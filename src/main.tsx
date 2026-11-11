@@ -2,20 +2,15 @@
 // innerHTML yok); temalar data-hm-theme ile, açık/koyu data-theme ile değişir. Yönlendirme hash kipinde (statik barındırma).
 import "hadi-march/css/font.css";
 import "hadi-march/css/tokens.css";
-import "hadi-march/css/sx.css";
-import "hadi-march/css/ui.css";
-import "hadi-march/css/forms.css";
-import "hadi-march/css/table.css";
-import "hadi-march/charts/charts.css";
+import "hadi-march/css/sx.css"; // components bring their own CSS (only what is used, split per page)
 import "hadi-march/motion/motion.css";
-import "hadi-march/fx/fx.css";
 import "./showcase.css";
 import { render, messages, setLocale } from "hadi-march";
 import { createRouter } from "hadi-march/router";
 import { installTransitions, installFlip, pageTransitions } from "hadi-march/motion";
 import { bootLoader } from "hadi-march/ui";
 import tr from "hadi-march/i18n/tr";
-import { App, PAGES } from "./app.tsx";
+import { App, PAGES, LOADERS } from "./app.tsx";
 
 messages("tr", tr);
 setLocale("tr");
@@ -24,7 +19,7 @@ installFlip();
 
 createRouter({
   mode: "hash",
-  routes: Object.fromEntries(PAGES.map((p) => [p.path, p.load])),
+  routes: Object.fromEntries(PAGES.map((p) => [p.path, LOADERS[p.path]])),
   title: (to: { path: string }) => { const p = PAGES.find((x) => x.path === to.path); return p && p.path !== "/" ? `${p.title} · HADI March` : "HADI March · Vitrin"; },
 });
 pageTransitions({ type: "fade", duration: 180 });

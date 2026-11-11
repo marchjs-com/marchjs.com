@@ -3,7 +3,7 @@ import { tween, reveal, magnet } from "hadi-march/motion";
 import { Particles, confetti } from "hadi-march/fx";
 import { Button, LinkCard, Kbd, Card, Badge, openPalette, ThemeSwatch, colorThemes, setColorTheme, colorTheme } from "hadi-march/ui";
 import { arrowRight, command, sparkles } from "hadi-march/icons";
-import { PAGES } from "../app.tsx";
+import { PAGES } from "../nav.ts";
 import { Demo } from "../demo.tsx";
 
 function Counter(props: { to: number; suffix?: string; label: string }) {

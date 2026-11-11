@@ -1,3 +1,4 @@
+import "hadi-march/css/themes.css"; // the gallery shows every theme at once (other pages load themes on demand)
 // Temalar ve tokenlar: her tema kendi kapsamında gerçek bileşenlerle (data-hm-theme), renk/yazı/yarıçap/gölge tokenları.
 import { Button, Badge, Chip, Toggle, Progress, Avatar, AvatarGroup, colorThemes, setColorTheme, colorTheme, ThemeSwatch } from "hadi-march/ui";
 import { THEMES } from "hadi-march/theme";

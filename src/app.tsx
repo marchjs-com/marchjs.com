@@ -11,21 +11,23 @@ import {
 /** March işareti. */
 export const marchMark = defineIcon("march", ["M5 19V6.5l7 7 7-7V19"]);
 
-export interface PageInfo { path: string; title: string; desc: string; icon: unknown; group?: string; load: () => Promise<unknown> }
-export const PAGES: PageInfo[] = [
-  { path: "/", title: "Merhaba", desc: "HADI March'a genel bakış", icon: dashboard, load: () => import("./pages/home.tsx") },
-  { path: "/temalar", title: "Temalar ve tokenlar", desc: "7 tema, renkler, yazı, yarıçap, gölge", icon: palette, group: "Temel", load: () => import("./pages/themes.tsx") },
-  { path: "/ikonlar", title: "İkonlar", desc: "Kendi SVG ikon seti", icon: grid, group: "Temel", load: () => import("./pages/icons.tsx") },
-  { path: "/dugmeler", title: "Düğmeler ve rozetler", desc: "Button, menü, çip, avatar, ipucu", icon: zap, group: "Bileşenler", load: () => import("./pages/buttons.tsx") },
-  { path: "/formlar", title: "Formlar", desc: "Alanlar, seçiciler, doğrulama, sihirbaz", icon: edit, group: "Bileşenler", load: () => import("./pages/forms.tsx") },
-  { path: "/veri", title: "Veri", desc: "10.000 satırlık tablo, ağaç, pano, adımlar", icon: layers, group: "Bileşenler", load: () => import("./pages/data.tsx") },
-  { path: "/grafikler", title: "Grafikler", desc: "Çizgi, alan, çubuk, pasta, ısı haritası", icon: barChart, group: "Bileşenler", load: () => import("./pages/charts.tsx") },
-  { path: "/katmanlar", title: "Pencereler ve bildirimler", desc: "Dialog, çekmece, toast, komut paleti", icon: message, group: "Bileşenler", load: () => import("./pages/overlays.tsx") },
-  { path: "/durumlar", title: "Durumlar", desc: "Uyarı, ilerleme, iskelet, boş, hata", icon: alertCircle, group: "Bileşenler", load: () => import("./pages/feedback.tsx") },
-  { path: "/hareket", title: "Hareket ve efektler", desc: "Yay, FLIP listeler, parallax, parçacık", icon: activity, group: "Hareket", load: () => import("./pages/motion.tsx") },
-  { path: "/gezinme", title: "Gezinme", desc: "NavSidebar: arama, son kullanılanlar, kategoriler", icon: menu, group: "Bileşenler", load: () => import("./pages/navigation.tsx") },
-  { path: "/dil", title: "March dili", desc: "$ değişkenler, <For>, bind:, borular, sx", icon: code, group: "Hareket", load: () => import("./pages/language.tsx") },
-];
+export { PAGES, type PageInfo } from "./nav.ts";
+import { PAGES } from "./nav.ts";
+/** Tembel sayfa yükleyicileri (yol → modül). */
+export const LOADERS: Record<string, () => Promise<unknown>> = {
+  "/": () => import("./pages/home.tsx"),
+  "/temalar": () => import("./pages/themes.tsx"),
+  "/ikonlar": () => import("./pages/icons.tsx"),
+  "/dugmeler": () => import("./pages/buttons.tsx"),
+  "/formlar": () => import("./pages/forms.tsx"),
+  "/veri": () => import("./pages/data.tsx"),
+  "/grafikler": () => import("./pages/charts.tsx"),
+  "/katmanlar": () => import("./pages/overlays.tsx"),
+  "/durumlar": () => import("./pages/feedback.tsx"),
+  "/hareket": () => import("./pages/motion.tsx"),
+  "/gezinme": () => import("./pages/navigation.tsx"),
+  "/dil": () => import("./pages/language.tsx"),
+};
 
 function Topbar() {
   const here = () => PAGES.find((p) => p.path === path())
