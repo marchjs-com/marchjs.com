@@ -1,15 +1,23 @@
 // Gezinme: NavSidebar — başlık, "Ara ya da sor…" kutusu (Ctrl K), canlı rozetli öne çıkan öğe, son kullanılanlar,
 // daraltılabilir kategoriler (sayılarla, "Tümünü aç/kapat"). Bu vitrinin kenar menüsü de aynı bileşen.
-import { NavSidebar, Button, Card, Kbd, Stack } from "hadi-march/ui";
+import { NavSidebar, Button, Card, Kbd, Stack, OverflowText, Marquee, Segmented } from "hadi-march/ui";
 import {
   inbox, users, crown, shieldCheck, hourglass, wallet, diamond, receipt, creditCard, image, flag, eye, barChart, gauge, globe, settings, store, truck, packageBox, plus, minus,
 } from "hadi-march/icons";
 import { Demo, Section } from "../demo.tsx";
 
+const SAMPLES = [
+  ["TR", "Haftalık etkinlik özeti: Kadıköy koşu grubu, Moda sahili buluşması ve akşam yemeği"],
+  ["EN", "Weekly digest: Saturday running club, beach clean-up meetup and the community dinner"],
+  ["AR", "ملخص الأسبوع: نادي الجري يوم السبت، لقاء تنظيف الشاطئ وعشاء المجتمع"],
+  ["Karışık", "HADİ Sosyal — مرحبا بكم في المجتمع — welcome to the community"],
+  ["Kısa", "Sığan metin kaymaz"],
+] as const
 const ICONS = { "Üyeler ve roller": users, "Ekonomi ve ödemeler": wallet, "İçerik ve moderasyon": image, "Raporlar ve analiz": barChart, "Mağaza ve ticaret": store }
 const ITEMS = [
   { id: "kurucular", label: "Kurucular", icon: crown, group: "Üyeler ve roller" },
   { id: "uyeler", label: "Üyeler", icon: users, group: "Üyeler ve roller" },
+  { id: "davet", label: "Davet bağlantıları ve toplu üye içe aktarma geçmişi", icon: users, group: "Üyeler ve roller" },
   { id: "roller", label: "Roller", icon: shieldCheck, group: "Üyeler ve roller" },
   { id: "bekleme", label: "Bekleme Salonu", icon: hourglass, group: "Üyeler ve roller" },
   { id: "elmas", label: "Elmas & Akçe", icon: diamond, group: "Ekonomi ve ödemeler" },
@@ -28,6 +36,8 @@ const ITEMS = [
 export default function Navigation() {
   let $waiting = 0
   let $picked = "—"
+  let $trigger = "hover"
+  let $mode = "bounce"
   const items = ITEMS.map((x) => ({ ...x, onSelect: () => { $picked = x.label } }))
   const featured = [{ id: "destek", label: "Destek talepleri", icon: inbox, badge: () => $waiting,
     sub: () => ($waiting ? `${$waiting} talep yanıt bekliyor` : "Yanıt bekleyen talep yok"), onSelect: () => { $picked = "Destek talepleri" } }]
@@ -50,6 +60,21 @@ export default function Navigation() {
           </Stack>
         </Card>
       </div>
+    </Demo>
+
+    <Demo wide title="Taşan metin: OverflowText ve Marquee" desc="Yalnız sığmayan metin kayar; sığan metin yerinde durur. Kenarlar mantıksal yönde solar; Arapça (RTL) ters yöne kayar; ekran okuyucu metni bir kez okur; azaltılmış harekette kaymaz, uç solar ve tam metin ipucunda. Yukarıdaki kenar çubuğunda uzun öğenin üzerine gel."
+      code={`<OverflowText text={title} />                         // hover + odak, gidip gelir
+<OverflowText trigger="visible" mode="loop" text={…} />  // görünürken sonsuz şerit
+<OverflowText trigger="always" mode="once" speed={60} pause={800} />
+<Marquee text="Duyuru · …" separator="✦" />          // trigger=visible, mode=loop`}>
+      <div class="sc-row sc-row-between">
+        <Segmented bind:value={$trigger} aria-label="Tetik" options={["hover", "focus", "always", "visible"].map((v) => ({ value: v, label: v }))} />
+        <Segmented bind:value={$mode} aria-label="Mod" options={["bounce", "loop", "once"].map((v) => ({ value: v, label: v }))} />
+      </div>
+      {() => { const trigger = $trigger as "hover", mode = $mode as "bounce"; return <div class="sc-mq-list">
+        {SAMPLES.map(([lang, text]) => <button type="button" class="sc-mq-row"><span class="sc-mq-lang">{lang}</span><OverflowText class="sc-mq-text" text={text} trigger={trigger} mode={mode} /></button>)}
+      </div> }}
+      <div class="sc-mq-ticker"><Marquee text="Yeni: HADİ March vitrini · Grid fill ve balance · Taşan metin · Dört resmi renk" separator="✦" speed={50} /></div>
     </Demo>
   </Section>
 }

@@ -176,3 +176,12 @@
 .sc-w-100 { width: 100%; }
 .sc-grid-compare { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(22rem, 100%), 1fr)); gap: var(--hm-space-3); }
 @media (max-width: 640px) { .sc-grid-controls { grid-template-columns: minmax(0, 1fr); } }
+
+/* overflow text demo */
+.sc-mq-list { display: grid; gap: var(--hm-space-2); max-width: 26rem; }
+.sc-mq-row { display: flex; align-items: center; gap: var(--hm-space-3); min-width: 0; padding: var(--hm-space-2) var(--hm-space-3); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); background: var(--hm-surface); color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.sc-mq-row:hover { background: var(--hm-bg-subtle); }
+.sc-mq-row:focus-visible { outline: 2px solid var(--hm-focus, var(--hm-primary)); outline-offset: 2px; }
+.sc-mq-lang { flex: none; min-width: 4.5rem; font-size: var(--hm-text-sm); color: var(--hm-muted); }
+.sc-mq-text { flex: 1 1 auto; }
+.sc-mq-ticker { max-width: 26rem; padding: var(--hm-space-2) var(--hm-space-3); border-radius: var(--hm-radius-2); background: var(--hm-primary-soft); color: var(--hm-primary); font-weight: 500; }
