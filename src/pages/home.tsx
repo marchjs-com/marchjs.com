@@ -1,7 +1,7 @@
 // Giriş: kahraman bölümü (tema renkleriyle parlayan sahne), hareketli sayılar, bölüm kartları, canlı sayaç.
 import { tween, reveal, magnet } from "hadi-march/motion";
 import { Particles, confetti } from "hadi-march/fx";
-import { Button, LinkCard, Kbd, Card, Badge, openPalette, ThemeSwatch, colorThemes, setColorTheme, colorTheme } from "hadi-march/ui";
+import { Button, LinkCard, Kbd, Card, Badge, Grid, openPalette, ThemeSwatch, colorThemes, setColorTheme, colorTheme } from "hadi-march/ui";
 import { arrowRight, command, sparkles } from "hadi-march/icons";
 import { PAGES } from "../nav.ts";
 import { Demo } from "../demo.tsx";
@@ -57,11 +57,11 @@ export default function Home() {
         </button>)}
       </section>
 
-      <div class="sc-cards">
+      <Grid min="17rem" gap={3} fill="stretch">
         {PAGES.filter((p) => p.path !== "/").map((p, i) => <div use:reveal={{ delay: i * 40 }}>
           <LinkCard href={p.path} icon={p.icon} tone={(["primary", "info", "success", "violet", "warn", "pink", "teal", "danger", "neutral", "primary"] as const)[i % 10]} title={p.title} description={p.desc} />
         </div>)}
-      </div>
+      </Grid>
 
       <div class="sc-demos">
         <Demo title="Yalnız değişen düğüm güncellenir" desc="Bileşen bir kez çalışır; $ ile başlayan değişkenler sinyaldir. Sanal DOM yok."
