@@ -5,6 +5,12 @@ import { THEMES } from "hadi-march/theme";
 import { check } from "hadi-march/icons";
 import { Demo, Section } from "../demo.tsx";
 
+const BRAND = [
+  ["heyecan", "Heyecan", "Vurgu (primary)", "#F2801F", "#FEF0E3"],
+  ["aktivite", "Aktivite", "Bilgi (info)", "#1D9AD6", "#E5F4FB"],
+  ["dostluk", "Dostluk", "Başarı (success)", "#78BE3A", "#EEF7E5"],
+  ["iletisim", "İletişim", "Özel (special)", "#A3338C", "#F6E8F3"],
+] as const
 const COLORS = [
   ["bg", "Zemin"], ["surface", "Yüzey"], ["surface-2", "Yüzey 2"], ["border", "Çizgi"], ["text", "Metin"], ["muted", "İkincil metin"],
   ["primary", "Vurgu"], ["primary-solid", "Dolu düğme"], ["primary-soft", "Yumuşak vurgu"], ["success", "Başarı"], ["warn", "Uyarı"], ["danger", "Tehlike"], ["info", "Bilgi"],
@@ -53,6 +59,19 @@ export const acme = defineTheme({
 fs.writeFileSync("acme.css", themeCss(acme))   // derleme betiğinde
 registerThemes([{ id: "acme", name: "Acme" }])   // uygulamada`}>
       <p class="hm-muted">Hazır temalar: {colorThemes().map((x) => x.name).join(" · ")}</p>
+    </Demo>
+
+    <Demo wide title="Marka renkleri" desc="HADİ Sosyal'ın dört resmi rengi (hadi_colors.dart ile birebir). Yazı rengi zemine göre okunurluk kuralıyla seçilir: beyaz en az 2,6:1 veriyorsa beyaz, yoksa koyu; metin olarak kullanılan tonu AA (4,5:1) için koyulaştırılır."
+      code={`--hm-heyecan · --hm-heyecan-soft · --hm-on-heyecan · --hm-heyecan-text
+--hm-aktivite · --hm-dostluk · --hm-iletisim (aynı dörtlü)
+primary/accent = Heyecan · info = Aktivite · success = Dostluk · special = İletişim · danger = error`}>
+      <div class="sc-brands" data-hm-theme="hadi">
+        {BRAND.map(([id, name, role, hex, soft]) => <div class={`sc-brand sc-b-${id}`}>
+          <div class="sc-brand-fill"><strong>{name}</strong><span>{hex}</span></div>
+          <div class="sc-brand-soft"><span class="sc-brand-text">{role}</span><code>--hm-{id}</code><span class="hm-muted">soft {soft}</span></div>
+        </div>)}
+      </div>
+      <div class="sc-ribbon" data-hm-theme="hadi" aria-hidden="true" />
     </Demo>
 
     <Demo title="Renk tokenları" desc="Etkin temanın anlamsal renkleri; koyu görünümde kendiliğinden değişir.">
