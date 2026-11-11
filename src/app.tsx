@@ -1,11 +1,11 @@
 // Vitrin kabuğu: kenar menüsü (bölümler), üst çubuk (konum, Ctrl+K, tema seçici, açık/koyu), sayfalar.
 import { Router, Link, path, type Href } from "hadi-march/router";
 import {
-  AppShell, NavMenu, Brand, Spacer, PaletteButton, ThemePicker, ThemeToggle, CommandPalette, ToastHost, Loader, registerCommands, toast,
+  AppShell, NavSidebar, Brand, openPalette, Spacer, PaletteButton, ThemePicker, ThemeToggle, CommandPalette, ToastHost, Loader, registerCommands, toast,
   setColorTheme, colorThemes, setTheme,
 } from "hadi-march/ui";
 import {
-  defineIcon, sparkles, palette, grid, zap, edit, layers, barChart, message, alertCircle, activity, code, dashboard, moon, sun,
+  defineIcon, sparkles, palette, grid, zap, edit, layers, barChart, message, alertCircle, activity, code, dashboard, moon, sun, command, menu,
 } from "hadi-march/icons";
 
 /** March işareti. */
@@ -23,6 +23,7 @@ export const PAGES: PageInfo[] = [
   { path: "/katmanlar", title: "Pencereler ve bildirimler", desc: "Dialog, çekmece, toast, komut paleti", icon: message, group: "Bileşenler", load: () => import("./pages/overlays.tsx") },
   { path: "/durumlar", title: "Durumlar", desc: "Uyarı, ilerleme, iskelet, boş, hata", icon: alertCircle, group: "Bileşenler", load: () => import("./pages/feedback.tsx") },
   { path: "/hareket", title: "Hareket ve efektler", desc: "Yay, FLIP listeler, parallax, parçacık", icon: activity, group: "Hareket", load: () => import("./pages/motion.tsx") },
+  { path: "/gezinme", title: "Gezinme", desc: "NavSidebar: arama, son kullanılanlar, kategoriler", icon: menu, group: "Bileşenler", load: () => import("./pages/navigation.tsx") },
   { path: "/dil", title: "March dili", desc: "$ değişkenler, <For>, bind:, borular, sx", icon: code, group: "Hareket", load: () => import("./pages/language.tsx") },
 ];
 
@@ -49,10 +50,15 @@ export function App() {
     { id: "mode-light", title: "Açık görünüm", group: "Görünüm", icon: sun, run: () => setTheme("light") },
     { id: "hello", title: "Bir bildirim göster", group: "Eylemler", icon: sparkles, keywords: "toast", run: () => toast("Merhaba! Bu bir March bildirimi.", { kind: "info" }) },
   ])
-  const items = PAGES.map((p) => ({ id: p.path, title: p.title, href: p.path as Href, icon: p.icon, group: p.group, keywords: p.desc }))
+  const items = PAGES.filter((p) => p.path !== "/").map((p) => ({ id: p.path, label: p.title, sub: p.desc, href: p.path as Href, icon: p.icon, group: p.group, keywords: p.desc }))
+  const featured = [
+    { id: "/", label: "Merhaba", sub: "Genel bakış ve canlı sayaç", href: "/" as Href, icon: dashboard },
+    { id: "palet", label: "Komut paleti", sub: "Sayfa, tema ya da eylem ara", icon: command, onSelect: openPalette },
+  ]
   return <AppShell header={<Topbar />} nav={
-    <NavMenu items={items} sort="none" storageKey="sc.nav" label="Vitrin menüsü" collapsible palette maxRecent={0} maxRecent={0}
-      brand={<Brand href="/" mark={marchMark} name="HADI March" sub="Arayüz kitaplığı" />}
+    <NavSidebar items={items} featured={featured} title={<Brand href="/" mark={marchMark} name="HADI March" sub="Arayüz kitaplığı" />}
+      groupOrder={["Temel", "Bileşenler", "Hareket"]} itemOrder="none" defaultOpen="all" hotkey="palette" placeholder="Ara ya da sor…"
+      storageKey="sc.sidebar" label="Vitrin menüsü" collapsible
       footer={<p class="sc-nav-foot hm-rail-hide">MIT · sıfır bağımlılık · CSP uyumlu</p>} />}>
     <Router loading={<Loader />} />
     <CommandPalette placeholder="Sayfa, tema ya da eylem ara…" />

@@ -9,6 +9,7 @@ export default {
   "/icons": () => import("./pages/icons.tsx"),
   "/language": () => import("./pages/language.tsx"),
   "/motion": () => import("./pages/motion.tsx"),
+  "/navigation": () => import("./pages/navigation.tsx"),
   "/overlays": () => import("./pages/overlays.tsx"),
   "/themes": () => import("./pages/themes.tsx"),
 };

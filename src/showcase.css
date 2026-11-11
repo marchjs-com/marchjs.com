@@ -140,3 +140,9 @@
 .sc-pulse { animation: sc-pulse 1.2s ease-in-out infinite; }
 @keyframes sc-pulse { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--hm-danger) 18%, transparent); } }
 .sc-skel-av { width: 2.5rem; height: 2.5rem; border-radius: 50%; }
+
+/* navigation page */
+.sc-sb-demo { display: grid; grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); gap: var(--hm-space-4); align-items: start; }
+.sc-sb-frame { display: flex; height: 36rem; overflow: hidden; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); box-shadow: var(--hm-shadow-2); }
+.sc-sb-frame .hm-sb { width: 100%; border-inline-end: 0; }
+@media (max-width: 900px) { .sc-sb-demo { grid-template-columns: minmax(0, 1fr); } .sc-sb-frame { height: auto; border: 0; box-shadow: none; } }
