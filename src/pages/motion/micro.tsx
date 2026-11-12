@@ -11,7 +11,7 @@ import { Icon, heart, star, sparkles, send } from "hadi-march/icons";
 
 export default function MotionMicro(props: { kit: typeof Kit }) {
   const { MotionDemo, opt } = props.kit
-  document.title = "Mikro etkileşimler · HADI March"
+  document.title = "Mikro etkileşimler · March"
 
   // 1 · ripple
   let $rDur = 650, $rCenter = false, $rInk = 22

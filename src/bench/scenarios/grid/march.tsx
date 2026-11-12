@@ -1,4 +1,4 @@
-// Data list, HADI March: the query, categories and sort are signals; the filtered list and the sorted view are two
+// Data list, March: the query, categories and sort are signals; the filtered list and the sorted view are two
 // computed values (a sort change does not filter again); a keyed <For> reuses rows by id and moves the fewest. Each
 // record has its own selection signal, so a toggle wakes one row's class binding and the summary, not the list.
 import { render, signal, computed, batch, For } from "hadi-march"

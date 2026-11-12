@@ -1,4 +1,4 @@
-// Benchmark app: HADI March, written the way the library recommends: a keyed <For> over a signal holding the rows,
+// Benchmark app: March, written the way the library recommends: a keyed <For> over a signal holding the rows,
 // a selector() for the selected row (choosing one row wakes two rows, not all), and plain onClick handlers.
 import { render, For, selector } from "hadi-march"
 import type { BenchApp, Row } from "../core.ts"

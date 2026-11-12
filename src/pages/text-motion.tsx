@@ -14,7 +14,7 @@ import { TEXT_COSTS } from "../text-costs.gen.ts";
 
 type Run = (el: HTMLElement, o?: Record<string, unknown>) => TX.TextAnimation;
 const FN = TX as unknown as Record<string, Run>;
-const SAMPLE = "Hadi March";
+const SAMPLE = "March";
 
 const FAMILY: Record<TextFamily, { title: string; desc: string }> = {
   enter: { title: "Giriş ve çıkış", desc: "Parça parça giriş; hepsi { out: true } ile çıkış olarak da oynar." },

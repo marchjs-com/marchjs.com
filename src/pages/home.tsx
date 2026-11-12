@@ -153,7 +153,7 @@ export default function Home() {
             {`${S.components} bileşen · ${S.icons.total} ikon · ${S.animations.total} animasyon`}
           </span>
           <h1 id="sc-hero-title" class="sc-hero-title" use:reveal={{ duration: 800, delay: 80 }}>
-            <span class="sc-hero-brand">HADI March</span>
+            <span class="sc-hero-brand">March</span>
           </h1>
           <p class="sc-hero-lead" use:reveal={{ duration: 800, delay: 160 }}>
             Sinyallerle çalışan, <span class="hm-gradient-text">sıfır bağımlılıklı</span> TypeScript arayüz çatısı.

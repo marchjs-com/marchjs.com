@@ -17,7 +17,7 @@ import { busy, Split, Group, Toggles, AllNone, Bars, Unsure, Preview, Status, li
 
 const DemoCode = lazy(() => import("../demo-code.tsx"), { placeholder: "text", height: "16rem" })
 
-/** What a scenario card says in one line, and whether the workload suits HADI March (fine-grained updates) or not. */
+/** What a scenario card says in one line, and whether the workload suits March (fine-grained updates) or not. */
 type Tilt = "pro" | "con" | "even"
 const CARD: Record<string, { summary: string; tilt: Tilt; why: string }> = {
   ticker: { summary: "2.000 satırlık fiyat tablosunda her karede birkaç satırın fiyatı ve rengi değişir.", tilt: "pro", why: "Dar değişiklik: yalnız değişen hücreye dokunulur." },
@@ -138,7 +138,7 @@ export default function BenchScenarios() {
 
     <section class="bt-block" aria-labelledby="bt-scen-h">
       <header class="bt-block-head"><h2 class="bt-block-title" id="bt-scen-h">{t("Senaryolar")}</h2>
-        <p class="bt-block-desc">{t("Büyük bir sayfada küçük ve sık değişiklikler. Her kitaplık senaryoyu kendi önerilen en iyi kalıbıyla yazdı; etiket, iş yükünün HADI March'ın tasarımına uyup uymadığını gösterir.")}</p></header>
+        <p class="bt-block-desc">{t("Büyük bir sayfada küçük ve sık değişiklikler. Her kitaplık senaryoyu kendi önerilen en iyi kalıbıyla yazdı; etiket, iş yükünün March'ın tasarımına uyup uymadığını gösterir.")}</p></header>
       <div class="bt-cards">{SCENARIOS.map((s) => { const c = CARD[s.id] ?? { summary: "", tilt: "even" as Tilt, why: "" }; return <article class="bt-card">
         <header class="bt-card-head"><h3 class="bt-card-title">{t(s.label)}</h3><span class={`bt-tilt bt-tilt-${c.tilt}`}>{t(TILT[c.tilt])}</span></header>
         <p class="bt-card-sum">{t(c.summary)}</p>

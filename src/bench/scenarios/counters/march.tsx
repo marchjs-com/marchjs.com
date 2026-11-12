@@ -1,4 +1,4 @@
-// Independent counters, HADI March: each Counter component owns its value (`let $n = 0` in the body is a signal) and
+// Independent counters, March: each Counter component owns its value (`let $n = 0` in the body is a signal) and
 // registers its increment; a step calls the fired counters' increments inside batch(), and only their text updates.
 import { render, batch } from "hadi-march"
 import type { Counter as Model, Fired } from "./def.ts"

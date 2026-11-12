@@ -1,4 +1,4 @@
-// HADI March showcase: every component, theme and animation of the library. Written entirely in March (no inline styles,
+// March showcase: every component, theme and animation of the library. Written entirely in March (no inline styles,
 // no innerHTML); themes switch with data-hm-theme, light/dark with data-theme. Normal addresses (/motion) under any base
 // path; where the address cannot change (file://, a sandboxed iframe) the router uses #/motion by itself.
 import "hadi-march/css/font.css";

@@ -24,7 +24,7 @@ const STEPS = [
 
 export default function MotionScroll(props: { kit: typeof Kit }) {
   const { MotionDemo, opt } = props.kit
-  document.title = "Kaydırma animasyonları · HADI March"
+  document.title = "Kaydırma animasyonları · March"
 
   // 1 · scroll timeline
   let $fx = "rise", $start = 0, $end = 45, $reverse = false

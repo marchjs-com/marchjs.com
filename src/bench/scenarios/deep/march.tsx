@@ -1,4 +1,4 @@
-// State at the top, HADI March: App holds the unit as a signal and the focus behind a selector(); Panel > Group > Item
+// State at the top, March: App holds the unit as a signal and the focus behind a selector(); Panel > Group > Item
 // are real components that run once. The unit is passed down as a prop (the compiler makes props live getters) and the
 // selector function is passed as a prop too. Only the measured items read the unit (one per group), so a
 // unit step updates only those 200 value text bindings; a focus step
