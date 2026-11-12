@@ -1,17 +1,19 @@
 // Sample page: a personal portfolio — projects open into their detail page with a shared element transition.
 import { Button } from "hadi-march/ui";
 import { lazy } from "hadi-march/lazy";
-import { SiteNav, Hero, SiteSection, ProjectGrid, ProjectDetail, HorizontalScroll, SiteFooter, type Project } from "hadi-march/components/landing/index.ts";
+import { SiteNav, Hero, SiteSection, ProjectGrid, HorizontalScroll, SiteFooter, type Project } from "hadi-march/components/landing/index.ts";
 import { sharedTransition } from "hadi-march/motion";
 import { arrowRight, mail, message } from "hadi-march/icons";
 import { PROJECTS, Cover } from "hadi-march/components/landing/project-grid/demo.tsx";
-import { details } from "hadi-march/components/landing/project-detail/demo.tsx";
 
 // about, skills, career and contact load as they come near (a long page stays light)
 const PortfolioMore = lazy(() => import("./portfolio-more.tsx"), { when: "visible", placeholder: "block", height: "120rem" })
+// a project's detail page: its own part, warmed up when idle (the shared cover needs it on screen on the first click)
+const Detail = lazy(() => import("./portfolio-detail.tsx"), { placeholder: "block", height: "40rem" })
 
 export default function PortfolioSample() {
   let $open: Project | null = null
+  void Detail.preload()
   let $sent = false
   // the cover morphs both ways: grid cover and detail cover share the name project-<id>
   const open = (p: Project, cover: Element) => { void sharedTransition(`project-${p.id}`, cover, () => { $open = p; globalThis.scrollTo?.({ top: 0 }) }) }
@@ -24,7 +26,7 @@ export default function PortfolioSample() {
       const p = $open
       if (p) {
         const n = PROJECTS[(PROJECTS.indexOf(p) + 1) % PROJECTS.length]!
-        return <SiteSection width="wide"><ProjectDetail project={details(p)} onBack={() => back(p)} next={{ project: n, onOpen: open }} /></SiteSection>
+        return <SiteSection width="wide"><Detail project={p} onBack={() => back(p)} next={{ project: n, onOpen: open }} /></SiteSection>
       }
       return <>
         <Hero variant="split" size="lg" eyebrow="Yeni projelere açığım" title="Ürünleri sade ve canlı yapıyorum" highlight="sade ve canlı"

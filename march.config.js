@@ -48,6 +48,7 @@ export default {
     "src/web/product-more.tsx": "lower half of the product sample: loaded when it comes near the viewport",
     "src/web/portfolio-more.tsx": "lower half of the portfolio sample: loaded when it comes near the viewport",
     "src/web/portfolio.tsx": "Web siteleri sample page: loaded only when ?view=portfolio opens it",
+    "src/web/portfolio-detail.tsx": "a portfolio project's detail page: warmed up after the portfolio sample, shown on a click",
     "src/web/slides.tsx": "Web siteleri sample deck: loaded only when ?view=slides opens it",
     "src/i18n/tr.ts": "locale dictionary: downloaded only for Turkish, never grouped",
     "src/router/outlets.ts": "named / modal outlets (1.8 KB, no dependencies): joining any page group would make it pull that page",
