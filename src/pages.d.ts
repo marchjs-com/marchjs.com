@@ -10,6 +10,7 @@ export interface PageParams {
   "/language": {  };
   "/layout": {  };
   "/messaging": {  };
+  "/managers": {  };
   "/motion": {  };
   "/navigation": {  };
   "/overlay": {  };
@@ -18,5 +19,5 @@ export interface PageParams {
   "/themes": {  };
 }
 declare module "hadi-march/router" {
-  interface Register { routes: "/buttons" | "/charts" | "/data" | "/feedback" | "/forms" | "/home" | "/icons" | "/language" | "/layout" | "/messaging" | "/motion" | "/navigation" | "/overlay" | "/overlays" | "/speed" | "/themes" }
+  interface Register { routes: "/buttons" | "/charts" | "/data" | "/feedback" | "/forms" | "/home" | "/icons" | "/language" | "/layout" | "/managers" | "/messaging" | "/motion" | "/navigation" | "/overlay" | "/overlays" | "/speed" | "/themes" }
 }

@@ -18,4 +18,5 @@ export const PAGES: PageInfo[] = [
   { path: "/navigation", title: "Gezinme" },
   { path: "/overlay", title: "Overlay" },
   { path: "/language", title: "March dili" },
+  { path: "/managers", title: "Yöneticiler" },
 ];

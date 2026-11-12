@@ -25,6 +25,7 @@ export const LOADERS: Record<string, () => Promise<unknown>> = {
   "/navigation": () => import("./pages/navigation.tsx"),
   "/overlay": () => import("./pages/overlay.tsx"),
   "/language": () => import("./pages/language.tsx"),
+  "/managers": () => import("./pages/managers.tsx"),
 };
 
 const ShellNav = lazy(() => import("./shell-nav.tsx"), { fallback: () => <div class="sc-nav-placeholder" aria-hidden="true" /> })
