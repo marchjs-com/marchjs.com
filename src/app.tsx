@@ -1,47 +1,33 @@
 // Showcase shell: the root layout of every route (mounted once, kept across navigations; the page goes into <Outlet />).
-// What the first paint needs (frame, breadcrumb). The side menu, the top bar tools and the rest
+// What the first paint needs (frame, breadcrumb). No page list here: routes, titles and loaders live in src/routes.ts,
+// a start-up chunk, so the entry does not grow with the number of pages. The side menu, the top bar tools and the rest
 // (palette, toasts, motion extras) are lazy chunks with placeholders of the same size, so the entry stays small.
 import { Outlet, Link, path } from "hadi-march/router";
 import { AppShell, Spacer } from "hadi-march/ui";
 import { lazy, skeleton } from "hadi-march/lazy";
 
-export { PAGES, type PageInfo } from "./nav.ts";
-import { PAGES } from "./nav.ts";
-/** Lazy page loaders (path → module). */
-export const LOADERS: Record<string, () => Promise<unknown>> = {
-  "/": () => import("./pages/home.tsx"),
-  "/themes": () => import("./pages/themes.tsx"),
-  "/icons": () => import("./pages/icons.tsx"),
-  "/buttons": () => import("./pages/buttons.tsx"),
-  "/forms": () => import("./pages/forms.tsx"),
-  "/data": () => import("./pages/data.tsx"),
-  "/charts": () => import("./pages/charts.tsx"),
-  "/overlays": () => import("./pages/overlays.tsx"),
-  "/feedback": () => import("./pages/feedback.tsx"),
-  "/motion": () => import("./pages/motion.tsx"),
-  "/animation": () => import("./pages/animation.tsx"),
-  "/speed": () => import("./pages/speed.tsx"),
-  "/messaging": () => import("./pages/messaging.tsx"),
-  "/network": () => import("./pages/network.tsx"),
-  "/layout": () => import("./pages/layout.tsx"),
-  "/navigation": () => import("./pages/navigation.tsx"),
-  "/overlay": () => import("./pages/overlay.tsx"),
-  "/language": () => import("./pages/language.tsx"),
-  "/managers": () => import("./pages/managers.tsx"),
-  "/web": () => import("./pages/web.tsx"),
-};
-
 const ShellNav = lazy(() => import("./shell-nav.tsx"), { fallback: () => <div class="sc-nav-placeholder" aria-hidden="true" /> })
 const ShellTools = lazy(() => import("./shell-tools.tsx"), { fallback: () => <div class="sc-tools sc-tools-placeholder" aria-hidden="true" /> })
 const ShellLate = lazy(() => import("./shell-late.tsx"), { fallback: () => null })
 
+/** A showcase page as the menu and the home page show it. */
+export interface PageEntry { path: string; title: string; desc?: string | undefined; group?: string | undefined; icon?: unknown }
+// The page list and the title lookup are installed by src/routes.ts (a start-up chunk) before anything renders: the
+// entry carries no page list, so adding a page never grows it
+let pageList: readonly PageEntry[] = []
+let titleOf: (path: string) => string | undefined = () => undefined
+/** Every page (menu order) with its menu metadata. */
+export const pages = (): readonly PageEntry[] => pageList
+export const setPages = (list: readonly PageEntry[], title: typeof titleOf): void => { pageList = list; titleOf = title }
+
 function Topbar() {
-  const here = () => PAGES.find((p) => p.path === path())
+  // instant on the click: the path changes at once, the title is looked up from it
+  const title = () => { const p = path(); return p !== "/" ? titleOf(p) : undefined }
   return <>
     <nav class="hm-crumbs" aria-label="Konum">
       <ol>
         <li><Link href="/">HADI March</Link></li>
-        {() => { const p = here(); return p && p.path !== "/" ? <li><span aria-current="page">{p.title}</span></li> : null }}
+        {() => { const t = title(); return t ? <li><span aria-current="page">{t}</span></li> : null }}
       </ol>
     </nav>
     <Spacer />

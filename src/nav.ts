@@ -3,6 +3,7 @@
 export interface PageInfo { path: string; title: string }
 export const PAGES: PageInfo[] = [
   { path: "/", title: "Merhaba" },
+  { path: "/start", title: "İlk Adımlar" },
   { path: "/themes", title: "Temalar ve tokenlar" },
   { path: "/icons", title: "İkonlar" },
   { path: "/buttons", title: "Düğmeler ve rozetler" },
@@ -13,6 +14,8 @@ export const PAGES: PageInfo[] = [
   { path: "/feedback", title: "Durumlar" },
   { path: "/motion", title: "Hareket ve efektler" },
   { path: "/animation", title: "Animasyon motoru" },
+  { path: "/text-motion", title: "Metin animasyonları" },
+  { path: "/transitions", title: "Sayfa geçişleri" },
   { path: "/speed", title: "Hız" },
   { path: "/messaging", title: "Haberleşme" },
   { path: "/network", title: "Ağ ve hatalar" },
@@ -22,4 +25,9 @@ export const PAGES: PageInfo[] = [
   { path: "/language", title: "March dili" },
   { path: "/managers", title: "Yöneticiler" },
   { path: "/web", title: "Web siteleri" },
+  { path: "/managers-data", title: "Yöneticiler: veri ve durum" },
+  { path: "/managers-ops", title: "Yöneticiler: bayrak, günlük, performans" },
+  { path: "/seo", title: "SEO" },
+  { path: "/managers-a11y", title: "Yöneticiler: erişilebilirlik" },
+  { path: "/managers-env", title: "Ortam yöneticileri" },
 ];
