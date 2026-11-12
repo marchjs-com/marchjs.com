@@ -1,6 +1,7 @@
-// Showcase shell: what the first paint needs (frame, breadcrumb, router). The side menu, the top bar tools and the rest
+// Showcase shell: the root layout of every route (mounted once, kept across navigations; the page goes into <Outlet />).
+// What the first paint needs (frame, breadcrumb). The side menu, the top bar tools and the rest
 // (palette, toasts, motion extras) are lazy chunks with placeholders of the same size, so the entry stays small.
-import { Router, Link, path } from "hadi-march/router";
+import { Outlet, Link, path } from "hadi-march/router";
 import { AppShell, Spacer } from "hadi-march/ui";
 import { lazy } from "hadi-march/lazy";
 
@@ -45,7 +46,10 @@ function Topbar() {
 
 export function App() {
   return <AppShell header={<Topbar />} nav={<ShellNav />}>
-    <Router loading={<div class="hm-loader" role="status" aria-label="Yükleniyor"><span class="hm-loading hm-spin-lg" /></div>} />
+    <Outlet />
     <ShellLate />
   </AppShell>
 }
+/** The shell as a layout loader (it is in the entry: resolves at once, so the frame paints before the page arrives). */
+export const SHELL = async () => ({ default: App })
+export const PAGE_LOADING = <div class="hm-loader" role="status" aria-label="Yükleniyor"><span class="hm-loading hm-spin-lg" /></div>

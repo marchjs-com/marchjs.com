@@ -7,8 +7,8 @@ import "hadi-march/motion/motion.css";
 import "./showcase.css";
 import { render, setLocale } from "hadi-march";
 import { loadLocale } from "hadi-march/i18n";
-import { createRouter } from "hadi-march/router";
-import { App, PAGES, LOADERS } from "./app.tsx";
+import { createRouter, Router } from "hadi-march/router";
+import { SHELL, PAGE_LOADING, PAGES, LOADERS } from "./app.tsx";
 
 // the Turkish pack is a lazy chunk (library texts switch to Turkish when it arrives)
 loadLocale("tr", () => import("hadi-march/i18n/tr"));
@@ -16,9 +16,10 @@ void setLocale("tr");
 
 createRouter({
   mode: "hash",
-  routes: Object.fromEntries(PAGES.map((p) => [p.path, LOADERS[p.path]])),
+  // every page sits in the shell layout (kept alive while pages change)
+  routes: Object.fromEntries(PAGES.map((p) => [p.path, { load: LOADERS[p.path], layouts: [SHELL] }])),
   title: (to: { path: string }) => { const p = PAGES.find((x) => x.path === to.path); return p && p.path !== "/" ? `${p.title} · HADI March` : "HADI March · Vitrin"; },
 });
 
 const el = document.getElementById("app");
-if (el) { render(() => <App />, el); document.getElementById("hm-boot")?.remove(); }
+if (el) { render(() => <Router loading={PAGE_LOADING} />, el); document.getElementById("hm-boot")?.remove(); }
