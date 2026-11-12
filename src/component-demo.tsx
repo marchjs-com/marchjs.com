@@ -22,8 +22,15 @@ export function PlayStage(props: { view: View; spec: PlaygroundSpec<never> }) {
     get: () => values()[o.key], set: ((v: unknown) => values.set({ ...values.peek(), [o.key]: v })) as (v: never) => void,
     visibleWhen: o.visibleWhen ? () => o.visibleWhen!(values() as never) : undefined,
   }))
-  // the demo reads props.values.<key>: a getter, so it stays live
-  return <Playground options={opts}><View values={new Proxy({}, { get: (_, k) => values()[k as string] }) as never} /></Playground>
+  // the demo reads props.values.<key>: a getter, so it stays live. `{ ...props.values }` reads every value at once: a
+  // thunk that rebuilds a block must read the values itself, because a value only passed on as a prop (`tone={v.tone}`)
+  // becomes a live getter the block reads untracked, once, and the thunk would never run again
+  const live = new Proxy({}, {
+    get: (_, k) => values()[k as string],
+    ownKeys: () => Reflect.ownKeys(values()),
+    getOwnPropertyDescriptor: (_, k) => (k in values() ? { value: values()[k as string], enumerable: true, configurable: true } : undefined),
+  })
+  return <Playground options={opts}><View values={live as never} /></Playground>
 }
 
 function Stage(props: { folder: string }) {
