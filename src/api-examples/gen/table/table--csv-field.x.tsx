@@ -9,11 +9,11 @@ import type { ApiExample } from "../../types.ts";
 import "../../table.css";
 
 const example: ApiExample<any> = {
-      code: `csvField('Acme, "Ltd"')        // "\\"Acme, \\"\\"Ltd\\"\\"\\""
+      code: `csvField('HADİ, "Ltd"')        // "\\"HADİ, \\"\\"Ltd\\"\\"\\""
 csvField("=SUM(A1:A9)")         // "'=SUM(A1:A9)" (formula-safe)
 csvField("a;b", ";")            // separator-aware quoting`,
       run: () => {
-        const raw = signal('Acme, "Ltd"')
+        const raw = signal('HADİ, "Ltd"')
         return <div class="sc-ex-table-stack">
           <TextInput value={raw} onChange={(v: string) => raw.set(v)} aria-label="Hücre" />
           <Row>{["=SUM(A1:A9)", "a;b", "Ada\nLovelace"].map((s) => <Button size="sm" variant="ghost" onClick={() => raw.set(s)}>{json(s)}</Button>)}</Row>

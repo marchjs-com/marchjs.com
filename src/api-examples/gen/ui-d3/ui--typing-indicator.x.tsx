@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
         const flip = (name: string) => typing.update((l) => (l.includes(name) ? l.filter((x) => x !== name) : [...l, name]))
         return <div class="sc-ex-stack">
           <TypingIndicator names={typing} variant={() => p.values.variant as "inline"} text={() => p.values.text} />
-          <Row>{["Ada", "Linus", "Grace", "Acme"].map((n) => <Button size="sm" variant={() => (typing().includes(n) ? "secondary" : "ghost")} aria-pressed={() => String(typing().includes(n))} onClick={() => flip(n)}>{n}</Button>)}</Row>
+          <Row>{["Ada", "Linus", "Grace", "HADİ"].map((n) => <Button size="sm" variant={() => (typing().includes(n) ? "secondary" : "ghost")} aria-pressed={() => String(typing().includes(n))} onClick={() => flip(n)}>{n}</Button>)}</Row>
         </div>
       },
     };

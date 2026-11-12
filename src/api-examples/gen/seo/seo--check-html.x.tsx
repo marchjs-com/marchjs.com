@@ -15,7 +15,7 @@ issues.filter((i) => i.level === "error")   // title, description, canonical, im
         const html = signal(PAGE)
         const issues = () => checkHtml(html())
         return <div class="sc-ex-stack"><Area label="HTML" value={html} />
-          <Row><Button variant="ghost" onClick={() => html.set(html().replace("</head>", `  <meta name="description" content="Acme mağazasında her mevsim için rahat ve şık ayakkabılar.">\n</head>`))}>Açıklama ekle</Button>
+          <Row><Button variant="ghost" onClick={() => html.set(html().replace("</head>", `  <meta name="description" content="HADİ mağazasında her mevsim için rahat ve şık ayakkabılar.">\n</head>`))}>Açıklama ekle</Button>
             <Out label="Hata" value={() => String(issues().filter((i) => i.level === "error").length)} /><Out label="Uyarı" value={() => String(issues().filter((i) => i.level === "warn").length)} /></Row>
           <Tags label="Sorunlar" items={() => issues().map((i) => `${i.level} · ${i.rule}`)} /></div>
       },

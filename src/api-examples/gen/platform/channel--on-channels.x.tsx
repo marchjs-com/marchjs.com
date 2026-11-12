@@ -15,8 +15,8 @@ const example: ApiExample<any> = {
         const [lines, add] = useLog()
         onChannels("ex.order.*", (m) => add(`${m.name}: ${String(m.payload)}`))
         return <Stack><Row>
-          <Button onClick={() => placed.emit("Acme #12")}>order.placed</Button>
-          <Button onClick={() => paid.emit("Acme #12")}>order.paid</Button>
+          <Button onClick={() => placed.emit("HADİ #12")}>order.placed</Button>
+          <Button onClick={() => paid.emit("HADİ #12")}>order.paid</Button>
           <Button variant="ghost" onClick={() => other.emit("Ada")}>user.seen (duyulmaz)</Button>
         </Row><Log lines={lines} /></Stack>
       },

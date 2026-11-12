@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
         const value = signal<unknown>(null), log = useLog()
         const upload = async (file: File, ctx: { onProgress: (n: number) => void }) => {
           for (let i = 1; i <= 4; i++) { await wait(150); ctx.onProgress(i / 4) }
-          return `acme://dosya/${file.name}`
+          return `hadi://dosya/${file.name}`
         }
         return <div class="sc-ex-stack">
           {() => { const m = p.values.multiple, a = p.values.accept; return <FileUpload value={value} multiple={m} accept={a || undefined} maxSize={2_000_000} upload={upload}

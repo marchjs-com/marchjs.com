@@ -19,7 +19,7 @@ const example: ApiExample<any> = {
         const round = signal(0), closed = signal(0)
         return <div class="sc-ex-ui-c-stack">
           {() => { round(); const dismissable = p.values.dismissable
-            return <Notice tone={() => p.values.tone} title="Acme raporu hazır" dismissable={dismissable} onDismiss={() => closed.update((x) => x + 1)}>Haftalık özet e-posta ile de gönderildi.</Notice> }}
+            return <Notice tone={() => p.values.tone} title="HADİ raporu hazır" dismissable={dismissable} onDismiss={() => closed.update((x) => x + 1)}>Haftalık özet e-posta ile de gönderildi.</Notice> }}
           <Row><Button variant="ghost" onClick={() => round.update((x) => x + 1)}>Yeniden göster</Button><Out label="kapatıldı" value={closed} /></Row>
         </div>
       },

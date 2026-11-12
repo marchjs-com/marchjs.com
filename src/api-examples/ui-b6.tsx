@@ -32,10 +32,10 @@ export default examples({
     },
     KeyValueEditor: {
       code: `<KeyValueEditor bind:value={$headers} keyPlaceholder="Başlık" valuePlaceholder="Değer" />
-// { "X-Team": "acme", "Retry": "3" }`,
+// { "X-Team": "hadi", "Retry": "3" }`,
       play: { options: [{ key: "numbers", label: "Sayıları dönüştür", default: true }] },
       run: (p: { values: { numbers: boolean } }) => {
-        const headers = signal<Record<string, string | number>>({ "X-Team": "acme", Retry: 3 })
+        const headers = signal<Record<string, string | number>>({ "X-Team": "hadi", Retry: 3 })
         return <div class="sc-ex-stack">
           {() => { const n = p.values.numbers; return <KeyValueEditor value={headers} numbers={n} keyPlaceholder="Başlık" valuePlaceholder="Değer" aria-label="İstek başlıkları" /> }}
           <Out label="Değer" value={() => JSON.stringify(headers())} />
@@ -74,7 +74,7 @@ export default examples({
   detail={() => <OrderView order={$sel} />} />`,
       play: { options: [{ key: "back", label: "Geri düğmesi (dar ekran)", default: true }, { key: "empty", label: "Özel boş görünüm", default: false }] },
       run: (p: { values: { back: boolean; empty: boolean } }) => {
-        const orders = [{ id: "A-101", who: "Ada", total: "₺1.250" }, { id: "A-102", who: "Deniz", total: "₺480" }, { id: "A-103", who: "Acme", total: "₺9.900" }]
+        const orders = [{ id: "A-101", who: "Ada", total: "₺1.250" }, { id: "A-102", who: "Deniz", total: "₺480" }, { id: "A-103", who: "HADİ", total: "₺9.900" }]
         const sel = signal<(typeof orders)[number] | null>(null)
         return <div class="sc-ex-ui-b-ld">
           {() => { const b = p.values.back, e = p.values.empty; return <ListDetail selected={sel} {...(b ? { onBack: () => sel.set(null) } : {})} listLabel="Siparişler"

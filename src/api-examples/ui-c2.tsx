@@ -27,7 +27,7 @@ export default examples({
       ] },
       run: (p: { values: { variant: "secondary" | "primary" | "ghost"; locked: boolean } }) => {
         const [lines, add] = logger()
-        const row = { name: "Acme faturası #42" }
+        const row = { name: "HADİ faturası #42" }
         return <div class="sc-ex-ui-c-stack">
           <Row><span>{row.name}</span>
             <Menu label="İşlemler" variant={() => p.values.variant} args={[row]} items={[
@@ -67,7 +67,7 @@ export default examples({
       },
     },
     NavMenu: {
-      code: `<NavMenu brand="Acme" palette={false} items={[
+      code: `<NavMenu brand="HADİ" palette={false} items={[
   { id: "inbox", title: "Gelen kutusu", href: "/inbox", icon: inbox, badge: () => unread() },
   { id: "pay", title: "Ödemeler", href: "/pay", group: "Finans" },
 ]} />`,
@@ -87,14 +87,14 @@ export default examples({
           <Row><Button onClick={() => unread.update((x) => x + 1)}>Yeni ileti</Button><Button variant="ghost" onClick={() => unread.set(0)}>Hepsini oku</Button></Row>
           <div class="sc-ex-ui-c-frame">
             {() => { const filter = p.values.filter, collapsible = p.values.collapsible
-              return <NavMenu items={items as never} brand={<strong>Acme</strong>} label="Örnek menü" palette={false} storageKey="sc.ex.navmenu" filter={filter} collapsible={collapsible} /> }}
+              return <NavMenu items={items as never} brand={<strong>HADİ</strong>} label="Örnek menü" palette={false} storageKey="sc.ex.navmenu" filter={filter} collapsible={collapsible} /> }}
             <div class="sc-ex-ui-c-main hm-muted">Sayfa içeriği</div>
           </div>
         </div>
       },
     },
     NavSidebar: {
-      code: `<NavSidebar title="Acme" recent={0} items={[
+      code: `<NavSidebar title="HADİ" recent={0} items={[
   { id: "orders", label: "Siparişler", group: "Satış", onSelect: () => go("orders"), badge: 3 },
   { id: "team", label: "Ekip", group: "Yönetim", sub: "4 kişi" },
 ]} />`,
@@ -115,7 +115,7 @@ export default examples({
         return <div class="sc-ex-ui-c-stack">
           <div class="sc-ex-ui-c-frame">
             {() => { const open = p.values.open, collapsible = p.values.collapsible
-              return <NavSidebar title="Acme" items={items} recent={0} groupOrder="none" itemOrder="none" defaultOpen={open} collapsible={collapsible}
+              return <NavSidebar title="HADİ" items={items} recent={0} groupOrder="none" itemOrder="none" defaultOpen={open} collapsible={collapsible}
                 storageKey={`sc.ex.navsidebar.${open}`} hotkey={false} palette={false} label="Örnek kenar çubuğu" /> }}
           </div>
           <Log lines={lines} />
@@ -134,7 +134,7 @@ export default examples({
         const round = signal(0), closed = signal(0)
         return <div class="sc-ex-ui-c-stack">
           {() => { round(); const dismissable = p.values.dismissable
-            return <Notice tone={() => p.values.tone} title="Acme raporu hazır" dismissable={dismissable} onDismiss={() => closed.update((x) => x + 1)}>Haftalık özet e-posta ile de gönderildi.</Notice> }}
+            return <Notice tone={() => p.values.tone} title="HADİ raporu hazır" dismissable={dismissable} onDismiss={() => closed.update((x) => x + 1)}>Haftalık özet e-posta ile de gönderildi.</Notice> }}
           <Row><Button variant="ghost" onClick={() => round.update((x) => x + 1)}>Yeniden göster</Button><Out label="kapatıldı" value={closed} /></Row>
         </div>
       },
@@ -163,7 +163,7 @@ export default examples({
       run: (p: { values: { trigger: "hover" | "focus" | "always"; mode: "bounce" | "loop" | "once" } }) => <div class="sc-ex-ui-c-stack sc-ex-ui-c-narrow">
         {() => { const trigger = p.values.trigger, mode = p.values.mode
           return <div class="sc-ex-ui-c-stack">
-            <Button><OverflowText text="Acme_2026_yillik_faaliyet_raporu_son_hali.pdf" trigger={trigger} mode={mode} /></Button>
+            <Button><OverflowText text="HADİ_2026_yillik_faaliyet_raporu_son_hali.pdf" trigger={trigger} mode={mode} /></Button>
             <Button variant="ghost"><OverflowText text="Kısa ad.pdf" trigger={trigger} mode={mode} /></Button>
           </div> }}
         <p class="hm-muted">Uzun ad kırpılır ve kayar; kısa ad sabit kalır.</p>

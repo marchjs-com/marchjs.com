@@ -19,7 +19,7 @@ toast("Kaydedildi", { kind: "success" })`,
       play: { options: [{ key: "kind", label: "Tür", default: "success", options: [{ value: "info", label: "bilgi" }, { value: "success", label: "başarı" }, { value: "warn", label: "uyarı" }] }, { key: "action", label: "Geri al eylemi", default: false }] },
       run: (p: { values: { kind: string; action: boolean } }) => {
         const n = signal(0)
-        const show = () => { n.update((x) => x + 1); toast(`Acme belgesi kaydedildi (#${n.peek()})`, { kind: p.values.kind as "info", timeout: 5000, action: p.values.action ? { label: "Geri al", run: () => n.update((x) => x - 1) } : undefined }) }
+        const show = () => { n.update((x) => x + 1); toast(`HADİ belgesi kaydedildi (#${n.peek()})`, { kind: p.values.kind as "info", timeout: 5000, action: p.values.action ? { label: "Geri al", run: () => n.update((x) => x - 1) } : undefined }) }
         return <div class="sc-ex-stack">
           <Row><Button variant="primary" onClick={show}>Bildirim göster</Button><Button variant="ghost" onClick={() => toast.clear()}>Hepsini kapat</Button><Out label="açık" value={() => toast.list().length} /></Row>
           <div class="sc-ex-ui-d-toasts"><ToastHost /></div>
@@ -76,7 +76,7 @@ toast("Kaydedildi", { kind: "success" })`,
   schema={{ type: "object", properties: { port: { type: "integer", minimum: 1 } } }} />`,
       play: { options: [{ key: "search", label: "Arama kutusu", default: false }, { key: "readonly", label: "Salt okunur", default: false }, { key: "expand", label: "Açık seviye", default: 1, options: [0, 1, 2] }] },
       run: (p: { values: { search: boolean; readonly: boolean; expand: number } }) => {
-        const config = signal<unknown>({ name: "acme-api", port: 8080, debug: false, hosts: ["acme.test", "api.acme.test"] })
+        const config = signal<unknown>({ name: "hadi-api", port: 8080, debug: false, hosts: ["hadisosyal.com", "api.hadisosyal.com"] })
         const sch = { type: "object", required: ["name", "port"], properties: { name: { type: "string", minLength: 2 }, port: { type: "integer", minimum: 1, maximum: 65535 }, debug: { type: "boolean" }, hosts: { type: "array", items: { type: "string" } } } }
         return <div class="sc-ex-stack">
           {() => { const { search, readonly, expand } = p.values; return <TreeEditor label="Ayarlar" value={config} schema={sch as never} search={search} readonly={readonly} expand={expand} /> }}
@@ -93,7 +93,7 @@ toast("Kaydedildi", { kind: "success" })`,
         const flip = (name: string) => typing.update((l) => (l.includes(name) ? l.filter((x) => x !== name) : [...l, name]))
         return <div class="sc-ex-stack">
           <TypingIndicator names={typing} variant={() => p.values.variant as "inline"} text={() => p.values.text} />
-          <Row>{["Ada", "Linus", "Grace", "Acme"].map((n) => <Button size="sm" variant={() => (typing().includes(n) ? "secondary" : "ghost")} aria-pressed={() => String(typing().includes(n))} onClick={() => flip(n)}>{n}</Button>)}</Row>
+          <Row>{["Ada", "Linus", "Grace", "HADİ"].map((n) => <Button size="sm" variant={() => (typing().includes(n) ? "secondary" : "ghost")} aria-pressed={() => String(typing().includes(n))} onClick={() => flip(n)}>{n}</Button>)}</Row>
         </div>
       },
     },
@@ -103,33 +103,33 @@ toast("Kaydedildi", { kind: "success" })`,
       play: { options: [{ key: "custom", label: "Özel metin", default: false }] },
       run: (p: { values: { custom: boolean } }) => {
         // a local stand-in for the server: only this example's URL is answered here, every other request goes on as usual
-        const URL_ = "acme-build-demo.txt", build = signal(1), reloads = signal(0)
+        const URL_ = "hadi-build-demo.txt", build = signal(1), reloads = signal(0)
         const real = globalThis.fetch
-        const fake = ((input: RequestInfo | URL, init?: RequestInit) => (String(input).endsWith(URL_) ? Promise.resolve(new Response(`acme-${build.peek()}`)) : real.call(globalThis, input, init))) as typeof fetch
+        const fake = ((input: RequestInfo | URL, init?: RequestInit) => (String(input).endsWith(URL_) ? Promise.resolve(new Response(`hadi-${build.peek()}`)) : real.call(globalThis, input, init))) as typeof fetch
         globalThis.fetch = fake
         onCleanup(() => { if (globalThis.fetch === fake) globalThis.fetch = real })
         return <div class="sc-ex-stack">
-          <Row><Button variant="primary" onClick={() => build.update((x) => x + 1)}>Yeni sürüm yayınla</Button><Out label="sunucudaki sürüm" value={() => `acme-${build()}`} /><Out label="yenileme" value={reloads} /></Row>
+          <Row><Button variant="primary" onClick={() => build.update((x) => x + 1)}>Yeni sürüm yayınla</Button><Out label="sunucudaki sürüm" value={() => `hadi-${build()}`} /><Out label="yenileme" value={reloads} /></Row>
           <p class="hm-muted">Sekme sürümü 6 sn'de bir denetler.</p>
-          <UpdateBanner url={URL_} every={0.1} text={() => (p.values.custom ? "Acme 2.1 hazır: yeni panolar geldi" : undefined)}
+          <UpdateBanner url={URL_} every={0.1} text={() => (p.values.custom ? "HADİ 2.1 hazır: yeni panolar geldi" : undefined)}
             reloadText={() => (p.values.custom ? "Şimdi geç" : undefined)} onReload={() => reloads.update((x) => x + 1)} />
         </div>
       },
     },
     UrlInput: {
-      code: `<UrlInput value={site} placeholder="https://acme.test" />   // url keyboard, trimmed`,
+      code: `<UrlInput value={site} placeholder="https://hadisosyal.com" />   // url keyboard, trimmed`,
       play: { options: [{ key: "affix", label: "Ön ek", default: false }, { key: "readonly", label: "Salt okunur", default: false }] },
       run: (p: { values: { affix: boolean; readonly: boolean } }) => {
-        const site = signal("https://acme.test/blog")
+        const site = signal("https://hadisosyal.com/blog")
         const host = () => { try { return new URL(site()).host } catch { return "geçersiz" } }
         return <div class="sc-ex-stack">
           {() => { const { affix, readonly } = p.values; return <UrlInput aria-label="Web sitesi" value={site} prefix={affix ? "URL" : undefined} readonly={readonly} /> }}
-          <Row><Out label="alan adı" value={host} /><Button size="sm" variant="ghost" onClick={() => site.set("  https://docs.acme.test  ")}>Boşluklu adres</Button></Row>
+          <Row><Out label="alan adı" value={host} /><Button size="sm" variant="ghost" onClick={() => site.set("  https://docs.hadisosyal.com  ")}>Boşluklu adres</Button></Row>
         </div>
       },
     },
     UserMenu: {
-      code: `<UserMenu name="Ada" detail="ada@acme.test" items={[
+      code: `<UserMenu name="Ada" detail="ada@hadisosyal.com" items={[
   { label: "Profil", onSelect: openProfile }, "-", { label: "Çıkış yap", danger: true, onSelect: signOut },
 ]} />`,
       play: { options: [{ key: "compact", label: "Yalnız avatar", default: false }, { key: "detail", label: "Ayrıntı satırı", default: true }] },
@@ -138,7 +138,7 @@ toast("Kaydedildi", { kind: "success" })`,
         const pick = (l: string) => () => log.update((x) => [...x.slice(-3), `${now()} ${l}`])
         const items = [{ label: "Profil", onSelect: pick("profil açıldı") }, { label: "Ayarlar", onSelect: pick("ayarlar açıldı") }, "-" as const, { label: "Çıkış yap", danger: true, onSelect: pick("çıkış yapıldı") }]
         return <div class="sc-ex-stack">
-          {() => { const { detail, compact } = p.values; return <UserMenu name="Ada" detail={detail ? "ada@acme.test" : undefined} items={items} compact={compact} placement="bottom-start" /> }}
+          {() => { const { detail, compact } = p.values; return <UserMenu name="Ada" detail={detail ? "ada@hadisosyal.com" : undefined} items={items} compact={compact} placement="bottom-start" /> }}
           <Log lines={log} />
         </div>
       },
@@ -150,7 +150,7 @@ price.provide({ id: "card", order: 1, render: (i, ctx) => <Card>{fmt(i.amount)} 
       play: { options: [{ key: "card", label: "Kart sağlayıcısı", default: true }, { key: "action", label: "Eylem sağlayıcısı", default: true }] },
       run: (p: { values: { card: boolean; action: boolean } }) => {
         type In = { amount: () => number }
-        const point = widgetPoint<In>("acme-price-example", { defaults: [{ id: "plain", render: (i) => <span>{() => `${i.amount()} TL`}</span> }] })
+        const point = widgetPoint<In>("hadi-price-example", { defaults: [{ id: "plain", render: (i) => <span>{() => `${i.amount()} TL`}</span> }] })
         const amount = signal(1499), copied = signal(0)
         effect(() => { if (p.values.card) untrack(() => point.provide({ id: "card", order: 1, render: (i, ctx) => <div class="sc-ex-ui-d-price"><strong>{() => tl(i.amount())}</strong><Badge tone="success">KDV dahil</Badge>{ctx.actions()}</div> })) })
         effect(() => { if (p.values.action) untrack(() => point.provide({ id: "copy", slot: "action", render: () => <Button size="sm" variant="ghost" onClick={() => copied.update((x) => x + 1)}>Kopyala</Button> })) })
@@ -170,11 +170,11 @@ price.provide({ id: "card", order: 1, render: (i, ctx) => <Card>{fmt(i.amount)} 
         const result = signal("—"), step = signal(0)
         const steps = () => [
           { title: "E-posta", schema: schema({ email: { type: "email", label: "E-posta", required: true } }),
-            validate: p.values.check ? (v: Record<string, unknown>) => (String(v["email"] ?? "").endsWith("@acme.test") ? null : { email: "Yalnız @acme.test adresleri" }) : undefined },
+            validate: p.values.check ? (v: Record<string, unknown>) => (String(v["email"] ?? "").endsWith("@hadisosyal.com") ? null : { email: "Yalnız @hadisosyal.com adresleri" }) : undefined },
           { title: "Konular", schema: schema({ weekly: { type: "bool", label: "Haftalık özet", control: "switch" }, product: { type: "bool", label: "Ürün haberleri", control: "switch" } }) },
         ]
         return <div class="sc-ex-stack">
-          {() => { const color = p.values.color; return <Wizard color={color as ColorToken} steps={steps()} initial={{ email: "ada@acme.test" }} submitLabel="Abone ol"
+          {() => { const color = p.values.color; return <Wizard color={color as ColorToken} steps={steps()} initial={{ email: "ada@hadisosyal.com" }} submitLabel="Abone ol"
             onStep={(i: number) => step.set(i)} onSubmit={(v: Record<string, unknown>) => result.set(JSON.stringify(v))} /> }}
           <Row><Out label="adım" value={() => step() + 1} /><Out label="gönderilen" value={result} /></Row>
         </div>

@@ -64,7 +64,7 @@ morph(thumb, big, { mode: "scale" })         // same picture in two places: FLIP
         return <div class="sc-ex-motion-b-stack">
           <div class="sc-ex-motion-b-stage">
             <button type="button" class="hm-btn hm-btn-primary sc-ex-motion-b-src" ref={(el: HTMLElement) => { src = el }} on:click={open}>Aç</button>
-            <div class="sc-ex-motion-b-panel" hidden ref={(el: HTMLElement) => { panel = el }}><strong>Acme Atölye</strong><span class="hm-muted">Kutu, düğmenin yerinden büyür.</span></div>
+            <div class="sc-ex-motion-b-panel" hidden ref={(el: HTMLElement) => { panel = el }}><strong>HADİ Atölye</strong><span class="hm-muted">Kutu, düğmenin yerinden büyür.</span></div>
           </div>
           <Row><Button variant="ghost" onClick={reset}>Sıfırla</Button></Row>
         </div>
@@ -82,7 +82,7 @@ dialog.hidden = true`,
         return <div class="sc-ex-motion-b-stack">
           <div class="sc-ex-motion-b-stage">
             <button type="button" class="hm-btn hm-btn-primary sc-ex-motion-b-src" ref={(el: HTMLElement) => { src = el }} on:click={open}>Aç</button>
-            <div class="sc-ex-motion-b-panel" ref={(el: HTMLElement) => { panel = el }}><strong>Acme Atölye</strong><span class="hm-muted">Kapatınca düğmeye geri çekilir.</span></div>
+            <div class="sc-ex-motion-b-panel" ref={(el: HTMLElement) => { panel = el }}><strong>HADİ Atölye</strong><span class="hm-muted">Kapatınca düğmeye geri çekilir.</span></div>
           </div>
           <Row><Button variant="primary" onClick={close}>Kapat</Button><Button variant="ghost" onClick={open}>Yeniden aç</Button></Row>
         </div>
@@ -346,12 +346,12 @@ at(0.5)   // { x, y, angle }: the point halfway along and its tangent in degrees
     },
     preset: {
       code: `installPresets()                                       // fadeIn, zoomIn, pop …
-preset("acme-pop", "zoomIn", { duration: 400, easing: "spring" })
-animate(card, "acme-pop")                              // by name, anywhere`,
+preset("hadi-pop", "zoomIn", { duration: 400, easing: "spring" })
+animate(card, "hadi-pop")                              // by name, anywhere`,
       run: () => {
         installPresets()
         const ez = signal("spring")
-        return <Replay label="acme-pop oynat" run={(box, keep) => { preset("acme-pop", "zoomIn", { duration: 500, easing: ez.peek() }); keep(animate(box, "acme-pop")) }}>
+        return <Replay label="hadi-pop oynat" run={(box, keep) => { preset("hadi-pop", "zoomIn", { duration: 500, easing: ez.peek() }); keep(animate(box, "hadi-pop")) }}>
           <Pick sig={ez} label="Eğri" options={["spring", "bounce", "out"]} />
         </Replay>
       },

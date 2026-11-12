@@ -18,7 +18,7 @@ const example: ApiExample<any> = {
           {() => (items().length
             ? <div class="sc-ex-stack">{items().map((x) => <Row><Icon of={fileText} /> {x}</Row>)}<Button size="sm" variant="ghost" onClick={() => items.set([])}>Temizle</Button></div>
             : <Empty icon={p.values.icon ? inbox : undefined} title="Henüz rapor yok"
-              action={p.values.action ? <Button variant="primary" onClick={() => items.set(["Acme · Ekim raporu", "Acme · Kasım raporu"])}>Örnek rapor ekle</Button> : undefined}>
+              action={p.values.action ? <Button variant="primary" onClick={() => items.set(["HADİ · Ekim raporu", "HADİ · Kasım raporu"])}>Örnek rapor ekle</Button> : undefined}>
               Oluşturduğun raporlar burada listelenir.
             </Empty>)}
         </div>

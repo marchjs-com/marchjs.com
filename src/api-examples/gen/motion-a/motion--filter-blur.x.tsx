@@ -10,7 +10,7 @@ const example: ApiExample<any> = {
       code: `filterBlur(title, { from: 16, axis: "x", duration: 800 })   // a motion blur settling to sharp`,
       play: { options: [{ key: "axis", label: "Eksen", default: "x", options: ["both", "x", "y"] }, { key: "from", label: "Bulanıklık", default: 16, options: [8, 16, 32] }] },
       run: (p: { values: { axis: string; from: number } }) => {
-        const title = el(<h3>Acme</h3>)
+        const title = el(<h3>HADİ</h3>)
         const host = el(<div>{title}</div>)
         return <Stage start={() => { title.style.filter = ""; host.querySelectorAll("svg").forEach((s) => s.remove()); return filterBlur(title, { from: p.values.from, axis: p.values.axis as "x", duration: 900 }) }}>{host}</Stage>
       },

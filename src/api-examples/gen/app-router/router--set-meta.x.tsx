@@ -8,13 +8,13 @@ import type { ApiExample } from "../../types.ts";
 import "../../app.css";
 
 const example: ApiExample<any> = {
-      code: `setMeta({ title: "Sipariş 42 · Acme", description: "Sipariş ayrıntısı" })`,
+      code: `setMeta({ title: "Sipariş 42 · HADİ", description: "Sipariş ayrıntısı" })`,
       run: () => {
         const prev = document.title, title = signal(document.title)
         onCleanup(() => setMeta({ title: prev }))
         const set = (v: string) => { setMeta({ title: v }); title.set(document.title) }
         return <Row>
-          <Button onClick={() => set("Sipariş 42 · Acme")}>Başlığı değiştir</Button>
+          <Button onClick={() => set("Sipariş 42 · HADİ")}>Başlığı değiştir</Button>
           <Button variant="ghost" onClick={() => set(prev)}>Geri al</Button>
           <Out label="document.title" value={title} />
         </Row>

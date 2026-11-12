@@ -19,7 +19,7 @@ h.canUndo()   // reactive`,
         const TAGS = ["acil", "satış", "destek", "arşiv"]
         return <div class="sc-ex-app-stack"><Row>
           <Button onClick={() => doc.tags.push(TAGS[doc.tags.length % TAGS.length]!)}>Etiket ekle</Button>
-          <Button onClick={() => { doc.title = doc.title === "Taslak" ? "Teklif · Acme" : "Taslak" }}>Başlığı değiştir</Button>
+          <Button onClick={() => { doc.title = doc.title === "Taslak" ? "Teklif · HADİ" : "Taslak" }}>Başlığı değiştir</Button>
           <Button variant="secondary" disabled={() => !hist.canUndo()} onClick={() => hist.undo()}>Geri al</Button>
           <Button variant="secondary" disabled={() => !hist.canRedo()} onClick={() => hist.redo()}>Yinele</Button>
         </Row><Out label="doc" value={() => json({ title: doc.title, tags: [...doc.tags] })} /></div>

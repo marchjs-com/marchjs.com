@@ -7,14 +7,14 @@ import type { ApiExample } from "../../types.ts";
 import "../../ui-b.css";
 
 const example: ApiExample<any> = {
-      code: `<Field label="E-posta"><EmailInput bind:value={$mail} placeholder="ad@acme.test" /></Field>
+      code: `<Field label="E-posta"><EmailInput bind:value={$mail} placeholder="ad@hadisosyal.com" /></Field>
 // type="email", autocomplete="email", inputmode="email", the value trimmed`,
       play: { options: [{ key: "disabled", label: "Devre dışı", default: false }] },
       run: (p: { values: { disabled: boolean } }) => {
-        const mail = signal("  ada@acme.test ")
+        const mail = signal("  ada@hadisosyal.com ")
         const ok = () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail())
         return <div class="sc-ex-stack">
-          {() => { const d = p.values.disabled; return <Field label="E-posta" help="Baştaki ve sondaki boşluklar silinir"><EmailInput value={mail} disabled={d} placeholder="ad@acme.test" /></Field> }}
+          {() => { const d = p.values.disabled; return <Field label="E-posta" help="Baştaki ve sondaki boşluklar silinir"><EmailInput value={mail} disabled={d} placeholder="ad@hadisosyal.com" /></Field> }}
           <Row><Out label="Değer" value={() => JSON.stringify(mail())} /><Badge tone={() => (ok() ? "success" : "danger")}>{() => (ok() ? "geçerli" : "geçersiz")}</Badge></Row>
         </div>
       },

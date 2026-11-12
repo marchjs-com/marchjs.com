@@ -14,7 +14,7 @@ const example: ApiExample<any> = {
       play: { options: [{ key: "nav", label: "İleri / geri düğmeleri", default: true }, { key: "vertical", label: "Dikey", default: false }] },
       run: (p: { values: { nav: boolean; vertical: boolean } }) => {
         const step = signal(0), done = signal("—")
-        const panels = [<p>Sepette 2 ürün: {tl(840)}</p>, <p>Teslimat: Acme Sok. 12, İstanbul</p>, <p>Kartla ödeme, 3 taksit</p>]
+        const panels = [<p>Sepette 2 ürün: {tl(840)}</p>, <p>Teslimat: HADİ Sok. 12, İstanbul</p>, <p>Kartla ödeme, 3 taksit</p>]
         return <div class="sc-ex-stack">
           {() => { const { nav, vertical } = p.values; return <Stepper steps={[{ title: "Sepet" }, { title: "Adres" }, { title: "Ödeme" }]} current={step} onSelect={(i: number) => step.set(i)}
             panels={panels} nav={nav} vertical={vertical} finishLabel="Siparişi ver" onFinish={() => done.set(now())} /> }}

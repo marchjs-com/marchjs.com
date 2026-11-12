@@ -142,11 +142,11 @@ await run(ctx)   // a → b → transport → b → a`,
       },
     },
     createNet: {
-      code: `const shop = createNet({ baseUrl: "https://api.acme.example", timeout: 5000 })
+      code: `const shop = createNet({ baseUrl: "https://api.hadisosyal.com", timeout: 5000 })
 shop.use(auth({ token }))
 await shop.get("/orders")`,
       run: () => {
-        const shop = createNet({ baseUrl: "https://api.acme.example", timeout: 5000 }), path = signal("/orders")
+        const shop = createNet({ baseUrl: "https://api.hadisosyal.com", timeout: 5000 }), path = signal("/orders")
         return <div class="sc-ex-stack"><Row><Text label="Yol" value={path} /></Row>
           <Out label="İstek adresi" value={() => shop.normalize({ url: path() }).url} />
           <Row><Out label="Taşıyıcılar" value={[...shop.transports.keys()].join(", ")} /><Out label="timeout" value={`${shop.config.timeout} ms`} /></Row></div>
@@ -232,7 +232,7 @@ net.use(log({ out: (line) => panel.add(line), filter: (ctx) => ctx.req.method !=
       },
     },
     ManagedSocket: {
-      code: `const chat = new ManagedSocket("wss://chat.acme.example/live")
+      code: `const chat = new ManagedSocket("wss://chat.hadisosyal.com/live")
 chat.subscribe("room:1", (m) => …)          // renewed after every reconnect
 const r = await chat.request({ type: "echo", text: "selam" })
 chat.state()   // "open" | "reconnecting" | …`,

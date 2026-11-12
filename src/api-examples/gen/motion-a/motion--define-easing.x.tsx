@@ -8,13 +8,13 @@ import type { ApiExample } from "../../types.ts";
 import "../../motion-a.css";
 
 const example: ApiExample<any> = {
-      code: `defineEasing("acme-snap", (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2))
-defineEasing("acme-soft", "cubic-bezier(.4, 0, .2, 1)")
-animate(ball, frames, { easing: "acme-snap" })`,
-      play: { options: [{ key: "name", label: "Eğri", default: "acme-snap", options: ["acme-snap", "acme-soft"] }] },
+      code: `defineEasing("hadi-snap", (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2))
+defineEasing("hadi-soft", "cubic-bezier(.4, 0, .2, 1)")
+animate(ball, frames, { easing: "hadi-snap" })`,
+      play: { options: [{ key: "name", label: "Eğri", default: "hadi-snap", options: ["hadi-snap", "hadi-soft"] }] },
       run: (p: { values: { name: string } }) => {
-        defineEasing("acme-snap", (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2))
-        defineEasing("acme-soft", "cubic-bezier(.4, 0, .2, 1)")
+        defineEasing("hadi-snap", (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2))
+        defineEasing("hadi-soft", "cubic-bezier(.4, 0, .2, 1)")
         const l = lane()
         return <Stage start={() => animate(l.ball, l.frames(), { duration: 1000, easing: p.values.name })}
           extra={<><Out label="kayıtlı" value={() => String(easingNames().includes(p.values.name))} /><Out label="CSS" value={() => ease(p.values.name).css ?? "yalnız JS"} /></>}>{l.track}</Stage>

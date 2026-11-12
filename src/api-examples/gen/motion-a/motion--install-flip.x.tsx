@@ -12,7 +12,7 @@ const example: ApiExample<any> = {
 <For each={$items} key="id" animate>{(it) => <li>{it().name}</li>}</For>`,
       run: () => {
         installFlip()
-        const items = signal([{ id: 1, name: "Acme" }, { id: 2, name: "Ada" }, { id: 3, name: "Bora" }, { id: 4, name: "Cem" }])
+        const items = signal([{ id: 1, name: "HADİ" }, { id: 2, name: "Ada" }, { id: 3, name: "Bora" }, { id: 4, name: "Cem" }])
         const shuffle = () => items.update((l) => [...l].sort(() => Math.random() - 0.5))
         const add = () => items.update((l) => [...l, { id: Date.now(), name: `Yeni ${l.length + 1}` }])
         return <div class="sc-ex-motion-a"><div class="sc-ex-motion-a-stage"><ul class="sc-ex-motion-a-flip"><For each={items} key="id" animate>{(it: () => { name: string }) => <li>{it().name}</li>}</For></ul></div>

@@ -8,12 +8,12 @@ import type { ApiExample } from "../../types.ts";
 import "../../motion-a.css";
 
 const example: ApiExample<any> = {
-      code: `defineTransition("acmePop", (o) => [{ opacity: 0, transform: "scale(.6)" }, { opacity: 1, transform: "none" }])
-<If when={$open}><div transition:acmePop={{ duration: 300 }}>Acme</div></If>`,
+      code: `defineTransition("hadiPop", (o) => [{ opacity: 0, transform: "scale(.6)" }, { opacity: 1, transform: "none" }])
+<If when={$open}><div transition:hadiPop={{ duration: 300 }}>HADİ</div></If>`,
       run: () => {
-        defineTransition("acmePop", () => [{ opacity: 0, transform: "scale(.6)" }, { opacity: 1, transform: "none" }])
+        defineTransition("hadiPop", () => [{ opacity: 0, transform: "scale(.6)" }, { opacity: 1, transform: "none" }])
         const open = signal(true)
-        return <div class="sc-ex-motion-a"><div class="sc-ex-motion-a-stage"><If when={open}><div class="sc-ex-motion-a-card" transition:acmePop={{ duration: 320 }}>Acme</div></If></div>
+        return <div class="sc-ex-motion-a"><div class="sc-ex-motion-a-stage"><If when={open}><div class="sc-ex-motion-a-card" transition:hadiPop={{ duration: 320 }}>HADİ</div></If></div>
           <Row><Button size="sm" variant="secondary" onClick={() => open.update((x) => !x)}>{() => (open() ? "Kaldır" : "Göster")}</Button></Row></div>
       },
     };

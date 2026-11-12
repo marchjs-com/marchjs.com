@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
       play: { options: [{ key: "count", label: "Satır", default: 1000, options: [{ value: 100, label: "100" }, { value: 1000, label: "1.000" }, { value: 100000, label: "100.000" }] }, { key: "gap", label: "Aralık", default: 0, options: [{ value: 0, label: "0" }, { value: 6, label: "6 px" }] }] },
       run: (p: { values: { count: number; gap: number } }) => {
         const words = ["Teslimat yola çıktı.", "Fatura hazır, onayınızı bekliyor; ödeme vadesi ay sonu.", "Toplantı 14.00'e alındı.", "Yeni sipariş: 12 koli, Ege deposundan çıkacak ve iki gün içinde teslim edilecek."]
-        const items = computed(() => Array.from({ length: p.values.count }, (_, i) => ({ id: i, title: `#${i + 1} · Acme`, text: words[(i * 7) % words.length]! })))
+        const items = computed(() => Array.from({ length: p.values.count }, (_, i) => ({ id: i, title: `#${i + 1} · HADİ`, text: words[(i * 7) % words.length]! })))
         const reached = signal(0)
         return <div class="sc-ex-data-stack">
           {() => { const gap = p.values.gap; return untrack(() => <VirtualList class="sc-ex-data-vlist" label="Mesajlar" items={items} key={(m) => m.id} estimate={56} gap={gap} onEndReached={() => reached.update((x) => x + 1)}

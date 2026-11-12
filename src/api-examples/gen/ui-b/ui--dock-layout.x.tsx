@@ -27,7 +27,7 @@ const example: ApiExample<any> = {
           <Row><Button size="sm" onClick={() => dock?.open("log")}>Günlüğe geç</Button><Button size="sm" variant="ghost" onClick={() => dock?.reset()}>Yerleşimi sıfırla</Button></Row>
           <div class="sc-ex-ui-b-dock">{() => {
             const s = p.values.split
-            return <DockLayout panels={panels} label="Acme çalışma alanı" commands={false}
+            return <DockLayout panels={panels} label="HADİ çalışma alanı" commands={false}
               layout={s === "row" ? { row: [["files"], ["editor", "log"]], share: 0.32 } : { column: [["editor", "log"], ["files"]], share: 0.6 }} api={(a: DockApi) => (dock = a)} />
           }}</div>
         </div>

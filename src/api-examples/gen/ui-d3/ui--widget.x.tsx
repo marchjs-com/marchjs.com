@@ -14,7 +14,7 @@ price.provide({ id: "card", order: 1, render: (i, ctx) => <Card>{fmt(i.amount)} 
       play: { options: [{ key: "card", label: "Kart sağlayıcısı", default: true }, { key: "action", label: "Eylem sağlayıcısı", default: true }] },
       run: (p: { values: { card: boolean; action: boolean } }) => {
         type In = { amount: () => number }
-        const point = widgetPoint<In>("acme-price-example", { defaults: [{ id: "plain", render: (i) => <span>{() => `${i.amount()} TL`}</span> }] })
+        const point = widgetPoint<In>("hadi-price-example", { defaults: [{ id: "plain", render: (i) => <span>{() => `${i.amount()} TL`}</span> }] })
         const amount = signal(1499), copied = signal(0)
         effect(() => { if (p.values.card) untrack(() => point.provide({ id: "card", order: 1, render: (i, ctx) => <div class="sc-ex-ui-d-price"><strong>{() => tl(i.amount())}</strong><Badge tone="success">KDV dahil</Badge>{ctx.actions()}</div> })) })
         effect(() => { if (p.values.action) untrack(() => point.provide({ id: "copy", slot: "action", render: () => <Button size="sm" variant="ghost" onClick={() => copied.update((x) => x + 1)}>Kopyala</Button> })) })

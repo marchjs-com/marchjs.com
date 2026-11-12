@@ -71,7 +71,7 @@ export default examples({
           <Pick sig={mode} label="Başlangıç" options={[["press", "basılan nokta"], ["center", "ortadan"]]} />
           {() => { const o = { center: mode() === "center", duration: 700 }; return <div class="sc-ex-motion-b-stage">
             <button type="button" class="hm-btn hm-btn-primary" use:ripple={o}>Kaydet</button>
-            <div class="sc-ex-motion-b-card sc-ex-motion-b-ripple" tabindex="0" role="button" use:ripple={o}>Acme kartı</div>
+            <div class="sc-ex-motion-b-card sc-ex-motion-b-ripple" tabindex="0" role="button" use:ripple={o}>HADİ kartı</div>
           </div> }}
         </div>
       },

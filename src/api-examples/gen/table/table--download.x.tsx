@@ -18,8 +18,8 @@ const example: ApiExample<any> = {
         const cols = COLS.map((c) => column(c))
         return <div class="sc-ex-table-stack">
           <Row>
-            <Button onClick={() => save("acme-siparisler.csv", toCSV(ORDERS, cols, { formatted: true }), "text/csv;charset=utf-8")}>CSV indir</Button>
-            <Button variant="ghost" onClick={() => save("acme-siparisler.json", toJSON(ORDERS, cols), "application/json")}>JSON indir</Button>
+            <Button onClick={() => save("hadi-siparisler.csv", toCSV(ORDERS, cols, { formatted: true }), "text/csv;charset=utf-8")}>CSV indir</Button>
+            <Button variant="ghost" onClick={() => save("hadi-siparisler.json", toJSON(ORDERS, cols), "application/json")}>JSON indir</Button>
           </Row>
           <Log lines={log} />
         </div>

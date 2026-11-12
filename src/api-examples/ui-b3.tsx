@@ -20,7 +20,7 @@ export default examples({
         const value = signal<unknown>(null), log = useLog()
         const upload = async (file: File, ctx: { onProgress: (n: number) => void }) => {
           for (let i = 1; i <= 4; i++) { await wait(150); ctx.onProgress(i / 4) }
-          return `acme://dosya/${file.name}`
+          return `hadi://dosya/${file.name}`
         }
         return <div class="sc-ex-stack">
           {() => { const m = p.values.multiple, a = p.values.accept; return <FileUpload value={value} multiple={m} accept={a || undefined} maxSize={2_000_000} upload={upload}
@@ -31,13 +31,13 @@ export default examples({
       },
     },
     FollowButton: {
-      code: `<FollowButton state={() => $state} private={account.private} name="Acme"
+      code: `<FollowButton state={() => $state} private={account.private} name="HADİ"
   onChange={(next) => { $state = next; api.follow(account.id, next) }} />`,
       play: { options: [{ key: "private", label: "Gizli hesap", default: false }, { key: "size", label: "Boyut", default: "md", options: ["sm", "md"] }] },
       run: (p: { values: { private: boolean; size: "sm" | "md" } }) => {
         const state = signal<FollowState>("follow"), log = useLog()
         return <div class="sc-ex-stack">
-          <Row><strong>Acme</strong><FollowButton state={state} private={() => p.values.private} size={() => p.values.size} name="Acme" onChange={(n) => { state.set(n); log.push(n) }} /></Row>
+          <Row><strong>HADİ</strong><FollowButton state={state} private={() => p.values.private} size={() => p.values.size} name="HADİ" onChange={(n) => { state.set(n); log.push(n) }} /></Row>
           <Log lines={log.lines} />
         </div>
       },
@@ -52,7 +52,7 @@ export default examples({
         return <div class="sc-ex-stack">
           {() => { const l = p.values.layout, rd = p.values.requireDirty; return <Form schema={Profile} layout={l} cols={2} requireDirty={rd} initial={{ name: "Ada" }} cancel submitLabel="Kaydet"
             onSubmit={async (v: Record<string, unknown>) => { await wait(400); if (String(v.email).startsWith("taken")) throw Object.assign(new Error("Reddedildi"), { fieldErrors: { email: "Bu adres kayıtlı" } }); log.push(`gönderildi: ${v.name} · ${v.email} · ${v.team}`) }} /> }}
-          <p class="hm-muted">İpucu: "taken@acme.test" sunucu hatası verir.</p>
+          <p class="hm-muted">İpucu: "taken@hadisosyal.com" sunucu hatası verir.</p>
           <Log lines={log.lines} />
         </div>
       },
@@ -66,7 +66,7 @@ export default examples({
       run: (p: { values: { cancel: boolean; requireDirty: boolean } }) => {
         const log = useLog()
         return <div class="sc-ex-stack">
-          <Form schema={Profile} actions={false} initial={{ name: "Ada", email: "ada@acme.test" }} onSubmit={async (v: Record<string, unknown>) => { await wait(500); log.push(`kaydedildi: ${v.name}`) }}>
+          <Form schema={Profile} actions={false} initial={{ name: "Ada", email: "ada@hadisosyal.com" }} onSubmit={async (v: Record<string, unknown>) => { await wait(500); log.push(`kaydedildi: ${v.name}`) }}>
             <Field name="name" />
             {() => { const c = p.values.cancel, rd = p.values.requireDirty; return <FormActions cancel={c} requireDirty={rd} submitLabel="Kaydet" busyLabel="Kaydediliyor…"
               extra={<Button variant="ghost" onClick={() => log.push("taslak saklandı")}>Taslak</Button>} /> }}
@@ -89,7 +89,7 @@ export default examples({
             <Button size="sm" variant="ghost" onClick={() => form?.reset()}>Geri al</Button>
           </Row>
         }
-        return <Form schema={Profile} actions={false} initial={{ name: "Ada", email: "ada@acme.test" }}><Field name="email" /><Status /></Form>
+        return <Form schema={Profile} actions={false} initial={{ name: "Ada", email: "ada@hadisosyal.com" }}><Field name="email" /><Status /></Form>
       },
     },
   },

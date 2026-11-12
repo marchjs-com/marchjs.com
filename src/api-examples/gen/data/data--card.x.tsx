@@ -23,7 +23,7 @@ const example: ApiExample<any> = {
       run: (p: { values: { actions: boolean; footer: boolean; flush: boolean } }) => {
         const total = signal(48200)
         const refresh = action("Yenile", () => total.update((x) => x + Math.round(Math.random() * 900)), { icon: zap, success: false })
-        return () => { const { actions, footer, flush } = p.values; return <Card title="Aylık gelir" subtitle="Kasım · Acme" flush={flush}
+        return () => { const { actions, footer, flush } = p.values; return <Card title="Aylık gelir" subtitle="Kasım · HADİ" flush={flush}
           actions={actions ? [refresh] : undefined} footer={footer ? <span class="hm-muted">Son güncelleme: {now()}</span> : undefined}>
           <strong class="sc-ex-ui-a-big">{() => `₺${total().toLocaleString("tr-TR")}`}</strong>
         </Card> }

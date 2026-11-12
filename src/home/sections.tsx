@@ -120,7 +120,7 @@ function SocialPreview() {
   let $count = S.components
   return <div class="sc-pv sc-pv-social">
     <span class="sc-pv-avatar" aria-hidden="true">A</span>
-    <span class="sc-pv-post"><b>Acme</b><span class="hm-muted">Yeni sürüm yayında</span></span>
+    <span class="sc-pv-post"><b>HADİ</b><span class="hm-muted">Yeni sürüm yayında</span></span>
     <Button size="sm" variant={() => ($liked ? "primary" : "secondary")} icon={heart} aria-pressed={() => String($liked)} label="Beğen"
       onClick={() => { $liked = !$liked; $count += $liked ? 1 : -1 }}>
       <CountRoll value={() => $count} format="full" />

@@ -47,9 +47,9 @@ export default examples({
       run: (p: { values: { lang: "ts" | "css" | "json"; lineNumbers: boolean; wrap: boolean } }) => {
         const n = signal(2)
         const SRC = {
-          ts: () => `const team = signal(${n()})\nexport const seats = computed(() => team() * 12) // Acme koltuk hesabı, uzun bir satır yorumu`,
-          css: () => `.acme-card {\n  padding: var(--hm-space-${n()});\n  border-radius: var(--hm-radius);\n}`,
-          json: () => JSON.stringify({ name: "acme", seats: n() * 12, plan: "pro" }, null, 2),
+          ts: () => `const team = signal(${n()})\nexport const seats = computed(() => team() * 12) // HADİ koltuk hesabı, uzun bir satır yorumu`,
+          css: () => `.hadi-card {\n  padding: var(--hm-space-${n()});\n  border-radius: var(--hm-radius);\n}`,
+          json: () => JSON.stringify({ name: "hadi", seats: n() * 12, plan: "pro" }, null, 2),
         }
         return <div class="sc-ex-stack">
           {() => { const { lang, lineNumbers, wrap } = p.values; return <CodeView code={SRC[lang]} lang={lang} lineNumbers={lineNumbers} wrap={wrap} label="Örnek kod" /> }}
@@ -62,8 +62,8 @@ export default examples({
 // the default "viewer" provider of the codeView widget point`,
       play: { options: [{ key: "files", label: "Ek dosyalar", default: true }] },
       run: (p: { values: { files: boolean } }) => () => CodeViewer({
-        source: `export function Hello() {\n  return <p class="hello">Merhaba, Acme</p>\n}`, lang: "tsx",
-        files: p.values.files ? [{ name: "hello.css", source: `.hello { color: var(--hm-primary-text); }`, lang: "css" }, { name: "data.json", source: `{ "name": "Acme" }`, lang: "json" }] : [],
+        source: `export function Hello() {\n  return <p class="hello">Merhaba, HADİ</p>\n}`, lang: "tsx",
+        files: p.values.files ? [{ name: "hello.css", source: `.hello { color: var(--hm-primary-text); }`, lang: "css" }, { name: "data.json", source: `{ "name": "HADİ" }`, lang: "json" }] : [],
       }),
     },
     ColorInput: {
@@ -88,7 +88,7 @@ export default examples({
         const color = signal("#78be3a")
         return <div class="sc-ex-stack">
           {() => { const { format, alpha, palettes } = p.values; return <ColorPicker value={color} format={format} alpha={alpha} recent={0} eyedropper={false}
-            palettes={palettes ? [{ label: "Acme", colors: ["#f2801f", "#1d9ad6", "#78be3a", "#a3338c"] }] : false} aria-label="Renk" /> }}
+            palettes={palettes ? [{ label: "HADİ", colors: ["#f2801f", "#1d9ad6", "#78be3a", "#a3338c"] }] : false} aria-label="Renk" /> }}
           <Out label="value" value={color} />
         </div>
       },
@@ -114,7 +114,7 @@ export default examples({
     },
     CommandPalette: {
       code: `<CommandPalette placeholder="Komut ya da sayfa…" limit={20}
-  commands={[{ id: "acme.invite", title: "Kişi davet et", group: "Ekip", run: invite }]}
+  commands={[{ id: "hadi.invite", title: "Kişi davet et", group: "Ekip", run: invite }]}
   onRun={(entry) => analytics.track(entry.id)} />`,
       play: { options: [{ key: "set", label: "Komutlar", default: "doc", options: [{ value: "doc", label: "belge" }, { value: "view", label: "görünüm" }] }] },
       run: (p: { values: { set: string } }) => {
@@ -123,7 +123,7 @@ export default examples({
         type Cmd = { id: string; title: string; group: string; icon: unknown; keywords?: string; run: () => void }
         const SETS: Record<string, Cmd[]> = {
           doc: [
-            { id: "ex.ui-a.new", title: "Yeni Acme belgesi", group: "Bu örnek", icon: fileText, run: () => log("yeni belge") },
+            { id: "ex.ui-a.new", title: "Yeni HADİ belgesi", group: "Bu örnek", icon: fileText, run: () => log("yeni belge") },
             { id: "ex.ui-a.star", title: "Belgeyi yıldızla", group: "Bu örnek", icon: star, keywords: "favori", run: () => log("yıldızlandı") },
           ],
           view: [
@@ -144,7 +144,7 @@ export default examples({
       play: { options: [{ key: "iconOnly", label: "Yalnız ikon", default: false }] },
       run: (p: { values: { iconOnly: boolean } }) => {
         const team = signal("tasarim"), copies = signal(0)
-        const link = () => `https://acme.example/davet/${team()}`
+        const link = () => `https://hadisosyal.com/davet/${team()}`
         return <div class="sc-ex-stack">
           <Row><code class="sc-ex-val">{link}</code>{() => <CopyButton text={link} iconOnly={p.values.iconOnly} label="Bağlantıyı kopyala" onCopy={() => copies.update((x) => x + 1)} />}</Row>
           <Row>

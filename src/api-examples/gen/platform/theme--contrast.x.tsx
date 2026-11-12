@@ -17,7 +17,7 @@ const example: ApiExample<any> = {
         return <Stack>
           <Row><span>Metin</span><Segmented value={fg} options={opts} aria-label="Metin rengi" /></Row>
           <Row><span>Zemin</span><Segmented value={bg} options={[{ value: HADI.mist, label: "mist" }, { value: HADI.night, label: "night" }, ...opts.slice(0, 2)]} aria-label="Zemin rengi" /></Row>
-          <Row><span class="sc-ex-platform-sw" style={() => ({ color: fg(), background: bg() })}>Acme 42</span>
+          <Row><span class="sc-ex-platform-sw" style={() => ({ color: fg(), background: bg() })}>HADİ 42</span>
             <Out label="oran" value={() => contrast(fg(), bg()).toFixed(2)} />
             {() => <Badge tone={contrast(fg(), bg()) >= 4.5 ? "success" : "warn"}>{contrast(fg(), bg()) >= 4.5 ? "AA geçer" : "AA altı"}</Badge>}</Row>
         </Stack>

@@ -17,7 +17,7 @@ const example: ApiExample<any> = {
         return <div class="sc-ex-stack">
           <Tabs label="Posta">
             <Tab id="inbox" label="Gelen" badge={() => (p.values.badge ? unread() : null)}>{() => <Row><span>{() => `${unread()} okunmamış ileti`}</span><Button size="sm" disabled={() => !unread()} onClick={() => unread.update((x) => x - 1)}>Birini oku</Button></Row>}</Tab>
-            <Tab id="sent" label="Giden">{() => <p>Son gönderilen: Acme teklifi</p>}</Tab>
+            <Tab id="sent" label="Giden">{() => <p>Son gönderilen: HADİ teklifi</p>}</Tab>
             <Tab id="archive" label="Arşiv" hidden={() => !p.values.archive}>{() => <p>Arşivde 128 ileti</p>}</Tab>
           </Tabs>
           <Button size="sm" variant="ghost" onClick={() => unread.update((x) => x + 1)}>Yeni ileti gelsin</Button>

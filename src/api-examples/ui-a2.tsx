@@ -34,7 +34,7 @@ export default examples({
           {() => <ButtonGroup label="Hizalama" attached={p.values.attached}>
             {OPTS.map(([v, l]) => <Button variant={() => (align() === v ? "primary" : "secondary")} aria-pressed={() => String(align() === v)} onClick={() => align.set(v)}>{l}</Button>)}
           </ButtonGroup>}
-          <p class="sc-ex-ui-a-align" style={() => `text-align: ${align()}`}>Acme bülteni · Kasım</p>
+          <p class="sc-ex-ui-a-align" style={() => `text-align: ${align()}`}>HADİ bülteni · Kasım</p>
         </div>
       },
     },
@@ -119,7 +119,7 @@ export default examples({
       },
     },
     ChatThread: {
-      code: `<ChatThread label="Acme destek" messages={messages} typing={typing}
+      code: `<ChatThread label="HADİ destek" messages={messages} typing={typing}
   onRetry={(m) => resend(m)} runMinutes={5} />`,
       play: { options: [
         { key: "group", label: "Grup sohbeti", default: false },
@@ -129,13 +129,13 @@ export default examples({
         type Msg = { id: string; text: string; mine?: boolean; time: number; status?: "sending" | "sent" | "delivered" | "read" | "failed"; senderId?: string; senderName?: string }
         const messages = signal<Msg[]>([
           { id: "1", text: "Merhaba, siparişim nerede?", mine: true, time: ago(9), status: "read" },
-          { id: "2", text: "Kargoya verildi, yarın elinizde.", time: ago(8), senderId: "s", senderName: "Acme Destek" },
+          { id: "2", text: "Kargoya verildi, yarın elinizde.", time: ago(8), senderId: "s", senderName: "HADİ Destek" },
           { id: "3", text: "Harika, teşekkürler!", mine: true, time: ago(2), status: "failed" },
         ])
         let id = 4
         const retry = (m: { id: string }) => messages.update((l) => l.map((x) => (x.id === m.id ? { ...x, status: "read" as const } : x)))
         return <div class="sc-stack sc-ex-ui-a-thread">
-          <ChatThread label="Acme destek" messages={messages} group={() => p.values.group} typing={() => (p.values.typing ? ["Acme Destek"] : [])} onRetry={retry} runMinutes={5} />
+          <ChatThread label="HADİ destek" messages={messages} group={() => p.values.group} typing={() => (p.values.typing ? ["HADİ Destek"] : [])} onRetry={retry} runMinutes={5} />
           <Row>
             <Button size="sm" onClick={() => messages.update((l) => [...l, { id: String(id++), text: "Başka bir sorum var.", mine: true, time: Date.now(), status: "sent" }])}>Mesaj ekle</Button>
             <span class="hm-muted">Gitmeyen mesajda "yeniden dene"ye basın.</span>
@@ -185,7 +185,7 @@ export default examples({
         { key: "size", label: "Boyut", default: "sm", options: ["sm", "md"] },
       ] },
       run: (p: { values: { tone: "neutral" | "primary" | "success" | "info"; size: "sm" | "md" } }) => {
-        const tags = signal(["tasarım", "ürün", "acme"])
+        const tags = signal(["tasarım", "ürün", "hadi"])
         const draft = signal("")
         const add = (e: Event) => { e.preventDefault(); const v = draft().trim(); if (v && !tags().includes(v)) tags.update((l) => [...l, v]); draft.set("") }
         return <div class="sc-ex-stack">

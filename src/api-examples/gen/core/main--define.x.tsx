@@ -6,10 +6,10 @@ import { Button } from "hadi-march/ui";
 import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
-      code: `define("acme-greet", (p) => <b>Merhaba {p.name ?? "dünya"}</b>, { props: ["name"] })
-// <acme-greet name="Ada"></acme-greet>`,
+      code: `define("hadi-greet", (p) => <b>Merhaba {p.name ?? "dünya"}</b>, { props: ["name"] })
+// <hadi-greet name="Ada"></hadi-greet>`,
       run: () => {
-        const tag = "acme-greet-demo"
+        const tag = "hadi-greet-demo"
         if (!customElements.get(tag)) define<"name">(tag, (p) => <strong>Merhaba, {() => p.name ?? "dünya"}</strong>, { props: ["name"] })
         const el = document.createElement(tag)
         const names = ["Ada", "Grace", "Linus"]

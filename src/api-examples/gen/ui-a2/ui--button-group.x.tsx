@@ -18,7 +18,7 @@ const example: ApiExample<any> = {
           {() => <ButtonGroup label="Hizalama" attached={p.values.attached}>
             {OPTS.map(([v, l]) => <Button variant={() => (align() === v ? "primary" : "secondary")} aria-pressed={() => String(align() === v)} onClick={() => align.set(v)}>{l}</Button>)}
           </ButtonGroup>}
-          <p class="sc-ex-ui-a-align" style={() => `text-align: ${align()}`}>Acme bülteni · Kasım</p>
+          <p class="sc-ex-ui-a-align" style={() => `text-align: ${align()}`}>HADİ bülteni · Kasım</p>
         </div>
       },
     };

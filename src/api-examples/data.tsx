@@ -154,7 +154,7 @@ can((a) => a.meta.plan === "pro")   // a predicate over access()`,
       run: () => {
         const mounts = signal(0), log = signal<string[]>([])
         const Reader = () => {
-          const q = query(() => { log.update((l) => [...l, `${now()} sunucuya gidildi`]); return wait(300).then(() => "Acme bakiye: ₺12.925") }, { key: "ex-clear-cache", staleTime: 60_000 })
+          const q = query(() => { log.update((l) => [...l, `${now()} sunucuya gidildi`]); return wait(300).then(() => "HADİ bakiye: ₺12.925") }, { key: "ex-clear-cache", staleTime: 60_000 })
           return <Out label="veri" value={() => (q.loading() ? "yükleniyor…" : q())} />
         }
         return <div class="sc-ex-data-stack">
@@ -389,7 +389,7 @@ setAccess(null)   // signed out`,
       play: { options: [{ key: "count", label: "Satır", default: 1000, options: [{ value: 100, label: "100" }, { value: 1000, label: "1.000" }, { value: 100000, label: "100.000" }] }, { key: "gap", label: "Aralık", default: 0, options: [{ value: 0, label: "0" }, { value: 6, label: "6 px" }] }] },
       run: (p: { values: { count: number; gap: number } }) => {
         const words = ["Teslimat yola çıktı.", "Fatura hazır, onayınızı bekliyor; ödeme vadesi ay sonu.", "Toplantı 14.00'e alındı.", "Yeni sipariş: 12 koli, Ege deposundan çıkacak ve iki gün içinde teslim edilecek."]
-        const items = computed(() => Array.from({ length: p.values.count }, (_, i) => ({ id: i, title: `#${i + 1} · Acme`, text: words[(i * 7) % words.length]! })))
+        const items = computed(() => Array.from({ length: p.values.count }, (_, i) => ({ id: i, title: `#${i + 1} · HADİ`, text: words[(i * 7) % words.length]! })))
         const reached = signal(0)
         return <div class="sc-ex-data-stack">
           {() => { const gap = p.values.gap; return untrack(() => <VirtualList class="sc-ex-data-vlist" label="Mesajlar" items={items} key={(m) => m.id} estimate={56} gap={gap} onEndReached={() => reached.update((x) => x + 1)}
@@ -434,7 +434,7 @@ setAccess(null)   // signed out`,
       run: (p: { values: { actions: boolean; footer: boolean; flush: boolean } }) => {
         const total = signal(48200)
         const refresh = action("Yenile", () => total.update((x) => x + Math.round(Math.random() * 900)), { icon: zap, success: false })
-        return () => { const { actions, footer, flush } = p.values; return <Card title="Aylık gelir" subtitle="Kasım · Acme" flush={flush}
+        return () => { const { actions, footer, flush } = p.values; return <Card title="Aylık gelir" subtitle="Kasım · HADİ" flush={flush}
           actions={actions ? [refresh] : undefined} footer={footer ? <span class="hm-muted">Son güncelleme: {now()}</span> : undefined}>
           <strong class="sc-ex-ui-a-big">{() => `₺${total().toLocaleString("tr-TR")}`}</strong>
         </Card> }
@@ -445,7 +445,7 @@ setAccess(null)   // signed out`,
       play: { options: [{ key: "open", label: "Açık derinlik", default: 1, options: [0, 1, 2, 3] }] },
       run: (p: { values: { open: number } }) => {
         const n = signal(1)
-        const data = () => ({ id: n(), name: "Acme", plan: { tier: "team", seats: 5 * n(), tags: ["beta", "eu"] }, active: n() % 2 === 1, owner: null })
+        const data = () => ({ id: n(), name: "HADİ", plan: { tier: "team", seats: 5 * n(), tags: ["beta", "eu"] }, active: n() % 2 === 1, owner: null })
         return <div class="sc-ex-stack">
           <Row><Button size="sm" onClick={() => n.update((x) => x + 1)}>Sonraki kayıt</Button></Row>
           {() => { const o = p.values.open; return <JsonView value={data} open={o} /> }}
@@ -481,7 +481,7 @@ setAccess(null)   // signed out`,
         return <div class="sc-ex-stack">
           <Row><Button size="sm" onClick={() => seats.update((n) => n + 1)}>Koltuk +1</Button><Button size="sm" variant="ghost" onClick={() => owner.update((o) => (o ? null : "Ada"))}>Sahibi değiştir</Button></Row>
           {() => { const c = p.values.columns; return <KeyValue columns={c} items={[
-            { label: "Kuruluş", value: "Acme" }, { label: "Plan", value: "Ekip" }, { label: "Koltuk", value: seats, hint: "en çok 50" },
+            { label: "Kuruluş", value: "HADİ" }, { label: "Plan", value: "Ekip" }, { label: "Koltuk", value: seats, hint: "en çok 50" },
             { label: "Sahibi", value: owner }, { label: "Bölge", value: "eu-west" }, { label: "Durum", value: () => (seats() > 15 ? "sınıra yakın" : "normal") },
           ]} /> }}
         </div>
@@ -490,7 +490,7 @@ setAccess(null)   // signed out`,
     Timeline: {
       code: `<Timeline items={[
   { time: order.createdAt, title: "Sipariş alındı", tone: "info" },
-  { time: "Bugün 14:20", title: "Kargoya verildi", body: "Takip no: ACME123", tone: "success" },
+  { time: "Bugün 14:20", title: "Kargoya verildi", body: "Takip no: HADI123", tone: "success" },
 ]} />`,
       play: { options: [{ key: "tones", label: "Renkli durumlar", default: true }, { key: "newest", label: "Yeni en üstte", default: false }] },
       run: (p: { values: { tones: boolean; newest: boolean } }) => {
@@ -498,7 +498,7 @@ setAccess(null)   // signed out`,
         const steps: [string, string][] = [["Sipariş alındı", "info"], ["Ödeme onaylandı", "success"], ["Kargoya verildi", "success"], ["Dağıtımda", "warn"], ["Teslim edildi", "success"]]
         const n = signal(2)
         const items = computed<TimelineItem[]>(() => {
-          const l = steps.slice(0, n()).map(([title, tone], i) => ({ time: base + i * 2400_000, title, tone: p.values.tones ? tone : "neutral", body: i === 2 ? "Takip no: ACME123" : undefined }))
+          const l = steps.slice(0, n()).map(([title, tone], i) => ({ time: base + i * 2400_000, title, tone: p.values.tones ? tone : "neutral", body: i === 2 ? "Takip no: HADI123" : undefined }))
           return p.values.newest ? l.reverse() : l
         })
         return <div class="sc-ex-stack">
@@ -583,7 +583,7 @@ Product.validate(values)   // { ok, errors: { price: "…" }, values }`,
           price: { type: "money", currency: "TRY", min: 1, label: "Fiyat" },
           email: { type: "email", label: "İletişim" },
         })
-        const values = signal<Record<string, string>>({ title: "Acme kupa", price: "0", email: "satis@acme" })
+        const values = signal<Record<string, string>>({ title: "HADİ kupa", price: "0", email: "satis@hadi" })
         const set = (k: string) => (v: string) => values.update((o) => ({ ...o, [k]: v }))
         const res = () => Product.validate(values())
         return <div class="sc-ex-data-stack">

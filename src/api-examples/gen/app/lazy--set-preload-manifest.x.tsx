@@ -9,7 +9,7 @@ import type { ApiExample } from "../../types.ts";
 import "../../app.css";
 
 const example: ApiExample<any> = {
-      code: `setPreloadManifest({ "src/pages/users.tsx": ["chunks/users-1.js", "chunks/users-1.css"] }, "https://cdn.acme.test/app/")`,
+      code: `setPreloadManifest({ "src/pages/users.tsx": ["chunks/users-1.js", "chunks/users-1.css"] }, "https://cdn.hadisosyal.com/app/")`,
       run: () => {
         const out = signal(json(chunksOf("demo/report.tsx")))
         // undefined (not part of the type): the next read takes the page's own manifest from index.html again

@@ -9,7 +9,7 @@ import type { ApiExample } from "../../types.ts";
 import "../../platform.css";
 
 const example: ApiExample<any> = {
-      code: `writeFileSync("dist/themes/acme.css", themeCss(acme))
+      code: `writeFileSync("dist/themes/hadi-marka.css", themeCss(hadiMarka))
 themeCss(hadi, true)   // the default also styles <html> without data-hm-theme`,
       run: () => {
         const id = signal("cream")

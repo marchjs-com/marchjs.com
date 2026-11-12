@@ -12,7 +12,7 @@ const example: ApiExample<any> = {
 animate(card, frames, timing)`,
       play: { options: [{ key: "name", label: "Hazır", default: "shake", options: ["fadeUp", "pop", "shake", "wobble", "bounceIn", "flipIn", "blurIn", "pulse"] }] },
       run: (p: { values: { name: keyof typeof PRESETS } }) => {
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         return <Stage start={() => { const [frames, timing] = PRESETS[p.values.name] as unknown as [never, Record<string, unknown>]; return animate(box, frames, { ...timing, iterations: timing.iterations === Infinity ? 3 : 1 }) }}
           extra={<Out label="süre" value={() => `${(PRESETS[p.values.name][1] as { duration?: number }).duration ?? "yayın"} ms`} />}>{box}</Stage>
       },

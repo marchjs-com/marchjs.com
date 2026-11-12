@@ -13,7 +13,7 @@ headToHtml(tags, { mark: true })   // data-hm-head: adopted by the client`,
       run: () => {
         const title = signal("Ürünler"), mark = signal(false)
         return <div class="sc-ex-stack"><Row><Text label="Başlık" value={title} /><Button variant={() => (mark() ? "primary" : "secondary")} onClick={() => mark.set(!mark())}>mark</Button></Row>
-          <Pre text={() => headToHtml(resolveHead([{ title: title(), description: "Acme ürünleri", og: {}, twitter: {} }]), { mark: mark() })} /></div>
+          <Pre text={() => headToHtml(resolveHead([{ title: title(), description: "HADİ ürünleri", og: {}, twitter: {} }]), { mark: mark() })} /></div>
       },
     };
 export default example;

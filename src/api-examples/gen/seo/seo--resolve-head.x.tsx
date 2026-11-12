@@ -8,13 +8,13 @@ import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
       code: `resolveHead([
-  { titleTemplate: "%s · Acme", og: { siteName: "Acme" } },   // defaults
+  { titleTemplate: "%s · HADİ", og: { siteName: "HADİ" } },   // defaults
   { title: "Ayakkabılar", description: "…" },                 // the route
   { title: "Koşu ayakkabısı" },                               // a component: later wins
 ])`,
       run: () => {
         const comp = signal(true)
-        const tags = () => resolveHead([{ titleTemplate: "%s · Acme", og: { siteName: "Acme" } }, { title: "Ayakkabılar", description: "Her mevsim için" }, comp() ? { title: "Koşu ayakkabısı" } : null], { site: "https://shop.acme.example", path: "/ayakkabi" })
+        const tags = () => resolveHead([{ titleTemplate: "%s · HADİ", og: { siteName: "HADİ" } }, { title: "Ayakkabılar", description: "Her mevsim için" }, comp() ? { title: "Koşu ayakkabısı" } : null], { site: "https://shop.hadisosyal.com", path: "/ayakkabi" })
         return <div class="sc-ex-stack"><Button variant={() => (comp() ? "primary" : "secondary")} onClick={() => comp.set(!comp())}>{() => (comp() ? "Bileşen kaynağı açık" : "Bileşen kaynağı kapalı")}</Button>
           <Pre text={() => headToHtml(tags())} /></div>
       },

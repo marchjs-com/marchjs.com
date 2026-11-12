@@ -18,7 +18,7 @@ const example: ApiExample<any> = {
           city: { type: "pick", options: ["İzmir", "Ankara", "Bursa"], label: "Şehir" },
           credit: { type: "money", currency: "TRY", min: 0, label: "Kredi" },
         })
-        let rows = [{ id: 1, name: "Acme", city: "İzmir", credit: 5000 }, { id: 2, name: "Bora Yapı", city: "Ankara", credit: 1200 }, { id: 3, name: "Çınar Gıda", city: "Bursa", credit: 800 }]
+        let rows = [{ id: 1, name: "HADİ", city: "İzmir", credit: 5000 }, { id: 2, name: "Bora Yapı", city: "Ankara", credit: 1200 }, { id: 3, name: "Çınar Gıda", city: "Bursa", credit: 800 }]
         let next = 4
         return <Load load={() => import("hadi-march/crud")}>{({ crud }: { crud: (...a: any[]) => unknown }) => crud({
           list: async () => { await wait(200); return rows },

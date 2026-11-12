@@ -11,17 +11,17 @@ import type { ApiExample } from "../../types.ts";
 import "../../platform.css";
 
 const example: ApiExample<any> = {
-      code: `export const acme = defineTheme({ ...hadi, id: "acme", name: "Acme",
+      code: `export const hadiMarka = defineTheme({ ...hadi, id: "hadi-marka", name: "HADİ",
   light: { ...hadi.light, primary: HADI.purple, solid: HADI.purple } })
-// build: write themeCss(acme) to themes/acme.css, then registerThemes([{ id: "acme", name: "Acme" }])`,
+// build: write themeCss(hadiMarka) to themes/hadi-marka.css, then registerThemes([{ id: "hadi-marka", name: "HADİ" }])`,
       run: () => {
         const accent = signal<string>(HADI.purple), err = signal("—")
-        const def = computed(() => defineTheme({ ...hadi, id: "acme", name: "Acme", description: "defineTheme ile türetildi",
+        const def = computed(() => defineTheme({ ...hadi, id: "hadi-marka", name: "HADİ", description: "defineTheme ile türetildi",
           light: { ...hadi.light, primary: ensureContrast(accent(), hadi.light.surface), solid: accent(), onSolid: onBrandFill(accent()) },
           dark: { ...hadi.dark, primary: accent(), solid: accent(), onSolid: onBrandFill(accent()) } }))
         return <Stack>
           <Row><Segmented value={accent} options={brand.slice(0, 4).map(([k, v]) => ({ value: v, label: k }))} aria-label="Vurgu rengi" />
-            <Button variant="ghost" onClick={() => { try { defineTheme({ ...hadi, id: "Acme Tema" }) } catch (e) { err.set((e as Error).message) } }}>Geçersiz id dene</Button></Row>
+            <Button variant="ghost" onClick={() => { try { defineTheme({ ...hadi, id: "HADİ Tema" }) } catch (e) { err.set((e as Error).message) } }}>Geçersiz id dene</Button></Row>
           <ThemeBox def={def} />
           <Out label="hata" value={err} />
         </Stack>

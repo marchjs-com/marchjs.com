@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
           out: (q) => <Out label="ad" value={q.name} />,
         }
         const view = computed(() => views[p.values.view] as never)
-        return <Dynamic component={view} name="Acme" />
+        return <Dynamic component={view} name="HADİ" />
       },
     };
 export default example;

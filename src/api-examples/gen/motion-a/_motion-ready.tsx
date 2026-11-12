@@ -6,9 +6,9 @@ const ensureMotion = () => {
   if (motionReady) return
   motionReady = true
   defineMotion({
-    keyframes: { "acme-wiggle": { frames: [{ transform: "rotate(0deg)" }, { transform: "rotate(-10deg)" }, { transform: "rotate(8deg)" }, { transform: "rotate(-4deg)" }, { transform: "rotate(0deg)" }], defaults: { duration: 500 } } },
-    easings: { "acme-punch": "cubic-bezier(.3, 1.6, .5, 1)" },
-    presets: { "acme-wiggle-slow": { use: "acme-wiggle", duration: 1100, easing: "in-out" } },
+    keyframes: { "hadi-wiggle": { frames: [{ transform: "rotate(0deg)" }, { transform: "rotate(-10deg)" }, { transform: "rotate(8deg)" }, { transform: "rotate(-4deg)" }, { transform: "rotate(0deg)" }], defaults: { duration: 500 } } },
+    easings: { "hadi-punch": "cubic-bezier(.3, 1.6, .5, 1)" },
+    presets: { "hadi-wiggle-slow": { use: "hadi-wiggle", duration: 1100, easing: "in-out" } },
   })
 }
 export { motionReady, ensureMotion };

@@ -10,7 +10,7 @@ const example: ApiExample<any> = {
       code: `<Markdown source={post.body} headingOffset={1} />   // safe: no raw HTML, https images only`,
       play: { options: [{ key: "offset", label: "Başlık kaydırma", default: 0, options: opts([0, "0"], [1, "+1"], [2, "+2"]) }] },
       run: (p: { values: { offset: number } }) => {
-        const src = signal("# Acme bülteni\n\nBu hafta **3 yeni** özellik var:\n\n- Hızlı arama\n- `Ctrl+K` ile komutlar\n- [Belgeler](https://example.com)\n\n> <b>HTML</b> etiketleri metin olarak kalır.")
+        const src = signal("# HADİ bülteni\n\nBu hafta **3 yeni** özellik var:\n\n- Hızlı arama\n- `Ctrl+K` ile komutlar\n- [Belgeler](https://example.com)\n\n> <b>HTML</b> etiketleri metin olarak kalır.")
         return <div class="sc-ex-ui-c-stack">
           <textarea class="hm-input sc-ex-ui-c-input" aria-label="Markdown kaynağı" value={src()} onInput={(e: Event) => src.set((e.target as HTMLTextAreaElement).value)} />
           <div class="sc-ex-ui-c-box"><Markdown source={src()} headingOffset={p.values.offset} /></div>

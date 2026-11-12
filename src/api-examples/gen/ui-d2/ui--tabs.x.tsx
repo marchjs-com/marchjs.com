@@ -17,8 +17,8 @@ const example: ApiExample<any> = {
       run: (p: { values: { color: string; panel: boolean } }) => {
         const tab = signal<string | null>("profile")
         const tabs = [
-          { id: "profile", label: "Profil", content: () => <p>Ada · ada@acme.test</p> },
-          { id: "billing", label: "Fatura", content: () => <p>Acme Pro · aylık {tl(249)}</p> },
+          { id: "profile", label: "Profil", content: () => <p>Ada · ada@hadisosyal.com</p> },
+          { id: "billing", label: "Fatura", content: () => <p>HADİ Pro · aylık {tl(249)}</p> },
           { id: "team", label: "Ekip", badge: 4, content: () => <p>4 üye, 1 davet bekliyor</p> },
         ]
         return <div class="sc-ex-stack">

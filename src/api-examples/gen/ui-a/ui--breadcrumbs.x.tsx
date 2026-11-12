@@ -13,7 +13,7 @@ const example: ApiExample<any> = {
 }))} />`,
       play: { options: [{ key: "icons", label: "Klasör ikonları", default: true }] },
       run: (p: { values: { icons: boolean } }) => {
-        const path = signal(["Acme", "Pazarlama", "2026", "Kampanya"])
+        const path = signal(["HADİ", "Pazarlama", "2026", "Kampanya"])
         const items = () => path().map((x, i) => ({ id: `${i}-${x}`, label: x, icon: p.values.icons ? (i ? folder : home) : undefined, onSelect: () => path.set(path().slice(0, i + 1)) }))
         return <div class="sc-ex-stack">
           <Breadcrumbs label="Konum" items={items} />

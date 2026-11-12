@@ -29,14 +29,14 @@ const headOf = (d: Document): string[] => [`<title>${d.title}</title>`, ...Array
 const PAGE = `<!doctype html>
 <html lang="tr">
 <head>
-  <title>Acme Mağaza · Ayakkabılar</title>
+  <title>HADİ Mağaza · Ayakkabılar</title>
   <meta name="viewport" content="width=device-width">
   <link rel="canonical" href="/ayakkabi">
 </head>
 <body><h1>Ayakkabılar</h1><img src="kapak.jpg"></body>
 </html>`;
 
-const RICH = `<h2>Sürüm notları</h2><p><b>Acme</b> artık <i>daha hızlı</i>. <a href="https://acme.example/notlar">Ayrıntılar</a></p><ul><li>Yeni tablo</li><li>Koyu tema</li></ul>`;
+const RICH = `<h2>Sürüm notları</h2><p><b>HADİ</b> artık <i>daha hızlı</i>. <a href="https://hadisosyal.com/notlar">Ayrıntılar</a></p><ul><li>Yeni tablo</li><li>Koyu tema</li></ul>`;
 
 export default examples({
   "hadi-march/seo": {
@@ -77,7 +77,7 @@ applyHead([])   // removes what it wrote, restores what it changed`,
         const go = () => {
           if (headBusy()) { out.set("Bu sayfada head yönetimi etkin; örnek taslak belgeyi kullanamaz."); return }
           const d = draftDoc()
-          applyHead(resolveHead([{ title: title(), description: "Acme ekibi", og: { image: "https://acme.example/og.png" } }]), { lang: undefined }, d)
+          applyHead(resolveHead([{ title: title(), description: "HADİ ekibi", og: { image: "https://hadisosyal.com/og.png" } }]), { lang: undefined }, d)
           const written = headOf(d)
           applyHead([], {}, d)
           out.set(`yazıldı:\n${written.join("\n")}\n\napplyHead([]) sonrası:\n${headOf(d).join("\n")}`)
@@ -92,7 +92,7 @@ issues.filter((i) => i.level === "error")   // title, description, canonical, im
         const html = signal(PAGE)
         const issues = () => checkHtml(html())
         return <div class="sc-ex-stack"><Area label="HTML" value={html} />
-          <Row><Button variant="ghost" onClick={() => html.set(html().replace("</head>", `  <meta name="description" content="Acme mağazasında her mevsim için rahat ve şık ayakkabılar.">\n</head>`))}>Açıklama ekle</Button>
+          <Row><Button variant="ghost" onClick={() => html.set(html().replace("</head>", `  <meta name="description" content="HADİ mağazasında her mevsim için rahat ve şık ayakkabılar.">\n</head>`))}>Açıklama ekle</Button>
             <Out label="Hata" value={() => String(issues().filter((i) => i.level === "error").length)} /><Out label="Uyarı" value={() => String(issues().filter((i) => i.level === "warn").length)} /></Row>
           <Tags label="Sorunlar" items={() => issues().map((i) => `${i.level} · ${i.rule}`)} /></div>
       },
@@ -123,17 +123,17 @@ headToHtml(tags, { mark: true })   // data-hm-head: adopted by the client`,
       run: () => {
         const title = signal("Ürünler"), mark = signal(false)
         return <div class="sc-ex-stack"><Row><Text label="Başlık" value={title} /><Button variant={() => (mark() ? "primary" : "secondary")} onClick={() => mark.set(!mark())}>mark</Button></Row>
-          <Pre text={() => headToHtml(resolveHead([{ title: title(), description: "Acme ürünleri", og: {}, twitter: {} }]), { mark: mark() })} /></div>
+          <Pre text={() => headToHtml(resolveHead([{ title: title(), description: "HADİ ürünleri", og: {}, twitter: {} }]), { mark: mark() })} /></div>
       },
     },
     installSeo: {
       code: `installSeo({
-  site: "https://shop.acme.example",
-  titleTemplate: "%s · Acme",
-  defaults: { og: { siteName: "Acme" } },
+  site: "https://shop.hadisosyal.com",
+  titleTemplate: "%s · HADİ",
+  defaults: { og: { siteName: "HADİ" } },
 })`,
       run: () => {
-        const tpl = signal("%s · Acme")
+        const tpl = signal("%s · HADİ")
         return <div class="sc-ex-stack"><Row><Text label="titleTemplate" value={tpl} /><Out label="Kurulu" value={() => String(headBusy())} /></Row>
           <Out label="Ürünler sayfasının başlığı" value={() => { const t = resolveHead([{ titleTemplate: tpl() }, { title: "Ürünler" }]).find((x) => x.tag === "title"); return t && "text" in t ? t.text : "—" }} />
           <Out label="installSeo" value={`${typeof installSeo} (uygulama açılışında bir kez)`} /></div>
@@ -143,7 +143,7 @@ headToHtml(tags, { mark: true })   // data-hm-head: adopted by the client`,
       code: `jsonLdText({ name: "</script><b>" })
 // {"name":"\\u003c/script\\u003e\\u003cb\\u003e"} — can never close the element`,
       run: () => {
-        const name = signal("Acme </script><img src=x>")
+        const name = signal("HADİ </script><img src=x>")
         return <div class="sc-ex-stack"><Text label="Ad" value={name} /><Pre text={() => jsonLdText({ "@type": "Organization", name: name() })} /></div>
       },
     },
@@ -155,10 +155,10 @@ headToHtml(tags, { mark: true })   // data-hm-head: adopted by the client`,
       run: () => {
         const kind = signal<"product" | "article" | "faq" | "breadcrumbs">("product")
         const data = () => ({
-          product: () => ld.product({ name: "Koşu ayakkabısı", brand: "Acme", price: 1499, currency: "TRY", availability: "InStock", rating: { value: 4.6, count: 128 } }),
-          article: () => ld.article({ headline: "Acme 2.0 çıktı", author: "Ada", datePublished: "2026-01-15" }),
+          product: () => ld.product({ name: "Koşu ayakkabısı", brand: "HADİ", price: 1499, currency: "TRY", availability: "InStock", rating: { value: 4.6, count: 128 } }),
+          article: () => ld.article({ headline: "HADİ 2.0 çıktı", author: "Ada", datePublished: "2026-01-15" }),
           faq: () => ld.faq([["Kargo ücretli mi?", "500 TL üzeri ücretsiz."]]),
-          breadcrumbs: () => ld.breadcrumbs([["Ana sayfa", "/"], ["Ayakkabı", "/ayakkabi"]], "https://shop.acme.example"),
+          breadcrumbs: () => ld.breadcrumbs([["Ana sayfa", "/"], ["Ayakkabı", "/ayakkabi"]], "https://shop.hadisosyal.com"),
         })[kind()]()
         return <div class="sc-ex-stack"><Row>{(["product", "article", "faq", "breadcrumbs"] as const).map((k) => <Button variant={() => (kind() === k ? "primary" : "secondary")} onClick={() => kind.set(k)}>{k}</Button>)}</Row><Pre text={() => JSON.stringify(data(), null, 1)} /></div>
       },
@@ -169,18 +169,18 @@ headToHtml(tags, { mark: true })   // data-hm-head: adopted by the client`,
       run: () => {
         const title = signal("Koşu ayakkabısı"), img = signal(true)
         return <div class="sc-ex-stack"><Row><Text label="Başlık" value={title} /><Button variant={() => (img() ? "primary" : "secondary")} onClick={() => img.set(!img())}>Görsel</Button></Row>
-          <Tags label="og" items={() => ogTags({ title: title(), siteName: "Acme", ...(img() ? { image: { url: "https://acme.example/og.png", width: 1200, height: 630 } } : {}) }).map((m) => `${m.property}=${m.content}`)} /></div>
+          <Tags label="og" items={() => ogTags({ title: title(), siteName: "HADİ", ...(img() ? { image: { url: "https://hadisosyal.com/og.png", width: 1200, height: 630 } } : {}) }).map((m) => `${m.property}=${m.content}`)} /></div>
       },
     },
     resolveHead: {
       code: `resolveHead([
-  { titleTemplate: "%s · Acme", og: { siteName: "Acme" } },   // defaults
+  { titleTemplate: "%s · HADİ", og: { siteName: "HADİ" } },   // defaults
   { title: "Ayakkabılar", description: "…" },                 // the route
   { title: "Koşu ayakkabısı" },                               // a component: later wins
 ])`,
       run: () => {
         const comp = signal(true)
-        const tags = () => resolveHead([{ titleTemplate: "%s · Acme", og: { siteName: "Acme" } }, { title: "Ayakkabılar", description: "Her mevsim için" }, comp() ? { title: "Koşu ayakkabısı" } : null], { site: "https://shop.acme.example", path: "/ayakkabi" })
+        const tags = () => resolveHead([{ titleTemplate: "%s · HADİ", og: { siteName: "HADİ" } }, { title: "Ayakkabılar", description: "Her mevsim için" }, comp() ? { title: "Koşu ayakkabısı" } : null], { site: "https://shop.hadisosyal.com", path: "/ayakkabi" })
         return <div class="sc-ex-stack"><Button variant={() => (comp() ? "primary" : "secondary")} onClick={() => comp.set(!comp())}>{() => (comp() ? "Bileşen kaynağı açık" : "Bileşen kaynağı kapalı")}</Button>
           <Pre text={() => headToHtml(tags())} /></div>
       },
@@ -188,7 +188,7 @@ headToHtml(tags, { mark: true })   // data-hm-head: adopted by the client`,
     scanTags: {
       code: `scanTags(html).filter((t) => t.name === "meta")   // start tags with attributes, no DOM`,
       run: () => {
-        const html = signal(`<title>Acme</title><meta name="description" content="Ayakkabı &amp; çanta"><img src="a.png" alt="">`)
+        const html = signal(`<title>HADİ</title><meta name="description" content="Ayakkabı &amp; çanta"><img src="a.png" alt="">`)
         return <div class="sc-ex-stack"><Text label="HTML" value={html} /><Tags label="Etiketler" items={() => scanTags(html()).map((t) => `${t.name} ${t.text ?? J(t.attrs)}`)} /></div>
       },
     },
@@ -204,12 +204,12 @@ tagKey("link", { rel: "canonical", href: "/x" }) // "link:canonical"`,
       },
     },
     twitterTags: {
-      code: `twitterTags({ site: "@acme", image: "https://acme.example/og.png" })
+      code: `twitterTags({ site: "@hadisosyal", image: "https://hadisosyal.com/og.png" })
 // card: "summary_large_image" because there is an image`,
       run: () => {
-        const img = signal(true), site = signal("@acme")
+        const img = signal(true), site = signal("@hadisosyal")
         return <div class="sc-ex-stack"><Row><Text label="site" value={site} /><Button variant={() => (img() ? "primary" : "secondary")} onClick={() => img.set(!img())}>Görsel</Button></Row>
-          <Tags label="twitter" items={() => twitterTags({ site: site(), title: "Acme", ...(img() ? { image: "https://acme.example/og.png" } : {}) }).map((m) => `${m.name}=${m.content}`)} /></div>
+          <Tags label="twitter" items={() => twitterTags({ site: site(), title: "HADİ", ...(img() ? { image: "https://hadisosyal.com/og.png" } : {}) }).map((m) => `${m.name}=${m.content}`)} /></div>
       },
     },
     useHead: {
@@ -218,7 +218,7 @@ tagKey("link", { rel: "canonical", href: "/x" }) // "link:canonical"`,
   return <h1>{p.item.name}</h1>
 }`,
       run: () => {
-        const on = signal(false), desc = signal("Acme: her mevsim için ayakkabı")
+        const on = signal(false), desc = signal("HADİ: her mevsim için ayakkabı")
         useHead(() => (on() ? { description: desc() } : null))
         const current = () => { headTags(); return document.head.querySelector("meta[name=description]")?.getAttribute("content") ?? "(yok)" }
         return <div class="sc-ex-stack"><Row><Text label="Açıklama" value={desc} /><Button variant={() => (on() ? "primary" : "secondary")} onClick={() => on.set(!on())}>{() => (on() ? "Etkin" : "Kapalı")}</Button></Row>
@@ -261,7 +261,7 @@ hydrate(() => <App />, document.getElementById("app")!)   // swaps in one step w
       code: `parseHtml(html, RICH_SCHEMA)                        // the rich text allowlist (default)
 parseHtml(html, { tags: { p: [], strong: [] } })   // your own, smaller one`,
       run: () => {
-        const own = signal(false), src = `<h2>Başlık</h2><p><b>Kalın</b>, <i>eğik</i>, <a href="https://acme.example">bağlantı</a></p>`
+        const own = signal(false), src = `<h2>Başlık</h2><p><b>Kalın</b>, <i>eğik</i>, <a href="https://hadisosyal.com">bağlantı</a></p>`
         const out = box("")
         effect(() => { out.replaceChildren(parseHtml(src, own() ? { tags: { p: [], strong: [] }, rename: { b: "strong" } } : RICH_SCHEMA)) })
         return <div class="sc-ex-stack"><Row><Button variant={() => (own() ? "secondary" : "primary")} onClick={() => own.set(false)}>RICH_SCHEMA</Button><Button variant={() => (own() ? "primary" : "secondary")} onClick={() => own.set(true)}>Yalnız p + strong</Button></Row>
@@ -301,7 +301,7 @@ normalizeBlocks(root, { topHeading: 2 })   // h1 → h2`,
       code: `const frag = parseHtml(clipboardHtml)   // allowlisted nodes only, no innerHTML
 editor.append(frag)`,
       run: () => {
-        const html = signal(`<p onclick="steal()">Merhaba <b>Ada</b> <a href="javascript:alert(1)">tıkla</a> <a href="https://acme.example">site</a></p><script>steal()</script><iframe src="//x"></iframe>`)
+        const html = signal(`<p onclick="steal()">Merhaba <b>Ada</b> <a href="javascript:alert(1)">tıkla</a> <a href="https://hadisosyal.com">site</a></p><script>steal()</script><iframe src="//x"></iframe>`)
         const out = box("")
         effect(() => { out.replaceChildren(parseHtml(html())) })
         return <div class="sc-ex-stack"><Area label="Gelen HTML" value={html} />{out}<Out label="Bağlantılar" value={() => { html(); return Array.from(out.querySelectorAll("a")).map((a) => a.getAttribute("href")).join(", ") || "(yok)" }} /></div>
@@ -324,7 +324,7 @@ editor.append(frag)`,
   },
   "hadi-march/dom/to-markdown": {
     toMarkdown: {
-      code: `const md = toMarkdown(editor)   // "## Sürüm notları\\n\\n**Acme** artık *daha hızlı*. …"
+      code: `const md = toMarkdown(editor)   // "## Sürüm notları\\n\\n**HADİ** artık *daha hızlı*. …"
 save({ body: md })`,
       run: () => {
         const ed = box(RICH, true), md = signal(toMarkdown(ed))

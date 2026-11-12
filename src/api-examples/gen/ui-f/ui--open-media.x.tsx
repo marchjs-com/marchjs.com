@@ -6,7 +6,7 @@ import { Out, Row } from "../../_kit.tsx";
 import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
-      code: `await openMedia("/img/cover.jpg", { title: "Kapak", alt: "Acme kapağı", size: "lg" })`,
+      code: `await openMedia("/img/cover.jpg", { title: "Kapak", alt: "HADİ kapağı", size: "lg" })`,
       run: () => {
         // a poster drawn on a canvas with theme colors, so the example needs no file or network
         const poster = (): string => {

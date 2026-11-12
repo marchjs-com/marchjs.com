@@ -10,17 +10,17 @@ import "../../motion-a.css";
 
 const example: ApiExample<any> = {
       code: `defineMotion({
-  keyframes: { "acme-wiggle": { frames: [...], defaults: { duration: 500 } } },
-  easings: { "acme-punch": "cubic-bezier(.3, 1.6, .5, 1)" },
-  presets: { "acme-wiggle-slow": { use: "acme-wiggle", duration: 1100 } },
+  keyframes: { "hadi-wiggle": { frames: [...], defaults: { duration: 500 } } },
+  easings: { "hadi-punch": "cubic-bezier(.3, 1.6, .5, 1)" },
+  presets: { "hadi-wiggle-slow": { use: "hadi-wiggle", duration: 1100 } },
 })
-animate(card, "acme-wiggle-slow")`,
-      play: { options: [{ key: "name", label: "Ad", default: "acme-wiggle", options: ["acme-wiggle", "acme-wiggle-slow"] }, { key: "easing", label: "Eğri", default: "", options: [{ value: "", label: "kendi" }, { value: "acme-punch", label: "acme-punch" }] }] },
+animate(card, "hadi-wiggle-slow")`,
+      play: { options: [{ key: "name", label: "Ad", default: "hadi-wiggle", options: ["hadi-wiggle", "hadi-wiggle-slow"] }, { key: "easing", label: "Eğri", default: "", options: [{ value: "", label: "kendi" }, { value: "hadi-punch", label: "hadi-punch" }] }] },
       run: (p: { values: { name: string; easing: string } }) => {
         ensureMotion()
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         return <Stage start={() => animate(box, p.values.name, p.values.easing ? { easing: p.values.easing } : {})}
-          extra={<Out label="kayıtlı" value={() => keyframeNames().filter((n) => n.startsWith("acme-")).join(", ")} />}>{box}</Stage>
+          extra={<Out label="kayıtlı" value={() => keyframeNames().filter((n) => n.startsWith("hadi-")).join(", ")} />}>{box}</Stage>
       },
     };
 export default example;

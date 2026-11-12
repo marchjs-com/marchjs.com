@@ -52,7 +52,7 @@ export default function MotionMicro(props: { kit: typeof Kit }) {
       {() => { const o = { duration: $rDur, center: $rCenter, opacity: $rInk / 100 }; return <div class="sc-mo-micro">
         <button type="button" class="hm-btn hm-btn-primary" use:ripple={o}>Kaydet</button>
         <button type="button" class="hm-btn hm-btn-secondary" use:ripple={o}>Paylaş</button>
-        <div class="sc-mo-ripple-card" tabindex="0" role="button" use:ripple={o}><strong>Acme</strong><span>Karta bas</span></div>
+        <div class="sc-mo-ripple-card" tabindex="0" role="button" use:ripple={o}><strong>HADİ</strong><span>Karta bas</span></div>
       </div> }}
     </MotionDemo>
 
@@ -83,7 +83,7 @@ export default function MotionMicro(props: { kit: typeof Kit }) {
         <span class="sc-mo-plx-sun" data-depth="0.3" aria-hidden="true" />
         <span class="sc-mo-plx-hill sc-mo-plx-h1" data-depth="0.5" aria-hidden="true" />
         <span class="sc-mo-plx-hill sc-mo-plx-h2" data-depth="0.8" aria-hidden="true" />
-        <div class="sc-mo-plx-text" data-depth="1.2"><strong>Acme Doğa</strong><span>İmleci kartın üstünde gezdir</span></div>
+        <div class="sc-mo-plx-text" data-depth="1.2"><strong>HADİ Doğa</strong><span>İmleci kartın üstünde gezdir</span></div>
         <span class="sc-mo-plx-spark" data-depth="1.6" aria-hidden="true"><Icon of={sparkles} size="lg" /></span>
       </div> }}
     </MotionDemo>

@@ -47,7 +47,7 @@ export default examples({
           city: { type: "pick", options: ["İzmir", "Ankara", "Bursa"], label: "Şehir" },
           credit: { type: "money", currency: "TRY", min: 0, label: "Kredi" },
         })
-        let rows = [{ id: 1, name: "Acme", city: "İzmir", credit: 5000 }, { id: 2, name: "Bora Yapı", city: "Ankara", credit: 1200 }, { id: 3, name: "Çınar Gıda", city: "Bursa", credit: 800 }]
+        let rows = [{ id: 1, name: "HADİ", city: "İzmir", credit: 5000 }, { id: 2, name: "Bora Yapı", city: "Ankara", credit: 1200 }, { id: 3, name: "Çınar Gıda", city: "Bursa", credit: 800 }]
         let next = 4
         return <Load load={() => import("hadi-march/crud")}>{({ crud }: { crud: (...a: any[]) => unknown }) => crud({
           list: async () => { await wait(200); return rows },
@@ -141,11 +141,11 @@ table.toggleSort("amount")   table.setSearch("ege")   table.next()
       },
     },
     csvField: {
-      code: `csvField('Acme, "Ltd"')        // "\\"Acme, \\"\\"Ltd\\"\\"\\""
+      code: `csvField('HADİ, "Ltd"')        // "\\"HADİ, \\"\\"Ltd\\"\\"\\""
 csvField("=SUM(A1:A9)")         // "'=SUM(A1:A9)" (formula-safe)
 csvField("a;b", ";")            // separator-aware quoting`,
       run: () => {
-        const raw = signal('Acme, "Ltd"')
+        const raw = signal('HADİ, "Ltd"')
         return <div class="sc-ex-table-stack">
           <TextInput value={raw} onChange={(v: string) => raw.set(v)} aria-label="Hücre" />
           <Row>{["=SUM(A1:A9)", "a;b", "Ada\nLovelace"].map((s) => <Button size="sm" variant="ghost" onClick={() => raw.set(s)}>{json(s)}</Button>)}</Row>
@@ -165,7 +165,7 @@ describeFilter({ filter: "select", options: regions }, ["ege"])  // "Ege"`,
           ["select", { filter: "select", options: [{ value: "ege", label: "Ege" }, { value: "mar", label: "Marmara" }] }, ["ege", "mar"]],
           ["bool", { filter: "bool" }, true],
           ["dateRange", { filter: "dateRange" }, { from: "2026-10-01", to: "2026-10-31" }],
-          ["text", { filter: "text" }, "acme"],
+          ["text", { filter: "text" }, "hadi"],
         ]
         return <ul class="sc-ex-table-list">{cases.map(([k, col, f]) => <li><code>{k} {json(f)}</code><Badge>{describeFilter(col, f)}</Badge></li>)}</ul>
       },
@@ -178,8 +178,8 @@ describeFilter({ filter: "select", options: regions }, ["ege"])  // "Ege"`,
         const cols = COLS.map((c) => column(c))
         return <div class="sc-ex-table-stack">
           <Row>
-            <Button onClick={() => save("acme-siparisler.csv", toCSV(ORDERS, cols, { formatted: true }), "text/csv;charset=utf-8")}>CSV indir</Button>
-            <Button variant="ghost" onClick={() => save("acme-siparisler.json", toJSON(ORDERS, cols), "application/json")}>JSON indir</Button>
+            <Button onClick={() => save("hadi-siparisler.csv", toCSV(ORDERS, cols, { formatted: true }), "text/csv;charset=utf-8")}>CSV indir</Button>
+            <Button variant="ghost" onClick={() => save("hadi-siparisler.json", toJSON(ORDERS, cols), "application/json")}>JSON indir</Button>
           </Row>
           <Log lines={log} />
         </div>
@@ -225,13 +225,13 @@ formatValue(order, { key: "amount", format: (v) => v > 1000 ? "büyük" : "küç
       code: `isEmptyFilter("")                       // true
 isEmptyFilter({ min: null, max: null }) // true
 isEmptyFilter(["ege"])                  // false`,
-      run: () => <ul class="sc-ex-table-list">{["", "  ", null, [], { min: null, max: null }, false, 0, "acme", ["ege"], { min: 100 }].map((v) => <li><code>{json(v)}</code><Badge tone={isEmptyFilter(v) ? "neutral" : "success"}>{String(isEmptyFilter(v))}</Badge></li>)}</ul>,
+      run: () => <ul class="sc-ex-table-list">{["", "  ", null, [], { min: null, max: null }, false, 0, "hadi", ["ege"], { min: 100 }].map((v) => <li><code>{json(v)}</code><Badge tone={isEmptyFilter(v) ? "neutral" : "success"}>{String(isEmptyFilter(v))}</Badge></li>)}</ul>,
     },
     mapParams: {
       code: `mapParams(params, { size: "limit", offset: "skip", page: null,
   sort: (s) => ({ order: s.map((x) => (x.dir === "desc" ? "-" : "") + x.key).join(",") }) })`,
       run: () => {
-        const params = { page: 3, size: 20, offset: 40, sort: [{ key: "amount", dir: "desc" }], filters: { region: ["Ege"] }, search: "acme" }
+        const params = { page: 3, size: 20, offset: 40, sort: [{ key: "amount", dir: "desc" }], filters: { region: ["Ege"] }, search: "hadi" }
         const styles: Record<string, Parameters<typeof mapParams>[1]> = {
           "varsayılan": undefined,
           "limit/skip": { size: "limit", offset: "skip", page: null, sort: (s) => ({ order: (s as SortSpec[]).map((x) => (x.dir === "desc" ? "-" : "") + x.key).join(",") }) },
@@ -282,7 +282,7 @@ orders.filter((o) => matchFilter(o, amount, { min: 1000 }))`,
       ] },
       run: (p: { values: { layout: "auto" | "table" | "cards"; selectable: boolean; paging: boolean } }) => <div>{() => {
         const { layout, selectable, paging } = p.values
-        return untrack(() => <Load load={() => import("hadi-march/table/render.ts")}>{({ Table }: { Table: (p: any) => unknown }) => <Table rows={ORDERS} columns={COLS} rowKey="id" pageSize={4} paging={paging} selectable={selectable} layout={layout} cardBreakpoint={520} caption="Siparişler" filename="acme-siparisler" />}</Load>)
+        return untrack(() => <Load load={() => import("hadi-march/table/render.ts")}>{({ Table }: { Table: (p: any) => unknown }) => <Table rows={ORDERS} columns={COLS} rowKey="id" pageSize={4} paging={paging} selectable={selectable} layout={layout} cardBreakpoint={520} caption="Siparişler" filename="hadi-siparisler" />}</Load>)
       }}</div>,
     },
     toCSV: {

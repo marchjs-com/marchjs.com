@@ -13,7 +13,7 @@ animate(card, "pop")                // by name, anywhere`,
       play: { options: [{ key: "name", label: "Ad", default: "pop", options: ["fadeUp", "pop", "shake", "wobble", "bounceIn", "flipIn", "blurIn", "zoomIn"] }] },
       run: (p: { values: { name: string } }) => {
         const names = Object.keys(installPresets())
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         return <Stage start={() => animate(box, p.values.name)} extra={<Out label="kayıtlı hazır" value={names.length} />}>{box}</Stage>
       },
     };

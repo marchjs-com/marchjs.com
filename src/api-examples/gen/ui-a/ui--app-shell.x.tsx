@@ -19,7 +19,7 @@ const example: ApiExample<any> = {
         const PAGES = ["Raporlar", "Müşteriler", "Ayarlar"]
         return <div class="sc-ex-ui-a-frame">
           {() => { const { header, nav } = p.values; return <AppShell mainId="sc-ex-ui-a-main"
-            nav={nav ? <nav class="sc-ex-ui-a-nav" aria-label="Acme">{PAGES.map((x) => <button type="button" aria-current={() => (page() === x ? "page" : null)} onClick={() => page.set(x)}>{x}</button>)}</nav> : null}
+            nav={nav ? <nav class="sc-ex-ui-a-nav" aria-label="HADİ">{PAGES.map((x) => <button type="button" aria-current={() => (page() === x ? "page" : null)} onClick={() => page.set(x)}>{x}</button>)}</nav> : null}
             header={header ? <div class="sc-ex-ui-a-head"><strong>{page}</strong><Avatar name="Ada Yılmaz" size="sm" /></div> : null}>
             <div class="sc-ex-ui-a-page"><p>{() => `${page()} sayfası`}</p><p class="hm-muted">Ana alan kayar; üst çubuk yerinde kalır.</p></div>
           </AppShell> }}

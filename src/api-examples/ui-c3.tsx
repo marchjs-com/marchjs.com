@@ -47,7 +47,7 @@ export default examples({
       code: `<section class="hero">
   <Overlay src="/media/sea.svg" opacity={0.5} />
   <Overlay effect="glass" front inset={4} />
-  <h2>Acme yaz kampı</h2>
+  <h2>HADİ yaz kampı</h2>
 </section>`,
       play: { options: [
         { key: "effect", label: "Efekt", default: "gradient", options: opts(["gradient", "geçiş"], ["dots", "nokta"], ["grid", "ızgara"], ["vignette", "vinyet"]) },
@@ -60,7 +60,7 @@ export default examples({
             return <div class="sc-ex-ui-c-hero">
               {withPhoto && <Overlay src={photo("sunset")} opacity={() => opacity()} />}
               <Overlay effect={effect} />
-              <div><strong>Acme yaz kampı</strong><p>Kayıtlar açık</p></div>
+              <div><strong>HADİ yaz kampı</strong><p>Kayıtlar açık</p></div>
             </div> }}
           <Row><Segmented aria-label="Fotoğraf saydamlığı" value={opacity} options={opts([0.3, "%30"], [0.6, "%60"], [1, "%100"])} /><Out label="opacity" value={opacity} /></Row>
         </div>

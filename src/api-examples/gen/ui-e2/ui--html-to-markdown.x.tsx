@@ -10,7 +10,7 @@ const example: ApiExample<any> = {
       code: `htmlToMarkdown("<h1>Başlık</h1><p>Bir <b>kalın</b> söz.</p>")
 // "## Başlık\\n\\nBir **kalın** söz."`,
       run: () => {
-        const html = signal('<h1>Merhaba</h1><p>Bir <b>kalın</b> ve <a href="https://acme.example">bağlantı</a>.</p><ul><li>Bir</li><li>İki</li></ul>')
+        const html = signal('<h1>Merhaba</h1><p>Bir <b>kalın</b> ve <a href="https://hadisosyal.com">bağlantı</a>.</p><ul><li>Bir</li><li>İki</li></ul>')
         return <div class="sc-ex-stack"><Textarea value={html} aria-label="HTML" rows={3} /><Pre text={() => htmlToMarkdown(html())} /></div>
       },
     };

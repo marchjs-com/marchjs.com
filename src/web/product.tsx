@@ -23,15 +23,15 @@ export default function ProductSample() {
     media: i === 0 ? <MockApp class="sc-mock-sm" /> : i === 3 ? <div class="sc-bento-stat"><Counter value={98.6} decimals={1} suffix="%" /><span>daha az JavaScript</span></div> : undefined }))
   return <div class="sc-sample-page">
     <ScrollProgress />
-    <SiteNav mode="floating" brand={{ name: "Acme", mark: sparkles }} links={LINKS}
+    <SiteNav mode="floating" brand={{ name: "HADİ", mark: sparkles }} links={LINKS}
       actions={<><Button variant="ghost" size="sm">Giriş</Button><Button size="sm">Ücretsiz başla</Button></>} />
-    <Hero variant="product" size="lg" eyebrow="Yeni: Acme 2.0 yayında" eyebrowHref="#p-features"
+    <Hero variant="product" size="lg" eyebrow="Yeni: HADİ 2.0 yayında" eyebrowHref="#p-features"
       title="Web sitesi kurmanın en hızlı yolu" highlight="en hızlı"
       lead="Hazır bloklar, akıcı hareket ve sıfır bağımlılık. Tanıtım sayfan dakikalar içinde, her cihazda kusursuz."
       actions={[{ label: "Ücretsiz başla", iconEnd: arrowRight }, { label: "Demoyu izle", variant: "secondary" }]}
       note="Kredi kartı gerekmez · 2 dakikada kurulum" media={<MockApp /> as Node} />
     <SiteSection space="sm">
-      <LogoCloud title="12.000'den fazla ekip Acme ile yayında" variant="marquee" logos={LOGO_NAMES.map((name) => ({ name, node: <Wordmark name={name} /> }))} />
+      <LogoCloud title="12.000'den fazla ekip HADİ ile yayında" variant="marquee" logos={LOGO_NAMES.map((name) => ({ name, node: <Wordmark name={name} /> }))} />
     </SiteSection>
     <SiteSection id="p-features" eyebrow="Özellikler" title="İhtiyacın olan her şey, fazlası değil" lead="Her blok tek bir işi çok iyi yapar ve diğerleriyle aynı dili konuşur.">
       <FeatureGrid variant="bento" items={bento} />

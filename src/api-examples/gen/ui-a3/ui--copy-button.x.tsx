@@ -12,7 +12,7 @@ const example: ApiExample<any> = {
       play: { options: [{ key: "iconOnly", label: "Yalnız ikon", default: false }] },
       run: (p: { values: { iconOnly: boolean } }) => {
         const team = signal("tasarim"), copies = signal(0)
-        const link = () => `https://acme.example/davet/${team()}`
+        const link = () => `https://hadisosyal.com/davet/${team()}`
         return <div class="sc-ex-stack">
           <Row><code class="sc-ex-val">{link}</code>{() => <CopyButton text={link} iconOnly={p.values.iconOnly} label="Bağlantıyı kopyala" onCopy={() => copies.update((x) => x + 1)} />}</Row>
           <Row>

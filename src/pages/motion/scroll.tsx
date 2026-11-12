@@ -93,7 +93,7 @@ parallaxLayers(hero, { strength: 160 })`}
           <span class="sc-mo-plx2-sun" data-depth="0.2" aria-hidden="true" />
           <span class="sc-mo-plx2-m sc-mo-plx2-m1" data-depth="0.4" aria-hidden="true" />
           <span class="sc-mo-plx2-m sc-mo-plx2-m2" data-depth="0.7" aria-hidden="true" />
-          <strong class="sc-mo-plx2-t" data-depth="-0.4">Acme Dağ</strong>
+          <strong class="sc-mo-plx2-t" data-depth="-0.4">HADİ Dağ</strong>
           <span class="sc-mo-plx2-m sc-mo-plx2-m3" data-depth="1" aria-hidden="true" />
         </div>
         <div class="sc-mo-pad" />
@@ -130,7 +130,7 @@ scrollIndicator(barEl, { source: articleEl })   // a scroll box`}
       <div class={() => $vertical ? "sc-mo-read sc-mo-read-v" : "sc-mo-read"}>
         <div class="sc-mo-read-track" aria-hidden="true"><div class="sc-mo-read-bar" ref={(el: HTMLElement) => { bar = el }} /></div>
         <article class="sc-mo-scroll" tabindex="0" aria-label="Örnek yazı" ref={(el: HTMLElement) => { box4 = el }}>
-          {["Acme bahar bülteni", "Bu sezon bahçede neler var?", "Tohumdan fideye", "Sulama saatleri", "Hasat günü", "Kış hazırlığı"].map((h, i) => <section class="sc-mo-read-sec"><h3>{h}</h3><p>{`Bölüm ${i + 1}: çubuk kaydırdıkça dolar, başa dönünce boşalır. Okunan kısım hep görünür.`}</p></section>)}
+          {["HADİ bahar bülteni", "Bu sezon bahçede neler var?", "Tohumdan fideye", "Sulama saatleri", "Hasat günü", "Kış hazırlığı"].map((h, i) => <section class="sc-mo-read-sec"><h3>{h}</h3><p>{`Bölüm ${i + 1}: çubuk kaydırdıkça dolar, başa dönünce boşalır. Okunan kısım hep görünür.`}</p></section>)}
         </article>
       </div>
     </MotionDemo>

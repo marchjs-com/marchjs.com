@@ -12,7 +12,7 @@ const example: ApiExample<any> = {
 clipFrames({ shape: "wipe", hide: true })   // the same, reversed`,
       play: { options: [{ key: "shape", label: "Biçim", default: "diamond", options: ["circle", "wipe", "diamond", "curtain", "blinds", "inset"] }, { key: "hide", label: "Gizle", default: false }] },
       run: (p: { values: { shape: string; hide: boolean } }) => {
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         const frames = () => clipFrames({ shape: p.values.shape as never, hide: p.values.hide })
         return <Stage start={() => animate(box, frames(), { duration: 800, easing: "in-out" })} extra={<Out label="ilk kare" value={() => String(frames()[0]!.clipPath)} />}>{box}</Stage>
       },

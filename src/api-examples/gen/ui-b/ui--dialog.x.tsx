@@ -18,7 +18,7 @@ const example: ApiExample<any> = {
         const close = (why: string) => { open.set(false); log.push(why) }
         return <div class="sc-ex-stack">
           <Row><Button variant="primary" onClick={() => open.set(true)}>Projeyi sil…</Button></Row>
-          {() => { const d = p.values.dismissable; return <Dialog open={open} onClose={() => close("kapatıldı")} title="Acme projesini sil" size={() => p.values.size} dismissable={d}
+          {() => { const d = p.values.dismissable; return <Dialog open={open} onClose={() => close("kapatıldı")} title="HADİ projesini sil" size={() => p.values.size} dismissable={d}
             footer={<Row><Button variant="ghost" onClick={() => close("vazgeçildi")}>Vazgeç</Button><Button variant="danger" onClick={() => close("silindi")}>Sil</Button></Row>}>
             <p>Proje ve 12 dosyası kalıcı olarak silinir.</p>
             {!d && <p class="hm-muted">Bu pencere yalnız düğmelerle kapanır.</p>}

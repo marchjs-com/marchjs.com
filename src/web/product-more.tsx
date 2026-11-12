@@ -15,9 +15,9 @@ export default function ProductMore() {
       <Faq layout="split" items={FAQ} title="Sık sorulanlar" lead="Aradığını bulamadın mı? Ekibimiz bir gün içinde yanıt verir." contact={<Button variant="secondary">Bize yaz</Button>} />
     </SiteSection>
     <CtaBand variant="gradient" title="Siteni bu hafta yayına al" lead="Ücretsiz başla, büyüdükçe yükselt." actions={[{ label: "Ücretsiz başla", iconEnd: arrowRight }, { label: "Satışla görüş" }]} note="14 gün ücretsiz · istediğin an iptal" />
-    <SiteFooter brand={{ name: "Acme", mark: sparkles }} about="Web sitelerini hızlı, erişilebilir ve güzel yapan bloklar." columns={FOOTER_COLUMNS}
+    <SiteFooter brand={{ name: "HADİ", mark: sparkles }} about="Web sitelerini hızlı, erişilebilir ve güzel yapan bloklar." columns={FOOTER_COLUMNS}
       social={[{ label: "Web", href: "#", icon: globe }, { label: "Topluluk", href: "#", icon: message }, { label: "E-posta", href: "#", icon: mail }]}
       newsletter={{ title: "Bülten", lead: "Ayda bir, yalnız yenilikler.", onSubmit: () => new Promise((r) => setTimeout(r, 700)) }}
-      legal={[{ label: "Gizlilik", href: "#" }, { label: "Koşullar", href: "#" }]} wordmark="Acme" />
+      legal={[{ label: "Gizlilik", href: "#" }, { label: "Koşullar", href: "#" }]} wordmark="HADİ" />
   </>
 }

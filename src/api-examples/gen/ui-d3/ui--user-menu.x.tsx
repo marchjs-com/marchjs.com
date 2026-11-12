@@ -8,7 +8,7 @@ import type { ApiExample } from "../../types.ts";
 import "../../ui-d.css";
 
 const example: ApiExample<any> = {
-      code: `<UserMenu name="Ada" detail="ada@acme.test" items={[
+      code: `<UserMenu name="Ada" detail="ada@hadisosyal.com" items={[
   { label: "Profil", onSelect: openProfile }, "-", { label: "Çıkış yap", danger: true, onSelect: signOut },
 ]} />`,
       play: { options: [{ key: "compact", label: "Yalnız avatar", default: false }, { key: "detail", label: "Ayrıntı satırı", default: true }] },
@@ -17,7 +17,7 @@ const example: ApiExample<any> = {
         const pick = (l: string) => () => log.update((x) => [...x.slice(-3), `${now()} ${l}`])
         const items = [{ label: "Profil", onSelect: pick("profil açıldı") }, { label: "Ayarlar", onSelect: pick("ayarlar açıldı") }, "-" as const, { label: "Çıkış yap", danger: true, onSelect: pick("çıkış yapıldı") }]
         return <div class="sc-ex-stack">
-          {() => { const { detail, compact } = p.values; return <UserMenu name="Ada" detail={detail ? "ada@acme.test" : undefined} items={items} compact={compact} placement="bottom-start" /> }}
+          {() => { const { detail, compact } = p.values; return <UserMenu name="Ada" detail={detail ? "ada@hadisosyal.com" : undefined} items={items} compact={compact} placement="bottom-start" /> }}
           <Log lines={log} />
         </div>
       },

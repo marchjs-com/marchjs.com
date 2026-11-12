@@ -31,7 +31,7 @@ export const KT: Model = {
   ],
 }
 
-export const DOC = { name: "Acme", tags: ["a", "b"], owner: { id: 7, mail: "ada@acme.test" } }
+export const DOC = { name: "HADİ", tags: ["a", "b"], owner: { id: 7, mail: "ada@hadisosyal.com" } }
 export const SCHEMA: Schema = {
   type: "object", required: ["name", "size"],
   properties: { name: { type: "string", minLength: 3 }, size: { type: "integer", minimum: 1 }, owner: { type: "object", properties: { mail: { type: "string", format: "email" } } } },

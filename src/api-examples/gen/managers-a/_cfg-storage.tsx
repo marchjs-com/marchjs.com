@@ -14,7 +14,7 @@ function CfgStorage() {
     view={(on) => <>
       <Row>
         <Button disabled={() => !on()} onClick={async () => { await storage().area("memory").set("note", text()); keys.set(await storage().area("memory").keys()) }}>Belleğe yaz</Button>
-        <Segmented aria-label="Değer" value={text()} onChange={(v: string) => text.set(v)} options={["Merhaba", "Acme"].map((v) => ({ value: v, label: v }))} />
+        <Segmented aria-label="Değer" value={text()} onChange={(v: string) => text.set(v)} options={["Merhaba", "HADİ"].map((v) => ({ value: v, label: v }))} />
       </Row>
       <Out label='area("memory").keys()' value={() => fmt(keys())} />
       <Out label='persistent("memory")' value={() => { on(); return yes(storage().persistent("memory")) }} />

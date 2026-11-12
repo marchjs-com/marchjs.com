@@ -11,7 +11,7 @@ function CfgNotifications() {
   let n = 0
   return <Cfg m={notificationManager} fn={configureNotifications} patch={{ native: "never", keep: 3, toast: (x: { title: string }) => shown.update((l) => [...l.slice(-4), `${now()} · ${x.title}`]) }}
     view={(on) => <>
-      <Row><Button disabled={() => !on()} onClick={() => notifications().notify({ title: `Mesaj ${++n}`, body: "Acme" })}>notify()</Button><Button variant="ghost" disabled={() => !on()} onClick={() => notifications().clear()}>clear()</Button></Row>
+      <Row><Button disabled={() => !on()} onClick={() => notifications().notify({ title: `Mesaj ${++n}`, body: "HADİ" })}>notify()</Button><Button variant="ghost" disabled={() => !on()} onClick={() => notifications().clear()}>clear()</Button></Row>
       <Out label="inbox().length (en çok 3)" value={() => { on(); return String(notifications().inbox().length) }} />
       <Out label="unread()" value={() => { on(); return String(notifications().unread()) }} />
       <Log lines={shown} label="Özel toast köprüsü" />

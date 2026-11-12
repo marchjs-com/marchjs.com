@@ -62,7 +62,7 @@ export default examples({
         onCleanup(() => clearTimeout(timer))
         const load = () => { ready.set(false); clearTimeout(timer); timer = setTimeout(() => ready.set(true), 1200) }
         return <div class="sc-ex-stack">
-          {() => { const { lines, block, colors } = p.values; return ready() ? <p>Acme hesabı: 3 proje, 12 üye.</p> : <Skeleton lines={lines} block={block} height="lg" colors={(colors || undefined) as "single"} /> }}
+          {() => { const { lines, block, colors } = p.values; return ready() ? <p>HADİ hesabı: 3 proje, 12 üye.</p> : <Skeleton lines={lines} block={block} height="lg" colors={(colors || undefined) as "single"} /> }}
           <Row><Button onClick={load}>Yükle (1,2 sn)</Button><Button variant="ghost" onClick={() => { clearTimeout(timer); ready.set(false) }}>İskelete dön</Button></Row>
         </div>
       },
@@ -80,7 +80,7 @@ export default examples({
     },
     Spacer: {
       code: `<div class="bar">
-  <strong>Acme</strong>
+  <strong>HADİ</strong>
   <Spacer />
   <Button>Giriş</Button>
 </div>`,
@@ -88,7 +88,7 @@ export default examples({
       run: (p: { values: { spacer: boolean } }) => {
         const clicks = signal(0)
         return <div class="sc-ex-stack">
-          <div class="sc-ex-ui-d-bar"><strong>Acme</strong>{() => (p.values.spacer ? <Spacer /> : null)}<Button size="sm" variant="ghost">Fiyatlar</Button><Button size="sm" variant="primary" onClick={() => clicks.update((x) => x + 1)}>Giriş</Button></div>
+          <div class="sc-ex-ui-d-bar"><strong>HADİ</strong>{() => (p.values.spacer ? <Spacer /> : null)}<Button size="sm" variant="ghost">Fiyatlar</Button><Button size="sm" variant="primary" onClick={() => clicks.update((x) => x + 1)}>Giriş</Button></div>
           <Out label="giriş tıklaması" value={clicks} />
         </div>
       },
@@ -151,7 +151,7 @@ export default examples({
         return <div class="sc-ex-stack">
           <StatusBar label="Eşitleme" items={[
             { id: "net", text: () => (p.values.online ? "Çevrim içi" : "Çevrim dışı"), tone: () => (p.values.online ? "success" : "warn") },
-            { id: "user", text: "Acme" },
+            { id: "user", text: "HADİ" },
             { id: "queue", side: "end", text: () => `${pending()} bekleyen`, tone: () => (pending() ? "info" : "neutral"), title: "Şimdi eşitle", onSelect: flush },
           ]} />
           <Row><Button size="sm" onClick={() => pending.update((x) => x + 1)}>Değişiklik yap</Button><Out label="son eşitleme" value={synced} /></Row>
@@ -165,7 +165,7 @@ export default examples({
       play: { options: [{ key: "nav", label: "İleri / geri düğmeleri", default: true }, { key: "vertical", label: "Dikey", default: false }] },
       run: (p: { values: { nav: boolean; vertical: boolean } }) => {
         const step = signal(0), done = signal("—")
-        const panels = [<p>Sepette 2 ürün: {tl(840)}</p>, <p>Teslimat: Acme Sok. 12, İstanbul</p>, <p>Kartla ödeme, 3 taksit</p>]
+        const panels = [<p>Sepette 2 ürün: {tl(840)}</p>, <p>Teslimat: HADİ Sok. 12, İstanbul</p>, <p>Kartla ödeme, 3 taksit</p>]
         return <div class="sc-ex-stack">
           {() => { const { nav, vertical } = p.values; return <Stepper steps={[{ title: "Sepet" }, { title: "Adres" }, { title: "Ödeme" }]} current={step} onSelect={(i: number) => step.set(i)}
             panels={panels} nav={nav} vertical={vertical} finishLabel="Siparişi ver" onFinish={() => done.set(now())} /> }}

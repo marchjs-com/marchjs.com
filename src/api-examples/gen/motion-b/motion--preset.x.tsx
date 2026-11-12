@@ -7,12 +7,12 @@ import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
       code: `installPresets()                                       // fadeIn, zoomIn, pop …
-preset("acme-pop", "zoomIn", { duration: 400, easing: "spring" })
-animate(card, "acme-pop")                              // by name, anywhere`,
+preset("hadi-pop", "zoomIn", { duration: 400, easing: "spring" })
+animate(card, "hadi-pop")                              // by name, anywhere`,
       run: () => {
         installPresets()
         const ez = signal("spring")
-        return <Replay label="acme-pop oynat" run={(box, keep) => { preset("acme-pop", "zoomIn", { duration: 500, easing: ez.peek() }); keep(animate(box, "acme-pop")) }}>
+        return <Replay label="hadi-pop oynat" run={(box, keep) => { preset("hadi-pop", "zoomIn", { duration: 500, easing: ez.peek() }); keep(animate(box, "hadi-pop")) }}>
           <Pick sig={ez} label="Eğri" options={["spring", "bounce", "out"]} />
         </Replay>
       },

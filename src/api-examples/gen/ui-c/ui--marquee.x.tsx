@@ -14,7 +14,7 @@ const example: ApiExample<any> = {
         { key: "separator", label: "Ayraç", default: "•", options: ["•", "✦", "—"] },
       ] },
       run: (p: { values: { speed: number; separator: string } }) => {
-        const news = signal(["Acme Koşu Kulübü pazar sabahı buluşuyor", "Yeni sezon üyelikleri açıldı", "Kahve atölyesi cuma 19.00'da"])
+        const news = signal(["HADİ Koşu Kulübü pazar sabahı buluşuyor", "Yeni sezon üyelikleri açıldı", "Kahve atölyesi cuma 19.00'da"])
         return <div class="sc-ex-ui-c-stack">
           <div class="sc-ex-ui-c-box">{() => { const speed = p.values.speed, separator = p.values.separator
             return <Marquee text={() => news().join(` ${separator} `)} speed={speed} separator={separator} /> }}</div>

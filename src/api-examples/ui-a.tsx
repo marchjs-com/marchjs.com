@@ -65,8 +65,8 @@ export default examples({
       run: (p: { values: { multiple: boolean; variant: "separated" | "contained"; locked: boolean } }) => () => {
         const { multiple, variant, locked } = p.values
         return <Accordion multiple={multiple} variant={variant} open={["plan"]} items={[
-          { id: "plan", icon: star, title: "Plan", subtitle: "Pro · aylık", content: <p>Acme ekibi 12 koltuk kullanıyor; sınırsız proje.</p> },
-          { id: "billing", icon: mail, title: "Fatura", subtitle: "ayın 1'i", content: <p>Faturalar fatura@acme.example adresine gider.</p> },
+          { id: "plan", icon: star, title: "Plan", subtitle: "Pro · aylık", content: <p>HADİ ekibi 12 koltuk kullanıyor; sınırsız proje.</p> },
+          { id: "billing", icon: mail, title: "Fatura", subtitle: "ayın 1'i", content: <p>Faturalar fatura@hadisosyal.com adresine gider.</p> },
           { id: "danger", icon: lock, title: "Hesabı kapat", disabled: locked, content: <p>Bu işlem geri alınamaz.</p> },
         ]} />
       },
@@ -138,7 +138,7 @@ export default examples({
         const n = signal(0)
         const TEXT = { info: "Yeni sürüm hazır.", success: "Yedekleme tamamlandı.", warn: "2 GB alanın %92'si kullanılıyor.", danger: "Ödeme alınamadı." }
         return <div class="sc-ex-stack">
-          {() => { n(); const { tone, title, dismissable } = p.values; return <Alert tone={tone} title={title ? "Acme hesabı" : undefined} dismissable={dismissable} onDismiss={() => toast("Uyarı kapatıldı")}>{TEXT[tone]}</Alert> }}
+          {() => { n(); const { tone, title, dismissable } = p.values; return <Alert tone={tone} title={title ? "HADİ hesabı" : undefined} dismissable={dismissable} onDismiss={() => toast("Uyarı kapatıldı")}>{TEXT[tone]}</Alert> }}
           <Button variant="ghost" size="sm" onClick={() => n.update((x) => x + 1)}>Yeniden göster</Button>
         </div>
       },
@@ -157,7 +157,7 @@ export default examples({
         const PAGES = ["Raporlar", "Müşteriler", "Ayarlar"]
         return <div class="sc-ex-ui-a-frame">
           {() => { const { header, nav } = p.values; return <AppShell mainId="sc-ex-ui-a-main"
-            nav={nav ? <nav class="sc-ex-ui-a-nav" aria-label="Acme">{PAGES.map((x) => <button type="button" aria-current={() => (page() === x ? "page" : null)} onClick={() => page.set(x)}>{x}</button>)}</nav> : null}
+            nav={nav ? <nav class="sc-ex-ui-a-nav" aria-label="HADİ">{PAGES.map((x) => <button type="button" aria-current={() => (page() === x ? "page" : null)} onClick={() => page.set(x)}>{x}</button>)}</nav> : null}
             header={header ? <div class="sc-ex-ui-a-head"><strong>{page}</strong><Avatar name="Ada Yılmaz" size="sm" /></div> : null}>
             <div class="sc-ex-ui-a-page"><p>{() => `${page()} sayfası`}</p><p class="hm-muted">Ana alan kayar; üst çubuk yerinde kalır.</p></div>
           </AppShell> }}
@@ -165,7 +165,7 @@ export default examples({
       },
     },
     AuthLayout: {
-      code: `<AuthLayout brand={<Brand name="Acme" mark={sparkles} />} title="Giriş yap" subtitle="Hesabınıza devam edin"
+      code: `<AuthLayout brand={<Brand name="HADİ" mark={sparkles} />} title="Giriş yap" subtitle="Hesabınıza devam edin"
   aside={{ headline: "Ekibiniz tek yerde", points: [{ icon: shieldCheck, title: "Güvenli" }] }}>
   <LoginForm />
 </AuthLayout>`,
@@ -176,11 +176,11 @@ export default examples({
       run: (p: { values: { aside: boolean; footer: boolean } }) => {
         const email = signal(""), sent = signal(false)
         return <div class="sc-ex-ui-a-frame sc-ex-ui-a-auth">
-          {() => { const { aside, footer } = p.values; return <AuthLayout brand={<Brand name="Acme" mark={sparkles} />} title="Giriş yap" subtitle="Bağlantıyı e-postanıza gönderelim"
+          {() => { const { aside, footer } = p.values; return <AuthLayout brand={<Brand name="HADİ" mark={sparkles} />} title="Giriş yap" subtitle="Bağlantıyı e-postanıza gönderelim"
             aside={aside ? { headline: "Ekibiniz tek yerde", text: "Projeler, belgeler ve sohbet.", points: [{ icon: shieldCheck, title: "Güvenli", text: "Parolasız giriş" }, { icon: zap, title: "Hızlı", text: "Saniyeler içinde" }] } : undefined}
             footer={footer ? <span class="hm-muted">Hesabınız yok mu? Kaydolun.</span> : undefined}>
             {() => (sent() ? <Alert tone="success">Bağlantı {email() || "adresinize"} gönderildi.</Alert> : <form class="sc-ex-stack" onSubmit={(e: Event) => { e.preventDefault(); sent.set(true) }}>
-              <input class="hm-input" type="email" placeholder="ada@acme.example" aria-label="E-posta" value={email} onInput={(e: Event) => email.set((e.target as HTMLInputElement).value)} />
+              <input class="hm-input" type="email" placeholder="ada@hadisosyal.com" aria-label="E-posta" value={email} onInput={(e: Event) => email.set((e.target as HTMLInputElement).value)} />
               <Button type="submit" variant="primary" block>Bağlantı gönder</Button>
             </form>)}
           </AuthLayout> }}
@@ -198,8 +198,8 @@ export default examples({
         const name = signal("Ada Yılmaz")
         return <div class="sc-ex-stack">
           <Row>
-            <Avatar name={name} size={() => p.values.size} src={() => (p.values.photo ? "/yok/acme-avatar.png" : null)} />
-            {["Grace Hopper", "Linus", "Acme Destek"].map((n) => <Avatar name={n} size={() => p.values.size} />)}
+            <Avatar name={name} size={() => p.values.size} src={() => (p.values.photo ? "/yok/hadi-avatar.png" : null)} />
+            {["Grace Hopper", "Linus", "HADİ Destek"].map((n) => <Avatar name={n} size={() => p.values.size} />)}
           </Row>
           <input class="hm-input" aria-label="Ad" value={name} onInput={(e: Event) => name.set((e.target as HTMLInputElement).value)} />
         </div>
@@ -246,12 +246,12 @@ export default examples({
         return <div class="sc-ex-ui-a-phone">
           <div class="sc-ex-ui-a-screen"><Log lines={lines} label="Sekme günlüğü" /></div>
           {() => <BottomNav items={items} value={tab} onChange={(id) => { tab.set(id); if (id === "inbox") unread.set(0); log(`sekme: ${id}`) }}
-            variant={p.values.variant} labels={p.values.labels} onCreate={p.values.create ? () => log("oluştur") : undefined} label="Acme" />}
+            variant={p.values.variant} labels={p.values.labels} onCreate={p.values.create ? () => log("oluştur") : undefined} label="HADİ" />}
         </div>
       },
     },
     Brand: {
-      code: `<Brand mark={sparkles} name="Acme" sub="Yönetim" href="/" size="lg" />`,
+      code: `<Brand mark={sparkles} name="HADİ" sub="Yönetim" href="/" size="lg" />`,
       play: { options: [
         { key: "size", label: "Boyut", default: "md", options: ["md", "lg"] },
         { key: "sub", label: "Alt satır", default: "Yönetim", options: [{ value: "", label: "yok" }, { value: "Yönetim", label: "Yönetim" }, { value: "Test ortamı", label: "Test ortamı" }] },
@@ -259,7 +259,7 @@ export default examples({
       ] },
       run: (p: { values: { size: "md" | "lg"; sub: string; mark: string } }) => () => {
         const { size, sub, mark } = p.values
-        return <Row><Brand mark={mark === "icon" ? sparkles : "A"} name="Acme" sub={sub || undefined} size={size} /></Row>
+        return <Row><Brand mark={mark === "icon" ? sparkles : "A"} name="HADİ" sub={sub || undefined} size={size} /></Row>
       },
     },
     Breadcrumbs: {
@@ -268,7 +268,7 @@ export default examples({
 }))} />`,
       play: { options: [{ key: "icons", label: "Klasör ikonları", default: true }] },
       run: (p: { values: { icons: boolean } }) => {
-        const path = signal(["Acme", "Pazarlama", "2026", "Kampanya"])
+        const path = signal(["HADİ", "Pazarlama", "2026", "Kampanya"])
         const items = () => path().map((x, i) => ({ id: `${i}-${x}`, label: x, icon: p.values.icons ? (i ? folder : home) : undefined, onSelect: () => path.set(path().slice(0, i + 1)) }))
         return <div class="sc-ex-stack">
           <Breadcrumbs label="Konum" items={items} />

@@ -23,7 +23,7 @@ const example: ApiExample<any> = {
           <div class="sc-ex-flow-split">
             {() => <FlowPalette flow={flow} search={p.values.search} types={p.values.only === "act" ? TYPES.filter((t) => t.category === "Eylem") : TYPES}
               onAdd={(id, ty) => lines.update((l) => [...l, `${String(ty.label)} eklendi (${id})`].slice(-4))} />}
-            <div class="sc-ex-flow-stage"><FlowCanvas flow={flow} minimap={false} fields={false} label="Acme sipariş akışı" /></div>
+            <div class="sc-ex-flow-stage"><FlowCanvas flow={flow} minimap={false} fields={false} label="HADİ sipariş akışı" /></div>
           </div>
           <Log lines={lines} />
         </Stack>}</Load>

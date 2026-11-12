@@ -5,7 +5,7 @@ import type { ApiExample } from "../../types.ts";
 import "../../managers-a.css";
 
 const example: ApiExample<any> = {
-      code: `configureWindow({ channel: "acme:window", heartbeat: 500, ttl: 1500 })   // a group of tabs of its own
+      code: `configureWindow({ channel: "hadi:window", heartbeat: 500, ttl: 1500 })   // a group of tabs of its own
 appWindow().count()`,
       run: () => <CfgWindow />,
     };

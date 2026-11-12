@@ -11,7 +11,7 @@ const example: ApiExample<any> = {
       play: { options: [{ key: "result", label: "Sonuç", default: "ok", options: [{ value: "ok", label: "Başarılı" }, { value: "fail", label: "Hata" }] }, { key: "ms", label: "Gecikme", default: 600, options: [{ value: 300, label: "0,3 sn" }, { value: 600, label: "0,6 sn" }, { value: 1500, label: "1,5 sn" }] }] },
       run: (p: { values: { result: string; ms: number } }) => {
         const tick = signal(0)
-        const load = () => { tick(); const fail = p.values.result === "fail", ms = p.values.ms; return new Promise<string>((ok, no) => setTimeout(() => (fail ? no(new Error("Sunucu yanıt vermedi")) : ok("Acme")), ms)) }
+        const load = () => { tick(); const fail = p.values.result === "fail", ms = p.values.ms; return new Promise<string>((ok, no) => setTimeout(() => (fail ? no(new Error("Sunucu yanıt vermedi")) : ok("HADİ")), ms)) }
         return <div class="sc-ex-stack">
           <Await for={load} loading={<p class="hm-muted">Yükleniyor…</p>} catch={(e: Error) => <p role="alert">{e.message}</p>}>
             {(name: string) => <p>Merhaba, <strong>{name}</strong></p>}

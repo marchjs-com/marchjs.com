@@ -8,12 +8,12 @@ import type { ApiExample } from "../../types.ts";
 import "../../platform.css";
 
 const example: ApiExample<any> = {
-      code: `export const acmeLogo = defineIcon("acme-logo", ["o:12,12,9", "M8 12h8", "M12 8v8"])
-<Icon of={acmeLogo} size="xl" />`,
+      code: `export const hadiLogo = defineIcon("hadi-logo", ["o:12,12,9", "M8 12h8", "M12 8v8"])
+<Icon of={hadiLogo} size="xl" />`,
       run: () => {
         const filled = signal(false)
-        const def = computed(() => defineIcon("acme-logo", filled() ? ["o:12,12,9"] : ["o:12,12,9", "M8 12h8", "M12 8v8"], filled()))
-        return <Row>{() => <Icon of={def()} size="xl" label="Acme" />}
+        const def = computed(() => defineIcon("hadi-logo", filled() ? ["o:12,12,9"] : ["o:12,12,9", "M8 12h8", "M12 8v8"], filled()))
+        return <Row>{() => <Icon of={def()} size="xl" label="HADİ" />}
           <Button size="sm" onClick={() => filled.update((f) => !f)}>{() => (filled() ? "Çizgi" : "Dolu")}</Button>
           <Out label="donmuş" value={() => String(Object.isFrozen(def()))} /></Row>
       },

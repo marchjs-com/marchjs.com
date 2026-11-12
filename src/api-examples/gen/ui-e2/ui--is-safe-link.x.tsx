@@ -8,11 +8,11 @@ import type { ApiExample } from "../../types.ts";
 import "../../ui-e.css";
 
 const example: ApiExample<any> = {
-      code: `isSafeLink("https://acme.example")   // true
+      code: `isSafeLink("https://hadisosyal.com")   // true
 isSafeLink("javascript:alert(1)")    // false`,
       run: () => {
-        const url = signal("https://acme.example")
-        const samples = ["https://acme.example", "/docs/start", "mailto:ada@acme.example", "javascript:alert(1)", "data:text/html,x", "//evil.example"]
+        const url = signal("https://hadisosyal.com")
+        const samples = ["https://hadisosyal.com", "/docs/start", "mailto:ada@hadisosyal.com", "javascript:alert(1)", "data:text/html,x", "//evil.example"]
         return <div class="sc-ex-stack"><Row>{samples.map((s) => <Button size="sm" variant="ghost" onClick={() => url.set(s)}>{s.slice(0, 14)}</Button>)}</Row>
           <Field value={url} label="Bağlantı" /><Row><Out label="isSafeLink" value={() => String(isSafeLink(url()))} /><Badge color={() => (isSafeLink(url()) ? "success" : "danger")}>{() => (isSafeLink(url()) ? "güvenli" : "engellenir")}</Badge></Row></div>
       },

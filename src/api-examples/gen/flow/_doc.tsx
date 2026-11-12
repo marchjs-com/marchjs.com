@@ -2,7 +2,7 @@
 import { FLOW_SCHEMA, type FlowDoc } from "hadi-march/components/composite/flow-canvas/model.ts";
 
 const doc = (): FlowDoc => ({
-  schema: FLOW_SCHEMA, name: "Acme siparişleri",
+  schema: FLOW_SCHEMA, name: "HADİ siparişleri",
   nodes: [{ id: "order", type: "order", x: 0, y: 48 }, { id: "check", type: "check", x: 320, y: 48 }, { id: "mail", type: "mail", x: 640, y: 0 }, { id: "note", type: "note", x: 640, y: 176 }],
   edges: [{ id: "e1", from: "order.out", to: "check.in" }, { id: "e2", from: "check.yes", to: "mail.in" }, { id: "e3", from: "check.no", to: "note.in" }],
 })

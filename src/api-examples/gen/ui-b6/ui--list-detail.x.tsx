@@ -12,7 +12,7 @@ const example: ApiExample<any> = {
   detail={() => <OrderView order={$sel} />} />`,
       play: { options: [{ key: "back", label: "Geri düğmesi (dar ekran)", default: true }, { key: "empty", label: "Özel boş görünüm", default: false }] },
       run: (p: { values: { back: boolean; empty: boolean } }) => {
-        const orders = [{ id: "A-101", who: "Ada", total: "₺1.250" }, { id: "A-102", who: "Deniz", total: "₺480" }, { id: "A-103", who: "Acme", total: "₺9.900" }]
+        const orders = [{ id: "A-101", who: "Ada", total: "₺1.250" }, { id: "A-102", who: "Deniz", total: "₺480" }, { id: "A-103", who: "HADİ", total: "₺9.900" }]
         const sel = signal<(typeof orders)[number] | null>(null)
         return <div class="sc-ex-ui-b-ld">
           {() => { const b = p.values.back, e = p.values.empty; return <ListDetail selected={sel} {...(b ? { onBack: () => sel.set(null) } : {})} listLabel="Siparişler"

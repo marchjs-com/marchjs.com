@@ -3,8 +3,8 @@ import { clipboard, clipboardManager, disposeClipboard } from "hadi-march/manage
 import { Dispose } from "./_dispose.tsx";
 
 function DisposeClipboard() {
-  return <Dispose m={clipboardManager} label="history().length" useLabel='copy("Acme")' stopLabel="disposeClipboard()"
-    use={() => { void clipboard().copy("Acme " + Date.now() % 1000) }} stop={() => disposeClipboard()} read={() => clipboard().history().length}
+  return <Dispose m={clipboardManager} label="history().length" useLabel='copy("HADİ")' stopLabel="disposeClipboard()"
+    use={() => { void clipboard().copy("HADİ " + Date.now() % 1000) }} stop={() => disposeClipboard()} read={() => clipboard().history().length}
     end={() => { if (clipboardManager.alive()) clipboard().clearHistory() }} />
 }
 export { DisposeClipboard };

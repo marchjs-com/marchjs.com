@@ -13,7 +13,7 @@ const example: ApiExample<any> = {
         const pos = signal("0, 0")
         return <div class="sc-ex-motion-a"><div class="sc-ex-motion-a-stage sc-ex-motion-a-stage-free">
           {() => <div class="sc-ex-motion-a-drag" tabindex="0" role="button" aria-label="Sürüklenebilir kutu"
-            use:drag={{ axis: p.values.axis, bounds: { left: -80, right: 80, top: -24, bottom: 24 }, snapBack: p.values.snapBack, onMove: (m: { x: number; y: number }) => pos.set(`${Math.round(m.x)}, ${Math.round(m.y)}`) }}>Acme</div>}
+            use:drag={{ axis: p.values.axis, bounds: { left: -80, right: 80, top: -24, bottom: 24 }, snapBack: p.values.snapBack, onMove: (m: { x: number; y: number }) => pos.set(`${Math.round(m.x)}, ${Math.round(m.y)}`) }}>HADİ</div>}
           <p class="sc-ex-motion-a-hint">Kutuyu sürükle ya da odaktayken ok tuşlarına bas.</p></div>
           <Row><Out label="konum" value={pos} /></Row></div>
       },

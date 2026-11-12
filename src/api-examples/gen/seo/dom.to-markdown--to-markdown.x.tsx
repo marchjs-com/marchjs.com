@@ -8,7 +8,7 @@ import { RICH } from "./_rich.tsx";
 import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
-      code: `const md = toMarkdown(editor)   // "## Sürüm notları\\n\\n**Acme** artık *daha hızlı*. …"
+      code: `const md = toMarkdown(editor)   // "## Sürüm notları\\n\\n**HADİ** artık *daha hızlı*. …"
 save({ body: md })`,
       run: () => {
         const ed = box(RICH, true), md = signal(toMarkdown(ed))

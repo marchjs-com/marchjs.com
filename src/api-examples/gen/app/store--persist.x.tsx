@@ -9,7 +9,7 @@ import "../../app.css";
 
 const example: ApiExample<any> = {
       code: `const prefs = store({ size: 14 })
-persist(prefs, "acme.prefs")   // loads now; saves 200 ms after a change`,
+persist(prefs, "hadi.prefs")   // loads now; saves 200 ms after a change`,
       run: () => {
         const KEY = "hm-ex-app.prefs"
         const prefs = store({ size: 14 })

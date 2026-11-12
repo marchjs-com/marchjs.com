@@ -79,7 +79,7 @@ function themeVars(def: ThemeDef, dark: boolean): [string, string][] {
 function ThemeBox(p: { def: () => ThemeDef; children?: unknown }) {
   const el = asEl(<div class="sc-ex-platform-theme">
     <p class="sc-ex-platform-theme-title">{() => p.def().name}</p>
-    <p class="sc-ex-platform-theme-text">{() => p.def().description ?? "Acme panosu"}</p>
+    <p class="sc-ex-platform-theme-text">{() => p.def().description ?? "HADİ panosu"}</p>
     <div class="sc-ex-platform-swatches">{[1, 2, 3, 4, 5, 6, 7, 8].map((i) => <span class="sc-ex-platform-sw" style={{ background: `var(--hm-cat-${i})` }} />)}</div>
     <Row><Button variant="primary" size="sm">Kaydet</Button><Button size="sm">Vazgeç</Button></Row>
     {p.children}
@@ -215,8 +215,8 @@ ch["temp.read"].on((c) => console.log(c))   // a late listener gets the last 3 f
         const [lines, add] = useLog()
         onChannels("ex.order.*", (m) => add(`${m.name}: ${String(m.payload)}`))
         return <Stack><Row>
-          <Button onClick={() => placed.emit("Acme #12")}>order.placed</Button>
-          <Button onClick={() => paid.emit("Acme #12")}>order.paid</Button>
+          <Button onClick={() => placed.emit("HADİ #12")}>order.placed</Button>
+          <Button onClick={() => paid.emit("HADİ #12")}>order.paid</Button>
           <Button variant="ghost" onClick={() => other.emit("Ada")}>user.seen (duyulmaz)</Button>
         </Row><Log lines={lines} /></Stack>
       },
@@ -480,7 +480,7 @@ const to = nearest([-120, 0, 120], rest)  // then snap`,
         return <Stack>
           <Row><span>Metin</span><Segmented value={fg} options={opts} aria-label="Metin rengi" /></Row>
           <Row><span>Zemin</span><Segmented value={bg} options={[{ value: HADI.mist, label: "mist" }, { value: HADI.night, label: "night" }, ...opts.slice(0, 2)]} aria-label="Zemin rengi" /></Row>
-          <Row><span class="sc-ex-platform-sw" style={() => ({ color: fg(), background: bg() })}>Acme 42</span>
+          <Row><span class="sc-ex-platform-sw" style={() => ({ color: fg(), background: bg() })}>HADİ 42</span>
             <Out label="oran" value={() => contrast(fg(), bg()).toFixed(2)} />
             {() => <Badge tone={contrast(fg(), bg()) >= 4.5 ? "success" : "warn"}>{contrast(fg(), bg()) >= 4.5 ? "AA geçer" : "AA altı"}</Badge>}</Row>
         </Stack>
@@ -495,17 +495,17 @@ cream.light.primary   // a warm, paper-like preset`) },
       run: () => <Stack><Out label="DEFAULT_THEME" value={DEFAULT_THEME} /><ThemeBox def={() => THEMES.find((t) => t.id === DEFAULT_THEME) ?? hadi} /></Stack>,
     },
     defineTheme: {
-      code: `export const acme = defineTheme({ ...hadi, id: "acme", name: "Acme",
+      code: `export const hadiMarka = defineTheme({ ...hadi, id: "hadi-marka", name: "HADİ",
   light: { ...hadi.light, primary: HADI.purple, solid: HADI.purple } })
-// build: write themeCss(acme) to themes/acme.css, then registerThemes([{ id: "acme", name: "Acme" }])`,
+// build: write themeCss(hadiMarka) to themes/hadi-marka.css, then registerThemes([{ id: "hadi-marka", name: "HADİ" }])`,
       run: () => {
         const accent = signal<string>(HADI.purple), err = signal("—")
-        const def = computed(() => defineTheme({ ...hadi, id: "acme", name: "Acme", description: "defineTheme ile türetildi",
+        const def = computed(() => defineTheme({ ...hadi, id: "hadi-marka", name: "HADİ", description: "defineTheme ile türetildi",
           light: { ...hadi.light, primary: ensureContrast(accent(), hadi.light.surface), solid: accent(), onSolid: onBrandFill(accent()) },
           dark: { ...hadi.dark, primary: accent(), solid: accent(), onSolid: onBrandFill(accent()) } }))
         return <Stack>
           <Row><Segmented value={accent} options={brand.slice(0, 4).map(([k, v]) => ({ value: v, label: k }))} aria-label="Vurgu rengi" />
-            <Button variant="ghost" onClick={() => { try { defineTheme({ ...hadi, id: "Acme Tema" }) } catch (e) { err.set((e as Error).message) } }}>Geçersiz id dene</Button></Row>
+            <Button variant="ghost" onClick={() => { try { defineTheme({ ...hadi, id: "HADİ Tema" }) } catch (e) { err.set((e as Error).message) } }}>Geçersiz id dene</Button></Row>
           <ThemeBox def={def} />
           <Out label="hata" value={err} />
         </Stack>
@@ -547,7 +547,7 @@ night.dark.bg`) },
         <span class="sc-ex-platform-sw" style={{ background: v, color: onBrandFill(v) }}>{k}: {onBrandFill(v)}</span>)}</div>,
     },
     themeCss: {
-      code: `writeFileSync("dist/themes/acme.css", themeCss(acme))
+      code: `writeFileSync("dist/themes/hadi-marka.css", themeCss(hadiMarka))
 themeCss(hadi, true)   // the default also styles <html> without data-hm-theme`,
       run: () => {
         const id = signal("cream")
@@ -573,12 +573,12 @@ themeCss(hadi, true)   // the default also styles <html> without data-hm-theme`,
   },
   "hadi-march/icons": {
     defineIcon: {
-      code: `export const acmeLogo = defineIcon("acme-logo", ["o:12,12,9", "M8 12h8", "M12 8v8"])
-<Icon of={acmeLogo} size="xl" />`,
+      code: `export const hadiLogo = defineIcon("hadi-logo", ["o:12,12,9", "M8 12h8", "M12 8v8"])
+<Icon of={hadiLogo} size="xl" />`,
       run: () => {
         const filled = signal(false)
-        const def = computed(() => defineIcon("acme-logo", filled() ? ["o:12,12,9"] : ["o:12,12,9", "M8 12h8", "M12 8v8"], filled()))
-        return <Row>{() => <Icon of={def()} size="xl" label="Acme" />}
+        const def = computed(() => defineIcon("hadi-logo", filled() ? ["o:12,12,9"] : ["o:12,12,9", "M8 12h8", "M12 8v8"], filled()))
+        return <Row>{() => <Icon of={def()} size="xl" label="HADİ" />}
           <Button size="sm" onClick={() => filled.update((f) => !f)}>{() => (filled() ? "Çizgi" : "Dolu")}</Button>
           <Out label="donmuş" value={() => String(Object.isFrozen(def()))} /></Row>
       },
@@ -663,7 +663,7 @@ Object.keys(ICONS).filter((n) => n.includes(q)).map((n) => <Icon of={ICONS[n]} /
       run: (p: { values: { title: string } }) => {
         const restore = keepConsent()
         return <Load from={consentLib}>{({ ConsentBanner, showConsentBanner }) => <Stack>
-          {() => <ConsentBanner inline always title={p.values.title} text="Acme, ziyaretleri ölçmek için analitik çerez kullanmak istiyor." />}
+          {() => <ConsentBanner inline always title={p.values.title} text="HADİ, ziyaretleri ölçmek için analitik çerez kullanmak istiyor." />}
           <Row><Out label="izin verilen" value={choices} /><Button size="sm" variant="ghost" onClick={() => { restore(); showConsentBanner() }}>Önceki tercihe dön</Button></Row>
         </Stack>}</Load>
       },
@@ -679,7 +679,7 @@ Object.keys(ICONS).filter((n) => n.includes(q)).map((n) => <Icon of={ICONS[n]} /
       run: (p: { values: { category: string; custom: boolean } }) => {
         const restore = keepConsent()
         return <Load from={consentLib}>{({ ConsentGate }) => <Stack>
-          {() => <ConsentGate category={p.values.category} label={p.values.custom ? "Harita, izin verdiğinizde Acme'nin sağlayıcısından yüklenir." : undefined}>
+          {() => <ConsentGate category={p.values.category} label={p.values.custom ? "Harita, izin verdiğinizde HADİ'nin sağlayıcısından yüklenir." : undefined}>
             <div class="sc-ex-platform-sample"><Icon of={bell} size="lg" /><p>İçerik yüklendi ({p.values.category}).</p></div>
           </ConsentGate>}
           <Row><Out label="consent.has(kategori)" value={() => String(consent.has(p.values.category))} /><Button size="sm" variant="ghost" onClick={restore}>Önceki tercihe dön</Button></Row>
@@ -702,7 +702,7 @@ Object.keys(ICONS).filter((n) => n.includes(q)).map((n) => <Icon of={ICONS[n]} /
       run: () => {
         const restore = keepConsent(), result = signal("—")
         return <Load from={consentLib}>{({ openConsentPreferences }) => <Row>
-          <Button variant="primary" onClick={async () => result.set(String(await openConsentPreferences({ title: "Acme gizlilik tercihleri" })))}>Tercihleri aç</Button>
+          <Button variant="primary" onClick={async () => result.set(String(await openConsentPreferences({ title: "HADİ gizlilik tercihleri" })))}>Tercihleri aç</Button>
           <Out label="kaydedildi" value={result} /><Out label="izin verilen" value={choices} />
           <Button size="sm" variant="ghost" onClick={restore}>Önceki tercihe dön</Button>
         </Row>}</Load>
@@ -812,7 +812,7 @@ b.label()   b.disabled()   b.shortcut()   b.run()`,
 h.run("Yazma", () => text.set(next), () => text.set(prev), "typing")
 h.undo()   h.redo()   h.past()`,
       run: () => {
-        const text = signal("Acme")
+        const text = signal("HADİ")
         const h = undoHistory({ mergeMs: 800 })
         onCleanup(h.dispose)
         let shown = text.peek()
@@ -856,7 +856,7 @@ const stack = create({ limit: 3, mergeMs: 0, commands: false }, (type, d) => log
         const restore = keepA11y()
         return <Load from={a11yLib}>{({ AccessibilitySettings }) => <Stack>
           <AccessibilitySettings />
-          {() => (p.values.sample ? <div class="sc-ex-platform-sample"><p>Acme bülteni: <a href="#api">bağlantı</a> ve <Button size="sm">odaklanabilir düğme</Button></p></div> : null)}
+          {() => (p.values.sample ? <div class="sc-ex-platform-sample"><p>HADİ bülteni: <a href="#api">bağlantı</a> ve <Button size="sm">odaklanabilir düğme</Button></p></div> : null)}
           <Row><Button variant="ghost" onClick={restore}>Önceki ayarlara dön</Button></Row>
         </Stack>}</Load>
       },

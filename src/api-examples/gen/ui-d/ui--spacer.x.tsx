@@ -8,7 +8,7 @@ import "../../ui-d.css";
 
 const example: ApiExample<any> = {
       code: `<div class="bar">
-  <strong>Acme</strong>
+  <strong>HADİ</strong>
   <Spacer />
   <Button>Giriş</Button>
 </div>`,
@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
       run: (p: { values: { spacer: boolean } }) => {
         const clicks = signal(0)
         return <div class="sc-ex-stack">
-          <div class="sc-ex-ui-d-bar"><strong>Acme</strong>{() => (p.values.spacer ? <Spacer /> : null)}<Button size="sm" variant="ghost">Fiyatlar</Button><Button size="sm" variant="primary" onClick={() => clicks.update((x) => x + 1)}>Giriş</Button></div>
+          <div class="sc-ex-ui-d-bar"><strong>HADİ</strong>{() => (p.values.spacer ? <Spacer /> : null)}<Button size="sm" variant="ghost">Fiyatlar</Button><Button size="sm" variant="primary" onClick={() => clicks.update((x) => x + 1)}>Giriş</Button></div>
           <Out label="giriş tıklaması" value={clicks} />
         </div>
       },

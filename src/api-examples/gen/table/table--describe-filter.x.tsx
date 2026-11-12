@@ -16,7 +16,7 @@ describeFilter({ filter: "select", options: regions }, ["ege"])  // "Ege"`,
           ["select", { filter: "select", options: [{ value: "ege", label: "Ege" }, { value: "mar", label: "Marmara" }] }, ["ege", "mar"]],
           ["bool", { filter: "bool" }, true],
           ["dateRange", { filter: "dateRange" }, { from: "2026-10-01", to: "2026-10-31" }],
-          ["text", { filter: "text" }, "acme"],
+          ["text", { filter: "text" }, "hadi"],
         ]
         return <ul class="sc-ex-table-list">{cases.map(([k, col, f]) => <li><code>{k} {json(f)}</code><Badge>{describeFilter(col, f)}</Badge></li>)}</ul>
       },

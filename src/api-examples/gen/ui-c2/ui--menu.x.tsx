@@ -20,7 +20,7 @@ const example: ApiExample<any> = {
       ] },
       run: (p: { values: { variant: "secondary" | "primary" | "ghost"; locked: boolean } }) => {
         const [lines, add] = logger()
-        const row = { name: "Acme faturası #42" }
+        const row = { name: "HADİ faturası #42" }
         return <div class="sc-ex-ui-c-stack">
           <Row><span>{row.name}</span>
             <Menu label="İşlemler" variant={() => p.values.variant} args={[row]} items={[

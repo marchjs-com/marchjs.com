@@ -9,7 +9,7 @@ const example: ApiExample<any> = {
       code: `jsonLdText({ name: "</script><b>" })
 // {"name":"\\u003c/script\\u003e\\u003cb\\u003e"} — can never close the element`,
       run: () => {
-        const name = signal("Acme </script><img src=x>")
+        const name = signal("HADİ </script><img src=x>")
         return <div class="sc-ex-stack"><Text label="Ad" value={name} /><Pre text={() => jsonLdText({ "@type": "Organization", name: name() })} /></div>
       },
     };

@@ -17,8 +17,8 @@ const example: ApiExample<any> = {
         const name = signal("Ada Yılmaz")
         return <div class="sc-ex-stack">
           <Row>
-            <Avatar name={name} size={() => p.values.size} src={() => (p.values.photo ? "/yok/acme-avatar.png" : null)} />
-            {["Grace Hopper", "Linus", "Acme Destek"].map((n) => <Avatar name={n} size={() => p.values.size} />)}
+            <Avatar name={name} size={() => p.values.size} src={() => (p.values.photo ? "/yok/hadi-avatar.png" : null)} />
+            {["Grace Hopper", "Linus", "HADİ Destek"].map((n) => <Avatar name={n} size={() => p.values.size} />)}
           </Row>
           <input class="hm-input" aria-label="Ad" value={name} onInput={(e: Event) => name.set((e.target as HTMLInputElement).value)} />
         </div>

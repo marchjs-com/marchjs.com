@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
         return <div class="sc-ex-stack">
           {() => p.values.kind === "vertical"
             ? <Row><Button variant="ghost">Kaydet</Button><Divider vertical /><Button variant="ghost">Paylaş</Button><Divider vertical /><Button variant="ghost">Sil</Button></Row>
-            : <div class="sc-ex-stack"><Button variant="primary">E-postayla giriş</Button>{p.values.kind === "label" ? <Divider label={or} /> : <Divider />}<Button>Acme hesabıyla giriş</Button></div>}
+            : <div class="sc-ex-stack"><Button variant="primary">E-postayla giriş</Button>{p.values.kind === "label" ? <Divider label={or} /> : <Divider />}<Button>HADİ hesabıyla giriş</Button></div>}
           {() => p.values.kind === "label" && <Row><TextInput value={or} aria-label="Ayırıcı etiketi" /></Row>}
         </div>
       },

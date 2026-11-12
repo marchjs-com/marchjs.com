@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
         onCleanup(() => clearTimeout(timer))
         const load = () => { ready.set(false); clearTimeout(timer); timer = setTimeout(() => ready.set(true), 1200) }
         return <div class="sc-ex-stack">
-          {() => { const { lines, block, colors } = p.values; return ready() ? <p>Acme hesabı: 3 proje, 12 üye.</p> : <Skeleton lines={lines} block={block} height="lg" colors={(colors || undefined) as "single"} /> }}
+          {() => { const { lines, block, colors } = p.values; return ready() ? <p>HADİ hesabı: 3 proje, 12 üye.</p> : <Skeleton lines={lines} block={block} height="lg" colors={(colors || undefined) as "single"} /> }}
           <Row><Button onClick={load}>Yükle (1,2 sn)</Button><Button variant="ghost" onClick={() => { clearTimeout(timer); ready.set(false) }}>İskelete dön</Button></Row>
         </div>
       },

@@ -45,7 +45,7 @@ export default examples({
 </footer>`,
       play: { options: [{ key: "variant", label: "Görünüm", default: "badge", options: opts(["text", "metin"], ["badge", "rozet"], ["small", "küçük"]) }] },
       run: (p: { values: { variant: "text" | "badge" | "small" } }) => <div class="sc-ex-ui-c-box">
-        <p class="hm-muted">© Acme · Gizlilik · Destek</p>
+        <p class="hm-muted">© HADİ · Gizlilik · Destek</p>
         <MadeWithMarch variant={() => p.values.variant} />
       </div>,
     },
@@ -64,7 +64,7 @@ export default examples({
       code: `<Markdown source={post.body} headingOffset={1} />   // safe: no raw HTML, https images only`,
       play: { options: [{ key: "offset", label: "Başlık kaydırma", default: 0, options: opts([0, "0"], [1, "+1"], [2, "+2"]) }] },
       run: (p: { values: { offset: number } }) => {
-        const src = signal("# Acme bülteni\n\nBu hafta **3 yeni** özellik var:\n\n- Hızlı arama\n- `Ctrl+K` ile komutlar\n- [Belgeler](https://example.com)\n\n> <b>HTML</b> etiketleri metin olarak kalır.")
+        const src = signal("# HADİ bülteni\n\nBu hafta **3 yeni** özellik var:\n\n- Hızlı arama\n- `Ctrl+K` ile komutlar\n- [Belgeler](https://example.com)\n\n> <b>HTML</b> etiketleri metin olarak kalır.")
         return <div class="sc-ex-ui-c-stack">
           <textarea class="hm-input sc-ex-ui-c-input" aria-label="Markdown kaynağı" value={src()} onInput={(e: Event) => src.set((e.target as HTMLTextAreaElement).value)} />
           <div class="sc-ex-ui-c-box"><Markdown source={src()} headingOffset={p.values.offset} /></div>
@@ -80,7 +80,7 @@ export default examples({
         { key: "stats", label: "Kelime sayısı", default: true },
       ] },
       run: (p: { values: { view: "write" | "preview" | "split"; toolbar: boolean; stats: boolean } }) => {
-        const body = signal("## Toplantı notu\n\n- **Acme** sürümü cuma\n- Belgeler güncellenecek")
+        const body = signal("## Toplantı notu\n\n- **HADİ** sürümü cuma\n- Belgeler güncellenecek")
         return <div class="sc-ex-ui-c-stack">
           {() => { const { view, toolbar, stats } = { view: p.values.view, toolbar: p.values.toolbar, stats: p.values.stats }
             return <MarkdownEditor value={body} view={view} toolbar={toolbar} stats={stats} rows={5} views={["write", "preview", "split"]} /> }}
@@ -95,7 +95,7 @@ export default examples({
         { key: "separator", label: "Ayraç", default: "•", options: ["•", "✦", "—"] },
       ] },
       run: (p: { values: { speed: number; separator: string } }) => {
-        const news = signal(["Acme Koşu Kulübü pazar sabahı buluşuyor", "Yeni sezon üyelikleri açıldı", "Kahve atölyesi cuma 19.00'da"])
+        const news = signal(["HADİ Koşu Kulübü pazar sabahı buluşuyor", "Yeni sezon üyelikleri açıldı", "Kahve atölyesi cuma 19.00'da"])
         return <div class="sc-ex-ui-c-stack">
           <div class="sc-ex-ui-c-box">{() => { const speed = p.values.speed, separator = p.values.separator
             return <Marquee text={() => news().join(` ${separator} `)} speed={speed} separator={separator} /> }}</div>

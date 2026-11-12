@@ -200,7 +200,7 @@ heartPop(icon, false)   // small press`,
       code: `htmlToMarkdown("<h1>Başlık</h1><p>Bir <b>kalın</b> söz.</p>")
 // "## Başlık\\n\\nBir **kalın** söz."`,
       run: () => {
-        const html = signal('<h1>Merhaba</h1><p>Bir <b>kalın</b> ve <a href="https://acme.example">bağlantı</a>.</p><ul><li>Bir</li><li>İki</li></ul>')
+        const html = signal('<h1>Merhaba</h1><p>Bir <b>kalın</b> ve <a href="https://hadisosyal.com">bağlantı</a>.</p><ul><li>Bir</li><li>İki</li></ul>')
         return <div class="sc-ex-stack"><Textarea value={html} aria-label="HTML" rows={3} /><Pre text={() => htmlToMarkdown(html())} /></div>
       },
     },
@@ -247,11 +247,11 @@ formatKey("mod+k")`,
       run: () => <Row><Out label="isMac()" value={String(isMac())} /><Kbd>{formatKey("mod+k")}</Kbd></Row>,
     },
     isSafeLink: {
-      code: `isSafeLink("https://acme.example")   // true
+      code: `isSafeLink("https://hadisosyal.com")   // true
 isSafeLink("javascript:alert(1)")    // false`,
       run: () => {
-        const url = signal("https://acme.example")
-        const samples = ["https://acme.example", "/docs/start", "mailto:ada@acme.example", "javascript:alert(1)", "data:text/html,x", "//evil.example"]
+        const url = signal("https://hadisosyal.com")
+        const samples = ["https://hadisosyal.com", "/docs/start", "mailto:ada@hadisosyal.com", "javascript:alert(1)", "data:text/html,x", "//evil.example"]
         return <div class="sc-ex-stack"><Row>{samples.map((s) => <Button size="sm" variant="ghost" onClick={() => url.set(s)}>{s.slice(0, 14)}</Button>)}</Row>
           <Field value={url} label="Bağlantı" /><Row><Out label="isSafeLink" value={() => String(isSafeLink(url()))} /><Badge color={() => (isSafeLink(url()) ? "success" : "danger")}>{() => (isSafeLink(url()) ? "güvenli" : "engellenir")}</Badge></Row></div>
       },
@@ -275,9 +275,9 @@ off()   // unregister (also automatic when the component is removed)`,
       },
     },
     markdownNodes: {
-      code: `parent.append(...markdownNodes("# Başlık\\n\\n**kalın** [bağlantı](https://acme.example)"))`,
+      code: `parent.append(...markdownNodes("# Başlık\\n\\n**kalın** [bağlantı](https://hadisosyal.com)"))`,
       run: () => {
-        const md = signal("# Başlık\n\n**Kalın**, *eğik* ve [bağlantı](https://acme.example).\n\n- Bir\n- İki\n\n<b>HTML metin olarak görünür</b>")
+        const md = signal("# Başlık\n\n**Kalın**, *eğik* ve [bağlantı](https://hadisosyal.com).\n\n- Bir\n- İki\n\n<b>HTML metin olarak görünür</b>")
         return <div class="sc-ex-stack"><Textarea value={md} aria-label="Markdown" rows={4} /><div class="sc-ex-ui-e-md">{() => markdownNodes(md())}</div></div>
       },
     },

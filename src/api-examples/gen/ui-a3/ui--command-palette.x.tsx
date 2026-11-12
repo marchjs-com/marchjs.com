@@ -10,7 +10,7 @@ import "../../ui-a.css";
 
 const example: ApiExample<any> = {
       code: `<CommandPalette placeholder="Komut ya da sayfa…" limit={20}
-  commands={[{ id: "acme.invite", title: "Kişi davet et", group: "Ekip", run: invite }]}
+  commands={[{ id: "hadi.invite", title: "Kişi davet et", group: "Ekip", run: invite }]}
   onRun={(entry) => analytics.track(entry.id)} />`,
       play: { options: [{ key: "set", label: "Komutlar", default: "doc", options: [{ value: "doc", label: "belge" }, { value: "view", label: "görünüm" }] }] },
       run: (p: { values: { set: string } }) => {
@@ -19,7 +19,7 @@ const example: ApiExample<any> = {
         type Cmd = { id: string; title: string; group: string; icon: unknown; keywords?: string; run: () => void }
         const SETS: Record<string, Cmd[]> = {
           doc: [
-            { id: "ex.ui-a.new", title: "Yeni Acme belgesi", group: "Bu örnek", icon: fileText, run: () => log("yeni belge") },
+            { id: "ex.ui-a.new", title: "Yeni HADİ belgesi", group: "Bu örnek", icon: fileText, run: () => log("yeni belge") },
             { id: "ex.ui-a.star", title: "Belgeyi yıldızla", group: "Bu örnek", icon: star, keywords: "favori", run: () => log("yıldızlandı") },
           ],
           view: [

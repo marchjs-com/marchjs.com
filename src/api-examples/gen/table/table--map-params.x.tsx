@@ -10,7 +10,7 @@ const example: ApiExample<any> = {
       code: `mapParams(params, { size: "limit", offset: "skip", page: null,
   sort: (s) => ({ order: s.map((x) => (x.dir === "desc" ? "-" : "") + x.key).join(",") }) })`,
       run: () => {
-        const params = { page: 3, size: 20, offset: 40, sort: [{ key: "amount", dir: "desc" }], filters: { region: ["Ege"] }, search: "acme" }
+        const params = { page: 3, size: 20, offset: 40, sort: [{ key: "amount", dir: "desc" }], filters: { region: ["Ege"] }, search: "hadi" }
         const styles: Record<string, Parameters<typeof mapParams>[1]> = {
           "varsayılan": undefined,
           "limit/skip": { size: "limit", offset: "skip", page: null, sort: (s) => ({ order: (s as SortSpec[]).map((x) => (x.dir === "desc" ? "-" : "") + x.key).join(",") }) },

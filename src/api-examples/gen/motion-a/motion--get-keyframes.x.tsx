@@ -4,18 +4,18 @@ import { animate, getKeyframes } from "hadi-march/motion";
 import { Out } from "../../_kit.tsx";
 import { el } from "./_el.tsx";
 import { Stage } from "./_stage.tsx";
-import { ensureAcme } from "./_ensure-acme.tsx";
+import { ensureHadi } from "./_ensure-hadi.tsx";
 import type { ApiExample } from "../../types.ts";
 import "../../motion-a.css";
 
 const example: ApiExample<any> = {
-      code: `keyframes("acme-rise", { opacity: [0, 1], transform: ["translateY(24px)", "none"] }, { duration: 420 })
-getKeyframes("acme-rise")?.defaults   // { duration: 420, easing: "expo" }
+      code: `keyframes("hadi-rise", { opacity: [0, 1], transform: ["translateY(24px)", "none"] }, { duration: 420 })
+getKeyframes("hadi-rise")?.defaults   // { duration: 420, easing: "expo" }
 getKeyframes("missing")               // null`,
-      play: { options: [{ key: "name", label: "Ad", default: "acme-rise", options: ["acme-rise", "acme-drop", "yok-boyle-bir-ad"] }] },
+      play: { options: [{ key: "name", label: "Ad", default: "hadi-rise", options: ["hadi-rise", "hadi-drop", "yok-boyle-bir-ad"] }] },
       run: (p: { values: { name: string } }) => {
-        ensureAcme()
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        ensureHadi()
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         const def = () => getKeyframes(p.values.name)
         return <Stage start={() => (def() ? animate(box, p.values.name) : null)} extra={<><Out label="bulundu" value={() => String(!!def())} /><Out label="varsayılan" value={() => (def() ? JSON.stringify(def()!.defaults) : "null")} /></>}>{box}</Stage>
       },

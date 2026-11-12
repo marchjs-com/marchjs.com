@@ -17,7 +17,7 @@ const example: ApiExample<any> = {
         const color = signal("#78be3a")
         return <div class="sc-ex-stack">
           {() => { const { format, alpha, palettes } = p.values; return <ColorPicker value={color} format={format} alpha={alpha} recent={0} eyedropper={false}
-            palettes={palettes ? [{ label: "Acme", colors: ["#f2801f", "#1d9ad6", "#78be3a", "#a3338c"] }] : false} aria-label="Renk" /> }}
+            palettes={palettes ? [{ label: "HADİ", colors: ["#f2801f", "#1d9ad6", "#78be3a", "#a3338c"] }] : false} aria-label="Renk" /> }}
           <Out label="value" value={color} />
         </div>
       },

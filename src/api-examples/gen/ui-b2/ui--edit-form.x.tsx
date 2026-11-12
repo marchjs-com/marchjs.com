@@ -11,7 +11,7 @@ const example: ApiExample<any> = {
   save={(values, { changed, reason }) => api.saveProfile(changed, reason)} />`,
       play: { options: [{ key: "layout", label: "Yerleşim", default: "grid", options: [{ value: "stack", label: "alt alta" }, { value: "grid", label: "ızgara" }] }, { key: "readonly", label: "Salt okunur", default: false }] },
       run: (p: { values: { layout: "stack" | "grid"; readonly: boolean } }) => {
-        const db: { name: string; email: string; team: string | null } = { name: "Ada", email: "ada@acme.test", team: "web" }
+        const db: { name: string; email: string; team: string | null } = { name: "Ada", email: "ada@hadisosyal.com", team: "web" }
         const log = useLog()
         return <div class="sc-ex-stack">
           {() => { const l = p.values.layout, ro = p.values.readonly; return <EditForm schema={Profile} layout={l} cols={2} readonly={ro} title="Profil" submitLabel="Kaydet"

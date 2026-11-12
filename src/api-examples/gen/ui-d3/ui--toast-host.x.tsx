@@ -13,7 +13,7 @@ toast("Kaydedildi", { kind: "success" })`,
       play: { options: [{ key: "kind", label: "Tür", default: "success", options: [{ value: "info", label: "bilgi" }, { value: "success", label: "başarı" }, { value: "warn", label: "uyarı" }] }, { key: "action", label: "Geri al eylemi", default: false }] },
       run: (p: { values: { kind: string; action: boolean } }) => {
         const n = signal(0)
-        const show = () => { n.update((x) => x + 1); toast(`Acme belgesi kaydedildi (#${n.peek()})`, { kind: p.values.kind as "info", timeout: 5000, action: p.values.action ? { label: "Geri al", run: () => n.update((x) => x - 1) } : undefined }) }
+        const show = () => { n.update((x) => x + 1); toast(`HADİ belgesi kaydedildi (#${n.peek()})`, { kind: p.values.kind as "info", timeout: 5000, action: p.values.action ? { label: "Geri al", run: () => n.update((x) => x - 1) } : undefined }) }
         return <div class="sc-ex-stack">
           <Row><Button variant="primary" onClick={show}>Bildirim göster</Button><Button variant="ghost" onClick={() => toast.clear()}>Hepsini kapat</Button><Out label="açık" value={() => toast.list().length} /></Row>
           <div class="sc-ex-ui-d-toasts"><ToastHost /></div>

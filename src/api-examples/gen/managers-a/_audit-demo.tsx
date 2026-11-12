@@ -11,7 +11,7 @@ function AuditDemo() {
     const root = (<div>
       <h2>Başlık</h2>
       {ok ? <h3>Alt başlık</h3> : <h4>Alt başlık</h4>}
-      {ok ? <img alt="Acme logosu" /> : <img />}
+      {ok ? <img alt="HADİ logosu" /> : <img />}
       <button type="button">{ok ? "Kaydet" : ""}</button>
       <input type="text" aria-label={ok ? "Ad" : undefined} />
     </div>) as HTMLElement

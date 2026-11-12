@@ -20,7 +20,7 @@ const example: ApiExample<any> = {
         const flow = newFlow(), runner = createFlowRunner(flow)
         onCleanup(() => runner.reset())
         return <Load from={flowLib}>{({ FlowCanvas, FlowControls }) => <Stack>
-          <div class="sc-ex-flow-stage"><FlowCanvas flow={flow} minimap={false} fields={false} label="Acme sipariş akışı" /></div>
+          <div class="sc-ex-flow-stage"><FlowCanvas flow={flow} minimap={false} fields={false} label="HADİ sipariş akışı" /></div>
           {() => <FlowControls runner={runner} flow={flow} timeline={() => p.values.timeline} speeds={p.values.speeds === "slow" ? [0.25, 0.5, 1] : [0.5, 1, 2, 4]} />}
         </Stack>}</Load>
       },

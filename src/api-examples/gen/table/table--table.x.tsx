@@ -17,7 +17,7 @@ const example: ApiExample<any> = {
       ] },
       run: (p: { values: { layout: "auto" | "table" | "cards"; selectable: boolean; paging: boolean } }) => <div>{() => {
         const { layout, selectable, paging } = p.values
-        return untrack(() => <Load load={() => import("hadi-march/table/render.ts")}>{({ Table }: { Table: (p: any) => unknown }) => <Table rows={ORDERS} columns={COLS} rowKey="id" pageSize={4} paging={paging} selectable={selectable} layout={layout} cardBreakpoint={520} caption="Siparişler" filename="acme-siparisler" />}</Load>)
+        return untrack(() => <Load load={() => import("hadi-march/table/render.ts")}>{({ Table }: { Table: (p: any) => unknown }) => <Table rows={ORDERS} columns={COLS} rowKey="id" pageSize={4} paging={paging} selectable={selectable} layout={layout} cardBreakpoint={520} caption="Siparişler" filename="hadi-siparisler" />}</Load>)
       }}</div>,
     };
 export default example;

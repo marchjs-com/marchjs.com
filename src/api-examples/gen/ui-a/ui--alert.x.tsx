@@ -18,7 +18,7 @@ const example: ApiExample<any> = {
         const n = signal(0)
         const TEXT = { info: "Yeni sürüm hazır.", success: "Yedekleme tamamlandı.", warn: "2 GB alanın %92'si kullanılıyor.", danger: "Ödeme alınamadı." }
         return <div class="sc-ex-stack">
-          {() => { n(); const { tone, title, dismissable } = p.values; return <Alert tone={tone} title={title ? "Acme hesabı" : undefined} dismissable={dismissable} onDismiss={() => toast("Uyarı kapatıldı")}>{TEXT[tone]}</Alert> }}
+          {() => { n(); const { tone, title, dismissable } = p.values; return <Alert tone={tone} title={title ? "HADİ hesabı" : undefined} dismissable={dismissable} onDismiss={() => toast("Uyarı kapatıldı")}>{TEXT[tone]}</Alert> }}
           <Button variant="ghost" size="sm" onClick={() => n.update((x) => x + 1)}>Yeniden göster</Button>
         </div>
       },

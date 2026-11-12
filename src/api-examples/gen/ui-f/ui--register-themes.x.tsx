@@ -6,12 +6,12 @@ import { Out, Row } from "../../_kit.tsx";
 import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
-      code: `registerThemes([{ id: "acme", name: "Acme", href: "/themes/acme.css" }])
-colorThemes().some((t) => t.id === "acme")   // true → ThemePicker listeler`,
+      code: `registerThemes([{ id: "hadi-marka", name: "HADİ", href: "/themes/hadi-marka.css" }])
+colorThemes().some((t) => t.id === "hadi-marka")   // true → ThemePicker listeler`,
       run: () => {
         const n = signal(colorThemes().length)
-        const go = () => { registerThemes([{ id: "acme", name: "Acme", description: "Örnek tema", href: "themes/acme.css" }]); n.set(colorThemes().length) }
-        return <Row><Button onClick={go}>“Acme” temasını kaydet</Button><Out label="kayıtlı tema" value={() => `${n()} (${colorThemes().some((t) => t.id === "acme") ? "acme dahil" : "acme yok"})`} /></Row>
+        const go = () => { registerThemes([{ id: "hadi-marka", name: "HADİ", description: "Örnek tema", href: "themes/hadi-marka.css" }]); n.set(colorThemes().length) }
+        return <Row><Button onClick={go}>“HADİ” temasını kaydet</Button><Out label="kayıtlı tema" value={() => `${n()} (${colorThemes().some((t) => t.id === "hadi-marka") ? "hadiMarka dahil" : "hadiMarka yok"})`} /></Row>
       },
     };
 export default example;

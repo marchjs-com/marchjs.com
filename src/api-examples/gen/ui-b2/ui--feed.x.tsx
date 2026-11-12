@@ -15,10 +15,10 @@ const example: ApiExample<any> = {
         const posts = signal<Post[]>(POSTS.map((x) => ({ ...x })))
         const fresh = signal(1)
         const like = (next: boolean, post: Post) => posts.update((l) => l.map((x) => (x.id === post.id ? { ...x, liked: next, likes: x.likes + (next ? 1 : -1) } : x)))
-        const merge = () => { posts.update((l) => [{ id: `n${Date.now()}`, author: { name: "Deniz Kaya", handle: "deniz" }, time: Date.now(), text: "Yeni gönderi: Acme panosu artık karanlık temada.", likes: 0 }, ...l]); fresh.set(0) }
+        const merge = () => { posts.update((l) => [{ id: `n${Date.now()}`, author: { name: "Deniz Kaya", handle: "deniz" }, time: Date.now(), text: "Yeni gönderi: HADİ panosu artık karanlık temada.", likes: 0 }, ...l]); fresh.set(0) }
         return <div class="sc-ex-ui-b-feed">
           <Feed posts={() => (p.values.loading ? [] : posts())} loading={() => p.values.loading} variant={() => p.values.variant}
-            newCount={fresh} onShowNew={merge} onLike={like} label="Acme akışı" />
+            newCount={fresh} onShowNew={merge} onLike={like} label="HADİ akışı" />
         </div>
       },
     };

@@ -11,7 +11,7 @@ const example: ApiExample<any> = {
   schema={{ type: "object", properties: { port: { type: "integer", minimum: 1 } } }} />`,
       play: { options: [{ key: "search", label: "Arama kutusu", default: false }, { key: "readonly", label: "Salt okunur", default: false }, { key: "expand", label: "Açık seviye", default: 1, options: [0, 1, 2] }] },
       run: (p: { values: { search: boolean; readonly: boolean; expand: number } }) => {
-        const config = signal<unknown>({ name: "acme-api", port: 8080, debug: false, hosts: ["acme.test", "api.acme.test"] })
+        const config = signal<unknown>({ name: "hadi-api", port: 8080, debug: false, hosts: ["hadisosyal.com", "api.hadisosyal.com"] })
         const sch = { type: "object", required: ["name", "port"], properties: { name: { type: "string", minLength: 2 }, port: { type: "integer", minimum: 1, maximum: 65535 }, debug: { type: "boolean" }, hosts: { type: "array", items: { type: "string" } } } }
         return <div class="sc-ex-stack">
           {() => { const { search, readonly, expand } = p.values; return <TreeEditor label="Ayarlar" value={config} schema={sch as never} search={search} readonly={readonly} expand={expand} /> }}

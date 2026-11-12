@@ -21,7 +21,7 @@ const example: ApiExample<any> = {
             <Button size="sm" variant="ghost" onClick={() => form?.reset()}>Geri al</Button>
           </Row>
         }
-        return <Form schema={Profile} actions={false} initial={{ name: "Ada", email: "ada@acme.test" }}><Field name="email" /><Status /></Form>
+        return <Form schema={Profile} actions={false} initial={{ name: "Ada", email: "ada@hadisosyal.com" }}><Field name="email" /><Status /></Form>
       },
     };
 export default example;
