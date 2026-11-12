@@ -45,3 +45,6 @@ export function mount(host: HTMLElement): BenchApp {
     destroy: () => root.unmount(),
   }
 }
+
+// the realistic scenarios' react apps ride in this chunk (see ../scenarios/libs.ts)
+export { scenarios } from "../scenarios/react.ts"

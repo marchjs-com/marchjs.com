@@ -13,6 +13,8 @@ import "./bench.css";
 
 const BarChart = lazy(() => import("hadi-march/charts/bar.ts"), { pick: "BarChart", when: "visible", placeholder: "chart", height: "16rem" })
 const DemoCode = lazy(() => import("../demo-code.tsx"), { placeholder: "text", height: "16rem" })
+// the realistic scenarios: their own lazy part (and every app a chunk of its own)
+const Scenarios = lazy(() => import("./bench-scenarios.tsx"), { when: "visible", placeholder: "text", height: "24rem" })
 
 interface FileSize { raw: number; gzip: number }
 interface License { name: string; version: string; license: string; text: string }
@@ -174,6 +176,8 @@ export default function Bench() {
         </div> : null}
       </div> : <p class="bt-empty">Henüz sonuç yok. Testi başlatınca sonuçlar burada canlı olarak sıralanır.</p>}
     </Demo>
+
+    <Scenarios />
 
     <Demo wide title="Ölçüm yöntemi" desc="Her kitaplık aynı işi yapar; ölçüm ve kontrol kodu ortaktır.">
       <ul class="bt-method">
