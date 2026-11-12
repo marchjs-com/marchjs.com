@@ -5,6 +5,7 @@ import { Particles, confetti } from "hadi-march/fx";
 import { Button, LinkCard, Kbd, Card, Badge, Grid, openPalette, ThemeSwatch, colorThemes, setColorTheme, colorTheme } from "hadi-march/ui";
 import { arrowRight, command, sparkles } from "hadi-march/icons";
 import { pages } from "../app.tsx";
+import { withMeta } from "../nav-meta.ts";
 import { Demo } from "../demo.tsx";
 
 function Counter(props: { to: number; suffix?: string; label: string }) {
@@ -60,7 +61,7 @@ export default function Home() {
       </section>
 
       <Grid cols={4} minCol="17rem" gap={3} fill="stretch" equal>
-        {pages().filter((p) => p.path !== "/" && !p.sub).map((p, i) => <div use:reveal={{ delay: i * 40 }}>
+        {withMeta(pages()).filter((p) => p.path !== "/" && !p.sub).map((p, i) => <div use:reveal={{ delay: i * 40 }}>
           <LinkCard href={p.path} icon={p.icon} tone={(["primary", "info", "success", "violet", "warn", "pink", "teal", "danger", "neutral", "primary"] as const)[i % 10]} title={p.title} description={p.desc} />
         </div>)}
       </Grid>

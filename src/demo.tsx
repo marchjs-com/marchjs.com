@@ -1,7 +1,11 @@
 // Showcase block (the one DemoCard every page uses): title, description, live preview and, if given, a Code tab.
-// The Code tab is a widget point: `<Widget sources={[codeView]} />` draws whatever provider is registered
-// (default: CodeViewer + Copy + Fullscreen; a live editor can replace it with codeView.provide(...)).
-import { Tabs, Widget, codeView } from "hadi-march/ui";
+// The Code tab is a widget point (demo-code.tsx, loaded on its first click): `<Widget sources={[codeView]} />` draws
+// whatever provider is registered (default: CodeViewer + Copy + Fullscreen; a live editor can replace it).
+import { Tabs } from "hadi-march/ui";
+import { lazy } from "hadi-march/lazy";
+
+// loaded on the first click on "Kod": the Tabs panel is drawn only when its tab opens
+const DemoCode = lazy(() => import("./demo-code.tsx"), { placeholder: "text", height: "8rem" })
 
 export function Demo(props: { title: string; desc?: string; code?: string; lang?: string; wide?: boolean; children?: unknown }) {
   const preview = <div class="sc-stage">{props.children}</div>
@@ -11,7 +15,7 @@ export function Demo(props: { title: string; desc?: string; code?: string; lang?
       {props.desc ? <p class="sc-demo-desc">{props.desc}</p> : null}
     </header>
     {props.code
-      ? <Tabs label={props.title} tabs={[{ id: "on", label: "Önizleme", content: preview }, { id: "code", label: "Kod", content: () => <Widget sources={[codeView]} input={{ source: props.code!.trim(), lang: props.lang ?? "tsx" }} /> }]} />
+      ? <Tabs label={props.title} tabs={[{ id: "on", label: "Önizleme", content: preview }, { id: "code", label: "Kod", content: () => <DemoCode source={props.code!.trim()} lang={props.lang ?? "tsx"} /> }]} />
       : preview}
   </section>
 }
