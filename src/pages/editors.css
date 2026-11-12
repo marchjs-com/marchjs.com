@@ -4,3 +4,10 @@
 .sc-ed-out { margin: 0; min-width: 0; max-height: 28rem; overflow: auto; padding: var(--hm-space-3); border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-3);
   background: var(--hm-bg-subtle); color: var(--hm-text-2); font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
 @media (max-width: 52rem) { .sc-ed-split { grid-template-columns: minmax(0, 1fr); } }
+.sc-cp-demo { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--hm-space-4); }
+.sc-cp-card, .sc-ge-banner { display: flex; flex-direction: column; justify-content: flex-end; gap: .25rem; flex: 1 1 12rem; min-height: 10rem; padding: var(--hm-space-4);
+  border-radius: var(--hm-radius-4); color: var(--hm-inverse-text); box-shadow: var(--hm-shadow-2); transition: background var(--hm-dur) var(--hm-ease); }
+.sc-cp-card { background: var(--sc-cp); }
+.sc-ge-banner { background: var(--sc-ge); min-height: 14rem; }
+.sc-cp-card b, .sc-ge-banner b { font-family: var(--hm-font-display); font-size: var(--hm-text-2xl); }
+.sc-cp-card span, .sc-ge-banner span { font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); opacity: .85; overflow-wrap: anywhere; }
