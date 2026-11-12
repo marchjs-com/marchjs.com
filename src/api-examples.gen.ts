@@ -10,6 +10,12 @@ const groups: Record<string, () => Promise<ApiExampleModule>> = {
   "managers-a": () => import("./api-examples/managers-a.tsx"),
   "platform": () => import("./api-examples/platform.tsx"),
   "text": () => import("./api-examples/text.tsx"),
+  "ui-b": () => import("./api-examples/ui-b.tsx"),
+  "ui-b2": () => import("./api-examples/ui-b2.tsx"),
+  "ui-b3": () => import("./api-examples/ui-b3.tsx"),
+  "ui-b4": () => import("./api-examples/ui-b4.tsx"),
+  "ui-b5": () => import("./api-examples/ui-b5.tsx"),
+  "ui-b6": () => import("./api-examples/ui-b6.tsx"),
   "ui-e": () => import("./api-examples/ui-e.tsx"),
   "ui-e2": () => import("./api-examples/ui-e2.tsx"),
 };
@@ -43,7 +49,7 @@ const bySubpath: Record<string, [group: string, first: string][]> = {
   "hadi-march/router": [["app-router","Link"]],
   "hadi-march/store": [["app","derive"]],
   "hadi-march/theme": [["platform","COLOR_TOKENS"]],
-  "hadi-march/ui": [["ui-e","accent"],["ui-e2","defineMeta"]],
+  "hadi-march/ui": [["ui-b","Dialog"],["ui-b2","EasingCurveEditor"],["ui-b3","FileUpload"],["ui-b4","GradientEditor"],["ui-b5","ImageCropper"],["ui-b6","KeyValue"],["ui-e","accent"],["ui-e2","defineMeta"]],
 };
 /** The example file of an export (a lazy part, loaded once), or null when its subpath has none yet. */
 export const loadExamples = (subpath: string, name: string): Promise<ApiExampleModule> | null => {
