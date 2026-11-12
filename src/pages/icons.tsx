@@ -14,6 +14,8 @@ import { arrowLeft as bootstrapArrow } from "hadi-march/icons/bootstrap";
 import { arrowLeft as featherArrow } from "hadi-march/icons/feather";
 import { SearchBox, toast, Segmented, RadioGroup, TextInput } from "hadi-march/ui";
 import { onCleanup, effect } from "hadi-march";
+// the window of core/virtual.ts (windowRange), inlined: importing that module from this page changes which pages share
+// it, and the build's chunk packer then regroups unrelated pages under the 10 KB floor
 const windowRange = ({ count, scrollTop = 0, height, rowHeight, overscan = 6 }: { count: number; scrollTop?: number; height: number; rowHeight: number; overscan?: number }) => { const first = Math.min(count, Math.floor(Math.max(0, scrollTop) / rowHeight)); const start = Math.max(0, first - overscan); const end = Math.min(count, first + Math.ceil(height / rowHeight) + 1 + overscan); return { start, end } };
 import { Demo, Section } from "../demo.tsx";
 import { loadIndex, loadNames, loadPack, toDef, importLine, type PackInfo, type PackData } from "../icon-packs.ts";
