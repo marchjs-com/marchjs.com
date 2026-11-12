@@ -92,7 +92,7 @@ openConsentPreferences()   showConsentBanner()   consent.withdraw()   consent.re
         <Button icon={settings} on:click={() => openConsentPreferences()}>Tercihler</Button>
         <Button variant="ghost" on:click={() => consent.withdraw()}>Rızayı geri çek</Button>
       </div>
-      <p class="hm-muted">Kayıt: {() => { const r = consent.record(); return r ? `${r.method} · sürüm ${r.version} · ${new Date(r.date).toLocaleString()}` : "karar yok" }}</p>
+      <p class="hm-muted">Politika sürümü {() => $version} · kayıt: {() => { const r = consent.record(); return r ? `${r.method} · sürüm ${r.version} · ${new Date(r.date).toLocaleString()}` : "karar yok" }}</p>
       <div class="sc-row">{() => consent.categories().map((c) => <Badge tone={consent.has(c.id) ? "success" : "neutral"} dot>{c.id}</Badge>)}</div>
     </Demo>
     <Demo title="Rıza yokken analitik kapalı" desc="consent.gate('analytics', gönder): rıza yoksa gönder hiç çalışmaz. Log gönderimi ve üçüncü taraf kancaları da aynı kapıdan geçer."
