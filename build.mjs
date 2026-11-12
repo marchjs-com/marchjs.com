@@ -15,6 +15,7 @@ import { join, dirname, extname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { genAll } from "../../tools/gen-all.mjs";
 import { writeGallery } from "../../cli/icons.js";
+import { filesOver } from "../../cli/perf.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const dist = join(here, "dist");
@@ -57,6 +58,10 @@ if (!serve || !existsSync(dist) || watching) {
     // icon packs for the Icons page: plain JSON fetched when a pack is opened (no JavaScript bundle grows)
     const packs = writeGallery(join(here, "..", "..", "src", "icons", "packs"), join(dist, "icon-packs"));
     console.log(`✔ icon packs: ${packs.length} (dist/icon-packs)`);
+    // the whole published folder (pages, chunks, public files, icon packs) against budget.maxFiles
+    const maxFiles = (await import(pathToFileURL(join(here, "march.config.js")).href)).default.budget?.maxFiles;
+    const tooMany = release ? filesOver(dist, maxFiles) : null;
+    if (tooMany) { console.error(`✖ ${tooMany}`); process.exit(1); }
     console.log(`✔ showcase (${release ? "release" : "dev"}): ${dist} in ${((performance.now() - t0) / 1000).toFixed(1)} s (generators ${(tGen / 1000).toFixed(1)} s)`);
   }
 }
