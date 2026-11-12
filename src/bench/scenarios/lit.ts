@@ -4,5 +4,6 @@ import { mount as ticker } from "./ticker/lit.ts"
 import { mount as tree } from "./tree/lit.ts"
 import { mount as derived } from "./derived/lit.ts"
 import { mount as theme } from "./theme/lit.ts"
+import { mount as hover } from "./hover/lit.ts"
 
-export const scenarios = { ticker, tree, derived, theme }
+export const scenarios = { ticker, tree, derived, theme, hover }
