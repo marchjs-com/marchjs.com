@@ -1,10 +1,7 @@
-// Forms: form from a schema + validation, single fields, pickers, rating, wizard.
+// Forms: form from a schema + validation, the choice looks side by side, then one card per input (src/components/forms/<name>/: demo, Playground, Code) and the wizard.
 import { schema } from "hadi-march/schema";
-import {
-  Form, Field, TextInput, PasswordInput, NumberInput, MoneyInput, PhoneInput, Select, Combobox, MultiSelect, Checkbox, Toggle, RadioGroup, CheckboxGroup, Segmented,
-  Slider, ColorInput, CodeInput, DatePicker, DateRangePicker, Textarea, FileUpload, Rating, toast, Card, Grid,
-} from "hadi-march/ui";
-import { Icon, search, users, zap, shieldCheck, globe } from "hadi-march/icons";
+import { Form, Field, Checkbox, Toggle, RadioGroup, CheckboxGroup, Slider, ColorInput, Rating, toast, Card } from "hadi-march/ui";
+import { users, zap, shieldCheck } from "hadi-march/icons";
 import type { ColorToken } from "hadi-march/theme";
 import { shapesFor } from "hadi-march/ui";
 import { Stack } from "hadi-march/ui";
@@ -49,38 +46,17 @@ function DayPicker(props: { variant: (typeof VARIANTS)[number]; color?: ColorTok
 }
 
 export default function Forms() {
-  let $otpLen = 6
-  let $otpPattern = "numeric"
-  let $otpColors = "brand"
-  let $otpFont = "display"
-  let $otpSize = "md"
-  let $otpVariant = "outline"
-  let $otpGroups = true
-  let $otpMask = false
   let $chVariant = "chip"
   let $chSize = "md"
   let $chShape = "rounded"
   let $chBrand = false
   let $plan = "team"
   let $partial = true
-  let $q = ""
-  let $pw = ""
-  let $n = 3
-  let $city = "İstanbul"
-  let $town = null
-  let $langs = ["tr"]
   let $agree = true
   let $notify = true
-  let $size = "m"
-  let $days = ["mon", "fri"]
   let $vol = 64
   let $color = "#f2801f"
-  let $date = null
-  let $range = null
   let $stars = 4
-  let $about = ""
-  let $phone = ""
-  let $price = 1499.9
   return <Section kicker="Bileşenler" title="Formlar" lead="Şemadan form: alanlar, doğrulama, koşullu alanlar ve tür bilgisi tek tanımdan. Bütün alanlar bind: ile iki yönlü bağlanır.">
     <Demo wide title="Seçim kontrolleri: varyantları karşılaştır" desc="Aynı gün seçici beş görünümde. Kutu özel çizilir (gerçek input görünmez ama klavye, form ve ekran okuyucu için durur); tik çizilerek gelir, dolgu ortadan büyür, basınca hafifçe küçülür, odakta temalı halka. Hareketi azalt tercihinde animasyonsuz.">
       <div class="sc-choice-compare">
@@ -131,28 +107,7 @@ export default function Forms() {
       </Card>
     </Demo>
 
-    <Demo title="Metin alanları" desc="Ön ek ikonu, parola göster/gizle, sayı adımlayıcı, para birimi, telefon."
-      code={`<Field label="E-posta"><TextInput bind:value={$mail} prefix={<Icon of={mail} />} /></Field>
-<Field label="Fiyat"><MoneyInput bind:value={$price} currency="TRY" /></Field>`}>
-      <Field label="Ara"><TextInput bind:value={$q} placeholder="Üye, sipariş, etiket…" prefix={<Icon of={search} />} /></Field>
-      <Field label="Parola" help="Güçlü bir parola seç"><PasswordInput bind:value={$pw} /></Field>
-      <Grid cols={2} gap={3}>
-        <Field label="Adet"><NumberInput bind:value={$n} min={0} max={99} /></Field>
-        <Field label="Fiyat"><MoneyInput bind:value={$price} currency="TRY" /></Field>
-      </Grid>
-      <Field label="Telefon"><PhoneInput bind:value={$phone} /></Field>
-      <Field label="Hakkında" help={() => `${$about.length}/280`}><Textarea bind:value={$about} rows={3} max={280} placeholder="Kendinden kısaca bahset" /></Field>
-    </Demo>
-
-    <Demo title="Seçiciler" desc="Select, aranabilir Combobox, çoklu seçim; klavyeyle gezinme.">
-      <Field label="Şehir"><Select bind:value={$city} options={CITIES} /></Field>
-      <Field label="İlçe (aranabilir)"><Combobox bind:value={$town} options={["Kadıköy", "Beşiktaş", "Üsküdar", "Şişli", "Bakırköy", "Ataşehir", "Sarıyer", "Fatih"].map((x) => ({ value: x, label: x }))} placeholder="Yazmaya başla" /></Field>
-      <Field label="Diller"><MultiSelect bind:value={$langs} options={[{ value: "tr", label: "Türkçe" }, { value: "en", label: "İngilizce" }, { value: "de", label: "Almanca" }, { value: "ar", label: "Arapça" }]} /></Field>
-      <Field label="Beden" group><RadioGroup bind:value={$size} inline options={[{ value: "s", label: "S" }, { value: "m", label: "M" }, { value: "l", label: "L" }, { value: "xl", label: "XL" }]} /></Field>
-      <Field label="Günler" group><CheckboxGroup bind:value={$days} inline variant="chip" options={[{ value: "mon", label: "Pzt" }, { value: "tue", label: "Sal" }, { value: "wed", label: "Çar" }, { value: "thu", label: "Per" }, { value: "fri", label: "Cum" }]} /></Field>
-    </Demo>
-
-    <Demo title="Anahtarlar, kaydırıcı, renk, puan" desc="Toggle, Checkbox, Slider, ColorInput, Rating (← → ile değişir).">
+    <Demo title="Bir arada: anahtarlar, kaydırıcı, renk, puan" desc="Toggle, Checkbox, Slider, ColorInput ve Rating aynı Field düzeninde (Rating ← → ile değişir). Her girişin kendi kartı aşağıda.">
       <Toggle bind:value={$notify} label="Anlık bildirimler" />
       <Checkbox bind:value={$agree} label="Kullanım koşullarını okudum" />
       <Field label={() => `Ses: ${$vol}`}><Slider bind:value={$vol} min={0} max={100} /></Field>
@@ -161,42 +116,31 @@ export default function Forms() {
       <p class="hm-muted">{() => `${$stars} yıldız · bildirim ${$notify ? "açık" : "kapalı"} · ${$agree ? "onaylandı" : "onay bekliyor"}`}</p>
     </Demo>
 
-    <Demo title="Tarih ve kod" desc="Takvim açılır panel, tarih aralığı (hazır aralıklar), tek kullanımlık kod.">
-      <Field label="Tarih"><DatePicker bind:value={$date} /></Field>
-      <Field label="Rapor dönemi" group><DateRangePicker bind:value={$range} /></Field>
-      <Field label="SMS kodu" group><CodeInput length={6} onComplete={(c: string) => toast(`Kod: ${c}`, { kind: "success" })} /></Field>
-    </Demo>
-
-    <Demo wide title="Doğrulama kodu (CodeInput)" desc="HADİ uygulamalarındaki gibi: her kutu sırayla dört HADİ renginden birini alır, rakamlar başlık yazı tipinde, girince hafifçe büyür. Uzunluk 3–12, karakter türü, gruplama, renk, yazı tipi, boyut ve biçim seçilebilir; dar ekranda kutular küçülür, yapıştırınca fazlası kırpılır."
-      code={`<CodeInput length={6} groups={[3, 3]} onComplete={verify} />            // HADİ: brand colors + display font
-<CodeInput length={8} pattern="alphanumeric" colors="palette" font="mono" variant="filled" />
-<CodeInput length={4} mask size="lg" />                                     // PIN`}>
-      <Playground options={[
-        { label: "Uzunluk", get: () => $otpLen, set: (v: number) => { $otpLen = v }, min: 3, max: 12 },
-        { label: "Kod karakteri", get: () => $otpPattern, set: (v: string) => { $otpPattern = v }, options: ["numeric", "alpha", "alphanumeric"] },
-        { label: "Kod renkleri", get: () => $otpColors, set: (v: string) => { $otpColors = v }, options: ["brand", "palette", "single"] },
-        // a masked code shows dots: the font has no effect then
-        { label: "Kod yazı tipi", get: () => $otpFont, set: (v: string) => { $otpFont = v }, options: ["display", "mono", "body"], visibleWhen: () => !$otpMask },
-        { label: "Kod boyutu", get: () => $otpSize, set: (v: string) => { $otpSize = v }, options: ["sm", "md", "lg"] },
-        { label: "Kod biçimi", get: () => $otpVariant, set: (v: string) => { $otpVariant = v }, options: ["outline", "filled", "underline"] },
-        // two groups need at least four boxes
-        { label: "Gruplu", get: () => $otpGroups, set: (v: boolean) => { $otpGroups = v }, visibleWhen: () => $otpLen >= 4 },
-        { label: "Gizli (PIN)", get: () => $otpMask, set: (v: boolean) => { $otpMask = v } },
-      ]}>
-      {() => {
-        // length, pattern, colors and groups shape the boxes: the preview is rebuilt when they change
-        const n = $otpLen, pattern = $otpPattern as "numeric", colors = $otpColors as "brand", grouped = $otpGroups
-        const sample = (pattern === "numeric" ? "482915730264" : pattern === "alpha" ? "HADIMARCHKOD" : "H4D1M4RCHK0D").slice(0, n)
-        let $code = sample
-        return <CodeInput bind:value={$code} length={n} pattern={pattern} colors={colors} font={$otpFont as "display"} size={$otpSize as "md"} variant={$otpVariant as "outline"}
-          groups={grouped ? [Math.ceil(n / 2), Math.floor(n / 2)] : undefined} mask={$otpMask} aria-label="Doğrulama kodu" onComplete={(c: string) => toast(`Kod: ${c}`, { kind: "success" })} />
-      }}
-      </Playground>
-    </Demo>
-
-    <Demo title="Dosya yükleme" desc="Sürükle bırak, tür ve boyut denetimi, önizleme.">
-      <FileUpload multiple accept="image/*" maxSize={5_000_000} label="Görselleri bırak ya da seç" />
-    </Demo>
+    <ComponentDemo folder="forms/text-input" />
+    <ComponentDemo folder="forms/textarea" />
+    <ComponentDemo folder="forms/password-input" />
+    <ComponentDemo folder="forms/phone-input" />
+    <ComponentDemo folder="forms/number-input" />
+    <ComponentDemo folder="forms/select" />
+    <ComponentDemo folder="forms/combobox" />
+    <ComponentDemo folder="forms/multi-select" />
+    <ComponentDemo folder="forms/choice-picker" />
+    <ComponentDemo folder="forms/checkbox" />
+    <ComponentDemo folder="forms/checkbox-group" />
+    <ComponentDemo folder="forms/radio-group" />
+    <ComponentDemo folder="forms/segmented" />
+    <ComponentDemo folder="forms/toggle" />
+    <ComponentDemo folder="forms/slider" />
+    <ComponentDemo folder="forms/color-input" />
+    <ComponentDemo folder="forms/code-input" />
+    <ComponentDemo folder="forms/calendar" />
+    <ComponentDemo folder="forms/date-picker" />
+    <ComponentDemo folder="forms/time-input" />
+    <ComponentDemo folder="forms/date-time-input" />
+    <ComponentDemo folder="forms/date-range-picker" />
+    <ComponentDemo folder="forms/list-editor" />
+    <ComponentDemo folder="forms/key-value-editor" />
+    <ComponentDemo folder="forms/file-upload" />
 
     <ComponentDemo folder="composite/wizard" title="Wizard: adım adım form" desc="Karmaşık bileşen: her adımın kendi şeması; ileri giderken doğrular, geri dönünce değerler korunur, önceki adımlar geçince sonraki adıma üstteki listeden atlanır. Parçaları aşağıdaki satırda." />
   </Section>
