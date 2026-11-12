@@ -4,12 +4,12 @@ import { appUrl } from "hadi-march/base";
 import { Button, Chip, Progress, toast } from "hadi-march/ui";
 import { untrack } from "hadi-march";
 import { lazy } from "hadi-march/lazy";
-import { factor, rank, unreliable } from "../bench/core.ts";
-import { LIBS, BASELINE, libById } from "../bench/libs.ts";
-import { FRAME_MS } from "../bench/scenarios/core.ts";
-import { SCENARIOS, scenarioById } from "../bench/scenarios/list.ts";
-import { SCENARIO_LIBS } from "../bench/scenarios/libs.ts";
-import { runScenarios, type ScenarioRun, type ScenarioProgress } from "../bench/scenarios/runner.ts";
+import { factor, rank, unreliable } from "./core.ts";
+import { LIBS, BASELINE, libById } from "./libs.ts";
+import { FRAME_MS } from "./scenarios/core.ts";
+import { SCENARIOS, scenarioById } from "./scenarios/list.ts";
+import { SCENARIO_LIBS } from "./scenarios/libs.ts";
+import { runScenarios, type ScenarioRun, type ScenarioProgress } from "./scenarios/runner.ts";
 import { Demo } from "../demo.tsx";
 
 const DemoCode = lazy(() => import("../demo-code.tsx"), { placeholder: "text", height: "16rem" })
