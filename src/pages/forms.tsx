@@ -5,6 +5,8 @@ import {
   Slider, ColorInput, CodeInput, DatePicker, DateRangePicker, Textarea, FileUpload, Rating, Wizard, toast, Card, Grid,
 } from "hadi-march/ui";
 import { Icon, search } from "hadi-march/icons";
+import { COLOR_TOKENS, type ColorToken } from "hadi-march/theme";
+import { Progress, Badge, Button, Stack } from "hadi-march/ui";
 import { Demo, Section } from "../demo.tsx";
 
 const Signup = schema({
@@ -21,7 +23,26 @@ const Signup = schema({
 
 const CITIES = ["İstanbul", "Ankara", "İzmir", "Bursa", "Antalya", "Konya", "Adana", "Gaziantep", "Kayseri", "Eskişehir", "Trabzon", "Samsun"].map((c) => ({ value: c, label: c }))
 
+const HADI_COLORS = ["brand-orange", "brand-blue", "brand-green", "brand-purple"] as const
+const COLOR_LABEL: Record<string, string> = { primary: "Birincil", "brand-orange": "Turuncu", "brand-blue": "Mavi", "brand-green": "Yeşil", "brand-purple": "Mor" }
+
+/** One row of controls in one color token. */
+function ColorRow(props: { color: ColorToken }) {
+  let $on = true
+  let $level = 60
+  return <div class="sc-color-row" data-hm-color={props.color}>
+    <code class="sc-color-name">{props.color}</code>
+    <Toggle bind:value={$on} aria-label={`${props.color} anahtar`} />
+    <Checkbox value={true} label="Seçili" />
+    <Slider bind:value={$level} min={0} max={100} aria-label={`${props.color} kaydırıcı`} />
+    <Progress value={$level} label="" size="sm" />
+    <Badge tone="primary">Yeni</Badge>
+    <Button variant="primary" size="sm">Kaydet</Button>
+  </div>
+}
+
 export default function Forms() {
+  let $accent: ColorToken = "primary"
   let $q = ""
   let $pw = ""
   let $n = 3
@@ -40,7 +61,19 @@ export default function Forms() {
   let $about = ""
   let $phone = ""
   let $price = 1499.9
-  return <Section kicker="Bileşenler" title="Formlar" lead="Şemadan form: alanlar, doğrulama, koşullu alanlar ve tür bilgisi tek tanımdan. Bütün alanlar bind: ile iki yönlü bağlanır.">
+  return <div data-hm-color={$accent}><Section kicker="Bileşenler" title="Formlar" lead="Şemadan form: alanlar, doğrulama, koşullu alanlar ve tür bilgisi tek tanımdan. Bütün alanlar bind: ile iki yönlü bağlanır.">
+    <Demo wide title="Form rengi" desc="Bir renk seç: sayfadaki bütün kontroller (odak, imleç, seçili metin, anahtar, onay kutusu, kaydırıcı, takvim, çipler, adımlar) bu renge geçer. Hata durumu her zaman kırmızı kalır. Yalnız tema tokenı seçilir; tema değişince uyum korunur."
+      code={`<Form color="brand-blue" …>            // every field inside inherits
+<Checkbox color="success" />               // one control
+<CheckboxGroup color="brand-green" …>      // a group`}>
+      <div class="sc-row">
+        <Segmented bind:value={$accent} aria-label="Form rengi" options={["primary", ...HADI_COLORS].map((v) => ({ value: v, label: COLOR_LABEL[v] }))} />
+        <Select bind:value={$accent} aria-label="Bütün renkler" options={COLOR_TOKENS.map((v) => ({ value: v, label: v }))} />
+      </div>
+    </Demo>
+    <Demo wide title="Bütün renkler" desc="Her tema tokenında aynı kontroller: anahtar, onay kutusu, kaydırıcı, ilerleme, rozet, düğme. Seçili zemin üstündeki işaretin rengi okunurluk kuralıyla seçilir.">
+      <div class="sc-color-grid">{COLOR_TOKENS.filter((c) => c !== "warning").map((c) => <ColorRow color={c} />)}</div>
+    </Demo>
     <Demo wide title="Şemadan form" desc="Koşullu alanlar (plan = ekip), canlı doğrulama, gönderimde yükleniyor; sunucu hatası alana düşer (deneme: …@taken.com)."
       code={`const SignUp = schema({
   email: { type: "email", required: true },
@@ -107,5 +140,5 @@ export default function Forms() {
         ]} submitLabel="Bitir" onSubmit={() => toast("Kurulum tamam!", { kind: "success" })} />
       </Card>
     </Demo>
-  </Section>
+  </Section></div>
 }
