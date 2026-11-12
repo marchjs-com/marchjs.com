@@ -3,8 +3,8 @@
 export const HOME_STATS = {
   "dependencies": 0,
   "components": 192,
-  "registered": 91,
-  "exports": 956,
+  "registered": 116,
+  "exports": 958,
   "subpaths": 93,
   "categories": [
     {
@@ -25,7 +25,7 @@ export const HOME_STATS = {
     {
       "id": "forms",
       "label": "Formlar",
-      "components": 1
+      "components": 26
     },
     {
       "id": "data",
@@ -84,8 +84,8 @@ export const HOME_STATS = {
     "pageFx": 10
   },
   "managers": 30,
-  "tests": 719,
-  "testFiles": 190,
+  "tests": 748,
+  "testFiles": 215,
   "budget": {
     "entry": 15360,
     "boot": 53248,
