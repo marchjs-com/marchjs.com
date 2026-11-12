@@ -12,6 +12,7 @@ export default {
   "/layout": () => import("./pages/layout.tsx"),
   "/managers-data": () => import("./pages/managers-data.tsx"),
   "/managers-ops": () => import("./pages/managers-ops.tsx"),
+  "/managers-a11y": () => import("./pages/managers-a11y.tsx"),
   "/managers": () => import("./pages/managers.tsx"),
   "/messaging": () => import("./pages/messaging.tsx"),
   "/motion": () => import("./pages/motion.tsx"),

@@ -25,4 +25,5 @@ export const PAGES: PageInfo[] = [
   { path: "/managers-data", title: "Yöneticiler: veri ve durum" },
   { path: "/managers-ops", title: "Yöneticiler: bayrak, günlük, performans" },
   { path: "/seo", title: "SEO" },
+  { path: "/managers-a11y", title: "Yöneticiler: erişilebilirlik" },
 ];
