@@ -1,6 +1,6 @@
 // Navigation: NavSidebar — title, a "search or ask" box (Ctrl K), a featured item with a live badge, recent items,
 // collapsible categories (with counts, "expand/collapse all"). The showcase's own side menu is the same component.
-import { NavSidebar, Button, Card, Kbd, Stack, OverflowText, Marquee, Segmented } from "hadi-march/ui";
+import { NavSidebar, Button, Card, Kbd, Stack, OverflowText, Marquee, Segmented, Toggle, Field, Slider } from "hadi-march/ui";
 import {
   inbox, users, crown, shieldCheck, hourglass, wallet, diamond, receipt, creditCard, image, flag, eye, barChart, gauge, globe, settings, store, truck, packageBox, plus, minus,
 } from "hadi-march/icons";
@@ -37,6 +37,12 @@ export default function Navigation() {
   let $waiting = 0
   let $picked = "—"
   let $trigger = "hover"
+  let $resizable = true
+  let $collapse = true
+  let $startWidth = 280
+  let $minWidth = 200
+  let $maxWidth = 440
+  let $liveWidth = 280
   let $mode = "bounce"
   const items = ITEMS.map((x) => ({ ...x, onSelect: () => { $picked = x.label } }))
   const featured = [{ id: "support", label: "Destek talepleri", icon: inbox, badge: () => $waiting,
@@ -59,6 +65,28 @@ export default function Navigation() {
             <p class="hm-muted">Bu vitrinin sol menüsünde <Kbd keys="mod+k" /> komut paletini açar; ray düğmesi menüyü ikonlara daraltır.</p>
           </Stack>
         </Card>
+      </div>
+    </Demo>
+
+    <Demo wide title="Genişletilebilir kenar çubuğu" desc="İç kenardaki ince tutamağı sürükle (dokunmatikte de), çift tıkla: başlangıç genişliği. Tutamağa Tab ile gel: ← → 16 px (Shift: 64), Home/End en dar/en geniş. collapseBelow altına çekince yalnız ikon moduna geçer. Bu vitrinin sol menüsü de böyle."
+      code={`<NavSidebar items={items} resizable width="18rem" minWidth={220} maxWidth={420}
+  collapseBelow={150} persist onResize={(w) => console.log(w)} />`}>
+      <div class="sc-row sc-row-between">
+        <Toggle bind:value={$resizable} label="resizable" />
+        <Toggle bind:value={$collapse} label="collapseBelow={150}" />
+        <span class="hm-muted">Genişlik: <strong>{() => `${$liveWidth} px`}</strong></span>
+      </div>
+      <div class="sc-grid-controls">
+        <Field label={() => `width (başlangıç): ${$startWidth} px`}><Slider bind:value={$startWidth} min={220} max={400} step={10} /></Field>
+        <Field label={() => `minWidth – maxWidth: ${$minWidth} – ${$maxWidth} px`}><Stack gap={2}><Slider bind:value={$minWidth} min={160} max={300} step={10} /><Slider bind:value={$maxWidth} min={320} max={600} step={10} /></Stack></Field>
+      </div>
+      <div class="sc-resize-frame">
+        {() => {
+          const opts = { resizable: $resizable, width: $startWidth, minWidth: $minWidth, maxWidth: $maxWidth, collapseBelow: $collapse ? 150 : undefined }
+          return <NavSidebar items={items} featured={featured} title="Panel" groupIcons={CATEGORY_ICONS} storageKey={`sc.sb.resize.${opts.width}.${opts.minWidth}.${opts.maxWidth}`} persist={false}
+            hotkey={false} palette={false} label="Genişletilebilir örnek" collapsible={$collapse} {...opts} onResize={(w: number) => { $liveWidth = w }} />
+        }}
+        <div class="sc-resize-content"><p class="hm-muted">Sayfa içeriği: kenar çubuğu genişledikçe bu alan daralır.</p></div>
       </div>
     </Demo>
 

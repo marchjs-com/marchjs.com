@@ -63,7 +63,7 @@ export function App() {
   return <AppShell header={<Topbar />} nav={
     <NavSidebar items={items} featured={featured} title={<Brand href="/" mark={marchMark} name="HADI March" sub="Arayüz kitaplığı" />}
       groupOrder={["Temel", "Bileşenler", "Hareket"]} itemOrder="none" defaultOpen="all" hotkey="palette" placeholder="Ara ya da sor…"
-      storageKey="sc.sidebar" label="Vitrin menüsü" collapsible
+      storageKey="sc.sidebar" label="Vitrin menüsü" collapsible resizable minWidth={220} maxWidth={420} collapseBelow={150}
       footer={<p class="sc-nav-foot hm-rail-hide">MIT · sıfır bağımlılık · CSP uyumlu</p>} />}>
     <Router loading={<Loader />} />
     <CommandPalette placeholder="Sayfa, tema ya da eylem ara…" />
