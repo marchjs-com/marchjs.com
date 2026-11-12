@@ -12,6 +12,8 @@ export interface RunOptions { libs: Lib[]; ops: Op[]; reps: number; warm?: numbe
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
 const heap = (): number | undefined => (performance as Performance & { memory?: { usedJSHeapSize: number } }).memory?.usedJSHeapSize
 const gc = (): void => { (globalThis as { gc?: () => void }).gc?.() }
+/** The same wait before every sample, for every library: garbage collection where exposed, 20 ms, one paint. */
+async function settle(): Promise<void> { gc(); await sleep(20); await afterPaint() }
 const idle = (): Promise<void> => new Promise((r) => ("requestIdleCallback" in globalThis ? requestIdleCallback(() => r(), { timeout: 1000 }) : setTimeout(r, 50)))
 
 /** Reads the benchmark table in a library's host (the operations' checks and clicks). */
@@ -61,15 +63,17 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
       let app: BenchApp | null = null
       try {
         report(lib.id, "", "load")
-        const h0 = heap()
         const t0 = performance.now()
         const mod = await lib.load()
         app = await mod.mount(host)
         res.firstPaint[lib.id] = (await afterPaint()) - t0
         const dom = probe(host)
         const rows = rowSource(1)
+        // memory: heap growth from 1.000 rows alone (the library's code is already loaded and mounted)
+        await settle(); await sleep(50)
+        const h0 = heap()
         if (h0 !== undefined) {
-          app.run(rows(1000)); await afterPaint(); gc(); await sleep(50)
+          app.run(rows(1000)); await afterPaint(); await settle(); await sleep(50)
           const h1 = heap()
           if (h1 !== undefined) res.memory[lib.id] = Math.max(0, (h1 - h0) / 1048576)
           app.clear(); await afterPaint()
@@ -83,6 +87,7 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
             report(lib.id, op.id, i < warm ? "warm" : "run")
             op.setup(app, rows, dom)
             await afterPaint()
+            await settle()
             op.mark?.(dom)
             const seen = hides
             const t0 = performance.now()
@@ -92,7 +97,6 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
             if (!op.check(dom)) { errs[op.id] = "Sonuç beklenen tabloyla eşleşmedi"; done += warm + o.reps - i; break }
             done++
             if (i >= warm) { list.push(ms); o.onSample?.(lib.id, op.id, ms) }
-            await sleep(16)
           }
           res.samples[lib.id]![op.id] = list
         }

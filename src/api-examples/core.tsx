@@ -1,8 +1,8 @@
 // API examples of the core entry (hadi-march): reactivity, rendering, control flow, portals, pipes, i18n, sx.
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
 import {
-  signal, computed, effect, batch, untrack, onCleanup, createRoot, getOwner, runWithOwner, catchError, context, provide,
-  useContext, reactive, isReactive, read, DEV, _enter, _leave, store, patch, unwrap, h, Fragment, insert, lazyChildren,
+  signal, computed, effect, batch, untrack, selector, onCleanup, createRoot, getOwner, runWithOwner, catchError, context, provide,
+  useContext, reactive, isReactive, read, DEV, _enter, _leave, _tpl, _prop, store, patch, unwrap, h, Fragment, insert, lazyChildren,
   safeUrl, registerTransition, If, Else, For, Switch, Match, Try, Await, Dynamic, setFlipHook, Portal, PortalTarget,
   portalTarget, openLayer, layers, render, define, pipe, applyPipe, toDate, t, locale, messages, missing,
   setFallbackLocale, sx, sxValue, version,
@@ -35,6 +35,28 @@ async function Profile() {
           lines.update((l) => [...l, `${now()} await sonrası sahip: ${getOwner() ? "var" : "yok"} (${v})`])
         }
         return <Row><Button onClick={go}>Bekle ve devam et</Button><Log lines={lines} /></Row>
+      },
+    },
+    _prop: {
+      code: `// written by the compiler for a template clone, not by hand:
+<a class={$cls} onClick={go}>…</a>   // → _prop(a, "a", "class", …); _prop(a, "a", "onClick", go)`,
+      run: () => {
+        const on = signal(false)
+        const a = _tpl(["button", [["type", "button"], ["class", "hm-btn"]], "Değiştir"])()
+        _prop(a, "button", "aria-pressed", reactive(() => String(on())))
+        _prop(a, "button", "onClick", () => on.update((x) => !x))
+        return <Row>{a}<Out label="aria-pressed" value={() => String(on())} /></Row>
+      },
+    },
+    _tpl: {
+      code: `// written by the compiler, not by hand: <tr class="row"><td>{id}</td></tr> →
+const _$t1 = _tpl(["tr", [["class", "row"]], ["td", []]])   // built once, cloned per row
+_$t1((r) => { insert(r.firstChild, () => row().id, null) })`,
+      run: () => {
+        const row = _tpl(["li", [["class", "sc-tpl-row"]], "Satır ", ["b", [], ""]])
+        const n = signal(0)
+        const list = <ul class="sc-stack">{() => Array.from({ length: n() }, (_, i) => row((r) => { (r.lastChild as Element).textContent = String(i + 1) }))}</ul>
+        return <div class="sc-stack"><Row><Button onClick={() => n.update((x) => x + 1)}>Satır ekle (kopya)</Button></Row>{list}</div>
       },
     },
     _leave: {
@@ -419,6 +441,20 @@ installFlip()   // calls setFlipHook(flip): <For animate> moves rows smoothly`,
         // only this demo's text: the page language stays as it is
         return <Row><Segmented value={lang} onChange={(v: string) => lang.set(v)} options={[{ value: "tr", label: "tr" }, { value: "en", label: "en" }]} aria-label="Dil" />
           <Out label='t("api.ex.hello")' value={() => (lang() === locale() ? t("api.ex.hello") : lang() === "en" ? "Hello" : "Merhaba")} /></Row>
+      },
+    },
+    selector: {
+      code: `const isSelected = selector(() => $selected)
+<For each={$rows} key="id">{(row) =>
+  <tr class={isSelected(row().id) ? "danger" : ""}>…</tr>}</For>
+// choosing a row wakes two rows (the old and the new one), not all of them`,
+      run: () => {
+        const sel = signal(2), wakes = signal(0)
+        const isSel = selector(sel)
+        const ids = [1, 2, 3, 4, 5]
+        // one effect per row, counting how often a row wakes up
+        for (const id of ids) effect(() => { isSel(id); untrack(() => wakes.update((x) => x + 1)) })
+        return <div class="sc-stack"><Row>{ids.map((id) => <Button variant={isSel(id) ? "primary" : "secondary"} onClick={() => sel.set(id)}>{id}</Button>)}</Row><Out label="satır uyanması (toplam)" value={wakes} /></div>
       },
     },
     signal: {
