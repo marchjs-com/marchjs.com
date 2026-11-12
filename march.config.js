@@ -31,5 +31,6 @@ export default {
     "src/pages/navigation.tsx": "page whose code is mostly shared (NavSidebar, router): any page group would push its route past the 60 KB budget",
     "src/env-managers/sync-server.ts": "Sync demo of the environment managers page: net and its mock arrive only when that demo is drawn",
     "src/components/composite/consent-banner/index.ts": "the consent UI (hadi-march/managers/consent/ui), lazy on purpose: loaded by the managers page and the ConsentBanner card, never folded into the component registry",
+    ".demos.gen.ts": "component cards of one showcase page (tools/gen-registry.js): joining the registry would make every page with a component card load them",
   } },
 };

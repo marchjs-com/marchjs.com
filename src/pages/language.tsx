@@ -1,6 +1,7 @@
 // The March language: $ variables, derived values, <For>/<If>/<Switch>, bind:, on:…|prevent, class:, pipes, sx, async components.
 import "hadi-march/motion/install"; // <For animate> (FLIP) on this page
-import { Card, Button, TextInput, Field, Toggle, Badge, Stack, Segmented, Widget, codeView, type CodeViewInput } from "hadi-march/ui";
+import { Card, Button, TextInput, Field, Toggle, Badge, Stack, Segmented, Widget, codeView } from "hadi-march/ui";
+import type { CodeViewInput } from "hadi-march/ui";
 import { onCleanup, effect, untrack } from "hadi-march";
 
 /** A stand-in for a live editor: plain text, no colours. Registered only while the switch is on. */

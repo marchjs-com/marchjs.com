@@ -8,7 +8,7 @@ import { motion } from "hadi-march/motion/engine/motion.ts";
 import { usePageTransitions, PAGE_VARIANTS } from "hadi-march/motion/page-fx.ts";
 import { Button } from "hadi-march/ui";
 import { Section } from "../../demo.tsx";
-import { MotionDemo, opt } from "../../motion-kit.tsx";
+import { MotionDemo, opt } from "../../playground.tsx";
 import { pageFx } from "../../motion-route-meta.ts";
 
 // every variant usable as meta.transition from now on
