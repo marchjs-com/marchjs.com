@@ -3,10 +3,16 @@
 // files with the first name of each one's alphabetical range.
 import type { ApiExampleModule } from "./api-examples/types.ts";
 const groups: Record<string, () => Promise<ApiExampleModule>> = {
+  "app-router": () => import("./api-examples/app-router.tsx"),
+  "app": () => import("./api-examples/app.tsx"),
   "core": () => import("./api-examples/core.tsx"),
 };
 const bySubpath: Record<string, [group: string, first: string][]> = {
   "hadi-march": [["core","Await"]],
+  "hadi-march/i18n": [["app","dir"]],
+  "hadi-march/lazy": [["app","chunksOf"]],
+  "hadi-march/router": [["app-router","Link"]],
+  "hadi-march/store": [["app","derive"]],
 };
 /** The example file of an export (a lazy part, loaded once), or null when its subpath has none yet. */
 export const loadExamples = (subpath: string, name: string): Promise<ApiExampleModule> | null => {
