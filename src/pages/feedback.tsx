@@ -1,6 +1,7 @@
 // Feedback: alerts, progress, skeleton, spinner, empty state, error box, loader, notice.
 import { Alert, Progress, Skeleton, Spinner, Empty, ErrorBox, Button, Card, Loader, Grid, Stack } from "hadi-march/ui";
 import { onCleanup } from "hadi-march";
+import { ProgressRing } from "hadi-march/charts";
 import { inbox, plus } from "hadi-march/icons";
 import { Demo, Section } from "../demo.tsx";
 
@@ -21,6 +22,31 @@ export default function Feedback() {
       <Progress value={72} tone="success" label="Hedef" showValue size="lg" />
       <Progress value={91} tone="warn" label="Depolama" showValue size="sm" />
       <Progress label="Hazırlanıyor" />
+    </Demo>
+    <Demo wide title="Çok renkli göstergeler" desc="HADİ temasında ilerleme çubuğu, çark ve iskelet varsayılan olarak dört marka rengini taşır (öteki temalarda tek renk). colors ile renkler, paint ile dizilim seçilir: gradient, segments ya da cycle (renkler akar). Hareketi azalt tercihinde durağan."
+      code={`<Progress value={60} />                                   // HADİ: four brand colors by default
+<Progress value={60} paint="segments" />                  // equal colored parts
+<Progress paint="cycle" />                                // indeterminate, colors flow
+<Progress value={60} colors={["brand-blue", "brand-green"]} />
+<Progress value={60} colors="single" />                   // one color
+<ProgressRing value={72} colors="brand" />  <Spinner colors="brand" />`}>
+      <div class="sc-multi">
+        <Stack gap={3}>
+          <Progress value={$p} label="Varsayılan (gradient)" showValue />
+          <Progress value={$p} paint="segments" colors="brand" label="segments" showValue />
+          <Progress paint="cycle" colors="brand" label="cycle (belirsiz)" />
+          <Progress value={$p} colors={["brand-blue", "brand-green"]} label="İki renk" showValue />
+          <Progress value={$p} colors="single" label="Tek renk" showValue />
+        </Stack>
+        <div class="sc-row">
+          <ProgressRing value={$p} colors="brand" label="Gradient" />
+          <ProgressRing value={$p} colors="brand" paint="segments" label="Segments" />
+          <ProgressRing value={$p} colors="brand" paint="cycle" label="Cycle" />
+          <Spinner size="lg" />
+          <Spinner size="lg" colors="single" />
+        </div>
+        <Skeleton lines={3} />
+      </div>
     </Demo>
     <Demo title="İskelet ve çark" desc="Yükleme sırasında düzen zıplamaz.">
       <div class="sc-row"><Button size="sm" on:click={() => { $loading = !$loading }}>{() => ($loading ? "Yüklemeyi bitir" : "Yeniden yükle")}</Button><Spinner size="sm" /><Spinner /><Spinner size="lg" /></div>
