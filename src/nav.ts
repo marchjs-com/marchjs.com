@@ -44,12 +44,6 @@ export const PAGES: PageInfo[] = [
 ];
 /** Pages under one wildcard route (the menu lists them under their parent; titles for the breadcrumb). */
 export const SUB_PAGES: PageInfo[] = [
-  { path: "/motion/svg", title: "SVG animasyonları" },
-  { path: "/motion/morph", title: "Morph" },
-  { path: "/motion/pages", title: "Sayfa geçişi efektleri" },
-  { path: "/motion/micro", title: "Mikro etkileşimler" },
-  { path: "/motion/scroll", title: "Kaydırma animasyonları" },
-  { path: "/motion/lists", title: "Liste animasyonları" },
   { path: "/web/product", title: "Ürün tanıtım sayfası", parent: "/web" },
   { path: "/web/portfolio", title: "Kişisel portfolyo", parent: "/web" },
   { path: "/web/slides", title: "Sunum", parent: "/web" },

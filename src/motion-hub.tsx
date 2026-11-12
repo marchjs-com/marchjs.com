@@ -19,6 +19,7 @@ const LAZY: Record<string, () => Promise<{ default: Page }>> = {
 }
 const LOCAL: Record<string, Page> = { "/motion/morph": MotionMorph, "/motion/pages": MotionPages }
 const VIEWS = new Map<string, Page>()
+const MotionTopics = lazy(() => import("./pages/motion.tsx"), { placeholder: "card", height: "40rem" }) as (p: { params: { rest?: string } }) => unknown
 
 export default function MotionHub(props: { params: { rest?: string } }) {
   // /motion/pages/<variant> is one page (the variant is its own route for the transition)
@@ -26,7 +27,8 @@ export default function MotionHub(props: { params: { rest?: string } }) {
   const Local = LOCAL[key]
   if (Local) return <Local />
   const load = LAZY[key]
-  if (!load) return <p class="sc-lead">Sayfa bulunamadı.</p>
+  // the other topics (/motion/spring-tween…) are on the motion page itself (its Hub draws them)
+  if (!load) return <MotionTopics params={props.params} />
   let View = VIEWS.get(key)
   if (!View) VIEWS.set(key, (View = lazy(load, { placeholder: "card", height: "40rem" }) as Page))
   return <View />

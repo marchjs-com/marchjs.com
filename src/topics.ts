@@ -171,6 +171,21 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "media", title: "Media", desc: "Kabına sığar, türü uzantıdan anlar; yüklenemezse yedek metin gösterir.", group: "Medya" },
     { slug: "carousel", title: "Carousel", desc: "Geniş ekranda 1–4 slayt, telefonda bir slayt ve sonrakinin ucu; oklar uçlarda gizlenir, noktalar konumu…", group: "Medya" },
   ],
+  "/motion": [
+    { slug: "spring-tween", title: "Yay ve tween", desc: "Aynı hedef, iki fizik: yay (aşar ve oturur) ve sekme eğrili tween.", group: "Temeller" },
+    { slug: "numbers", title: "Hareketli sayılar", desc: "tween ile değer akışı; tabular rakamlar zıplamaz.", group: "Temeller" },
+    { slug: "flip", title: "FLIP listeler", desc: "Ekle, karıştır, sil: öğeler yeni yerlerine kayar (<For animate>).", group: "Temeller" },
+    { slug: "timeline-stagger", title: "Zaman çizelgesi ve stagger", desc: "Ortadan dışa doğru gecikmeli giriş, ardından dönüş.", group: "Temeller" },
+    { slug: "gestures", title: "Jestler", desc: "Sürükle (geri yaylanır, ok tuşlarıyla da), mıknatıslı düğme, basınca küçülme.", group: "Temeller" },
+    { slug: "spotlight", title: "Spot ışığı, parçacıklar, parallax", desc: "İmleci kartın üstünde gezdir; parçacıklar imlece tepki verir; görsel katmanlar farklı hızda kayar.", group: "Temeller" },
+    { slug: "reveal", title: "Kayınca belir", desc: "reveal ve inView: görünür alana girince bir kez oynar.", group: "Temeller" },
+    { slug: "svg", title: "SVG animasyonları", desc: "Yol çizimi, şekil morph, yol boyunca, kırpma, SVG filtreleri.", group: "Kütüphane" },
+    { slug: "morph", title: "Morph", desc: "Düğme → diyalog, kart → sayfa, paylaşılan öğe, ikon ve şekil morph.", group: "Kütüphane" },
+    { slug: "pages", title: "Sayfa geçişi efektleri", desc: "Daire, silme, yığın, küp, çevir, perde, panjur, piksel, morph.", group: "Kütüphane" },
+    { slug: "micro", title: "Mikro etkileşimler", desc: "Dalga, mıknatıs, eğim ve katman parallax, yaylı basma, durum morph.", group: "Kütüphane" },
+    { slug: "scroll", title: "Kaydırma animasyonları", desc: "Kaydırma zaman çizelgesi, parallax katmanları, yapışkan sahne, ilerleme.", group: "Kütüphane" },
+    { slug: "lists", title: "Liste animasyonları", desc: "Ekle / kaldır / sırala FLIP, çıkış kopyası, sırayla giriş.", group: "Kütüphane" },
+  ],
 };
 
 /** Every topic as a sub page under its section (path, title, parent) for the routes, the breadcrumb and the menu. */
