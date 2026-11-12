@@ -171,7 +171,7 @@ appCache().invalidate("rates")   appCache().stats()   appCache().entries()`}>
     </li>) }}</ul>
     <Card title="Seçenekler" subtitle="Cache">
       <Field label="Tazelik (ms)"><Slider bind:value={$ttl} min={1000} max={15000} step={1000} /></Field>
-      <Field label="En çok kayıt (LRU)"><Slider value={() => $max} onChange={setMax} min={2} max={6} step={1} /></Field>
+      <Field label="En çok kayıt (LRU)"><Slider value={$max} onChange={setMax} min={2} max={6} step={1} /></Field>
       <Toggle bind:value={$swr} label="Bayatken eskiyi hemen göster, arkada yenile (swr)" />
     </Card>
   </Demo>

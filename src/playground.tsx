@@ -5,7 +5,7 @@
 //     preview cards, kind "grid" → square tiles, 10+ → Combobox); booleans are switches, numbers sliders.
 import type { PickerKind } from "hadi-march/ui";
 import { ChoicePicker, Toggle, Slider, Field, Button } from "hadi-march/ui";
-import { untrack, effect } from "hadi-march";
+import { untrack, effect, If } from "hadi-march";
 import { refresh } from "hadi-march/icons";
 import { Demo } from "./demo.tsx";
 
@@ -34,11 +34,18 @@ function control(o: PlayOption): unknown {
   return <Toggle value={!!o.get()} onChange={set} label={o.label} />
 }
 
+/**
+ * An option row, drawn while the option has an effect. If redraws only when the visibility flips: a value change (a
+ * slider being dragged) never rebuilds the row, so the input stays the same DOM node and keeps focus and pointer capture.
+ */
+const shown = (visibleWhen: (() => boolean) | undefined, draw: () => unknown): unknown =>
+  visibleWhen ? If({ when: visibleWhen, children: () => <div class="sc-play-opt">{draw()}</div> }) : untrack(() => <div class="sc-play-opt">{draw()}</div>)
+
 export function Playground(props: { options: readonly PlayOption[]; label?: string; children?: unknown }) {
   return <div class="sc-play"><div class="sc-play-inner">
     <div class="sc-play-stage">{props.children}</div>
     <div class="sc-play-panel" role="group" aria-label={props.label ?? "Seçenekler"}>
-      {props.options.map((o) => () => (o.visibleWhen && !o.visibleWhen() ? null : untrack(() => <div class="sc-play-opt">{control(o)}</div>)))}
+      {props.options.map((o) => shown(o.visibleWhen, () => control(o)))}
     </div>
   </div></div>
 }
