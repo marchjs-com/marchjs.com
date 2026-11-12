@@ -210,3 +210,4 @@
 .sc-multi { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--hm-space-5); align-items: start; }
 .sc-multi > :last-child { grid-column: 1 / -1; }
 @media (max-width: 900px) { .sc-multi { grid-template-columns: minmax(0, 1fr); } }
+.sc-choice-note { margin: 0; font-size: var(--hm-text-sm); }

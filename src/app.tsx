@@ -2,7 +2,7 @@
 import { t } from "hadi-march";
 import { Router, Link, path, type Href } from "hadi-march/router";
 import {
-  AppShell, NavSidebar, Brand, openPalette, Spacer, PaletteButton, ThemePicker, ThemeToggle, CommandPalette, ToastHost, Loader, registerCommands, toast,
+  AppShell, NavSidebar, Brand, openPalette, Spacer, PaletteButton, ThemePicker, ThemeToggle, AccentPicker, CommandPalette, ToastHost, Loader, registerCommands, toast,
   setColorTheme, colorThemes, setTheme,
 } from "hadi-march/ui";
 import {
@@ -43,6 +43,7 @@ function Topbar() {
     </nav>
     <Spacer />
     <PaletteButton label="Bileşen ara…" />
+    <AccentPicker label="Vurgu rengi" />
     <ThemePicker label="Tema" />
     <ThemeToggle />
   </>
