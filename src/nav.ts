@@ -8,6 +8,7 @@ export const PAGES: PageInfo[] = [
   { path: "/icons", title: "İkonlar" },
   { path: "/buttons", title: "Düğmeler ve rozetler" },
   { path: "/forms", title: "Formlar" },
+  { path: "/editors", title: "Editörler" },
   { path: "/data", title: "Veri" },
   { path: "/big-data", title: "Büyük veri" },
   { path: "/charts", title: "Grafikler" },
@@ -31,4 +32,5 @@ export const PAGES: PageInfo[] = [
   { path: "/seo", title: "SEO" },
   { path: "/managers-a11y", title: "Yöneticiler: erişilebilirlik" },
   { path: "/managers-env", title: "Ortam yöneticileri" },
+  { path: "/flow", title: "Akış editörü" },
 ];

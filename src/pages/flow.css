@@ -1,0 +1,27 @@
+/* Flow editor page: editor layout (palette / JSON aside + canvas), stages of the component demos. */
+.sc-flow-stack { display: flex; flex-direction: column; gap: var(--hm-space-3); min-inline-size: 0; }
+.sc-flow-muted { margin: 0; min-block-size: 1.25rem; color: var(--hm-muted); font-size: var(--hm-text-sm); }
+.sc-flow-stage { min-inline-size: 0; block-size: 26rem; }
+.sc-flow-stage > .hm-flow, .sc-flow-stage > .hm-ctxmenu > .hm-flow { block-size: 100%; min-block-size: 0; }
+.sc-flow-stage-sm { block-size: 20rem; }
+.sc-flow-stage-lg { block-size: 36rem; }
+.sc-flow-editor { display: grid; gap: var(--hm-space-3); min-inline-size: 0; }
+.sc-flow-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--hm-space-3); min-inline-size: 0; }
+.sc-flow-top > .hm-flowctl { flex: 1 1 32rem; }
+.sc-flow-main { display: grid; grid-template-columns: 17rem minmax(0, 1fr); gap: var(--hm-space-3); min-inline-size: 0; }
+.sc-flow-aside { display: flex; flex-direction: column; min-inline-size: 0; block-size: 36rem; }
+.sc-flow-aside-body { block-size: 31rem; overflow: auto; padding-block: var(--hm-space-2); padding-inline-end: var(--hm-space-1); }
+.sc-flow-split { display: grid; grid-template-columns: 14rem minmax(0, 1fr); gap: var(--hm-space-3); min-inline-size: 0; }
+.sc-flow-keys { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--hm-space-2) var(--hm-space-3); margin: 0; align-items: baseline; }
+.sc-flow-keys dt { min-inline-size: 0; } .sc-flow-keys dd { margin: 0; color: var(--hm-muted); font-size: var(--hm-text-sm); min-inline-size: 0; }
+@media (max-width: 900px) {
+  .sc-flow-main, .sc-flow-split { grid-template-columns: minmax(0, 1fr); }
+  .sc-flow-aside { block-size: auto; order: 2; }
+  .sc-flow-aside-body { block-size: 18rem; }
+  .sc-flow-stage-lg { block-size: 28rem; }
+  .sc-flow-split .hm-flowpal { max-block-size: 16rem; overflow: auto; }
+  .sc-flow-keys { grid-template-columns: minmax(0, 1fr); }
+}
+.sc-flow-json { font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); }
+.sc-flow-check { margin: 0; font-size: var(--hm-text-xs); color: var(--hm-success-text); }
+.sc-flow-check.is-bad { color: var(--hm-danger-text); }

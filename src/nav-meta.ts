@@ -17,6 +17,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/icons": { desc: "Kendi SVG ikon seti", group: "Temel", icon: grid },
   "/buttons": { desc: "Button, menü, çip, avatar, ipucu", group: "Eylemler", icon: zap },
   "/forms": { desc: "Alanlar, seçiciler, doğrulama, sihirbaz", group: "Formlar", icon: edit },
+  "/editors": { desc: "Zengin metin, Markdown, JSON, renk, eğri, zaman çizelgesi, kırpma", group: "Formlar", icon: edit },
   "/data": { desc: "10.000 satırlık tablo, ağaç, pano, adımlar", group: "Veri gösterimi", icon: layers },
   "/big-data": { desc: "DataGrid, TreeView, takvim, Gantt, dosya yöneticisi", group: "Veri gösterimi", icon: grid },
   "/charts": { desc: "Çizgi, alan, çubuk, pasta, ısı haritası", group: "Veri gösterimi", icon: barChart },
@@ -44,4 +45,5 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/managers-a11y": { desc: "Katman, odak, kısayol, duyurucu, erişilebilirlik tercihleri, kısayol ipuçları", group: "Yöneticiler", icon: cpu },
   "/managers-env": { desc: "Yöneticiler: boşta, çevrimdışı eşitleme, cihaz, izin, konum, bildirim, sekme, kaydırma, oturum süresi, varlık", group: "Yöneticiler", icon: cpu },
   "/language": { desc: "$ değişkenler, <For>, bind:, borular, sx", group: "Temel", icon: code },
+  "/flow": { desc: "Düğüm tabanlı akış: tuval, palet, çalıştır/duraklat/adım, zaman çizelgesi", group: "Karmaşık bileşenler", icon: activity },
 };
