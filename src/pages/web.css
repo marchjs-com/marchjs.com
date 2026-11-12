@@ -89,6 +89,9 @@
 @media (max-width: 760px) { .sc-about { grid-template-columns: minmax(0, 1fr); } }
 .sc-sent { margin: 0; padding: var(--hm-space-5); border-radius: var(--hm-radius-3); background: var(--hm-success-soft); text-align: center; font-weight: 600; }
 .sc-pd-stage { min-height: 24rem; }
+/* a demo option whose effect shows on the next interaction: the line says what will happen */
+.sc-demo-stack { display: flex; flex-direction: column; gap: var(--hm-space-3); min-width: 0; }
+.sc-demo-call { margin: 0; overflow-wrap: anywhere; font-family: var(--hm-font-mono, ui-monospace, monospace); font-size: var(--hm-text-xs, .75rem); color: var(--hm-muted); background: var(--hm-surface-2, var(--hm-bg-subtle)); border-radius: var(--hm-radius-2); padding: var(--hm-space-1) var(--hm-space-2); }
 .sc-sprog-demo { width: 100%; }
 .sc-story-mock { width: 88%; border-radius: var(--hm-radius-3); overflow: hidden; box-shadow: var(--hm-shadow-3); }
 .sc-story-num { font-size: clamp(3rem, 2rem + 4vw, 5.5rem); font-weight: 800; letter-spacing: -.04em; color: var(--hm-accent, var(--hm-primary)); }
