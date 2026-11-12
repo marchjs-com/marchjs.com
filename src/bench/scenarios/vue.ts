@@ -3,5 +3,6 @@
 // check exempt only that chunk). Add a scenario here when its folder gets a vue app.
 import { mount as ticker } from "./ticker/vue.ts"
 import { mount as tree } from "./tree/vue.ts"
+import { mount as derived } from "./derived/vue.ts"
 
-export const scenarios = { ticker, tree }
+export const scenarios = { ticker, tree, derived }

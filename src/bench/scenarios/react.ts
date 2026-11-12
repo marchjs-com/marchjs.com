@@ -3,5 +3,6 @@
 // check exempt only that chunk). Add a scenario here when its folder gets a react app.
 import { mount as ticker } from "./ticker/react.ts"
 import { mount as tree } from "./tree/react.ts"
+import { mount as derived } from "./derived/react.ts"
 
-export const scenarios = { ticker, tree }
+export const scenarios = { ticker, tree, derived }

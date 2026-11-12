@@ -3,5 +3,6 @@
 // check exempt only that chunk). Add a scenario here when its folder gets a preact app.
 import { mount as ticker } from "./ticker/preact.ts"
 import { mount as tree } from "./tree/preact.ts"
+import { mount as derived } from "./derived/preact.ts"
 
-export const scenarios = { ticker, tree }
+export const scenarios = { ticker, tree, derived }
