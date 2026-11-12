@@ -1,0 +1,74 @@
+[
+ {
+  "id": "1",
+  "name": "Ada Lovelace",
+  "email": "ada.lovelace@example.com",
+  "role": "admin"
+ },
+ {
+  "id": "2",
+  "name": "Alan Turing",
+  "email": "alan.turing@example.com",
+  "role": "editor"
+ },
+ {
+  "id": "3",
+  "name": "Grace Hopper",
+  "email": "grace.hopper@example.com",
+  "role": "viewer"
+ },
+ {
+  "id": "4",
+  "name": "Linus Torvalds",
+  "email": "linus.torvalds@example.com",
+  "role": "admin"
+ },
+ {
+  "id": "5",
+  "name": "Margaret Hamilton",
+  "email": "margaret.hamilton@example.com",
+  "role": "editor"
+ },
+ {
+  "id": "6",
+  "name": "Dennis Ritchie",
+  "email": "dennis.ritchie@example.com",
+  "role": "viewer"
+ },
+ {
+  "id": "7",
+  "name": "Barbara Liskov",
+  "email": "barbara.liskov@example.com",
+  "role": "admin"
+ },
+ {
+  "id": "8",
+  "name": "Ken Thompson",
+  "email": "ken.thompson@example.com",
+  "role": "editor"
+ },
+ {
+  "id": "9",
+  "name": "Frances Allen",
+  "email": "frances.allen@example.com",
+  "role": "viewer"
+ },
+ {
+  "id": "10",
+  "name": "Tim Berners-Lee",
+  "email": "tim.bernerslee@example.com",
+  "role": "admin"
+ },
+ {
+  "id": "11",
+  "name": "Radia Perlman",
+  "email": "radia.perlman@example.com",
+  "role": "editor"
+ },
+ {
+  "id": "12",
+  "name": "Edsger Dijkstra",
+  "email": "edsger.dijkstra@example.com",
+  "role": "viewer"
+ }
+]
