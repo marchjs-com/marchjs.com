@@ -22,6 +22,7 @@ export const PAGES: PageInfo[] = [
   { path: "/network", title: "Ağ ve hatalar" },
   { path: "/layout", title: "Yerleşim" },
   { path: "/navigation", title: "Gezinme" },
+  { path: "/social", title: "Sosyal" },
   { path: "/overlay", title: "Overlay" },
   { path: "/language", title: "March dili" },
   { path: "/managers", title: "Yöneticiler" },
