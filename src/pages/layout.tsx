@@ -76,6 +76,8 @@ export default function Layout() {
     <ComponentDemo folder="layout/splitter" title="Splitter: boyutlandırılabilir bölmeler" desc="Tutamacı sürükleyin ya da odaklayıp ← → (RTL'de aynalı), Home / End; Enter başlangıç payına döndürür." />
     <ComponentDemo folder="layout/accordion" title="Accordion: açılır bölümler" desc="Varsayılan tek açık bölüm; birden çok açık seçeneği, yükseklik animasyonu, başlıklar arasında ↑ ↓ Home End." />
     <ComponentDemo folder="layout/disclosure" title="Disclosure: katlanır bölüm" desc="Yerel details / summary üzerinde: klavye ve ekran okuyucu desteği hazır, açılıp kapanma animasyonlu." />
+    <ComponentDemo folder="layout/layout" title="Layout: değiştirilebilir sayfa çerçevesi" desc="Bölgeler (üst bilgi, gezinme, yan alan, alt bilgi, dört köşe), ada göre açılıp kapanan davranışlar (başa dön, okuma çubuğu, rota odağı, kaydırınca gizlenen üst bilgi) ve Layout.extend ile türetme. Bu vitrin de bir Layout: sağ alttaki düğme ve üstteki okuma çubuğu oradan gelir." />
+    <ComponentDemo folder="layout/bottom-right-controls" title="Sayfa köşeleri: BottomRightControls" desc="Sayfa çapı denetimler dört köşeden birine sırayla yerleşir, üst üste binmez; sağdan sola yazımda aynalanır." />
     <ComponentDemo folder="layout/app-shell" title="AppShell: uygulama çerçevesi" desc="Kenar çubuğu sütunu, üst duyuru ve kayan ana alan; önce gelen 'İçeriğe geç' bağlantısı. Dar ekranda tam genişlik." />
   </Section>
 }

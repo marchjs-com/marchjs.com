@@ -19,3 +19,14 @@
 .sc-stack-item { padding: var(--hm-space-2) var(--hm-space-3); border-radius: var(--hm-radius); background: var(--hm-bg-subtle); border: 1px solid var(--hm-border); }
 .sc-stack-item-1 { padding-block: var(--hm-space-4); }
 .sc-stack-item-2 { padding-block: var(--hm-space-1); }
+
+/* Layout demo: a small framed layout (the real frame is full-height) */
+.sc-layout-demo { inline-size: 100%; }
+.sc-layout-demo .hm-shell { min-block-size: 16rem; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-lg); overflow: hidden; }
+.sc-layout-demo .hm-shell-nav, .sc-layout-demo .hm-shell-header { position: static; block-size: auto; }
+.sc-layout-demo .hm-layout-aside { position: static; max-block-size: none; }
+.sc-ld-box { padding: var(--hm-space-3); background: var(--hm-surface-2); color: var(--hm-muted); font-size: var(--hm-text-sm); }
+.sc-ld-main { min-block-size: 8rem; display: grid; place-items: center; color: var(--hm-text); }
+/* corner demo */
+.sc-corner-demo { display: grid; gap: var(--hm-space-3); }
+.sc-corner-demo .sc-row { display: flex; flex-wrap: wrap; gap: var(--hm-space-2); }

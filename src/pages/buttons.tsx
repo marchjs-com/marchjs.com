@@ -1,4 +1,5 @@
 // Buttons, menus, tooltips, badges, chips, avatars, cards, tabs.
+import "./buttons.css";
 import {
   Button, IconButton, Chip, Avatar, AvatarGroup, Card, LinkCard, IconTile, Tabs,
   Stack, Divider,
@@ -18,6 +19,7 @@ export default function Buttons() {
 
     <ComponentDemo folder="actions/icon-button" title="IconButton: yalnız ikon" desc="Erişilebilir ad zorunlu; aynı ad ipucu olarak da görünür. Kalp düğmesi aria-pressed ile açılıp kapanır." />
     <ComponentDemo folder="actions/button-group" title="ButtonGroup: ilişkili düğmeler" desc="Aralıklı ya da bitişik; bitişik şeritte yuvarlak uçlar RTL'de de dışta kalır." />
+    <ComponentDemo folder="actions/scroll-to-top" title="ScrollToTop: başa dön" desc="Sayfa aşağı kayınca belirir, basınca yumuşakça başa döner; varsayılan olarak sayfa köşesine yerleşir. Burada kendi kaydırma kutusunda." />
     <ComponentDemo folder="actions/copy-button" title="CopyButton: panoya kopyala" desc="Kopyalandı der ve bunu ekran okuyucuya duyurur; pano yoksa bildirimle söyler." />
 
     <ComponentDemo folder="actions/menu" title="Menu ve Dropdown" desc="Ok tuşları, Home/End, Esc; kısayollar platforma göre yazılır, action() onaylı silme ve bildirimi getirir. Dropdown herhangi bir içeriği açar." />
