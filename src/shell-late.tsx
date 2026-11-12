@@ -3,8 +3,8 @@
 import { t } from "hadi-march";
 import { CommandPalette, ToastHost, Dialog, registerCommands, toast, setColorTheme, colorThemes, setTheme } from "hadi-march/ui";
 import { PortalTarget } from "hadi-march";
-import { Outlet } from "hadi-march/router";
-import { palette, moon, sun, sparkles } from "hadi-march/icons";
+import { Outlet, navigate } from "hadi-march/router";
+import { palette, moon, sun, sparkles, hash } from "hadi-march/icons";
 import "./perflog.ts";
 import { whenIdle } from "hadi-march/lazy";
 
@@ -12,6 +12,29 @@ import { whenIdle } from "hadi-march/lazy";
 // is idle after start-up: the first paint and the start-up download do not wait for it (a navigation before then has
 // no page transition, nothing else changes)
 whenIdle(() => { void import("./motion-late.ts"); }, 3000);
+
+// Ctrl+K also finds the demo sections inside pages ("terminal" → Editörler › Terminal): the index is its own chunk,
+// loaded when idle; picking one opens the page, scrolls to the section and flashes it
+whenIdle(() => { void import("./sections.gen.ts").then(({ SECTIONS }) => registerCommands(SECTIONS.map((s) => ({
+  id: `sec-${s.path}-${s.id}`, title: `${s.page} › ${s.title}`, group: "Bölümler", icon: hash,
+  keywords: [s.desc, s.comp, s.page].join(" "), run: () => void goToSection(s.path, s.id),
+})))) }, 2500);
+
+/** Open a page and bring one of its sections into view (it may still be loading: wait for it a moment). */
+async function goToSection(path: string, id: string): Promise<void> {
+  await navigate(`${path}#${id}` as never)
+  const started = performance.now()
+  let el: HTMLElement | null = null
+  while (!(el = document.getElementById(id)) && performance.now() - started < 4000) await new Promise((r) => setTimeout(r, 80))
+  if (!el) return
+  el.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" })
+  const head = el.querySelector<HTMLElement>("h2, h3") ?? el
+  if (!head.hasAttribute("tabindex")) head.setAttribute("tabindex", "-1")
+  head.focus({ preventScroll: true })
+  // a short flash on the motion engine (global speed and reduced motion apply)
+  const target = el
+  void import("hadi-march/motion").then((m) => m.animate(target, [{ boxShadow: "0 0 0 0 transparent" }, { boxShadow: "0 0 0 6px color-mix(in srgb, var(--hm-primary) 35%, transparent)" }, { boxShadow: "0 0 0 0 transparent" }], { duration: 1400, easing: "easeInOutCubic" }))
+}
 
 export default function ShellLate() {
   registerCommands([

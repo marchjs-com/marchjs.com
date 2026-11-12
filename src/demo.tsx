@@ -9,9 +9,12 @@ import { lazy } from "hadi-march/lazy";
 const DemoCode = lazy(() => import("./demo-code.tsx"), { placeholder: "text", height: "8rem" })
 
 /** `code`: the Code tab's source, or a loader for it (fetched on the first click on Kod, like the viewer itself). */
+/** A section anchor from a title (same as tools/gen-sections.js: the palette jumps to it). */
+export const demoSlug = (s: string): string => s.toLocaleLowerCase("tr").replace(/ı/g, "i").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60)
+
 export function Demo(props: { title: string; desc?: string; code?: string | (() => Promise<string>); lang?: string; wide?: boolean; id?: string; children?: unknown }) {
   const preview = <div class="sc-stage">{props.children}</div>
-  return <section class={props.wide ? "sc-demo sc-demo-wide" : "sc-demo"} id={props.id}>
+  return <section class={props.wide ? "sc-demo sc-demo-wide" : "sc-demo"} id={props.id ?? `d-${demoSlug(props.title)}`}>
     <header class="sc-demo-head">
       <h2 class="sc-demo-title">{props.title}</h2>
       {props.desc ? <p class="sc-demo-desc">{props.desc}</p> : null}

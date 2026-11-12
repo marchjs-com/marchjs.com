@@ -140,3 +140,6 @@
 .sc-contact-field { display: flex; flex-direction: column; gap: var(--hm-space-1); font-size: var(--hm-text-sm); font-weight: var(--hm-weight-medium); }
 .sc-contact > .hm-btn { align-self: flex-start; }
 .sc-sample-site { background: var(--hm-bg); color: var(--hm-text); min-block-size: 100%; }
+/* previews: only fields keep text selection */
+.sc-sample-device { user-select: none; -webkit-user-select: none; }
+.sc-sample-device :is(input, textarea, select, [contenteditable="true"]) { user-select: text; -webkit-user-select: text; }

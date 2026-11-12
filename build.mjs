@@ -36,6 +36,8 @@ if (!serve || !existsSync(dist) || watching) {
   try { genAll({ force: release, log: (l) => console.log(l) }); } catch (e) { console.error(`✖ ${e.message}`); process.exit(1); }
   // the home page numbers (components, exports, icons, tests …) from their sources: none is typed by hand
   execFileSync(process.execPath, [join(here, "..", "..", "tools", "gen-home-stats.js")], { stdio: "inherit" });
+  // the command palette's section index (Ctrl+K finds a demo inside a page and jumps to it)
+  execFileSync(process.execPath, [join(here, "..", "..", "tools", "gen-sections.js")], { stdio: "inherit" });
   const tGen = performance.now() - t0;
   if (watching) {
     // stays running: march build --watch rebuilds on change (serve alongside with --serve)
