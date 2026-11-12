@@ -2,6 +2,7 @@
 // morphs. Each one is an engine Playback (global speed, "Stop all", reduced motion).
 import "../motion-pages.css";
 import { morph, morphBack, morphIcon, shapeMorph, MORPH_ICONS, type MorphIconName, type ShapeName } from "hadi-march/motion/morph.ts";
+import type { Playback } from "hadi-march/motion";
 import { Button } from "hadi-march/ui";
 import { Section } from "../../demo.tsx";
 import { MotionDemo, opt, EASES } from "../../playground.tsx";
@@ -38,9 +39,12 @@ export default function MotionMorph() {
     $dlg = true
     queueMicrotask(() => { if (trigger && dialog) { morph(trigger, dialog, { duration: $bDur, easing: $bEase, fadeContent: $bFade }); dialog.querySelector<HTMLElement>("input")?.focus() } })
   }
+  let dlgClosing: Playback | null = null
   const closeDlg = (): void => {
-    if (!trigger || !dialog || !$dlg) return
-    void morphBack(dialog, trigger, { duration: $bDur * 0.8, fadeContent: $bFade }).finished.then(() => { $dlg = false; trigger?.focus() })
+    if (!trigger || !dialog || !$dlg || dlgClosing) return
+    const p = dlgClosing = morphBack(dialog, trigger, { duration: $bDur * 0.8, fadeContent: $bFade })
+    // a reopen during the shrink cancels it (state "idle"): the dialog stays open
+    void p.finished.then(() => { if (dlgClosing === p) dlgClosing = null; if (p.state !== "finished") return; $dlg = false; trigger?.focus() })
   }
 
   // 2 · card → page
@@ -52,10 +56,12 @@ export default function MotionMorph() {
     $page = id
     queueMicrotask(() => { const c = cardEls.get(id); if (c && pageEl) { morph(c, pageEl, { duration: $cDur, easing: $cEase }); pageEl.querySelector<HTMLElement>("button")?.focus() } })
   }
+  let cardClosing: Playback | null = null
   const closeCard = (): void => {
     const c = cardEls.get($page)
-    if (!c || !pageEl) return
-    void morphBack(pageEl, c, { duration: $cDur * 0.75 }).finished.then(() => { $page = ""; c.focus() })
+    if (!c || !pageEl || cardClosing) return
+    const p = cardClosing = morphBack(pageEl, c, { duration: $cDur * 0.75 })
+    void p.finished.then(() => { if (cardClosing === p) cardClosing = null; if (p.state !== "finished") return; $page = ""; c.focus() })
   }
 
   // 3 · shared element
