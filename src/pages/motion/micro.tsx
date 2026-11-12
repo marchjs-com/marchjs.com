@@ -3,12 +3,14 @@
 import "../motion-pages.css";
 import { onCleanup } from "hadi-march";
 import { ripple, hoverParallax, stateMorph, type ButtonState } from "hadi-march/motion/micro.ts";
-import { magnet, tilt, press } from "hadi-march/motion/gestures.ts";
+import { magnet, press } from "hadi-march/motion/gestures.ts";
 import { Section } from "../../demo.tsx";
-import { MotionDemo, opt } from "../../playground.tsx";
+// the demo kit comes from the /motion/* hub (already loaded): importing it here would split 1 KB into a file of its own
+import type * as Kit from "../../motion-kit.tsx";
 import { Icon, heart, star, sparkles, send } from "hadi-march/icons";
 
-export default function MotionMicro() {
+export default function MotionMicro(props: { kit: typeof Kit }) {
+  const { MotionDemo, opt } = props.kit
   document.title = "Mikro etkileşimler · HADI March"
 
   // 1 · ripple
@@ -103,7 +105,7 @@ export default function MotionMicro() {
     </MotionDemo>
 
     <MotionDemo wide title="Durum morph" desc="Kaydet: düğme daireye daralır ve döner; sonuç gelince onay ya da çarpı çizilir (hata sallanır), başarıda konfeti; sonra eski hâline yayla döner. Ekran okuyucuya durum bildirilir."
-      call={() => `stateMorph(button, "${$state}"${$state === "success" && $confetti ? ", { confetti: true }" : ""})  // sonuç: ${$result}, bekleme: ${$wait} ms`}
+      call={() => `stateMorph(button, "${$state}", { confetti: ${$result === "success" && $confetti} })  // sonuç: ${$result}, bekleme: ${$wait} ms`}
       code={`import { stateMorph } from "hadi-march/motion"
 
 stateMorph(btn, "loading")
