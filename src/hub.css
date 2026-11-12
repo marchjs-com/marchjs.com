@@ -1,5 +1,7 @@
 /* Section overview (grouped topic cards) and topic pages (prev / next). */
-.sc-hub-group { margin-block-start: var(--hm-space-6); }
+/* the page body is a two-column demo grid: groups, the topic and its footer take the full width */
+.sc-demos > :is(.sc-hub-group, .sc-topic-body, .sc-topic-pager) { grid-column: 1 / -1; }
+.sc-hub-group { margin-block-start: var(--hm-space-2); }
 .sc-hub-group-title { margin: 0 0 var(--hm-space-3); font-size: var(--hm-text-sm); font-weight: var(--hm-weight-semibold); color: var(--hm-muted); text-transform: uppercase; letter-spacing: .06em; }
 .sc-hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: var(--hm-space-3); }
 .sc-hub-card { position: relative; display: flex; flex-direction: column; gap: var(--hm-space-1); padding: var(--hm-space-4) var(--hm-space-5) var(--hm-space-4) var(--hm-space-4);
@@ -14,9 +16,10 @@
 .sc-hub-card-go:dir(rtl) { scale: -1 1; }
 
 /* a topic page: the demo's own heading repeats the page title, so a lone demo shows only its description */
+.sc-topic-body { display: flex; flex-direction: column; gap: var(--hm-space-5); min-inline-size: 0; }
 .sc-topic-body > .sc-demo:only-child .sc-demo-title { display: none; }
-.sc-topic-pager { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--hm-space-3); margin-block-start: var(--hm-space-6);
-  padding-block-start: var(--hm-space-4); border-block-start: 1px solid var(--hm-border-subtle); }
+.sc-topic-pager { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--hm-space-3); margin-block-start: var(--hm-space-4);
+  padding-block-start: var(--hm-space-5); border-block-start: 1px solid var(--hm-border-subtle); }
 .sc-topic-step { display: inline-flex; align-items: center; gap: var(--hm-space-2); color: var(--hm-text); text-decoration: none; }
 .sc-topic-step span { display: flex; flex-direction: column; }
 .sc-topic-step small { color: var(--hm-muted); font-size: var(--hm-text-xs); }
