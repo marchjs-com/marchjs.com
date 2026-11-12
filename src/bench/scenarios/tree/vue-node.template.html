@@ -1,0 +1,2 @@
+<div v-if="n.kids" class="n"><span class="l">{{ n.label }}</span><TreeNode v-for="c of n.kids" :key="c.id" :n="c" /></div>
+<div v-else class="n leaf"><span class="l">{{ n.label }}</span><b class="v">{{ cells[n.leaf].v }}</b></div>

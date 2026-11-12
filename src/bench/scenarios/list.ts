@@ -2,6 +2,7 @@
 // check, an honest description) and one app per library; ./<library>.ts files register the apps.
 import type { Scenario } from "./core.ts"
 import { ticker } from "./ticker/def.ts"
+import tree from "./tree/def.ts"
 
-export const SCENARIOS: Scenario[] = [ticker as Scenario]
+export const SCENARIOS: Scenario[] = [ticker as Scenario, tree as Scenario]
 export const scenarioById = (id: string): Scenario | undefined => SCENARIOS.find((s) => s.id === id)

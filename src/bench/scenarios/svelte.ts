@@ -3,6 +3,7 @@
 // tools/gen-bench.mjs (<scenario>/svelte.svelte → svelte.gen.js) and exports step(payload).
 import { mount as svelteMount, unmount, flushSync, type Component } from "svelte"
 import Ticker from "./ticker/svelte.gen.js"
+import Tree from "./tree/svelte.gen.js"
 import type { ScenarioApp } from "./core.ts"
 
 const app = (C: unknown) => (host: HTMLElement, data: unknown): ScenarioApp => {
@@ -10,4 +11,4 @@ const app = (C: unknown) => (host: HTMLElement, data: unknown): ScenarioApp => {
   flushSync()
   return { step: (p) => a.step(p), destroy: () => { void unmount(a as never) } }
 }
-export const scenarios = { ticker: app(Ticker) }
+export const scenarios = { ticker: app(Ticker), tree: app(Tree) }
