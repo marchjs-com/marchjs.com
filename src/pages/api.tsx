@@ -1,7 +1,7 @@
 // API: every runtime export of every package subpath. Left: a searchable tree grouped by subpath; right: the selected
 // export's full documentation — signature with types, parameter / props / member tables, value contents, the long-form
 // doc (docs/api/<subpath>/<name>.md), the live example (api-examples/<group>.tsx), related exports, version and stability.
-// Deep links: #/api/<subpath>/<name> (subpath without "hadi-march/", the core entry is "core").
+// Deep links: /api/<subpath>/<name> (subpath without "hadi-march/", the core entry is "core").
 // Data (tools/api-docs.js): public/api/index.<lang>.json (the search index, one file) and public/api/docs-<n>.json (the
 // full docs, fetched when one of their exports opens). Nothing of it is part of start-up.
 import "./api.css";
