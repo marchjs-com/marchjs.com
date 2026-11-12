@@ -3,13 +3,13 @@ import { NavSidebar, Brand, openPalette } from "hadi-march/ui";
 import { defineIcon, dashboard, command } from "hadi-march/icons";
 import type { Href } from "hadi-march/router";
 import { PAGES } from "./nav.ts";
-import { PAGE_META } from "./nav-meta.ts";
+import { PAGE_META, SUB_PAGES } from "./nav-meta.ts";
 
 /** The March mark. */
 export const marchMark = defineIcon("march", ["M5 19V6.5l7 7 7-7V19"]);
 
 export default function ShellNav() {
-  const items = PAGES.filter((p) => p.path !== "/").map((p) => ({ id: p.path, label: p.title, sub: PAGE_META[p.path]?.desc, href: p.path as Href, icon: PAGE_META[p.path]?.icon, group: PAGE_META[p.path]?.group, keywords: PAGE_META[p.path]?.desc }))
+  const items = [...PAGES, ...SUB_PAGES].filter((p) => p.path !== "/").map((p) => ({ id: p.path, label: p.title, sub: PAGE_META[p.path]?.desc, href: p.path as Href, icon: PAGE_META[p.path]?.icon, group: PAGE_META[p.path]?.group, keywords: PAGE_META[p.path]?.desc }))
   const featured = [
     { id: "/", label: "Merhaba", sub: "Genel bakış ve canlı sayaç", href: "/" as Href, icon: dashboard },
     { id: "palette", label: "Komut paleti", sub: "Sayfa, tema ya da eylem ara", icon: command, onSelect: openPalette },

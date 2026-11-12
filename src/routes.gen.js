@@ -13,6 +13,7 @@ export default {
   "/managers": () => import("./pages/managers.tsx"),
   "/messaging": () => import("./pages/messaging.tsx"),
   "/motion": () => import("./pages/motion.tsx"),
+  "/motion/svg": () => import("./pages/motion/svg.tsx"),
   "/navigation": () => import("./pages/navigation.tsx"),
   "/network": () => import("./pages/network.tsx"),
   "/overlay": () => import("./pages/overlay.tsx"),

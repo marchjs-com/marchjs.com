@@ -1,0 +1,41 @@
+/* Showcase › Motion pages (sc-mo-*). Theme tokens only; logical properties (RTL); nothing overflows at 390 px. */
+.sc-mo-stage { display: grid; place-items: center; min-block-size: 14rem; inline-size: 100%; min-inline-size: 0; position: relative; }
+.sc-mo-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--hm-space-2); margin-block-start: var(--hm-space-3); min-inline-size: 0; }
+.sc-mo-call { flex: 1 1 14rem; min-inline-size: 0; overflow-wrap: anywhere; font-family: var(--hm-font-mono, ui-monospace, monospace); font-size: var(--hm-text-xs, .75rem); color: var(--hm-muted); background: var(--hm-surface-2, var(--hm-bg-subtle)); border-radius: var(--hm-radius-2); padding: var(--hm-space-1) var(--hm-space-2); }
+
+/* stroke art */
+.sc-mo-art { inline-size: min(100%, 26rem); block-size: auto; }
+.sc-mo-ink { fill: none; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.sc-mo-ink-o { stroke: var(--hm-brand-orange); } .sc-mo-ink-b { stroke: var(--hm-brand-blue); }
+.sc-mo-ink-g { stroke: var(--hm-brand-green); } .sc-mo-ink-p { stroke: var(--hm-brand-purple); }
+
+/* morph */
+.sc-mo-morph { inline-size: min(100%, 13rem); block-size: auto; filter: drop-shadow(0 10px 18px color-mix(in oklab, var(--hm-brand-purple) 30%, transparent)); }
+.sc-mo-stop-o { stop-color: var(--hm-brand-orange); } .sc-mo-stop-p { stop-color: var(--hm-brand-purple); }
+
+/* road */
+.sc-mo-road { inline-size: min(100%, 26rem); block-size: auto; overflow: visible; }
+.sc-mo-road-bg { fill: none; stroke: var(--hm-border); stroke-width: 3; stroke-dasharray: 2 8; stroke-linecap: round; }
+.sc-mo-road-ink { fill: none; stroke: var(--hm-brand-blue); stroke-width: 4; stroke-linecap: round; }
+.sc-mo-plane { fill: var(--hm-brand-orange); }
+
+/* clip reveal poster */
+.sc-mo-poster-wrap { inline-size: min(100%, 24rem); cursor: crosshair; border-radius: var(--hm-radius-3); background: repeating-linear-gradient(45deg, var(--hm-surface-2, var(--hm-bg-subtle)) 0 8px, transparent 8px 16px); }
+.sc-mo-poster { position: relative; overflow: hidden; display: grid; align-content: end; gap: var(--hm-space-1); aspect-ratio: 16 / 10; padding: var(--hm-space-4); border-radius: var(--hm-radius-3); color: var(--hm-on-brand-purple); background: linear-gradient(135deg, var(--hm-brand-purple), var(--hm-brand-blue)); }
+.sc-mo-poster strong { font-size: var(--hm-text-3xl, 2rem); line-height: 1; position: relative; }
+.sc-mo-poster span:not(.sc-mo-poster-dot) { position: relative; opacity: .9; }
+.sc-mo-poster-dot { position: absolute; border-radius: 50%; }
+.sc-mo-d1 { inline-size: 9rem; aspect-ratio: 1; inset-block-start: -3rem; inset-inline-end: -2rem; background: var(--hm-brand-orange); }
+.sc-mo-d2 { inline-size: 4rem; aspect-ratio: 1; inset-block-start: 2rem; inset-inline-start: 40%; background: var(--hm-brand-green); }
+.sc-mo-d3 { inline-size: 6rem; aspect-ratio: 1; inset-block-end: -2.5rem; inset-inline-end: 30%; border: 10px solid color-mix(in oklab, var(--hm-on-brand-purple) 40%, transparent); }
+
+/* filters */
+.sc-mo-fx { display: grid; gap: var(--hm-space-1); place-items: center; inline-size: min(100%, 20rem); padding: var(--hm-space-6) var(--hm-space-4); border-radius: var(--hm-radius-3); color: var(--hm-on-brand-orange); background: radial-gradient(circle at 30% 20%, var(--hm-brand-orange), var(--hm-brand-purple)); }
+.sc-mo-fx strong { font-size: var(--hm-text-3xl, 2rem); line-height: 1; }
+
+/* goo */
+.sc-mo-goo { position: relative; inline-size: 12rem; aspect-ratio: 1; }
+.sc-mo-blob { position: absolute; inset-block-start: 50%; inset-inline-start: 50%; inline-size: 3rem; aspect-ratio: 1; margin: -1.5rem; border-radius: 50%; }
+.sc-mo-blob-0 { inline-size: 4.5rem; margin: -2.25rem; background: var(--hm-brand-orange); }
+.sc-mo-blob-1 { background: var(--hm-brand-orange); } .sc-mo-blob-2 { background: var(--hm-brand-orange); inline-size: 2.4rem; margin: -1.2rem; }
+.sc-mo-blob-3 { background: var(--hm-brand-orange); inline-size: 2rem; margin: -1rem; } .sc-mo-blob-4 { background: var(--hm-brand-orange); }

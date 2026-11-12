@@ -22,6 +22,8 @@ createRouter({
     ...Object.fromEntries(PAGES.map((p) => [p.path, { load: LOADERS[p.path], layouts: [SHELL] }])),
     // page transitions demo: its tabs and tile pages (the page module picks each one's transition)
     "/transitions/*": { load: () => import("./pages/transitions.tsx"), layouts: [SHELL] },
+    // motion library pages (/motion/svg, /motion/morph…): one route, each page its own lazy chunk
+    "/motion/*": { load: () => import("./motion-hub.tsx"), layouts: [SHELL] },
     // router demo: a section layout under the shell (nested, kept while its tabs change) and a record page that opens
     // beside (named outlet), over the list (modal route) or in full (direct visit)
     "/navigation/router": { load: () => import("./router-demo/list.tsx"), layouts: [SHELL, ROUTER_DEMO] },
