@@ -1,6 +1,7 @@
 // Feedback: alerts, progress, skeleton, spinner, empty state, error box, loader, notice.
 import { Alert, Progress, Skeleton, Spinner, Empty, ErrorBox, Button, Card, Loader, Grid, Stack } from "hadi-march/ui";
 import { onCleanup } from "hadi-march";
+import { onFrame } from "hadi-march/motion";
 import { ProgressRing } from "hadi-march/charts";
 import { inbox, plus } from "hadi-march/icons";
 import { Demo, Section } from "../demo.tsx";
@@ -8,8 +9,9 @@ import { Demo, Section } from "../demo.tsx";
 export default function Feedback() {
   let $p = 35
   let $loading = true
-  const tick = setInterval(() => { $p = $p >= 100 ? 0 : $p + 7 }, 900)
-  onCleanup(() => clearInterval(tick))
+  // the demo progress steps on the motion clock: global speed and "Stop all" reach it too
+  let acc = 0
+  onCleanup(onFrame((_t, dt) => { acc += dt; if (acc >= 900) { acc = 0; $p = $p >= 100 ? 0 : $p + 7 } }))
   return <Section kicker="Bileşenler" title="Durumlar" lead="Her ekranın yükleniyor, boş ve hata hâli birinci sınıf: iskeletler gerçek düzeni taklit eder, boş durumlar bir sonraki adımı gösterir.">
     <Demo title="Uyarılar" desc="Dört ton; başlık, kapatma, kendi ikonu.">
       <Alert tone="info" title="Bakım penceresi">Pazar 03:00–03:30 arası ödeme sağlayıcısı bakımda.</Alert>

@@ -12,8 +12,8 @@ export interface PageParams {
   "/layout": {  };
   "/managers-a11y": {  };
   "/managers-data": {  };
-  "/managers-ops": {  };
   "/managers-env": {  };
+  "/managers-ops": {  };
   "/managers": {  };
   "/messaging": {  };
   "/motion": {  };
@@ -25,8 +25,8 @@ export interface PageParams {
   "/speed": {  };
   "/text-motion": {  };
   "/themes": {  };
+  "/transitions": {  };
 }
 declare module "hadi-march/router" {
-  interface Register { routes: "/animation" | "/buttons" | "/charts" | "/data" | "/feedback" | "/forms" | "/home" | "/icons" | "/language" | "/layout" | "/managers-a11y" | "/managers-data" | "/managers-ops" | "/managers" | "/messaging" | "/motion" | "/navigation" | "/network" | "/overlay" | "/overlays" | "/seo" | "/speed" | "/text-motion" | "/themes" }
-  interface Register { routes: "/animation" | "/buttons" | "/charts" | "/data" | "/feedback" | "/forms" | "/home" | "/icons" | "/language" | "/layout" | "/managers-env" | "/managers" | "/messaging" | "/motion" | "/navigation" | "/network" | "/overlay" | "/overlays" | "/speed" | "/themes" }
+  interface Register { routes: "/animation" | "/buttons" | "/charts" | "/data" | "/feedback" | "/forms" | "/home" | "/icons" | "/language" | "/layout" | "/managers-a11y" | "/managers-data" | "/managers-env" | "/managers-ops" | "/managers" | "/messaging" | "/motion" | "/navigation" | "/network" | "/overlay" | "/overlays" | "/seo" | "/speed" | "/text-motion" | "/themes" | "/transitions" }
 }

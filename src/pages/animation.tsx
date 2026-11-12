@@ -270,7 +270,7 @@ function Stagger200() {
 
 export default function Animation() {
   return <Section kicker="Hareket" title="Animasyon motoru" lead="Tek keyframe motoru: değer katmanı hedeften bağımsız; DOM (WAAPI), CSS değişkeni, canvas, WebGL ve düz nesneler aynı timeline'da oynar. Tek saat, global hız, durdurma ve 'hareketi azalt' her animasyona — saf CSS animasyonlarına bile — ulaşır.">
-    <Demo wide title="Global denetim" desc="motion.config: hız, tümünü durdur, azaltılmış hareket, karakter ve yavaş çekim. Ayar kalıcıdır; fps ve uzun görevler canlı ölçülür."
+    <Demo wide title="Global denetim" desc="motion.config: hız, tümünü durdur, azaltılmış hareket, karakter ve yavaş çekim. Ayar kalıcıdır; fps ve uzun görevler canlı ölçülür. Tümünü durdur bütün vitrini durdurur: başka sayfaya geç, iskeletler, kayan yazılar, canvas katmanları, ilerleme çubukları ve sayfa geçişleri de durur; alttaki uyarı her sayfada kalır."
       code={`motion.config({ speed: 0.5 })      // tüm animasyonlar yarı hızda
 motion.pauseAll(); motion.resumeAll()  // WAAPI, canvas, WebGL, yaylar, CSS animasyonları
 motion.config({ reduce: "reduce" })    // ya da "system" (prefers-reduced-motion)

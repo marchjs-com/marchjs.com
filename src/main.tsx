@@ -20,6 +20,8 @@ createRouter({
   // every page sits in the shell layout (kept alive while pages change)
   routes: {
     ...Object.fromEntries(PAGES.map((p) => [p.path, { load: LOADERS[p.path], layouts: [SHELL] }])),
+    // page transitions demo: its tabs and tile pages (the page module picks each one's transition)
+    "/transitions/*": { load: () => import("./pages/transitions.tsx"), layouts: [SHELL] },
     // router demo: a section layout under the shell (nested, kept while its tabs change) and a record page that opens
     // beside (named outlet), over the list (modal route) or in full (direct visit)
     "/navigation/router": { load: () => import("./router-demo/list.tsx"), layouts: [SHELL, ROUTER_DEMO] },

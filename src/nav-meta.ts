@@ -14,6 +14,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/feedback": { desc: "Uyarı, ilerleme, iskelet, boş, hata", group: "Bileşenler", icon: alertCircle },
   "/animation": { desc: "Tek motor: keyframe, timeline, eğri, global hız ve durdurma", group: "Hareket", icon: film },
   "/text-motion": { desc: "56 metin animasyonu: giriş, döngü, süsleme, daktilo, sayaç", group: "Hareket", icon: edit },
+  "/transitions": { desc: "Rota başına geçiş, geri yönde ters, paylaşılan öğe, RTL", group: "Hareket", icon: layers },
   "/motion": { desc: "Yay, FLIP listeler, parallax, parçacık", group: "Hareket", icon: activity },
   "/messaging": { desc: "Habersiz bileşenler arası türlü kanallar, sekmeler arası", group: "Temel", icon: message },
   "/speed": { desc: "Tembel yükleme, ön yükleme ve önbellek: canlı ağ paneli", group: "Temel", icon: gauge },

@@ -14,6 +14,7 @@ export const PAGES: PageInfo[] = [
   { path: "/motion", title: "Hareket ve efektler" },
   { path: "/animation", title: "Animasyon motoru" },
   { path: "/text-motion", title: "Metin animasyonları" },
+  { path: "/transitions", title: "Sayfa geçişleri" },
   { path: "/speed", title: "Hız" },
   { path: "/messaging", title: "Haberleşme" },
   { path: "/network", title: "Ağ ve hatalar" },

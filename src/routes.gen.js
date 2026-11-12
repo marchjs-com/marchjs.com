@@ -12,8 +12,8 @@ export default {
   "/layout": () => import("./pages/layout.tsx"),
   "/managers-a11y": () => import("./pages/managers-a11y.tsx"),
   "/managers-data": () => import("./pages/managers-data.tsx"),
-  "/managers-ops": () => import("./pages/managers-ops.tsx"),
   "/managers-env": () => import("./pages/managers-env.tsx"),
+  "/managers-ops": () => import("./pages/managers-ops.tsx"),
   "/managers": () => import("./pages/managers.tsx"),
   "/messaging": () => import("./pages/messaging.tsx"),
   "/motion": () => import("./pages/motion.tsx"),
@@ -25,4 +25,5 @@ export default {
   "/speed": () => import("./pages/speed.tsx"),
   "/text-motion": () => import("./pages/text-motion.tsx"),
   "/themes": () => import("./pages/themes.tsx"),
+  "/transitions": () => import("./pages/transitions.tsx"),
 };
