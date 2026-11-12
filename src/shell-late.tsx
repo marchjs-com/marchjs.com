@@ -6,9 +6,12 @@ import { PortalTarget } from "hadi-march";
 import { Outlet } from "hadi-march/router";
 import { palette, moon, sun, sparkles } from "hadi-march/icons";
 import "./perflog.ts";
+import { whenIdle } from "hadi-march/lazy";
 
-// the motion engine (transitions, <For animate> FLIP, page transitions) is its own lazy part: the shell stays small
-void import("./motion-late.ts");
+// the motion engine (transitions, <For animate> FLIP, page transitions) is its own lazy part, loaded once the browser
+// is idle after start-up: the first paint and the start-up download do not wait for it (a navigation before then has
+// no page transition, nothing else changes)
+whenIdle(() => { void import("./motion-late.ts"); }, 3000);
 
 export default function ShellLate() {
   registerCommands([
