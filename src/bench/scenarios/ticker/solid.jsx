@@ -2,7 +2,7 @@
 // updates only the bound text and class. Compiled with babel-preset-solid (tools/gen-bench.mjs → solid.gen.js).
 import { createSignal, batch } from "solid-js"
 import { render } from "solid-js/web"
-import { fmtPrice, dir } from "../core.ts"
+import { fmtPrice, dir } from "./def.ts"
 
 export function mount(host, data) {
   const rows = data.map((q) => { const [price, setPrice] = createSignal(q.price), [cls, setCls] = createSignal("px"); return { sym: q.sym, price, setPrice, cls, setCls } })

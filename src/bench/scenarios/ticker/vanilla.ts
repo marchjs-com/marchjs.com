@@ -1,6 +1,6 @@
 // Live ticker, plain DOM (hand-optimized): the rows are cloned from one prototype, the price cells are kept in an
 // array, and a tick writes only the changed cells' text and class.
-import { fmtPrice, dir, type Quote, type Tick } from "../core.ts"
+import { fmtPrice, dir, type Quote, type Tick } from "./def.ts"
 import type { ScenarioApp } from "../core.ts"
 
 export function mount(host: HTMLElement, data: Quote[]): ScenarioApp {

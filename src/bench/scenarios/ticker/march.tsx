@@ -1,7 +1,8 @@
 // Live ticker, HADI March: each quote holds two signals (price and direction); a tick writes them inside batch(), and
 // only the bound text and class of the changed cells update. No list diff: the rows themselves never change.
 import { render, signal, batch } from "hadi-march"
-import { fmtPrice, dir, type Quote, type Tick, type ScenarioApp } from "../core.ts"
+import { fmtPrice, dir, type Quote, type Tick } from "./def.ts"
+import type { ScenarioApp } from "../core.ts"
 
 export function mount(host: HTMLElement, data: Quote[]): ScenarioApp {
   const rows = data.map((q) => ({ sym: q.sym, price: signal(q.price), cls: signal("px") }))

@@ -4,7 +4,8 @@
 import { createElement as h, memo, useSyncExternalStore } from "react"
 import { flushSync } from "react-dom"
 import { createRoot } from "react-dom/client"
-import { fmtPrice, dir, type Quote, type Tick, type ScenarioApp } from "../core.ts"
+import { fmtPrice, dir, type Quote, type Tick } from "./def.ts"
+import type { ScenarioApp } from "../core.ts"
 
 interface Cell { price: number; cls: string }
 export function mount(host: HTMLElement, data: Quote[]): ScenarioApp {

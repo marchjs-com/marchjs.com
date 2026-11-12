@@ -3,7 +3,8 @@
 // form (../lit-tpl.ts), as the CSP refuses HTML strings.
 import { render } from "lit/html.js"
 import { template, el, attr, child } from "../lit-tpl.ts"
-import { fmtPrice, dir, type Quote, type Tick, type ScenarioApp } from "../core.ts"
+import { fmtPrice, dir, type Quote, type Tick } from "./def.ts"
+import type { ScenarioApp } from "../core.ts"
 
 export function mount(host: HTMLElement, data: Quote[]): ScenarioApp {
   const row = template(el("tr", {}, el("td", { class: "sym" }, child()), el("td", { class: attr("class") }, child())))

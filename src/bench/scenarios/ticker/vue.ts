@@ -4,7 +4,8 @@
 import { createApp, defineComponent, reactive, markRaw } from "vue"
 import { render as listRender } from "./vue.render.gen.js"
 import { render as rowRender } from "./vue-row.render.gen.js"
-import { fmtPrice, dir, type Quote, type Tick, type ScenarioApp } from "../core.ts"
+import { fmtPrice, dir, type Quote, type Tick } from "./def.ts"
+import type { ScenarioApp } from "../core.ts"
 
 export function mount(host: HTMLElement, data: Quote[]): ScenarioApp {
   const rows = markRaw(data.map((q) => reactive({ id: q.id, sym: q.sym, price: q.price, cls: "px" })))
