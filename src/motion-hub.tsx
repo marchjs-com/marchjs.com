@@ -4,6 +4,7 @@ import { lazy } from "hadi-march/lazy";
 
 const PAGES: Record<string, () => Promise<{ default: (p: object) => unknown }>> = {
   "/motion/svg": () => import("./pages/motion/svg.tsx"),
+  "/motion/morph": () => import("./pages/motion/morph.tsx"),
 }
 const VIEWS = new Map<string, ReturnType<typeof lazy>>()
 

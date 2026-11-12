@@ -5,6 +5,7 @@ export interface PageMeta { desc: string; group?: string; icon: unknown }
 /** Pages under one wildcard route (kept out of the entry: nav.ts lists only top-level routes). */
 export const SUB_PAGES: { path: string; title: string }[] = [
   { path: "/motion/svg", title: "SVG animasyonları" },
+  { path: "/motion/morph", title: "Morph" },
 ]
 export const PAGE_META: Record<string, PageMeta> = {
   "/": { desc: "HADI March'a genel bakış", icon: dashboard },
@@ -19,6 +20,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/animation": { desc: "Tek motor: keyframe, timeline, eğri, global hız ve durdurma", group: "Hareket", icon: film },
   "/transitions": { desc: "Rota başına geçiş, geri yönde ters, paylaşılan öğe, RTL", group: "Hareket", icon: layers },
   "/motion/svg": { desc: "Yol çizimi, şekil morph, yol boyunca, kırpma, SVG filtreleri", group: "Hareket", icon: activity },
+  "/motion/morph": { desc: "Düğme → diyalog, kart → sayfa, paylaşılan öğe, ikon ve şekil morph", group: "Hareket", icon: layers },
   "/motion": { desc: "Yay, FLIP listeler, parallax, parçacık", group: "Hareket", icon: activity },
   "/messaging": { desc: "Habersiz bileşenler arası türlü kanallar, sekmeler arası", group: "Temel", icon: message },
   "/speed": { desc: "Tembel yükleme, ön yükleme ve önbellek: canlı ağ paneli", group: "Temel", icon: gauge },
