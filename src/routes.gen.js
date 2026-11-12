@@ -6,6 +6,7 @@ export default {
   "/charts": () => import("./pages/charts.tsx"),
   "/data": () => import("./pages/data.tsx"),
   "/feedback": () => import("./pages/feedback.tsx"),
+  "/flow": () => import("./pages/flow.tsx"),
   "/forms": () => import("./pages/forms.tsx"),
   "/home": () => import("./pages/home.tsx"),
   "/icons": () => import("./pages/icons.tsx"),

@@ -31,4 +31,5 @@ export const PAGES: PageInfo[] = [
   { path: "/seo", title: "SEO" },
   { path: "/managers-a11y", title: "Yöneticiler: erişilebilirlik" },
   { path: "/managers-env", title: "Ortam yöneticileri" },
+  { path: "/flow", title: "Akış editörü" },
 ];

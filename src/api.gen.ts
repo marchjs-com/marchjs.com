@@ -3,5 +3,5 @@
 export type ApiItem = [name: string, kind: "component" | "function" | "class" | "const" | "icon", summary: string, also: string[]];
 /** One subpath; `icons`: its single icons, space-separated. */
 export interface ApiGroup { subpath: string; items: ApiItem[]; icons?: string }
-/** Every subpath in package order (2 lazy parts). */
-export const loadApi = (): Promise<ApiGroup[]> => Promise.all([import("./api.gen.1.ts"), import("./api.gen.2.ts")]).then((m) => m.flatMap((x) => x.default).reduce<ApiGroup[]>((out, g) => { const last = out[out.length - 1]; if (last?.subpath === g.subpath) { last.items.push(...g.items); if (g.icons) last.icons = g.icons; } else out.push({ ...g, items: [...g.items] }); return out; }, []));
+/** Every subpath in package order (3 lazy parts). */
+export const loadApi = (): Promise<ApiGroup[]> => Promise.all([import("./api.gen.1.ts"), import("./api.gen.2.ts"), import("./api.gen.3.ts")]).then((m) => m.flatMap((x) => x.default).reduce<ApiGroup[]>((out, g) => { const last = out[out.length - 1]; if (last?.subpath === g.subpath) { last.items.push(...g.items); if (g.icons) last.icons = g.icons; } else out.push({ ...g, items: [...g.items] }); return out; }, []));

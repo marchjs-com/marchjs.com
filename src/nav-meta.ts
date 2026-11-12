@@ -44,4 +44,5 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/managers-a11y": { desc: "Katman, odak, kısayol, duyurucu, erişilebilirlik tercihleri, kısayol ipuçları", group: "Yöneticiler", icon: cpu },
   "/managers-env": { desc: "Yöneticiler: boşta, çevrimdışı eşitleme, cihaz, izin, konum, bildirim, sekme, kaydırma, oturum süresi, varlık", group: "Yöneticiler", icon: cpu },
   "/language": { desc: "$ değişkenler, <For>, bind:, borular, sx", group: "Temel", icon: code },
+  "/flow": { desc: "Düğüm tabanlı akış: tuval, palet, çalıştır/duraklat/adım, zaman çizelgesi", group: "Karmaşık bileşenler", icon: activity },
 };
