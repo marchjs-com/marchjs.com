@@ -36,7 +36,9 @@ function Topbar() {
 }
 
 export function App() {
-  return <AppShell header={<Topbar />} nav={<ShellNav />}>
+  // AppShell is a Layout: every page gets back-to-top, the reading bar and route focus from here; no page repeats them
+  return <AppShell header={<Topbar />} nav={<ShellNav />} titleTemplate="%s · March"
+    features={{ scrollToTop: true, readingProgress: true, routeFocus: true }}>
     <Outlet />
     <ShellLate />
   </AppShell>
