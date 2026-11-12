@@ -201,7 +201,7 @@ export default function Bench() {
     <Demo wide title="Kod" desc="Her kitaplığın test uygulaması; ölçülen kod tam olarak bu.">
       <div class="bt-code" ref={() => loadSources()}>
         <Choice label="Kitaplık" value={$code} set={(v) => { $code = v }} options={LIBS.map((l) => ({ value: l.id, label: l.name }))} />
-        {() => $sources ? <DemoCode source={($sources[$code] ?? "").trim()} lang={libById($code)?.src.endsWith(".tsx") ? "tsx" : "ts"} /> : <p class="bt-empty">Yükleniyor…</p>}
+        {() => $sources ? <DemoCode source={($sources[$code] ?? "").trim()} lang={$code === "svelte" ? "html" : "tsx"} /> : <p class="bt-empty">Yükleniyor…</p>}
       </div>
     </Demo>
 
