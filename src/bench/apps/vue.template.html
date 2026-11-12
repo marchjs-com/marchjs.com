@@ -1,0 +1,8 @@
+<table class="bt"><tbody>
+  <tr v-for="item of rows" :key="item.id" :class="{ danger: item.id === selected }">
+    <td class="c1">{{ item.id }}</td>
+    <td class="c4"><a class="lbl" @click="select(item.id)">{{ item.label }}</a></td>
+    <td class="c1"><a class="rm" @click="remove(item.id)">×</a></td>
+    <td class="c6"></td>
+  </tr>
+</tbody></table>
