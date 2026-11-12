@@ -5,9 +5,12 @@ import { computed } from "hadi-march";
 import { Link, query } from "hadi-march/router";
 import { Section } from "../demo.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
-import ProductSample from "../web/product.tsx";
-import PortfolioSample from "../web/portfolio.tsx";
-import SlidesSample from "../web/slides.tsx";
+import { lazy } from "hadi-march/lazy";
+
+// the sample pages load only when one is opened (?view=…), each as its own part
+const ProductSample = lazy(() => import("../web/product.tsx"), { placeholder: "block", height: "100vh" })
+const PortfolioSample = lazy(() => import("../web/portfolio.tsx"), { placeholder: "block", height: "100vh" })
+const SlidesSample = lazy(() => import("../web/slides.tsx"), { placeholder: "card", height: "36rem" })
 
 export const title = "Web siteleri"
 

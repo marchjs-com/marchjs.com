@@ -25,6 +25,11 @@ export default {
   // allow: a locale dictionary stays its own file (only that locale downloads it; grouping it would make every
   // Turkish visitor download pages, or every English visitor the dictionary)
   chunks: { minSize: 10 * 1024, allow: {
+    "src/web/product.tsx": "Web siteleri sample page: loaded only when ?view=product opens it, never with the blocks page",
+    "src/web/product-more.tsx": "lower half of the product sample: loaded when it comes near the viewport",
+    "src/web/portfolio-more.tsx": "lower half of the portfolio sample: loaded when it comes near the viewport",
+    "src/web/portfolio.tsx": "Web siteleri sample page: loaded only when ?view=portfolio opens it",
+    "src/web/slides.tsx": "Web siteleri sample deck: loaded only when ?view=slides opens it",
     "src/i18n/tr.ts": "locale dictionary: downloaded only for Turkish, never grouped",
     "src/router/outlets.ts": "named / modal outlets (1.8 KB, no dependencies): joining any page group would make it pull that page",
     "src/seo/hydrate.ts": "takes over the prerendered start page (1 KB): loaded only on that page, never with a page group",

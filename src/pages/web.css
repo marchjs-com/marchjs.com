@@ -113,3 +113,6 @@
 .sc-cover.a6 { --sc-c1: var(--hm-cat-7); --sc-c2: var(--hm-cat-8); }
 .sc-deck-title { font-size: 6.2cqw !important; line-height: 1.02; }
 .sc-slides-title { margin: 0; font-size: var(--hm-text-xl); }
+.sc-contact { display: flex; flex-direction: column; gap: var(--hm-space-3); align-items: stretch; }
+.sc-contact-field { display: flex; flex-direction: column; gap: var(--hm-space-1); font-size: var(--hm-text-sm); font-weight: var(--hm-weight-medium); }
+.sc-contact > .hm-btn { align-self: flex-start; }
