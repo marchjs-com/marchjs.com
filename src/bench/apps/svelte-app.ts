@@ -9,3 +9,6 @@ export function mount(host: HTMLElement): BenchApp {
   const app = svelteMount(App, { target: host }) as unknown as Api
   return { run: (r) => app.run(r), add: (r) => app.add(r), update: () => app.update(), swap: () => app.swap(), clear: () => app.clear(), destroy: () => { void unmount(app as never) } }
 }
+
+// the realistic scenarios' Svelte apps ride in this chunk (see ../scenarios/libs.ts)
+export { scenarios } from "../scenarios/svelte.ts"

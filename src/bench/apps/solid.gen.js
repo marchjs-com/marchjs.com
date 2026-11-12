@@ -76,4 +76,7 @@ export function mount(host) {
     destroy: dispose
   };
 }
+
+// the realistic scenarios' Solid apps ride in this chunk (see ../scenarios/libs.ts)
+export { scenarios } from "../scenarios/solid.ts";
 _$delegateEvents(["click"]);

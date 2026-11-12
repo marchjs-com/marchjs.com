@@ -28,7 +28,7 @@ const sig: Record<string, Record<string, string>> = {
   "effect": "function effect(fn: () => void): Cleanup",
   "getOwner": "const getOwner = (): Owner | null =>",
   "h": "function h<P extends object>(type: Component<P>, props: P | null, ...children: unknown[]): unknown",
-  "insert": "function insert(parent: Node, value: unknown, before: Node | null = null): void",
+  "insert": "function insert(parent: Node, value: unknown, before: Node | null = null, owned?: unknown): void",
   "isReactive": "const isReactive = (v: unknown): v is (() => unknown) =>",
   "layers": "const layers = (): readonly { kind: LayerKind; el: HTMLElement }[] =>",
   "lazyChildren": "function lazyChildren<F extends () => unknown>(fn: F): F",

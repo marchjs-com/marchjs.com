@@ -44,3 +44,6 @@ export function mount(host: HTMLElement): BenchApp {
     destroy: () => { render(null, tbody); table.remove() },
   }
 }
+
+// the realistic scenarios' Lit apps ride in this chunk (see ../scenarios/libs.ts)
+export { scenarios } from "../scenarios/lit.ts"
