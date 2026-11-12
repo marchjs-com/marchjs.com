@@ -8,5 +8,6 @@ import { mount as hover } from "./hover/lit.ts"
 import { mount as counters } from "./counters/lit.ts"
 import { mount as store } from "./store/lit.ts"
 import { mount as deep } from "./deep/lit.ts"
+import { mount as grid } from "./grid/lit.ts"
 
-export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep }
+export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep, grid }

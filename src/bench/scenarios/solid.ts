@@ -8,5 +8,6 @@ import { mount as hover } from "./hover/solid.gen.js"
 import { mount as counters } from "./counters/solid.gen.js"
 import { mount as store } from "./store/solid.gen.js"
 import { mount as deep } from "./deep/solid.gen.js"
+import { mount as grid } from "./grid/solid.gen.js"
 
-export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep }
+export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep, grid }
