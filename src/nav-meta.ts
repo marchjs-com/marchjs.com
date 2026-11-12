@@ -17,6 +17,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/icons": { desc: "Kendi SVG ikon seti", group: "Temel", icon: grid },
   "/buttons": { desc: "Button, menü, çip, avatar, ipucu", group: "Eylemler", icon: zap },
   "/forms": { desc: "Alanlar, seçiciler, doğrulama, sihirbaz", group: "Formlar", icon: edit },
+  "/editors": { desc: "Zengin metin, Markdown, JSON, renk, eğri, zaman çizelgesi, kırpma", group: "Formlar", icon: edit },
   "/data": { desc: "10.000 satırlık tablo, ağaç, pano, adımlar", group: "Veri gösterimi", icon: layers },
   "/big-data": { desc: "DataGrid, TreeView, takvim, Gantt, dosya yöneticisi", group: "Veri gösterimi", icon: grid },
   "/charts": { desc: "Çizgi, alan, çubuk, pasta, ısı haritası", group: "Veri gösterimi", icon: barChart },

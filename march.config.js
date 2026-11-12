@@ -31,5 +31,6 @@ export default {
     "src/pages/navigation.tsx": "page whose code is mostly shared (NavSidebar, router): any page group would push its route past the 60 KB budget",
     "src/env-managers/sync-server.ts": "Sync demo of the environment managers page: net and its mock arrive only when that demo is drawn",
     ".demos.gen.ts": "component cards of one showcase page (tools/gen-registry.js): joining the registry would make every page with a component card load them",
+    "src/pages/editors.tsx": "a page of lazy editor cards (each card loads its own editor): grouping it would make its neighbours download nothing useful and regroup the other pages",
   } },
 };

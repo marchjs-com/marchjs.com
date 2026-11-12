@@ -5,6 +5,7 @@ export default {
   "/buttons": () => import("./pages/buttons.tsx"),
   "/charts": () => import("./pages/charts.tsx"),
   "/data": () => import("./pages/data.tsx"),
+  "/editors": () => import("./pages/editors.tsx"),
   "/feedback": () => import("./pages/feedback.tsx"),
   "/flow": () => import("./pages/flow.tsx"),
   "/forms": () => import("./pages/forms.tsx"),
