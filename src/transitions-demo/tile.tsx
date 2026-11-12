@@ -4,11 +4,8 @@ import { Link, back } from "hadi-march/router";
 import { Button } from "hadi-march/ui";
 import { TILES } from "./tiles.ts";
 
-// the page module's own meta joins the route's: a slower cross-fade so the tile's move is easy to follow
-export const meta = { transition: { type: "fade", duration: 360 } }
-
-export default function TilePage(props: { params: { id: string }; close?: () => void }) {
-  const i = TILES.findIndex((x) => x.id === props.params.id)
+export default function TilePage(props: { id: string; close?: () => void }) {
+  const i = TILES.findIndex((x) => x.id === props.id)
   const t = TILES[i]
   if (!t) return <p class="hm-muted">Kare yok.</p>
   const prev = TILES[(i + TILES.length - 1) % TILES.length]!, next = TILES[(i + 1) % TILES.length]!

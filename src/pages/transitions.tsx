@@ -9,6 +9,12 @@ import { Button, Badge, Card, Slider, Field } from "hadi-march/ui";
 import { Toggle } from "hadi-march/forms";
 import { Demo, Section } from "../demo.tsx";
 import { TILES } from "../transitions-demo/tiles.ts";
+import TilePage from "../transitions-demo/tile.tsx";
+
+// one route (/transitions/*), a transition per tab: meta.transition can be a function of the route params
+export const meta = {
+  transition: (p: { rest?: string }) => p.rest?.startsWith("tile/") ? { type: "fade", duration: 360 } : p.rest === "slide" ? "slide" : p.rest === "scale" ? { type: "scale", duration: 320 } : "fade",
+}
 
 const TABS = [
   { href: "/transitions", type: "fade", label: "Solma", text: "Eski sayfa solar, yenisi belirir. Rota tanımı: meta: { transition: \"fade\" }." },
@@ -19,7 +25,10 @@ const TABS = [
 // the RTL switch outlives the tab routes (each tab is a new page)
 const rtl = signal(false);
 
-export default function Transitions() {
+export default function Transitions(props: { params: { rest?: string }; close?: () => void }) {
+  document.title = "Sayfa geçişleri · HADI March"
+  const rest = props.params.rest ?? ""
+  if (rest.startsWith("tile/")) return <TilePage id={rest.slice(5)} close={props.close} />
   const tab = () => TABS.find((t) => t.href === path()) ?? TABS[0]
   let $speed = motion.config().speed
   let $rtl = rtl.peek()
