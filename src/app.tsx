@@ -25,6 +25,7 @@ export const LOADERS: Record<string, () => Promise<unknown>> = {
   "/network": () => import("./pages/network.tsx"),
   "/layout": () => import("./pages/layout.tsx"),
   "/navigation": () => import("./pages/navigation.tsx"),
+  "/social": () => import("./pages/social.tsx"),
   "/overlay": () => import("./pages/overlay.tsx"),
   "/language": () => import("./pages/language.tsx"),
   "/managers": () => import("./pages/managers.tsx"),
