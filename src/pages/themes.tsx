@@ -1,7 +1,7 @@
 import { t } from "hadi-march";
 import "hadi-march/css/themes.css"; // the gallery shows every theme at once (other pages load themes on demand)
 // Themes and tokens: each theme scoped with real components (data-hm-theme); color, type, radius and shadow tokens.
-import { Button, Badge, Chip, Toggle, Progress, Avatar, AvatarGroup, colorThemes, setColorTheme, colorTheme, ThemeSwatch } from "hadi-march/ui";
+import { Button, Badge, Chip, Toggle, Progress, Avatar, AvatarGroup, setColorTheme, colorTheme, ThemeSwatch } from "hadi-march/ui";
 import { THEMES } from "hadi-march/theme";
 import { check } from "hadi-march/icons";
 import { Demo, Section } from "../demo.tsx";
@@ -50,19 +50,8 @@ setColorTheme("neon")          // <html data-hm-theme="neon">
     </Demo>
     <ComponentDemo folder="composite/theme-menu" title="ThemeMenu: tek menüde görünüm" desc="Karmaşık bileşen: açık / koyu / sistem, renk teması ve vurgu rengi tek açılır menüde; bölümler ThemePicker ve AccentPicker ile aynı. Parçaları aşağıdaki satırda." />
 
-    <Demo wide title="Kendi temanı yaz" desc="defineTheme ile renkleri ver, themeCss ile derleme anında .css üret, registerThemes ile seçiciye ekle."
-      code={`import { defineTheme, themeCss } from "hadi-march/theme"
-
-export const acme = defineTheme({
-  id: "acme", name: "Acme", font: '"Inter"', display: '"Inter"', radius: 10,
-  light: { bg: "#F7F8FA", surface: "#FFF", text: "#111827", muted: "#4B5563", border: "#E5E7EB",
-           primary: "#0E7490", solid: "#0E7490", onSolid: "#FFF", /* … */ },
-  dark:  { /* … */ },
-})
-fs.writeFileSync("acme.css", themeCss(acme))   // in the build script
-registerThemes([{ id: "acme", name: "Acme" }])   // uygulamada`}>
-      <p class="hm-muted">Hazır temalar: {colorThemes().map((x) => t(x.name)).join(" · ")}</p>
-    </Demo>
+    <ComponentDemo folder="composite/theme-editor" title="Kendi temanı yaz"
+      desc="Tema düzenleyici: hazır bir temadan ya da sıfırdan başla; açık ve koyu kip için her renk tokenı, ton ölçeği ve WCAG kontrast denetimi; yazı, biçim ve hareket tokenları. Önizleme yalnız bu kartta çizilir; istersen bütün vitrine uygula. Çıktı defineTheme kodu, CSS ve JSON; paylaşım bağlantısı ve tema seçiciye ekleme." />
 
     <Demo wide title="Marka renkleri" desc="HADİ Sosyal'ın dört resmi rengi (hadi_colors.dart ile birebir). Yazı rengi zemine göre okunurluk kuralıyla seçilir: beyaz en az 2,6:1 veriyorsa beyaz, yoksa koyu; metin olarak kullanılan tonu AA (4,5:1) için koyulaştırılır."
       code={`--hm-brand-orange · --hm-brand-orange-soft · --hm-on-brand-orange · --hm-brand-orange-text

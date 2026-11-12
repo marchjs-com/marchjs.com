@@ -51,6 +51,9 @@ export default {
     ".demos.gen.ts": "component cards of one showcase page (tools/gen-registry.js): joining the registry would make every page with a component card load them",
     "src/motion/scroll.ts": "motion values, scroll and pointer (4 KB) shared by /flow, the home page group and four demos: start-up is at its budget and any page host would push a demo part past 25 KB",
     "src/pages/editors.tsx": "a page of lazy editor cards (each card loads its own editor): grouping it would make its neighbours download nothing useful and regroup the other pages",
+    "src/components/composite/theme-editor/colors.ts": "ThemeEditor colors tab: with ColorPicker its own part; folded into the editor, the editor's first part passes 25 KB",
+    "src/components/composite/theme-editor/persist.ts": "ThemeEditor start step and saving (StorageManager, DirtyState): loads after the editor shows; folded, the editor's first part passes 25 KB",
+    "src/components/composite/theme-editor/preview.ts": "ThemeEditor preview screen (real components, a chart): its own part; folded into the editor, the editor's first part passes 25 KB",
     "src/components/composite/wizard/demo.tsx": "Wizard card's stage: it brings the form engine; folded into the component registry, every page with a component card would download it",
   } },
 };
