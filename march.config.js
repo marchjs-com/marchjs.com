@@ -64,7 +64,7 @@ export default {
     "src/components/composite/property-grid/index.ts": "PropertyGrid (7 KB), shared by its card and the IDE shell demo page: either host would make the other download it",
     "src/env-managers/sync-server.ts": "Sync demo of the environment managers page: net and its mock arrive only when that demo is drawn",
     "src/components/composite/consent-banner/index.ts": "the consent UI (hadi-march/managers/consent/ui), lazy on purpose: loaded by the managers page and the ConsentBanner card, never folded into the component registry",
-    ".ex.tsx": "API reference example of one export (api-examples/gen/, tools/api-examples.js): loads only when its card opens; joining the API page would make the page download every example",
+    ".ex.tsx": "API reference examples, one part of ~1/14 of them (api-examples/gen/part-NN.ex.tsx, tools/api-examples.js): loads when a card of its range opens; joining the API page would make the page download every example",
     ".demos.gen.ts":"component cards of one showcase page (tools/gen-registry.js): joining the registry would make every page with a component card load them",
     "src/motion/scroll.ts": "motion values, scroll and pointer (4 KB) shared by /flow, the home page group and four demos: start-up is at its budget and any page host would push a demo part past 25 KB",
     "src/pages/editors.tsx": "a page of lazy editor cards (each card loads its own editor): grouping it would make its neighbours download nothing useful and regroup the other pages",

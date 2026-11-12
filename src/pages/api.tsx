@@ -207,7 +207,7 @@ function ValueView(props: { value: string; T: (typeof TEXT)[Lang] }) {
   return <details class="sc-apip-value"><summary>{props.T.show} ({v.split("\n").length} satır)</summary><pre class="sc-apip-pre"><code>{v}</code></pre></details>
 }
 
-/** The live example of an export (its own lazy module). */
+/** The live example of an export (from its lazy part of the examples). */
 function Example(props: { subpath: string; name: string; T: (typeof TEXT)[Lang] }) {
   const T = props.T
   const mod = signal<ApiExampleModule | null | false>(null)
