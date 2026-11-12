@@ -1,5 +1,5 @@
 // Page descriptions, groups and icons for the side menu and the home page (kept out of the entry).
-import { activity, film, alertCircle, barChart, code, cpu, dashboard, edit, gauge, grid, layers, menu, message, palette, server, zap } from "hadi-march/icons";
+import { activity, film, alertCircle, barChart, code, cpu, dashboard, edit, gauge, grid, layers, menu, message, palette, search, server, zap } from "hadi-march/icons";
 
 export interface PageMeta { desc: string; group?: string; icon: unknown }
 export const PAGE_META: Record<string, PageMeta> = {
@@ -21,5 +21,6 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/navigation": { desc: "NavSidebar: arama, son kullanılanlar, kategoriler", group: "Bileşenler", icon: menu },
   "/overlay": { desc: "Video, resim, SVG, canvas ve cam katmanları", group: "Hareket", icon: layers },
   "/managers": { desc: "Viewport, rıza (KVKK/GDPR) ve komut yöneticileri", group: "Temel", icon: cpu },
+  "/seo": { desc: "Rota başına head, OG/Twitter, JSON-LD, prerender, sitemap", group: "Temel", icon: search },
   "/language": { desc: "$ değişkenler, <For>, bind:, borular, sx", group: "Hareket", icon: code },
 };

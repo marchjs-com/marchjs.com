@@ -31,4 +31,11 @@ createRouter({
 });
 
 const el = document.getElementById("app");
-if (el) { render(() => <Router loading={PAGE_LOADING} skeleton={PAGE_SKELETON} />, el); document.getElementById("hm-boot")?.remove(); }
+if (el) {
+  const app = () => <Router loading={PAGE_LOADING} skeleton={PAGE_SKELETON} />;
+  // index.html carries the start page prerendered (march build, seo.prerender). On that route a small lazy chunk
+  // hydrates it (the page stays visible meanwhile); any other hash route drops it at once and renders as usual.
+  if (el.getAttribute("data-hm-prerender") === `#${location.hash.slice(1) || "/"}`) void import("hadi-march/seo/hydrate").then((m) => m.hydrate(app, el));
+  else { el.replaceChildren(); render(app, el); }
+  document.getElementById("hm-boot")?.remove();
+}
