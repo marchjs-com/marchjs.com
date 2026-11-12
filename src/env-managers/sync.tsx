@@ -32,7 +32,7 @@ function SyncBody(props: { api: SyncDemoApi }) {
     </div>
     <div class="sc-row">
       <TextInput bind:value={$text} placeholder="Not yaz…" on:keydown={(e: KeyboardEvent) => { if (e.key === "Enter") add() }} />
-      <Button variant="primary" on:click={add}>Not ekle</Button>
+      <Button variant="primary" data-audit-try on:click={add}>Not ekle</Button>
       <Button variant="secondary" disabled={() => !sync().queue().length} on:click={() => sync().retry()}>Hepsini şimdi dene</Button>
     </div>
     <ul class="sc-mgr-queue">{() => sync().queue().length ? sync().queue().map(row) : <li class="hm-muted">Kuyruk boş.</li>}</ul>

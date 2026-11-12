@@ -47,7 +47,7 @@ export default function FlowPage() {
   return <Section kicker="Karmaşık bileşenler" title="Akış editörü" lead="Düğüm tabanlı akışlar: sonsuz tuval, portlar ve bezier kenarlar, sürükle-bırak palet, geri alma ve pano, mini harita, otomatik yerleşim, gruplar; akış gerçekten çalışır ve her adımı zaman çizelgesine kaydeder.">
     <LiveEditor />
     <Demo wide title="FlowCanvas: seçenekler" desc="Boş alanda sürükleme seçim kutusu ya da kaydırma; ızgara adımı hem yapışmayı hem noktalı zemini değiştirir; mini harita ve düğüm içi alanlar açılıp kapanır." code={canvasCode}><LitePlayground spec={canvasSpec} view={FlowCanvasDemo} /></Demo>
-    <Demo wide title="FlowControls ve zaman çizelgesi" desc="Çalıştır, duraklat, adım adım, sıfırla ve hız. 'Ödeme hata versin' açıkken ödeme düğümü sarsılır, sonrası atlanır, durum 'Hatayla bitti' olur." code={controlsCode}><LitePlayground spec={controlsSpec} view={FlowControlsDemo} /></Demo>
+    <Demo wide title="FlowControls ve zaman çizelgesi" desc="Çalıştır, duraklat, adım adım, sıfırla ve hız. Ödeme düğümünde 'Kart reddedilsin' açıkken düğüm sarsılır, sonrası atlanır, durum 'Hatayla bitti' olur." code={controlsCode}><LitePlayground spec={controlsSpec} view={FlowControlsDemo} /></Demo>
     <Demo wide title="FlowPalette: sürükleyerek ekle" desc="Kartı tuvale bırakın ya da odaklayıp Enter'a basın. Arama Türkçe harf ve aksan duyarsız." code={paletteCode}><LitePlayground spec={paletteSpec} view={FlowPaletteDemo} /></Demo>
     <Demo wide title="ContextMenu: sağ tık menüsü" desc="Menu ile aynı öğeler ve klavye; öğeler tıklanan hedefe göre değişir. Shift+F10 ya da Menü tuşu klavyeden açar." code={menuCode}><LitePlayground spec={menuSpec} view={ContextMenuDemo} /></Demo>
     <Keys />
