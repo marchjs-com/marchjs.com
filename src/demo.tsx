@@ -1,7 +1,9 @@
-// Showcase block: title, description, live preview and (if given) a source code tab.
-import { Tabs, CodeView } from "hadi-march/ui";
+// Showcase block (the one DemoCard every page uses): title, description, live preview and, if given, a Code tab.
+// The Code tab is a widget point: `<Widget sources={[codeView]} />` draws whatever provider is registered
+// (default: CodeViewer + Copy + Fullscreen; a live editor can replace it with codeView.provide(...)).
+import { Tabs, Widget, codeView } from "hadi-march/ui";
 
-export function Demo(props: { title: string; desc?: string; code?: string; wide?: boolean; children?: unknown }) {
+export function Demo(props: { title: string; desc?: string; code?: string; lang?: string; wide?: boolean; children?: unknown }) {
   const preview = <div class="sc-stage">{props.children}</div>
   return <section class={props.wide ? "sc-demo sc-demo-wide" : "sc-demo"}>
     <header class="sc-demo-head">
@@ -9,7 +11,7 @@ export function Demo(props: { title: string; desc?: string; code?: string; wide?
       {props.desc ? <p class="sc-demo-desc">{props.desc}</p> : null}
     </header>
     {props.code
-      ? <Tabs label={props.title} tabs={[{ id: "on", label: "Önizleme", content: preview }, { id: "code", label: "Kod", content: <CodeView code={props.code.trim()} lang="tsx" copy /> }]} />
+      ? <Tabs label={props.title} tabs={[{ id: "on", label: "Önizleme", content: preview }, { id: "code", label: "Kod", content: () => <Widget sources={[codeView]} input={{ source: props.code!.trim(), lang: props.lang ?? "tsx" }} /> }]} />
       : preview}
   </section>
 }

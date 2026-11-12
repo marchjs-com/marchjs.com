@@ -1,6 +1,12 @@
 // The March language: $ variables, derived values, <For>/<If>/<Switch>, bind:, on:…|prevent, class:, pipes, sx, async components.
 import "hadi-march/motion/install"; // <For animate> (FLIP) on this page
-import { Card, Button, TextInput, Field, Toggle, Badge, Stack, Segmented } from "hadi-march/ui";
+import { Card, Button, TextInput, Field, Toggle, Badge, Stack, Segmented, Widget, codeView, type CodeViewInput } from "hadi-march/ui";
+import { onCleanup, effect, untrack } from "hadi-march";
+
+/** A stand-in for a live editor: plain text, no colours. Registered only while the switch is on. */
+function PlainProvider(input: CodeViewInput) {
+  return <div class="sc-plain-code"><p class="hm-muted">Sahte sağlayıcı ({input.lang}): renksiz düz metin</p><pre>{input.source}</pre></div>
+}
 import { Demo, Section } from "../demo.tsx";
 
 interface Todo { id: number; text: string; done: boolean }
@@ -19,6 +25,11 @@ export default function Language() {
   let $when = Date.now() - 3 * 3600_000
   let $name = "zeynep kaya"
   let $big = false
+  let $plain = false
+  let offPlain: (() => void) | null = null
+  const setPlain = (on: boolean) => untrack(() => { offPlain?.(); offPlain = on ? codeView.provide({ id: "plain", order: 1, render: (input) => PlainProvider(input) }) : null })
+  effect(() => setPlain($plain))
+  onCleanup(() => offPlain?.())
   return <Section kicker="Hareket" title="March dili" lead="JSX ve birkaç küçük derleyici kolaylığı: $ önekli değişkenler sinyaldir, onlara bağlı const'lar türetilir. Çıktı düz JavaScript; eval yok, innerHTML yok.">
     <Demo wide title="Yapılacaklar: $, türetme, <For>, bind:, on:submit|prevent" desc="Bileşen bir kez çalışır; yalnız değişen satır güncellenir."
       code={`let $todos = [...]
@@ -76,6 +87,19 @@ const $left = $todos.filter((x) => !x.done).length   // derived (computed)
         <div class="sc-sx" sx={{ p: 3, radius: 4, shadow: 3 }}>shadow-3</div>
       </div>
       <Badge tone="danger" dot class:sc-pulse={$big}>Canlı</Badge>
+    </Demo>
+
+    <Demo wide title="Kod sekmesi bir widget noktası" desc="Bütün Kod sekmeleri <Widget sources={[codeView]} /> ile çizilir. Varsayılan sağlayıcı CodeViewer (renkli, salt okunur); Kopyala ve Tam ekran ayrı widget'lardır. Anahtarı açınca ikinci bir sağlayıcı kaydedilir ve vitrindeki bütün Kod sekmeleri onu gösterir; kurucunun canlı editörü de böyle eklenecek."
+      code={`import { codeView } from "hadi-march/ui"
+
+const off = codeView.provide({
+  id: "plain",
+  order: 1,                                  // higher than the default viewer (0)
+  render: (input, ctx) => <pre>{input.source}</pre>,
+})
+off()                                        // back to CodeViewer`}>
+      <Toggle bind:value={$plain} label="Sahte sağlayıcıyı kaydet" />
+      <Widget sources={[codeView]} input={{ lang: "tsx", source: 'export const Hello = () => <p class="hi">Merhaba</p>', files: [{ name: "hello.css", lang: "css", source: ".hi { color: var(--hm-primary-text); }" }, { name: "data.json", lang: "json", source: '{ "name": "March", "fast": true, "size": 15 }' }] }} />
     </Demo>
   </Section>
 }

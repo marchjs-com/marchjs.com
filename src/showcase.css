@@ -260,3 +260,4 @@
 .sc-budget-near .sc-budget-value { color: var(--hm-warn-text, var(--hm-warn)); font-weight: 600; }
 .sc-budget-over > td:first-child { box-shadow: inset 3px 0 0 var(--hm-danger); }
 .sc-budget-near > td:first-child { box-shadow: inset 3px 0 0 var(--hm-warn); }
+.sc-plain-code pre { margin: 0; padding: var(--hm-space-3); border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-3); white-space: pre-wrap; font: var(--hm-text-sm)/1.6 var(--hm-font-mono); }
