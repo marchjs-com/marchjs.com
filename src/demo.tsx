@@ -2,12 +2,14 @@
 // The Code tab is a widget point (demo-code.tsx, loaded on its first click): `<Widget sources={[codeView]} />` draws
 // whatever provider is registered (default: CodeViewer + Copy + Fullscreen; a live editor can replace it).
 import { Tabs } from "hadi-march/ui";
+import { Await } from "hadi-march";
 import { lazy } from "hadi-march/lazy";
 
 // loaded on the first click on "Kod": the Tabs panel is drawn only when its tab opens
 const DemoCode = lazy(() => import("./demo-code.tsx"), { placeholder: "text", height: "8rem" })
 
-export function Demo(props: { title: string; desc?: string; code?: string; lang?: string; wide?: boolean; children?: unknown }) {
+/** `code`: the Code tab's source, or a loader for it (fetched on the first click on Kod, like the viewer itself). */
+export function Demo(props: { title: string; desc?: string; code?: string | (() => Promise<string>); lang?: string; wide?: boolean; children?: unknown }) {
   const preview = <div class="sc-stage">{props.children}</div>
   return <section class={props.wide ? "sc-demo sc-demo-wide" : "sc-demo"}>
     <header class="sc-demo-head">
@@ -15,7 +17,7 @@ export function Demo(props: { title: string; desc?: string; code?: string; lang?
       {props.desc ? <p class="sc-demo-desc">{props.desc}</p> : null}
     </header>
     {props.code
-      ? <Tabs label={props.title} tabs={[{ id: "on", label: "Önizleme", content: preview }, { id: "code", label: "Kod", content: () => <DemoCode source={props.code!.trim()} lang={props.lang ?? "tsx"} /> }]} />
+      ? <Tabs label={props.title} tabs={[{ id: "on", label: "Önizleme", content: preview }, { id: "code", label: "Kod", content: () => { const c = props.code!; const view = (s: string) => <DemoCode source={s.trim()} lang={props.lang ?? "tsx"} />; return typeof c === "string" ? view(c) : <Await for={c}>{view}</Await> } }]} />
       : preview}
   </section>
 }
