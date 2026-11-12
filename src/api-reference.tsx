@@ -97,8 +97,6 @@ function ApiReference(props: { api: ApiGroup[]; lang: Lang }) {
 }
 
 type Text = (typeof TEXT)[Lang]
-// examples already loaded, per subpath (a card opened again draws at once)
-const loaded = new Map<string, Promise<ApiExampleModule>>()
 
 /** An open card: signature, example code and the live example (Playground when it has options). */
 function ApiDetail(props: { subpath: string; name: string; text: Text }) {
@@ -106,9 +104,10 @@ function ApiDetail(props: { subpath: string; name: string; text: Text }) {
   let $mod: ApiExampleModule | null = null
   let $none = false
   let $failed = false
-  const p = loaded.get(props.subpath) ?? loadExamples(props.subpath)
+  // the example file of this export (a lazy part; the browser keeps a loaded one)
+  const p = loadExamples(props.subpath, props.name)
   if (!p) $none = true
-  else { loaded.set(props.subpath, p); p.then((m) => { $mod = m }, () => { loaded.delete(props.subpath); $failed = true }) }
+  else p.then((m) => { $mod = m }, () => { $failed = true })
   return <div class="sc-api-detail">
     {() => {
       if ($failed) return <p class="sc-api-note">{T.failed}</p>
