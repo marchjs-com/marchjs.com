@@ -92,7 +92,7 @@
 .sc-pv-post { display: flex; flex-direction: column; flex: 1; min-inline-size: 0; font-size: var(--hm-text-sm); }
 .sc-pv-post > * { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sc-pv-themes { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--hm-space-2); }
-.sc-pv-swatch { inline-size: 2.5rem; block-size: 2.5rem; padding: 3px; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); background: var(--hm-bg); cursor: pointer;
+.sc-pv-swatch { box-sizing: border-box; display: inline-grid; inline-size: 2.5rem; block-size: 2.5rem; padding: 3px; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); background: var(--hm-bg); cursor: pointer;
   transition: transform var(--hm-dur) var(--hm-ease), box-shadow var(--hm-dur) var(--hm-ease); }
 .sc-pv-swatch:hover { transform: translateY(-2px); }
 .sc-pv-swatch[aria-checked="true"] { border-color: var(--hm-primary); box-shadow: 0 0 0 3px var(--hm-primary-soft); }
