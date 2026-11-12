@@ -1,0 +1,51 @@
+/* Home hero: the four HADİ colors as a drifting aurora (animated by the motion engine, see home.tsx), a live preview.
+   Theme tokens only, logical properties only (RTL). Loaded with the home route, not at start-up. */
+.sc-home { overflow-x: clip; }
+.sc-hero { position: relative; isolation: isolate; overflow: hidden; padding: clamp(2.5rem, 7vw, 6rem) var(--hm-space-6) clamp(2.5rem, 6vw, 5rem);
+  background: var(--hm-bg); color: var(--hm-text); border-block-end: 1px solid var(--hm-border); }
+.sc-hero-aurora { position: absolute; inset: -20% -10%; z-index: -2; filter: blur(72px) saturate(130%); opacity: .3; pointer-events: none; }
+.sc-hero-blob { position: absolute; inline-size: 36%; aspect-ratio: 1; border-radius: 50%; background: var(--sc-blob); will-change: transform; }
+.sc-hero-blob:nth-child(1) { inset-inline-start: 0; inset-block-start: 4%; }
+.sc-hero-blob:nth-child(2) { inset-inline-end: 4%; inset-block-start: -6%; }
+.sc-hero-blob:nth-child(3) { inset-inline-start: 26%; inset-block-end: -14%; }
+.sc-hero-blob:nth-child(4) { inset-inline-end: 18%; inset-block-end: -4%; }
+.sc-hero-mesh { position: absolute; inset: 0; z-index: -1; opacity: .5;
+  background-image: linear-gradient(var(--hm-border-subtle) 1px, transparent 1px), linear-gradient(90deg, var(--hm-border-subtle) 1px, transparent 1px);
+  background-size: 44px 44px; mask-image: radial-gradient(ellipse 70% 70% at 50% 35%, #000 25%, transparent 75%); }
+.sc-hero-inner { position: relative; max-inline-size: 76rem; margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(var(--hm-space-6), 5vw, 4.5rem); align-items: center; }
+.sc-hero-copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--hm-space-5); min-inline-size: 0; }
+.sc-pill { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-2); max-inline-size: 100%; padding-block: .25rem; padding-inline: .25rem .875rem; border-radius: var(--hm-radius-full);
+  background: color-mix(in srgb, var(--hm-surface) 70%, transparent); box-shadow: inset 0 0 0 1px var(--hm-border); backdrop-filter: blur(10px); font-size: var(--hm-text-sm); color: var(--hm-text-2); }
+.sc-hero-title { margin: 0; font-family: var(--hm-font-display); font-weight: var(--hm-display-weight); font-size: clamp(3rem, 8vw, 6rem); line-height: .95; letter-spacing: -.045em; }
+.sc-hero-brand { background-image: linear-gradient(100deg, var(--hm-text) 30%, color-mix(in srgb, var(--hm-text) 55%, var(--hm-primary))); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.sc-hero-lead { margin: 0; max-inline-size: 34rem; font-family: var(--hm-font-display); font-size: clamp(1.375rem, 2.6vw, 2rem); line-height: 1.2; letter-spacing: -.02em; font-weight: 600; }
+.sc-hero-lead .hm-gradient-text { background-image: linear-gradient(100deg, var(--hm-brand-orange, var(--hm-cat-1)), var(--hm-brand-purple, var(--hm-cat-4)) 45%, var(--hm-brand-blue, var(--hm-cat-2)) 75%, var(--hm-brand-green, var(--hm-cat-3))); }
+.sc-hero-sub { margin: 0; max-inline-size: 36rem; font-size: clamp(1rem, 1.4vw, 1.125rem); line-height: 1.65; color: var(--hm-text-2); }
+.sc-hero-cta { display: flex; flex-wrap: wrap; gap: var(--hm-space-3); }
+.sc-hero-demo { min-inline-size: 0; }
+
+/* live preview card */
+.sc-live { display: flex; flex-direction: column; gap: var(--hm-space-4); padding: var(--hm-space-5); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-4);
+  background: color-mix(in srgb, var(--hm-surface) 82%, transparent); backdrop-filter: blur(16px) saturate(140%); box-shadow: var(--hm-shadow-4); }
+.sc-live-head { display: flex; align-items: center; gap: var(--hm-space-2); min-inline-size: 0; }
+.sc-live-title { flex: 1; min-inline-size: 0; font-weight: 600; font-size: var(--hm-text-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-live-dot { inline-size: .5rem; block-size: .5rem; border-radius: 50%; background: var(--hm-success); box-shadow: 0 0 0 4px color-mix(in srgb, var(--hm-success) 22%, transparent); }
+.sc-live-row { display: flex; flex-wrap: wrap; gap: var(--hm-space-2); }
+.sc-live-theme, .sc-live-accent { box-sizing: border-box; display: inline-grid; place-items: center; inline-size: 2.25rem; block-size: 2.25rem; padding: 3px; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-full);
+  background: var(--hm-bg); cursor: pointer; transition: transform var(--hm-dur) var(--hm-ease), border-color var(--hm-dur) var(--hm-ease), box-shadow var(--hm-dur) var(--hm-ease); }
+.sc-live-theme:hover, .sc-live-accent:hover { transform: translateY(-2px); border-color: var(--hm-border-strong); }
+.sc-live-theme[aria-checked="true"], .sc-live-accent[aria-checked="true"] { border-color: var(--hm-primary); box-shadow: 0 0 0 3px var(--hm-primary-soft); }
+.sc-live-theme:focus-visible, .sc-live-accent:focus-visible { outline: 2px solid var(--hm-primary); outline-offset: 2px; }
+.sc-live-theme .hm-swatch { inline-size: 100%; block-size: 100%; border-radius: var(--hm-radius-full); }
+.sc-live-theme .hm-swatch > span { border-radius: var(--hm-radius-full); }
+.sc-live-dot-color, .sc-live-dot-theme { inline-size: 100%; block-size: 100%; border-radius: 50%; background: var(--sc-dot); }
+.sc-live-dot-theme { background: conic-gradient(var(--hm-cat-1), var(--hm-cat-2), var(--hm-cat-3), var(--hm-cat-4), var(--hm-cat-1)); }
+.sc-live-sample { display: flex; flex-direction: column; gap: var(--hm-space-4); padding-block-start: var(--hm-space-4); border-block-start: 1px dashed var(--hm-border); }
+.sc-live-chips, .sc-live-actions { display: flex; flex-wrap: wrap; gap: var(--hm-space-2); }
+
+@media (max-width: 960px) { .sc-hero-inner { grid-template-columns: minmax(0, 1fr); } .sc-hero-demo { max-inline-size: 30rem; } }
+@media (max-width: 640px) { .sc-hero { padding-inline: var(--hm-space-4); } .sc-hero-aurora { filter: blur(48px) saturate(140%); } }
+.sc-live-meter { display: flex; flex-direction: column; gap: var(--hm-space-2); font-size: var(--hm-text-sm); color: var(--hm-text-2); }
+.sc-live-meter-bar { display: block; block-size: .5rem; border-radius: var(--hm-radius-full); background: var(--hm-border-subtle); overflow: hidden; }
+.sc-live-meter-bar > span { display: block; block-size: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--hm-primary), var(--hm-brand-blue, var(--hm-cat-2))); transition: inline-size var(--hm-dur-slow) var(--hm-ease-out); }
+[dir="rtl"] .sc-live-meter-bar > span { background: linear-gradient(-90deg, var(--hm-primary), var(--hm-brand-blue, var(--hm-cat-2))); }
