@@ -105,7 +105,7 @@ export default function MotionMicro(props: { kit: typeof Kit }) {
     </MotionDemo>
 
     <MotionDemo wide title="Durum morph" desc="Kaydet: düğme daireye daralır ve döner; sonuç gelince onay ya da çarpı çizilir (hata sallanır), başarıda konfeti; sonra eski hâline yayla döner. Ekran okuyucuya durum bildirilir."
-      call={() => `stateMorph(button, "${$state}"${$state === "success" && $confetti ? ", { confetti: true }" : ""})  // sonuç: ${$result}, bekleme: ${$wait} ms`}
+      call={() => `stateMorph(button, "${$state}", { confetti: ${$result === "success" && $confetti} })  // sonuç: ${$result}, bekleme: ${$wait} ms`}
       code={`import { stateMorph } from "hadi-march/motion"
 
 stateMorph(btn, "loading")
