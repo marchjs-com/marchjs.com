@@ -11,6 +11,8 @@ export default {
   "/forms": () => import("./pages/forms.tsx"),
   "/home": () => import("./pages/home.tsx"),
   "/icons": () => import("./pages/icons.tsx"),
+  "/ide-live": () => import("./pages/ide-live.tsx"),
+  "/ide": () => import("./pages/ide.tsx"),
   "/language": () => import("./pages/language.tsx"),
   "/layout": () => import("./pages/layout.tsx"),
   "/managers-a11y": () => import("./pages/managers-a11y.tsx"),
