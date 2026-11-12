@@ -7,6 +7,10 @@ import derived from "./derived/def.ts"
 import theme from "./theme/def.ts"
 import hover from "./hover/def.ts"
 import counters from "./counters/def.ts"
+import store from "./store/def.ts"
+import deep from "./deep/def.ts"
+import grid from "./grid/def.ts"
+import startup from "./startup/def.ts"
 
-export const SCENARIOS: Scenario[] = [ticker as Scenario, tree as Scenario, derived as Scenario, counters as Scenario, theme as Scenario, hover as Scenario]
+export const SCENARIOS: Scenario[] = [ticker as Scenario, tree as Scenario, derived as Scenario, counters as Scenario, theme as Scenario, hover as Scenario, store as Scenario, deep as Scenario, grid as Scenario, startup as Scenario]
 export const scenarioById = (id: string): Scenario | undefined => SCENARIOS.find((s) => s.id === id)

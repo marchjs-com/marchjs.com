@@ -1,0 +1,9 @@
+<div class="dash">
+  <PageHeader :title="d.title" :k="k" />
+  <nav class="nv"><ul><li v-for="l of d.nav" :key="l.href"><a :href="l.href">{{ l.label }}</a></li></ul></nav>
+  <section class="cards"><div v-for="s of d.stats" :key="s.label" class="card"><div class="lbl">{{ s.label }}</div><div class="val">{{ s.value }}</div><div class="delta">{{ s.delta }}</div></div></section>
+  <table class="bt"><thead><tr><th v-for="t of heads" :key="t">{{ t }}</th></tr></thead><tbody>
+    <tr v-for="r of rows" :key="r.id"><td class="id">{{ r.id }}</td><td><a :href="'#u' + r.id">{{ r.name }}</a></td><td>{{ r.email }}</td><td><span :class="'badge ' + r.status">{{ r.status }}</span></td><td class="amt">{{ r.amount }}</td><td>{{ r.date }}</td></tr>
+  </tbody></table>
+  <form class="fm"><div v-for="f of d.fields" :key="f.name" class="f"><label>{{ f.label }}</label><input :name="f.name" :type="f.type"></div><button type="button">Kaydet</button></form>
+</div>

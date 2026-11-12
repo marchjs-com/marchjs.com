@@ -1,0 +1,1 @@
+<div class="grp"><h4>{{ g.title }}</h4><ItemView v-for="it of g.items" :key="it.id" :it="it" :unit="it.v === null ? '' : unit" :on="it.id === focus" /></div>

@@ -7,5 +7,9 @@ import { mount as derived } from "./derived/vue.ts"
 import { mount as theme } from "./theme/vue.ts"
 import { mount as hover } from "./hover/vue.ts"
 import { mount as counters } from "./counters/vue.ts"
+import { mount as store } from "./store/vue.ts"
+import { mount as deep } from "./deep/vue.ts"
+import { mount as grid } from "./grid/vue.ts"
+import { mount as startup } from "./startup/vue.ts"
 
-export const scenarios = { ticker, tree, derived, theme, hover, counters }
+export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep, grid, startup }

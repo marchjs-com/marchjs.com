@@ -7,5 +7,9 @@ import { mount as derived } from "./derived/preact.ts"
 import { mount as theme } from "./theme/preact.ts"
 import { mount as hover } from "./hover/preact.ts"
 import { mount as counters } from "./counters/preact.ts"
+import { mount as store } from "./store/preact.ts"
+import { mount as deep } from "./deep/preact.ts"
+import { mount as grid } from "./grid/preact.ts"
+import { mount as startup } from "./startup/preact.ts"
 
-export const scenarios = { ticker, tree, derived, theme, hover, counters }
+export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep, grid, startup }
