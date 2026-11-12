@@ -47,7 +47,13 @@ export async function runScenarios(o: { scenarios: Scenario[]; libs: string[]; s
       try {
         const mount = (await reg[lib]!())[sc.id]
         if (!mount) throw new Error("Bu kitaplığın bu senaryo için uygulaması yok")
-        await sleep(50)
+        // one unmeasured mount first: whichever library runs first would otherwise pay the page's own warm-up
+        // (style and layout caches, JIT) in its set-up time and first frames
+        const warm = await mount(host, data as never)
+        await frame(() => {})
+        warm.destroy()
+        host.textContent = ""
+        gc(); await sleep(50)
         const h0 = heap(), t0 = performance.now()
         app = await mount(host, data as never)
         await new Promise<void>((r) => { requestAnimationFrame(() => { const ch = new MessageChannel(); ch.port1.onmessage = () => { ch.port1.close(); r() }; ch.port2.postMessage(0) }) }) // the first paint
