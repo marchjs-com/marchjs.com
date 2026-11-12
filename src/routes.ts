@@ -4,7 +4,7 @@
 import type { RouteTarget } from "hadi-march/router";
 import { PAGES } from "./nav.ts";
 import { SHELL, setPages } from "./app.tsx";
-import { PAGE_META } from "./nav-meta.ts";
+import { PAGE_META, SUB_PAGES } from "./nav-meta.ts";
 import GEN from "./routes.gen.js";
 
 const ROUTER_DEMO = () => import("./router-demo/_layout.tsx");
@@ -17,6 +17,8 @@ export const ROUTES = {
   ...Object.fromEntries(PAGES.map((p) => [p.path, { load: LOADERS[p.path], layouts: [SHELL], title: p.title }])),
   // page transitions demo: its tabs and tile pages (the page module picks each one's transition)
   "/transitions/*": { load: LOADERS["/transitions"], layouts: [SHELL], title: PAGES.find((p) => p.path === "/transitions")?.title },
+  // motion library pages (/motion/svg, /motion/morph…): one route, each page its own lazy chunk
+  "/motion/*": { load: () => import("./motion-hub.tsx"), layouts: [SHELL], title: "Hareket" },
   // router demo: a section layout under the shell (nested, kept while its tabs change) and a record page that opens
   // beside (named outlet), over the list (modal route) or in full (direct visit)
   "/navigation/router": { load: () => import("./router-demo/list.tsx"), layouts: [SHELL, ROUTER_DEMO], title: ROUTER_TITLE },
@@ -25,7 +27,7 @@ export const ROUTES = {
 };
 export const OUTLETS = { aside: { "/item/:id": () => import("./router-demo/item.tsx") } };
 
-const titleOf = (p: string): string | undefined => (p.startsWith("/navigation/router") ? ROUTER_TITLE : PAGES.find((x) => x.path === p)?.title);
-setPages(PAGES.map((p) => ({ ...p, ...PAGE_META[p.path] })), titleOf);
+const titleOf = (p: string): string | undefined => (p.startsWith("/navigation/router") ? ROUTER_TITLE : (PAGES.find((x) => x.path === p) ?? SUB_PAGES.find((x) => p === x.path || p.startsWith(`${x.path}/`)))?.title);
+setPages([...PAGES.map((p) => ({ ...p, ...PAGE_META[p.path] })), ...SUB_PAGES.map((p) => ({ ...p, ...PAGE_META[p.path], sub: true }))], titleOf);
 /** Document title of a route. */
 export const pageTitle = (to: RouteTarget): string => { const t = to.path !== "/" && titleOf(to.path); return t ? `${t} · HADI March` : "HADI March · Vitrin"; };

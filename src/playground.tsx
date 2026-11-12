@@ -3,7 +3,8 @@
 //     phone), so options appearing or going never move the stage;
 //   - no drop-down for a few values: choices go through ChoicePicker (2–6 → Segmented, more → chips, `preview` →
 //     preview cards, kind "grid" → square tiles, 10+ → Combobox); booleans are switches, numbers sliders.
-import { ChoicePicker, Toggle, Slider, Field, type PickerKind } from "hadi-march/ui";
+import { ChoicePicker, Toggle, Slider, Field } from "hadi-march/ui";
+import type { PickerKind } from "hadi-march/ui";
 import { untrack } from "hadi-march";
 
 export interface PlayOption {
