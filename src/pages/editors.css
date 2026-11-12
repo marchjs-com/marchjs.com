@@ -1,0 +1,6 @@
+/* Editors page: demo layouts (the components bring their own styles). */
+.sc-ed-split { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--hm-space-4); align-items: stretch; }
+.sc-ed-one { display: grid; grid-template-columns: minmax(0, 1fr); }
+.sc-ed-out { margin: 0; min-width: 0; max-height: 28rem; overflow: auto; padding: var(--hm-space-3); border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-3);
+  background: var(--hm-bg-subtle); color: var(--hm-text-2); font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 52rem) { .sc-ed-split { grid-template-columns: minmax(0, 1fr); } }
