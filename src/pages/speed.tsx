@@ -9,7 +9,8 @@ import { netLog, clearNetLog, type NetEntry } from "../perflog.ts";
 import { Demo, Section } from "../demo.tsx";
 
 interface ReportRow { name: string; kind?: string; js: number; css: number; limit?: number | null; over?: boolean; files?: string[] }
-interface Report { entry: ReportRow; routes: ReportRow[]; parts?: ReportRow[]; budget: { entry: number; route: number; part?: number } | null }
+interface ChunkStats { minSize: number; files: number; bytes: number; smallest: { file: string; bytes: number } | null; under: number }
+interface Report { chunks?: ChunkStats; entry: ReportRow; routes: ReportRow[]; parts?: ReportRow[]; budget: { entry: number; route: number; part?: number } | null }
 /** "../../src/charts/xy.ts" → "hadi-march/charts/xy.ts" (library parts by their import name) */
 const LIB_PATH = /^(?:\.\.\/)+src\//
 const shortName = (n: string): string => n.replace(LIB_PATH, "hadi-march/")
@@ -158,6 +159,11 @@ export default { budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, 
             {near ? <Badge tone="warn">{`${near} satır sınırda (%90+)`}</Badge> : null}
             <Toggle bind:value={$onlyOver} label="Yalnız aşan ve sınırdakiler" />
           </div>
+          {$report.chunks ? <div class="sc-row">
+            <Badge tone={$report.chunks.under ? "danger" : "success"}>{`Sınır altı parça: ${$report.chunks.under} (hedef 0, sınır ${kb($report.chunks.minSize)})`}</Badge>
+            <Badge tone="neutral">{`En küçük parça: ${$report.chunks.smallest ? `${shortName($report.chunks.smallest.file)} ${kb($report.chunks.smallest.bytes)}` : "—"}`}</Badge>
+            <Badge tone="neutral">{`Toplam: ${$report.chunks.files} dosya, ${kb($report.chunks.bytes)} (gzip öncesi)`}</Badge>
+          </div> : null}
           <p class="hm-muted">Bütçe yalnız JavaScript'in gzip boyutuna uygulanır (her satır kendi sınırıyla, ayrı ayrı); CSS bilgi için gösterilir. İstek: o satır için inen dosya sayısı (JS + CSS).</p>
           <div class="sc-speed-scroll" tabindex="0" role="region" aria-label="Boyut raporu">
             <table class="sc-speed-table">
