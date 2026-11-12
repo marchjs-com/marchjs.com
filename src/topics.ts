@@ -127,6 +127,21 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "device-preview", title: "DevicePreview", desc: "Telefon ve tablet kasası, çentik, durum çubuğu, gerçek ekran boyu, döndürme; fare parmak gibi:…", group: "Yerleşim" },
     { slug: "app-shell", title: "AppShell", desc: "Kenar çubuğu sütunu, üst duyuru ve kayan ana alan; önce gelen 'İçeriğe geç' bağlantısı.", group: "Yerleşim" },
   ],
+  "/buttons": [
+    { slug: "button", title: "Button", desc: "Beş varyant, üç boyut; yükleniyor düğmeyi kilitler ve ikonun yerinde çark döner.", group: "Eylemler" },
+    { slug: "icon-button", title: "IconButton", desc: "Erişilebilir ad zorunlu; aynı ad ipucu olarak da görünür.", group: "Eylemler" },
+    { slug: "button-group", title: "ButtonGroup", desc: "Aralıklı ya da bitişik; bitişik şeritte yuvarlak uçlar RTL'de de dışta kalır.", group: "Eylemler" },
+    { slug: "scroll-to-top", title: "ScrollToTop", desc: "Sayfa aşağı kayınca belirir, basınca yumuşakça başa döner; varsayılan olarak sayfa köşesine yerleşir.", group: "Eylemler" },
+    { slug: "copy-button", title: "CopyButton", desc: "Kopyalandı der ve bunu ekran okuyucuya duyurur; pano yoksa bildirimle söyler.", group: "Eylemler" },
+    { slug: "menu", title: "Menu ve Dropdown", desc: "Ok tuşları, Home/End, Esc; kısayollar platforma göre yazılır, action() onaylı silme ve bildirimi getirir.", group: "Eylemler" },
+    { slug: "tooltip", title: "Tooltip", desc: "Üstüne gelince kısa bir gecikmeyle, klavye odağında hemen görünür; aria-describedby ile bağlanır, Esc gizler.", group: "Katmanlar" },
+    { slug: "chips", title: "Çipler", desc: "Seçilebilir süzgeç çipleri ve kaldırılabilir etiketler.", group: "Örnekler" },
+    { slug: "chip", title: "Chip", desc: "Bileşen klasöründen (src/components/actions/chip) gelen demo: seçenekler playground.ts'den, kod docs.md'den.", group: "Eylemler" },
+    { slug: "made-with-march", title: "MadeWithMarch", desc: "İsteğe bağlı küçük \"March ile yapıldı\" yazısı ya da rozeti.", group: "Eylemler" },
+    { slug: "avatars", title: "Avatarlar", desc: "Baş harfler tema paletiyle; grup ve +N.", group: "Örnekler" },
+    { slug: "kbd", title: "Kbd", desc: "mod macOS'ta ⌘, ötekilerde Ctrl yazılır; kısayol dizisi key() ve kısayol listesiyle aynı biçimde okunur.", group: "Tipografi" },
+    { slug: "cards-tabs", title: "Kartlar ve sekmeler", desc: "Card, LinkCard, IconTile; Tabs (alt çizgi kayar, panel yükselerek gelir).", group: "Örnekler" },
+  ],
 };
 
 /** Every topic as a sub page under its section (path, title, parent) for the routes, the breadcrumb and the menu. */
