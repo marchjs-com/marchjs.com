@@ -6,7 +6,7 @@
 // full docs, fetched when one of their exports opens). Nothing of it is part of start-up.
 import "./api.css";
 import { SearchBox, Badge, Markdown, registerCommands } from "hadi-march/ui";
-import { Link, navigate, params, type Href } from "hadi-march/router";
+import { Link, navigate, params, query, path, type Href } from "hadi-march/router";
 import { appUrl } from "hadi-march/base";
 import { locale, effect, onCleanup, Try, signal, computed, untrack } from "hadi-march";
 import { fold } from "hadi-march/ui";
@@ -31,7 +31,7 @@ interface Doc {
 
 const TEXT = {
   tr: { title: "API", lead: "Her alt yolun her dışa aktarımı: imza, parametreler, açıklama, örnekler ve canlı demo.", search: "Ara: signal, createRouter, toast…",
-    label: "API ara", kinds: { component: "bileşen", function: "işlev", class: "sınıf", const: "değer" } as Record<Kind, string>,
+    label: "API ara", allKinds: "Tümü", kindFilter: "Türe göre süz", subFilter: "Alt yol", allSubs: "Tüm alt yollar", kinds: { component: "bileşen", function: "işlev", class: "sınıf", const: "değer" } as Record<Kind, string>,
     status: { stable: "kararlı", experimental: "deneysel", deprecated: "kullanımdan kalkıyor" } as Record<string, string>,
     sig: "İmza", params: "Parametreler", props: "Prop'lar", returns: "Dönüş", name: "Ad", type: "Tür", def: "Varsayılan", desc: "Açıklama",
     ctor: "Yapıcı (constructor)", members: "Üyeler", statics: "Statik üyeler", ext: "Kalıtım", events: "Olaylar", value: "İçerik", valueType: "Tür",
@@ -40,7 +40,7 @@ const TEXT = {
     icons: "ikon", iconsPage: "İkonlar sayfası", noExample: "Bu dışa aktarımın canlı örneği hazırlanıyor.", failed: "Örnek çalışırken hata oluştu", show: "Tamamını göster",
     optional: "isteğe bağlı", exports: "dışa aktarım", import: "İçe aktarma", readonly: "salt okunur" },
   en: { title: "API", lead: "Every export of every subpath: signature, parameters, description, examples and a live demo.", search: "Search: signal, createRouter, toast…",
-    label: "Search the API", kinds: { component: "component", function: "function", class: "class", const: "value" } as Record<Kind, string>,
+    label: "Search the API", allKinds: "All", kindFilter: "Filter by kind", subFilter: "Subpath", allSubs: "All subpaths", kinds: { component: "component", function: "function", class: "class", const: "value" } as Record<Kind, string>,
     status: { stable: "stable", experimental: "experimental", deprecated: "deprecated" } as Record<string, string>,
     sig: "Signature", params: "Parameters", props: "Props", returns: "Returns", name: "Name", type: "Type", def: "Default", desc: "Description",
     ctor: "Constructor", members: "Members", statics: "Static members", ext: "Extends", events: "Events", value: "Content", valueType: "Type",
@@ -78,9 +78,34 @@ export default function ApiPage() {
   // flat order for previous / next and keyboard moves
   const flat = computed(() => (index()?.subpaths ?? []).flatMap((s) => s.items.map((i) => ({ s, i }))))
   let $q = ""
-  const shown = computed(() => {
+  // kind and subpath filters live in the address (?kind=component&sub=ui): a shared link opens filtered
+  const KINDS: Kind[] = ["component", "function", "class", "const"]
+  const kind = computed(() => { const k = String(query()["kind"] ?? ""); return (KINDS as string[]).includes(k) ? (k as Kind) : null })
+  const sub = computed(() => String(query()["sub"] ?? "") || null)
+  const setFilter = (key: "kind" | "sub", v: string | null): void => {
+    const u = new URLSearchParams(globalThis.location?.search ?? "")
+    if (v) u.set(key, v); else u.delete(key)
+    const qs = u.toString()
+    void navigate(`${path()}${qs ? `?${qs}` : ""}` as Href, { replace: true })
+  }
+  // text first (counts per kind follow the search), then subpath, then kind
+  const byText = computed(() => {
     const q = fold($q.trim())
-    return (index()?.subpaths ?? []).map((s) => ({ ...s, items: s.items.filter((i) => !q || fold(i[0]).includes(q) || fold(i[2]).includes(q) || fold(s.subpath).includes(q)) })).filter((s) => s.items.length)
+    return (index()?.subpaths ?? []).filter((s) => !sub() || s.slug === sub()).map((s) => ({ ...s, items: s.items.filter((i) => !q || fold(i[0]).includes(q) || fold(i[2]).includes(q) || fold(s.subpath).includes(q)) }))
+  })
+  const counts = computed(() => { const c: Record<string, number> = { all: 0 }; for (const s of byText()) for (const i of s.items) { c[i[1]] = (c[i[1]] ?? 0) + 1; c["all"]!++ } return c })
+  const shown = computed(() => byText().map((s) => ({ ...s, items: kind() ? s.items.filter((i) => i[1] === kind()) : s.items })).filter((s) => s.items.length))
+  // "/" goes to the search box, 1–5 pick a kind (not while typing)
+  effect(() => {
+    const onKeys = (e: KeyboardEvent): void => {
+      const tg = e.target as HTMLElement | null
+      if (e.ctrlKey || e.metaKey || e.altKey || tg?.closest("input, textarea, select, [contenteditable]")) return
+      if (e.key === "/") { e.preventDefault(); (listEl?.parentElement?.querySelector("input") as HTMLInputElement | null)?.focus(); return }
+      const n = Number(e.key)
+      if (n >= 1 && n <= 5) setFilter("kind", n === 1 ? null : KINDS[n - 2]!)
+    }
+    globalThis.addEventListener("keydown", onKeys)
+    onCleanup(() => globalThis.removeEventListener("keydown", onKeys))
   })
   // Ctrl+K: every export is a command of the palette while this page is open
   effect(() => {
@@ -108,11 +133,19 @@ export default function ApiPage() {
     <div class="sc-apip-grid">
       <nav class="sc-apip-nav" aria-label={T().label} onKeyDown={onKey}>
         <SearchBox bind:value={$q} placeholder={T().search} label={T().label} />
+        <div class="sc-apip-kinds" role="radiogroup" aria-label={() => T().kindFilter}>
+          {() => [null, ...KINDS].map((k, n) => <button type="button" role="radio" class="sc-apip-kchip" aria-checked={() => String(kind() === k)} aria-keyshortcuts={String(n + 1)}
+            on:click={() => setFilter("kind", k)}>{k ? T().kinds[k] : T().allKinds}<span class="sc-apip-n">{() => counts()[k ?? "all"] ?? 0}</span></button>)}
+        </div>
+        <select class="hm-input sc-apip-sub" aria-label={() => T().subFilter} value={() => sub() ?? ""} on:change={(e: Event) => setFilter("sub", (e.target as HTMLSelectElement).value || null)}>
+          <option value="">{() => T().allSubs}</option>
+          {() => (index()?.subpaths ?? []).map((s) => <option value={s.slug}>{s.subpath}</option>)}
+        </select>
         <p class="sc-apip-count">{() => { const ix = index(); if (!ix) return T().loading; const n = shown().reduce((a, s) => a + s.items.length, 0); return `${n} ${T().exports} · ${ix.icons} ${T().icons} › ` }}
           <Link href={"/icons" as Href}>{() => T().iconsPage}</Link></p>
         <div class="sc-apip-tree" ref={(el: HTMLElement) => { listEl = el }}>
           {() => (index() && !shown().length ? <p class="sc-apip-note">{T().none}</p> : null)}
-          {() => shown().map((s) => <details class="sc-apip-group" open={!!$q || sel()?.slug === s.slug || shown().length < 4}>
+          {() => shown().map((s) => <details class="sc-apip-group" open={!!$q || !!kind() || !!sub() || sel()?.slug === s.slug || shown().length < 4}>
             <summary><code>{s.subpath}</code><span class="sc-apip-n">{s.items.length}</span></summary>
             <ul>{s.items.map((i) => <li><Link class={() => (sel()?.slug === s.slug && sel()?.name === i[0] ? "sc-apip-link is-on" : "sc-apip-link")} href={hrefOf(s.slug, i[0])}
               aria-current={() => (sel()?.slug === s.slug && sel()?.name === i[0] ? "page" : null)}><code>{i[0]}</code><span class={`sc-apip-k sc-apip-k-${i[1]}`}>{T().kinds[i[1]]}</span></Link></li>)}</ul>

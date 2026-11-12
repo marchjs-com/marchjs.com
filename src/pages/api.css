@@ -1,6 +1,11 @@
 /* API page (#/api): searchable tree on the start side, the selected export's docs beside it; one column when narrow. */
 .sc-apip-grid { display: grid; grid-template-columns: minmax(15rem, 20rem) minmax(0, 1fr); gap: var(--hm-space-5); align-items: start; min-width: 0; }
-.sc-apip-nav { position: sticky; inset-block-start: var(--hm-space-3); display: grid; gap: var(--hm-space-2); min-width: 0; max-height: calc(100dvh - 6rem); grid-template-rows: auto auto minmax(0, 1fr); }
+.sc-apip-nav { position: sticky; inset-block-start: var(--hm-space-3); display: grid; gap: var(--hm-space-2); min-width: 0; max-height: calc(100dvh - 6rem); grid-template-rows: auto auto auto auto minmax(0, 1fr); }
+.sc-apip-kinds { display: flex; flex-wrap: wrap; gap: var(--hm-space-1); }
+.sc-apip-kchip { display: inline-flex; align-items: center; gap: var(--hm-space-1); padding: 2px var(--hm-space-2); border: 1px solid var(--hm-border); border-radius: 999px; background: var(--hm-surface); color: var(--hm-muted); font: inherit; font-size: var(--hm-text-xs); cursor: pointer; }
+.sc-apip-kchip[aria-checked="true"] { border-color: var(--hm-primary); background: var(--hm-primary-soft, var(--hm-surface-2)); color: var(--hm-text); }
+.sc-apip-kchip .sc-apip-n { opacity: .7; }
+.sc-apip-sub { font-size: var(--hm-text-sm); }
 .sc-apip-count { margin: 0; font-size: var(--hm-text-xs); color: var(--hm-muted); }
 .sc-apip-tree { min-height: 0; overflow: auto; padding-inline-end: var(--hm-space-1); }
 .sc-apip-group > summary { display: flex; align-items: baseline; gap: var(--hm-space-2); padding: var(--hm-space-1) 0; cursor: pointer; font-size: var(--hm-text-sm); font-weight: 600; }
