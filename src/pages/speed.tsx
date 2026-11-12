@@ -6,11 +6,12 @@ import { Link } from "hadi-march/router";
 import { slow, SLOW_MS } from "../slow.ts";
 import { registerServiceWorker, unregisterServiceWorker, swState } from "hadi-march/sw";
 import { netLog, clearNetLog, type NetEntry } from "../perflog.ts";
+import { resolveSize, type FileSize } from "../netsize.ts";
 import { Demo, Section } from "../demo.tsx";
 
 interface ReportRow { name: string; kind?: string; js: number; css: number; limit?: number | null; over?: boolean; files?: string[] }
 interface ChunkStats { minSize: number; files: number; bytes: number; smallest: { file: string; bytes: number } | null; under: number }
-interface Report { chunks?: ChunkStats; entry: ReportRow; routes: ReportRow[]; parts?: ReportRow[]; budget: { entry: number; route: number; part?: number } | null }
+interface Report { files?: Record<string, FileSize>; chunks?: ChunkStats; entry: ReportRow; routes: ReportRow[]; parts?: ReportRow[]; budget: { entry: number; route: number; part?: number } | null }
 /** "../../src/charts/xy.ts" → "hadi-march/charts/xy.ts" (library parts by their import name) */
 const LIB_PATH = /^(?:\.\.\/)+src\//
 const shortName = (n: string): string => n.replace(LIB_PATH, "hadi-march/")
@@ -49,10 +50,13 @@ export default function Speed() {
   void fetch("march-report.json").then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status))))).then((x: Report) => { $report = x }, () => { $reportError = "Rapor yalnız derlenmiş vitrinde var (march build)." })
 
   const rows = (): NetEntry[] => netLog().filter((e) => e.kind !== "diğer")
+  // measured by the browser when it may; otherwise (cross-origin without Timing-Allow-Origin: ~300 B of headers) the
+  // build report's size, and the row says which
+  const size = (e: NetEntry) => resolveSize(e, $report?.files)
   const totals = () => {
     const list = rows()
     const net = list.filter((e) => e.source === "ağ")
-    return { files: list.length, net: net.length, cached: list.length - net.length, bytes: net.reduce((s, e) => s + e.bytes, 0), preload: list.filter((e) => e.preload).length }
+    return { files: list.length, net: net.length, cached: list.length - net.length, bytes: net.reduce((s, e) => s + size(e).bytes, 0), estimated: net.some((e) => size(e).from !== "ölçülen"), preload: list.filter((e) => e.preload).length }
   }
   // live chunk list: every lazy unit of the build and whether (and how) it has arrived in this tab
   const manifest = readManifest()
@@ -124,20 +128,22 @@ const Map = lazy(() => import("./Map.tsx"))
         <Card><div class="sc-speed-n">{() => totals().net}</div><div class="hm-muted">ağdan</div></Card>
         <Card><div class="sc-speed-n">{() => totals().cached}</div><div class="hm-muted">önbellekten</div></Card>
         <Card><div class="sc-speed-n">{() => totals().preload}</div><div class="hm-muted">ön yükleme</div></Card>
-        <Card><div class="sc-speed-n">{() => kb(totals().bytes)}</div><div class="hm-muted">aktarılan</div></Card>
+        <Card><div class="sc-speed-n">{() => kb(totals().bytes)}</div><div class="hm-muted">{() => (totals().estimated ? "aktarılan (rapordan)" : "aktarılan")}</div></Card>
       </Grid>
       <div class="sc-row"><Button size="sm" on:click={clearNetLog}>Listeyi temizle</Button></div>
       <div class="sc-speed-scroll" role="region" aria-label="Yüklenen dosyalar" tabindex="0">
         <table class="sc-speed-table">
-          <thead><tr><th scope="col" class="sc-num">ms</th><th scope="col">Sayfa</th><th scope="col">Dosya</th><th scope="col">Tür</th><th scope="col" class="sc-num">Boyut</th><th scope="col">Kaynak</th></tr></thead>
+          <thead><tr><th scope="col" class="sc-num">ms</th><th scope="col">Sayfa</th><th scope="col">Dosya</th><th scope="col">Tür</th><th scope="col" class="sc-num">Boyut</th><th scope="col">Ölçüm</th><th scope="col">Kaynak</th></tr></thead>
           <tbody>
             {() => rows().slice().reverse().slice(0, 200).map((e) => <tr>
               <td class="sc-num">{e.t}</td>
               <td>{e.route}</td>
-              <td class="sc-speed-file">{e.file}{e.preload ? <Badge tone="info">önceden</Badge> : null}</td>
+              <td class="sc-speed-file">{e.file}</td>
               <td>{e.kind}</td>
-              <td class="sc-num">{kb(e.bytes)}</td>
-              <td><Badge tone={e.source === "ağ" ? "warn" : "success"}>{e.source}</Badge></td>
+              {(() => { const z = size(e); return [
+                <td class="sc-num" title={z.raw ? `gzip ${kb(z.bytes)} · ham ${kb(z.raw)}` : undefined}>{z.from === "bilinmiyor" ? "—" : kb(z.bytes)}</td>,
+                <td><Badge tone={z.from === "ölçülen" ? "success" : "neutral"}>{z.from}</Badge></td>] })()}
+              <td><Badge tone={e.source === "ağ" ? "warn" : "success"}>{e.preload ? `önceden · ${e.source}` : e.source}</Badge></td>
             </tr>)}
           </tbody>
         </table>
