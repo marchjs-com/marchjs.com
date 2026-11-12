@@ -19,5 +19,7 @@ export default {
   // boot: the shell pieces load at start-up, so a route row counts only what its own navigation downloads
   budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, boot: ["src/shell-nav.tsx", "src/shell-tools.tsx", "src/shell-late.tsx"], fail: true },
   // no output file under 10 KB (before gzip): small shared code folds, small lazy modules join their parent or a group
-  chunks: { minSize: 10 * 1024 },
+  // allow: a locale dictionary stays its own file (only that locale downloads it; grouping it would make every
+  // Turkish visitor download pages, or every English visitor the dictionary)
+  chunks: { minSize: 10 * 1024, allow: { "src/i18n/tr.ts": "locale dictionary: downloaded only for Turkish, never grouped" } },
 };
