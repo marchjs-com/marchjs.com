@@ -9,7 +9,7 @@ export default function IdeLivePage() {
     <Demo wide title="Mini editör" desc="Ctrl+S kaydeder, Ctrl+Enter çalıştırır, Ctrl+Shift+I biçimlendirir; hepsi komut paletinde de var. Kaydedilmemiş dosya varken sayfadan ayrılırsan sorulur (DirtyState). F6 panel grupları arasında gezinir."
       code={`<ActivityBar value={$view} onChange={…} items={views} />
 <DockLayout panels={[explorer, ...editors, inspector, console]} commands="ide.dock" persist="ide.layout"
-  layout={{ row: [["files"], { column: [{ row: [editors, ["inspector"]] }, ["console"]], share: .7 }], share: .24 }} />
+  layout={{ row: [["files"], { column: [editors, ["inspector", "console"]], share: .62 }], share: .24 }} />
 <OverflowToolbar items={[{ id: "save", command: "ide.save" }, { id: "run", command: "ide.run", showLabel: true }, …]} />
 <StatusBar items={[{ id: "pos", side: "end", text: () => "Sa " + $line }, { id: "save", command: "ide.saveAll", live: true, … }]} />`}>
       <MiniIde />

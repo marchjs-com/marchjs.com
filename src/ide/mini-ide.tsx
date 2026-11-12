@@ -178,7 +178,7 @@ export default function MiniIde() {
       <div id="mini-ide-dock" class="sc-ide-dock">
         <DockLayout panels={panels} commands="ide.dock" label="Editör çalışma alanı" persist="sc.mini-ide.layout" api={(a: DockApi) => { dock = a }}
           onClose={(id: string) => { if (id.startsWith("file:")) open.set(open().filter((x) => `file:${x}` !== id)) }}
-          layout={{ row: [["files"], { column: [{ row: [["file:app.ts", "file:theme.css"], ["inspector"]], share: 0.7 }, ["console"]], share: 0.7 }], share: 0.24 }} />
+          layout={{ row: [["files"], { column: [["file:app.ts", "file:theme.css"], ["inspector", "console"]], share: 0.62 }], share: 0.24 }} />
       </div>
     </div>
     <StatusBar label="Editör durumu" items={[

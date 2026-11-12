@@ -28,7 +28,7 @@
 .sc-ide-body { display: grid; grid-template-columns: auto minmax(0, 1fr); min-height: 0; }
 .sc-ide-dock { min-width: 0; min-height: 0; }
 .sc-ide-dock > .hm-dock { border-radius: 0; min-height: 0; }
-.sc-ide-side { display: grid; align-content: start; gap: .375rem; padding: .375rem; }
+.sc-ide-side { display: grid; align-content: start; gap: .375rem; min-width: 0; height: 100%; padding: .375rem; overflow: auto; }
 .sc-ide-search .hm-input { min-height: 1.875rem; font-size: var(--hm-text-sm); }
 .sc-ide-editor { --sc-ide-c: var(--hm-cat-1, var(--hm-primary)); display: grid; grid-template-columns: auto minmax(0, 1fr); height: 100%; min-height: 8rem; font: var(--sc-ide-fs, 13px)/1.6 var(--hm-font-mono); }
 .sc-ide-editor.accent-blue { --sc-ide-c: var(--hm-cat-2, var(--hm-info)); } .sc-ide-editor.accent-green { --sc-ide-c: var(--hm-cat-3, var(--hm-success)); } .sc-ide-editor.accent-purple { --sc-ide-c: var(--hm-cat-4, var(--hm-primary)); }
