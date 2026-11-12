@@ -7,5 +7,6 @@ import { ComponentDemo } from "../component-demo.tsx";
 export default function IdePage() {
   return <Section kicker="Karmaşık bileşenler" title="IDE kabuğu" lead="Editör ve geliştirici araçları için yerleşim parçaları: sürükle-bırak panel yerleşimi, özellik düzenleyici, taşan araç çubuğu, durum ve etkinlik çubukları, yol çubuğu. Hepsi mevcut bileşenlerden kurulur ve komut paletine bağlanır.">
     <ComponentDemo folder="composite/dock-layout" title="DockLayout: sürükle, bırak, yerleştir" desc="Sekmeyi bir grubun kenarına bırak: yeni bölme; ortasına ya da sekmelerin arasına: sekme; alanın kenarına: tüm yerleşimin kenarı; dışına: yüzen pencere. Bırakma önizlemesi hareket motoruyla kayar. Grup düğmeleri büyütür, yüzdürür, küçültür. Klavye: F6 gruplar arası, Alt+Shift+oklar yerleştirir." />
+    <ComponentDemo folder="composite/property-grid" title="PropertyGrid: özellik düzenleyici" desc="Gruplu, aranabilir satırlar; her tür kendi form denetimiyle düzenlenir. Her değişiklik bir geri alma adımı (Ctrl+Z ya da başlıktaki düğmeler), kaydedilmemiş değişiklikler DirtyState’e kayıtlı: sayfadan ayrılırken sorulur. Değişen satır işaretlenir, tek tek sıfırlanır." />
   </Section>
 }

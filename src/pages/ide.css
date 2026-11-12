@@ -2,3 +2,13 @@
 .sc-dock-stage { height: 26rem; min-width: 0; }
 .sc-dock-pane { display: grid; align-content: start; gap: .25rem; padding: .75rem 1rem; font-size: var(--hm-text-sm); }
 .sc-dock-pane p { margin: 0; white-space: pre; overflow: hidden; text-overflow: ellipsis; }
+.sc-pg-stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem); gap: var(--hm-space-4); min-width: 0; }
+@media (max-width: 44rem) { .sc-pg-stage { grid-template-columns: minmax(0, 1fr); } }
+.sc-pg-preview { display: grid; place-items: center; min-height: 14rem; padding: var(--hm-space-4); border-radius: var(--hm-radius-3); background: var(--hm-surface-2); overflow: hidden; }
+.sc-pg-card { width: min(100%, var(--sc-pg-w, 300px)); padding: var(--hm-space-4); border: 1px solid var(--hm-border); border-radius: var(--sc-pg-r, 12px); background: var(--hm-surface);
+  transition: width var(--hm-dur) var(--hm-ease), border-radius var(--hm-dur) var(--hm-ease), box-shadow var(--hm-dur) var(--hm-ease), background-color var(--hm-dur) var(--hm-ease); overflow-wrap: anywhere; }
+.sc-pg-card p { margin: var(--hm-space-1) 0 0; color: var(--hm-muted); }
+.sc-pg-card.is-elevated { box-shadow: var(--hm-shadow-3); }
+.sc-pg-card.is-center { text-align: center; }
+.sc-pg-card.is-accent { border-color: var(--sc-pg-accent); background: color-mix(in srgb, var(--sc-pg-accent) 12%, var(--hm-surface)); }
+.sc-pg-panel { height: 26rem; min-width: 0; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); background: var(--hm-surface); overflow: hidden; }
