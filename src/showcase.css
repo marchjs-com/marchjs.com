@@ -223,3 +223,10 @@
 .sc-ov-label { padding: .125rem .5rem; border-radius: var(--hm-radius-1); background: color-mix(in srgb, var(--hm-surface) 85%, transparent); font-size: var(--hm-text-sm); }
 .sc-ov-stage { min-height: 16rem; display: grid; place-items: center; padding: var(--hm-space-5); border: 1px dashed var(--hm-border-strong); border-radius: var(--hm-radius-3); overflow: hidden; }
 .sc-ov-content { width: min(18rem, 100%); }
+
+/* shell placeholders (lazy side menu and top bar tools): same size, no layout shift */
+.sc-nav-placeholder { width: var(--hm-sb-w, 17.5rem); height: 100%; background: var(--hm-surface); border-inline-end: 1px solid var(--hm-border); }
+@media (max-width: 900px) { .sc-nav-placeholder { display: none; } }
+.sc-tools { display: flex; align-items: center; gap: var(--hm-space-2); }
+.sc-tools-placeholder { width: 27rem; height: 2.25rem; }
+@media (max-width: 900px) { .sc-tools-placeholder { width: 8rem; } }

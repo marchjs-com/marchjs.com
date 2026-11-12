@@ -5,25 +5,20 @@ import "hadi-march/css/tokens.css";
 import "hadi-march/css/sx.css"; // components bring their own CSS (only what is used, split per page)
 import "hadi-march/motion/motion.css";
 import "./showcase.css";
-import "./perflog.ts"; // network panel of the Speed page: records from the start
-import { render, messages, setLocale } from "hadi-march";
+import { render, setLocale } from "hadi-march";
+import { loadLocale } from "hadi-march/i18n";
 import { createRouter } from "hadi-march/router";
-import { installTransitions, installFlip, pageTransitions } from "hadi-march/motion";
-import { bootLoader } from "hadi-march/ui";
-import tr from "hadi-march/i18n/tr";
 import { App, PAGES, LOADERS } from "./app.tsx";
 
-messages("tr", tr);
-setLocale("tr");
-installTransitions();
-installFlip();
+// the Turkish pack is a lazy chunk (library texts switch to Turkish when it arrives)
+loadLocale("tr", () => import("hadi-march/i18n/tr"));
+void setLocale("tr");
 
 createRouter({
   mode: "hash",
   routes: Object.fromEntries(PAGES.map((p) => [p.path, LOADERS[p.path]])),
   title: (to: { path: string }) => { const p = PAGES.find((x) => x.path === to.path); return p && p.path !== "/" ? `${p.title} · HADI March` : "HADI March · Vitrin"; },
 });
-pageTransitions({ type: "fade", duration: 180 });
 
 const el = document.getElementById("app");
-if (el) { render(() => <App />, el); bootLoader.done(); }
+if (el) { render(() => <App />, el); document.getElementById("hm-boot")?.remove(); }

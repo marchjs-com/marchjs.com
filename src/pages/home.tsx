@@ -6,6 +6,7 @@ import { Button, LinkCard, Kbd, Card, Badge, Grid, openPalette, ThemeSwatch, col
 import { arrowRight, command, sparkles } from "hadi-march/icons";
 import { PAGES } from "../nav.ts";
 import { Demo } from "../demo.tsx";
+import { PAGE_META } from "../nav-meta.ts";
 
 function Counter(props: { to: number; suffix?: string; label: string }) {
   let $target = 0
@@ -60,7 +61,7 @@ export default function Home() {
 
       <Grid cols={4} minCol="17rem" gap={3} fill="stretch" equal>
         {PAGES.filter((p) => p.path !== "/").map((p, i) => <div use:reveal={{ delay: i * 40 }}>
-          <LinkCard href={p.path} icon={p.icon} tone={(["primary", "info", "success", "violet", "warn", "pink", "teal", "danger", "neutral", "primary"] as const)[i % 10]} title={p.title} description={p.desc} />
+          <LinkCard href={p.path} icon={PAGE_META[p.path]?.icon} tone={(["primary", "info", "success", "violet", "warn", "pink", "teal", "danger", "neutral", "primary"] as const)[i % 10]} title={p.title} description={PAGE_META[p.path]?.desc} />
         </div>)}
       </Grid>
 
