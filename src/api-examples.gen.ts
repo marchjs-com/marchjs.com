@@ -4,13 +4,35 @@
 import type { ApiExampleModule } from "./api-examples/types.ts";
 const groups: Record<string, () => Promise<ApiExampleModule>> = {
   "core": () => import("./api-examples/core.tsx"),
+  "flow": () => import("./api-examples/flow.tsx"),
   "managers-a": () => import("./api-examples/managers-a.tsx"),
+  "platform": () => import("./api-examples/platform.tsx"),
   "ui-e": () => import("./api-examples/ui-e.tsx"),
   "ui-e2": () => import("./api-examples/ui-e2.tsx"),
 };
 const bySubpath: Record<string, [group: string, first: string][]> = {
   "hadi-march": [["core","Await"]],
+  "hadi-march/behaviors/dismiss": [["platform","dismiss"]],
+  "hadi-march/behaviors/drag": [["platform","arrowStep"]],
+  "hadi-march/behaviors/dropzone": [["platform","dropzone"]],
+  "hadi-march/behaviors/list-nav": [["platform","listNav"]],
+  "hadi-march/behaviors/resize-handle": [["platform","resizeHandle"]],
+  "hadi-march/behaviors/roving-focus": [["platform","rovingFocus"]],
+  "hadi-march/behaviors/swipe": [["platform","fling"]],
+  "hadi-march/channel": [["platform","ChannelScope"]],
+  "hadi-march/context-menu": [["platform","ContextMenu"]],
+  "hadi-march/flow": [["flow","FLOW_NODE"]],
+  "hadi-march/icons": [["platform","Icon"]],
+  "hadi-march/icons/catalog": [["platform","ICONS"]],
   "hadi-march/managers": [["managers-a","DEFAULT_CATEGORIES"]],
+  "hadi-march/managers/accessibility/ui": [["platform","AccessibilitySettings"]],
+  "hadi-march/managers/command/ui": [["platform","CommandButton"]],
+  "hadi-march/managers/consent/ui": [["platform","ConsentBanner"]],
+  "hadi-march/managers/shortcut-hint": [["platform","comboOf"]],
+  "hadi-march/managers/shortcut-hint/ui": [["platform","ShortcutHelp"]],
+  "hadi-march/managers/undo": [["platform","undoHistory"]],
+  "hadi-march/managers/undo/history": [["platform","create"]],
+  "hadi-march/theme": [["platform","COLOR_TOKENS"]],
   "hadi-march/ui": [["ui-e","accent"],["ui-e2","defineMeta"]],
 };
 /** The example file of an export (a lazy part, loaded once), or null when its subpath has none yet. */
