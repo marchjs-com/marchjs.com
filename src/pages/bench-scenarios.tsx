@@ -1,5 +1,6 @@
 // Speed › Comparison › "Gerçekçi senaryolar": realistic workloads (small, frequent updates on a large page), kept apart
 // from the canonical operations. Its own lazy part of the benchmark page; every library's app is a lazy chunk too.
+import { appUrl } from "hadi-march/base";
 import { Button, Chip, Progress, toast } from "hadi-march/ui";
 import { untrack } from "hadi-march";
 import { lazy } from "hadi-march/lazy";
@@ -49,7 +50,7 @@ export default function BenchScenarios() {
     return rank(Object.entries(per).map(([id, r]) => ({ id, ...r })))
   }
   const base = () => $result?.results[$view]?.[BASELINE]?.stats.median ?? NaN
-  const loadSources = () => { if (!$sources) void fetch("bench/scenario-sources.json").then((r) => r.json()).then((x: Record<string, Record<string, string>>) => { $sources = x }, () => { $sources = {} }) }
+  const loadSources = () => { if (!$sources) void fetch(appUrl("bench/scenario-sources.json")).then((r) => r.json()).then((x: Record<string, Record<string, string>>) => { $sources = x }, () => { $sources = {} }) }
 
   return <>
     <Demo wide title="Gerçekçi senaryolar" desc="Kanonik işlemlerden ayrı: büyük bir sayfada küçük ve sık değişiklikler. Her kitaplık senaryoyu kendi önerilen en iyi kalıbıyla yazdı (React'te memo ve satıra bölünmüş durum, Vue'da satır bileşeni ve reactive, vanilla'da elle önbelleğe alınmış hücreler). Her adım bir karenin başında çağrılır ve o karenin boyamasına kadar ölçülür; 16,7 ms'yi aşan kare düşen karedir.">
