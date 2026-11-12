@@ -5,7 +5,8 @@ import { users, zap, shieldCheck } from "hadi-march/icons";
 import type { ColorToken } from "hadi-march/theme";
 import { shapesFor } from "hadi-march/ui";
 import { Stack } from "hadi-march/ui";
-import { Demo, Section } from "../demo.tsx";
+import { Demo } from "../demo.tsx";
+import { Hub } from "../hub.tsx";
 import { Playground } from "../playground.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
 
@@ -45,7 +46,7 @@ function DayPicker(props: { variant: (typeof VARIANTS)[number]; color?: ColorTok
   </div>
 }
 
-export default function Forms() {
+export default function Forms(props: { params?: { rest?: string } }) {
   let $chVariant = "chip"
   let $chSize = "md"
   let $chShape = "rounded"
@@ -57,92 +58,92 @@ export default function Forms() {
   let $vol = 64
   let $color = "#f2801f"
   let $stars = 4
-  return <Section kicker="Bileşenler" title="Formlar" lead="Şemadan form: alanlar, doğrulama, koşullu alanlar ve tür bilgisi tek tanımdan. Bütün alanlar bind: ile iki yönlü bağlanır.">
-    <Demo wide title="Seçim kontrolleri: varyantları karşılaştır" desc="Aynı gün seçici beş görünümde. Kutu özel çizilir (gerçek input görünmez ama klavye, form ve ekran okuyucu için durur); tik çizilerek gelir, dolgu ortadan büyür, basınca hafifçe küçülür, odakta temalı halka. Hareketi azalt tercihinde animasyonsuz.">
-      <div class="sc-choice-compare">
-        {VARIANTS.map((v) => <DayPicker variant={v} />)}
-      </div>
-    </Demo>
-    <Demo wide title="Seçim kontrolleri: seçenekler" desc="Varyant, boyut ve köşe değiştir. Renk üst çubuktaki Vurgu rengi seçicisinden gelir; HADİ renkleri açıkken her seçenek sırayla turuncu, mavi, yeşil, mor olur."
-      code={`<CheckboxGroup variant="chip" size="md" shape="rounded" color="brand-blue" options={days} />
-<CheckboxGroup variant="chip" colors="brand" options={days} />      // one HADİ color per option
-<RadioGroup variant="card" options={[{ value, label, hint, icon }]} />
-<Checkbox variant="soft" indeterminate label="Kısmen" />`}>
-      <Playground options={[
-        { label: "Varyant", get: () => $chVariant, set: (v: string) => { $chVariant = v }, options: [...VARIANTS] },
-        { label: "Boyut", get: () => $chSize, set: (v: string) => { $chSize = v }, options: ["sm", "md", "lg"] },
-        // only the corners this variant can have; hidden when it has a single one
-        { label: "Köşe", get: () => $chShape, set: (v: string) => { $chShape = v }, options: () => shapesFor($chVariant as "chip", "checkbox"), visibleWhen: () => shapesFor($chVariant as "chip", "checkbox").length > 1 },
-        { label: "HADİ renkleri (colors=brand)", get: () => $chBrand, set: (v: boolean) => { $chBrand = v } },
-      ]}>
-      <p class="hm-muted sc-choice-note">{() => $chVariant === "card" ? "Kart köşesi yalnız square ya da rounded olabilir (kart yuvarlak olmaz)." : $chVariant === "chip" ? "chip: circle hap şeklidir; rounded ve square köşeleri keskinleştirir." : "Radio kutusu her zaman yuvarlaktır; köşe seçimi checkbox'ları ve chip / toggle / card biçimlerini etkiler."}</p>
-      {() => <DayPicker variant={$chVariant as "chip"} size={$chSize as "md"} shape={$chShape as "rounded"} colors={$chBrand ? "brand" : undefined} />}
-      <div class="sc-choice-compare">
-        <div class="sc-choice-case"><code class="sc-choice-name">radio · {() => $chVariant === "toggle" ? "segmented" : $chVariant}</code>
-          {() => <RadioGroup bind:value={$plan} inline={$chVariant !== "card"} variant={($chVariant === "toggle" ? "segmented" : $chVariant) as "chip"} size={$chSize as "md"} colors={$chBrand ? "brand" : undefined}
-            options={$chVariant === "card" ? PLANS : PLANS.map(({ value, label }) => ({ value, label }))} aria-label="Plan" />}</div>
-        <div class="sc-choice-case"><code class="sc-choice-name">tek kutu · kısmi (indeterminate)</code>
-          <Stack gap={2}>
-            {() => <Checkbox bind:value={$partial} variant={($chVariant === "chip" || $chVariant === "card" || $chVariant === "toggle" ? "classic" : $chVariant) as "classic"} size={$chSize as "md"} shape={$chShape as "rounded"} label="Bildirimleri al" />}
-            <Checkbox value={true} indeterminate label="Bazı alt öğeler seçili" />
-            <Checkbox value={false} disabled label="Devre dışı" />
-          </Stack></div>
-      </div>
-      </Playground>
-    </Demo>
-    <Demo wide title="Şemadan form" desc="Koşullu alanlar (plan = ekip), canlı doğrulama, gönderimde yükleniyor; sunucu hatası alana düşer (deneme: …@taken.com)."
-      code={`const SignUp = schema({
-  email: { type: "email", required: true },
-  plan:  { type: "pick", options: […], control: "segmented" },
-  seats: { type: "int", min: 2, when: (v) => v.plan === "team" },
-})
-<Form schema={SignUp} layout="grid" cols={2} onSubmit={api.signUp} />`}>
-      <Card>
-        <Form schema={Signup} layout="grid" cols={2} submitLabel="Hesap oluştur"
-          onSubmit={async (v: Record<string, unknown>) => {
-            await new Promise((r) => setTimeout(r, 700))
-            if (String(v.email).endsWith("@taken.com")) throw Object.assign(new Error("Reddedildi"), { fieldErrors: { email: "Bu adres zaten kayıtlı" } })
-            toast(`Hoş geldin, ${v.name}!`, { kind: "success" })
-          }} />
-      </Card>
-    </Demo>
+  const RENDER: Record<string, () => unknown> = {
+    "choice-variants": () => <>
+  <Demo wide title="Seçim kontrolleri: varyantları karşılaştır" desc="Aynı gün seçici beş görünümde. Kutu özel çizilir (gerçek input görünmez ama klavye, form ve ekran okuyucu için durur); tik çizilerek gelir, dolgu ortadan büyür, basınca hafifçe küçülür, odakta temalı halka. Hareketi azalt tercihinde animasyonsuz.">
+    <div class="sc-choice-compare">
+      {VARIANTS.map((v) => <DayPicker variant={v} />)}
+    </div>
+  </Demo>
+  <Demo wide title="Seçim kontrolleri: seçenekler" desc="Varyant, boyut ve köşe değiştir. Renk üst çubuktaki Vurgu rengi seçicisinden gelir; HADİ renkleri açıkken her seçenek sırayla turuncu, mavi, yeşil, mor olur."
+    code={`<CheckboxGroup variant="chip" size="md" shape="rounded" color="brand-blue" options={days} />
+heckboxGroup variant="chip" colors="brand" options={days} />      // one HADİ color per option
+adioGroup variant="card" options={[{ value, label, hint, icon }]} />
+heckbox variant="soft" indeterminate label="Kısmen" />`}>
+    <Playground options={[
+      { label: "Varyant", get: () => $chVariant, set: (v: string) => { $chVariant = v }, options: [...VARIANTS] },
+      { label: "Boyut", get: () => $chSize, set: (v: string) => { $chSize = v }, options: ["sm", "md", "lg"] },
+      // only the corners this variant can have; hidden when it has a single one
+      { label: "Köşe", get: () => $chShape, set: (v: string) => { $chShape = v }, options: () => shapesFor($chVariant as "chip", "checkbox"), visibleWhen: () => shapesFor($chVariant as "chip", "checkbox").length > 1 },
+      { label: "HADİ renkleri (colors=brand)", get: () => $chBrand, set: (v: boolean) => { $chBrand = v } },
+    ]}>
+    <p class="hm-muted sc-choice-note">{() => $chVariant === "card" ? "Kart köşesi yalnız square ya da rounded olabilir (kart yuvarlak olmaz)." : $chVariant === "chip" ? "chip: circle hap şeklidir; rounded ve square köşeleri keskinleştirir." : "Radio kutusu her zaman yuvarlaktır; köşe seçimi checkbox'ları ve chip / toggle / card biçimlerini etkiler."}</p>
+    {() => <DayPicker variant={$chVariant as "chip"} size={$chSize as "md"} shape={$chShape as "rounded"} colors={$chBrand ? "brand" : undefined} />}
+    <div class="sc-choice-compare">
+      <div class="sc-choice-case"><code class="sc-choice-name">radio · {() => $chVariant === "toggle" ? "segmented" : $chVariant}</code>
+        {() => <RadioGroup bind:value={$plan} inline={$chVariant !== "card"} variant={($chVariant === "toggle" ? "segmented" : $chVariant) as "chip"} size={$chSize as "md"} colors={$chBrand ? "brand" : undefined}
+          options={$chVariant === "card" ? PLANS : PLANS.map(({ value, label }) => ({ value, label }))} aria-label="Plan" />}</div>
+      <div class="sc-choice-case"><code class="sc-choice-name">tek kutu · kısmi (indeterminate)</code>
+        <Stack gap={2}>
+          {() => <Checkbox bind:value={$partial} variant={($chVariant === "chip" || $chVariant === "card" || $chVariant === "toggle" ? "classic" : $chVariant) as "classic"} size={$chSize as "md"} shape={$chShape as "rounded"} label="Bildirimleri al" />}
+          <Checkbox value={true} indeterminate label="Bazı alt öğeler seçili" />
+          <Checkbox value={false} disabled label="Devre dışı" />
+        </Stack></div>
+    </div>
+    </Playground>
+  </Demo>
+  </>,
+    "schema": () => <Demo wide title="Şemadan form" desc="Koşullu alanlar (plan = ekip), canlı doğrulama, gönderimde yükleniyor; sunucu hatası alana düşer (deneme: …@taken.com)."
+    code={`const SignUp = schema({
+email: { type: "email", required: true },
+plan:  { type: "pick", options: […], control: "segmented" },
+seats: { type: "int", min: 2, when: (v) => v.plan === "team" },
 
-    <Demo title="Bir arada: anahtarlar, kaydırıcı, renk, puan" desc="Toggle, Checkbox, Slider, ColorInput ve Rating aynı Field düzeninde (Rating ← → ile değişir). Her girişin kendi kartı aşağıda.">
-      <Toggle bind:value={$notify} label="Anlık bildirimler" />
-      <Checkbox bind:value={$agree} label="Kullanım koşullarını okudum" />
-      <Field label={() => `Ses: ${$vol}`}><Slider bind:value={$vol} min={0} max={100} /></Field>
-      <Field label="Marka rengi"><ColorInput bind:value={$color} /></Field>
-      <Field label="Puan" group><Rating bind:value={$stars} size="lg" /></Field>
-      <p class="hm-muted">{() => `${$stars} yıldız · bildirim ${$notify ? "açık" : "kapalı"} · ${$agree ? "onaylandı" : "onay bekliyor"}`}</p>
-    </Demo>
-
-    <ComponentDemo folder="forms/text-input" />
-    <ComponentDemo folder="forms/textarea" />
-    <ComponentDemo folder="forms/password-input" />
-    <ComponentDemo folder="forms/phone-input" />
-    <ComponentDemo folder="forms/number-input" />
-    <ComponentDemo folder="forms/select" />
-    <ComponentDemo folder="forms/combobox" />
-    <ComponentDemo folder="forms/multi-select" />
-    <ComponentDemo folder="forms/choice-picker" />
-    <ComponentDemo folder="forms/checkbox" />
-    <ComponentDemo folder="forms/checkbox-group" />
-    <ComponentDemo folder="forms/radio-group" />
-    <ComponentDemo folder="forms/segmented" />
-    <ComponentDemo folder="forms/toggle" />
-    <ComponentDemo folder="forms/slider" />
-    <ComponentDemo folder="forms/color-input" />
-    <ComponentDemo folder="forms/code-input" />
-    <ComponentDemo folder="forms/calendar" />
-    <ComponentDemo folder="forms/date-picker" />
-    <ComponentDemo folder="forms/time-input" />
-    <ComponentDemo folder="forms/date-time-input" />
-    <ComponentDemo folder="forms/date-range-picker" />
-    <ComponentDemo folder="forms/list-editor" />
-    <ComponentDemo folder="forms/key-value-editor" />
-    <ComponentDemo folder="forms/file-upload" />
-
-    <ComponentDemo folder="forms/rating" title="Rating: yıldızla puan" desc="Radyo grubu: oklarla değişir (RTL'de aynalanır), üstüne gelince önizler; salt okunurken yarım yıldız gösterir." />
-    <ComponentDemo folder="composite/wizard" title="Wizard: adım adım form" desc="Karmaşık bileşen: her adımın kendi şeması; ileri giderken doğrular, geri dönünce değerler korunur, önceki adımlar geçince sonraki adıma üstteki listeden atlanır. Parçaları aşağıdaki satırda." />
-  </Section>
+orm schema={SignUp} layout="grid" cols={2} onSubmit={api.signUp} />`}>
+    <Card>
+      <Form schema={Signup} layout="grid" cols={2} submitLabel="Hesap oluştur"
+        onSubmit={async (v: Record<string, unknown>) => {
+          await new Promise((r) => setTimeout(r, 700))
+          if (String(v.email).endsWith("@taken.com")) throw Object.assign(new Error("Reddedildi"), { fieldErrors: { email: "Bu adres zaten kayıtlı" } })
+          toast(`Hoş geldin, ${v.name}!`, { kind: "success" })
+        }} />
+    </Card>
+  </Demo>,
+    "together": () => <Demo title="Bir arada: anahtarlar, kaydırıcı, renk, puan" desc="Toggle, Checkbox, Slider, ColorInput ve Rating aynı Field düzeninde (Rating ← → ile değişir). Her girişin kendi kartı aşağıda.">
+    <Toggle bind:value={$notify} label="Anlık bildirimler" />
+    <Checkbox bind:value={$agree} label="Kullanım koşullarını okudum" />
+    <Field label={() => `Ses: ${$vol}`}><Slider bind:value={$vol} min={0} max={100} /></Field>
+    <Field label="Marka rengi"><ColorInput bind:value={$color} /></Field>
+    <Field label="Puan" group><Rating bind:value={$stars} size="lg" /></Field>
+    <p class="hm-muted">{() => `${$stars} yıldız · bildirim ${$notify ? "açık" : "kapalı"} · ${$agree ? "onaylandı" : "onay bekliyor"}`}</p>
+  </Demo>,
+    "text-input": () => <ComponentDemo folder="forms/text-input" />,
+    "textarea": () => <ComponentDemo folder="forms/textarea" />,
+    "password": () => <ComponentDemo folder="forms/password-input" />,
+    "phone": () => <ComponentDemo folder="forms/phone-input" />,
+    "number": () => <ComponentDemo folder="forms/number-input" />,
+    "select": () => <ComponentDemo folder="forms/select" />,
+    "combobox": () => <ComponentDemo folder="forms/combobox" />,
+    "multi-select": () => <ComponentDemo folder="forms/multi-select" />,
+    "choice-picker": () => <ComponentDemo folder="forms/choice-picker" />,
+    "checkbox": () => <ComponentDemo folder="forms/checkbox" />,
+    "checkbox-group": () => <ComponentDemo folder="forms/checkbox-group" />,
+    "radio-group": () => <ComponentDemo folder="forms/radio-group" />,
+    "segmented": () => <ComponentDemo folder="forms/segmented" />,
+    "toggle": () => <ComponentDemo folder="forms/toggle" />,
+    "slider": () => <ComponentDemo folder="forms/slider" />,
+    "color-input": () => <ComponentDemo folder="forms/color-input" />,
+    "code": () => <ComponentDemo folder="forms/code-input" />,
+    "calendar": () => <ComponentDemo folder="forms/calendar" />,
+    "date": () => <ComponentDemo folder="forms/date-picker" />,
+    "time": () => <ComponentDemo folder="forms/time-input" />,
+    "date-time": () => <ComponentDemo folder="forms/date-time-input" />,
+    "date-range": () => <ComponentDemo folder="forms/date-range-picker" />,
+    "list-editor": () => <ComponentDemo folder="forms/list-editor" />,
+    "key-value-editor": () => <ComponentDemo folder="forms/key-value-editor" />,
+    "file-upload": () => <ComponentDemo folder="forms/file-upload" />,
+    "rating": () => <ComponentDemo folder="forms/rating" title="Rating: yıldızla puan" desc="Radyo grubu: oklarla değişir (RTL'de aynalanır), üstüne gelince önizler; salt okunurken yarım yıldız gösterir." />,
+    "wizard": () => <ComponentDemo folder="composite/wizard" title="Wizard: adım adım form" desc="Karmaşık bileşen: her adımın kendi şeması; ileri giderken doğrular, geri dönünce değerler korunur, önceki adımlar geçince sonraki adıma üstteki listeden atlanır. Parçaları aşağıdaki satırda." />,
+  }
+  return <Hub base="/forms" kicker="Bileşenler" title="Formlar" lead="Şemadan form: alanlar, doğrulama, koşullu alanlar ve tür bilgisi tek tanımdan. Bütün alanlar bind: ile iki yönlü bağlanır." render={RENDER} params={props.params} />
 }
