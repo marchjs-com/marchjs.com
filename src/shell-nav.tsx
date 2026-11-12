@@ -1,5 +1,5 @@
 // The showcase side menu: a lazy chunk (the shell paints first with a placeholder of the same width).
-import { NavSidebar, Brand, openPalette } from "hadi-march/ui";
+import { NavSidebar, Brand, MadeWithMarch, openPalette } from "hadi-march/ui";
 import { defineIcon, dashboard, command } from "hadi-march/icons";
 import type { Href } from "hadi-march/router";
 import { PAGES } from "./nav.ts";
@@ -18,5 +18,5 @@ export default function ShellNav() {
   return <NavSidebar items={items} featured={featured} title={<Brand href="/" mark={marchMark} name="HADI March" />}
     groupOrder={MENU_GROUPS} itemOrder="none" defaultOpen="all" hotkey="palette" placeholder="Ara ya da sor…"
     storageKey="sc.sidebar" label="Vitrin menüsü" collapsible resizable minWidth={220} maxWidth={420} collapseBelow={150}
-    footer={<p class="sc-nav-foot hm-rail-hide">MIT · sıfır bağımlılık · CSP uyumlu</p>} />
+    footer={<div class="sc-nav-foot hm-rail-hide"><p class="sc-nav-foot-line">MIT · sıfır bağımlılık · CSP uyumlu</p><MadeWithMarch variant="small" /></div>} />
 }

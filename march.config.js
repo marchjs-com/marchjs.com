@@ -15,14 +15,19 @@ export default {
   stableNames: true,
   // no _headers file: the publishing host refuses names starting with "_" (caching is set on the host)
   headers: false,
+  // the start page is written into index.html at build time (hadi-march/seo); hash routing: other routes stay
+  // client-side, and main.tsx drops the prerendered page at once when the URL asks for another route
+  seo: { prerender: true },
   // the build fails when the entry, a route or a lazy part (lazy() component, shell piece) grows past it
-  // boot: the shell pieces load at start-up, so a route row counts only what its own navigation downloads
-  budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, boot: ["src/shell-nav.tsx", "src/shell-tools.tsx", "src/shell-late.tsx"], fail: true },
+  // boot: the route table and the shell pieces load at start-up, so a route row counts only what its own navigation downloads
+  budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, boot: ["src/routes.ts", "src/shell-nav.tsx", "src/shell-tools.tsx", "src/shell-late.tsx"], fail: true },
   // no output file under 10 KB (before gzip): small shared code folds, small lazy modules join their parent or a group
   // allow: a locale dictionary stays its own file (only that locale downloads it; grouping it would make every
   // Turkish visitor download pages, or every English visitor the dictionary)
   chunks: { minSize: 10 * 1024, allow: {
     "src/i18n/tr.ts": "locale dictionary: downloaded only for Turkish, never grouped",
     "src/router/outlets.ts": "named / modal outlets (1.8 KB, no dependencies): joining any page group would make it pull that page",
+    "src/seo/hydrate.ts": "takes over the prerendered start page (1 KB): loaded only on that page, never with a page group",
+    "src/env-managers/sync-server.ts": "Sync demo of the environment managers page: net and its mock arrive only when that demo is drawn",
   } },
 };
