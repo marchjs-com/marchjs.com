@@ -1,0 +1,15 @@
+/* API examples of hadi-march/managers (managers-a.tsx). Logical properties only (RTL); colors are tokens. */
+.sc-ex-managers-a-layer {
+  position: absolute; inset-block-start: 6rem; inset-inline-end: var(--hm-space-4); inline-size: min(16rem, calc(100vw - 2rem));
+  display: grid; gap: var(--hm-space-2); padding: var(--hm-space-3); background: var(--hm-surface); color: var(--hm-text);
+  border: 1px solid var(--hm-border-strong); border-radius: var(--hm-radius-3, 12px); box-shadow: var(--hm-shadow-lg, 0 12px 32px rgb(0 0 0 / .2));
+}
+.sc-ex-managers-a-box { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-2); padding: var(--hm-space-3); border: 2px dashed var(--hm-border); border-radius: var(--hm-radius-2, 8px); }
+.sc-ex-managers-a-box[data-on] { border-style: solid; border-color: var(--hm-primary); }
+.sc-ex-managers-a-bar { position: relative; block-size: .75rem; border-radius: var(--hm-radius-1); background: var(--hm-surface-2); overflow: hidden; }
+.sc-ex-managers-a-bar > i { position: absolute; inset-block: 0; inset-inline-start: 0; background: var(--hm-primary); }
+.sc-ex-managers-a-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: var(--hm-space-2); }
+.sc-ex-managers-a-cell { display: grid; gap: 2px; padding: var(--hm-space-2); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2, 8px); min-inline-size: 0; }
+.sc-ex-managers-a-cell[data-off] { opacity: .55; }
+.sc-ex-managers-a-sample { display: grid; gap: var(--hm-space-2); padding: var(--hm-space-3); border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-2, 8px); }
+.sc-ex-managers-a-sample h4, .sc-ex-managers-a-sample h6 { margin: 0; }
