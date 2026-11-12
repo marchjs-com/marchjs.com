@@ -84,7 +84,7 @@
 .sc-mo-shape { inline-size: min(100%, 12rem); aspect-ratio: 1; background: conic-gradient(from 210deg, var(--hm-brand-orange), var(--hm-brand-purple), var(--hm-brand-blue), var(--hm-brand-green), var(--hm-brand-orange)); }
 
 /* page transition variants */
-.sc-mo-scene { position: relative; overflow: hidden; display: grid; align-content: end; justify-items: start; gap: var(--hm-space-2); inline-size: 100%; min-block-size: 15rem; padding: var(--hm-space-5); border-radius: var(--hm-radius-4, 1rem); }
+.sc-mo-scene { position: relative; overflow: clip; contain: paint; display: grid; align-content: end; justify-items: start; gap: var(--hm-space-2); inline-size: 100%; min-block-size: 15rem; padding: var(--hm-space-5); border-radius: var(--hm-radius-4, 1rem); }
 .sc-mo-scene p { margin: 0; max-inline-size: 46ch; position: relative; }
 .sc-mo-scene-kicker { position: relative; font-size: var(--hm-text-sm, .875rem); opacity: .85; }
 .sc-mo-scene-title { position: relative; font-size: clamp(1.75rem, 6vw, 3rem); line-height: 1; }
