@@ -16,7 +16,10 @@ export interface Scenario<D = unknown, P = unknown> {
   /** measured steps (frames) and warm-up steps */
   steps: number
   warm: number
-  data(seed: number): D
+  /** the page's data; `large`: the optional large size (see `large` below) */
+  data(seed: number, large?: boolean): D
+  /** the large size, when the scenario has one (e.g. "10.000 sayaç"); its note says what changes at that size */
+  large?: { label: string; note: string }
   /** the step payloads, in order (warm-up first) */
   plan(data: D, seed: number, count: number): P[]
   /** the DOM after `applied` steps matches the model */
