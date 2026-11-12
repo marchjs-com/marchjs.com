@@ -8,5 +8,6 @@ import { mount as theme } from "./theme/preact.ts"
 import { mount as hover } from "./hover/preact.ts"
 import { mount as counters } from "./counters/preact.ts"
 import { mount as store } from "./store/preact.ts"
+import { mount as deep } from "./deep/preact.ts"
 
-export const scenarios = { ticker, tree, derived, theme, hover, counters, store }
+export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep }

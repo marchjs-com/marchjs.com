@@ -3,6 +3,7 @@
 // tools/gen-bench.mjs (<scenario>/svelte.svelte → svelte.gen.js) and exports step(payload).
 import { mount as svelteMount, unmount, flushSync, type Component } from "svelte"
 import Ticker from "./ticker/svelte.gen.js"
+import Deep from "./deep/svelte.gen.js"
 import Store from "./store/svelte.gen.js"
 import Counters from "./counters/svelte.gen.js"
 import Hover from "./hover/svelte.gen.js"
@@ -16,4 +17,4 @@ const app = (C: unknown) => (host: HTMLElement, data: unknown): ScenarioApp => {
   flushSync()
   return { step: (p) => a.step(p), destroy: () => { void unmount(a as never) } }
 }
-export const scenarios = { ticker: app(Ticker), tree: app(Tree), derived: app(Derived), theme: app(Theme), hover: app(Hover), counters: app(Counters), store: app(Store) }
+export const scenarios = { ticker: app(Ticker), tree: app(Tree), derived: app(Derived), theme: app(Theme), hover: app(Hover), counters: app(Counters), store: app(Store), deep: app(Deep) }

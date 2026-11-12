@@ -1,0 +1,1 @@
+<section class="pnl"><h3>{{ p.title }}</h3><p class="note">{{ p.note }}</p><div class="grps"><GroupView v-for="g of p.groups" :key="g.id" :g="g" :unit="unit" :focus="gf(focus, g.id)" /></div></section>
