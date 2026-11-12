@@ -3,8 +3,8 @@
 export const HOME_STATS = {
   "dependencies": 0,
   "components": 192,
-  "registered": 62,
-  "exports": 950,
+  "registered": 91,
+  "exports": 956,
   "subpaths": 93,
   "categories": [
     {
@@ -15,32 +15,32 @@ export const HOME_STATS = {
     {
       "id": "typography",
       "label": "Tipografi",
-      "components": 1
+      "components": 3
     },
     {
       "id": "actions",
       "label": "Eylemler",
-      "components": 3
+      "components": 8
     },
     {
       "id": "forms",
       "label": "Formlar",
-      "components": 0
+      "components": 1
     },
     {
       "id": "data",
       "label": "Veri gösterimi",
-      "components": 5
+      "components": 12
     },
     {
       "id": "feedback",
       "label": "Geri bildirim",
-      "components": 1
+      "components": 8
     },
     {
       "id": "overlays",
       "label": "Katmanlar",
-      "components": 2
+      "components": 5
     },
     {
       "id": "navigation",
@@ -50,7 +50,7 @@ export const HOME_STATS = {
     {
       "id": "media",
       "label": "Medya",
-      "components": 0
+      "components": 3
     },
     {
       "id": "motion",
@@ -65,7 +65,7 @@ export const HOME_STATS = {
     {
       "id": "composite",
       "label": "Karmaşık bileşenler",
-      "components": 25
+      "components": 26
     },
     {
       "id": "landing",
@@ -84,8 +84,8 @@ export const HOME_STATS = {
     "pageFx": 10
   },
   "managers": 30,
-  "tests": 679,
-  "testFiles": 161,
+  "tests": 719,
+  "testFiles": 190,
   "budget": {
     "entry": 15360,
     "boot": 53248,
