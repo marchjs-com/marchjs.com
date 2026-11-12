@@ -42,3 +42,10 @@
 .sc-dev-head { position: sticky; top: 0; display: flex; align-items: center; justify-content: space-between; padding: var(--hm-space-3) var(--hm-space-4); background: var(--hm-surface); border-block-end: 1px solid var(--hm-border); }
 .sc-dev-list { margin: 0; padding: 0; list-style: none; }
 .sc-dev-list li { padding: var(--hm-space-3) var(--hm-space-4); border-block-end: 1px solid var(--hm-border); }
+
+/* Window demo: a desk the windows live in */
+.sc-win-desk { position: relative; block-size: 26rem; overflow: hidden; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); background: radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--hm-primary) 10%, transparent), transparent 60%), var(--hm-bg-subtle); }
+.sc-win-pad { padding: var(--hm-space-3) var(--hm-space-4); font-size: var(--hm-text-sm); }
+.sc-win-pad ul { margin: var(--hm-space-2) 0 0; padding-inline-start: 1.1rem; }
+.sc-win-pad p { margin: 0 0 var(--hm-space-1); }
+.sc-win-reopen { position: absolute; inset-block-start: var(--hm-space-3); inset-inline-end: var(--hm-space-3); }
