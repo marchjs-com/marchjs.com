@@ -7,6 +7,7 @@ import { arrowRight, command, sparkles } from "hadi-march/icons";
 import { pages } from "../app.tsx";
 import { withMeta } from "../nav-meta.ts";
 import { Demo } from "../demo.tsx";
+import { HOME_STATS as S } from "../home-stats.gen.ts";
 
 function Counter(props: { to: number; suffix?: string; label: string }) {
   let $target = 0
@@ -31,7 +32,7 @@ export default function Home() {
       <div class="sc-hero-grid" aria-hidden="true" />
       <Particles count={70} links={110} interactive class="hm-fx-fill sc-hero-particles" />
       <div class="sc-hero-inner">
-        <span class="sc-pill" use:reveal={{ duration: 600 }}><Badge tone="primary" dot>Yeni</Badge> Tema sistemi · 7 hazır tema</span>
+        <span class="sc-pill" use:reveal={{ duration: 600 }}><Badge tone="primary" dot>Yeni</Badge> {`${S.icons.total} ikon · ${S.animations.total} animasyon · ${colorThemes().length} tema`}</span>
         <h1 class="sc-hero-title" use:reveal={{ duration: 800, delay: 80 }}>Arayüzü yaz,<br /><span class="hm-gradient-text">March yürütsün.</span></h1>
         <p class="sc-hero-sub" use:reveal={{ duration: 800, delay: 180 }}>
           İnce taneli sinyaller, gerçek DOM, sıfır bağımlılık. Bileşenler, formlar, tablolar, grafikler ve animasyonlar tek pakette;
@@ -44,10 +45,10 @@ export default function Home() {
           <Button size="lg" variant="ghost" icon={sparkles} onClick={celebrate} use:magnet={{ strength: 0.3 }}>{() => ($clicks ? `Kutla (${$clicks})` : "Kutla")}</Button>
         </div>
         <div class="sc-stats" use:reveal={{ duration: 800, delay: 380 }}>
-          <Counter to={0} label="çalışma zamanı bağımlılığı" />
-          <Counter to={90} suffix="+" label="bileşen" />
-          <Counter to={7} label="hazır tema" />
-          <Counter to={132} label="SVG ikon" />
+          <Counter to={S.dependencies} label="çalışma zamanı bağımlılığı" />
+          <Counter to={S.components} label="bileşen" />
+          <Counter to={S.exports} label="dışa aktarım" />
+          <Counter to={S.icons.total} label="ikon" />
         </div>
       </div>
     </section>

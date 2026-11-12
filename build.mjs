@@ -12,6 +12,8 @@ const dist = join(here, "dist");
 export const CSP = "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; media-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types 'none'";
 
 if (!process.argv.includes("--serve") || !existsSync(dist)) {
+  // the home page numbers (components, exports, icons, tests …) from their sources: none is typed by hand
+  execFileSync(process.execPath, [join(here, "..", "..", "tools", "gen-home-stats.js")], { stdio: "inherit" });
   execFileSync(process.execPath, [join(here, "..", "..", "cli", "march.js"), "build"], { cwd: here, stdio: "inherit", env: { ...process.env, MARCH_SHOWCASE_SW: process.argv.includes("--serve") ? "1" : "0" } });
   // index.html: root-absolute paths → relative (hosting in a subfolder or from files)
   const html = join(dist, "index.html");

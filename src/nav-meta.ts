@@ -2,12 +2,13 @@
 // the side menu loads it on first idle, test/boot-pages.test.js checks that no start-up piece imports it). A group is one of
 // MENU_GROUPS (src/components/categories.ts): İlk Adımlar, Temel, the component categories, Yöneticiler, Altyapı.
 import { activity, film, alertCircle, barChart, code, cpu, dashboard, edit, gauge, grid, layers, menu, message, heart, palette, search, server, zap } from "hadi-march/icons";
+import { HOME_STATS } from "./home-stats.gen.ts";
 
 export interface PageMeta { desc: string; group?: string; icon: unknown }
 export const PAGE_META: Record<string, PageMeta> = {
   "/": { desc: "HADI March'a genel bakış", icon: dashboard },
   "/start": { desc: "Kurulum, ilk bileşen, march CLI, proje yapısı", group: "İlk Adımlar", icon: zap },
-  "/themes": { desc: "7 tema, renkler, yazı, yarıçap, gölge", group: "Temel", icon: palette },
+  "/themes": { desc: "Hazır temalar, renkler, yazı, yarıçap, gölge", group: "Temel", icon: palette },
   "/icons": { desc: "Kendi SVG ikon seti", group: "Temel", icon: grid },
   "/buttons": { desc: "Button, menü, çip, avatar, ipucu", group: "Eylemler", icon: zap },
   "/forms": { desc: "Alanlar, seçiciler, doğrulama, sihirbaz", group: "Formlar", icon: edit },
@@ -18,7 +19,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/overlays": { desc: "Dialog, çekmece, toast, komut paleti", group: "Katmanlar", icon: message },
   "/feedback": { desc: "Uyarı, ilerleme, iskelet, boş, hata", group: "Geri bildirim", icon: alertCircle },
   "/animation": { desc: "Tek motor: keyframe, timeline, eğri, global hız ve durdurma", group: "Hareket", icon: film },
-  "/text-motion": { desc: "56 metin animasyonu: giriş, döngü, süsleme, daktilo, sayaç", group: "Hareket", icon: edit },
+  "/text-motion": { desc: `${HOME_STATS.animations.text} metin animasyonu: giriş, döngü, süsleme, daktilo, sayaç`, group: "Hareket", icon: edit },
   "/transitions": { desc: "Rota başına geçiş, geri yönde ters, paylaşılan öğe, RTL", group: "Hareket", icon: layers },
   "/motion/svg": { desc: "Yol çizimi, şekil morph, yol boyunca, kırpma, SVG filtreleri", group: "Hareket", icon: activity },
   "/motion/morph": { desc: "Düğme → diyalog, kart → sayfa, paylaşılan öğe, ikon ve şekil morph", group: "Hareket", icon: layers },
