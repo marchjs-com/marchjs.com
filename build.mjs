@@ -17,11 +17,11 @@ if (!process.argv.includes("--serve") || !existsSync(dist)) {
   const html = join(dist, "index.html");
   writeFileSync(html, readFileSync(html, "utf8").replace(/(src|href)="\/(?!\/)/g, '$1="./'));
   const walk = (d) => readdirSync(d).flatMap((n) => { const p = join(d, n); return statSync(p).isDirectory() ? walk(p) : [p]; });
-  // the compared third-party libraries of /bench (march.config.js › budget.parts, each its own lazy chunk): their
+  // the compared third-party libraries of /bench (march.config.js › THIRD_PARTY, each its own lazy chunk): their
   // runtimes carry HTML-string code paths (React's <script> creation, Vue's static content…) that the benchmark apps
   // never reach and the CSP's Trusted Types would refuse; only those chunk files skip this check
   const manifest = JSON.parse(readFileSync(html, "utf8").match(/id="march-manifest">([^<]*)</)?.[1] ?? "{}");
-  const parts = Object.keys((await import(pathToFileURL(join(here, "march.config.js")).href)).default.budget?.parts ?? {});
+  const parts = (await import(pathToFileURL(join(here, "march.config.js")).href)).THIRD_PARTY ?? [];
   const thirdParty = new Set(parts.flatMap((k) => (manifest[k] ?? []).slice(0, 1)).map((f) => resolve(dist, f.split("?")[0])));
   const bad = walk(dist).filter((p) => /\.(js|css|html)$/.test(p) && !thirdParty.has(p)).filter((p) => /innerHTML\s*=|insertAdjacentHTML|document\.write\(/.test(readFileSync(p, "utf8")));
   if (bad.length) { console.error("✖ forbidden pattern:", bad); process.exit(1); }

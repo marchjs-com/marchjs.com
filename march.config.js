@@ -1,9 +1,13 @@
 // HADI March showcase: `node ../../cli/march.js dev` or `node build.mjs` (static, relative paths → dist/).
 // Speed › Comparison (/bench): each compared third-party library is a lazy chunk fetched only when its own test runs
-// (never at start-up, never with a page). A UI library runtime does not fit the 25 KB part budget, so these chunks
-// alone get an argued, measured limit. Only third-party benchmark apps: no March code, no showcase page (test/bench-libs.test.js).
+// (never at start-up, never with a page). THIRD_PARTY: those chunks (build.mjs skips its HTML-string check on them:
+// library code paths the benchmark apps never reach, refused by the CSP's Trusted Types anyway). BENCH_PARTS: the ones a
+// UI library runtime pushes past the 25 KB part budget get an argued, measured limit. Only third-party benchmark apps:
+// no March code, no showcase page (test/bench-libs.test.js).
+export const THIRD_PARTY = ["src/bench/apps/react.ts", "src/bench/apps/preact.ts", "src/bench/apps/vue.ts", "src/bench/apps/svelte-app.ts", "src/bench/apps/solid.gen.js", "src/bench/apps/lit-app.ts"];
 const BENCH_PARTS = {
   "src/bench/apps/react.ts": { limit: 72 * 1024, why: "React 19 + react-dom client runtime (67.6 KB gzip measured), loaded only when its benchmark runs" },
+  "src/bench/apps/vue.ts": { limit: 30 * 1024, why: "Vue 3 runtime-dom + reactivity (26.3 KB gzip measured), loaded only when its benchmark runs" },
 };
 
 export default {

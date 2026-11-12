@@ -83,6 +83,7 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
             report(lib.id, op.id, i < warm ? "warm" : "run")
             op.setup(app, rows, dom)
             await afterPaint()
+            op.mark?.(dom)
             const seen = hides
             const t0 = performance.now()
             op.act(app, rows, dom)
