@@ -82,6 +82,9 @@ export default function ApiPage() {
   const KINDS: Kind[] = ["component", "function", "class", "const"]
   const kind = computed(() => { const k = String(query()["kind"] ?? ""); return (KINDS as string[]).includes(k) ? (k as Kind) : null })
   const sub = computed(() => String(query()["sub"] ?? "") || null)
+  // links keep the filters: opening an export does not reset the list
+  const filterQs = (): string => { const u = new URLSearchParams(); const k = kind(), su = sub(); if (k) u.set("kind", k); if (su) u.set("sub", su); const q = u.toString(); return q ? `?${q}` : "" }
+  const link = (slug: string, name: string): (() => Href) => () => `${hrefOf(slug, name)}${filterQs()}` as Href
   const setFilter = (key: "kind" | "sub", v: string | null): void => {
     const u = new URLSearchParams(globalThis.location?.search ?? "")
     if (v) u.set(key, v); else u.delete(key)
@@ -147,7 +150,7 @@ export default function ApiPage() {
           {() => (index() && !shown().length ? <p class="sc-apip-note">{T().none}</p> : null)}
           {() => shown().map((s) => <details class="sc-apip-group" open={!!$q || !!kind() || !!sub() || sel()?.slug === s.slug || shown().length < 4}>
             <summary><code>{s.subpath}</code><span class="sc-apip-n">{s.items.length}</span></summary>
-            <ul>{s.items.map((i) => <li><Link class={() => (sel()?.slug === s.slug && sel()?.name === i[0] ? "sc-apip-link is-on" : "sc-apip-link")} href={hrefOf(s.slug, i[0])}
+            <ul>{s.items.map((i) => <li><Link class={() => (sel()?.slug === s.slug && sel()?.name === i[0] ? "sc-apip-link is-on" : "sc-apip-link")} href={link(s.slug, i[0])}
               aria-current={() => (sel()?.slug === s.slug && sel()?.name === i[0] ? "page" : null)}><code>{i[0]}</code><span class={`sc-apip-k sc-apip-k-${i[1]}`}>{T().kinds[i[1]]}</span></Link></li>)}</ul>
           </details>)}
         </div>
@@ -165,8 +168,8 @@ export default function ApiPage() {
           return untrack(() => <article class="sc-apip-doc">
             <DocView subpath={sub.subpath} file={item[4]} name={item[0]} slug={sub.slug} lang={lang()} />
             <nav class="sc-apip-pn" aria-label={`${T().prev} / ${T().next}`}>
-              {prev ? <Link href={hrefOf(prev.s.slug, prev.i[0])}>← {T().prev}: <code>{prev.i[0]}</code></Link> : <span />}
-              {next ? <Link href={hrefOf(next.s.slug, next.i[0])}>{T().next}: <code>{next.i[0]}</code> →</Link> : <span />}
+              {prev ? <Link href={link(prev.s.slug, prev.i[0])}>← {T().prev}: <code>{prev.i[0]}</code></Link> : <span />}
+              {next ? <Link href={link(next.s.slug, next.i[0])}>{T().next}: <code>{next.i[0]}</code> →</Link> : <span />}
             </nav>
           </article>)
         }}

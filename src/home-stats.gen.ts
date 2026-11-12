@@ -2,9 +2,9 @@
 // Measured sizes come from march-report.json at run time.
 export const HOME_STATS = {
   "dependencies": 0,
-  "components": 219,
-  "registered": 142,
-  "exports": 1028,
+  "components": 220,
+  "registered": 143,
+  "exports": 1035,
   "subpaths": 93,
   "categories": [
     {
@@ -65,7 +65,7 @@ export const HOME_STATS = {
     {
       "id": "composite",
       "label": "Karmaşık bileşenler",
-      "components": 26
+      "components": 27
     },
     {
       "id": "landing",
@@ -84,8 +84,8 @@ export const HOME_STATS = {
     "pageFx": 10
   },
   "managers": 30,
-  "tests": 837,
-  "testFiles": 247,
+  "tests": 842,
+  "testFiles": 248,
   "budget": {
     "entry": 15360,
     "boot": 53248,
