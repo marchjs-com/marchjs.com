@@ -312,3 +312,7 @@
 .sc-blend-screen { mix-blend-mode: screen; }
 .sc-blend-overlay { mix-blend-mode: overlay; }
 .sc-blend-soft-light { mix-blend-mode: soft-light; }
+
+/* SEO page: head / JSON-LD / check output */
+.sc-seo-code { margin: 0; padding: var(--hm-space-3); max-height: 22rem; overflow: auto; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); background: var(--hm-surface-2, var(--hm-bg)); white-space: pre-wrap; overflow-wrap: anywhere; font: var(--hm-text-sm)/1.6 var(--hm-font-mono); }
+.sc-seo-report { display: grid; gap: var(--hm-space-2); }

@@ -19,6 +19,7 @@ export default {
   "/network": () => import("./pages/network.tsx"),
   "/overlay": () => import("./pages/overlay.tsx"),
   "/overlays": () => import("./pages/overlays.tsx"),
+  "/seo": () => import("./pages/seo.tsx"),
   "/speed": () => import("./pages/speed.tsx"),
   "/text-motion": () => import("./pages/text-motion.tsx"),
   "/themes": () => import("./pages/themes.tsx"),
