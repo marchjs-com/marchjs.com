@@ -20,7 +20,9 @@
 .sc-topic-body > .sc-demo:only-child .sc-demo-title { display: none; }
 /* a topic page fills the screen; the previous / next bar sits at the bottom of the screen at any content height, and
    the content scrolls above it */
-.sc-page:has(> .sc-demos > .sc-topic-pager) { min-block-size: calc(100dvh - var(--hm-topbar-h, 3.5rem)); padding-block-end: 0; box-sizing: border-box; }
+.sc-page:has(> .sc-demos > .sc-topic-pager) { min-block-size: calc(100dvh - var(--hm-topbar-h, 3.5rem)); padding-block-end: 0; box-sizing: border-box;
+  /* a screen-high page that rises in would overflow by the rise and flash a scrollbar: it fades in instead */
+  animation-name: hm-fade-in; }
 .sc-demos:has(> .sc-topic-pager) { flex: 1; grid-template-rows: 1fr auto; }
 .sc-topic-pager { position: sticky; inset-block-end: 0; z-index: 5; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--hm-space-3);
   margin-inline: calc(var(--hm-space-6) * -1); padding: var(--hm-space-3) var(--hm-space-6); border-block-start: 1px solid var(--hm-border-subtle);
