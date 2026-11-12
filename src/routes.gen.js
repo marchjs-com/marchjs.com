@@ -10,6 +10,7 @@ export default {
   "/icons": () => import("./pages/icons.tsx"),
   "/language": () => import("./pages/language.tsx"),
   "/layout": () => import("./pages/layout.tsx"),
+  "/managers-a11y": () => import("./pages/managers-a11y.tsx"),
   "/managers": () => import("./pages/managers.tsx"),
   "/messaging": () => import("./pages/messaging.tsx"),
   "/motion": () => import("./pages/motion.tsx"),
