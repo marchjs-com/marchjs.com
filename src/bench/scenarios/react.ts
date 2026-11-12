@@ -10,5 +10,6 @@ import { mount as counters } from "./counters/react.ts"
 import { mount as store } from "./store/react.ts"
 import { mount as deep } from "./deep/react.ts"
 import { mount as grid } from "./grid/react.ts"
+import { mount as startup } from "./startup/react.ts"
 
-export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep, grid }
+export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep, grid, startup }

@@ -8,5 +8,6 @@ import { mount as counters } from "./counters/march.tsx"
 import { mount as store } from "./store/march.tsx"
 import { mount as deep } from "./deep/march.tsx"
 import { mount as grid } from "./grid/march.tsx"
+import { mount as startup } from "./startup/march.tsx"
 
-export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep, grid }
+export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep, grid, startup }

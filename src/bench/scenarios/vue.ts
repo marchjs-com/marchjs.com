@@ -10,5 +10,6 @@ import { mount as counters } from "./counters/vue.ts"
 import { mount as store } from "./store/vue.ts"
 import { mount as deep } from "./deep/vue.ts"
 import { mount as grid } from "./grid/vue.ts"
+import { mount as startup } from "./startup/vue.ts"
 
-export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep, grid }
+export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep, grid, startup }

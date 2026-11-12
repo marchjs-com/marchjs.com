@@ -8,5 +8,6 @@ import { mount as counters } from "./counters/vanilla.ts"
 import { mount as store } from "./store/vanilla.ts"
 import { mount as deep } from "./deep/vanilla.ts"
 import { mount as grid } from "./grid/vanilla.ts"
+import { mount as startup } from "./startup/vanilla.ts"
 
-export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep, grid }
+export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep, grid, startup }

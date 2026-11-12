@@ -9,5 +9,6 @@ import { mount as counters } from "./counters/lit.ts"
 import { mount as store } from "./store/lit.ts"
 import { mount as deep } from "./deep/lit.ts"
 import { mount as grid } from "./grid/lit.ts"
+import { mount as startup } from "./startup/lit.ts"
 
-export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep, grid }
+export const scenarios = { ticker, tree, derived, theme, hover, counters, store, deep, grid, startup }
