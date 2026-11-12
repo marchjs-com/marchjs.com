@@ -1,0 +1,55 @@
+/* API examples of hadi-march/motion (COMPOSITOR … magnet): small stages that hold the animated elements. */
+.sc-ex-motion-a { display: grid; gap: var(--hm-space-2); min-width: 0; }
+.sc-ex-motion-a-stage { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-3); min-width: 0; min-height: 7rem; padding: var(--hm-space-3); overflow: hidden; border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-2); }
+.sc-ex-motion-a-stage-free { overflow: visible; }
+.sc-ex-motion-a-stage-col { flex-direction: column; align-items: stretch; }
+.sc-ex-motion-a-box { flex: none; inline-size: 2.5rem; block-size: 2.5rem; border-radius: var(--hm-radius-2); background: var(--hm-primary); }
+.sc-ex-motion-a-card { display: grid; place-items: center; flex: none; inline-size: 7rem; block-size: 4.5rem; border: 1px solid var(--hm-border-subtle); border-radius: var(--hm-radius-2); background: var(--hm-primary-soft); font-weight: 700; }
+.sc-ex-motion-a-lane { position: relative; inline-size: 100%; block-size: 2.5rem; }
+.sc-ex-motion-a-drop { position: relative; inline-size: 2.5rem; block-size: 8rem; }
+.sc-ex-motion-a-ball { position: absolute; inset-block-start: 0; inset-inline-start: 0; inline-size: 2.5rem; block-size: 2.5rem; border-radius: var(--hm-radius-full); background: var(--hm-primary); }
+.sc-ex-motion-a-pages { position: relative; inline-size: 100%; block-size: 8rem; overflow: hidden; border-radius: var(--hm-radius-2); background: var(--hm-surface-2); }
+.sc-ex-motion-a-page { position: absolute; inset: 0; display: grid; place-items: center; font-size: var(--hm-text-xl); font-weight: 700; background: var(--hm-primary-soft); }
+.sc-ex-motion-a-page-b { background: var(--hm-info-soft); }
+.sc-ex-motion-a-range { inline-size: min(100%, 16rem); accent-color: var(--hm-primary); }
+.sc-ex-motion-a-svg { inline-size: min(100%, 18rem); block-size: auto; color: var(--hm-primary); overflow: visible; }
+.sc-ex-motion-a-svg path, .sc-ex-motion-a-svg polyline { fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.sc-ex-motion-a-svg .sc-ex-motion-a-ghost { stroke: var(--hm-border); stroke-width: 2; }
+.sc-ex-motion-a-svg .sc-ex-motion-a-fill { fill: currentColor; stroke: none; }
+.sc-ex-motion-a-canvas { max-inline-size: 100%; block-size: auto; color: var(--hm-primary); }
+.sc-ex-motion-a-pre { margin: 0; padding: var(--hm-space-2) var(--hm-space-3); max-block-size: 11rem; overflow: auto; border-radius: var(--hm-radius-1); background: var(--hm-surface-2); font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); white-space: pre-wrap; overflow-wrap: anywhere; }
+.sc-ex-motion-a-icons { display: flex; flex-wrap: wrap; gap: var(--hm-space-2); }
+.sc-ex-motion-a-icon { color: var(--hm-text); }
+.sc-ex-motion-a-icon svg { inline-size: 1.5rem; block-size: 1.5rem; fill: currentColor; }
+.sc-ex-motion-a-icon-big svg { inline-size: 4rem; block-size: 4rem; color: var(--hm-primary); }
+.sc-ex-motion-a-chips { display: flex; flex-wrap: wrap; gap: var(--hm-space-1); }
+.sc-ex-motion-a-spin { flex: none; inline-size: 2.25rem; block-size: 2.25rem; border: 4px solid var(--hm-border); border-block-start-color: var(--hm-primary); border-radius: var(--hm-radius-full); animation: sc-ex-motion-a-turn 1.2s linear infinite; }
+.sc-ex-motion-a-spin:nth-child(2) { animation-duration: 2.4s; }
+.sc-ex-motion-a-spin:nth-child(3) { animation-duration: .6s; }
+@keyframes sc-ex-motion-a-turn { to { transform: rotate(1turn); } }
+.sc-ex-motion-a-meter { position: relative; inline-size: 100%; block-size: 1.25rem; overflow: hidden; border-radius: var(--hm-radius-full); background: var(--hm-surface-3); }
+.sc-ex-motion-a-meter > i { position: absolute; inset-block: 0; inset-inline-start: 0; inline-size: var(--p, 0%); background: var(--hm-primary); }
+.sc-ex-motion-a-dial { flex: none; inline-size: 2.5rem; block-size: 2.5rem; border-radius: var(--hm-radius-2); background: var(--hm-info); transform: rotate(calc(var(--turn, 0) * 1deg)); }
+.sc-ex-motion-a-gauge { position: relative; inline-size: 100%; block-size: 1.5rem; overflow: hidden; border-radius: var(--hm-radius-1); background: var(--hm-surface-3); }
+.sc-ex-motion-a-gauge > i { position: absolute; inset-block: 0; inset-inline-start: 0; inline-size: calc(var(--level, 0) * 1%); background: var(--hm-success); }
+.sc-ex-motion-a-gauge > b { position: relative; padding-inline: var(--hm-space-2); font-size: var(--hm-text-sm); }
+.sc-ex-motion-a-pulse { display: grid; place-items: center; inline-size: 7rem; block-size: 4rem; border: 1px solid var(--hm-border-subtle); border-radius: var(--hm-radius-2); background: var(--hm-surface-2); font-weight: 700; }
+.sc-ex-motion-a-goo { display: flex; align-items: center; justify-content: center; inline-size: 100%; block-size: 6rem; }
+.sc-ex-motion-a-goo > i { flex: none; inline-size: 3rem; block-size: 3rem; border-radius: var(--hm-radius-full); background: var(--hm-primary); }
+.sc-ex-motion-a-goo > i + i { margin-inline-start: -.5rem; background: var(--hm-info); }
+.sc-ex-motion-a-flip { display: flex; flex-wrap: wrap; gap: var(--hm-space-2); margin: 0; padding: 0; list-style: none; }
+.sc-ex-motion-a-flip > li { padding: var(--hm-space-1) var(--hm-space-3); border: 1px solid var(--hm-border-subtle); border-radius: var(--hm-radius-2); background: var(--hm-primary-soft); font-weight: 600; }
+.sc-ex-motion-a-scroll { inline-size: 100%; block-size: 8rem; overflow: auto; display: grid; align-content: start; gap: var(--hm-space-2); }
+.sc-ex-motion-a-scroll > div { padding: var(--hm-space-2) var(--hm-space-3); border: 1px solid var(--hm-border-subtle); border-radius: var(--hm-radius-1); background: var(--hm-surface-2); }
+.sc-ex-motion-a-scroll > div.is-visible { border-color: var(--hm-primary); background: var(--hm-primary-soft); }
+.sc-ex-motion-a-parallax { position: relative; inline-size: 12rem; block-size: 7rem; border: 1px solid var(--hm-border-subtle); border-radius: var(--hm-radius-3); background: var(--hm-surface-2); }
+.sc-ex-motion-a-parallax > i { position: absolute; border-radius: var(--hm-radius-full); }
+.sc-ex-motion-a-parallax > i:nth-child(1) { inset-inline-start: 1rem; inset-block-start: 1rem; inline-size: 2rem; block-size: 2rem; background: var(--hm-primary); }
+.sc-ex-motion-a-parallax > i:nth-child(2) { inset-inline-end: 2rem; inset-block-start: 2rem; inline-size: 3rem; block-size: 3rem; background: var(--hm-info); }
+.sc-ex-motion-a-parallax > i:nth-child(3) { inset-inline-start: 4rem; inset-block-end: .75rem; inline-size: 1.5rem; block-size: 1.5rem; background: var(--hm-success); }
+.sc-ex-motion-a-drag { display: grid; place-items: center; inline-size: 4rem; block-size: 4rem; border-radius: var(--hm-radius-2); background: var(--hm-primary); color: var(--hm-inverse-text); cursor: grab; user-select: none; touch-action: none; }
+.sc-ex-motion-a-drag.is-dragging { cursor: grabbing; }
+.sc-ex-motion-a-slab { padding: var(--hm-space-3); border-radius: var(--hm-radius-2); background: var(--hm-info-soft); font-weight: 600; }
+.sc-ex-motion-a-page[hidden] { display: none; }
+.sc-ex-motion-a-stage > .sc-ex-motion-a-hint { flex: 1 1 100%; margin: 0; font-size: var(--hm-text-sm); color: var(--hm-muted); }
+.sc-ex-motion-a-hostcol { display: grid; gap: var(--hm-space-3); inline-size: 100%; }
