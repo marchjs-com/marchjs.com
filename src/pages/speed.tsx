@@ -12,6 +12,14 @@ interface Report { entry: ReportRow; routes: ReportRow[]; parts?: ReportRow[]; b
 /** "../../src/charts/xy.ts" → "hadi-march/charts/xy.ts" (library parts by their import name) */
 const LIB_PATH = /^(?:\.\.\/)+src\//
 const shortName = (n: string): string => n.replace(LIB_PATH, "hadi-march/")
+type Row = ReportRow & { kind: string; state: "over" | "near" | "ok" }
+/** Report rows with their budget state; over first, then near the limit (90%+), then the rest in report order. */
+function reportRows(r: Report): Row[] {
+  const all = [{ ...r.entry, kind: "entry" }, ...r.routes.map((x) => ({ kind: "route", ...x })), ...(r.parts ?? []).map((x) => ({ kind: "part", ...x }))]
+  const rank = { over: 0, near: 1, ok: 2 }
+  return all.map((x, i) => ({ ...x, i, state: (x.limit && x.js > x.limit ? "over" : x.limit && x.js >= x.limit * 0.9 ? "near" : "ok") as Row["state"] }))
+    .sort((a, b) => rank[a.state] - rank[b.state] || a.i - b.i)
+}
 const KIND: Record<string, string> = { entry: "giriş", route: "sayfa", layout: "yerleşim", part: "parça" }
 
 // a lazy component for the slow 3G demo: skeleton on its first arrival, instant afterwards (no skeleton when cached)
@@ -56,6 +64,7 @@ export default function Speed() {
     }).sort((a, b) => (a.hit ? a.hit.t : Infinity) - (b.hit ? b.hit.t : Infinity) || a.name.localeCompare(b.name))
   }
   let $showPie = false
+  let $onlyOver = false
   const toggleSw = async () => {
     if (swState() === "ready" || swState() === "update") { await unregisterServiceWorker(); toast("Service worker ve önbelleği kaldırıldı", { kind: "info" }); return }
     await registerServiceWorker({ onUpdate: () => toast("Yeni sürüm hazır", { kind: "info" }) })
@@ -127,21 +136,42 @@ const Map = lazy(() => import("./Map.tsx"))
       code={`// march.config.js
 export default { budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, routes: { "/data": 80 * 1024 }, fail: true } }
 // ✖ over budget: /data JS 82.3 KB > 80.0 KB`}>
-      {() => $report ? <div class="sc-speed-scroll" tabindex="0" role="region" aria-label="Boyut raporu">
-        <table class="sc-speed-table">
-          <thead><tr><th scope="col">Ad</th><th scope="col">Tür</th><th scope="col" class="sc-num">JS</th><th scope="col" class="sc-num">CSS</th><th scope="col" class="sc-num">Bütçe</th><th scope="col" class="sc-num">Dosya</th></tr></thead>
-          <tbody>
-            {[{ ...$report.entry, kind: "entry" }, ...$report.routes.map((r) => ({ kind: "route", ...r })), ...($report.parts ?? []).map((r) => ({ kind: "part", ...r }))].map((r) => <tr>
-              <td class="sc-speed-file">{shortName(r.name)}</td>
-              <td>{KIND[r.kind] ?? r.kind}</td>
-              <td class="sc-num">{kb(r.js)}{r.over ? <Badge tone="danger">aştı</Badge> : null}</td>
-              <td class="sc-num">{kb(r.css)}</td>
-              <td class="sc-num">{r.limit ? kb(r.limit) : "—"}</td>
-              <td class="sc-num">{r.files?.length ?? ""}</td>
-            </tr>)}
-          </tbody>
-        </table>
-      </div> : <p class="hm-muted">{$reportError || "Yükleniyor…"}</p>}
+      {() => {
+        if (!$report) return <p class="hm-muted">{$reportError || "Yükleniyor…"}</p>
+        const rows = reportRows($report)
+        const over = rows.filter((r) => r.state === "over").length, near = rows.filter((r) => r.state === "near").length
+        const shown = $onlyOver ? rows.filter((r) => r.state !== "ok") : rows
+        return <Stack gap={3}>
+          <div class="sc-row">
+            <Badge tone={over ? "danger" : "success"}>{over ? `${over} satır bütçeyi aşıyor` : "Hepsi bütçe içinde"}</Badge>
+            {near ? <Badge tone="warn">{`${near} satır sınırda (%90+)`}</Badge> : null}
+            <Toggle bind:value={$onlyOver} label="Yalnız aşan ve sınırdakiler" />
+          </div>
+          <p class="hm-muted">Bütçe yalnız JavaScript'in gzip boyutuna uygulanır (her satır kendi sınırıyla, ayrı ayrı); CSS bilgi için gösterilir. İstek: o satır için inen dosya sayısı (JS + CSS).</p>
+          <div class="sc-speed-scroll" tabindex="0" role="region" aria-label="Boyut raporu">
+            <table class="sc-speed-table">
+              <thead><tr>
+                <th scope="col">Durum</th><th scope="col">Ad</th><th scope="col">Tür</th>
+                <th scope="col" class="sc-num" title="JavaScript, gzip: bütçeyle karşılaştırılan değer">JS (gzip)</th>
+                <th scope="col" class="sc-num" title="CSS, gzip: bilgi için, bütçeye girmez">CSS (gzip)</th>
+                <th scope="col" class="sc-num" title="Bu satırın JS sınırı">JS bütçesi</th>
+                <th scope="col" class="sc-num" title="İndirilen dosya sayısı">İstek</th>
+              </tr></thead>
+              <tbody>
+                {shown.length ? shown.map((r) => <tr class={`sc-budget-${r.state}`}>
+                  <td>{r.state === "over" ? <Badge tone="danger">{`aştı +${kb(r.js - (r.limit ?? 0))}`}</Badge> : r.state === "near" ? <Badge tone="warn">{`sınırda %${Math.round((r.js / (r.limit ?? 1)) * 100)}`}</Badge> : <span class="hm-muted">—</span>}</td>
+                  <td class="sc-speed-file">{shortName(r.name)}</td>
+                  <td>{KIND[r.kind] ?? r.kind}</td>
+                  <td class="sc-num sc-budget-value">{kb(r.js)}</td>
+                  <td class="sc-num">{kb(r.css)}</td>
+                  <td class="sc-num">{r.limit ? kb(r.limit) : "—"}</td>
+                  <td class="sc-num">{r.files?.length ?? ""}</td>
+                </tr>) : <tr><td colspan="7" class="hm-muted">Aşan ya da sınırda satır yok.</td></tr>}
+              </tbody>
+            </table>
+          </div>
+        </Stack>
+      }}
     </Demo>
 
     <Demo title="Çevrimdışı önbellek (service worker)" desc="İsteğe bağlı: march.config.js › sw: true derlemede sw.js yazar. Parçalar ilk gelişte önbelleğe girer; ikinci ziyarette sayfa ağ olmadan açılır; yeni sürümde eski önbellek silinir."

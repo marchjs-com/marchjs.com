@@ -245,3 +245,9 @@
 .sc-router-list li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-2); padding: var(--hm-space-2) var(--hm-space-3); border: 1px solid var(--hm-border-subtle); border-radius: var(--hm-radius-2); }
 .sc-router-list strong { margin-inline-end: auto; }
 .sc-router-pane { padding: var(--hm-space-4); border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-3); min-height: 8rem; }
+
+/* size report: the value that is compared with the budget takes the state color */
+.sc-budget-over .sc-budget-value { color: var(--hm-danger-text); font-weight: 650; }
+.sc-budget-near .sc-budget-value { color: var(--hm-warn-text, var(--hm-warn)); font-weight: 600; }
+.sc-budget-over > td:first-child { box-shadow: inset 3px 0 0 var(--hm-danger); }
+.sc-budget-near > td:first-child { box-shadow: inset 3px 0 0 var(--hm-warn); }
