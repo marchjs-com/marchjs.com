@@ -1,5 +1,6 @@
-// Showcase pages: path and title only (the entry needs them for the breadcrumb and the document title). Descriptions,
-// groups and icons live in nav-meta.ts, which only the side menu and the home page load.
+// Showcase pages: path and title only (start-up needs them for the breadcrumb and the document title). Descriptions,
+// groups, icons and the menu group order live in nav-meta.ts (the menu manifest), which only the side menu (on first
+// idle) and the home page load.
 export interface PageInfo { path: string; title: string }
 export const PAGES: PageInfo[] = [
   { path: "/", title: "Merhaba" },
@@ -35,4 +36,11 @@ export const PAGES: PageInfo[] = [
   { path: "/flow", title: "Akış editörü" },
   { path: "/ide", title: "IDE kabuğu" },
   { path: "/ide-live", title: "IDE kabuğu: canlı demo" },
+];
+/** Pages under one wildcard route (the menu lists them under their parent; titles for the breadcrumb). */
+export const SUB_PAGES: PageInfo[] = [
+  { path: "/motion/svg", title: "SVG animasyonları" },
+  { path: "/motion/morph", title: "Morph" },
+  { path: "/motion/pages", title: "Sayfa geçişi efektleri" },
+  { path: "/motion/micro", title: "Mikro etkileşimler" },
 ];

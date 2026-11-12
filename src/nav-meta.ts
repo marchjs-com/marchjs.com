@@ -1,15 +1,9 @@
-// Page descriptions, groups and icons for the side menu and the home page (kept out of the entry). A group is one of
+// The menu manifest: page descriptions, groups and icons for the side menu and the home page (kept out of start-up:
+// the side menu loads it on first idle, test/boot-pages.test.js checks that no start-up piece imports it). A group is one of
 // MENU_GROUPS (src/components/categories.ts): İlk Adımlar, Temel, the component categories, Yöneticiler, Altyapı.
 import { activity, film, alertCircle, barChart, code, cpu, dashboard, edit, gauge, grid, layers, menu, message, heart, palette, search, server, zap } from "hadi-march/icons";
 
 export interface PageMeta { desc: string; group?: string; icon: unknown }
-/** Pages under one wildcard route (kept out of the entry: nav.ts lists only top-level routes). */
-export const SUB_PAGES: { path: string; title: string }[] = [
-  { path: "/motion/svg", title: "SVG animasyonları" },
-  { path: "/motion/morph", title: "Morph" },
-  { path: "/motion/pages", title: "Sayfa geçişi efektleri" },
-  { path: "/motion/micro", title: "Mikro etkileşimler" },
-]
 export const PAGE_META: Record<string, PageMeta> = {
   "/": { desc: "HADI March'a genel bakış", icon: dashboard },
   "/start": { desc: "Kurulum, ilk bileşen, march CLI, proje yapısı", group: "İlk Adımlar", icon: zap },
@@ -49,3 +43,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/ide": { desc: "Panel yerleşimi, özellik düzenleyici, araç ve durum çubukları, mini editör", group: "Karmaşık bileşenler", icon: code },
   "/ide-live": { desc: "Mini editör: dosya ağacı, sekmeli editör, ayarlar, konsol, komut paleti", group: "Karmaşık bileşenler", icon: code },
 };
+
+export { MENU_GROUPS } from "hadi-march/components/categories.ts";
+/** The pages with their menu metadata (the start-up list has paths and titles only). */
+export const withMeta = <P extends { path: string }>(list: readonly P[]): (P & Partial<PageMeta>)[] => list.map((p) => ({ ...p, ...PAGE_META[p.path] }));

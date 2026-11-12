@@ -20,13 +20,16 @@ export default {
   seo: { prerender: true },
   // the build fails when the entry, a route or a lazy part (lazy() component, shell piece) grows past it
   // boot: the route table and the shell pieces load at start-up, so a route row counts only what its own navigation downloads
-  budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, boot: ["src/routes.ts", "src/shell-nav.tsx", "src/shell-tools.tsx", "src/shell-late.tsx"], fail: true },
+  // bootLimit: start-up as a whole; the packer folds shared code into start-up chunks only below it
+  budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, bootLimit: 52 * 1024, boot: ["src/routes.ts", "src/shell-nav.tsx", "src/shell-tools.tsx", "src/shell-late.tsx"], fail: true },
   // no output file under 10 KB (before gzip): small shared code folds, small lazy modules join their parent or a group
   // allow: a locale dictionary stays its own file (only that locale downloads it; grouping it would make every
   // Turkish visitor download pages, or every English visitor the dictionary)
   chunks: { minSize: 10 * 1024, allow: {
     "src/i18n/tr.ts": "locale dictionary: downloaded only for Turkish, never grouped",
     "src/router/outlets.ts": "named / modal outlets (1.8 KB, no dependencies): joining any page group would make it pull that page",
+    "src/demo-code.tsx": "a demo card's Code tab (code widget + highlighter), loaded on the first click on Kod: inlined into the card it would load with every page",
+    "src/shell-menu.tsx": "the side menu with its manifest, loaded on first idle by shell-nav: inlined into it, the menu would be part of start-up again",
     "src/seo/hydrate.ts": "takes over the prerendered start page (1 KB): loaded only on that page, never with a page group",
     "src/pages/navigation.tsx": "page whose code is mostly shared (NavSidebar, router): any page group would push its route past the 60 KB budget",
     "src/components/composite/dock-layout/demo.tsx": "IDE shell component demo: loads with its card only (folded into the registry, every page with a component card would download it)",
