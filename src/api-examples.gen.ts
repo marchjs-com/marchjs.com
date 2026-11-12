@@ -33,6 +33,8 @@ const groups: Record<string, () => Promise<ApiExampleModule>> = {
   "ui-c6": () => import("./api-examples/ui-c6.tsx"),
   "ui-e": () => import("./api-examples/ui-e.tsx"),
   "ui-e2": () => import("./api-examples/ui-e2.tsx"),
+  "ui-f": () => import("./api-examples/ui-f.tsx"),
+  "ui-f2": () => import("./api-examples/ui-f2.tsx"),
 };
 const bySubpath: Record<string, [group: string, first: string][]> = {
   "hadi-march": [["core","Await"]],
@@ -74,7 +76,7 @@ const bySubpath: Record<string, [group: string, first: string][]> = {
   "hadi-march/store": [["app","derive"]],
   "hadi-march/sw": [["mock","applyUpdate"]],
   "hadi-march/theme": [["platform","COLOR_TOKENS"]],
-  "hadi-march/ui": [["ui-a","ACCENT_CHOICES"],["ui-a2","ButtonGroup"],["ui-a3","CodeInput"],["ui-b","Dialog"],["ui-b2","EasingCurveEditor"],["ui-b3","FileUpload"],["ui-b4","GradientEditor"],["ui-b5","ImageCropper"],["ui-b6","KeyValue"],["ui-c","LocaleSelect"],["ui-c2","Menu"],["ui-c3","OverflowToolbar"],["ui-c4","PostCard"],["ui-c5","QUICK_REACTIONS"],["ui-c6","RichTextEditor"],["ui-e","accent"],["ui-e2","defineMeta"]],
+  "hadi-march/ui": [["ui-a","ACCENT_CHOICES"],["ui-a2","ButtonGroup"],["ui-a3","CodeInput"],["ui-b","Dialog"],["ui-b2","EasingCurveEditor"],["ui-b3","FileUpload"],["ui-b4","GradientEditor"],["ui-b5","ImageCropper"],["ui-b6","KeyValue"],["ui-c","LocaleSelect"],["ui-c2","Menu"],["ui-c3","OverflowToolbar"],["ui-c4","PostCard"],["ui-c5","QUICK_REACTIONS"],["ui-c6","RichTextEditor"],["ui-e","accent"],["ui-e2","defineMeta"],["ui-f","openDialogs"],["ui-f2","resolveColor"]],
 };
 /** The example file of an export (a lazy part, loaded once), or null when its subpath has none yet. */
 export const loadExamples = (subpath: string, name: string): Promise<ApiExampleModule> | null => {

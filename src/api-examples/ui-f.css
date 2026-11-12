@@ -1,0 +1,12 @@
+/* API examples, group ui-f: a few result visuals (swatch, curve, keyframe box, placement panel). Tokens only. */
+.sc-ex-ui-f-swatch { display: inline-block; inline-size: 2.5rem; block-size: 1.5rem; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-1); background: var(--hm-surface-2); }
+.sc-ex-ui-f-wide { inline-size: min(100%, 14rem); }
+.sc-ex-ui-f-curve { inline-size: 6rem; block-size: 6rem; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-1); background: var(--hm-surface-2); color: var(--hm-primary); }
+.sc-ex-ui-f-curve path { fill: none; stroke: currentColor; stroke-width: 3; vector-effect: non-scaling-stroke; }
+.sc-ex-ui-f-stage { position: relative; min-block-size: 4.5rem; padding: var(--hm-space-3); overflow: hidden; border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-1); }
+.sc-ex-ui-f-box { inline-size: 2.5rem; block-size: 2.5rem; border-radius: var(--hm-radius-2); background: var(--hm-primary); translate: calc(var(--hm-kt-x, 0) * 1px) calc(var(--hm-kt-y, 0) * 1px); scale: var(--hm-kt-s, 1); rotate: calc(var(--hm-kt-r, 0) * 1deg); opacity: var(--hm-kt-o, 1); }
+.sc-ex-ui-f-panel { inline-size: 11rem; block-size: 3.5rem; padding: var(--hm-space-2); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-1); background: var(--hm-surface-2); font-size: var(--hm-text-xs); }
+.sc-ex-ui-f-code { margin: 0; padding: var(--hm-space-2); overflow-x: auto; border-radius: var(--hm-radius-1); background: var(--hm-surface-2); font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); white-space: pre; }
+.sc-ex-ui-f-list { display: grid; gap: var(--hm-space-1); margin: 0; padding: 0; list-style: none; font-size: var(--hm-text-sm); }
+.sc-ex-ui-f-list li { display: flex; flex-wrap: wrap; gap: var(--hm-space-2); align-items: center; }
+.sc-ex-ui-f-range { inline-size: min(100%, 14rem); accent-color: var(--hm-primary); }
