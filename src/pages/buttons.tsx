@@ -1,6 +1,6 @@
 // Buttons, menus, tooltips, badges, chips, avatars, cards, tabs.
 import {
-  Button, IconButton, ButtonGroup, Menu, Dropdown, Tooltip, CopyButton, Badge, Chip, Avatar, AvatarGroup, Kbd, Card, LinkCard, IconTile, Tabs,
+  Button, IconButton, ButtonGroup, Menu, Dropdown, Tooltip, CopyButton, Badge, Chip, Avatar, AvatarGroup, Card, LinkCard, IconTile, Tabs,
   Segmented, toast, action, Stack, Divider,
 } from "hadi-march/ui";
 import {
@@ -81,11 +81,12 @@ export default function Buttons() {
 
     <ComponentDemo folder="actions/made-with-march" title="MadeWithMarch: kredi satırı" desc="İsteğe bağlı: \"HADI March ve 💗 ile geliştirildi\". Lisans MIT olarak kalır; kullanmak rica, zorunluluk değil. Bağlantı adresi tek bir sabittedir (MARCH_URL)." />
 
-    <Demo title="Avatarlar ve klavye" desc="Baş harfler tema paletiyle; grup ve +N.">
+    <Demo title="Avatarlar" desc="Baş harfler tema paletiyle; grup ve +N.">
       <div class="sc-row"><Avatar name="Elif Yılmaz" size="lg" /><Avatar name="Mert Demir" /><Avatar name="Zeynep Kaya" size="sm" />
         <AvatarGroup names={["Ada", "Linus", "Grace", "Zeynep", "Can", "Ece", "Onur"]} max={5} /></div>
-      <div class="sc-row"><Kbd keys="mod+k" /><Kbd>Esc</Kbd><Kbd keys="shift+enter" /><span class="hm-muted">komut paleti · kapat · yeni satır</span></div>
     </Demo>
+
+    <ComponentDemo folder="typography/kbd" title="Kbd: klavye kısayolu" desc="mod macOS'ta ⌘, ötekilerde Ctrl yazılır; kısayol dizisi key() ve kısayol listesiyle aynı biçimde okunur." />
 
     <Demo wide title="Kartlar ve sekmeler" desc="Card, LinkCard, IconTile; Tabs (alt çizgi kayar, panel yükselerek gelir).">
       <div class="sc-grid3">
