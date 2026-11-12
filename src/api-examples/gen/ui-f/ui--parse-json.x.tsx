@@ -6,11 +6,11 @@ import { Out } from "../../_kit.tsx";
 import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
-      code: `const r = parseJson('{ "ad": "Acme", }')
+      code: `const r = parseJson('{ "ad": "HADİ", }')
 r.error       // "Expected double-quoted property name"
 r.line        // 1  ·  r.column  // 16`,
       run: () => {
-        const text = signal('{\n  "ad": "Acme",\n  "adet": 3,\n}')
+        const text = signal('{\n  "ad": "HADİ",\n  "adet": 3,\n}')
         const r = computed(() => parseJson(text()))
         return <div class="sc-ex-stack">
           <Textarea value={text} rows={4} aria-label="JSON" />

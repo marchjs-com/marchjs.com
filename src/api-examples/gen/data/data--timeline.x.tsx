@@ -14,7 +14,7 @@ import "../../ui-e.css";
 const example: ApiExample<any> = {
       code: `<Timeline items={[
   { time: order.createdAt, title: "Sipariş alındı", tone: "info" },
-  { time: "Bugün 14:20", title: "Kargoya verildi", body: "Takip no: ACME123", tone: "success" },
+  { time: "Bugün 14:20", title: "Kargoya verildi", body: "Takip no: HADI123", tone: "success" },
 ]} />`,
       play: { options: [{ key: "tones", label: "Renkli durumlar", default: true }, { key: "newest", label: "Yeni en üstte", default: false }] },
       run: (p: { values: { tones: boolean; newest: boolean } }) => {
@@ -22,7 +22,7 @@ const example: ApiExample<any> = {
         const steps: [string, string][] = [["Sipariş alındı", "info"], ["Ödeme onaylandı", "success"], ["Kargoya verildi", "success"], ["Dağıtımda", "warn"], ["Teslim edildi", "success"]]
         const n = signal(2)
         const items = computed<TimelineItem[]>(() => {
-          const l = steps.slice(0, n()).map(([title, tone], i) => ({ time: base + i * 2400_000, title, tone: p.values.tones ? tone : "neutral", body: i === 2 ? "Takip no: ACME123" : undefined }))
+          const l = steps.slice(0, n()).map(([title, tone], i) => ({ time: base + i * 2400_000, title, tone: p.values.tones ? tone : "neutral", body: i === 2 ? "Takip no: HADI123" : undefined }))
           return p.values.newest ? l.reverse() : l
         })
         return <div class="sc-ex-stack">

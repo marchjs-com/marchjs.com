@@ -58,7 +58,7 @@ await dialog         // kapanınca 0`,
       },
     },
     openMedia: {
-      code: `await openMedia("/img/cover.jpg", { title: "Kapak", alt: "Acme kapağı", size: "lg" })`,
+      code: `await openMedia("/img/cover.jpg", { title: "Kapak", alt: "HADİ kapağı", size: "lg" })`,
       run: () => {
         // a poster drawn on a canvas with theme colors, so the example needs no file or network
         const poster = (): string => {
@@ -79,7 +79,7 @@ await dialog         // kapanınca 0`,
       code: `registerCommands([{ id: "new", title: "Yeni belge", run: () => create() }])
 openPalette()          // Esc ile kapanır`,
       run: () => {
-        const off = registerCommands([{ id: "ex-open-palette", title: "Örnek komut: merhaba", group: "Örnek", run: () => toast("Merhaba, Acme!", { kind: "success" }) }])
+        const off = registerCommands([{ id: "ex-open-palette", title: "Örnek komut: merhaba", group: "Örnek", run: () => toast("Merhaba, HADİ!", { kind: "success" }) }])
         onCleanup(off)
         return <Row><Button variant="primary" onClick={() => openPalette()}>Paleti aç</Button><span class="hm-muted">“merhaba” yazıp Enter’a bas</span></Row>
       },
@@ -150,11 +150,11 @@ parseDate("")                      // null (boş)  ·  parseDate("32.13.2026") /
       },
     },
     parseJson: {
-      code: `const r = parseJson('{ "ad": "Acme", }')
+      code: `const r = parseJson('{ "ad": "HADİ", }')
 r.error       // "Expected double-quoted property name"
 r.line        // 1  ·  r.column  // 16`,
       run: () => {
-        const text = signal('{\n  "ad": "Acme",\n  "adet": 3,\n}')
+        const text = signal('{\n  "ad": "HADİ",\n  "adet": 3,\n}')
         const r = computed(() => parseJson(text()))
         return <div class="sc-ex-stack">
           <Textarea value={text} rows={4} aria-label="JSON" />
@@ -344,12 +344,12 @@ renderFields(form)`,
       },
     },
     registerThemes: {
-      code: `registerThemes([{ id: "acme", name: "Acme", href: "/themes/acme.css" }])
-colorThemes().some((t) => t.id === "acme")   // true → ThemePicker listeler`,
+      code: `registerThemes([{ id: "hadi-marka", name: "HADİ", href: "/themes/hadi-marka.css" }])
+colorThemes().some((t) => t.id === "hadi-marka")   // true → ThemePicker listeler`,
       run: () => {
         const n = signal(colorThemes().length)
-        const go = () => { registerThemes([{ id: "acme", name: "Acme", description: "Örnek tema", href: "themes/acme.css" }]); n.set(colorThemes().length) }
-        return <Row><Button onClick={go}>“Acme” temasını kaydet</Button><Out label="kayıtlı tema" value={() => `${n()} (${colorThemes().some((t) => t.id === "acme") ? "acme dahil" : "acme yok"})`} /></Row>
+        const go = () => { registerThemes([{ id: "hadi-marka", name: "HADİ", description: "Örnek tema", href: "themes/hadi-marka.css" }]); n.set(colorThemes().length) }
+        return <Row><Button onClick={go}>“HADİ” temasını kaydet</Button><Out label="kayıtlı tema" value={() => `${n()} (${colorThemes().some((t) => t.id === "hadi-marka") ? "hadiMarka dahil" : "hadiMarka yok"})`} /></Row>
       },
     },
     removeAt: {
@@ -365,7 +365,7 @@ colorThemes().some((t) => t.id === "acme")   // true → ThemePicker listeler`,
       },
     },
     renameAt: {
-      code: `renameAt({ ad: "Acme", adet: 3 }, ["ad"], "name")   // { name: "Acme", adet: 3 } (sıra korunur)`,
+      code: `renameAt({ ad: "HADİ", adet: 3 }, ["ad"], "name")   // { name: "HADİ", adet: 3 } (sıra korunur)`,
       run: () => {
         const doc = signal<unknown>(DOC)
         const to = signal("title")

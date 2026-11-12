@@ -13,7 +13,7 @@ const example: ApiExample<any> = {
       run: () => {
         const title = signal("Koşu ayakkabısı"), img = signal(true)
         return <div class="sc-ex-stack"><Row><Text label="Başlık" value={title} /><Button variant={() => (img() ? "primary" : "secondary")} onClick={() => img.set(!img())}>Görsel</Button></Row>
-          <Tags label="og" items={() => ogTags({ title: title(), siteName: "Acme", ...(img() ? { image: { url: "https://acme.example/og.png", width: 1200, height: 630 } } : {}) }).map((m) => `${m.property}=${m.content}`)} /></div>
+          <Tags label="og" items={() => ogTags({ title: title(), siteName: "HADİ", ...(img() ? { image: { url: "https://hadisosyal.com/og.png", width: 1200, height: 630 } } : {}) }).map((m) => `${m.property}=${m.content}`)} /></div>
       },
     };
 export default example;

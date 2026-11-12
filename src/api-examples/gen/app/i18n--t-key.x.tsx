@@ -11,7 +11,7 @@ const example: ApiExample<any> = {
       code: "tKey([\"Merhaba \", \", \", \" yeni ileti\"])   // \"Merhaba {0}, {1} yeni ileti\" — the key t`Merhaba ${a}, ${b} yeni ileti` looks up",
       run: () => {
         const key = (s: TemplateStringsArray, ..._v: unknown[]) => tKey(s)
-        const keys = [key`Merhaba ${"Ada"}`, key`${3} dosya silindi`, key`${"Acme"} ekibine ${"Can"} katıldı`]
+        const keys = [key`Merhaba ${"Ada"}`, key`${3} dosya silindi`, key`${"HADİ"} ekibine ${"Can"} katıldı`]
         const i = signal(0)
         return <div class="sc-ex-app-stack">
           <Segmented value={i} options={keys.map((_, n) => ({ value: n, label: `şablon ${n + 1}` }))} aria-label="Şablon" />

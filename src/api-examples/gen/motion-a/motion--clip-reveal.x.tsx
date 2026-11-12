@@ -11,7 +11,7 @@ const example: ApiExample<any> = {
 clipReveal(panel, { shape: "blinds", count: 8, hide: true })`,
       play: { options: [{ key: "shape", label: "Biçim", default: "circle", options: ["circle", "wipe", "diamond", "curtain", "blinds", "inset"] }, { key: "hide", label: "Gizle", default: false }] },
       run: (p: { values: { shape: string; hide: boolean } }) => {
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         return <Stage start={() => clipReveal(box, { shape: p.values.shape as never, hide: p.values.hide, duration: 900, origin: { x: 20, y: 80 } })}>{box}</Stage>
       },
     };

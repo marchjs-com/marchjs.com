@@ -13,7 +13,7 @@ const example: ApiExample<any> = {
   return <h1>{p.item.name}</h1>
 }`,
       run: () => {
-        const on = signal(false), desc = signal("Acme: her mevsim için ayakkabı")
+        const on = signal(false), desc = signal("HADİ: her mevsim için ayakkabı")
         useHead(() => (on() ? { description: desc() } : null))
         const current = () => { headTags(); return document.head.querySelector("meta[name=description]")?.getAttribute("content") ?? "(yok)" }
         return <div class="sc-ex-stack"><Row><Text label="Açıklama" value={desc} /><Button variant={() => (on() ? "primary" : "secondary")} onClick={() => on.set(!on())}>{() => (on() ? "Etkin" : "Kapalı")}</Button></Row>

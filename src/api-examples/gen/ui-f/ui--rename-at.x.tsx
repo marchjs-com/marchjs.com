@@ -7,7 +7,7 @@ import { Button, renameAt } from "hadi-march/ui";
 import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
-      code: `renameAt({ ad: "Acme", adet: 3 }, ["ad"], "name")   // { name: "Acme", adet: 3 } (sıra korunur)`,
+      code: `renameAt({ ad: "HADİ", adet: 3 }, ["ad"], "name")   // { name: "HADİ", adet: 3 } (sıra korunur)`,
       run: () => {
         const doc = signal<unknown>(DOC)
         const to = signal("title")

@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
         return <div class="sc-ex-stack">
           {() => { const { affix, upper } = p.values; return <TextInput aria-label="Kupon" value={code} prefix={affix ? "#" : undefined} placeholder="Kupon kodu" maxLength={10}
             transform={upper ? (v: string) => v.toUpperCase() : undefined} /> }}
-          <Row><Out label="değer" value={() => code() || "—"} /><Button size="sm" variant="ghost" onClick={() => code.set("ACME25")}>Örnek kod</Button></Row>
+          <Row><Out label="değer" value={() => code() || "—"} /><Button size="sm" variant="ghost" onClick={() => code.set("HADI25")}>Örnek kod</Button></Row>
         </div>
       },
     };

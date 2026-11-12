@@ -10,7 +10,7 @@ import "../../motion-a.css";
 const example: ApiExample<any> = {
       code: `flip(Array.from(list.children), () => list.append(...shuffled))   // First, mutate, Last, Invert, Play`,
       run: () => {
-        const list = el(<ul class="sc-ex-motion-a-flip">{["Acme", "Ada", "Bora", "Cem", "Defne", "Ece"].map((n) => <li>{n}</li>)}</ul>)
+        const list = el(<ul class="sc-ex-motion-a-flip">{["HADİ", "Ada", "Bora", "Cem", "Defne", "Ece"].map((n) => <li>{n}</li>)}</ul>)
         const items = () => Array.from(list.children)
         queueMicrotask(() => flip(items(), () => undefined))
         const shuffle = () => { const a = items(); a.sort(() => Math.random() - 0.5); flip(a, () => list.append(...a), { duration: 420 }) }

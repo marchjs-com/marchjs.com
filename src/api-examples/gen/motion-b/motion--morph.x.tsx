@@ -19,7 +19,7 @@ morph(thumb, big, { mode: "scale" })         // same picture in two places: FLIP
         return <div class="sc-ex-motion-b-stack">
           <div class="sc-ex-motion-b-stage">
             <button type="button" class="hm-btn hm-btn-primary sc-ex-motion-b-src" ref={(el: HTMLElement) => { src = el }} on:click={open}>Aç</button>
-            <div class="sc-ex-motion-b-panel" hidden ref={(el: HTMLElement) => { panel = el }}><strong>Acme Atölye</strong><span class="hm-muted">Kutu, düğmenin yerinden büyür.</span></div>
+            <div class="sc-ex-motion-b-panel" hidden ref={(el: HTMLElement) => { panel = el }}><strong>HADİ Atölye</strong><span class="hm-muted">Kutu, düğmenin yerinden büyür.</span></div>
           </div>
           <Row><Button variant="ghost" onClick={reset}>Sıfırla</Button></Row>
         </div>

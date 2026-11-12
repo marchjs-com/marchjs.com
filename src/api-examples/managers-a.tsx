@@ -226,7 +226,7 @@ function AuditDemo() {
     const root = (<div>
       <h2>Başlık</h2>
       {ok ? <h3>Alt başlık</h3> : <h4>Alt başlık</h4>}
-      {ok ? <img alt="Acme logosu" /> : <img />}
+      {ok ? <img alt="HADİ logosu" /> : <img />}
       <button type="button">{ok ? "Kaydet" : ""}</button>
       <input type="text" aria-label={ok ? "Ad" : undefined} />
     </div>) as HTMLElement
@@ -359,7 +359,7 @@ function ClipboardDemo() {
     <Row>
       <Button onClick={() => { void clipboard().copy(text()) }}>{() => (clipboard().copied() ? "Kopyalandı" : "Kopyala")}</Button>
       <Button variant="ghost" onClick={() => clipboard().clearHistory()}>Geçmişi temizle</Button>
-      <Segmented aria-label="Metin" value={text()} onChange={(v: string) => text.set(v)} options={["INV-2026-001", "Acme Ltd.", "ada@example.com"].map((v) => ({ value: v, label: v }))} />
+      <Segmented aria-label="Metin" value={text()} onChange={(v: string) => text.set(v)} options={["INV-2026-001", "HADİ", "ada@example.com"].map((v) => ({ value: v, label: v }))} />
     </Row>
     <Out label="supported()" value={yes(board.supported())} />
     <Out label="last()" value={() => clipboard().last() ?? "—"} />
@@ -656,7 +656,7 @@ function CfgNotifications() {
   let n = 0
   return <Cfg m={notificationManager} fn={configureNotifications} patch={{ native: "never", keep: 3, toast: (x: { title: string }) => shown.update((l) => [...l.slice(-4), `${now()} · ${x.title}`]) }}
     view={(on) => <>
-      <Row><Button disabled={() => !on()} onClick={() => notifications().notify({ title: `Mesaj ${++n}`, body: "Acme" })}>notify()</Button><Button variant="ghost" disabled={() => !on()} onClick={() => notifications().clear()}>clear()</Button></Row>
+      <Row><Button disabled={() => !on()} onClick={() => notifications().notify({ title: `Mesaj ${++n}`, body: "HADİ" })}>notify()</Button><Button variant="ghost" disabled={() => !on()} onClick={() => notifications().clear()}>clear()</Button></Row>
       <Out label="inbox().length (en çok 3)" value={() => { on(); return String(notifications().inbox().length) }} />
       <Out label="unread()" value={() => { on(); return String(notifications().unread()) }} />
       <Log lines={shown} label="Özel toast köprüsü" />
@@ -743,7 +743,7 @@ function CfgStorage() {
     view={(on) => <>
       <Row>
         <Button disabled={() => !on()} onClick={async () => { await storage().area("memory").set("note", text()); keys.set(await storage().area("memory").keys()) }}>Belleğe yaz</Button>
-        <Segmented aria-label="Değer" value={text()} onChange={(v: string) => text.set(v)} options={["Merhaba", "Acme"].map((v) => ({ value: v, label: v }))} />
+        <Segmented aria-label="Değer" value={text()} onChange={(v: string) => text.set(v)} options={["Merhaba", "HADİ"].map((v) => ({ value: v, label: v }))} />
       </Row>
       <Out label='area("memory").keys()' value={() => fmt(keys())} />
       <Out label='persistent("memory")' value={() => { on(); return yes(storage().persistent("memory")) }} />
@@ -817,8 +817,8 @@ function DisposeCache() {
     use={() => appCache().set(`demo:${Date.now() % 1000}`, 1)} stop={() => disposeCache()} read={() => appCache().stats().size} />
 }
 function DisposeClipboard() {
-  return <Dispose m={clipboardManager} label="history().length" useLabel='copy("Acme")' stopLabel="disposeClipboard()"
-    use={() => { void clipboard().copy("Acme " + Date.now() % 1000) }} stop={() => disposeClipboard()} read={() => clipboard().history().length}
+  return <Dispose m={clipboardManager} label="history().length" useLabel='copy("HADİ")' stopLabel="disposeClipboard()"
+    use={() => { void clipboard().copy("HADİ " + Date.now() % 1000) }} stop={() => disposeClipboard()} read={() => clipboard().history().length}
     end={() => { if (clipboardManager.alive()) clipboard().clearHistory() }} />
 }
 function DisposeCommands() {
@@ -1103,7 +1103,7 @@ session().start()`,
       run: () => <CfgHints />,
     },
     configureStorage: {
-      code: `configureStorage({ prefix: "acme.", version: 2 })
+      code: `configureStorage({ prefix: "hadi.", version: 2 })
 await storage().area("memory").set("note", "Hello")`,
       run: () => <CfgStorage />,
     },
@@ -1123,7 +1123,7 @@ viewport().breakpoint()`,
       run: () => <CfgViewport />,
     },
     configureWindow: {
-      code: `configureWindow({ channel: "acme:window", heartbeat: 500, ttl: 1500 })   // a group of tabs of its own
+      code: `configureWindow({ channel: "hadi:window", heartbeat: 500, ttl: 1500 })   // a group of tabs of its own
 appWindow().count()`,
       run: () => <CfgWindow />,
     },
@@ -1190,7 +1190,7 @@ disposeCache()   // every entry is forgotten`,
       run: () => <DisposeCache />,
     },
     disposeClipboard: {
-      code: `await clipboard().copy("Acme")
+      code: `await clipboard().copy("HADİ")
 disposeClipboard()   // history is gone`,
       run: () => <DisposeClipboard />,
     },

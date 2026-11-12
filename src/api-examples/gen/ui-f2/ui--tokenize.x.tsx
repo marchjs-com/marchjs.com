@@ -11,7 +11,7 @@ const example: ApiExample<any> = {
 // [["kw", "const"], ["", " "], ["", "n"], …, ["com", "// adet"]]`,
       run: () => {
         const lang = signal("ts")
-        const SRC: Record<string, string> = { ts: 'const total = items.length * 3 // adet', css: ".card { color: var(--hm-primary); }", json: '{ "ad": "Acme", "adet": 3 }', sh: "npm run build # derle" }
+        const SRC: Record<string, string> = { ts: 'const total = items.length * 3 // adet', css: ".card { color: var(--hm-primary); }", json: '{ "ad": "HADİ", "adet": 3 }', sh: "npm run build # derle" }
         return <div class="sc-ex-stack">
           <Pick sig={lang} label="Dil" options={[["ts", "ts"], ["css", "css"], ["json", "json"], ["sh", "sh"]]} />
           <pre class="sc-ex-ui-f-code">{() => tokenize(SRC[lang()]!, lang()).map(([k, t]) => <span class={k ? `hm-tok-${k}` : ""}>{t}</span>)}</pre>

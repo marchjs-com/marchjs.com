@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
         { key: "counter", label: "Sayaç", default: true },
       ] },
       run: (p: { values: { toolbar: string; counter: boolean } }) => {
-        const body = signal("**Acme** ekibine merhaba! Yarınki toplantı 10.00'da.")
+        const body = signal("**HADİ** ekibine merhaba! Yarınki toplantı 10.00'da.")
         const tools = { full: true, minimal: ["bold", "italic", "link", "|", "ul"], none: false } as const
         return <div class="sc-ex-ui-c-stack">
           {() => { const toolbar = tools[p.values.toolbar as keyof typeof tools], counter = p.values.counter

@@ -9,14 +9,14 @@ import "../../motion-a.css";
 
 const example: ApiExample<any> = {
       code: `installTransitions()    // fade, slide, scale, blur and fly as WAAPI transitions
-<If when={$open}><div transition:blur={{ amount: 10 }}>Acme</div></If>`,
+<If when={$open}><div transition:blur={{ amount: 10 }}>HADİ</div></If>`,
       play: { options: [{ key: "kind", label: "Geçiş", default: "blur", options: ["blur", "fly"] }] },
       run: (p: { values: { kind: string } }) => {
         installTransitions()
         const open = signal(true)
         return <div class="sc-ex-motion-a"><div class="sc-ex-motion-a-stage">{() => p.values.kind === "blur"
-          ? <If when={open}><div class="sc-ex-motion-a-card" transition:blur={{ amount: 10, duration: 400 }}>Acme</div></If>
-          : <If when={open}><div class="sc-ex-motion-a-card" transition:fly={{ y: 32, duration: 400 }}>Acme</div></If>}</div>
+          ? <If when={open}><div class="sc-ex-motion-a-card" transition:blur={{ amount: 10, duration: 400 }}>HADİ</div></If>
+          : <If when={open}><div class="sc-ex-motion-a-card" transition:fly={{ y: 32, duration: 400 }}>HADİ</div></If>}</div>
           <Row><Button size="sm" variant="secondary" onClick={() => open.update((x) => !x)}>{() => (open() ? "Kaldır" : "Göster")}</Button></Row></div>
       },
     };

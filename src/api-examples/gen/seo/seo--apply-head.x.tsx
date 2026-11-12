@@ -18,7 +18,7 @@ applyHead([])   // removes what it wrote, restores what it changed`,
         const go = () => {
           if (headBusy()) { out.set("Bu sayfada head yönetimi etkin; örnek taslak belgeyi kullanamaz."); return }
           const d = draftDoc()
-          applyHead(resolveHead([{ title: title(), description: "Acme ekibi", og: { image: "https://acme.example/og.png" } }]), { lang: undefined }, d)
+          applyHead(resolveHead([{ title: title(), description: "HADİ ekibi", og: { image: "https://hadisosyal.com/og.png" } }]), { lang: undefined }, d)
           const written = headOf(d)
           applyHead([], {}, d)
           out.set(`yazıldı:\n${written.join("\n")}\n\napplyHead([]) sonrası:\n${headOf(d).join("\n")}`)

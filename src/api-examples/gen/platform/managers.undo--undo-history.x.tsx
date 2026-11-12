@@ -14,7 +14,7 @@ const example: ApiExample<any> = {
 h.run("Yazma", () => text.set(next), () => text.set(prev), "typing")
 h.undo()   h.redo()   h.past()`,
       run: () => {
-        const text = signal("Acme")
+        const text = signal("HADİ")
         const h = undoHistory({ mergeMs: 800 })
         onCleanup(h.dispose)
         let shown = text.peek()

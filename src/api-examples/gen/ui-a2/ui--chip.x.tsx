@@ -14,7 +14,7 @@ const example: ApiExample<any> = {
         { key: "size", label: "Boyut", default: "sm", options: ["sm", "md"] },
       ] },
       run: (p: { values: { tone: "neutral" | "primary" | "success" | "info"; size: "sm" | "md" } }) => {
-        const tags = signal(["tasarım", "ürün", "acme"])
+        const tags = signal(["tasarım", "ürün", "hadi"])
         const draft = signal("")
         const add = (e: Event) => { e.preventDefault(); const v = draft().trim(); if (v && !tags().includes(v)) tags.update((l) => [...l, v]); draft.set("") }
         return <div class="sc-ex-stack">

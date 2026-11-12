@@ -16,7 +16,7 @@ function RestoreLook() {
 }
 
 const STORIES: StoryGroup[] = [
-  { id: "acme", name: "Acme Koşu", items: [{ id: "a1", src: "media/social/dawn.svg", alt: "Şafakta dağlar", caption: "Sabah turu" }, { id: "a2", src: "media/social/ride.svg", alt: "Bisiklet" }] },
+  { id: "hadi", name: "HADİ Koşu", items: [{ id: "a1", src: "media/social/dawn.svg", alt: "Şafakta dağlar", caption: "Sabah turu" }, { id: "a2", src: "media/social/ride.svg", alt: "Bisiklet" }] },
   { id: "ada", name: "Ada", items: [{ id: "b1", src: "media/social/sea.svg", alt: "Denizde yelkenli", caption: "Hafta sonu" }] },
   { id: "lin", name: "Linus", items: [{ id: "c1", src: "media/social/coffee.svg", alt: "Kahve fincanı" }, { id: "c2", src: "media/social/city.svg", alt: "Gece şehir" }] },
 ]
@@ -42,7 +42,7 @@ export default examples({
       play: { options: [{ key: "size", label: "Boyut", default: "md", options: ["sm", "md", "lg"] }, { key: "loading", label: "Yükleniyor", default: false }] },
       run: (p: { values: { size: string; loading: boolean } }) => {
         const seen = signal<string[]>([])
-        const people = [{ id: "ada", name: "Ada", state: "new" }, { id: "acme", name: "Acme Koşu", state: "close" }, { id: "lin", name: "Linus", state: "new" }] as const
+        const people = [{ id: "ada", name: "Ada", state: "new" }, { id: "hadi", name: "HADİ Koşu", state: "close" }, { id: "lin", name: "Linus", state: "new" }] as const
         return <div class="sc-ex-stack">
           <div class="sc-ex-ui-d-tray">
             <StoryRing name="Siz" label="Hikâyen" add state="none" size={() => p.values.size as "md"} onClick={() => seen.set([])} />
@@ -58,7 +58,7 @@ export default examples({
   start="ada" onSeen={(g, s) => markSeen(s.id)} onReply={(g, s, text) => send(g, text)} />`,
       play: { options: [{ key: "reply", label: "Yanıt alanı", default: true }, { key: "like", label: "Beğeni", default: true }] },
       run: (p: { values: { reply: boolean; like: boolean } }) => {
-        const open = signal(false), start = signal("acme"), log = signal<string[]>([]), liked = signal<string[]>([])
+        const open = signal(false), start = signal("hadi"), log = signal<string[]>([]), liked = signal<string[]>([])
         const add = (l: string) => log.update((x) => [...x.slice(-4), l])
         return <div class="sc-ex-stack">
           <div class="sc-ex-ui-d-tray">{STORIES.map((g) => <StoryRing name={g.name} label={g.name} size="sm" onClick={() => { start.set(g.id); open.set(true) }} />)}</div>
@@ -82,7 +82,7 @@ export default examples({
         return <div class="sc-ex-stack">
           <Tabs label="Posta">
             <Tab id="inbox" label="Gelen" badge={() => (p.values.badge ? unread() : null)}>{() => <Row><span>{() => `${unread()} okunmamış ileti`}</span><Button size="sm" disabled={() => !unread()} onClick={() => unread.update((x) => x - 1)}>Birini oku</Button></Row>}</Tab>
-            <Tab id="sent" label="Giden">{() => <p>Son gönderilen: Acme teklifi</p>}</Tab>
+            <Tab id="sent" label="Giden">{() => <p>Son gönderilen: HADİ teklifi</p>}</Tab>
             <Tab id="archive" label="Arşiv" hidden={() => !p.values.archive}>{() => <p>Arşivde 128 ileti</p>}</Tab>
           </Tabs>
           <Button size="sm" variant="ghost" onClick={() => unread.update((x) => x + 1)}>Yeni ileti gelsin</Button>
@@ -99,8 +99,8 @@ export default examples({
       run: (p: { values: { color: string; panel: boolean } }) => {
         const tab = signal<string | null>("profile")
         const tabs = [
-          { id: "profile", label: "Profil", content: () => <p>Ada · ada@acme.test</p> },
-          { id: "billing", label: "Fatura", content: () => <p>Acme Pro · aylık {tl(249)}</p> },
+          { id: "profile", label: "Profil", content: () => <p>Ada · ada@hadisosyal.com</p> },
+          { id: "billing", label: "Fatura", content: () => <p>HADİ Pro · aylık {tl(249)}</p> },
           { id: "team", label: "Ekip", badge: 4, content: () => <p>4 üye, 1 davet bekliyor</p> },
         ]
         return <div class="sc-ex-stack">
@@ -113,7 +113,7 @@ export default examples({
       code: `<Textarea value={note} rows={2} maxLength={280} placeholder="Notunuz…" />   // grows with the text`,
       play: { options: [{ key: "autosize", label: "Metinle büyü", default: true }, { key: "rows", label: "Satır", default: 2, options: [2, 4] }] },
       run: (p: { values: { autosize: boolean; rows: number } }) => {
-        const note = signal("Acme toplantısı:\n- bütçe\n- takvim")
+        const note = signal("HADİ toplantısı:\n- bütçe\n- takvim")
         return <div class="sc-ex-stack">
           {() => { const { rows, autosize } = p.values; return <Textarea aria-label="Not" value={note} rows={rows} autosize={autosize} maxLength={280} placeholder="Notunuz…" /> }}
           <Row><Out label="karakter" value={() => `${note().length}/280`} /><Out label="satır" value={() => note().split("\n").length} /><Button size="sm" variant="ghost" onClick={() => note.update((x) => `${x}\n- yeni madde`)}>Satır ekle</Button></Row>
@@ -129,7 +129,7 @@ export default examples({
         return <div class="sc-ex-stack">
           {() => { const { affix, upper } = p.values; return <TextInput aria-label="Kupon" value={code} prefix={affix ? "#" : undefined} placeholder="Kupon kodu" maxLength={10}
             transform={upper ? (v: string) => v.toUpperCase() : undefined} /> }}
-          <Row><Out label="değer" value={() => code() || "—"} /><Button size="sm" variant="ghost" onClick={() => code.set("ACME25")}>Örnek kod</Button></Row>
+          <Row><Out label="değer" value={() => code() || "—"} /><Button size="sm" variant="ghost" onClick={() => code.set("HADI25")}>Örnek kod</Button></Row>
         </div>
       },
     },

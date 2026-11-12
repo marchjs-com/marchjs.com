@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
       run: (p: { values: { cancel: boolean; requireDirty: boolean } }) => {
         const log = useLog()
         return <div class="sc-ex-stack">
-          <Form schema={Profile} actions={false} initial={{ name: "Ada", email: "ada@acme.test" }} onSubmit={async (v: Record<string, unknown>) => { await wait(500); log.push(`kaydedildi: ${v.name}`) }}>
+          <Form schema={Profile} actions={false} initial={{ name: "Ada", email: "ada@hadisosyal.com" }} onSubmit={async (v: Record<string, unknown>) => { await wait(500); log.push(`kaydedildi: ${v.name}`) }}>
             <Field name="name" />
             {() => { const c = p.values.cancel, rd = p.values.requireDirty; return <FormActions cancel={c} requireDirty={rd} submitLabel="Kaydet" busyLabel="Kaydediliyor…"
               extra={<Button variant="ghost" onClick={() => log.push("taslak saklandı")}>Taslak</Button>} /> }}

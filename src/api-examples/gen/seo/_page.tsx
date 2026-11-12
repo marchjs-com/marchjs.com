@@ -3,7 +3,7 @@
 const PAGE = `<!doctype html>
 <html lang="tr">
 <head>
-  <title>Acme Mağaza · Ayakkabılar</title>
+  <title>HADİ Mağaza · Ayakkabılar</title>
   <meta name="viewport" content="width=device-width">
   <link rel="canonical" href="/ayakkabi">
 </head>

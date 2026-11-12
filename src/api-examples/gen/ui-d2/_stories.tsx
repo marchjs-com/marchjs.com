@@ -2,7 +2,7 @@
 import type { StoryGroup } from "hadi-march/ui";
 
 const STORIES: StoryGroup[] = [
-  { id: "acme", name: "Acme Koşu", items: [{ id: "a1", src: "media/social/dawn.svg", alt: "Şafakta dağlar", caption: "Sabah turu" }, { id: "a2", src: "media/social/ride.svg", alt: "Bisiklet" }] },
+  { id: "hadi", name: "HADİ Koşu", items: [{ id: "a1", src: "media/social/dawn.svg", alt: "Şafakta dağlar", caption: "Sabah turu" }, { id: "a2", src: "media/social/ride.svg", alt: "Bisiklet" }] },
   { id: "ada", name: "Ada", items: [{ id: "b1", src: "media/social/sea.svg", alt: "Denizde yelkenli", caption: "Hafta sonu" }] },
   { id: "lin", name: "Linus", items: [{ id: "c1", src: "media/social/coffee.svg", alt: "Kahve fincanı" }, { id: "c2", src: "media/social/city.svg", alt: "Gece şehir" }] },
 ]

@@ -32,7 +32,7 @@ export default examples({
       run: (p: { values: { variant: "card" | "flat"; clamp: number } }) => {
         const [lines, add] = logger()
         const post = signal({
-          id: "p1", author: { name: "Acme Kahve Atölyesi", handle: "acme.kahve", verified: true }, time: Date.now() - 42 * 60_000, place: "Kadıköy",
+          id: "p1", author: { name: "HADİ Kahve Atölyesi", handle: "hadi.kahve", verified: true }, time: Date.now() - 42 * 60_000, place: "Kadıköy",
           text: "Cuma akşamı demleme atölyesi var. Yeni çekirdekleri birlikte tadacağız, filtre kahve ve soğuk demleme yöntemlerini adım adım deneyeceğiz. Kontenjan 12 kişi; kayıt için profildeki bağlantıyı kullanın.",
           media: [PICS[2]!], likes: 18, liked: false, comments: 4, shares: 1,
         })
@@ -130,7 +130,7 @@ export default examples({
         { key: "disabled", label: "Kapalı", default: false },
       ] },
       run: (p: { values: { threshold: number; disabled: boolean } }) => {
-        const items = signal(["Acme: yeni sezon duyurusu", "Kitap kulübü: bu ayın kitabı", "Koşu grubu: pazar rotası"])
+        const items = signal(["HADİ: yeni sezon duyurusu", "Kitap kulübü: bu ayın kitabı", "Koşu grubu: pazar rotası"])
         const phase = signal("idle")
         let n = 0
         const refresh = () => new Promise<void>((done) => setTimeout(done, 700))

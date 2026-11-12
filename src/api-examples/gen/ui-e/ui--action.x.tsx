@@ -12,11 +12,11 @@ const example: ApiExample<any> = {
       code: `const archive = action("Arşivle", async (id: string) => { await save(id); return id }, {
   confirm: "Arşivlensin mi?", success: (id) => id + " arşivlendi",
 })
-await archive.run("Acme")   // asks, shows busy, toasts`,
+await archive.run("HADİ")   // asks, shows busy, toasts`,
       run: () => {
         const log = signal<string[]>([])
-        const archive = action("Arşivle", async (id: string) => { await sleep(500); return id }, { confirm: "Acme arşivlensin mi?", success: (id) => `${id} arşivlendi` })
-        const go = async () => { const r = await archive.run("Acme").catch(() => undefined); log.update((l) => [...l, `${now()} sonuç: ${r ?? "vazgeçildi"}`]) }
+        const archive = action("Arşivle", async (id: string) => { await sleep(500); return id }, { confirm: "HADİ arşivlensin mi?", success: (id) => `${id} arşivlendi` })
+        const go = async () => { const r = await archive.run("HADİ").catch(() => undefined); log.update((l) => [...l, `${now()} sonuç: ${r ?? "vazgeçildi"}`]) }
         return <Row><Button loading={archive.busy} onClick={go}>{() => archive.label()}</Button><Log lines={log} /></Row>
       },
     };

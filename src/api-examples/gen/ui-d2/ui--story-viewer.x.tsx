@@ -12,7 +12,7 @@ const example: ApiExample<any> = {
   start="ada" onSeen={(g, s) => markSeen(s.id)} onReply={(g, s, text) => send(g, text)} />`,
       play: { options: [{ key: "reply", label: "Yanıt alanı", default: true }, { key: "like", label: "Beğeni", default: true }] },
       run: (p: { values: { reply: boolean; like: boolean } }) => {
-        const open = signal(false), start = signal("acme"), log = signal<string[]>([]), liked = signal<string[]>([])
+        const open = signal(false), start = signal("hadi"), log = signal<string[]>([]), liked = signal<string[]>([])
         const add = (l: string) => log.update((x) => [...x.slice(-4), l])
         return <div class="sc-ex-stack">
           <div class="sc-ex-ui-d-tray">{STORIES.map((g) => <StoryRing name={g.name} label={g.name} size="sm" onClick={() => { start.set(g.id); open.set(true) }} />)}</div>

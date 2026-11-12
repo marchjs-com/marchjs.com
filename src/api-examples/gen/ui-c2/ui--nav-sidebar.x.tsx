@@ -10,7 +10,7 @@ import type { ApiExample } from "../../types.ts";
 import "../../ui-c.css";
 
 const example: ApiExample<any> = {
-      code: `<NavSidebar title="Acme" recent={0} items={[
+      code: `<NavSidebar title="HADİ" recent={0} items={[
   { id: "orders", label: "Siparişler", group: "Satış", onSelect: () => go("orders"), badge: 3 },
   { id: "team", label: "Ekip", group: "Yönetim", sub: "4 kişi" },
 ]} />`,
@@ -31,7 +31,7 @@ const example: ApiExample<any> = {
         return <div class="sc-ex-ui-c-stack">
           <div class="sc-ex-ui-c-frame">
             {() => { const open = p.values.open, collapsible = p.values.collapsible
-              return <NavSidebar title="Acme" items={items} recent={0} groupOrder="none" itemOrder="none" defaultOpen={open} collapsible={collapsible}
+              return <NavSidebar title="HADİ" items={items} recent={0} groupOrder="none" itemOrder="none" defaultOpen={open} collapsible={collapsible}
                 storageKey={`sc.ex.navsidebar.${open}`} hotkey={false} palette={false} label="Örnek kenar çubuğu" /> }}
           </div>
           <Log lines={lines} />

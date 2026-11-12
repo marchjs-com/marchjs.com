@@ -8,7 +8,7 @@ import type { ApiExample } from "../../types.ts";
 const example: ApiExample<any> = {
       code: `scanTags(html).filter((t) => t.name === "meta")   // start tags with attributes, no DOM`,
       run: () => {
-        const html = signal(`<title>Acme</title><meta name="description" content="Ayakkabı &amp; çanta"><img src="a.png" alt="">`)
+        const html = signal(`<title>HADİ</title><meta name="description" content="Ayakkabı &amp; çanta"><img src="a.png" alt="">`)
         return <div class="sc-ex-stack"><Text label="HTML" value={html} /><Tags label="Etiketler" items={() => scanTags(html()).map((t) => `${t.name} ${t.text ?? J(t.attrs)}`)} /></div>
       },
     };

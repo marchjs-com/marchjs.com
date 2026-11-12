@@ -9,7 +9,7 @@ const example: ApiExample<any> = {
       code: `registerCommands([{ id: "new", title: "Yeni belge", run: () => create() }])
 openPalette()          // Esc ile kapanır`,
       run: () => {
-        const off = registerCommands([{ id: "ex-open-palette", title: "Örnek komut: merhaba", group: "Örnek", run: () => toast("Merhaba, Acme!", { kind: "success" }) }])
+        const off = registerCommands([{ id: "ex-open-palette", title: "Örnek komut: merhaba", group: "Örnek", run: () => toast("Merhaba, HADİ!", { kind: "success" }) }])
         onCleanup(off)
         return <Row><Button variant="primary" onClick={() => openPalette()}>Paleti aç</Button><span class="hm-muted">“merhaba” yazıp Enter’a bas</span></Row>
       },

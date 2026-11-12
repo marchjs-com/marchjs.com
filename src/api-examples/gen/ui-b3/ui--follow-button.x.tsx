@@ -8,13 +8,13 @@ import type { ApiExample } from "../../types.ts";
 import "../../ui-b.css";
 
 const example: ApiExample<any> = {
-      code: `<FollowButton state={() => $state} private={account.private} name="Acme"
+      code: `<FollowButton state={() => $state} private={account.private} name="HADİ"
   onChange={(next) => { $state = next; api.follow(account.id, next) }} />`,
       play: { options: [{ key: "private", label: "Gizli hesap", default: false }, { key: "size", label: "Boyut", default: "md", options: ["sm", "md"] }] },
       run: (p: { values: { private: boolean; size: "sm" | "md" } }) => {
         const state = signal<FollowState>("follow"), log = useLog()
         return <div class="sc-ex-stack">
-          <Row><strong>Acme</strong><FollowButton state={state} private={() => p.values.private} size={() => p.values.size} name="Acme" onChange={(n) => { state.set(n); log.push(n) }} /></Row>
+          <Row><strong>HADİ</strong><FollowButton state={state} private={() => p.values.private} size={() => p.values.size} name="HADİ" onChange={(n) => { state.set(n); log.push(n) }} /></Row>
           <Log lines={log.lines} />
         </div>
       },

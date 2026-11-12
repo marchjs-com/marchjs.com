@@ -15,10 +15,10 @@ const example: ApiExample<any> = {
       run: () => {
         const kind = signal<"product" | "article" | "faq" | "breadcrumbs">("product")
         const data = () => ({
-          product: () => ld.product({ name: "Koşu ayakkabısı", brand: "Acme", price: 1499, currency: "TRY", availability: "InStock", rating: { value: 4.6, count: 128 } }),
-          article: () => ld.article({ headline: "Acme 2.0 çıktı", author: "Ada", datePublished: "2026-01-15" }),
+          product: () => ld.product({ name: "Koşu ayakkabısı", brand: "HADİ", price: 1499, currency: "TRY", availability: "InStock", rating: { value: 4.6, count: 128 } }),
+          article: () => ld.article({ headline: "HADİ 2.0 çıktı", author: "Ada", datePublished: "2026-01-15" }),
           faq: () => ld.faq([["Kargo ücretli mi?", "500 TL üzeri ücretsiz."]]),
-          breadcrumbs: () => ld.breadcrumbs([["Ana sayfa", "/"], ["Ayakkabı", "/ayakkabi"]], "https://shop.acme.example"),
+          breadcrumbs: () => ld.breadcrumbs([["Ana sayfa", "/"], ["Ayakkabı", "/ayakkabi"]], "https://shop.hadisosyal.com"),
         })[kind()]()
         return <div class="sc-ex-stack"><Row>{(["product", "article", "faq", "breadcrumbs"] as const).map((k) => <Button variant={() => (kind() === k ? "primary" : "secondary")} onClick={() => kind.set(k)}>{k}</Button>)}</Row><Pre text={() => JSON.stringify(data(), null, 1)} /></div>
       },

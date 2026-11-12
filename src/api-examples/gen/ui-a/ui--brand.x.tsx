@@ -7,7 +7,7 @@ import type { ApiExample } from "../../types.ts";
 import "../../ui-a.css";
 
 const example: ApiExample<any> = {
-      code: `<Brand mark={sparkles} name="Acme" sub="Yönetim" href="/" size="lg" />`,
+      code: `<Brand mark={sparkles} name="HADİ" sub="Yönetim" href="/" size="lg" />`,
       play: { options: [
         { key: "size", label: "Boyut", default: "md", options: ["md", "lg"] },
         { key: "sub", label: "Alt satır", default: "Yönetim", options: [{ value: "", label: "yok" }, { value: "Yönetim", label: "Yönetim" }, { value: "Test ortamı", label: "Test ortamı" }] },
@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
       ] },
       run: (p: { values: { size: "md" | "lg"; sub: string; mark: string } }) => () => {
         const { size, sub, mark } = p.values
-        return <Row><Brand mark={mark === "icon" ? sparkles : "A"} name="Acme" sub={sub || undefined} size={size} /></Row>
+        return <Row><Brand mark={mark === "icon" ? sparkles : "A"} name="HADİ" sub={sub || undefined} size={size} /></Row>
       },
     };
 export default example;

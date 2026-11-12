@@ -2,7 +2,7 @@
 import type { Post } from "hadi-march/ui";
 
 const POSTS: Post[] = [
-  { id: "p1", author: { name: "Ada Yılmaz", handle: "ada", verified: true }, time: Date.now() - 4 * 60_000, text: "Acme'nin yeni sürümü yayında: arama iki kat hızlı.", likes: 12, comments: 3 },
-  { id: "p2", author: { name: "Acme Ekibi", handle: "acme" }, time: Date.now() - 52 * 60_000, place: "İzmir", text: "Cumartesi buluşmasına kayıtlar açıldı.", likes: 41, liked: true, comments: 9, shares: 2 },
+  { id: "p1", author: { name: "Ada Yılmaz", handle: "ada", verified: true }, time: Date.now() - 4 * 60_000, text: "HADİ'nin yeni sürümü yayında: arama iki kat hızlı.", likes: 12, comments: 3 },
+  { id: "p2", author: { name: "HADİ Ekibi", handle: "hadisosyal" }, time: Date.now() - 52 * 60_000, place: "İzmir", text: "Cumartesi buluşmasına kayıtlar açıldı.", likes: 41, liked: true, comments: 9, shares: 2 },
 ]
 export { POSTS };

@@ -10,7 +10,7 @@ const example: ApiExample<any> = {
       code: `displace(card, { from: 60, to: 0, frequency: 0.03, duration: 1200 })   // ripples that calm down`,
       play: { options: [{ key: "frequency", label: "Dalga sıklığı", default: 0.03, options: [0.01, 0.03, 0.08] }, { key: "from", label: "Güç", default: 60, options: [30, 60, 120] }] },
       run: (p: { values: { frequency: number; from: number } }) => {
-        const card = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        const card = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         const host = el(<div>{card}</div>)
         return <Stage start={() => {
           card.style.filter = ""; host.querySelectorAll("svg").forEach((s) => s.remove())

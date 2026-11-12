@@ -9,7 +9,7 @@ import { Badge, Button } from "hadi-march/ui";
 import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
-      code: `const chat = new ManagedSocket("wss://chat.acme.example/live")
+      code: `const chat = new ManagedSocket("wss://chat.hadisosyal.com/live")
 chat.subscribe("room:1", (m) => …)          // renewed after every reconnect
 const r = await chat.request({ type: "echo", text: "selam" })
 chat.state()   // "open" | "reconnecting" | …`,

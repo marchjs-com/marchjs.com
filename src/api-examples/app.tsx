@@ -56,7 +56,7 @@ h.canUndo()   // reactive`,
         const TAGS = ["acil", "satış", "destek", "arşiv"]
         return <div class="sc-ex-app-stack"><Row>
           <Button onClick={() => doc.tags.push(TAGS[doc.tags.length % TAGS.length]!)}>Etiket ekle</Button>
-          <Button onClick={() => { doc.title = doc.title === "Taslak" ? "Teklif · Acme" : "Taslak" }}>Başlığı değiştir</Button>
+          <Button onClick={() => { doc.title = doc.title === "Taslak" ? "Teklif · HADİ" : "Taslak" }}>Başlığı değiştir</Button>
           <Button variant="secondary" disabled={() => !hist.canUndo()} onClick={() => hist.undo()}>Geri al</Button>
           <Button variant="secondary" disabled={() => !hist.canRedo()} onClick={() => hist.redo()}>Yinele</Button>
         </Row><Out label="doc" value={() => json({ title: doc.title, tags: [...doc.tags] })} /></div>
@@ -79,7 +79,7 @@ on(app, "cart.**", …)   // anything below cart`,
     },
     persist: {
       code: `const prefs = store({ size: 14 })
-persist(prefs, "acme.prefs")   // loads now; saves 200 ms after a change`,
+persist(prefs, "hadi.prefs")   // loads now; saves 200 ms after a change`,
       run: () => {
         const KEY = "hm-ex-app.prefs"
         const prefs = store({ size: 14 })
@@ -144,7 +144,7 @@ off()`,
         onCleanup(subscribe(app.cart, (e: StoreEvent) => push(log, `${e.op} ${e.path}`)))
         return <div class="sc-ex-app-stack"><Row>
           <Button onClick={() => app.cart.items.push("Kalem")}>Ürün ekle</Button>
-          <Button onClick={() => { app.cart.coupon = app.cart.coupon ? "" : "ACME10" }}>Kupon</Button>
+          <Button onClick={() => { app.cart.coupon = app.cart.coupon ? "" : "HADI10" }}>Kupon</Button>
           <Button variant="ghost" onClick={() => { app.user = app.user === "Ada" ? "Can" : "Ada" }}>user (sepet dışı)</Button>
         </Row><Log lines={log} /></div>
       },
@@ -197,7 +197,7 @@ await setLocale("de")   // the pack downloads the first time only`,
       code: "tKey([\"Merhaba \", \", \", \" yeni ileti\"])   // \"Merhaba {0}, {1} yeni ileti\" — the key t`Merhaba ${a}, ${b} yeni ileti` looks up",
       run: () => {
         const key = (s: TemplateStringsArray, ..._v: unknown[]) => tKey(s)
-        const keys = [key`Merhaba ${"Ada"}`, key`${3} dosya silindi`, key`${"Acme"} ekibine ${"Can"} katıldı`]
+        const keys = [key`Merhaba ${"Ada"}`, key`${3} dosya silindi`, key`${"HADİ"} ekibine ${"Can"} katıldı`]
         const i = signal(0)
         return <div class="sc-ex-app-stack">
           <Segmented value={i} options={keys.map((_, n) => ({ value: n, label: `şablon ${n + 1}` }))} aria-label="Şablon" />
@@ -225,12 +225,12 @@ tt("cart.items", { n: 2 })   // tt("cart.items") or tt("cart.item", …) do not 
       code: `unused("tr", usedKeys)   // ["old.banner"] — translations no code looks up any more`,
       run: () => {
         const KEYS = ["menu.home", "menu.cart", "menu.orders", "old.banner"]
-        messages("x-acme", Object.fromEntries(KEYS.map((k) => [k, k])))
+        messages("x-hadi", Object.fromEntries(KEYS.map((k) => [k, k])))
         const on = KEYS.map((k) => signal(k === "menu.home" || k === "menu.cart"))
         const used = () => KEYS.filter((_, i) => on[i]!())
         return <div class="sc-ex-app-stack">
           <Row>{KEYS.map((k, i) => <Checkbox value={on[i]!} label={k} />)}</Row>
-          <Out label='unused("x-acme", kullanılan)' value={() => json(unused("x-acme", used()))} />
+          <Out label='unused("x-hadi", kullanılan)' value={() => json(unused("x-hadi", used()))} />
         </div>
       },
     },
@@ -248,14 +248,14 @@ tt("cart.items", { n: 2 })   // tt("cart.items") or tt("cart.item", …) do not 
     },
     lazy: {
       code: `const Sales = lazy(() => import("./SalesCard.tsx"), { when: "visible", placeholder: "card", height: "8rem" })
-<Sales name="Acme" />
+<Sales name="HADİ" />
 Sales.preload()   // e.g. on hover`,
       play: { options: [{ key: "placeholder", label: "placeholder", default: "card", options: [{ value: "card", label: "card" }, { value: "chart", label: "chart" }, { value: "text", label: "text" }] }, { key: "when", label: "when", default: "immediate", options: [{ value: "immediate", label: "immediate" }, { value: "interaction", label: "interaction" }] }] },
       run: (p: { values: { placeholder: LazyPlaceholder; when: LazyWhen } }) => {
         const n = signal(0)
         return <div class="sc-ex-app-stack">
           <Row><Button onClick={() => n.update((x) => x + 1)}>Yeniden yükle (900 ms)</Button>{() => (p.values.when === "interaction" ? <span class="hm-muted">Yüklemek için alanın üzerine gel.</span> : null)}</Row>
-          {() => { n(); const ph = p.values.placeholder, when = p.values.when; return untrack(() => { const C = lazy<{ name: string }>(() => wait(900, { default: Sales }), { placeholder: ph, when, height: "7.5rem" }); return <C name="Acme" /> }) }}
+          {() => { n(); const ph = p.values.placeholder, when = p.values.when; return untrack(() => { const C = lazy<{ name: string }>(() => wait(900, { default: Sales }), { placeholder: ph, when, height: "7.5rem" }); return <C name="HADİ" /> }) }}
         </div>
       },
     },
@@ -362,7 +362,7 @@ setLoadDelay(0)`,
       },
     },
     setPreloadManifest: {
-      code: `setPreloadManifest({ "src/pages/users.tsx": ["chunks/users-1.js", "chunks/users-1.css"] }, "https://cdn.acme.test/app/")`,
+      code: `setPreloadManifest({ "src/pages/users.tsx": ["chunks/users-1.js", "chunks/users-1.css"] }, "https://cdn.hadisosyal.com/app/")`,
       run: () => {
         const out = signal(json(chunksOf("demo/report.tsx")))
         // undefined (not part of the type): the next read takes the page's own manifest from index.html again

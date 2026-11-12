@@ -7,6 +7,6 @@ import type { ApiExample } from "../../types.ts";
 const example: ApiExample<any> = {
       code: `const s = store({ a: 1 })
 JSON.stringify(unwrap(s))   // the plain object, no tracking`,
-      run: () => { const s = store({ name: "Acme", tags: ["a", "b"] }); return <Out label="unwrap(s)" value={JSON.stringify(unwrap(s))} /> },
+      run: () => { const s = store({ name: "HADİ", tags: ["a", "b"] }); return <Out label="unwrap(s)" value={JSON.stringify(unwrap(s))} /> },
     };
 export default example;

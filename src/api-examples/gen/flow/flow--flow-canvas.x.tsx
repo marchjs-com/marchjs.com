@@ -18,7 +18,7 @@ const example: ApiExample<any> = {
       run: (p: { values: { tool: "select" | "pan"; fields: boolean } }) => {
         const flow = newFlow()
         return <Load from={flowLib}>{({ FlowCanvas }) => <Stack>
-          <div class="sc-ex-flow-stage"><FlowCanvas flow={flow} tool={() => p.values.tool} fields={() => p.values.fields} minimap={false} label="Acme sipariş akışı" /></div>
+          <div class="sc-ex-flow-stage"><FlowCanvas flow={flow} tool={() => p.values.tool} fields={() => p.values.fields} minimap={false} label="HADİ sipariş akışı" /></div>
           <Row><Out label="seçili" value={() => [...flow.selection()].join(", ") || "—"} /><Out label="tutar" value={() => String(flow.node("order")?.data()["total"] ?? "—")} /></Row>
         </Stack>}</Load>
       },

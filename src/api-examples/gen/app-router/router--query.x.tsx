@@ -8,11 +8,11 @@ import type { ApiExample } from "../../types.ts";
 import "../../app.css";
 
 const example: ApiExample<any> = {
-      code: `// URL /search?q=acme&tag=a&tag=b
-query()   // { q: "acme", tag: ["a", "b"] }`,
+      code: `// URL /search?q=hadi&tag=a&tag=b
+query()   // { q: "hadi", tag: ["a", "b"] }`,
       run: () => <div class="sc-ex-app-stack">
         <Row>
-          <Button size="sm" variant="secondary" onClick={() => setQuery({ q: "acme" })}>q=acme</Button>
+          <Button size="sm" variant="secondary" onClick={() => setQuery({ q: "hadi" })}>q=hadi</Button>
           <Button size="sm" variant="secondary" onClick={() => setQuery({ tag: ["a", "b"] })}>tag=a&tag=b</Button>
           <Button size="sm" variant="ghost" onClick={() => setQuery({ q: null, tag: null })}>Temizle</Button>
         </Row>

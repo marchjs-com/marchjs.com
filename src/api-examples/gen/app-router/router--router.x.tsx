@@ -19,7 +19,7 @@ const example: ApiExample<any> = {
         <p class="hm-muted">Bu sayfanın kendi Router'ı bir outlet seviyesinde şunları gösterir (ikinci bir Router açılmaz):</p>
         <div class="sc-ex-app-frame hm-outlet">
           <span class="sc-ex-app-tag">{() => `.hm-outlet · ${p.values.state}`}</span>
-          {() => p.values.state === "skeleton" ? skeleton("card") : p.values.state === "notFound" ? h(_router.notFoundComp, {}) : <Card title="Siparişler"><p>Acme · 3 açık sipariş</p></Card>}
+          {() => p.values.state === "skeleton" ? skeleton("card") : p.values.state === "notFound" ? h(_router.notFoundComp, {}) : <Card title="Siparişler"><p>HADİ · 3 açık sipariş</p></Card>}
         </div>
         <Row><Out label="bu sayfadaki outlet" value={() => { path(); return String(document.querySelectorAll(".hm-outlet[data-depth]").length) }} /><Out label="route()" value={() => route()?.route.pattern ?? "—"} /></Row>
       </div>,

@@ -18,7 +18,7 @@ import { Demo, Section } from "../demo.tsx";
 import { LitePlayground } from "../play-lite.tsx";
 
 function LiveEditor() {
-  return <Demo wide title="Canlı akış: Acme sipariş akışı" desc="Çalıştır'a basın: sipariş tetikleyiciden geçer, tutara göre ödeme ya da elle onay yoluna ayrılır, iki yol birleşir. Kenarlarda değerler akar ve sayılır, çalışan düğüm parlar; 'Kart reddedilsin' açıkken ödeme düğümü sarsılır. Paletten sürükleyin, portları sürükleyerek bağlayın, sağ tıklayın."
+  return <Demo wide title="Canlı akış: HADİ sipariş akışı" desc="Çalıştır'a basın: sipariş tetikleyiciden geçer, tutara göre ödeme ya da elle onay yoluna ayrılır, iki yol birleşir. Kenarlarda değerler akar ve sayılır, çalışan düğüm parlar; 'Kart reddedilsin' açıkken ödeme düğümü sarsılır. Paletten sürükleyin, portları sürükleyerek bağlayın, sağ tıklayın."
     code={`const flow = createFlow({ types, doc })
 const runner = createFlowRunner(flow)
 <FlowControls runner={runner} flow={flow} />

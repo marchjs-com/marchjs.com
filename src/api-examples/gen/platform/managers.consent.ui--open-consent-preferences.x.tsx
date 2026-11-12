@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
       run: () => {
         const restore = keepConsent(), result = signal("—")
         return <Load from={consentLib}>{({ openConsentPreferences }) => <Row>
-          <Button variant="primary" onClick={async () => result.set(String(await openConsentPreferences({ title: "Acme gizlilik tercihleri" })))}>Tercihleri aç</Button>
+          <Button variant="primary" onClick={async () => result.set(String(await openConsentPreferences({ title: "HADİ gizlilik tercihleri" })))}>Tercihleri aç</Button>
           <Out label="kaydedildi" value={result} /><Out label="izin verilen" value={choices} />
           <Button size="sm" variant="ghost" onClick={restore}>Önceki tercihe dön</Button>
         </Row>}</Load>

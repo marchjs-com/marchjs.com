@@ -9,12 +9,12 @@ import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
       code: `installSeo({
-  site: "https://shop.acme.example",
-  titleTemplate: "%s · Acme",
-  defaults: { og: { siteName: "Acme" } },
+  site: "https://shop.hadisosyal.com",
+  titleTemplate: "%s · HADİ",
+  defaults: { og: { siteName: "HADİ" } },
 })`,
       run: () => {
-        const tpl = signal("%s · Acme")
+        const tpl = signal("%s · HADİ")
         return <div class="sc-ex-stack"><Row><Text label="titleTemplate" value={tpl} /><Out label="Kurulu" value={() => String(headBusy())} /></Row>
           <Out label="Ürünler sayfasının başlığı" value={() => { const t = resolveHead([{ titleTemplate: tpl() }, { title: "Ürünler" }]).find((x) => x.tag === "title"); return t && "text" in t ? t.text : "—" }} />
           <Out label="installSeo" value={`${typeof installSeo} (uygulama açılışında bir kez)`} /></div>

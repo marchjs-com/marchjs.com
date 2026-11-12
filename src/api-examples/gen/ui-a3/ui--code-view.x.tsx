@@ -16,9 +16,9 @@ const example: ApiExample<any> = {
       run: (p: { values: { lang: "ts" | "css" | "json"; lineNumbers: boolean; wrap: boolean } }) => {
         const n = signal(2)
         const SRC = {
-          ts: () => `const team = signal(${n()})\nexport const seats = computed(() => team() * 12) // Acme koltuk hesabı, uzun bir satır yorumu`,
-          css: () => `.acme-card {\n  padding: var(--hm-space-${n()});\n  border-radius: var(--hm-radius);\n}`,
-          json: () => JSON.stringify({ name: "acme", seats: n() * 12, plan: "pro" }, null, 2),
+          ts: () => `const team = signal(${n()})\nexport const seats = computed(() => team() * 12) // HADİ koltuk hesabı, uzun bir satır yorumu`,
+          css: () => `.hadi-card {\n  padding: var(--hm-space-${n()});\n  border-radius: var(--hm-radius);\n}`,
+          json: () => JSON.stringify({ name: "hadi", seats: n() * 12, plan: "pro" }, null, 2),
         }
         return <div class="sc-ex-stack">
           {() => { const { lang, lineNumbers, wrap } = p.values; return <CodeView code={SRC[lang]} lang={lang} lineNumbers={lineNumbers} wrap={wrap} label="Örnek kod" /> }}

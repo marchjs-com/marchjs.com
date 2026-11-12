@@ -17,7 +17,7 @@ off()`,
         onCleanup(subscribe(app.cart, (e: StoreEvent) => push(log, `${e.op} ${e.path}`)))
         return <div class="sc-ex-app-stack"><Row>
           <Button onClick={() => app.cart.items.push("Kalem")}>Ürün ekle</Button>
-          <Button onClick={() => { app.cart.coupon = app.cart.coupon ? "" : "ACME10" }}>Kupon</Button>
+          <Button onClick={() => { app.cart.coupon = app.cart.coupon ? "" : "HADI10" }}>Kupon</Button>
           <Button variant="ghost" onClick={() => { app.user = app.user === "Ada" ? "Can" : "Ada" }}>user (sepet dışı)</Button>
         </Row><Log lines={log} /></div>
       },

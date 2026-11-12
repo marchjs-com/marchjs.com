@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
         { key: "disabled", label: "Kapalı", default: false },
       ] },
       run: (p: { values: { threshold: number; disabled: boolean } }) => {
-        const items = signal(["Acme: yeni sezon duyurusu", "Kitap kulübü: bu ayın kitabı", "Koşu grubu: pazar rotası"])
+        const items = signal(["HADİ: yeni sezon duyurusu", "Kitap kulübü: bu ayın kitabı", "Koşu grubu: pazar rotası"])
         const phase = signal("idle")
         let n = 0
         const refresh = () => new Promise<void>((done) => setTimeout(done, 700))

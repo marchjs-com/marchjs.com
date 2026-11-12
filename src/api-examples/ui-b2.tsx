@@ -12,8 +12,8 @@ import "./ui-b.css";
 export { default as SIG } from "./ui-b2.sig.gen.ts";
 
 const POSTS: Post[] = [
-  { id: "p1", author: { name: "Ada Yılmaz", handle: "ada", verified: true }, time: Date.now() - 4 * 60_000, text: "Acme'nin yeni sürümü yayında: arama iki kat hızlı.", likes: 12, comments: 3 },
-  { id: "p2", author: { name: "Acme Ekibi", handle: "acme" }, time: Date.now() - 52 * 60_000, place: "İzmir", text: "Cumartesi buluşmasına kayıtlar açıldı.", likes: 41, liked: true, comments: 9, shares: 2 },
+  { id: "p1", author: { name: "Ada Yılmaz", handle: "ada", verified: true }, time: Date.now() - 4 * 60_000, text: "HADİ'nin yeni sürümü yayında: arama iki kat hızlı.", likes: 12, comments: 3 },
+  { id: "p2", author: { name: "HADİ Ekibi", handle: "hadisosyal" }, time: Date.now() - 52 * 60_000, place: "İzmir", text: "Cumartesi buluşmasına kayıtlar açıldı.", likes: 41, liked: true, comments: 9, shares: 2 },
 ]
 
 export default examples({
@@ -36,7 +36,7 @@ animate(card, frames, { easing: curve() })   // hadi-march/motion: a name or "cu
   save={(values, { changed, reason }) => api.saveProfile(changed, reason)} />`,
       play: { options: [{ key: "layout", label: "Yerleşim", default: "grid", options: [{ value: "stack", label: "alt alta" }, { value: "grid", label: "ızgara" }] }, { key: "readonly", label: "Salt okunur", default: false }] },
       run: (p: { values: { layout: "stack" | "grid"; readonly: boolean } }) => {
-        const db: { name: string; email: string; team: string | null } = { name: "Ada", email: "ada@acme.test", team: "web" }
+        const db: { name: string; email: string; team: string | null } = { name: "Ada", email: "ada@hadisosyal.com", team: "web" }
         const log = useLog()
         return <div class="sc-ex-stack">
           {() => { const l = p.values.layout, ro = p.values.readonly; return <EditForm schema={Profile} layout={l} cols={2} readonly={ro} title="Profil" submitLabel="Kaydet"
@@ -48,14 +48,14 @@ animate(card, frames, { easing: curve() })   // hadi-march/motion: a name or "cu
       },
     },
     EmailInput: {
-      code: `<Field label="E-posta"><EmailInput bind:value={$mail} placeholder="ad@acme.test" /></Field>
+      code: `<Field label="E-posta"><EmailInput bind:value={$mail} placeholder="ad@hadisosyal.com" /></Field>
 // type="email", autocomplete="email", inputmode="email", the value trimmed`,
       play: { options: [{ key: "disabled", label: "Devre dışı", default: false }] },
       run: (p: { values: { disabled: boolean } }) => {
-        const mail = signal("  ada@acme.test ")
+        const mail = signal("  ada@hadisosyal.com ")
         const ok = () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail())
         return <div class="sc-ex-stack">
-          {() => { const d = p.values.disabled; return <Field label="E-posta" help="Baştaki ve sondaki boşluklar silinir"><EmailInput value={mail} disabled={d} placeholder="ad@acme.test" /></Field> }}
+          {() => { const d = p.values.disabled; return <Field label="E-posta" help="Baştaki ve sondaki boşluklar silinir"><EmailInput value={mail} disabled={d} placeholder="ad@hadisosyal.com" /></Field> }}
           <Row><Out label="Değer" value={() => JSON.stringify(mail())} /><Badge tone={() => (ok() ? "success" : "danger")}>{() => (ok() ? "geçerli" : "geçersiz")}</Badge></Row>
         </div>
       },
@@ -71,7 +71,7 @@ animate(card, frames, { easing: curve() })   // hadi-march/motion: a name or "cu
           {() => (items().length
             ? <div class="sc-ex-stack">{items().map((x) => <Row><Icon of={fileText} /> {x}</Row>)}<Button size="sm" variant="ghost" onClick={() => items.set([])}>Temizle</Button></div>
             : <Empty icon={p.values.icon ? inbox : undefined} title="Henüz rapor yok"
-              action={p.values.action ? <Button variant="primary" onClick={() => items.set(["Acme · Ekim raporu", "Acme · Kasım raporu"])}>Örnek rapor ekle</Button> : undefined}>
+              action={p.values.action ? <Button variant="primary" onClick={() => items.set(["HADİ · Ekim raporu", "HADİ · Kasım raporu"])}>Örnek rapor ekle</Button> : undefined}>
               Oluşturduğun raporlar burada listelenir.
             </Empty>)}
         </div>
@@ -99,10 +99,10 @@ animate(card, frames, { easing: curve() })   // hadi-march/motion: a name or "cu
         const posts = signal<Post[]>(POSTS.map((x) => ({ ...x })))
         const fresh = signal(1)
         const like = (next: boolean, post: Post) => posts.update((l) => l.map((x) => (x.id === post.id ? { ...x, liked: next, likes: x.likes + (next ? 1 : -1) } : x)))
-        const merge = () => { posts.update((l) => [{ id: `n${Date.now()}`, author: { name: "Deniz Kaya", handle: "deniz" }, time: Date.now(), text: "Yeni gönderi: Acme panosu artık karanlık temada.", likes: 0 }, ...l]); fresh.set(0) }
+        const merge = () => { posts.update((l) => [{ id: `n${Date.now()}`, author: { name: "Deniz Kaya", handle: "deniz" }, time: Date.now(), text: "Yeni gönderi: HADİ panosu artık karanlık temada.", likes: 0 }, ...l]); fresh.set(0) }
         return <div class="sc-ex-ui-b-feed">
           <Feed posts={() => (p.values.loading ? [] : posts())} loading={() => p.values.loading} variant={() => p.values.variant}
-            newCount={fresh} onShowNew={merge} onLike={like} label="Acme akışı" />
+            newCount={fresh} onShowNew={merge} onLike={like} label="HADİ akışı" />
         </div>
       },
     },

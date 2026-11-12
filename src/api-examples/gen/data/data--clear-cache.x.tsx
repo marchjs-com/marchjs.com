@@ -21,7 +21,7 @@ const example: ApiExample<any> = {
       run: () => {
         const mounts = signal(0), log = signal<string[]>([])
         const Reader = () => {
-          const q = query(() => { log.update((l) => [...l, `${now()} sunucuya gidildi`]); return wait(300).then(() => "Acme bakiye: ₺12.925") }, { key: "ex-clear-cache", staleTime: 60_000 })
+          const q = query(() => { log.update((l) => [...l, `${now()} sunucuya gidildi`]); return wait(300).then(() => "HADİ bakiye: ₺12.925") }, { key: "ex-clear-cache", staleTime: 60_000 })
           return <Out label="veri" value={() => (q.loading() ? "yükleniyor…" : q())} />
         }
         return <div class="sc-ex-data-stack">

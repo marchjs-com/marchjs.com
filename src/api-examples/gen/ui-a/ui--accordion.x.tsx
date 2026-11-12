@@ -18,8 +18,8 @@ const example: ApiExample<any> = {
       run: (p: { values: { multiple: boolean; variant: "separated" | "contained"; locked: boolean } }) => () => {
         const { multiple, variant, locked } = p.values
         return <Accordion multiple={multiple} variant={variant} open={["plan"]} items={[
-          { id: "plan", icon: star, title: "Plan", subtitle: "Pro · aylık", content: <p>Acme ekibi 12 koltuk kullanıyor; sınırsız proje.</p> },
-          { id: "billing", icon: mail, title: "Fatura", subtitle: "ayın 1'i", content: <p>Faturalar fatura@acme.example adresine gider.</p> },
+          { id: "plan", icon: star, title: "Plan", subtitle: "Pro · aylık", content: <p>HADİ ekibi 12 koltuk kullanıyor; sınırsız proje.</p> },
+          { id: "billing", icon: mail, title: "Fatura", subtitle: "ayın 1'i", content: <p>Faturalar fatura@hadisosyal.com adresine gider.</p> },
           { id: "danger", icon: lock, title: "Hesabı kapat", disabled: locked, content: <p>Bu işlem geri alınamaz.</p> },
         ]} />
       },

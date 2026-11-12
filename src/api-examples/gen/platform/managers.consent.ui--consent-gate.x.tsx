@@ -22,7 +22,7 @@ const example: ApiExample<any> = {
       run: (p: { values: { category: string; custom: boolean } }) => {
         const restore = keepConsent()
         return <Load from={consentLib}>{({ ConsentGate }) => <Stack>
-          {() => <ConsentGate category={p.values.category} label={p.values.custom ? "Harita, izin verdiğinizde Acme'nin sağlayıcısından yüklenir." : undefined}>
+          {() => <ConsentGate category={p.values.category} label={p.values.custom ? "Harita, izin verdiğinizde HADİ'nin sağlayıcısından yüklenir." : undefined}>
             <div class="sc-ex-platform-sample"><Icon of={bell} size="lg" /><p>İçerik yüklendi ({p.values.category}).</p></div>
           </ConsentGate>}
           <Row><Out label="consent.has(kategori)" value={() => String(consent.has(p.values.category))} /><Button size="sm" variant="ghost" onClick={restore}>Önceki tercihe dön</Button></Row>

@@ -6,9 +6,9 @@ import type { ApiExample } from "../../types.ts";
 import "../../ui-e.css";
 
 const example: ApiExample<any> = {
-      code: `parent.append(...markdownNodes("# Başlık\\n\\n**kalın** [bağlantı](https://acme.example)"))`,
+      code: `parent.append(...markdownNodes("# Başlık\\n\\n**kalın** [bağlantı](https://hadisosyal.com)"))`,
       run: () => {
-        const md = signal("# Başlık\n\n**Kalın**, *eğik* ve [bağlantı](https://acme.example).\n\n- Bir\n- İki\n\n<b>HTML metin olarak görünür</b>")
+        const md = signal("# Başlık\n\n**Kalın**, *eğik* ve [bağlantı](https://hadisosyal.com).\n\n- Bir\n- İki\n\n<b>HTML metin olarak görünür</b>")
         return <div class="sc-ex-stack"><Textarea value={md} aria-label="Markdown" rows={4} /><div class="sc-ex-ui-e-md">{() => markdownNodes(md())}</div></div>
       },
     };

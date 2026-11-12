@@ -86,7 +86,7 @@ applyPipe("relative", Date.now() - 90_000)`,
       play: { options: [{ key: "result", label: "Sonuç", default: "ok", options: [{ value: "ok", label: "Başarılı" }, { value: "fail", label: "Hata" }] }, { key: "ms", label: "Gecikme", default: 600, options: [{ value: 300, label: "0,3 sn" }, { value: 600, label: "0,6 sn" }, { value: 1500, label: "1,5 sn" }] }] },
       run: (p: { values: { result: string; ms: number } }) => {
         const tick = signal(0)
-        const load = () => { tick(); const fail = p.values.result === "fail", ms = p.values.ms; return new Promise<string>((ok, no) => setTimeout(() => (fail ? no(new Error("Sunucu yanıt vermedi")) : ok("Acme")), ms)) }
+        const load = () => { tick(); const fail = p.values.result === "fail", ms = p.values.ms; return new Promise<string>((ok, no) => setTimeout(() => (fail ? no(new Error("Sunucu yanıt vermedi")) : ok("HADİ")), ms)) }
         return <div class="sc-ex-stack">
           <Await for={load} loading={<p class="hm-muted">Yükleniyor…</p>} catch={(e: Error) => <p role="alert">{e.message}</p>}>
             {(name: string) => <p>Merhaba, <strong>{name}</strong></p>}
@@ -155,10 +155,10 @@ stop()   // the effect is gone`,
       },
     },
     define: {
-      code: `define("acme-greet", (p) => <b>Merhaba {p.name ?? "dünya"}</b>, { props: ["name"] })
-// <acme-greet name="Ada"></acme-greet>`,
+      code: `define("hadi-greet", (p) => <b>Merhaba {p.name ?? "dünya"}</b>, { props: ["name"] })
+// <hadi-greet name="Ada"></hadi-greet>`,
       run: () => {
-        const tag = "acme-greet-demo"
+        const tag = "hadi-greet-demo"
         if (!customElements.get(tag)) define<"name">(tag, (p) => <strong>Merhaba, {() => p.name ?? "dünya"}</strong>, { props: ["name"] })
         const el = document.createElement(tag)
         const names = ["Ada", "Grace", "Linus"]
@@ -182,7 +182,7 @@ DEV.warn = (...a) => myLogger.warn(...a)  // where they go`,
           out: (q) => <Out label="ad" value={q.name} />,
         }
         const view = computed(() => views[p.values.view] as never)
-        return <Dynamic component={view} name="Acme" />
+        return <Dynamic component={view} name="HADİ" />
       },
     },
     effect: {
@@ -420,9 +420,9 @@ setTimeout(() => runWithOwner(owner, () => onCleanup(stop)), 100)`,
       },
     },
     safeUrl: {
-      code: `safeUrl("https://acme.example")     // kept
+      code: `safeUrl("https://hadisosyal.com")     // kept
 safeUrl("javascript:alert(1)")      // "about:blank"`,
-      run: () => <div class="sc-ex-stack">{["https://acme.example", "/docs", "mailto:info@acme.example", "javascript:alert(1)"].map((u) => <Out label={u} value={safeUrl(u)} />)}</div>,
+      run: () => <div class="sc-ex-stack">{["https://hadisosyal.com", "/docs", "mailto:info@hadisosyal.com", "javascript:alert(1)"].map((u) => <Out label={u} value={safeUrl(u)} />)}</div>,
     },
     setFallbackLocale: {
       code: `setFallbackLocale("en")   // missing Turkish keys show English`,
@@ -529,7 +529,7 @@ toDate("bozuk")               // null`,
     unwrap: {
       code: `const s = store({ a: 1 })
 JSON.stringify(unwrap(s))   // the plain object, no tracking`,
-      run: () => { const s = store({ name: "Acme", tags: ["a", "b"] }); return <Out label="unwrap(s)" value={JSON.stringify(unwrap(s))} /> },
+      run: () => { const s = store({ name: "HADİ", tags: ["a", "b"] }); return <Out label="unwrap(s)" value={JSON.stringify(unwrap(s))} /> },
     },
     useContext: {
       code: `const Size = context<"sm" | "md">("md")

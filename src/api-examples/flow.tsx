@@ -24,7 +24,7 @@ const TYPES: readonly FlowNodeType[] = [
   { type: "note", label: "Kayda yaz", category: "Eylem", color: "brand-purple", inputs: [{ id: "in" }], run: ({ input }) => `kayıt (${String(input)} ₺)` },
 ]
 const doc = (): FlowDoc => ({
-  schema: FLOW_SCHEMA, name: "Acme siparişleri",
+  schema: FLOW_SCHEMA, name: "HADİ siparişleri",
   nodes: [{ id: "order", type: "order", x: 0, y: 48 }, { id: "check", type: "check", x: 320, y: 48 }, { id: "mail", type: "mail", x: 640, y: 0 }, { id: "note", type: "note", x: 640, y: 176 }],
   edges: [{ id: "e1", from: "order.out", to: "check.in" }, { id: "e2", from: "check.yes", to: "mail.in" }, { id: "e3", from: "check.no", to: "note.in" }],
 })
@@ -155,7 +155,7 @@ endOf("api.v2.out")       // ["api.v2", "out"] — the port is after the last do
       run: (p: { values: { tool: "select" | "pan"; fields: boolean } }) => {
         const flow = newFlow()
         return <Load from={flowLib}>{({ FlowCanvas }) => <Stack>
-          <div class="sc-ex-flow-stage"><FlowCanvas flow={flow} tool={() => p.values.tool} fields={() => p.values.fields} minimap={false} label="Acme sipariş akışı" /></div>
+          <div class="sc-ex-flow-stage"><FlowCanvas flow={flow} tool={() => p.values.tool} fields={() => p.values.fields} minimap={false} label="HADİ sipariş akışı" /></div>
           <Row><Out label="seçili" value={() => [...flow.selection()].join(", ") || "—"} /><Out label="tutar" value={() => String(flow.node("order")?.data()["total"] ?? "—")} /></Row>
         </Stack>}</Load>
       },
@@ -171,7 +171,7 @@ endOf("api.v2.out")       // ["api.v2", "out"] — the port is after the last do
         const flow = newFlow(), runner = createFlowRunner(flow)
         onCleanup(() => runner.reset())
         return <Load from={flowLib}>{({ FlowCanvas, FlowControls }) => <Stack>
-          <div class="sc-ex-flow-stage"><FlowCanvas flow={flow} minimap={false} fields={false} label="Acme sipariş akışı" /></div>
+          <div class="sc-ex-flow-stage"><FlowCanvas flow={flow} minimap={false} fields={false} label="HADİ sipariş akışı" /></div>
           {() => <FlowControls runner={runner} flow={flow} timeline={() => p.values.timeline} speeds={p.values.speeds === "slow" ? [0.25, 0.5, 1] : [0.5, 1, 2, 4]} />}
         </Stack>}</Load>
       },
@@ -189,7 +189,7 @@ endOf("api.v2.out")       // ["api.v2", "out"] — the port is after the last do
           <div class="sc-ex-flow-split">
             {() => <FlowPalette flow={flow} search={p.values.search} types={p.values.only === "act" ? TYPES.filter((t) => t.category === "Eylem") : TYPES}
               onAdd={(id, ty) => lines.update((l) => [...l, `${String(ty.label)} eklendi (${id})`].slice(-4))} />}
-            <div class="sc-ex-flow-stage"><FlowCanvas flow={flow} minimap={false} fields={false} label="Acme sipariş akışı" /></div>
+            <div class="sc-ex-flow-stage"><FlowCanvas flow={flow} minimap={false} fields={false} label="HADİ sipariş akışı" /></div>
           </div>
           <Log lines={lines} />
         </Stack>}</Load>

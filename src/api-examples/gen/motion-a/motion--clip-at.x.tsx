@@ -15,7 +15,7 @@ box.style.clipPath = clipAt(progress, { shape: "diamond" })`,
       play: { options: [{ key: "shape", label: "Biçim", default: "circle", options: ["circle", "wipe", "diamond", "curtain", "blinds", "inset"] }] },
       run: (p: { values: { shape: string } }) => {
         const t = signal(60)
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         effect(() => { box.style.clipPath = clipAt(t() / 100, { shape: p.values.shape as never }) })
         let run: Playback | null = null
         onCleanup(() => run?.cancel())

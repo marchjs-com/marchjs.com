@@ -19,7 +19,7 @@ const example: ApiExample<any> = {
         return <div class="sc-ex-stack">
           <StatusBar label="Eşitleme" items={[
             { id: "net", text: () => (p.values.online ? "Çevrim içi" : "Çevrim dışı"), tone: () => (p.values.online ? "success" : "warn") },
-            { id: "user", text: "Acme" },
+            { id: "user", text: "HADİ" },
             { id: "queue", side: "end", text: () => `${pending()} bekleyen`, tone: () => (pending() ? "info" : "neutral"), title: "Şimdi eşitle", onSelect: flush },
           ]} />
           <Row><Button size="sm" onClick={() => pending.update((x) => x + 1)}>Değişiklik yap</Button><Out label="son eşitleme" value={synced} /></Row>

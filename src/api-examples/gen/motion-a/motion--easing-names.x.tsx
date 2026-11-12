@@ -9,12 +9,12 @@ import "../../motion-a.css";
 
 const example: ApiExample<any> = {
       code: `easingNames()            // ["in", "out", "in-out", "back", "spring", …]
-defineEasing("acme-snap", "cubic-bezier(.7, 0, .2, 1)")   // joins the list`,
+defineEasing("hadi-snap", "cubic-bezier(.7, 0, .2, 1)")   // joins the list`,
       run: () => {
         const names = signal(easingNames())
-        const add = () => { defineEasing("acme-snap", "cubic-bezier(.7, 0, .2, 1)"); names.set(easingNames()) }
+        const add = () => { defineEasing("hadi-snap", "cubic-bezier(.7, 0, .2, 1)"); names.set(easingNames()) }
         return <div class="sc-ex-motion-a"><div class="sc-ex-motion-a-chips">{() => names().map((n) => <code class="sc-ex-val">{n}</code>)}</div>
-          <Row><Button size="sm" variant="secondary" onClick={add}>acme-snap ekle</Button><Out label="sayı" value={() => names().length} /></Row></div>
+          <Row><Button size="sm" variant="secondary" onClick={add}>hadi-snap ekle</Button><Out label="sayı" value={() => names().length} /></Row></div>
       },
     };
 export default example;

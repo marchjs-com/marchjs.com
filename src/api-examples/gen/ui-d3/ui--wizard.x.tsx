@@ -18,11 +18,11 @@ const example: ApiExample<any> = {
         const result = signal("—"), step = signal(0)
         const steps = () => [
           { title: "E-posta", schema: schema({ email: { type: "email", label: "E-posta", required: true } }),
-            validate: p.values.check ? (v: Record<string, unknown>) => (String(v["email"] ?? "").endsWith("@acme.test") ? null : { email: "Yalnız @acme.test adresleri" }) : undefined },
+            validate: p.values.check ? (v: Record<string, unknown>) => (String(v["email"] ?? "").endsWith("@hadisosyal.com") ? null : { email: "Yalnız @hadisosyal.com adresleri" }) : undefined },
           { title: "Konular", schema: schema({ weekly: { type: "bool", label: "Haftalık özet", control: "switch" }, product: { type: "bool", label: "Ürün haberleri", control: "switch" } }) },
         ]
         return <div class="sc-ex-stack">
-          {() => { const color = p.values.color; return <Wizard color={color as ColorToken} steps={steps()} initial={{ email: "ada@acme.test" }} submitLabel="Abone ol"
+          {() => { const color = p.values.color; return <Wizard color={color as ColorToken} steps={steps()} initial={{ email: "ada@hadisosyal.com" }} submitLabel="Abone ol"
             onStep={(i: number) => step.set(i)} onSubmit={(v: Record<string, unknown>) => result.set(JSON.stringify(v))} /> }}
           <Row><Out label="adım" value={() => step() + 1} /><Out label="gönderilen" value={result} /></Row>
         </div>

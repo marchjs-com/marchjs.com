@@ -8,10 +8,10 @@ import "../../ui-b.css";
 
 const example: ApiExample<any> = {
       code: `<KeyValueEditor bind:value={$headers} keyPlaceholder="Başlık" valuePlaceholder="Değer" />
-// { "X-Team": "acme", "Retry": "3" }`,
+// { "X-Team": "hadi", "Retry": "3" }`,
       play: { options: [{ key: "numbers", label: "Sayıları dönüştür", default: true }] },
       run: (p: { values: { numbers: boolean } }) => {
-        const headers = signal<Record<string, string | number>>({ "X-Team": "acme", Retry: 3 })
+        const headers = signal<Record<string, string | number>>({ "X-Team": "hadi", Retry: 3 })
         return <div class="sc-ex-stack">
           {() => { const n = p.values.numbers; return <KeyValueEditor value={headers} numbers={n} keyPlaceholder="Başlık" valuePlaceholder="Değer" aria-label="İstek başlıkları" /> }}
           <Out label="Değer" value={() => JSON.stringify(headers())} />

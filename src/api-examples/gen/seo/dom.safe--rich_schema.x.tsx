@@ -13,7 +13,7 @@ const example: ApiExample<any> = {
       code: `parseHtml(html, RICH_SCHEMA)                        // the rich text allowlist (default)
 parseHtml(html, { tags: { p: [], strong: [] } })   // your own, smaller one`,
       run: () => {
-        const own = signal(false), src = `<h2>Başlık</h2><p><b>Kalın</b>, <i>eğik</i>, <a href="https://acme.example">bağlantı</a></p>`
+        const own = signal(false), src = `<h2>Başlık</h2><p><b>Kalın</b>, <i>eğik</i>, <a href="https://hadisosyal.com">bağlantı</a></p>`
         const out = box("")
         effect(() => { out.replaceChildren(parseHtml(src, own() ? { tags: { p: [], strong: [] }, rename: { b: "strong" } } : RICH_SCHEMA)) })
         return <div class="sc-ex-stack"><Row><Button variant={() => (own() ? "secondary" : "primary")} onClick={() => own.set(false)}>RICH_SCHEMA</Button><Button variant={() => (own() ? "primary" : "secondary")} onClick={() => own.set(true)}>Yalnız p + strong</Button></Row>

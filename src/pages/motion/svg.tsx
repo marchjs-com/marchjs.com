@@ -161,7 +161,7 @@ clipReveal(card, { shape: "blinds", count: 7, hide: true })`}
       <div class="sc-mo-poster-wrap" on:pointerdown={at}>
         <div class="sc-mo-poster" ref={(el: HTMLElement) => { poster = el }}>
           <span class="sc-mo-poster-dot sc-mo-d1" /><span class="sc-mo-poster-dot sc-mo-d2" /><span class="sc-mo-poster-dot sc-mo-d3" />
-          <strong>Acme</strong><span>Yaz koleksiyonu</span>
+          <strong>HADİ</strong><span>Yaz koleksiyonu</span>
         </div>
       </div>
     </MotionDemo>
@@ -179,7 +179,7 @@ displace(card, { from: 60, frequency: 0.02 })           // turbulence that calms
         opt("Sıklık", () => $freq, (v: number) => { $freq = v }, { min: 0.005, max: 0.08, step: 0.005, visibleWhen: () => $fx === "displace" }),
       ]} play={filt}>
       <div class="sc-mo-fx" ref={(el: HTMLElement) => { fxEl = el }}>
-        <strong>Acme</strong><span>Dalga dalga gelir</span>
+        <strong>HADİ</strong><span>Dalga dalga gelir</span>
       </div>
     </MotionDemo>
 

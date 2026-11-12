@@ -5,8 +5,8 @@ import { safeUrl } from "hadi-march";
 import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
-      code: `safeUrl("https://acme.example")     // kept
+      code: `safeUrl("https://hadisosyal.com")     // kept
 safeUrl("javascript:alert(1)")      // "about:blank"`,
-      run: () => <div class="sc-ex-stack">{["https://acme.example", "/docs", "mailto:info@acme.example", "javascript:alert(1)"].map((u) => <Out label={u} value={safeUrl(u)} />)}</div>,
+      run: () => <div class="sc-ex-stack">{["https://hadisosyal.com", "/docs", "mailto:info@hadisosyal.com", "javascript:alert(1)"].map((u) => <Out label={u} value={safeUrl(u)} />)}</div>,
     };
 export default example;

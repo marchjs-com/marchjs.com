@@ -202,7 +202,7 @@ registerIconPack(tabler)
 <Button icon={icon("tabler:chart-bar")}>Rapor</Button>  // any icon prop; reactive, empty until the pack loads
 
 // your own set: { id, name, license, resolve(name) → IconDef | Promise }
-registerIconPack({ id: "acme", name: "Acme", license: "MIT", resolve: (n) => acmeIcons[n] })`}>
+registerIconPack({ id: "hadi", name: "HADİ", license: "MIT", resolve: (n) => hadiIcons[n] })`}>
     <div class="sc-byname">
       {shown.map((n) => <button type="button" class="sc-byname-item" on:click={() => { $ref = n }} title={n}><NamedIcon name={n} size="xl" /><code>{n}</code></button>)}
     </div>

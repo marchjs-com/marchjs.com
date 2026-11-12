@@ -171,7 +171,7 @@ matchRoute(routes, "/orders/42")   // { route, params: { id: "42" }, path }`,
     },
     navigate: {
       code: `await navigate("/users/42")
-await navigate("/search?q=acme", { replace: true })
+await navigate("/search?q=hadi", { replace: true })
 navigate("/photos/3", { modal: true })   // over the current page`,
       run: () => {
         // same page, other query: the route stays, only ?tab changes
@@ -305,11 +305,11 @@ params().id   // "42" (reactive)`,
       },
     },
     query: {
-      code: `// URL /search?q=acme&tag=a&tag=b
-query()   // { q: "acme", tag: ["a", "b"] }`,
+      code: `// URL /search?q=hadi&tag=a&tag=b
+query()   // { q: "hadi", tag: ["a", "b"] }`,
       run: () => <div class="sc-ex-app-stack">
         <Row>
-          <Button size="sm" variant="secondary" onClick={() => setQuery({ q: "acme" })}>q=acme</Button>
+          <Button size="sm" variant="secondary" onClick={() => setQuery({ q: "hadi" })}>q=hadi</Button>
           <Button size="sm" variant="secondary" onClick={() => setQuery({ tag: ["a", "b"] })}>tag=a&tag=b</Button>
           <Button size="sm" variant="ghost" onClick={() => setQuery({ q: null, tag: null })}>Temizle</Button>
         </Row>
@@ -353,7 +353,7 @@ route()?.meta.title`,
         <p class="hm-muted">Bu sayfanın kendi Router'ı bir outlet seviyesinde şunları gösterir (ikinci bir Router açılmaz):</p>
         <div class="sc-ex-app-frame hm-outlet">
           <span class="sc-ex-app-tag">{() => `.hm-outlet · ${p.values.state}`}</span>
-          {() => p.values.state === "skeleton" ? skeleton("card") : p.values.state === "notFound" ? h(_router.notFoundComp, {}) : <Card title="Siparişler"><p>Acme · 3 açık sipariş</p></Card>}
+          {() => p.values.state === "skeleton" ? skeleton("card") : p.values.state === "notFound" ? h(_router.notFoundComp, {}) : <Card title="Siparişler"><p>HADİ · 3 açık sipariş</p></Card>}
         </div>
         <Row><Out label="bu sayfadaki outlet" value={() => { path(); return String(document.querySelectorAll(".hm-outlet[data-depth]").length) }} /><Out label="route()" value={() => route()?.route.pattern ?? "—"} /></Row>
       </div>,
@@ -366,13 +366,13 @@ route()?.meta.title`,
       </div>,
     },
     setMeta: {
-      code: `setMeta({ title: "Sipariş 42 · Acme", description: "Sipariş ayrıntısı" })`,
+      code: `setMeta({ title: "Sipariş 42 · HADİ", description: "Sipariş ayrıntısı" })`,
       run: () => {
         const prev = document.title, title = signal(document.title)
         onCleanup(() => setMeta({ title: prev }))
         const set = (v: string) => { setMeta({ title: v }); title.set(document.title) }
         return <Row>
-          <Button onClick={() => set("Sipariş 42 · Acme")}>Başlığı değiştir</Button>
+          <Button onClick={() => set("Sipariş 42 · HADİ")}>Başlığı değiştir</Button>
           <Button variant="ghost" onClick={() => set(prev)}>Geri al</Button>
           <Out label="document.title" value={title} />
         </Row>

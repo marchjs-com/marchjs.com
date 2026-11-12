@@ -8,12 +8,12 @@ import { twitterTags } from "hadi-march/seo";
 import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
-      code: `twitterTags({ site: "@acme", image: "https://acme.example/og.png" })
+      code: `twitterTags({ site: "@hadisosyal", image: "https://hadisosyal.com/og.png" })
 // card: "summary_large_image" because there is an image`,
       run: () => {
-        const img = signal(true), site = signal("@acme")
+        const img = signal(true), site = signal("@hadisosyal")
         return <div class="sc-ex-stack"><Row><Text label="site" value={site} /><Button variant={() => (img() ? "primary" : "secondary")} onClick={() => img.set(!img())}>Görsel</Button></Row>
-          <Tags label="twitter" items={() => twitterTags({ site: site(), title: "Acme", ...(img() ? { image: "https://acme.example/og.png" } : {}) }).map((m) => `${m.name}=${m.content}`)} /></div>
+          <Tags label="twitter" items={() => twitterTags({ site: site(), title: "HADİ", ...(img() ? { image: "https://hadisosyal.com/og.png" } : {}) }).map((m) => `${m.name}=${m.content}`)} /></div>
       },
     };
 export default example;

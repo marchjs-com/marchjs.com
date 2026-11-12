@@ -104,18 +104,18 @@ const ensureGauge = () => {
     element: (g) => g.el,
   })
 }
-const ensureAcme = () => {
-  keyframes("acme-drop", [{ transform: "translateY(-40px)", opacity: 0 }, { transform: "translateY(0px)", opacity: 1 }], { duration: 600, easing: "bounce" })
-  keyframes("acme-rise", { opacity: [0, 1], transform: ["translateY(24px)", "translateY(0px)"] }, { duration: 420, easing: "expo" })
+const ensureHadi = () => {
+  keyframes("hadi-drop", [{ transform: "translateY(-40px)", opacity: 0 }, { transform: "translateY(0px)", opacity: 1 }], { duration: 600, easing: "bounce" })
+  keyframes("hadi-rise", { opacity: [0, 1], transform: ["translateY(24px)", "translateY(0px)"] }, { duration: 420, easing: "expo" })
 }
 let motionReady = false
 const ensureMotion = () => {
   if (motionReady) return
   motionReady = true
   defineMotion({
-    keyframes: { "acme-wiggle": { frames: [{ transform: "rotate(0deg)" }, { transform: "rotate(-10deg)" }, { transform: "rotate(8deg)" }, { transform: "rotate(-4deg)" }, { transform: "rotate(0deg)" }], defaults: { duration: 500 } } },
-    easings: { "acme-punch": "cubic-bezier(.3, 1.6, .5, 1)" },
-    presets: { "acme-wiggle-slow": { use: "acme-wiggle", duration: 1100, easing: "in-out" } },
+    keyframes: { "hadi-wiggle": { frames: [{ transform: "rotate(0deg)" }, { transform: "rotate(-10deg)" }, { transform: "rotate(8deg)" }, { transform: "rotate(-4deg)" }, { transform: "rotate(0deg)" }], defaults: { duration: 500 } } },
+    easings: { "hadi-punch": "cubic-bezier(.3, 1.6, .5, 1)" },
+    presets: { "hadi-wiggle-slow": { use: "hadi-wiggle", duration: 1100, easing: "in-out" } },
   })
 }
 
@@ -126,7 +126,7 @@ export default examples({
   { duration: 500, easing: "out" })`,
       play: { options: [{ key: "easing", label: "Eğri", default: "out", options: ["out", "spring", "bounce", "back"] }, { key: "gap", label: "Gecikme", default: 80, options: [{ value: 0, label: "yok" }, { value: 80, label: "80 ms" }, { value: 160, label: "160 ms" }] }] },
       run: (p: { values: { easing: string; gap: number } }) => {
-        const cards = [1, 2, 3].map((n) => el(<div class="sc-ex-motion-a-card">Acme {n}</div>))
+        const cards = [1, 2, 3].map((n) => el(<div class="sc-ex-motion-a-card">HADİ {n}</div>))
         return <Stage start={() => { const d = stagger(p.values.gap); return cards.map((c, i) => animate(c, FADE_UP, { duration: 500, easing: p.values.easing, delay: d(i, cards.length) })) }}>{cards}</Stage>
       },
     },
@@ -198,7 +198,7 @@ box.style.clipPath = clipAt(progress, { shape: "diamond" })`,
       play: { options: [{ key: "shape", label: "Biçim", default: "circle", options: ["circle", "wipe", "diamond", "curtain", "blinds", "inset"] }] },
       run: (p: { values: { shape: string } }) => {
         const t = signal(60)
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         effect(() => { box.style.clipPath = clipAt(t() / 100, { shape: p.values.shape as never }) })
         let run: Playback | null = null
         onCleanup(() => run?.cancel())
@@ -213,7 +213,7 @@ box.style.clipPath = clipAt(progress, { shape: "diamond" })`,
 clipFrames({ shape: "wipe", hide: true })   // the same, reversed`,
       play: { options: [{ key: "shape", label: "Biçim", default: "diamond", options: ["circle", "wipe", "diamond", "curtain", "blinds", "inset"] }, { key: "hide", label: "Gizle", default: false }] },
       run: (p: { values: { shape: string; hide: boolean } }) => {
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         const frames = () => clipFrames({ shape: p.values.shape as never, hide: p.values.hide })
         return <Stage start={() => animate(box, frames(), { duration: 800, easing: "in-out" })} extra={<Out label="ilk kare" value={() => String(frames()[0]!.clipPath)} />}>{box}</Stage>
       },
@@ -223,7 +223,7 @@ clipFrames({ shape: "wipe", hide: true })   // the same, reversed`,
 clipReveal(panel, { shape: "blinds", count: 8, hide: true })`,
       play: { options: [{ key: "shape", label: "Biçim", default: "circle", options: ["circle", "wipe", "diamond", "curtain", "blinds", "inset"] }, { key: "hide", label: "Gizle", default: false }] },
       run: (p: { values: { shape: string; hide: boolean } }) => {
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         return <Stage start={() => clipReveal(box, { shape: p.values.shape as never, hide: p.values.hide, duration: 900, origin: { x: 20, y: 80 } })}>{box}</Stage>
       },
     },
@@ -287,13 +287,13 @@ timeline().add(gauge, { level: [0, 100] }, { duration: 1200 }).play()`,
       },
     },
     defineEasing: {
-      code: `defineEasing("acme-snap", (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2))
-defineEasing("acme-soft", "cubic-bezier(.4, 0, .2, 1)")
-animate(ball, frames, { easing: "acme-snap" })`,
-      play: { options: [{ key: "name", label: "Eğri", default: "acme-snap", options: ["acme-snap", "acme-soft"] }] },
+      code: `defineEasing("hadi-snap", (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2))
+defineEasing("hadi-soft", "cubic-bezier(.4, 0, .2, 1)")
+animate(ball, frames, { easing: "hadi-snap" })`,
+      play: { options: [{ key: "name", label: "Eğri", default: "hadi-snap", options: ["hadi-snap", "hadi-soft"] }] },
       run: (p: { values: { name: string } }) => {
-        defineEasing("acme-snap", (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2))
-        defineEasing("acme-soft", "cubic-bezier(.4, 0, .2, 1)")
+        defineEasing("hadi-snap", (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2))
+        defineEasing("hadi-soft", "cubic-bezier(.4, 0, .2, 1)")
         const l = lane()
         return <Stage start={() => animate(l.ball, l.frames(), { duration: 1000, easing: p.values.name })}
           extra={<><Out label="kayıtlı" value={() => String(easingNames().includes(p.values.name))} /><Out label="CSS" value={() => ease(p.values.name).css ?? "yalnız JS"} /></>}>{l.track}</Stage>
@@ -301,40 +301,40 @@ animate(ball, frames, { easing: "acme-snap" })`,
     },
     defineMotion: {
       code: `defineMotion({
-  keyframes: { "acme-wiggle": { frames: [...], defaults: { duration: 500 } } },
-  easings: { "acme-punch": "cubic-bezier(.3, 1.6, .5, 1)" },
-  presets: { "acme-wiggle-slow": { use: "acme-wiggle", duration: 1100 } },
+  keyframes: { "hadi-wiggle": { frames: [...], defaults: { duration: 500 } } },
+  easings: { "hadi-punch": "cubic-bezier(.3, 1.6, .5, 1)" },
+  presets: { "hadi-wiggle-slow": { use: "hadi-wiggle", duration: 1100 } },
 })
-animate(card, "acme-wiggle-slow")`,
-      play: { options: [{ key: "name", label: "Ad", default: "acme-wiggle", options: ["acme-wiggle", "acme-wiggle-slow"] }, { key: "easing", label: "Eğri", default: "", options: [{ value: "", label: "kendi" }, { value: "acme-punch", label: "acme-punch" }] }] },
+animate(card, "hadi-wiggle-slow")`,
+      play: { options: [{ key: "name", label: "Ad", default: "hadi-wiggle", options: ["hadi-wiggle", "hadi-wiggle-slow"] }, { key: "easing", label: "Eğri", default: "", options: [{ value: "", label: "kendi" }, { value: "hadi-punch", label: "hadi-punch" }] }] },
       run: (p: { values: { name: string; easing: string } }) => {
         ensureMotion()
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         return <Stage start={() => animate(box, p.values.name, p.values.easing ? { easing: p.values.easing } : {})}
-          extra={<Out label="kayıtlı" value={() => keyframeNames().filter((n) => n.startsWith("acme-")).join(", ")} />}>{box}</Stage>
+          extra={<Out label="kayıtlı" value={() => keyframeNames().filter((n) => n.startsWith("hadi-")).join(", ")} />}>{box}</Stage>
       },
     },
     definePageTransition: {
-      code: `definePageTransition("acme-tilt", (side, dir) => side === "in"
+      code: `definePageTransition("hadi-tilt", (side, dir) => side === "in"
   ? [{ opacity: 0, transform: "rotate(6deg) translateY(24px)" }, { opacity: 1, transform: "none" }]
   : [{ opacity: 1 }, { opacity: 0 }])
-// { path: "/photos", meta: { transition: "acme-tilt" } }`,
+// { path: "/photos", meta: { transition: "hadi-tilt" } }`,
       run: () => {
-        definePageTransition("acme-tilt", (side, dir) => {
+        definePageTransition("hadi-tilt", (side, dir) => {
           const k = dir === "back" ? -1 : 1
           return side === "in" ? [{ opacity: 0, transform: `rotate(${6 * k}deg) translateY(${24 * k}px)` }, { opacity: 1, transform: "none" }] : [{ opacity: 1 }, { opacity: 0 }]
         })
-        const v: PageVariant = { name: "acme-tilt", frames: (...a) => transitionFrames("acme-tilt", ...a) }
+        const v: PageVariant = { name: "hadi-tilt", frames: (...a) => transitionFrames("hadi-tilt", ...a) }
         return <PageStage variant={() => v} />
       },
     },
     defineTransition: {
-      code: `defineTransition("acmePop", (o) => [{ opacity: 0, transform: "scale(.6)" }, { opacity: 1, transform: "none" }])
-<If when={$open}><div transition:acmePop={{ duration: 300 }}>Acme</div></If>`,
+      code: `defineTransition("hadiPop", (o) => [{ opacity: 0, transform: "scale(.6)" }, { opacity: 1, transform: "none" }])
+<If when={$open}><div transition:hadiPop={{ duration: 300 }}>HADİ</div></If>`,
       run: () => {
-        defineTransition("acmePop", () => [{ opacity: 0, transform: "scale(.6)" }, { opacity: 1, transform: "none" }])
+        defineTransition("hadiPop", () => [{ opacity: 0, transform: "scale(.6)" }, { opacity: 1, transform: "none" }])
         const open = signal(true)
-        return <div class="sc-ex-motion-a"><div class="sc-ex-motion-a-stage"><If when={open}><div class="sc-ex-motion-a-card" transition:acmePop={{ duration: 320 }}>Acme</div></If></div>
+        return <div class="sc-ex-motion-a"><div class="sc-ex-motion-a-stage"><If when={open}><div class="sc-ex-motion-a-card" transition:hadiPop={{ duration: 320 }}>HADİ</div></If></div>
           <Row><Button size="sm" variant="secondary" onClick={() => open.update((x) => !x)}>{() => (open() ? "Kaldır" : "Göster")}</Button></Row></div>
       },
     },
@@ -342,7 +342,7 @@ animate(card, "acme-wiggle-slow")`,
       code: `displace(card, { from: 60, to: 0, frequency: 0.03, duration: 1200 })   // ripples that calm down`,
       play: { options: [{ key: "frequency", label: "Dalga sıklığı", default: 0.03, options: [0.01, 0.03, 0.08] }, { key: "from", label: "Güç", default: 60, options: [30, 60, 120] }] },
       run: (p: { values: { frequency: number; from: number } }) => {
-        const card = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        const card = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         const host = el(<div>{card}</div>)
         return <Stage start={() => {
           card.style.filter = ""; host.querySelectorAll("svg").forEach((s) => s.remove())
@@ -357,7 +357,7 @@ animate(card, "acme-wiggle-slow")`,
         const pos = signal("0, 0")
         return <div class="sc-ex-motion-a"><div class="sc-ex-motion-a-stage sc-ex-motion-a-stage-free">
           {() => <div class="sc-ex-motion-a-drag" tabindex="0" role="button" aria-label="Sürüklenebilir kutu"
-            use:drag={{ axis: p.values.axis, bounds: { left: -80, right: 80, top: -24, bottom: 24 }, snapBack: p.values.snapBack, onMove: (m: { x: number; y: number }) => pos.set(`${Math.round(m.x)}, ${Math.round(m.y)}`) }}>Acme</div>}
+            use:drag={{ axis: p.values.axis, bounds: { left: -80, right: 80, top: -24, bottom: 24 }, snapBack: p.values.snapBack, onMove: (m: { x: number; y: number }) => pos.set(`${Math.round(m.x)}, ${Math.round(m.y)}`) }}>HADİ</div>}
           <p class="sc-ex-motion-a-hint">Kutuyu sürükle ya da odaktayken ok tuşlarına bas.</p></div>
           <Row><Out label="konum" value={pos} /></Row></div>
       },
@@ -418,12 +418,12 @@ e.css          // "linear(…)" for WAAPI, e.duration: the spring's own length`,
     },
     easingNames: {
       code: `easingNames()            // ["in", "out", "in-out", "back", "spring", …]
-defineEasing("acme-snap", "cubic-bezier(.7, 0, .2, 1)")   // joins the list`,
+defineEasing("hadi-snap", "cubic-bezier(.7, 0, .2, 1)")   // joins the list`,
       run: () => {
         const names = signal(easingNames())
-        const add = () => { defineEasing("acme-snap", "cubic-bezier(.7, 0, .2, 1)"); names.set(easingNames()) }
+        const add = () => { defineEasing("hadi-snap", "cubic-bezier(.7, 0, .2, 1)"); names.set(easingNames()) }
         return <div class="sc-ex-motion-a"><div class="sc-ex-motion-a-chips">{() => names().map((n) => <code class="sc-ex-val">{n}</code>)}</div>
-          <Row><Button size="sm" variant="secondary" onClick={add}>acme-snap ekle</Button><Out label="sayı" value={() => names().length} /></Row></div>
+          <Row><Button size="sm" variant="secondary" onClick={add}>hadi-snap ekle</Button><Out label="sayı" value={() => names().length} /></Row></div>
       },
     },
     Effect: {
@@ -444,7 +444,7 @@ fx.progressAt(400)   // eased progress at 400 ms`,
       code: `filterBlur(title, { from: 16, axis: "x", duration: 800 })   // a motion blur settling to sharp`,
       play: { options: [{ key: "axis", label: "Eksen", default: "x", options: ["both", "x", "y"] }, { key: "from", label: "Bulanıklık", default: 16, options: [8, 16, 32] }] },
       run: (p: { values: { axis: string; from: number } }) => {
-        const title = el(<h3>Acme</h3>)
+        const title = el(<h3>HADİ</h3>)
         const host = el(<div>{title}</div>)
         return <Stage start={() => { title.style.filter = ""; host.querySelectorAll("svg").forEach((s) => s.remove()); return filterBlur(title, { from: p.values.from, axis: p.values.axis as "x", duration: 900 }) }}>{host}</Stage>
       },
@@ -464,7 +464,7 @@ polys[0].pts    // [x0, y0, x1, y1, …] curves as 12 straight steps`,
     flip: {
       code: `flip(Array.from(list.children), () => list.append(...shuffled))   // First, mutate, Last, Invert, Play`,
       run: () => {
-        const list = el(<ul class="sc-ex-motion-a-flip">{["Acme", "Ada", "Bora", "Cem", "Defne", "Ece"].map((n) => <li>{n}</li>)}</ul>)
+        const list = el(<ul class="sc-ex-motion-a-flip">{["HADİ", "Ada", "Bora", "Cem", "Defne", "Ece"].map((n) => <li>{n}</li>)}</ul>)
         const items = () => Array.from(list.children)
         queueMicrotask(() => flip(items(), () => undefined))
         const shuffle = () => { const a = items(); a.sort(() => Math.random() - 0.5); flip(a, () => list.append(...a), { duration: 420 }) }
@@ -531,13 +531,13 @@ m.stop()`,
       },
     },
     getKeyframes: {
-      code: `keyframes("acme-rise", { opacity: [0, 1], transform: ["translateY(24px)", "none"] }, { duration: 420 })
-getKeyframes("acme-rise")?.defaults   // { duration: 420, easing: "expo" }
+      code: `keyframes("hadi-rise", { opacity: [0, 1], transform: ["translateY(24px)", "none"] }, { duration: 420 })
+getKeyframes("hadi-rise")?.defaults   // { duration: 420, easing: "expo" }
 getKeyframes("missing")               // null`,
-      play: { options: [{ key: "name", label: "Ad", default: "acme-rise", options: ["acme-rise", "acme-drop", "yok-boyle-bir-ad"] }] },
+      play: { options: [{ key: "name", label: "Ad", default: "hadi-rise", options: ["hadi-rise", "hadi-drop", "yok-boyle-bir-ad"] }] },
       run: (p: { values: { name: string } }) => {
-        ensureAcme()
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        ensureHadi()
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         const def = () => getKeyframes(p.values.name)
         return <Stage start={() => (def() ? animate(box, p.values.name) : null)} extra={<><Out label="bulundu" value={() => String(!!def())} /><Out label="varsayılan" value={() => (def() ? JSON.stringify(def()!.defaults) : "null")} /></>}>{box}</Stage>
       },
@@ -581,7 +581,7 @@ off()                                  // remove the filter`,
 <For each={$items} key="id" animate>{(it) => <li>{it().name}</li>}</For>`,
       run: () => {
         installFlip()
-        const items = signal([{ id: 1, name: "Acme" }, { id: 2, name: "Ada" }, { id: 3, name: "Bora" }, { id: 4, name: "Cem" }])
+        const items = signal([{ id: 1, name: "HADİ" }, { id: 2, name: "Ada" }, { id: 3, name: "Bora" }, { id: 4, name: "Cem" }])
         const shuffle = () => items.update((l) => [...l].sort(() => Math.random() - 0.5))
         const add = () => items.update((l) => [...l, { id: Date.now(), name: `Yeni ${l.length + 1}` }])
         return <div class="sc-ex-motion-a"><div class="sc-ex-motion-a-stage"><ul class="sc-ex-motion-a-flip"><For each={items} key="id" animate>{(it: () => { name: string }) => <li>{it().name}</li>}</For></ul></div>
@@ -594,20 +594,20 @@ animate(card, "pop")                // by name, anywhere`,
       play: { options: [{ key: "name", label: "Ad", default: "pop", options: ["fadeUp", "pop", "shake", "wobble", "bounceIn", "flipIn", "blurIn", "zoomIn"] }] },
       run: (p: { values: { name: string } }) => {
         const names = Object.keys(installPresets())
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         return <Stage start={() => animate(box, p.values.name)} extra={<Out label="kayıtlı hazır" value={names.length} />}>{box}</Stage>
       },
     },
     installTransitions: {
       code: `installTransitions()    // fade, slide, scale, blur and fly as WAAPI transitions
-<If when={$open}><div transition:blur={{ amount: 10 }}>Acme</div></If>`,
+<If when={$open}><div transition:blur={{ amount: 10 }}>HADİ</div></If>`,
       play: { options: [{ key: "kind", label: "Geçiş", default: "blur", options: ["blur", "fly"] }] },
       run: (p: { values: { kind: string } }) => {
         installTransitions()
         const open = signal(true)
         return <div class="sc-ex-motion-a"><div class="sc-ex-motion-a-stage">{() => p.values.kind === "blur"
-          ? <If when={open}><div class="sc-ex-motion-a-card" transition:blur={{ amount: 10, duration: 400 }}>Acme</div></If>
-          : <If when={open}><div class="sc-ex-motion-a-card" transition:fly={{ y: 32, duration: 400 }}>Acme</div></If>}</div>
+          ? <If when={open}><div class="sc-ex-motion-a-card" transition:blur={{ amount: 10, duration: 400 }}>HADİ</div></If>
+          : <If when={open}><div class="sc-ex-motion-a-card" transition:fly={{ y: 32, duration: 400 }}>HADİ</div></If>}</div>
           <Row><Button size="sm" variant="secondary" onClick={() => open.update((x) => !x)}>{() => (open() ? "Kaldır" : "Göster")}</Button></Row></div>
       },
     },
@@ -629,32 +629,32 @@ path.setAttribute("d", mix(0.5))    // halfway, even with different command list
       },
     },
     keyframeNames: {
-      code: `keyframeNames()    // ["acme-rise", "acme-drop", …]: every registered keyframe and preset
-keyframes("acme-extra", { opacity: [0, 1] })`,
+      code: `keyframeNames()    // ["hadi-rise", "hadi-drop", …]: every registered keyframe and preset
+keyframes("hadi-extra", { opacity: [0, 1] })`,
       run: () => {
-        ensureAcme()
+        ensureHadi()
         const names = signal(keyframeNames())
-        const add = () => { keyframes("acme-extra", { opacity: [0, 1] }); names.set(keyframeNames()) }
+        const add = () => { keyframes("hadi-extra", { opacity: [0, 1] }); names.set(keyframeNames()) }
         return <div class="sc-ex-motion-a"><div class="sc-ex-motion-a-chips">{() => names().map((n) => <code class="sc-ex-val">{n}</code>)}</div>
-          <Row><Button size="sm" variant="secondary" onClick={add}>acme-extra ekle</Button><Out label="sayı" value={() => names().length} /></Row></div>
+          <Row><Button size="sm" variant="secondary" onClick={add}>hadi-extra ekle</Button><Out label="sayı" value={() => names().length} /></Row></div>
       },
     },
     keyframes: {
-      code: `keyframes("acme-drop", [{ transform: "translateY(-40px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: 600, easing: "bounce" })
-animate(card, "acme-drop")`,
+      code: `keyframes("hadi-drop", [{ transform: "translateY(-40px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: 600, easing: "bounce" })
+animate(card, "hadi-drop")`,
       play: { options: [{ key: "easing", label: "Eğri", default: "", options: [{ value: "", label: "kayıtlı" }, { value: "spring", label: "spring" }, { value: "out", label: "out" }] }] },
       run: (p: { values: { easing: string } }) => {
-        ensureAcme()
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
-        return <Stage start={() => animate(box, "acme-drop", p.values.easing ? { easing: p.values.easing } : {})}>{box}</Stage>
+        ensureHadi()
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
+        return <Stage start={() => animate(box, "hadi-drop", p.values.easing ? { easing: p.values.easing } : {})}>{box}</Stage>
       },
     },
     keyframesCss: {
-      code: `keyframesCss({ names: ["acme-rise"] })    // @keyframes hm-acme-rise { … } .hm-anim-acme-rise { … }
+      code: `keyframesCss({ names: ["hadi-rise"] })    // @keyframes hm-hadi-rise { … } .hm-anim-hadi-rise { … }
 // node tools/gen-motion-css.js <module> out.css --presets`,
-      play: { options: [{ key: "name", label: "Ad", default: "acme-rise", options: ["acme-rise", "acme-drop"] }, { key: "prefix", label: "Önek", default: "hm-", options: ["hm-", "acme-"] }] },
+      play: { options: [{ key: "name", label: "Ad", default: "hadi-rise", options: ["hadi-rise", "hadi-drop"] }, { key: "prefix", label: "Önek", default: "hm-", options: ["hm-", "hadi-"] }] },
       run: (p: { values: { name: string; prefix: string } }) => {
-        ensureAcme()
+        ensureHadi()
         return <pre class="sc-ex-motion-a-pre">{() => keyframesCss({ names: [p.values.name], prefix: p.values.prefix })}</pre>
       },
     },
@@ -719,7 +719,7 @@ await pb.finished`,
 animate(card, frames, timing)`,
       play: { options: [{ key: "name", label: "Hazır", default: "shake", options: ["fadeUp", "pop", "shake", "wobble", "bounceIn", "flipIn", "blurIn", "pulse"] }] },
       run: (p: { values: { name: keyof typeof PRESETS } }) => {
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
         return <Stage start={() => { const [frames, timing] = PRESETS[p.values.name] as unknown as [never, Record<string, unknown>]; return animate(box, frames, { ...timing, iterations: timing.iterations === Infinity ? 3 : 1 }) }}
           extra={<Out label="süre" value={() => `${(PRESETS[p.values.name][1] as { duration?: number }).duration ?? "yayın"} ms`} />}>{box}</Stage>
       },

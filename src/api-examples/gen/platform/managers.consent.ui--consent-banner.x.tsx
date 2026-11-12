@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
       run: (p: { values: { title: string } }) => {
         const restore = keepConsent()
         return <Load from={consentLib}>{({ ConsentBanner, showConsentBanner }) => <Stack>
-          {() => <ConsentBanner inline always title={p.values.title} text="Acme, ziyaretleri ölçmek için analitik çerez kullanmak istiyor." />}
+          {() => <ConsentBanner inline always title={p.values.title} text="HADİ, ziyaretleri ölçmek için analitik çerez kullanmak istiyor." />}
           <Row><Out label="izin verilen" value={choices} /><Button size="sm" variant="ghost" onClick={() => { restore(); showConsentBanner() }}>Önceki tercihe dön</Button></Row>
         </Stack>}</Load>
       },

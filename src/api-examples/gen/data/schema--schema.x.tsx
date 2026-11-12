@@ -25,7 +25,7 @@ Product.validate(values)   // { ok, errors: { price: "…" }, values }`,
           price: { type: "money", currency: "TRY", min: 1, label: "Fiyat" },
           email: { type: "email", label: "İletişim" },
         })
-        const values = signal<Record<string, string>>({ title: "Acme kupa", price: "0", email: "satis@acme" })
+        const values = signal<Record<string, string>>({ title: "HADİ kupa", price: "0", email: "satis@hadi" })
         const set = (k: string) => (v: string) => values.update((o) => ({ ...o, [k]: v }))
         const res = () => Product.validate(values())
         return <div class="sc-ex-data-stack">

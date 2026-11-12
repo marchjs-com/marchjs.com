@@ -208,7 +208,7 @@ function MockDemo() {
 // ------------------------------------------------------------------ WebSocket: mock notification stream
 const ws = mockSocketServer(() => 120 + Math.round(delay() / 4));
 let seq = 0;
-const NOTES = ["Yeni yorum: Acme bütçe taslağı", "Yeni sipariş: #1042", "Bir panoya eklendiniz", "Yedekleme tamamlandı", "Rapor dosyası güncellendi", "3 yeni üye katıldı"];
+const NOTES = ["Yeni yorum: HADİ bütçe taslağı", "Yeni sipariş: #1042", "Bir panoya eklendiniz", "Yedekleme tamamlandı", "Rapor dosyası güncellendi", "3 yeni üye katıldı"];
 ws.ws("/demo-ws", (c) => c.send({ type: "hello" }), (msg: { type?: string }) => (msg.type === "ask" ? { answer: `Sunucu saati ${new Date().toLocaleTimeString("tr")}` } : undefined));
 const sock = new ManagedSocket<Notice | { type: string }, { type: string }>("ws:/demo-ws", { factory: ws.factory, lazy: true, reconnect: { min: 600, max: 5000 }, heartbeat: { interval: 5000 } });
 const SOCK_TEXT = { idle: "bekliyor", connecting: "bağlanıyor", open: "bağlı", reconnecting: "yeniden bağlanıyor", closed: "kapalı" } as const;

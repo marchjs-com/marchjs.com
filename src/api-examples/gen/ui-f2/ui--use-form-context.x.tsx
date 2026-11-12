@@ -10,6 +10,6 @@ const example: ApiExample<any> = {
   return <p>{form.valid() ? "Geçerli" : "Eksik alan var"}</p>
 }
 <Form schema={spec}><Status /></Form>`,
-      run: () => <Form schema={{ title: { type: "text", label: "Başlık", required: true }, qty: { type: "number", label: "Adet", min: 1 } }} initial={{ title: "Acme" }} actions={false}><FormPeek /></Form>,
+      run: () => <Form schema={{ title: { type: "text", label: "Başlık", required: true }, qty: { type: "number", label: "Adet", min: 1 } }} initial={{ title: "HADİ" }} actions={false}><FormPeek /></Form>,
     };
 export default example;

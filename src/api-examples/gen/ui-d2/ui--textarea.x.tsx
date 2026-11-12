@@ -10,7 +10,7 @@ const example: ApiExample<any> = {
       code: `<Textarea value={note} rows={2} maxLength={280} placeholder="Notunuz…" />   // grows with the text`,
       play: { options: [{ key: "autosize", label: "Metinle büyü", default: true }, { key: "rows", label: "Satır", default: 2, options: [2, 4] }] },
       run: (p: { values: { autosize: boolean; rows: number } }) => {
-        const note = signal("Acme toplantısı:\n- bütçe\n- takvim")
+        const note = signal("HADİ toplantısı:\n- bütçe\n- takvim")
         return <div class="sc-ex-stack">
           {() => { const { rows, autosize } = p.values; return <Textarea aria-label="Not" value={note} rows={rows} autosize={autosize} maxLength={280} placeholder="Notunuz…" /> }}
           <Row><Out label="karakter" value={() => `${note().length}/280`} /><Out label="satır" value={() => note().split("\n").length} /><Button size="sm" variant="ghost" onClick={() => note.update((x) => `${x}\n- yeni madde`)}>Satır ekle</Button></Row>

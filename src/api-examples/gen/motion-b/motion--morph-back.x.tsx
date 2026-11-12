@@ -18,7 +18,7 @@ dialog.hidden = true`,
         return <div class="sc-ex-motion-b-stack">
           <div class="sc-ex-motion-b-stage">
             <button type="button" class="hm-btn hm-btn-primary sc-ex-motion-b-src" ref={(el: HTMLElement) => { src = el }} on:click={open}>Aç</button>
-            <div class="sc-ex-motion-b-panel" ref={(el: HTMLElement) => { panel = el }}><strong>Acme Atölye</strong><span class="hm-muted">Kapatınca düğmeye geri çekilir.</span></div>
+            <div class="sc-ex-motion-b-panel" ref={(el: HTMLElement) => { panel = el }}><strong>HADİ Atölye</strong><span class="hm-muted">Kapatınca düğmeye geri çekilir.</span></div>
           </div>
           <Row><Button variant="primary" onClick={close}>Kapat</Button><Button variant="ghost" onClick={open}>Yeniden aç</Button></Row>
         </div>

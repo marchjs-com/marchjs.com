@@ -5,7 +5,7 @@ import type { ApiExample } from "../../types.ts";
 import "../../managers-a.css";
 
 const example: ApiExample<any> = {
-      code: `configureStorage({ prefix: "acme.", version: 2 })
+      code: `configureStorage({ prefix: "hadi.", version: 2 })
 await storage().area("memory").set("note", "Hello")`,
       run: () => <CfgStorage />,
     };

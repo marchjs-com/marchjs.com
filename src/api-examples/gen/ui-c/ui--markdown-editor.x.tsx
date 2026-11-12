@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
         { key: "stats", label: "Kelime sayısı", default: true },
       ] },
       run: (p: { values: { view: "write" | "preview" | "split"; toolbar: boolean; stats: boolean } }) => {
-        const body = signal("## Toplantı notu\n\n- **Acme** sürümü cuma\n- Belgeler güncellenecek")
+        const body = signal("## Toplantı notu\n\n- **HADİ** sürümü cuma\n- Belgeler güncellenecek")
         return <div class="sc-ex-ui-c-stack">
           {() => { const { view, toolbar, stats } = { view: p.values.view, toolbar: p.values.toolbar, stats: p.values.stats }
             return <MarkdownEditor value={body} view={view} toolbar={toolbar} stats={stats} rows={5} views={["write", "preview", "split"]} /> }}

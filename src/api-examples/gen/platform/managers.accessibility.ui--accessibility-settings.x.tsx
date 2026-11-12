@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
         const restore = keepA11y()
         return <Load from={a11yLib}>{({ AccessibilitySettings }) => <Stack>
           <AccessibilitySettings />
-          {() => (p.values.sample ? <div class="sc-ex-platform-sample"><p>Acme bülteni: <a href="#api">bağlantı</a> ve <Button size="sm">odaklanabilir düğme</Button></p></div> : null)}
+          {() => (p.values.sample ? <div class="sc-ex-platform-sample"><p>HADİ bülteni: <a href="#api">bağlantı</a> ve <Button size="sm">odaklanabilir düğme</Button></p></div> : null)}
           <Row><Button variant="ghost" onClick={restore}>Önceki ayarlara dön</Button></Row>
         </Stack>}</Load>
       },

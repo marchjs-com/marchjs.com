@@ -6,16 +6,16 @@ import type { ApiExample } from "../../types.ts";
 import "../../motion-a.css";
 
 const example: ApiExample<any> = {
-      code: `definePageTransition("acme-tilt", (side, dir) => side === "in"
+      code: `definePageTransition("hadi-tilt", (side, dir) => side === "in"
   ? [{ opacity: 0, transform: "rotate(6deg) translateY(24px)" }, { opacity: 1, transform: "none" }]
   : [{ opacity: 1 }, { opacity: 0 }])
-// { path: "/photos", meta: { transition: "acme-tilt" } }`,
+// { path: "/photos", meta: { transition: "hadi-tilt" } }`,
       run: () => {
-        definePageTransition("acme-tilt", (side, dir) => {
+        definePageTransition("hadi-tilt", (side, dir) => {
           const k = dir === "back" ? -1 : 1
           return side === "in" ? [{ opacity: 0, transform: `rotate(${6 * k}deg) translateY(${24 * k}px)` }, { opacity: 1, transform: "none" }] : [{ opacity: 1 }, { opacity: 0 }]
         })
-        const v: PageVariant = { name: "acme-tilt", frames: (...a) => transitionFrames("acme-tilt", ...a) }
+        const v: PageVariant = { name: "hadi-tilt", frames: (...a) => transitionFrames("hadi-tilt", ...a) }
         return <PageStage variant={() => v} />
       },
     };

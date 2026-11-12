@@ -60,7 +60,7 @@ const blob = await cropper.toBlob({ width: 256 })`,
   validate={(v) => (typeof v === "object" && v && "name" in v ? null : '"name" gerekli')} />`,
       play: { options: [{ key: "mode", label: "İlk görünüm", default: "text", options: [{ value: "text", label: "metin" }, { value: "tree", label: "ağaç" }] }, { key: "readonly", label: "Salt okunur", default: false }] },
       run: (p: { values: { mode: "text" | "tree"; readonly: boolean } }) => {
-        const config = signal<unknown>({ name: "acme", port: 8080, flags: ["fast", "safe"] })
+        const config = signal<unknown>({ name: "hadi", port: 8080, flags: ["fast", "safe"] })
         return <div class="sc-ex-stack">
           {() => { const m = p.values.mode, ro = p.values.readonly; return <JsonEditor value={config} mode={m} readonly={ro} rows={7} aria-label="Ayarlar"
             validate={(v: unknown) => (v && typeof v === "object" && "name" in v ? null : '"name" alanı gerekli')} /> }}

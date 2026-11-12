@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
         const n = signal(5)
         return <div class="sc-ex-stack">
           <Row><Button size="sm" onClick={() => n.update((x) => Math.min(9, x + 1))}>Kart ekle</Button><Button size="sm" variant="ghost" onClick={() => n.update((x) => Math.max(1, x - 1))}>Kart çıkar</Button><Out label="Kart" value={n} /></Row>
-          {() => { const c = p.values.cols, f = p.values.fill; return <Grid cols={c} gap={2} {...(f ? { fill: f } : {})} minCol="6rem">{Array.from({ length: n() }, (_, i) => <Card><strong>Acme {i + 1}</strong></Card>)}</Grid> }}
+          {() => { const c = p.values.cols, f = p.values.fill; return <Grid cols={c} gap={2} {...(f ? { fill: f } : {})} minCol="6rem">{Array.from({ length: n() }, (_, i) => <Card><strong>HADİ {i + 1}</strong></Card>)}</Grid> }}
         </div>
       },
     };

@@ -24,7 +24,7 @@ export default examples({
         const close = (why: string) => { open.set(false); log.push(why) }
         return <div class="sc-ex-stack">
           <Row><Button variant="primary" onClick={() => open.set(true)}>Projeyi sil…</Button></Row>
-          {() => { const d = p.values.dismissable; return <Dialog open={open} onClose={() => close("kapatıldı")} title="Acme projesini sil" size={() => p.values.size} dismissable={d}
+          {() => { const d = p.values.dismissable; return <Dialog open={open} onClose={() => close("kapatıldı")} title="HADİ projesini sil" size={() => p.values.size} dismissable={d}
             footer={<Row><Button variant="ghost" onClick={() => close("vazgeçildi")}>Vazgeç</Button><Button variant="danger" onClick={() => close("silindi")}>Sil</Button></Row>}>
             <p>Proje ve 12 dosyası kalıcı olarak silinir.</p>
             {!d && <p class="hm-muted">Bu pencere yalnız düğmelerle kapanır.</p>}
@@ -42,7 +42,7 @@ export default examples({
         const log = useLog()
         return <div class="sc-ex-stack">
           {() => <Disclosure title="Teslimat ayrıntıları" open={p.values.open} onToggle={(o) => log.push(o ? "açıldı" : "kapandı")}>
-            <KeyValue items={{ Kargo: "Acme Lojistik", Süre: "2 iş günü", Ücret: "Ücretsiz" }} />
+            <KeyValue items={{ Kargo: "HADİ Lojistik", Süre: "2 iş günü", Ücret: "Ücretsiz" }} />
           </Disclosure>}
           <Log lines={log.lines} />
         </div>
@@ -58,7 +58,7 @@ export default examples({
         return <div class="sc-ex-stack">
           {() => p.values.kind === "vertical"
             ? <Row><Button variant="ghost">Kaydet</Button><Divider vertical /><Button variant="ghost">Paylaş</Button><Divider vertical /><Button variant="ghost">Sil</Button></Row>
-            : <div class="sc-ex-stack"><Button variant="primary">E-postayla giriş</Button>{p.values.kind === "label" ? <Divider label={or} /> : <Divider />}<Button>Acme hesabıyla giriş</Button></div>}
+            : <div class="sc-ex-stack"><Button variant="primary">E-postayla giriş</Button>{p.values.kind === "label" ? <Divider label={or} /> : <Divider />}<Button>HADİ hesabıyla giriş</Button></div>}
           {() => p.values.kind === "label" && <Row><TextInput value={or} aria-label="Ayırıcı etiketi" /></Row>}
         </div>
       },
@@ -83,7 +83,7 @@ export default examples({
           <Row><Button size="sm" onClick={() => dock?.open("log")}>Günlüğe geç</Button><Button size="sm" variant="ghost" onClick={() => dock?.reset()}>Yerleşimi sıfırla</Button></Row>
           <div class="sc-ex-ui-b-dock">{() => {
             const s = p.values.split
-            return <DockLayout panels={panels} label="Acme çalışma alanı" commands={false}
+            return <DockLayout panels={panels} label="HADİ çalışma alanı" commands={false}
               layout={s === "row" ? { row: [["files"], ["editor", "log"]], share: 0.32 } : { column: [["editor", "log"], ["files"]], share: 0.6 }} api={(a: DockApi) => (dock = a)} />
           }}</div>
         </div>

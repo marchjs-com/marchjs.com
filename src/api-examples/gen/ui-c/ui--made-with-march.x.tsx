@@ -11,7 +11,7 @@ const example: ApiExample<any> = {
 </footer>`,
       play: { options: [{ key: "variant", label: "Görünüm", default: "badge", options: opts(["text", "metin"], ["badge", "rozet"], ["small", "küçük"]) }] },
       run: (p: { values: { variant: "text" | "badge" | "small" } }) => <div class="sc-ex-ui-c-box">
-        <p class="hm-muted">© Acme · Gizlilik · Destek</p>
+        <p class="hm-muted">© HADİ · Gizlilik · Destek</p>
         <MadeWithMarch variant={() => p.values.variant} />
       </div>,
     };

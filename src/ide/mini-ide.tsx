@@ -1,6 +1,6 @@
 // IDE shell demo: a small editor built only from March pieces — ActivityBar, DockLayout (file tree, editor tabs,
 // inspector, console), PropertyGrid, OverflowToolbar, Breadcrumbs, StatusBar and the command palette (every action is
-// a command: Ctrl+K finds it). Demo data is neutral ("acme" project).
+// a command: Ctrl+K finds it). Demo data is neutral ("hadi" project).
 import { signal, computed, effect, onCleanup } from "hadi-march";
 import { Tree, PaletteButton, toast, DockLayout, PropertyGrid, OverflowToolbar, StatusBar, ActivityBar, Breadcrumbs, type DockApi, type DockPanel, type PropertySpec } from "hadi-march/ui";
 import { command } from "hadi-march/managers/command";
@@ -13,7 +13,7 @@ const START: File[] = [
   { name: "app.ts", dir: "src", text: `import { startApp } from "./router"\nimport { theme } from "./theme"\n\nexport function main() {\n  theme.apply("hadi")\n  return startApp({ root: "#app" })\n}\n` },
   { name: "router.ts", dir: "src", text: `export function startApp(o: { root: string }) {\n  const el = document.querySelector(o.root)\n  if (!el) throw new Error("root yok")\n  return el\n}\n` },
   { name: "theme.css", dir: "src", text: `:root {\n  --brand: #f2801f;\n  --radius: 12px;\n}\n` },
-  { name: "README.md", dir: "", text: `# acme\n\nKüçük örnek proje. Ctrl+K ile komutları ara.\n` },
+  { name: "README.md", dir: "", text: `# hadi\n\nKüçük örnek proje. Ctrl+K ile komutları ara.\n` },
 ]
 const LANG: Record<string, string> = { ts: "TypeScript", css: "CSS", md: "Markdown" }
 const langOf = (n: string) => LANG[n.split(".").pop() ?? ""] ?? "Metin"
@@ -27,7 +27,7 @@ export default function MiniIde() {
   const caret = signal({ line: 1, col: 1 })
   const view = signal<string | null>("files")
   const query = signal("")
-  const logs = signal<{ t: string; kind: "info" | "ok" | "err" }[]>([{ t: "acme hazır. F5 / Ctrl+Enter çalıştırır.", kind: "info" }])
+  const logs = signal<{ t: string; kind: "info" | "ok" | "err" }[]>([{ t: "hadi hazır. F5 / Ctrl+Enter çalıştırır.", kind: "info" }])
   const saving = signal(false)
   const settingsVal = signal<Record<string, unknown>>({ fontSize: 13, tabSize: 2, wrap: false, lineNumbers: true, accent: "orange" })
   let dock: DockApi | undefined
@@ -66,7 +66,7 @@ export default function MiniIde() {
     log(`${n} biçimlendirildi`)
   }
   function run() {
-    log(`$ acme run ${active()}`)
+    log(`$ hadi run ${active()}`)
     const f = file(active())
     if (f && /throw new Error/.test(f.text) && Math.random() < 0.3) log("Hata: root yok", "err")
     else log(`Çıktı: ${f ? f.text.split("\n").length : 0} satır derlendi, 0 uyarı`, "ok")
@@ -98,7 +98,7 @@ export default function MiniIde() {
     const q = query().toLocaleLowerCase("tr")
     const match = (f: File) => !q || f.name.toLocaleLowerCase("tr").includes(q) || f.text.toLocaleLowerCase("tr").includes(q)
     const leaf = (f: File) => ({ id: f.name, label: f.name, icon: fileText, meta: isDirty(f.name) ? "●" : undefined })
-    return [{ id: "acme", label: "acme", icon: folder, children: [
+    return [{ id: "hadi", label: "hadi", icon: folder, children: [
       { id: "src", label: "src", icon: folder, children: files().filter((f) => f.dir === "src" && match(f)).map(leaf) },
       ...files().filter((f) => !f.dir && match(f)).map(leaf),
     ] }]
@@ -107,7 +107,7 @@ export default function MiniIde() {
     {() => (view() === "search"
       ? <label class="sc-ide-search"><span class="hm-sr-only">Dosyalarda ara</span><input class="hm-input" type="search" placeholder="Dosyalarda ara…" value={query()} on:input={(e: Event) => query.set((e.target as HTMLInputElement).value)} /></label>
       : null)}
-    {() => <Tree nodes={treeNodes()} expanded={["acme", "src"]} selected={active} label="Dosyalar" onSelect={(n: { id: string; children?: unknown }) => { if (!n.children) openFile(n.id) }} />}
+    {() => <Tree nodes={treeNodes()} expanded={["hadi", "src"]} selected={active} label="Dosyalar" onSelect={(n: { id: string; children?: unknown }) => { if (!n.children) openFile(n.id) }} />}
   </div>
 
   const editor = (n: string) => () => {
@@ -148,7 +148,7 @@ export default function MiniIde() {
   const crumbs = () => {
     const f = file(active())
     return [
-      { id: "acme", label: "acme", icon: folder },
+      { id: "hadi", label: "hadi", icon: folder },
       ...(f?.dir ? [{ id: f.dir, label: f.dir, icon: folder, siblings: files().filter((x) => x.dir === f.dir).map((x) => ({ id: x.name, label: x.name, icon: fileText, onSelect: () => openFile(x.name) })) }] : []),
       { id: "file", label: active(), icon: fileText },
     ]

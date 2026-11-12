@@ -7,14 +7,14 @@ import type { ApiExample } from "../../types.ts";
 import "../../ui-d.css";
 
 const example: ApiExample<any> = {
-      code: `<UrlInput value={site} placeholder="https://acme.test" />   // url keyboard, trimmed`,
+      code: `<UrlInput value={site} placeholder="https://hadisosyal.com" />   // url keyboard, trimmed`,
       play: { options: [{ key: "affix", label: "Ön ek", default: false }, { key: "readonly", label: "Salt okunur", default: false }] },
       run: (p: { values: { affix: boolean; readonly: boolean } }) => {
-        const site = signal("https://acme.test/blog")
+        const site = signal("https://hadisosyal.com/blog")
         const host = () => { try { return new URL(site()).host } catch { return "geçersiz" } }
         return <div class="sc-ex-stack">
           {() => { const { affix, readonly } = p.values; return <UrlInput aria-label="Web sitesi" value={site} prefix={affix ? "URL" : undefined} readonly={readonly} /> }}
-          <Row><Out label="alan adı" value={host} /><Button size="sm" variant="ghost" onClick={() => site.set("  https://docs.acme.test  ")}>Boşluklu adres</Button></Row>
+          <Row><Out label="alan adı" value={host} /><Button size="sm" variant="ghost" onClick={() => site.set("  https://docs.hadisosyal.com  ")}>Boşluklu adres</Button></Row>
         </div>
       },
     };

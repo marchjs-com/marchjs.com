@@ -12,7 +12,7 @@ const example: ApiExample<any> = {
   { duration: 500, easing: "out" })`,
       play: { options: [{ key: "easing", label: "Eğri", default: "out", options: ["out", "spring", "bounce", "back"] }, { key: "gap", label: "Gecikme", default: 80, options: [{ value: 0, label: "yok" }, { value: 80, label: "80 ms" }, { value: 160, label: "160 ms" }] }] },
       run: (p: { values: { easing: string; gap: number } }) => {
-        const cards = [1, 2, 3].map((n) => el(<div class="sc-ex-motion-a-card">Acme {n}</div>))
+        const cards = [1, 2, 3].map((n) => el(<div class="sc-ex-motion-a-card">HADİ {n}</div>))
         return <Stage start={() => { const d = stagger(p.values.gap); return cards.map((c, i) => animate(c, FADE_UP, { duration: 500, easing: p.values.easing, delay: d(i, cards.length) })) }}>{cards}</Stage>
       },
     };

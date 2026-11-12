@@ -23,7 +23,7 @@ const example: ApiExample<any> = {
         return <div class="sc-ex-stack">
           <Row><Button size="sm" onClick={() => seats.update((n) => n + 1)}>Koltuk +1</Button><Button size="sm" variant="ghost" onClick={() => owner.update((o) => (o ? null : "Ada"))}>Sahibi değiştir</Button></Row>
           {() => { const c = p.values.columns; return <KeyValue columns={c} items={[
-            { label: "Kuruluş", value: "Acme" }, { label: "Plan", value: "Ekip" }, { label: "Koltuk", value: seats, hint: "en çok 50" },
+            { label: "Kuruluş", value: "HADİ" }, { label: "Plan", value: "Ekip" }, { label: "Koltuk", value: seats, hint: "en çok 50" },
             { label: "Sahibi", value: owner }, { label: "Bölge", value: "eu-west" }, { label: "Durum", value: () => (seats() > 15 ? "sınıra yakın" : "normal") },
           ]} /> }}
         </div>

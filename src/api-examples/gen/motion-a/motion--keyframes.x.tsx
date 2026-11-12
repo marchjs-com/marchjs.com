@@ -3,18 +3,18 @@
 import { animate } from "hadi-march/motion";
 import { el } from "./_el.tsx";
 import { Stage } from "./_stage.tsx";
-import { ensureAcme } from "./_ensure-acme.tsx";
+import { ensureHadi } from "./_ensure-hadi.tsx";
 import type { ApiExample } from "../../types.ts";
 import "../../motion-a.css";
 
 const example: ApiExample<any> = {
-      code: `keyframes("acme-drop", [{ transform: "translateY(-40px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: 600, easing: "bounce" })
-animate(card, "acme-drop")`,
+      code: `keyframes("hadi-drop", [{ transform: "translateY(-40px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: 600, easing: "bounce" })
+animate(card, "hadi-drop")`,
       play: { options: [{ key: "easing", label: "Eğri", default: "", options: [{ value: "", label: "kayıtlı" }, { value: "spring", label: "spring" }, { value: "out", label: "out" }] }] },
       run: (p: { values: { easing: string } }) => {
-        ensureAcme()
-        const box = el(<div class="sc-ex-motion-a-card">Acme</div>)
-        return <Stage start={() => animate(box, "acme-drop", p.values.easing ? { easing: p.values.easing } : {})}>{box}</Stage>
+        ensureHadi()
+        const box = el(<div class="sc-ex-motion-a-card">HADİ</div>)
+        return <Stage start={() => animate(box, "hadi-drop", p.values.easing ? { easing: p.values.easing } : {})}>{box}</Stage>
       },
     };
 export default example;

@@ -14,7 +14,7 @@ const example: ApiExample<any> = {
       run: (p: { values: { trigger: "hover" | "focus" | "always"; mode: "bounce" | "loop" | "once" } }) => <div class="sc-ex-ui-c-stack sc-ex-ui-c-narrow">
         {() => { const trigger = p.values.trigger, mode = p.values.mode
           return <div class="sc-ex-ui-c-stack">
-            <Button><OverflowText text="Acme_2026_yillik_faaliyet_raporu_son_hali.pdf" trigger={trigger} mode={mode} /></Button>
+            <Button><OverflowText text="HADİ_2026_yillik_faaliyet_raporu_son_hali.pdf" trigger={trigger} mode={mode} /></Button>
             <Button variant="ghost"><OverflowText text="Kısa ad.pdf" trigger={trigger} mode={mode} /></Button>
           </div> }}
         <p class="hm-muted">Uzun ad kırpılır ve kayar; kısa ad sabit kalır.</p>

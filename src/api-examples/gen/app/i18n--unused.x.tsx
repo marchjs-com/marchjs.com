@@ -13,12 +13,12 @@ const example: ApiExample<any> = {
       code: `unused("tr", usedKeys)   // ["old.banner"] — translations no code looks up any more`,
       run: () => {
         const KEYS = ["menu.home", "menu.cart", "menu.orders", "old.banner"]
-        messages("x-acme", Object.fromEntries(KEYS.map((k) => [k, k])))
+        messages("x-hadi", Object.fromEntries(KEYS.map((k) => [k, k])))
         const on = KEYS.map((k) => signal(k === "menu.home" || k === "menu.cart"))
         const used = () => KEYS.filter((_, i) => on[i]!())
         return <div class="sc-ex-app-stack">
           <Row>{KEYS.map((k, i) => <Checkbox value={on[i]!} label={k} />)}</Row>
-          <Out label='unused("x-acme", kullanılan)' value={() => json(unused("x-acme", used()))} />
+          <Out label='unused("x-hadi", kullanılan)' value={() => json(unused("x-hadi", used()))} />
         </div>
       },
     };

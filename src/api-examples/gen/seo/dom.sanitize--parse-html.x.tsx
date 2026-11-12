@@ -11,7 +11,7 @@ const example: ApiExample<any> = {
       code: `const frag = parseHtml(clipboardHtml)   // allowlisted nodes only, no innerHTML
 editor.append(frag)`,
       run: () => {
-        const html = signal(`<p onclick="steal()">Merhaba <b>Ada</b> <a href="javascript:alert(1)">tıkla</a> <a href="https://acme.example">site</a></p><script>steal()</script><iframe src="//x"></iframe>`)
+        const html = signal(`<p onclick="steal()">Merhaba <b>Ada</b> <a href="javascript:alert(1)">tıkla</a> <a href="https://hadisosyal.com">site</a></p><script>steal()</script><iframe src="//x"></iframe>`)
         const out = box("")
         effect(() => { out.replaceChildren(parseHtml(html())) })
         return <div class="sc-ex-stack"><Area label="Gelen HTML" value={html} />{out}<Out label="Bağlantılar" value={() => { html(); return Array.from(out.querySelectorAll("a")).map((a) => a.getAttribute("href")).join(", ") || "(yok)" }} /></div>

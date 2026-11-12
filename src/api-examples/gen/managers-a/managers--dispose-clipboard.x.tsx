@@ -5,7 +5,7 @@ import type { ApiExample } from "../../types.ts";
 import "../../managers-a.css";
 
 const example: ApiExample<any> = {
-      code: `await clipboard().copy("Acme")
+      code: `await clipboard().copy("HADİ")
 disposeClipboard()   // history is gone`,
       run: () => <DisposeClipboard />,
     };

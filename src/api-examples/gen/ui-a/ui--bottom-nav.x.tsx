@@ -30,7 +30,7 @@ const example: ApiExample<any> = {
         return <div class="sc-ex-ui-a-phone">
           <div class="sc-ex-ui-a-screen"><Log lines={lines} label="Sekme günlüğü" /></div>
           {() => <BottomNav items={items} value={tab} onChange={(id) => { tab.set(id); if (id === "inbox") unread.set(0); log(`sekme: ${id}`) }}
-            variant={p.values.variant} labels={p.values.labels} onCreate={p.values.create ? () => log("oluştur") : undefined} label="Acme" />}
+            variant={p.values.variant} labels={p.values.labels} onCreate={p.values.create ? () => log("oluştur") : undefined} label="HADİ" />}
         </div>
       },
     };

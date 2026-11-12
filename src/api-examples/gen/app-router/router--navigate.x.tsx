@@ -8,7 +8,7 @@ import "../../app.css";
 
 const example: ApiExample<any> = {
       code: `await navigate("/users/42")
-await navigate("/search?q=acme", { replace: true })
+await navigate("/search?q=hadi", { replace: true })
 navigate("/photos/3", { modal: true })   // over the current page`,
       run: () => {
         // same page, other query: the route stays, only ?tab changes

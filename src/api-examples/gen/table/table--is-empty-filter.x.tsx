@@ -10,6 +10,6 @@ const example: ApiExample<any> = {
       code: `isEmptyFilter("")                       // true
 isEmptyFilter({ min: null, max: null }) // true
 isEmptyFilter(["ege"])                  // false`,
-      run: () => <ul class="sc-ex-table-list">{["", "  ", null, [], { min: null, max: null }, false, 0, "acme", ["ege"], { min: 100 }].map((v) => <li><code>{json(v)}</code><Badge tone={isEmptyFilter(v) ? "neutral" : "success"}>{String(isEmptyFilter(v))}</Badge></li>)}</ul>,
+      run: () => <ul class="sc-ex-table-list">{["", "  ", null, [], { min: null, max: null }, false, 0, "hadi", ["ege"], { min: 100 }].map((v) => <li><code>{json(v)}</code><Badge tone={isEmptyFilter(v) ? "neutral" : "success"}>{String(isEmptyFilter(v))}</Badge></li>)}</ul>,
     };
 export default example;

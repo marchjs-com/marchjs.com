@@ -4,19 +4,19 @@ import { signal } from "hadi-march";
 import { keyframeNames, keyframes } from "hadi-march/motion";
 import { Out, Row } from "../../_kit.tsx";
 import { Button } from "hadi-march/ui";
-import { ensureAcme } from "./_ensure-acme.tsx";
+import { ensureHadi } from "./_ensure-hadi.tsx";
 import type { ApiExample } from "../../types.ts";
 import "../../motion-a.css";
 
 const example: ApiExample<any> = {
-      code: `keyframeNames()    // ["acme-rise", "acme-drop", …]: every registered keyframe and preset
-keyframes("acme-extra", { opacity: [0, 1] })`,
+      code: `keyframeNames()    // ["hadi-rise", "hadi-drop", …]: every registered keyframe and preset
+keyframes("hadi-extra", { opacity: [0, 1] })`,
       run: () => {
-        ensureAcme()
+        ensureHadi()
         const names = signal(keyframeNames())
-        const add = () => { keyframes("acme-extra", { opacity: [0, 1] }); names.set(keyframeNames()) }
+        const add = () => { keyframes("hadi-extra", { opacity: [0, 1] }); names.set(keyframeNames()) }
         return <div class="sc-ex-motion-a"><div class="sc-ex-motion-a-chips">{() => names().map((n) => <code class="sc-ex-val">{n}</code>)}</div>
-          <Row><Button size="sm" variant="secondary" onClick={add}>acme-extra ekle</Button><Out label="sayı" value={() => names().length} /></Row></div>
+          <Row><Button size="sm" variant="secondary" onClick={add}>hadi-extra ekle</Button><Out label="sayı" value={() => names().length} /></Row></div>
       },
     };
 export default example;

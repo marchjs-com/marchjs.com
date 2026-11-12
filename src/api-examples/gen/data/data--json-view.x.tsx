@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
       play: { options: [{ key: "open", label: "Açık derinlik", default: 1, options: [0, 1, 2, 3] }] },
       run: (p: { values: { open: number } }) => {
         const n = signal(1)
-        const data = () => ({ id: n(), name: "Acme", plan: { tier: "team", seats: 5 * n(), tags: ["beta", "eu"] }, active: n() % 2 === 1, owner: null })
+        const data = () => ({ id: n(), name: "HADİ", plan: { tier: "team", seats: 5 * n(), tags: ["beta", "eu"] }, active: n() % 2 === 1, owner: null })
         return <div class="sc-ex-stack">
           <Row><Button size="sm" onClick={() => n.update((x) => x + 1)}>Sonraki kayıt</Button></Row>
           {() => { const o = p.values.open; return <JsonView value={data} open={o} /> }}

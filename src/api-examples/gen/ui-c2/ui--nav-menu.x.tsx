@@ -8,7 +8,7 @@ import type { ApiExample } from "../../types.ts";
 import "../../ui-c.css";
 
 const example: ApiExample<any> = {
-      code: `<NavMenu brand="Acme" palette={false} items={[
+      code: `<NavMenu brand="HADİ" palette={false} items={[
   { id: "inbox", title: "Gelen kutusu", href: "/inbox", icon: inbox, badge: () => unread() },
   { id: "pay", title: "Ödemeler", href: "/pay", group: "Finans" },
 ]} />`,
@@ -28,7 +28,7 @@ const example: ApiExample<any> = {
           <Row><Button onClick={() => unread.update((x) => x + 1)}>Yeni ileti</Button><Button variant="ghost" onClick={() => unread.set(0)}>Hepsini oku</Button></Row>
           <div class="sc-ex-ui-c-frame">
             {() => { const filter = p.values.filter, collapsible = p.values.collapsible
-              return <NavMenu items={items as never} brand={<strong>Acme</strong>} label="Örnek menü" palette={false} storageKey="sc.ex.navmenu" filter={filter} collapsible={collapsible} /> }}
+              return <NavMenu items={items as never} brand={<strong>HADİ</strong>} label="Örnek menü" palette={false} storageKey="sc.ex.navmenu" filter={filter} collapsible={collapsible} /> }}
             <div class="sc-ex-ui-c-main hm-muted">Sayfa içeriği</div>
           </div>
         </div>

@@ -15,7 +15,7 @@ function ClipboardDemo() {
     <Row>
       <Button onClick={() => { void clipboard().copy(text()) }}>{() => (clipboard().copied() ? "Kopyalandı" : "Kopyala")}</Button>
       <Button variant="ghost" onClick={() => clipboard().clearHistory()}>Geçmişi temizle</Button>
-      <Segmented aria-label="Metin" value={text()} onChange={(v: string) => text.set(v)} options={["INV-2026-001", "Acme Ltd.", "ada@example.com"].map((v) => ({ value: v, label: v }))} />
+      <Segmented aria-label="Metin" value={text()} onChange={(v: string) => text.set(v)} options={["INV-2026-001", "HADİ", "ada@example.com"].map((v) => ({ value: v, label: v }))} />
     </Row>
     <Out label="supported()" value={yes(board.supported())} />
     <Out label="last()" value={() => clipboard().last() ?? "—"} />

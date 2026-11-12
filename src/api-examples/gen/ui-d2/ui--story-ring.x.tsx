@@ -12,7 +12,7 @@ const example: ApiExample<any> = {
       play: { options: [{ key: "size", label: "Boyut", default: "md", options: ["sm", "md", "lg"] }, { key: "loading", label: "Yükleniyor", default: false }] },
       run: (p: { values: { size: string; loading: boolean } }) => {
         const seen = signal<string[]>([])
-        const people = [{ id: "ada", name: "Ada", state: "new" }, { id: "acme", name: "Acme Koşu", state: "close" }, { id: "lin", name: "Linus", state: "new" }] as const
+        const people = [{ id: "ada", name: "Ada", state: "new" }, { id: "hadi", name: "HADİ Koşu", state: "close" }, { id: "lin", name: "Linus", state: "new" }] as const
         return <div class="sc-ex-stack">
           <div class="sc-ex-ui-d-tray">
             <StoryRing name="Siz" label="Hikâyen" add state="none" size={() => p.values.size as "md"} onClick={() => seen.set([])} />
