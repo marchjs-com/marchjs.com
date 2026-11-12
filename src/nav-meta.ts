@@ -1,4 +1,5 @@
-// Page descriptions, groups and icons for the side menu and the home page (kept out of the entry).
+// Page descriptions, groups and icons for the side menu and the home page (kept out of the entry). A group is one of
+// MENU_GROUPS (src/components/categories.ts): İlk Adımlar, Temel, the component categories, Yöneticiler, Altyapı.
 import { activity, film, alertCircle, barChart, code, cpu, dashboard, edit, gauge, grid, layers, menu, message, palette, server, zap } from "hadi-march/icons";
 
 export interface PageMeta { desc: string; group?: string; icon: unknown }
@@ -7,20 +8,20 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/start": { desc: "Kurulum, ilk bileşen, march CLI, proje yapısı", group: "İlk Adımlar", icon: zap },
   "/themes": { desc: "7 tema, renkler, yazı, yarıçap, gölge", group: "Temel", icon: palette },
   "/icons": { desc: "Kendi SVG ikon seti", group: "Temel", icon: grid },
-  "/buttons": { desc: "Button, menü, çip, avatar, ipucu", group: "Bileşenler", icon: zap },
-  "/forms": { desc: "Alanlar, seçiciler, doğrulama, sihirbaz", group: "Bileşenler", icon: edit },
-  "/data": { desc: "10.000 satırlık tablo, ağaç, pano, adımlar", group: "Bileşenler", icon: layers },
-  "/charts": { desc: "Çizgi, alan, çubuk, pasta, ısı haritası", group: "Bileşenler", icon: barChart },
-  "/overlays": { desc: "Dialog, çekmece, toast, komut paleti", group: "Bileşenler", icon: message },
-  "/feedback": { desc: "Uyarı, ilerleme, iskelet, boş, hata", group: "Bileşenler", icon: alertCircle },
+  "/buttons": { desc: "Button, menü, çip, avatar, ipucu", group: "Eylemler", icon: zap },
+  "/forms": { desc: "Alanlar, seçiciler, doğrulama, sihirbaz", group: "Formlar", icon: edit },
+  "/data": { desc: "10.000 satırlık tablo, ağaç, pano, adımlar", group: "Veri gösterimi", icon: layers },
+  "/charts": { desc: "Çizgi, alan, çubuk, pasta, ısı haritası", group: "Veri gösterimi", icon: barChart },
+  "/overlays": { desc: "Dialog, çekmece, toast, komut paleti", group: "Katmanlar", icon: message },
+  "/feedback": { desc: "Uyarı, ilerleme, iskelet, boş, hata", group: "Geri bildirim", icon: alertCircle },
   "/animation": { desc: "Tek motor: keyframe, timeline, eğri, global hız ve durdurma", group: "Hareket", icon: film },
   "/motion": { desc: "Yay, FLIP listeler, parallax, parçacık", group: "Hareket", icon: activity },
-  "/messaging": { desc: "Habersiz bileşenler arası türlü kanallar, sekmeler arası", group: "Temel", icon: message },
-  "/speed": { desc: "Tembel yükleme, ön yükleme ve önbellek: canlı ağ paneli", group: "Temel", icon: gauge },
-  "/network": { desc: "İstek politikaları, middleware, mock, WebSocket, hata kuralları", group: "Temel", icon: server },
-  "/layout": { desc: "Grid: taşmasız sütunlar, fill ve balance", group: "Bileşenler", icon: grid },
-  "/navigation": { desc: "NavSidebar: arama, son kullanılanlar, kategoriler", group: "Bileşenler", icon: menu },
-  "/overlay": { desc: "Video, resim, SVG, canvas ve cam katmanları", group: "Hareket", icon: layers },
-  "/managers": { desc: "Viewport, rıza (KVKK/GDPR) ve komut yöneticileri", group: "Temel", icon: cpu },
-  "/language": { desc: "$ değişkenler, <For>, bind:, borular, sx", group: "Hareket", icon: code },
+  "/messaging": { desc: "Habersiz bileşenler arası türlü kanallar, sekmeler arası", group: "Altyapı", icon: message },
+  "/speed": { desc: "Tembel yükleme, ön yükleme ve önbellek: canlı ağ paneli", group: "Altyapı", icon: gauge },
+  "/network": { desc: "İstek politikaları, middleware, mock, WebSocket, hata kuralları", group: "Altyapı", icon: server },
+  "/layout": { desc: "Grid: taşmasız sütunlar, fill ve balance", group: "Yerleşim", icon: grid },
+  "/navigation": { desc: "NavSidebar: arama, son kullanılanlar, kategoriler", group: "Gezinme", icon: menu },
+  "/overlay": { desc: "Video, resim, SVG, canvas ve cam katmanları", group: "Medya", icon: layers },
+  "/managers": { desc: "Viewport, rıza (KVKK/GDPR) ve komut yöneticileri", group: "Yöneticiler", icon: cpu },
+  "/language": { desc: "$ değişkenler, <For>, bind:, borular, sx", group: "Temel", icon: code },
 };
