@@ -6,6 +6,7 @@ import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "
 import { createServer } from "node:http";
 import { join, dirname, extname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { writeGallery } from "../../cli/icons.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const dist = join(here, "dist");
@@ -19,6 +20,9 @@ if (!process.argv.includes("--serve") || !existsSync(dist)) {
   const walk = (d) => readdirSync(d).flatMap((n) => { const p = join(d, n); return statSync(p).isDirectory() ? walk(p) : [p]; });
   const bad = walk(dist).filter((p) => /\.(js|css|html)$/.test(p)).filter((p) => /innerHTML\s*=|insertAdjacentHTML|document\.write\(/.test(readFileSync(p, "utf8")));
   if (bad.length) { console.error("✖ forbidden pattern:", bad); process.exit(1); }
+  // icon packs for the Icons page: plain JSON fetched when a pack is opened (no JavaScript bundle grows)
+  const packs = writeGallery(join(here, "..", "..", "src", "icons", "packs"), join(dist, "icon-packs"));
+  console.log(`✔ icon packs: ${packs.length} (dist/icon-packs)`);
   console.log(`✔ showcase: ${dist}`);
 }
 if (process.argv.includes("--serve")) {
