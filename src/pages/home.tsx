@@ -4,9 +4,8 @@ import { tween, reveal, magnet } from "hadi-march/motion";
 import { Particles, confetti } from "hadi-march/fx";
 import { Button, LinkCard, Kbd, Card, Badge, Grid, openPalette, ThemeSwatch, colorThemes, setColorTheme, colorTheme } from "hadi-march/ui";
 import { arrowRight, command, sparkles } from "hadi-march/icons";
-import { PAGES } from "../nav.ts";
+import { pages } from "../app.tsx";
 import { Demo } from "../demo.tsx";
-import { PAGE_META } from "../nav-meta.ts";
 
 function Counter(props: { to: number; suffix?: string; label: string }) {
   let $target = 0
@@ -34,11 +33,12 @@ export default function Home() {
         <span class="sc-pill" use:reveal={{ duration: 600 }}><Badge tone="primary" dot>Yeni</Badge> Tema sistemi · 7 hazır tema</span>
         <h1 class="sc-hero-title" use:reveal={{ duration: 800, delay: 80 }}>Arayüzü yaz,<br /><span class="hm-gradient-text">March yürütsün.</span></h1>
         <p class="sc-hero-sub" use:reveal={{ duration: 800, delay: 180 }}>
-          İnce taneli sinyaller, gerçek DOM, sıfır bağımlılık. Bileşenler, formlar, tablolar, grafikler ve animasyonlar tek kitaplıkta;
+          İnce taneli sinyaller, gerçek DOM, sıfır bağımlılık. Bileşenler, formlar, tablolar, grafikler ve animasyonlar tek pakette;
           sıkı CSP ve Trusted Types ile çalışır.
         </p>
         <div class="sc-hero-cta" use:reveal={{ duration: 800, delay: 280 }}>
-          <Button variant="primary" size="lg" href="/buttons" iconEnd={arrowRight}>Bileşenlere göz at</Button>
+          <Button variant="primary" size="lg" href="/start" iconEnd={arrowRight}>İlk Adımlar</Button>
+          <Button size="lg" href="/buttons">Bileşenlere göz at</Button>
           <Button size="lg" icon={command} onClick={openPalette}>Komut paleti <Kbd keys="mod+k" /></Button>
           <Button size="lg" variant="ghost" icon={sparkles} onClick={celebrate} use:magnet={{ strength: 0.3 }}>{() => ($clicks ? `Kutla (${$clicks})` : "Kutla")}</Button>
         </div>
@@ -60,8 +60,8 @@ export default function Home() {
       </section>
 
       <Grid cols={4} minCol="17rem" gap={3} fill="stretch" equal>
-        {PAGES.filter((p) => p.path !== "/").map((p, i) => <div use:reveal={{ delay: i * 40 }}>
-          <LinkCard href={p.path} icon={PAGE_META[p.path]?.icon} tone={(["primary", "info", "success", "violet", "warn", "pink", "teal", "danger", "neutral", "primary"] as const)[i % 10]} title={p.title} description={PAGE_META[p.path]?.desc} />
+        {pages().filter((p) => p.path !== "/").map((p, i) => <div use:reveal={{ delay: i * 40 }}>
+          <LinkCard href={p.path} icon={p.icon} tone={(["primary", "info", "success", "violet", "warn", "pink", "teal", "danger", "neutral", "primary"] as const)[i % 10]} title={p.title} description={p.desc} />
         </div>)}
       </Grid>
 

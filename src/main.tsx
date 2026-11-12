@@ -8,31 +8,28 @@ import "./showcase.css";
 import { render, setLocale } from "hadi-march";
 import { loadLocale } from "hadi-march/i18n";
 import { createRouter, Router } from "hadi-march/router";
-import { SHELL, PAGE_LOADING, PAGE_SKELETON, PAGES, LOADERS } from "./app.tsx";
-const ROUTER_DEMO = () => import("./router-demo/_layout.tsx");
+import { runLoad } from "hadi-march/lazy";
+import { PAGE_LOADING, PAGE_SKELETON } from "./app.tsx";
+// the route table is a start-up chunk (grouped with the shell pieces): the entry stays the same size however many
+// pages there are; runLoad preloads all of its files at once through the build manifest
+const ROUTES = () => import("./routes.ts");
 
 // the Turkish pack is a lazy chunk (library texts switch to Turkish when it arrives)
 loadLocale("tr", () => import("hadi-march/i18n/tr"));
 void setLocale("tr");
 
-createRouter({
-  mode: "hash",
-  // every page sits in the shell layout (kept alive while pages change)
-  routes: {
-    ...Object.fromEntries(PAGES.map((p) => [p.path, { load: LOADERS[p.path], layouts: [SHELL] }])),
-    // page transitions demo: its tabs and tile pages (the page module picks each one's transition)
-    "/transitions/*": { load: () => import("./pages/transitions.tsx"), layouts: [SHELL] },
-    // motion library pages (/motion/svg, /motion/morph…): one route, each page its own lazy chunk
-    "/motion/*": { load: () => import("./motion-hub.tsx"), layouts: [SHELL] },
-    // router demo: a section layout under the shell (nested, kept while its tabs change) and a record page that opens
-    // beside (named outlet), over the list (modal route) or in full (direct visit)
-    "/navigation/router": { load: () => import("./router-demo/list.tsx"), layouts: [SHELL, ROUTER_DEMO] },
-    "/navigation/router/about": { load: () => import("./router-demo/about.tsx"), layouts: [SHELL, ROUTER_DEMO] },
-    "/navigation/router/item/:id": { load: () => import("./router-demo/item.tsx"), layouts: [SHELL] },
-  },
-  outlets: { aside: { "/item/:id": () => import("./router-demo/item.tsx") } },
-  title: (to: { path: string }) => { const t = to.path.startsWith("/navigation/router") ? "Yönlendirici" : to.path !== "/" && PAGES.find((x) => x.path === to.path)?.title; return t ? `${t} · HADI March` : "HADI March · Vitrin"; },
-});
-
 const el = document.getElementById("app");
-if (el) { render(() => <Router loading={PAGE_LOADING} skeleton={PAGE_SKELETON} />, el); document.getElementById("hm-boot")?.remove(); }
+// index.html carries the start page prerendered (march build, seo.prerender). On that route it stays visible and a small
+// lazy chunk hydrates it; any other hash route drops it at once (before anything else loads)
+const pre = !!el && el.getAttribute("data-hm-prerender") === `#${location.hash.slice(1) || "/"}`;
+if (el && !pre) el.replaceChildren();
+const hydrateChunk = pre ? import("hadi-march/seo/hydrate") : null;
+
+void runLoad(ROUTES, { kind: "part", key: "" }).then(async ({ ROUTES: routes, OUTLETS, pageTitle }) => {
+  // every page sits in the shell layout (kept alive while pages change)
+  createRouter({ mode: "hash", routes, outlets: OUTLETS, title: pageTitle });
+  if (!el) return;
+  const app = () => <Router loading={PAGE_LOADING} skeleton={PAGE_SKELETON} />;
+  if (hydrateChunk) (await hydrateChunk).hydrate(app, el); else render(app, el);
+  document.getElementById("hm-boot")?.remove();
+});
