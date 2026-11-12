@@ -10,9 +10,15 @@ const ShellNav = lazy(() => import("./shell-nav.tsx"), { fallback: () => <div cl
 const ShellTools = lazy(() => import("./shell-tools.tsx"), { fallback: () => <div class="sc-tools sc-tools-placeholder" aria-hidden="true" /> })
 const ShellLate = lazy(() => import("./shell-late.tsx"), { fallback: () => null })
 
-/** Page title by path: installed by src/routes.ts (the entry carries no page list). */
+/** A showcase page as the menu and the home page show it. */
+export interface PageEntry { path: string; title: string; desc?: string | undefined; group?: string | undefined; icon?: unknown; /** A page under another one's route (menu only). */ sub?: boolean }
+// The page list and the title lookup are installed by src/routes.ts (a start-up chunk) before anything renders: the
+// entry carries no page list, so adding a page never grows it
+let pageList: readonly PageEntry[] = []
 let titleOf: (path: string) => string | undefined = () => undefined
-export const setPageTitles = (fn: typeof titleOf): void => { titleOf = fn }
+/** Every page (menu order) with its menu metadata. */
+export const pages = (): readonly PageEntry[] => pageList
+export const setPages = (list: readonly PageEntry[], title: typeof titleOf): void => { pageList = list; titleOf = title }
 
 function Topbar() {
   // instant on the click: the path changes at once, the title is looked up from it
