@@ -23,10 +23,11 @@ export interface PageParams {
   "/overlays": {  };
   "/seo": {  };
   "/speed": {  };
+  "/start": {  };
   "/text-motion": {  };
   "/themes": {  };
   "/transitions": {  };
 }
 declare module "hadi-march/router" {
-  interface Register { routes: "/animation" | "/buttons" | "/charts" | "/data" | "/feedback" | "/forms" | "/home" | "/icons" | "/language" | "/layout" | "/managers-a11y" | "/managers-data" | "/managers-env" | "/managers-ops" | "/managers" | "/messaging" | "/motion" | "/navigation" | "/network" | "/overlay" | "/overlays" | "/seo" | "/speed" | "/text-motion" | "/themes" | "/transitions" }
+  interface Register { routes: "/animation" | "/buttons" | "/charts" | "/data" | "/feedback" | "/forms" | "/home" | "/icons" | "/language" | "/layout" | "/managers-a11y" | "/managers-data" | "/managers-env" | "/managers-ops" | "/managers" | "/messaging" | "/motion" | "/navigation" | "/network" | "/overlay" | "/overlays" | "/seo" | "/speed" | "/start" | "/text-motion" | "/themes" | "/transitions" }
 }

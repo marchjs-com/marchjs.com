@@ -23,6 +23,7 @@ export default {
   "/overlays": () => import("./pages/overlays.tsx"),
   "/seo": () => import("./pages/seo.tsx"),
   "/speed": () => import("./pages/speed.tsx"),
+  "/start": () => import("./pages/start.tsx"),
   "/text-motion": () => import("./pages/text-motion.tsx"),
   "/themes": () => import("./pages/themes.tsx"),
   "/transitions": () => import("./pages/transitions.tsx"),

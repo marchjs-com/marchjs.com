@@ -2,6 +2,7 @@
 // from playground.ts, the Code tab from demo.tsx › code. New components appear by adding the folder, not by editing pages.
 import { signal } from "hadi-march";
 import { lazy } from "hadi-march/lazy";
+import { Link, type Href } from "hadi-march/router";
 import { registry } from "hadi-march/components/registry.gen.ts";
 import type { PlaygroundOption } from "hadi-march/ui";
 import { Demo } from "./demo.tsx";
@@ -23,9 +24,21 @@ function Stage(props: { folder: string }) {
   return <Body />
 }
 
+/** "Şunlardan oluşur": the parts a component is built from (meta.composedOf), each linked to the page that shows it. */
+export function ComposedOf(props: { parts: readonly string[] }) {
+  if (!props.parts.length) return null
+  return <p class="sc-parts"><span class="sc-parts-label">Şunlardan oluşur:</span>
+    {props.parts.map((name) => {
+      const page = registry.find((e) => e.meta.name === name)?.meta.showcase
+      return page ? <Link class="sc-part" href={page as Href}>{name}</Link> : <code class="sc-part">{name}</code>
+    })}
+  </p>
+}
+
 export function ComponentDemo(props: { folder: string; title?: string; desc?: string; code?: string }) {
   const entry = registry.find((e) => e.folder === props.folder)!
   return <Demo wide title={props.title ?? entry.meta.name} desc={props.desc ?? entry.meta.summary} code={props.code ?? entry.code}>
+    <ComposedOf parts={entry.meta.composedOf} />
     <Stage folder={props.folder} />
   </Demo>
 }

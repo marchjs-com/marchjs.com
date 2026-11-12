@@ -33,11 +33,12 @@ export default function Home() {
         <span class="sc-pill" use:reveal={{ duration: 600 }}><Badge tone="primary" dot>Yeni</Badge> Tema sistemi · 7 hazır tema</span>
         <h1 class="sc-hero-title" use:reveal={{ duration: 800, delay: 80 }}>Arayüzü yaz,<br /><span class="hm-gradient-text">March yürütsün.</span></h1>
         <p class="sc-hero-sub" use:reveal={{ duration: 800, delay: 180 }}>
-          İnce taneli sinyaller, gerçek DOM, sıfır bağımlılık. Bileşenler, formlar, tablolar, grafikler ve animasyonlar tek kitaplıkta;
+          İnce taneli sinyaller, gerçek DOM, sıfır bağımlılık. Bileşenler, formlar, tablolar, grafikler ve animasyonlar tek pakette;
           sıkı CSP ve Trusted Types ile çalışır.
         </p>
         <div class="sc-hero-cta" use:reveal={{ duration: 800, delay: 280 }}>
-          <Button variant="primary" size="lg" href="/buttons" iconEnd={arrowRight}>Bileşenlere göz at</Button>
+          <Button variant="primary" size="lg" href="/start" iconEnd={arrowRight}>İlk Adımlar</Button>
+          <Button size="lg" href="/buttons">Bileşenlere göz at</Button>
           <Button size="lg" icon={command} onClick={openPalette}>Komut paleti <Kbd keys="mod+k" /></Button>
           <Button size="lg" variant="ghost" icon={sparkles} onClick={celebrate} use:magnet={{ strength: 0.3 }}>{() => ($clicks ? `Kutla (${$clicks})` : "Kutla")}</Button>
         </div>

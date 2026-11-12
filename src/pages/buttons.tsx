@@ -77,9 +77,9 @@ export default function Buttons() {
       </div>
     </Demo>
 
-    <ComponentDemo folder="chip" title="Chip: seçenekler" desc="Bileşen klasöründen (src/components/chip) gelen demo: seçenekler playground.ts'den, kod docs.md'den. Renk yalnız süzgeç çipinde ya da primary tonda etkili olduğu için yalnız o zaman görünür." />
+    <ComponentDemo folder="actions/chip" title="Chip: seçenekler" desc="Bileşen klasöründen (src/components/actions/chip) gelen demo: seçenekler playground.ts'den, kod docs.md'den. Renk yalnız süzgeç çipinde ya da primary tonda etkili olduğu için yalnız o zaman görünür." />
 
-    <ComponentDemo folder="made-with-march" title="MadeWithMarch: kredi satırı" desc="İsteğe bağlı: \"HADI March ve 💗 ile geliştirildi\". Lisans MIT olarak kalır; kullanmak rica, zorunluluk değil. Bağlantı adresi tek bir sabittedir (MARCH_URL)." />
+    <ComponentDemo folder="actions/made-with-march" title="MadeWithMarch: kredi satırı" desc="İsteğe bağlı: \"HADI March ve 💗 ile geliştirildi\". Lisans MIT olarak kalır; kullanmak rica, zorunluluk değil. Bağlantı adresi tek bir sabittedir (MARCH_URL)." />
 
     <Demo title="Avatarlar ve klavye" desc="Baş harfler tema paletiyle; grup ve +N.">
       <div class="sc-row"><Avatar name="Elif Yılmaz" size="lg" /><Avatar name="Mert Demir" /><Avatar name="Zeynep Kaya" size="sm" />
