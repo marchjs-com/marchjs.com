@@ -195,6 +195,30 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "stagger-200", title: "200 öğe stagger", desc: "200 nokta, ızgara stagger'ı ortadan.", group: "Motor" },
     { slug: "keyframes-css", title: "Keyframe'ler → tek CSS dosyası", desc: "keyframesCss() (ya da tools/gen-motion-css.js) kayıtlardan @keyframes ve .hm-anim-* sınıfları üretir;…", group: "Motor" },
   ],
+  "/charts": [
+    { slug: "stats", title: "Göstergeler", desc: "Stat: değer, önceki döneme göre değişim, eğilim çizgisi.", group: "Grafikler" },
+    { slug: "line-area", title: "Çizgi ve alan", desc: "Sürükleyerek yakınlaştır; noktalar arasında ← → ile gez.", group: "Grafikler" },
+    { slug: "bar", title: "Çubuk", desc: "Gruplu ya da yatay.", group: "Grafikler" },
+    { slug: "pie", title: "Pasta ve halka", desc: "Donut ortasında toplam; dilimler odaklanabilir.", group: "Grafikler" },
+    { slug: "bar-list", title: "Çubuk listesi ve halkalar", desc: "BarList, ProgressRing, Sparkline.", group: "Grafikler" },
+    { slug: "heatmap", title: "Isı haritası", desc: "Gün × saat yoğunluğu (tema vurgusunun tonları).", group: "Grafikler" },
+  ],
+  "/speed": [
+    { slug: "slow-3g", title: "Yavaş 3G", desc: "Yavaş ağda sayfa ve parçaların nasıl geldiği.", group: "Hız" },
+    { slug: "instant", title: "Anında geçiş", desc: "Menüde bir sayfaya tıklayınca adres, etkin bağlantı ve konum çubuğu hemen değişir.", group: "Hız" },
+    { slug: "parts", title: "Canlı parça listesi", desc: "Derlemedeki her tembel birim (sayfalar, lazy bileşenler, kabuk parçaları, dil paketi) ve bu sekmede inip…", group: "Hız" },
+    { slug: "network-log", title: "Canlı ağ paneli", desc: "Bu sekme açıldığından beri yüklenen her dosya.", group: "Hız" },
+    { slug: "route-size", title: "Rota başına boyut (gzip)", desc: "march build her derlemede yazar (march-report.json): giriş, her sayfa (yoluyla) ve her tembel parça (lazy…", group: "Hız" },
+    { slug: "offline", title: "Çevrimdışı önbellek (service worker)", desc: "İsteğe bağlı: march.config.js › sw: true derlemede sw.js yazar.", group: "Hız" },
+  ],
+  "/network": [
+    { slug: "monitor", title: "Canlı istek izleyici", desc: "Her istek: kategori, politika, öncelik, kaynak ve middleware adımlarının süreleri (satıra tıklayın).", group: "Ağ" },
+    { slug: "dedupe", title: "dedupe", desc: "Aynı anahtar uçuştayken gelen istekler aynı yanıtı paylaşır; birinin iptali ötekileri bozmaz.", group: "Ağ" },
+    { slug: "latest", title: "latest", desc: "Aynı kategoride yeni istek eskisini iptal eder; yalnız son yazılanın sonucu gelir.", group: "Ağ" },
+    { slug: "mock", title: "Mock ↔ gerçek, yavaş ağ, hata oranı", desc: "Mock sağlayıcı tarayıcıda yanıt verir: tohumlu veri, durumlu CRUD, gecikme ve hata oranı.", group: "Ağ" },
+    { slug: "websocket", title: "WebSocket bildirim akışı (mock)", desc: "Yönetilen bağlantı: jitter'lı yeniden bağlanma, heartbeat, konu aboneliği (yeniden bağlanınca yenilenir),…", group: "Ağ" },
+    { slug: "errors", title: "Hata kuralları", desc: "window hataları, yakalanmamış sözler, sınırlar, net ve WS hataları tek toplayıcıya gelir; aynı hata tekrar…", group: "Ağ" },
+  ],
 };
 
 /** Every topic as a sub page under its section (path, title, parent) for the routes, the breadcrumb and the menu. */
