@@ -10,7 +10,7 @@ import { Link, navigate, params, type Href } from "hadi-march/router";
 import { locale, effect, onCleanup, Try, signal, computed, untrack } from "hadi-march";
 import { fold } from "hadi-march/ui";
 import { lazy } from "hadi-march/lazy";
-import { loadExamples } from "../api-examples.gen.ts";
+import { loadExample } from "../api-examples.gen.ts";
 import type { ApiExampleModule } from "../api-examples/types.ts";
 import { LitePlayground } from "../play-lite.tsx";
 
@@ -207,16 +207,16 @@ function ValueView(props: { value: string; T: (typeof TEXT)[Lang] }) {
   return <details class="sc-apip-value"><summary>{props.T.show} ({v.split("\n").length} satır)</summary><pre class="sc-apip-pre"><code>{v}</code></pre></details>
 }
 
-/** The live example of an export (its lazy example file). */
+/** The live example of an export (its own lazy module). */
 function Example(props: { subpath: string; name: string; T: (typeof TEXT)[Lang] }) {
   const T = props.T
   const mod = signal<ApiExampleModule | null | false>(null)
-  const p = loadExamples(props.subpath, props.name)
-  if (!p) mod.set(false); else p.then((m) => mod.set(m), () => mod.set(false))
+  const p = loadExample(props.subpath, props.name)
+  if (!p) mod.set(false); else p.then((m) => mod.set(m ?? false), () => mod.set(false))
   return <>{() => {
     const m = mod()
     if (m === null) return <p class="sc-apip-note">{T.loading}</p>
-    const ex = m ? m.default[props.subpath]?.[props.name] : undefined
+    const ex = m ? m.default : undefined
     if (!ex) return <p class="sc-apip-note">{T.noExample}</p>
     return <>
       <Block title={T.example}><DemoCode source={ex.code.trim()} lang="tsx" /></Block>

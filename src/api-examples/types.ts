@@ -12,7 +12,7 @@ export interface ApiExample<V = Record<string, unknown>> {
 }
 /** { subpath: { export name: example } }. */
 export type ApiExamples = Record<string, Record<string, ApiExample<any>>>;
-/** What an example file module exports: the examples and the generated signatures. */
-export interface ApiExampleModule { default: ApiExamples; SIG: Record<string, Record<string, string>> }
+/** A generated example module (api-examples/gen/<group>/<subpath>--<name>.tsx, tools/api-examples.js): one example. */
+export interface ApiExampleModule { default: ApiExample<any> }
 /** Typed helper for an example file's default export. */
 export const examples = (e: ApiExamples): ApiExamples => e;
