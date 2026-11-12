@@ -114,6 +114,14 @@ export function stats(samples: readonly number[]): Stats {
   return { n, median, mean, sd, ci: [mean - h, mean + h], min: s[0]!, max: s[n - 1]! }
 }
 
+/** Share of the median above which a result is not trusted (a busy machine). */
+export const NOISE = 0.15
+/** True when the standard deviation or the half-width of the 95% interval is above NOISE × median. */
+export function unreliable(s: Stats): boolean {
+  if (s.n < 2 || !(s.median > 0)) return false
+  return s.sd > NOISE * s.median || (s.ci[1] - s.ci[0]) / 2 > NOISE * s.median
+}
+
 /** Factor against the baseline (vanilla JS): 1.00 = as fast, 2.00 = twice the time. */
 export const factor = (value: number, base: number): number => (base > 0 && Number.isFinite(value) ? value / base : NaN)
 

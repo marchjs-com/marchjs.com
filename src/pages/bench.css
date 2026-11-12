@@ -26,3 +26,4 @@
 .bt-licenses { display: flex; flex-direction: column; gap: var(--hm-space-2); }
 .bt-license summary { cursor: pointer; font-weight: 600; }
 .bt-license pre { max-block-size: 16rem; overflow: auto; white-space: pre-wrap; font-size: var(--hm-text-xs); color: var(--hm-muted); }
+.bt-warn { margin: 0; padding: var(--hm-space-2) var(--hm-space-3); border-inline-start: 3px solid var(--hm-warn-solid); background: var(--hm-warn-soft); color: var(--hm-text); border-radius: var(--hm-radius-2); }

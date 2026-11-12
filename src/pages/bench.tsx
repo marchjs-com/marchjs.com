@@ -3,8 +3,9 @@
 // after another on the same page, each in its own host element (no iframe: the CSP has no frame-src).
 import { Button, Chip, Progress, Stack, toast } from "hadi-march/ui";
 import { lazy } from "hadi-march/lazy";
+import { untrack } from "hadi-march";
 import { query, setQuery } from "hadi-march/router";
-import { OPS, stats, factor, rank, encodeResult, decodeResult, type RunResult, type Stats } from "../bench/core.ts";
+import { OPS, stats, factor, rank, unreliable, encodeResult, decodeResult, type RunResult, type Stats } from "../bench/core.ts";
 import { LIBS, BASELINE, libById } from "../bench/libs.ts";
 import { runBench, type Progress as RunProgress } from "../bench/runner.ts";
 import { Demo, Section } from "../demo.tsx";
@@ -19,18 +20,6 @@ interface License { name: string; version: string; license: string; text: string
 const ms = (x: number): string => (Number.isFinite(x) ? (x >= 100 ? x.toFixed(0) : x.toFixed(1)) : "—")
 const kb = (n: number): string => `${(n / 1024).toFixed(1)} KB`
 const PHASE: Record<RunProgress["phase"], string> = { load: "yükleniyor", warm: "ısınma", run: "ölçülüyor", cool: "soğuma ve bellek toplama", paused: "duraklatıldı: sekme gizli" }
-
-/** Gzip KB each library's chunk downloads (the build report and the chunk manifest; dev mode has neither). */
-function chunkSizes(files: Record<string, FileSize>): Record<string, number> {
-  let manifest: Record<string, string[]> = {}
-  try { manifest = JSON.parse(document.getElementById("march-manifest")?.textContent ?? "{}") as Record<string, string[]> } catch { /* dev mode */ }
-  const out: Record<string, number> = {}
-  for (const lib of LIBS) {
-    const list = manifest[lib.src]
-    if (list) out[lib.id] = list.filter((f) => f.endsWith(".js")).reduce((s, f) => s + (files[f.replace(/^\.\//, "")]?.gzip ?? 0), 0)
-  }
-  return out
-}
 
 /** Plain-text summary for the clipboard. */
 function summary(r: RunResult): string {
@@ -53,7 +42,7 @@ function Choice(props: { label: string; value: string; set: (v: string) => void;
 export default function Bench() {
   let $libs: string[] = LIBS.map((l) => l.id)
   let $ops: string[] = ["create1k"]
-  let $reps = "5"
+  let $reps = "20"
   let $running = false
   let $progress: RunProgress | null = null
   let $result: RunResult | null = null
@@ -67,7 +56,8 @@ export default function Bench() {
   let stage!: HTMLDivElement
   let ctrl: AbortController | null = null
 
-  void fetch("march-report.json").then((r) => (r.ok ? r.json() : null)).then((x: { files?: Record<string, FileSize> } | null) => { if (x?.files) $sizes = chunkSizes(x.files) }, () => {})
+  // each app bundled alone with its library, minified, gzip -9 (tools/gen-bench.mjs)
+  void fetch("bench/sizes.json").then((r) => (r.ok ? r.json() : null)).then((x: Record<string, FileSize> | null) => { if (x) $sizes = Object.fromEntries(Object.entries(x).map(([k, v]) => [k, v.gzip])) }, () => {})
   // a shared link: #/bench?r=<deflated result>
   const shared = query().r
   if (shared) void decodeResult(shared).then((r) => { if (r) { $result = r; $shared = true; $view = OPS.find((o) => r.samples[BASELINE]?.[o.id]?.length)?.id ?? $view } else toast("Bağlantıdaki sonuç okunamadı", { kind: "warn" }) })
@@ -132,7 +122,7 @@ export default function Bench() {
           <Chip tone="info" onClick={() => { $ops = $ops.length === OPS.length ? ["create1k"] : OPS.map((o) => o.id) }}>{$ops.length === OPS.length ? "Yalnız ilki" : "Tümü"}</Chip>
         </div>
         <div class="bt-run">
-          <Choice label="Tekrar sayısı" value={$reps} set={(v) => { $reps = v }} options={[{ value: "3", label: "3 tekrar" }, { value: "5", label: "5 tekrar" }, { value: "10", label: "10 tekrar" }]} />
+          <Choice label="Tekrar sayısı" value={$reps} set={(v) => { $reps = v }} options={[{ value: "10", label: "10 tekrar" }, { value: "20", label: "20 tekrar" }, { value: "30", label: "30 tekrar" }]} />
           <Button variant={$running ? "secondary" : "primary"} onClick={start}>{$running ? "Durdur" : "Testi başlat"}</Button>
         </div>
       </div>
@@ -146,6 +136,7 @@ export default function Bench() {
     <Demo wide title="Sonuçlar" desc="Seçili işlem için medyan süre, hızlıdan yavaşa. Katsayı vanilla JS'e göredir: ×1.00 aynı süre, ×2.00 iki katı.">
       {() => opsIn().length ? <div class="bt-results">
         <Choice label="İşlem" value={$view} set={(v) => { $view = v }} options={opsIn().map((o) => ({ value: o.id, label: o.label }))} />
+        {() => { const bad = ranked().filter((x) => unreliable(x.stats)).map((x) => libById(x.id)?.name ?? x.id); return bad.length ? <p class="bt-warn" role="status">Sonuç güvenilir değil, makine meşgul: {bad.join(", ")} için sapma ya da güven aralığı medyanın %15'inden büyük. Diğer uygulamaları kapatıp testi yeniden çalıştır.</p> : null }}
         <BarChart data={bars()} x="name" y="median" series={{ median: "Medyan (ms)" }} horizontal height={Math.max(160, bars().length * 44)} title={OPS.find((o) => o.id === $view)?.label ?? ""} />
         <div class="bt-table-wrap">
           <table class="hm-table bt-table">
@@ -155,7 +146,7 @@ export default function Bench() {
               <td>{ms(x.stats.median)} ms</td>
               <td>{ms(x.stats.mean)} ± {ms(x.stats.sd)}</td>
               <td>{ms(x.stats.ci[0])}–{ms(x.stats.ci[1])}</td>
-              <td>{x.stats.n}</td>
+              <td>{x.stats.n}{unreliable(x.stats) ? <span class="bt-factor" title="Sapma ya da güven aralığı medyanın %15'inden büyük"> ⚠</span> : null}</td>
               <td>{Number.isFinite(base($view)) ? `×${factor(x.stats.median, base($view)).toFixed(2)}` : "—"}</td>
             </tr>)}</tbody>
           </table>
@@ -188,11 +179,11 @@ export default function Bench() {
       <ul class="bt-method">
         <li>Uygulama: 4 sütunlu tablo (kimlik, etiket, seçme ve silme bağlantısı). Satırlar her kitaplık için aynı tohumdan üretilir. Kitaplık kodları kendi önerilen kalıbıyla yazıldı (anahtarlı liste, satır başına bağlama); Kod bölümünde hepsi görünür.</li>
         <li>Süre: işlem çağrısından hemen önce saat alınır; sonra bir requestAnimationFrame ve onun içinden gönderilen bir mesaj beklenir. Mesaj, işlemden sonraki ilk boyamanın hemen ardından gelir. Satır seç ve sil, satırdaki bağlantıya gerçek bir tıklama olayıyla yapılır.</li>
-        <li>Her ölçümden önce hazırlık (ör. 1.000 satır kurmak) ölçülmeden yapılır ve boyanır. İşlemden sonra tablo kontrol edilir; işi atlayan bir uygulama hata alır, kazanmaz.</li>
-        <li>Isınma: 1k işlemlerde 3, 10k işlemlerde 1 ölçülmeyen tur. Sonra seçilen sayıda tekrar; medyan, ortalama, örnek standart sapması ve ortalamanın %95 güven aralığı (Student t) verilir.</li>
+        <li>Her ölçümden önce hazırlık (ör. 1.000 satır kurmak) ölçülmeden yapılır ve boyanır; sonra her kitaplık için aynı biçimde tarayıcı izin veriyorsa çöp toplama istenir, 20 ms beklenir ve bir boyama daha beklenir. İşlemden sonra tablo kontrol edilir; işi atlayan bir uygulama hata alır, kazanmaz.</li>
+        <li>Isınma: 1k işlemlerde 3, 10k işlemlerde 1 ölçülmeyen tur. Sonra seçilen sayıda tekrar (varsayılan 20); medyan, ortalama, örnek standart sapması ve ortalamanın %95 güven aralığı (Student t) verilir. Sapma ya da güven aralığının yarısı medyanın %15'ini aşarsa sonuç güvenilir sayılmaz ve uyarı çıkar.</li>
         <li>Kitaplıklar sırayla, bu sayfada ayrı bir kapsayıcıda çalışır. Aralarında uygulama kaldırılır, tarayıcı izin veriyorsa çöp toplama istenir, sayfa boşta kalana kadar beklenir.</li>
         <li>Sekme gizlenirse test durur; gizliyken başlayan ölçüm atılıp yeniden yapılır.</li>
-        <li>İlk çizim: kitaplık parçasının indirilmesinden boş uygulamanın ilk boyamasına kadar (ikinci çalıştırmada parça önbellektedir). Bellek: 1.000 satır sonrası JS yığını artışı; yalnız performance.memory veren tarayıcılarda ve kaba bir değerdir. İndirilen: derleme raporundaki gzip boyutu.</li>
+        <li>İlk çizim: kitaplık parçasının indirilmesinden boş uygulamanın ilk boyamasına kadar (ikinci çalıştırmada parça önbellektedir). Bellek: 1.000 satır sonrası JS yığını artışı; yalnız performance.memory veren tarayıcılarda ve kaba bir değerdir. İndirilen: uygulamanın kitaplığıyla birlikte tek başına paketlenmiş, küçültülmüş hâlinin gzip (düzey 9) boyutu.</li>
         <li>React çağrıları flushSync içinde yapılır (düğme tıklaması gibi, boyamadan önce çizilir). Svelte ve Solid derlenmiş çıktılarıyla çalışır.</li>
       </ul>
     </Demo>
@@ -200,7 +191,11 @@ export default function Bench() {
     <Demo wide title="Kod" desc="Her kitaplığın test uygulaması; ölçülen kod tam olarak bu.">
       <div class="bt-code" ref={() => loadSources()}>
         <Choice label="Kitaplık" value={$code} set={(v) => { $code = v }} options={LIBS.map((l) => ({ value: l.id, label: l.name }))} />
-        {() => $sources ? <DemoCode source={($sources[$code] ?? "").trim()} lang={$code === "svelte" ? "html" : "tsx"} /> : <p class="bt-empty">Yükleniyor…</p>}
+        {() => {
+          // read the choice here: the code view takes its source once, so a new choice draws a new view
+          const id = $code, all = $sources
+          return all ? untrack(() => <DemoCode source={(all[id] ?? "").trim()} lang={id === "svelte" ? "html" : "tsx"} />) : <p class="bt-empty">Yükleniyor…</p>
+        }}
       </div>
     </Demo>
 
