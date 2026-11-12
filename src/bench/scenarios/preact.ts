@@ -4,5 +4,6 @@
 import { mount as ticker } from "./ticker/preact.ts"
 import { mount as tree } from "./tree/preact.ts"
 import { mount as derived } from "./derived/preact.ts"
+import { mount as theme } from "./theme/preact.ts"
 
-export const scenarios = { ticker, tree, derived }
+export const scenarios = { ticker, tree, derived, theme }

@@ -2,5 +2,6 @@
 import { mount as ticker } from "./ticker/vanilla.ts"
 import { mount as tree } from "./tree/vanilla.ts"
 import { mount as derived } from "./derived/vanilla.ts"
+import { mount as theme } from "./theme/vanilla.ts"
 
-export const scenarios = { ticker, tree, derived }
+export const scenarios = { ticker, tree, derived, theme }

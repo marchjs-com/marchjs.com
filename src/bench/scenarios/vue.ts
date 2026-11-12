@@ -4,5 +4,6 @@
 import { mount as ticker } from "./ticker/vue.ts"
 import { mount as tree } from "./tree/vue.ts"
 import { mount as derived } from "./derived/vue.ts"
+import { mount as theme } from "./theme/vue.ts"
 
-export const scenarios = { ticker, tree, derived }
+export const scenarios = { ticker, tree, derived, theme }

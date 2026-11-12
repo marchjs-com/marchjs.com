@@ -3,5 +3,6 @@
 import { mount as ticker } from "./ticker/solid.gen.js"
 import { mount as tree } from "./tree/solid.gen.js"
 import { mount as derived } from "./derived/solid.gen.js"
+import { mount as theme } from "./theme/solid.gen.js"
 
-export const scenarios = { ticker, tree, derived }
+export const scenarios = { ticker, tree, derived, theme }
