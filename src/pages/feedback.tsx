@@ -1,30 +1,19 @@
 // Feedback: alerts, progress, skeleton, spinner, empty state, error box, loader, notice.
-import { Alert, Progress, Skeleton, Spinner, Empty, ErrorBox, Button, Card, Loader, Grid, Stack } from "hadi-march/ui";
+import { Progress, Skeleton, Spinner, Stack } from "hadi-march/ui";
 import { onCleanup } from "hadi-march";
 import { onFrame } from "hadi-march/motion";
 import { ProgressRing } from "hadi-march/charts";
-import { inbox, plus } from "hadi-march/icons";
 import { Demo, Section } from "../demo.tsx";
+import { ComponentDemo } from "../component-demo.tsx";
 
 export default function Feedback() {
   let $p = 35
-  let $loading = true
   // the demo progress steps on the motion clock: global speed and "Stop all" reach it too
   let acc = 0
   onCleanup(onFrame((_t, dt) => { acc += dt; if (acc >= 900) { acc = 0; $p = $p >= 100 ? 0 : $p + 7 } }))
   return <Section kicker="Bileşenler" title="Durumlar" lead="Her ekranın yükleniyor, boş ve hata hâli birinci sınıf: iskeletler gerçek düzeni taklit eder, boş durumlar bir sonraki adımı gösterir.">
-    <Demo title="Uyarılar" desc="Dört ton; başlık, kapatma, kendi ikonu.">
-      <Alert tone="info" title="Bakım penceresi">Pazar 03:00–03:30 arası ödeme sağlayıcısı bakımda.</Alert>
-      <Alert tone="success">Domain doğrulandı, SSL sertifikası yüklendi.</Alert>
-      <Alert tone="warn" title="Kota" dismissable>Bu ay depolamanın %90'ı kullanıldı.</Alert>
-      <Alert tone="danger" title="Ödeme başarısız">Kartın reddedildi. Başka bir kart dene.</Alert>
-    </Demo>
-    <Demo title="İlerleme" desc="Belirli, belirsiz, tonlu, üç boyut.">
-      <Progress value={$p} label="Yükleniyor" showValue />
-      <Progress value={72} tone="success" label="Hedef" showValue size="lg" />
-      <Progress value={91} tone="warn" label="Depolama" showValue size="sm" />
-      <Progress label="Hazırlanıyor" />
-    </Demo>
+    <ComponentDemo folder="feedback/alert" title="Alert: beş ton" desc="Başlık, ton ikonu ve kapatma düğmesi; uyarı ve tehlike hemen okunur (role=alert), ötekiler nazikçe (role=status)." />
+    <ComponentDemo folder="feedback/progress" title="Progress: değer, belirsiz, renkler" desc="Ton tek renk verir; birden çok renk gradient, eşit parçalar ya da akan döngü olarak dizilir. Dolgu kırpılır, RTL'de aynalanır." />
     <Demo wide title="Çok renkli göstergeler" desc="HADİ temasında ilerleme çubuğu, çark ve iskelet varsayılan olarak dört marka rengini taşır (öteki temalarda tek renk). colors ile renkler, paint ile dizilim seçilir: gradient, segments ya da cycle (renkler akar). Hareketi azalt tercihinde durağan."
       code={`<Progress value={60} />                                   // HADİ: four brand colors by default
 <Progress value={60} paint="segments" />                  // equal colored parts
@@ -50,18 +39,10 @@ export default function Feedback() {
         <Skeleton lines={3} />
       </div>
     </Demo>
-    <Demo title="İskelet ve çark" desc="Yükleme sırasında düzen zıplamaz.">
-      <div class="sc-row"><Button size="sm" on:click={() => { $loading = !$loading }}>{() => ($loading ? "Yüklemeyi bitir" : "Yeniden yükle")}</Button><Spinner size="sm" /><Spinner /><Spinner size="lg" /></div>
-      {() => ($loading
-        ? <Card><Stack gap={3}><div class="sc-row"><span class="hm-skel sc-skel-av" /><div class="sc-grow"><Skeleton lines={2} /></div></div><Skeleton block height="md" /></Stack></Card>
-        : <Card title="Elif Yılmaz" subtitle="Ürün tasarımcısı"><p class="hm-muted">Veri geldi; iskelet aynı düzenin yerini aldı.</p></Card>)}
-    </Demo>
-    <Demo title="Boş durum" desc="İkon, başlık, açıklama ve eylem.">
-      <Card><Empty icon={inbox} title="Gelen kutusu boş" action={[<Button variant="primary" icon={plus}>Yeni mesaj</Button>]}>Yeni bir konuşma başlat ya da bir ekip arkadaşını davet et.</Empty></Card>
-    </Demo>
-    <Demo title="Hata ve yükleyici" desc="ErrorBox yeniden dene düğmesiyle; Loader sayfa geçişlerinde.">
-      <ErrorBox title="Veriler alınamadı" message="Sunucuya ulaşılamadı (503). Bağlantını kontrol et." retry={() => {}} />
-      <Card><Loader text="Panolar hazırlanıyor…" /></Card>
-    </Demo>
+    <ComponentDemo folder="feedback/skeleton" title="Skeleton: içerik gelmeden düzen" desc="Satırlar, blok ya da ikisi birden; veri gelince aynı yere oturur, hiçbir şey zıplamaz. Parıltı marka renklerini taşıyabilir." />
+    <ComponentDemo folder="feedback/spinner" title="Spinner: dönen halka" desc="Üç boyut; dört marka rengi, iki renk ya da tek renk. Ekran okuyucu etiketi okur." />
+    <ComponentDemo folder="feedback/empty" title="Empty: boş ekran ne yapılacağını söyler" desc="İkon, başlık, açıklama ve sonraki adım. Eylem düğmesine basınca başlık değişir." />
+    <ComponentDemo folder="feedback/error-box" title="ErrorBox: hata ve yeniden dene" desc="Hatanın iletisi metin olarak; yeniden dene düğmesi denemeleri sayar, üçüncüsü başarılı olur." />
+    <ComponentDemo folder="feedback/loader" title="Loader: bir alanı dolduran yükleme" desc="Yerinde ya da içeriğin üstünde yarı saydam perdeyle; hızlı yüklemede çark hiç görünmez (gecikmeli belirir)." />
   </Section>
 }

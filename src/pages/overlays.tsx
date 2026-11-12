@@ -50,6 +50,8 @@ toast("Silindi", { kind: "danger", action: { label: "Geri al", run: geriAl } })`
       <p class="hm-muted">Dene: "koyu", "neon", "tablo", "bildirim".</p>
     </Demo>
     <ComponentDemo folder="composite/command-palette" title="CommandPalette: komut ekleme" desc="Karmaşık bileşen: uygulamanın tek paleti; bu kart ekranda olduğu sürece kendi komutlarını ekler, kart kapanınca kaldırır. Düğmenin üstüne gelince pencere önden yüklenir. Parçaları aşağıdaki satırda." />
+    <ComponentDemo folder="overlays/dialog" title="Dialog: boyut, alt çubuk, kapatma" desc="Odak pencerenin içinde döner, Escape en üsttekini kapatır, kapanınca odak açan düğmeye döner. Telefonda alttan yükselir." />
+    <ComponentDemo folder="overlays/toast" title="Toast: tür, geri al, süre" desc="Engellemeyen kısa ileti; en fazla beş üst üste. Geri al eylemi önce toast'ı kapatır, sonra çalışır." />
     <ComponentDemo folder="overlays/drawer" title="Drawer: dört kenar, sürükle, durma noktaları" desc="Başlangıç / bitiş kenarı yazı yönüne uyar (RTL'de yer değiştirir). Tutamaçtan ya da başlıktan sürükleyin; bırakınca en yakın durma noktasına oturur, kenara atınca kapanır. Modal kapalıyken sayfa kullanılabilir kalır." />
   </Section>
 }

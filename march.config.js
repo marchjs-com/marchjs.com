@@ -45,6 +45,12 @@ export default {
     "src/motion/scroll.ts": "motion values, scroll and pointer (4 KB) shared by /flow, the home page group and four demos: start-up is at its budget and any page host would push a demo part past 25 KB",
     "src/pages/editors.tsx": "a page of lazy editor cards (each card loads its own editor): grouping it would make its neighbours download nothing useful and regroup the other pages",
     "src/components/layout/splitter/index.ts": "Chip, Progress, Steps, Splitter (7 KB) shared by 24 pages and parts: start-up would pass 52 KB and every other host pushes 6+ routes or demo parts past their budget",
+    "src/pages/messaging.tsx": "8.4 KB of page code: the planner measures it with its import glue (10.8 KB) and leaves it alone, packing then trims the glue to 9.4 KB; grouping it pushed other page groups under the floor",
+    "src/forms/registry.ts": "form engine (form + registry, 8 KB) shared by the /forms page and the Wizard card only: either one hosting it makes the other pass its budget (page 60 KB, card 25 KB)",
+    "src/components/composite/json-editor/index.ts": "JsonEditor with the JSON field editors (9 KB) shared by the /editors cards and the lazy form editors: either host passes the 25 KB part budget",
+    "src/managers/command/index.ts": "command + dirty-state managers (6 KB), shared by the managers / IDE pages and the IDE cards: the IDE card modules sit at 24.5 KB, any host or common chunk passes 25 KB",
+    "src/managers/command/ui.ts": "command palette view (2 KB), same users and the same limit as the command manager",
+    "src/managers/viewport/index.ts": "viewport manager (4.5 KB), shared by /managers and the consent UI: /managers is at 58.5 KB with the rest of its managers",
     "src/components/composite/wizard/demo.tsx": "Wizard card's stage: it brings the form engine; folded into the component registry, every page with a component card would download it",
   } },
 };
