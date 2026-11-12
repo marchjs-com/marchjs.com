@@ -9,6 +9,8 @@ export const SUB_PAGES: { path: string; title: string }[] = [
   { path: "/motion/morph", title: "Morph" },
   { path: "/motion/pages", title: "Sayfa geçişi efektleri" },
   { path: "/motion/micro", title: "Mikro etkileşimler" },
+  { path: "/motion/scroll", title: "Kaydırma animasyonları" },
+  { path: "/motion/lists", title: "Liste animasyonları" },
 ]
 export const PAGE_META: Record<string, PageMeta> = {
   "/": { desc: "HADI March'a genel bakış", icon: dashboard },
@@ -29,7 +31,9 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/motion/svg": { desc: "Yol çizimi, şekil morph, yol boyunca, kırpma, SVG filtreleri", group: "Hareket", icon: activity },
   "/motion/morph": { desc: "Düğme → diyalog, kart → sayfa, paylaşılan öğe, ikon ve şekil morph", group: "Hareket", icon: layers },
   "/motion/pages": { desc: "Daire, silme, yığın, küp, çevir, perde, panjur, piksel, morph", group: "Hareket", icon: layers },
-  "/motion/micro": { desc: "Ripple, hover parallax, basma yayı, durum morph", group: "Hareket", icon: zap },
+  "/motion/micro": { desc: "Dalga, mıknatıs, eğim ve katman parallax, yaylı basma, durum morph", group: "Hareket", icon: zap },
+  "/motion/scroll": { desc: "Kaydırma zaman çizelgesi, parallax katmanları, yapışkan sahne, ilerleme", group: "Hareket", icon: activity },
+  "/motion/lists": { desc: "Ekle / kaldır / sırala FLIP, çıkış kopyası, sırayla giriş", group: "Hareket", icon: grid },
   "/motion": { desc: "Yay, FLIP listeler, parallax, parçacık", group: "Hareket", icon: activity },
   "/messaging": { desc: "Habersiz bileşenler arası türlü kanallar, sekmeler arası", group: "Altyapı", icon: message },
   "/speed": { desc: "Tembel yükleme, ön yükleme ve önbellek: canlı ağ paneli", group: "Altyapı", icon: gauge },
@@ -44,6 +48,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/seo": { desc: "Rota başına head, OG/Twitter, JSON-LD, prerender, sitemap", group: "Altyapı", icon: search },
   "/managers-a11y": { desc: "Katman, odak, kısayol, duyurucu, erişilebilirlik tercihleri, kısayol ipuçları", group: "Yöneticiler", icon: cpu },
   "/managers-env": { desc: "Yöneticiler: boşta, çevrimdışı eşitleme, cihaz, izin, konum, bildirim, sekme, kaydırma, oturum süresi, varlık", group: "Yöneticiler", icon: cpu },
+  "/web": { desc: "Hero, menü, fiyatlar, yorumlar, portfolyo, sunum; 3 örnek sayfa", group: "Landing", icon: layers },
   "/language": { desc: "$ değişkenler, <For>, bind:, borular, sx", group: "Temel", icon: code },
   "/flow": { desc: "Düğüm tabanlı akış: tuval, palet, çalıştır/duraklat/adım, zaman çizelgesi", group: "Karmaşık bileşenler", icon: activity },
   "/ide": { desc: "Panel yerleşimi, özellik düzenleyici, araç ve durum çubukları, mini editör", group: "Karmaşık bileşenler", icon: code },
