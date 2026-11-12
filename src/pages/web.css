@@ -72,7 +72,32 @@
 
 /* sample pages inside the showcase shell: full bleed, the site bar sticks under the shell's top bar */
 .sc-sample-wrap { --hm-site-nav-top: var(--hm-topbar-h, 0px); min-width: 0; }
-.sc-sample-bar { display: flex; align-items: center; gap: var(--hm-space-3); padding: var(--hm-space-2) var(--hm-space-4); border-block-end: 1px solid var(--hm-border); font-size: var(--hm-text-sm); background: var(--hm-surface); }
+.sc-sample-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-2) var(--hm-space-3); padding: var(--hm-space-2) var(--hm-space-4); border-block-end: 1px solid var(--hm-border); font-size: var(--hm-text-sm); background: var(--hm-surface); }
+.sc-sample-back { display: inline-flex; align-items: center; gap: var(--hm-space-1); }
+.sc-sample-back svg, .sc-sample-step svg, .sc-chip-src svg, .sc-seg-solo svg { inline-size: 1rem; block-size: 1rem; }
+.sc-sample-name { margin-inline-end: auto; }
+.sc-seg { display: inline-flex; align-items: center; gap: 2px; padding: 2px; border-radius: 999px; background: var(--hm-surface-2); }
+.sc-seg-btn { display: inline-flex; align-items: center; gap: var(--hm-space-1); padding: var(--hm-space-1) var(--hm-space-3); border: 0; border-radius: 999px; background: transparent; color: var(--hm-muted); font: inherit; cursor: pointer; }
+.sc-seg-btn[aria-checked="true"], .sc-seg-btn[aria-pressed="true"] { background: var(--hm-surface); color: var(--hm-text); box-shadow: var(--hm-shadow-1); }
+.sc-seg-solo { border: 1px solid var(--hm-border); }
+.sc-sample-swatch { display: inline-grid; place-items: center; padding: 2px; border: 2px solid transparent; border-radius: 999px; background: none; cursor: pointer; }
+.sc-sample-swatch[aria-checked="true"] { border-color: var(--hm-primary); }
+.sc-sample-swatch .hm-swatch { inline-size: 1.25rem; block-size: 1.25rem; }
+.sc-sample-parts { padding: var(--hm-space-2) var(--hm-space-4); border-block-end: 1px solid var(--hm-border); background: var(--hm-surface); font-size: var(--hm-text-sm); }
+.sc-sample-parts summary { cursor: pointer; color: var(--hm-muted); }
+.sc-sample-chips { display: flex; flex-wrap: wrap; gap: var(--hm-space-2); padding-block: var(--hm-space-2); }
+.sc-chip-link { display: inline-flex; align-items: center; gap: var(--hm-space-1); padding: 2px var(--hm-space-2); border: 1px solid var(--hm-border); border-radius: 999px; text-decoration: none; color: var(--hm-text); }
+.sc-chip-link:hover { border-color: var(--hm-primary); color: var(--hm-primary); }
+.sc-sample-stage { padding: 0; background: var(--hm-surface-2); }
+.sc-sample-device { inline-size: min(100%, var(--sc-device-w, 100%)); margin-inline: auto; background: var(--hm-bg); color: var(--hm-text); }
+.sc-sample-device[style*="390px"], .sc-sample-device[style*="834px"] { margin-block: var(--hm-space-4); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-lg); box-shadow: var(--hm-shadow-3); overflow: clip; container-type: inline-size; }
+.sc-sample-pager { display: flex; justify-content: space-between; gap: var(--hm-space-3); padding: var(--hm-space-5) var(--hm-space-4); border-block-start: 1px solid var(--hm-border); }
+.sc-sample-step { display: inline-flex; align-items: center; gap: var(--hm-space-2); text-decoration: none; color: var(--hm-text); }
+.sc-sample-step small { display: block; color: var(--hm-muted); font-size: var(--hm-text-xs); }
+.sc-sample-step-next { text-align: end; margin-inline-start: auto; }
+/* full screen: the sample covers the window (the shell stays underneath); Esc comes back */
+.sc-sample-wrap.is-full { position: fixed; inset: 0; z-index: var(--hm-z-dialog); overflow: auto; background: var(--hm-bg); --hm-site-nav-top: 0px; }
+.sc-sample-wrap.is-full .sc-sample-bar { position: sticky; top: 0; z-index: 2; }
 .sc-sample-page { position: relative; min-width: 0; overflow-x: clip; background: var(--hm-bg); }
 .sc-sample-slides { display: flex; flex-direction: column; gap: var(--hm-space-3); max-width: 72rem; margin-inline: auto; padding: var(--hm-space-5) var(--hm-space-4); }
 .sc-slides-help { margin: 0; text-align: center; font-size: var(--hm-text-sm); }

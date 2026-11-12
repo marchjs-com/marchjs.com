@@ -1,7 +1,7 @@
 // The menu manifest: page descriptions, groups and icons for the side menu and the home page (kept out of start-up:
 // the side menu loads it on first idle, test/boot-pages.test.js checks that no start-up piece imports it). A group is one of
 // MENU_GROUPS (src/components/categories.ts): İlk Adımlar, Temel, the component categories, Yöneticiler, Altyapı.
-import { activity, film, alertCircle, barChart, code, cpu, dashboard, edit, gauge, grid, layers, menu, message, heart, palette, search, server, zap } from "hadi-march/icons";
+import { activity, film, alertCircle, barChart, code, cpu, dashboard, edit, gauge, grid, layers, menu, message, heart, palette, play, search, server, sparkles, zap } from "hadi-march/icons";
 import { HOME_STATS } from "./home-stats.gen.ts";
 
 export interface PageMeta { desc: string; group?: string; icon: unknown }
@@ -43,7 +43,10 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/seo": { desc: "Rota başına head, OG/Twitter, JSON-LD, prerender, sitemap", group: "Altyapı", icon: search },
   "/managers-a11y": { desc: "Katman, odak, kısayol, duyurucu, erişilebilirlik tercihleri, kısayol ipuçları", group: "Yöneticiler", icon: cpu },
   "/managers-env": { desc: "Yöneticiler: boşta, çevrimdışı eşitleme, cihaz, izin, konum, bildirim, sekme, kaydırma, oturum süresi, varlık", group: "Yöneticiler", icon: cpu },
-  "/web": { desc: "Hero, menü, fiyatlar, yorumlar, portfolyo, sunum; 3 örnek sayfa", group: "Landing", icon: layers },
+  "/web": { desc: "Hero, menü, fiyatlar, yorumlar, portfolyo, sunum blokları", group: "Landing", icon: layers },
+  "/web/product": { desc: "Örnek site: yüzen menü, ürün karesi, bento, fiyatlar, SSS", group: "Landing", icon: sparkles },
+  "/web/portfolio": { desc: "Örnek site: süzgeçli projeler, ayrıntı geçişi, iletişim", group: "Landing", icon: grid },
+  "/web/slides": { desc: "Örnek site: klavyeyle sunum, konuşmacı penceresi, tam ekran", group: "Landing", icon: play },
   "/language": { desc: "$ değişkenler, <For>, bind:, borular, sx", group: "Temel", icon: code },
   "/flow": { desc: "Düğüm tabanlı akış: tuval, palet, çalıştır/duraklat/adım, zaman çizelgesi", group: "Karmaşık bileşenler", icon: activity },
   "/ide": { desc: "Panel yerleşimi, özellik düzenleyici, araç ve durum çubukları, mini editör", group: "Karmaşık bileşenler", icon: code },

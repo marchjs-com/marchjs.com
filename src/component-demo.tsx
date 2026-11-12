@@ -53,9 +53,12 @@ export function ComposedOf(props: { parts: readonly string[] }) {
   </p>
 }
 
+/** The anchor of a component demo on its page ("landing/hero" → "c-landing-hero"). */
+export const demoId = (folder: string): string => "c-" + folder.split("/").join("-")
+
 export function ComponentDemo(props: { folder: string; title?: string; desc?: string; code?: string; view?: View; spec?: PlaygroundSpec<never> }) {
   const entry = cards.find((e) => e.f === props.folder)!
-  return <Demo wide title={props.title ?? entry.n} desc={props.desc ?? entry.s} code={props.code ?? (() => cardCode(props.folder))}>
+  return <Demo wide id={demoId(props.folder)} title={props.title ?? entry.n} desc={props.desc ?? entry.s} code={props.code ?? (() => cardCode(props.folder))}>
     <ComposedOf parts={entry.p ?? []} />
     {props.view && props.spec ? <PlayStage view={props.view} spec={props.spec} /> : <Stage folder={props.folder} />}
   </Demo>

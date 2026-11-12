@@ -48,4 +48,7 @@ export const SUB_PAGES: PageInfo[] = [
   { path: "/motion/micro", title: "Mikro etkileşimler" },
   { path: "/motion/scroll", title: "Kaydırma animasyonları" },
   { path: "/motion/lists", title: "Liste animasyonları" },
+  { path: "/web/product", title: "Ürün tanıtım sayfası" },
+  { path: "/web/portfolio", title: "Kişisel portfolyo" },
+  { path: "/web/slides", title: "Sunum" },
 ];

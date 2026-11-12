@@ -19,6 +19,8 @@ export const ROUTES = {
   "/transitions/*": { load: LOADERS["/transitions"], layouts: [SHELL], title: PAGES.find((p) => p.path === "/transitions")?.title },
   // API page: /api/<subpath>/<name> opens one export (the same page module)
   "/api/*": { load: LOADERS["/api"], layouts: [SHELL], title: "API" },
+  // sample websites (/web/product, /web/portfolio, /web/slides): the web page module shows one by its path
+  "/web/*": { load: LOADERS["/web"], layouts: [SHELL], title: "Web siteleri" },
   // motion library pages (/motion/svg, /motion/morph…): one route, each page its own lazy chunk
   "/motion/*": { load: () => import("./motion-hub.tsx"), layouts: [SHELL], title: "Hareket" },
   // router demo: a section layout under the shell (nested, kept while its tabs change) and a record page that opens
