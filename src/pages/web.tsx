@@ -7,7 +7,7 @@ import { computed, signal, effect, onCleanup } from "hadi-march";
 import { Link, query, navigate } from "hadi-march/router";
 import { colorThemes, loadTheme, ThemeSwatch } from "hadi-march/ui";
 import { Icon, arrowLeft, arrowRight, maximize, minimize, externalLink, rotateCw } from "hadi-march/icons";
-import { DevicePreview } from "hadi-march/components/layout/index.ts";
+import { DevicePreview, previewFrame } from "hadi-march/components/layout/index.ts";
 import { appUrl } from "hadi-march/base";
 import { Section } from "../demo.tsx";
 import { ComponentDemo, demoId } from "../component-demo.tsx";
@@ -122,7 +122,7 @@ function SampleView(props: { sample: Sample; view: () => unknown }) {
           return `${appUrl(`web/${s.view}`)}?${u}`
         }
         return device() === "desktop"
-          ? <iframe class="sc-sample-frame" src={src} title={`${s.title} önizleme`} />
+          ? previewFrame(src, `${s.title} önizleme`, "sc-sample-frame")
           : <DevicePreview device={device()} landscape={rotate} src={src} />
       }}
     </div>

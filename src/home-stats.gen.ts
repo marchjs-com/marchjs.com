@@ -4,7 +4,7 @@ export const HOME_STATS = {
   "dependencies": 0,
   "components": 222,
   "registered": 145,
-  "exports": 1040,
+  "exports": 1041,
   "subpaths": 93,
   "categories": [
     {
@@ -84,7 +84,7 @@ export const HOME_STATS = {
     "pageFx": 10
   },
   "managers": 30,
-  "tests": 847,
+  "tests": 848,
   "testFiles": 250,
   "budget": {
     "entry": 15360,
