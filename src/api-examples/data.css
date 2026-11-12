@@ -1,0 +1,12 @@
+/* API examples of the data group (hadi-march/data, schema, components/registry.gen.ts). */
+.sc-ex-data-stack { display: grid; gap: var(--hm-space-3); min-width: 0; }
+.sc-ex-data-pre { max-block-size: 12rem; margin: 0; padding: var(--hm-space-2); overflow: auto; border-radius: var(--hm-radius-1); background: var(--hm-surface-2); font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); white-space: pre-wrap; overflow-wrap: anywhere; }
+.sc-ex-data-list { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; font-size: var(--hm-text-sm); }
+.sc-ex-data-list > li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--hm-space-2); padding: var(--hm-space-1) var(--hm-space-2); border-radius: var(--hm-radius-1); background: var(--hm-surface-2); }
+.sc-ex-data-list > li.is-group { background: transparent; font-weight: 600; cursor: pointer; }
+.sc-ex-data-list > li.is-off { opacity: .45; }
+.sc-ex-data-vlist { block-size: 14rem; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-1); }
+.sc-ex-data-item { display: grid; gap: var(--hm-space-1); padding: var(--hm-space-2) var(--hm-space-3); border-block-end: 1px solid var(--hm-border); font-size: var(--hm-text-sm); }
+.sc-ex-data-item > p { margin: 0; color: var(--hm-muted); }
+.sc-ex-data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); gap: var(--hm-space-2); margin: 0; padding: 0; list-style: none; font-size: var(--hm-text-sm); }
+.sc-ex-data-grid > li { padding: var(--hm-space-1) var(--hm-space-2); border-radius: var(--hm-radius-1); background: var(--hm-surface-2); overflow-wrap: anywhere; }

@@ -1,0 +1,16 @@
+/* API examples: text animations and fx (sc-ex-text-*). Tokens only, logical properties. */
+.sc-ex-text { display: grid; gap: var(--hm-space-2); min-width: 0; }
+.sc-ex-text-stage { display: grid; place-items: center; min-block-size: 6rem; padding: var(--hm-space-3); border-radius: var(--hm-radius-2); background: var(--hm-surface-2); overflow: hidden; }
+.sc-ex-text-line { max-inline-size: 100%; font-size: clamp(1.25rem, 5vw, 1.8rem); font-weight: 700; line-height: 1.25; text-align: center; overflow-wrap: anywhere; }
+.sc-ex-text-hint { margin: 0; font-size: var(--hm-text-sm); color: var(--hm-text-muted); }
+.sc-ex-text-part { outline: 1px dashed var(--hm-border); outline-offset: 1px; }
+.sc-ex-text-ranks { display: flex; flex-wrap: wrap; gap: var(--hm-space-2); }
+.sc-ex-text-rank { display: grid; place-items: center; inline-size: 2rem; block-size: 2rem; border-radius: var(--hm-radius-1); background: var(--hm-primary-soft); font-family: var(--hm-font-mono); }
+.sc-ex-text-chips { display: flex; flex-wrap: wrap; gap: var(--hm-space-1); min-width: 0; }
+.sc-ex-text-fx { position: relative; display: grid; place-items: center; min-block-size: 8rem; border-radius: var(--hm-radius-2); background: var(--hm-surface-2); overflow: hidden; isolation: isolate; }
+.sc-ex-text-fx-title { position: relative; z-index: 1; font-size: 1.5rem; }
+.sc-ex-text-fx-wrap { display: grid; min-width: 0; }
+.sc-ex-text-card { display: grid; place-items: center; min-block-size: 7rem; padding: var(--hm-space-4); border-radius: var(--hm-radius-2); text-align: center; }
+.sc-ex-text-tone-primary { background: var(--hm-primary-soft-2); }
+.sc-ex-text-tone-info { background: var(--hm-info-soft); }
+.sc-ex-text-tone-plain { background: var(--hm-surface-2); }

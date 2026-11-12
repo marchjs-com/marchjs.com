@@ -5,6 +5,7 @@ export interface PageInfo { path: string; title: string }
 export const PAGES: PageInfo[] = [
   { path: "/", title: "Merhaba" },
   { path: "/start", title: "İlk Adımlar" },
+  { path: "/api", title: "API" },
   { path: "/themes", title: "Temalar ve tokenlar" },
   { path: "/icons", title: "İkonlar" },
   { path: "/buttons", title: "Düğmeler ve rozetler" },

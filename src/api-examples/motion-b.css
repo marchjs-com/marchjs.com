@@ -1,0 +1,40 @@
+/* API examples of hadi-march/motion (measure … zoomThrough): small stages that play real engine animations. */
+.sc-ex-motion-b-stage { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--hm-space-3); min-block-size: 6.5rem; min-inline-size: 0; padding: var(--hm-space-3); overflow: hidden; border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-2); background: var(--hm-surface); }
+.sc-ex-motion-b-stack { display: grid; gap: var(--hm-space-3); min-inline-size: 0; }
+.sc-ex-motion-b-box { inline-size: 2.5rem; block-size: 2.5rem; border-radius: var(--hm-radius-2); background: var(--hm-brand-orange); }
+.sc-ex-motion-b-box-b { background: var(--hm-brand-blue); }
+.sc-ex-motion-b-box-g { background: var(--hm-brand-green); }
+.sc-ex-motion-b-box-p { background: var(--hm-brand-purple); }
+.sc-ex-motion-b-lane { position: relative; inline-size: 100%; block-size: 2rem; border-radius: var(--hm-radius-2); background: var(--hm-surface-2); overflow: hidden; }
+.sc-ex-motion-b-pill { position: absolute; inset-block: .25rem; inset-inline-start: .25rem; inline-size: 25%; border-radius: 999px; background: var(--hm-brand-orange); }
+.sc-ex-motion-b-meter { inline-size: 100%; block-size: .75rem; border-radius: 999px; background: var(--hm-surface-2); overflow: hidden; }
+.sc-ex-motion-b-meter > i { display: block; block-size: 100%; inline-size: 0; border-radius: inherit; background: var(--hm-brand-green); }
+.sc-ex-motion-b-grid { display: grid; grid-template-columns: repeat(6, 1.75rem); gap: .4rem; }
+.sc-ex-motion-b-dot { inline-size: 1.75rem; block-size: 1.75rem; border-radius: 50%; background: var(--hm-brand-blue); }
+.sc-ex-motion-b-src { min-inline-size: 5rem; }
+.sc-ex-motion-b-panel { flex: 1 1 11rem; display: grid; gap: var(--hm-space-1); padding: var(--hm-space-3); border-radius: var(--hm-radius-3, var(--hm-radius-2)); background: var(--hm-surface-2); box-shadow: var(--hm-shadow-2, none); }
+.sc-ex-motion-b-panel[hidden] { display: none; }
+.sc-ex-motion-b-svg { inline-size: min(100%, 14rem); block-size: auto; flex: none; }
+.sc-ex-motion-b-fill { fill: var(--hm-brand-orange); }
+.sc-ex-motion-b-ink { fill: none; stroke: var(--hm-brand-blue); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.sc-ex-motion-b-ink-dim { stroke: var(--hm-border-strong, var(--hm-border)); }
+.sc-ex-motion-b-mark { fill: var(--hm-brand-orange); }
+.sc-ex-motion-b-pages { position: relative; inline-size: min(100%, 16rem); block-size: 7rem; overflow: hidden; border-radius: var(--hm-radius-2); background: var(--hm-surface-2); }
+.sc-ex-motion-b-pg { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 600; color: var(--hm-on-accent, var(--hm-text)); background: var(--hm-brand-orange); }
+.sc-ex-motion-b-pg-2 { background: var(--hm-brand-blue); visibility: hidden; }
+.sc-ex-motion-b-shape { inline-size: 5rem; block-size: 5rem; background: var(--hm-brand-purple); }
+.sc-ex-motion-b-shapes { display: flex; flex-wrap: wrap; gap: var(--hm-space-3); justify-content: center; }
+.sc-ex-motion-b-shapes > figure { display: grid; justify-items: center; gap: var(--hm-space-1); margin: 0; font-size: var(--hm-text-xs); color: var(--hm-muted); }
+.sc-ex-motion-b-shapes .sc-ex-motion-b-shape { inline-size: 3.5rem; block-size: 3.5rem; }
+.sc-ex-motion-b-pad { position: relative; inline-size: min(100%, 16rem); block-size: 7rem; border-radius: var(--hm-radius-2); background: var(--hm-surface-2); cursor: crosshair; touch-action: none; }
+.sc-ex-motion-b-pad > i { position: absolute; inset-block-start: 0; inset-inline-start: 0; inline-size: 1.25rem; block-size: 1.25rem; margin: -.625rem; border-radius: 50%; background: var(--hm-brand-orange); pointer-events: none; }
+.sc-ex-motion-b-handle { inline-size: 2.75rem; block-size: 2.75rem; border-radius: 50%; background: var(--hm-brand-green); cursor: grab; touch-action: none; }
+.sc-ex-motion-b-card { display: grid; place-items: center; inline-size: 9rem; block-size: 5.5rem; border-radius: var(--hm-radius-3, var(--hm-radius-2)); background: var(--hm-surface-2); border: 1px solid var(--hm-border-subtle); font-weight: 600; touch-action: pan-y; user-select: none; }
+.sc-ex-motion-b-ripple { position: relative; overflow: hidden; }
+.sc-ex-motion-b-canvas { inline-size: min(100%, 16rem); block-size: 7rem; border-radius: var(--hm-radius-2); background: var(--hm-surface-2); }
+.sc-ex-motion-b-turn { transform: rotate(var(--ex-b-turn, 0deg)); }
+.sc-ex-motion-b-vt { view-transition-name: sc-ex-motion-b-vt; }
+.sc-ex-motion-b-swatch { inline-size: 100%; block-size: 2.5rem; border-radius: var(--hm-radius-2); border: 1px solid var(--hm-border-subtle); }
+.sc-ex-motion-b-range { inline-size: min(100%, 16rem); }
+.sc-ex-motion-b-code { margin: 0; padding: var(--hm-space-2); max-block-size: 9rem; overflow: auto; border-radius: var(--hm-radius-1); background: var(--hm-surface-2); font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); white-space: pre-wrap; overflow-wrap: anywhere; }
+.sc-ex-motion-b-scroll { display: grid; gap: var(--hm-space-2); justify-items: center; padding-block: var(--hm-space-6, 3rem); }

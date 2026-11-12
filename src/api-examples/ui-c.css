@@ -1,0 +1,15 @@
+/* API examples, group ui-c (hadi-march/ui, LocaleSelect … SearchBox): frames for the components that need a box. */
+.sc-ex-ui-c-stack { display: grid; gap: var(--hm-space-3); min-width: 0; }
+.sc-ex-ui-c-narrow { inline-size: min(100%, 16rem); }
+.sc-ex-ui-c-box { position: relative; min-width: 0; padding: var(--hm-space-4); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); background: var(--hm-surface); }
+.sc-ex-ui-c-frame { display: flex; block-size: 20rem; min-width: 0; overflow: hidden; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); }
+.sc-ex-ui-c-frame > :first-child { block-size: 100%; }
+.sc-ex-ui-c-frame .hm-sb { inline-size: 100%; border-inline-end: 0; }
+.sc-ex-ui-c-main { flex: 1; min-width: 0; padding: var(--hm-space-3); }
+.sc-ex-ui-c-hero { position: relative; display: grid; place-items: center; min-block-size: 9rem; overflow: hidden; border-radius: var(--hm-radius-2); background: var(--hm-surface-2); text-align: center; }
+.sc-ex-ui-c-scroll { block-size: 14rem; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); background: var(--hm-surface); }
+.sc-ex-ui-c-list { margin: 0; padding: 0; list-style: none; }
+.sc-ex-ui-c-list li { padding: var(--hm-space-2) var(--hm-space-3); border-block-end: 1px solid var(--hm-border-subtle); }
+.sc-ex-ui-c-input { inline-size: 100%; min-block-size: 5rem; font-family: var(--hm-font-mono); font-size: var(--hm-text-sm); }
+.sc-ex-ui-c-tbar { max-inline-size: 100%; }
+.sc-ex-ui-c-emoji { font-size: var(--hm-text-lg); }
