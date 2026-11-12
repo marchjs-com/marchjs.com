@@ -9,6 +9,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/buttons": { desc: "Button, menü, çip, avatar, ipucu", group: "Bileşenler", icon: zap },
   "/forms": { desc: "Alanlar, seçiciler, doğrulama, sihirbaz", group: "Bileşenler", icon: edit },
   "/data": { desc: "10.000 satırlık tablo, ağaç, pano, adımlar", group: "Bileşenler", icon: layers },
+  "/big-data": { desc: "DataGrid, TreeView, takvim, Gantt, dosya yöneticisi", group: "Bileşenler", icon: grid },
   "/charts": { desc: "Çizgi, alan, çubuk, pasta, ısı haritası", group: "Bileşenler", icon: barChart },
   "/overlays": { desc: "Dialog, çekmece, toast, komut paleti", group: "Bileşenler", icon: message },
   "/feedback": { desc: "Uyarı, ilerleme, iskelet, boş, hata", group: "Bileşenler", icon: alertCircle },

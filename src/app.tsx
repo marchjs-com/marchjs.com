@@ -15,6 +15,7 @@ export const LOADERS: Record<string, () => Promise<unknown>> = {
   "/buttons": () => import("./pages/buttons.tsx"),
   "/forms": () => import("./pages/forms.tsx"),
   "/data": () => import("./pages/data.tsx"),
+  "/big-data": () => import("./pages/big-data.tsx"),
   "/charts": () => import("./pages/charts.tsx"),
   "/overlays": () => import("./pages/overlays.tsx"),
   "/feedback": () => import("./pages/feedback.tsx"),
