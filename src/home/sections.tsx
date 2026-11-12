@@ -2,7 +2,7 @@
 // small live previews, the performance band, a first example and the footer. Every number comes from home-stats.gen.ts
 // (tools/gen-home-stats.js) or from march-report.json (this build's measured sizes); none is typed here.
 import "./sections.css";
-import { reveal, inView, animate } from "hadi-march/motion";
+import { reveal, inView, animate, tween, reducedMotion } from "hadi-march/motion";
 import { Link } from "hadi-march/router";
 import { Button, CountRoll, MadeWithMarch, ThemeSwatch, colorThemes, colorTheme, setColorTheme, type IconTone } from "hadi-march/ui";
 import { Icon, activity, arrowRight, edit, film, gauge, globe, heart, layers, palette, eye, sliders, packageBox, panelLeft } from "hadi-march/icons";
@@ -25,8 +25,18 @@ const rtl = (el: Element): boolean => !!el.closest("[dir=rtl]")
 
 // ── live numbers ────────────────────────────────────────────────────────────────────────────────────────────────
 
+/** How far a count has rolled (0..1 of its value): a few steps, so CountRoll rolls the digits up like a counter. */
+const STEPS = [0, 0.3, 0.55, 0.75, 0.9, 1]
+const stepOf = (p: number): number => { let s = 0; for (const x of STEPS) if (p >= x - 1e-6) s = x; return s }
+
+// The numbers roll once, when the band first scrolls into view. The prerendered page (no IntersectionObserver at build
+// time) and the takeover show zeros, so nothing jumps; with reduced motion the final values appear at once.
 function StatsBand(props: { report: () => Report | null }) {
   let $shown = false
+  let $still = false
+  const rolled = tween(() => ($shown ? 1 : 0), { duration: 1500, easing: "easeOutCubic" })
+  const progress = () => ($still ? ($shown ? 1 : 0) : stepOf(rolled()))
+  const enter = () => { if (typeof IntersectionObserver !== "function") return; $still = reducedMotion(); $shown = true }
   const boot = () => { const r = props.report(); return r?.boot ? kb(r.boot.js) : null }
   const stats: Array<{ value: () => number | null; label: string; href: string }> = [
     { value: () => S.components, label: "bileşen", href: "/buttons" },
@@ -38,9 +48,9 @@ function StatsBand(props: { report: () => Report | null }) {
     { value: () => (boot() == null ? null : Math.round(boot() as number)), label: "KB açılış (gzip)", href: "/speed" },
     { value: () => S.dependencies, label: "bağımlılık", href: "/start" },
   ]
-  return <section class="sc-band sc-numbers" aria-label="Rakamlarla" use:inView={{ once: true, enter: () => { $shown = true } }}>
+  return <section class="sc-band sc-numbers" aria-label="Rakamlarla" use:inView={{ once: true, enter }}>
     {stats.map((s, i) => <Link href={s.href} class="sc-number" use:reveal={{ delay: i * 50 }}>
-      <span class="sc-number-n"><CountRoll value={() => ($shown ? s.value() : 0)} format="full" duration={900} /></span>
+      <span class="sc-number-n"><CountRoll value={() => { const v = s.value(); return v == null ? null : Math.round(v * progress()) }} format="full" duration={260} /></span>
       <span class="sc-number-l">{s.label}</span>
     </Link>)}
   </section>
