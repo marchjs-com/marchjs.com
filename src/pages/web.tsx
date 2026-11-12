@@ -6,7 +6,7 @@ import "./web.css";
 import { computed, signal, effect, onCleanup } from "hadi-march";
 import { Link, query, navigate } from "hadi-march/router";
 import { colorThemes, loadTheme, ThemeSwatch } from "hadi-march/ui";
-import { arrowLeft, arrowRight, maximize, minimize, externalLink } from "hadi-march/icons";
+import { Icon, arrowLeft, arrowRight, maximize, minimize, externalLink } from "hadi-march/icons";
 import { Section } from "../demo.tsx";
 import { ComponentDemo, demoId } from "../component-demo.tsx";
 import { lazy } from "hadi-march/lazy";
@@ -80,8 +80,9 @@ function SampleView(props: { sample: Sample; view: () => unknown }) {
   const width = (): string => DEVICES.find((d) => d.id === device())?.width || "100%"
   const fullLabel = (): string => (full() ? "Tam ekrandan çık (Esc)" : "Tam ekran")
   return <div class={() => (full() ? "sc-sample-wrap is-full" : "sc-sample-wrap")}>
+    <div class="sc-sample-head">
     <div class="sc-sample-bar" role="toolbar" aria-label="Önizleme">
-      <Link href="/web" class="sc-sample-back">{arrowLeft()}<span>Bloklar</span></Link>
+      <Link href="/web" class="sc-sample-back"><Icon of={arrowLeft} /><span>Bloklar</span></Link>
       <strong class="sc-sample-name">{s.title}</strong>
       <div class="sc-seg" role="radiogroup" aria-label="Cihaz">
         {DEVICES.map((d) => <button type="button" role="radio" class="sc-seg-btn" aria-checked={() => String(device() === d.id)} on:click={() => device.set(d.id)}>{d.label}</button>)}
@@ -91,15 +92,16 @@ function SampleView(props: { sample: Sample; view: () => unknown }) {
         {colorThemes().map((th) => <button type="button" role="radio" class="sc-sample-swatch" title={th.name} aria-label={th.name} aria-checked={() => String(theme() === th.id)} on:click={() => theme.set(th.id)}><ThemeSwatch id={th.id} /></button>)}
       </div>
       <button type="button" class="sc-seg-btn sc-seg-solo" aria-pressed={() => String(rtl())} on:click={() => rtl.set(!rtl())}>Sağdan sola</button>
-      <button type="button" class="sc-seg-btn sc-seg-solo" aria-pressed={() => String(full())} aria-label={fullLabel} title={fullLabel} on:click={() => full.set(!full())}>{() => (full() ? minimize() : maximize())}</button>
+      <button type="button" class="sc-seg-btn sc-seg-solo" aria-pressed={() => String(full())} aria-label={fullLabel} title={fullLabel} on:click={() => full.set(!full())}>{() => <Icon of={full() ? minimize : maximize} />}</button>
     </div>
     <details class="sc-sample-parts">
       <summary>{`Bu site ${s.blocks.length} bloktan oluşur · kaynak`}</summary>
       <div class="sc-sample-chips">
         {s.blocks.map((b) => <Link class="sc-chip-link" href={`/web#${demoId(`landing/${b}`)}` as never}><code>{blockName(b)}</code></Link>)}
-        <a class="sc-chip-link sc-chip-src" href={SOURCE + s.file} target="_blank" rel="noopener">{externalLink()}<span>{`Kaynak: web/${s.file}`}</span></a>
+        <a class="sc-chip-link sc-chip-src" href={SOURCE + s.file} target="_blank" rel="noopener"><Icon of={externalLink} /><span>{`Kaynak: web/${s.file}`}</span></a>
       </div>
     </details>
+    </div>
     <div class="sc-sample-stage">
       <div class="sc-sample-device" style={() => ({ "--sc-device-w": width() })}
         data-hm-theme={() => (theme() && ready() ? theme() : undefined)} dir={() => (rtl() ? "rtl" : undefined)}>
@@ -107,8 +109,8 @@ function SampleView(props: { sample: Sample; view: () => unknown }) {
       </div>
     </div>
     <nav class="sc-sample-pager" aria-label="Örnek siteler">
-      <Link href={`/web/${prev.view}` as never} class="sc-sample-step">{arrowLeft()}<span><small>Önceki örnek</small>{prev.title}</span></Link>
-      <Link href={`/web/${next.view}` as never} class="sc-sample-step sc-sample-step-next"><span><small>Sonraki örnek</small>{next.title}</span>{arrowRight()}</Link>
+      <Link href={`/web/${prev.view}` as never} class="sc-sample-step"><Icon of={arrowLeft} /><span><small>Önceki örnek</small>{prev.title}</span></Link>
+      <Link href={`/web/${next.view}` as never} class="sc-sample-step sc-sample-step-next"><span><small>Sonraki örnek</small>{next.title}</span><Icon of={arrowRight} /></Link>
     </nav>
   </div>
 }
