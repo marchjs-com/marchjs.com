@@ -1,6 +1,8 @@
 // Speed: a live network panel to see lazy loading and caching (which page fetched which chunk when, from the network or
 // the cache), the build's per-route size report and the optional service worker.
-import { Button, Badge, Card, Grid, Stack, toast } from "hadi-march/ui";
+import { Button, Badge, Card, Grid, Stack, Toggle, toast } from "hadi-march/ui";
+import { lazy } from "hadi-march/lazy";
+import { slow, SLOW_MS } from "../slow.ts";
 import { registerServiceWorker, unregisterServiceWorker, swState } from "hadi-march/sw";
 import { netLog, clearNetLog, type NetEntry } from "../perflog.ts";
 import { Demo, Section } from "../demo.tsx";
@@ -11,6 +13,19 @@ interface Report { entry: ReportRow; routes: ReportRow[]; parts?: ReportRow[]; b
 const LIB_PATH = /^(?:\.\.\/)+src\//
 const shortName = (n: string): string => n.replace(LIB_PATH, "hadi-march/")
 const KIND: Record<string, string> = { entry: "giriş", route: "sayfa", part: "parça" }
+
+// a lazy component for the slow 3G demo: skeleton on its first arrival, instant afterwards (no skeleton when cached)
+const PieChart = lazy(() => import("hadi-march/charts/pie.ts"), { pick: "PieChart", when: "immediate", placeholder: "chart", height: "14rem" })
+const SHARE = [{ label: "Uygulama", value: 4200 }, { label: "Web", value: 2900 }, { label: "Davet", value: 1800 }, { label: "Diğer", value: 610 }]
+
+/** The build's chunk manifest (the JSON data block in index.html): dynamic import source → its files. */
+function readManifest(): Record<string, string[]> {
+  try { return JSON.parse(document.getElementById("march-manifest")?.textContent ?? "{}") as Record<string, string[]> } catch { return {} }
+}
+const fileName = (p: string): string => p.split("/").pop() ?? p
+const partName = (key: string): string => shortName(key).replace(PAGE_SRC, "sayfa: $1").replace(APP_SRC, "$1")
+const PAGE_SRC = /^src\/pages\/(.*)\.tsx$/
+const APP_SRC = /^src\/(.*)\.tsx?$/
 
 const kb = (n: number): string => (n >= 1024 ? `${(n / 1024).toFixed(1)} KB` : `${n} B`);
 const SW_TEXT: Record<string, string> = {
@@ -29,12 +44,54 @@ export default function Speed() {
     const net = list.filter((e) => e.source === "ağ")
     return { files: list.length, net: net.length, cached: list.length - net.length, bytes: net.reduce((s, e) => s + e.bytes, 0), preload: list.filter((e) => e.preload).length }
   }
+  // live chunk list: every lazy unit of the build and whether (and how) it has arrived in this tab
+  const manifest = readManifest()
+  const parts = () => {
+    const seen = new Map<string, NetEntry>()
+    for (const e of netLog()) if (e.kind === "js" && !seen.has(e.file)) seen.set(e.file, e)
+    return Object.entries(manifest).map(([key, files]) => {
+      const own = files.find((x) => x.endsWith(".js"))
+      const hit = own ? seen.get(fileName(own)) : undefined
+      return { key, name: partName(key), files: files.length, hit }
+    }).sort((a, b) => (a.hit ? a.hit.t : Infinity) - (b.hit ? b.hit.t : Infinity) || a.name.localeCompare(b.name))
+  }
+  let $showPie = false
   const toggleSw = async () => {
     if (swState() === "ready" || swState() === "update") { await unregisterServiceWorker(); toast("Service worker ve önbelleği kaldırıldı", { kind: "info" }); return }
     await registerServiceWorker({ onUpdate: () => toast("Yeni sürüm hazır", { kind: "info" }) })
   }
 
   return <Section kicker="Temel" title="Hız" lead="Uygulama tek sayfa ama hepsi açılışta inmez: giriş paketi yalnız kabuk ve yönlendiricidir; her sayfa, ağır bileşen ve tema kendi parçasıdır ve gerektiğinde gelir. Bağlantının üzerine gelince parçalar önceden çekilir, boşta kalınca da sayfadaki bağlantılar. Gelen her şey önbelleğe girer.">
+    <Demo wide title="Yavaş 3G" desc={`Açıkken her tembel parça ve sayfa yüklenmeden önce ${SLOW_MS / 1000} sn bekler (setLoadDelay ile benzetim). Böylece iskelet, ilerleme çizgisi ve yumuşak geliş görünür. Bu sekme boyunca açık kalır; Veri ya da Grafikler sayfasına gidip bak. Aynı parça ikinci kez istendiğinde önbellektedir, iskelet hiç görünmez.`}
+      code={`import { setLoadDelay } from "hadi-march/lazy"
+setLoadDelay(1600)   // demo / test: every lazy() part and route waits 1.6 s
+const Pie = lazy(() => import("hadi-march/charts/pie.ts"), { pick: "PieChart", placeholder: "chart", height: "14rem" })`}>
+      <div class="sc-row">
+        <Toggle value={slow} label="Yavaş 3G" />
+        <Button size="sm" on:click={() => { $showPie = !$showPie }}>{() => ($showPie ? "Grafiği kaldır" : "Grafiği göster")}</Button>
+        <span class="hm-muted">{() => (PieChart.loaded ? "Parça önbellekte: iskeletsiz gelir" : "Parça henüz inmedi")}</span>
+      </div>
+      <div class="sc-speed-lazy">{() => ($showPie ? <PieChart data={SHARE} donut title="Kanal payı" legend="right" width={320} height={200} /> : <p class="hm-muted">Grafik burada, tembel bir parçadan gelir.</p>)}</div>
+    </Demo>
+
+    <Demo wide title="Canlı parça listesi" desc="Derlemedeki her tembel birim (sayfalar, lazy bileşenler, kabuk parçaları, dil paketi) ve bu sekmede inip inmediği. Sayfalar arasında gez ya da Yavaş 3G'yi aç: satırlar indikçe güncellenir.">
+      <p class="hm-muted">{() => { const l = parts(); return `${l.filter((p) => p.hit).length} / ${l.length} parça indi` }}</p>
+      <div class="sc-speed-scroll" role="region" aria-label="Tembel parçalar" tabindex="0">
+        <table class="sc-speed-table">
+          <thead><tr><th scope="col">Parça</th><th scope="col" class="sc-num">Dosya</th><th scope="col">Durum</th><th scope="col" class="sc-num">ms</th><th scope="col">Sayfa</th></tr></thead>
+          <tbody>
+            {() => parts().map((p) => <tr>
+              <td class="sc-speed-file">{p.name}</td>
+              <td class="sc-num">{p.files}</td>
+              <td>{p.hit ? <Badge tone={p.hit.source === "ağ" ? "warn" : "success"}>{p.hit.preload ? `önceden · ${p.hit.source}` : p.hit.source}</Badge> : <Badge>inmedi</Badge>}</td>
+              <td class="sc-num">{p.hit ? p.hit.t : "—"}</td>
+              <td>{p.hit ? p.hit.route : ""}</td>
+            </tr>)}
+          </tbody>
+        </table>
+      </div>
+    </Demo>
+
     <Demo wide title="Canlı ağ paneli" desc="Bu sekme açıldığından beri yüklenen her dosya. Başka bir sayfaya git, sonra geri gel: yeni parçalar o sayfanın adıyla eklenir, ikinci gelişte önbellekten gelir. Kenar menüsündeki bir bağlantının üzerine gelmek ön yükleme satırı ekler."
       code={`// page chunk: the router splits it
 createRouter({ routes: { "/report": () => import("./pages/rapor.tsx") } })
@@ -51,7 +108,7 @@ const Map = lazy(() => import("./Map.tsx"))
       <div class="sc-row"><Button size="sm" on:click={clearNetLog}>Listeyi temizle</Button></div>
       <div class="sc-speed-scroll" role="region" aria-label="Yüklenen dosyalar" tabindex="0">
         <table class="sc-speed-table">
-          <thead><tr><th scope="col">ms</th><th scope="col">Sayfa</th><th scope="col">Dosya</th><th scope="col">Tür</th><th scope="col">Boyut</th><th scope="col">Kaynak</th></tr></thead>
+          <thead><tr><th scope="col" class="sc-num">ms</th><th scope="col">Sayfa</th><th scope="col">Dosya</th><th scope="col">Tür</th><th scope="col" class="sc-num">Boyut</th><th scope="col">Kaynak</th></tr></thead>
           <tbody>
             {() => rows().slice().reverse().slice(0, 200).map((e) => <tr>
               <td class="sc-num">{e.t}</td>
@@ -72,7 +129,7 @@ export default { budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, 
 // ✖ over budget: /data JS 82.3 KB > 80.0 KB`}>
       {() => $report ? <div class="sc-speed-scroll" tabindex="0" role="region" aria-label="Boyut raporu">
         <table class="sc-speed-table">
-          <thead><tr><th scope="col">Ad</th><th scope="col">Tür</th><th scope="col">JS</th><th scope="col">CSS</th><th scope="col">Bütçe</th><th scope="col">Dosya</th></tr></thead>
+          <thead><tr><th scope="col">Ad</th><th scope="col">Tür</th><th scope="col" class="sc-num">JS</th><th scope="col" class="sc-num">CSS</th><th scope="col" class="sc-num">Bütçe</th><th scope="col" class="sc-num">Dosya</th></tr></thead>
           <tbody>
             {[{ ...$report.entry, kind: "entry" }, ...$report.routes.map((r) => ({ kind: "route", ...r })), ...($report.parts ?? []).map((r) => ({ kind: "part", ...r }))].map((r) => <tr>
               <td class="sc-speed-file">{shortName(r.name)}</td>

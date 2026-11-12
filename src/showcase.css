@@ -193,7 +193,9 @@
 .sc-speed-table th { position: sticky; top: 0; z-index: 1; background: var(--hm-surface-2); text-align: start; font-weight: 600; }
 .sc-speed-table th, .sc-speed-table td { padding: .375rem .625rem; border-bottom: 1px solid var(--hm-border-subtle); white-space: nowrap; }
 .sc-speed-file { display: flex; align-items: center; gap: var(--hm-space-2); }
+.sc-speed-lazy { min-height: 14rem; display: grid; align-items: center; }
 .sc-num { text-align: end; font-variant-numeric: tabular-nums; }
+.sc-speed-table th.sc-num, .sc-speed-table td.sc-num { text-align: end; }
 
 /* resizable sidebar demo */
 .sc-resize-frame { display: flex; height: 30rem; overflow: hidden; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); box-shadow: var(--hm-shadow-2); }
