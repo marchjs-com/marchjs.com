@@ -21,5 +21,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/navigation": { desc: "NavSidebar: arama, son kullanılanlar, kategoriler", group: "Bileşenler", icon: menu },
   "/overlay": { desc: "Video, resim, SVG, canvas ve cam katmanları", group: "Hareket", icon: layers },
   "/managers": { desc: "Viewport, rıza (KVKK/GDPR) ve komut yöneticileri", group: "Temel", icon: cpu },
+  "/managers-data": { desc: "Pano, geri al, kaydedilmemiş değişiklik, depolama, önbellek, yapılandırma", group: "Temel", icon: cpu },
+  "/managers-ops": { desc: "Özellik bayrakları, günlük, Web Vitals, hız sınırı", group: "Temel", icon: cpu },
   "/language": { desc: "$ değişkenler, <For>, bind:, borular, sx", group: "Hareket", icon: code },
 };

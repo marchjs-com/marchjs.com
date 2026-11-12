@@ -4,6 +4,7 @@ import {
 } from "hadi-march/ui";
 import { trash, edit, sliders, command, bell, check, alertTriangle, info, xCircle } from "hadi-march/icons";
 import { Demo, Section } from "../demo.tsx";
+import { ComponentDemo } from "../component-demo.tsx";
 
 export default function Overlays() {
   let $last = "—"
@@ -48,5 +49,6 @@ toast("Silindi", { kind: "danger", action: { label: "Geri al", run: geriAl } })`
       <Divider />
       <p class="hm-muted">Dene: "koyu", "neon", "tablo", "bildirim".</p>
     </Demo>
+    <ComponentDemo folder="drawer" title="Drawer: dört kenar, sürükle, durma noktaları" desc="Başlangıç / bitiş kenarı yazı yönüne uyar (RTL'de yer değiştirir). Tutamaçtan ya da başlıktan sürükleyin; bırakınca en yakın durma noktasına oturur, kenara atınca kapanır. Modal kapalıyken sayfa kullanılabilir kalır." />
   </Section>
 }
