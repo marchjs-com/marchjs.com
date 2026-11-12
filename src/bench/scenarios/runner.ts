@@ -26,7 +26,7 @@ export function frame(fn: () => void): Promise<number> {
 }
 const visible = (): Promise<void> => (document.hidden ? new Promise((r) => { const on = () => { if (!document.hidden) { document.removeEventListener("visibilitychange", on); r() } }; document.addEventListener("visibilitychange", on) }) : Promise.resolve())
 
-export async function runScenarios(o: { scenarios: Scenario[]; libs: string[]; stage: HTMLElement; seed?: number; onProgress?: (p: ScenarioProgress) => void; signal?: AbortSignal; /** the scenarios' large size */ large?: boolean; /** library id → its scenario apps (default: the registered ones) */ registry?: Record<string, () => Promise<ScenarioMounts>> }): Promise<ScenarioRun> {
+export async function runScenarios(o: { scenarios: Scenario[]; libs: string[]; stage: HTMLElement; seed?: number; onProgress?: (p: ScenarioProgress) => void; /** each library's result as soon as it is in (for a live view; not part of the measurement) */ onResult?: (scenario: string, lib: string, r: ScenarioResult) => void; signal?: AbortSignal; /** the scenarios' large size */ large?: boolean; /** library id → its scenario apps (default: the registered ones) */ registry?: Record<string, () => Promise<ScenarioMounts>> }): Promise<ScenarioRun> {
   const reg = o.registry ?? SCENARIO_LIBS
   const seed = o.seed ?? 7, res: ScenarioRun = { results: {} }
   const libs = o.libs.filter((l) => reg[l])
@@ -77,6 +77,7 @@ export async function runScenarios(o: { scenarios: Scenario[]; libs: string[]; s
         try { app?.destroy() } catch { /* a failed app may not tear down */ }
         host.remove()
       }
+      if (per[lib]) o.onResult?.(sc.id, lib, per[lib]!)
     }
   }
   return res
