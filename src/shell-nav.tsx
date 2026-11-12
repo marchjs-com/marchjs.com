@@ -14,8 +14,8 @@ export default function ShellNav() {
     { id: "/", label: "Merhaba", sub: "Genel bakış ve canlı sayaç", href: "/" as Href, icon: dashboard },
     { id: "palette", label: "Komut paleti", sub: "Sayfa, tema ya da eylem ara", icon: command, onSelect: openPalette },
   ]
-  return <NavSidebar items={items} featured={featured} title={<Brand href="/" mark={marchMark} name="HADI March" sub="Arayüz kitaplığı" />}
-    groupOrder={["Temel", "Bileşenler", "Hareket"]} itemOrder="none" defaultOpen="all" hotkey="palette" placeholder="Ara ya da sor…"
+  return <NavSidebar items={items} featured={featured} title={<Brand href="/" mark={marchMark} name="HADI March" />}
+    groupOrder={["İlk Adımlar", "Temel", "Bileşenler", "Hareket"]} itemOrder="none" defaultOpen="all" hotkey="palette" placeholder="Ara ya da sor…"
     storageKey="sc.sidebar" label="Vitrin menüsü" collapsible resizable minWidth={220} maxWidth={420} collapseBelow={150}
     footer={<p class="sc-nav-foot hm-rail-hide">MIT · sıfır bağımlılık · CSP uyumlu</p>} />
 }

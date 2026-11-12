@@ -4,6 +4,7 @@ import { activity, film, alertCircle, barChart, code, cpu, dashboard, edit, gaug
 export interface PageMeta { desc: string; group?: string; icon: unknown }
 export const PAGE_META: Record<string, PageMeta> = {
   "/": { desc: "HADI March'a genel bakış", icon: dashboard },
+  "/start": { desc: "Kurulum, ilk bileşen, march CLI, proje yapısı", group: "İlk Adımlar", icon: zap },
   "/themes": { desc: "7 tema, renkler, yazı, yarıçap, gölge", group: "Temel", icon: palette },
   "/icons": { desc: "Kendi SVG ikon seti", group: "Temel", icon: grid },
   "/buttons": { desc: "Button, menü, çip, avatar, ipucu", group: "Bileşenler", icon: zap },
