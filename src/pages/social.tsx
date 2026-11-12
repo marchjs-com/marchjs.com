@@ -20,5 +20,7 @@ export default function SocialPage() {
     <ComponentDemo folder="social/media-grid" title="MediaGrid: medya ızgarası" desc="1, 2, 3, 4 ve daha fazla fotoğraf için ayrı yerleşim; fazlası son karede +N. Görsel gelene kadar iskelet, sonra yumuşak belirme." />
     <ComponentDemo folder="social/count-roll" title="CountRoll: yuvarlanan sayaç" desc="Yalnız değişen basamak döner: artınca yukarı, azalınca aşağı. Yerel kısa biçim (1,2 B) ya da tam sayı." />
     <ComponentDemo folder="data/virtual-list" title="VirtualList: sanal liste" desc="100.000 satır, her biri kendi yüksekliğinde: yalnız görünen pencere DOM'da. Satırlar ölçülür, üstteki satır büyüyünce içerik yerinde kalır; sona yaklaşınca onEndReached." />
+    <ComponentDemo folder="composite/profile-header" title="ProfileHeader: profil başlığı" desc="Kapak, hikâye halkalı avatar, ad ve biyografi, sayaçlı istatistikler. Takip et'e basınca düğme dönüşür ve takipçi sayısı birlikte yuvarlanır." />
+    <ComponentDemo folder="social/follow-button" title="FollowButton: takip et" desc="Takip et → Takip ediliyor: genişlik yaylanır, dolgu çerçeveye döner, + tike çevrilir, dört renk parlar. Gizli hesapta istek gönderilir; takip edilirken üzerine gelince kırmızı uyarır." />
   </Section>
 }

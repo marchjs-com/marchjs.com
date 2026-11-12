@@ -32,3 +32,5 @@
 .sc-social-chat .hm-chat { flex: 1; }
 .sc-social-composer { display: flex; flex-direction: column; gap: var(--hm-space-2); width: 100%; max-width: 26rem; margin-inline: auto; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-4); overflow: hidden; }
 .sc-social-sent { display: flex; flex-direction: column; gap: .25rem; min-height: 6rem; margin: 0; padding: var(--hm-space-3); list-style: none; font-size: var(--hm-text-sm); }
+.sc-social-follow { display: flex; flex-direction: column; align-items: center; gap: var(--hm-space-2); width: 100%; max-width: 20rem; margin-inline: auto; }
+.sc-social-profile { display: flex; flex-direction: column; gap: var(--hm-space-2); width: 100%; max-width: 30rem; margin-inline: auto; min-width: 0; }
