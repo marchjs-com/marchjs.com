@@ -4,13 +4,11 @@ import { t } from "hadi-march";
 import { CommandPalette, ToastHost, Dialog, registerCommands, toast, setColorTheme, colorThemes, setTheme } from "hadi-march/ui";
 import { PortalTarget } from "hadi-march";
 import { Outlet } from "hadi-march/router";
-import { installTransitions, installFlip, pageTransitions } from "hadi-march/motion";
 import { palette, moon, sun, sparkles } from "hadi-march/icons";
 import "./perflog.ts";
 
-installTransitions();
-installFlip();
-pageTransitions({ type: "fade", duration: 180 });
+// the motion engine (transitions, <For animate> FLIP, page transitions) is its own lazy part: the shell stays small
+void import("./motion-late.ts");
 
 export default function ShellLate() {
   registerCommands([
