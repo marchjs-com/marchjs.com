@@ -5,5 +5,6 @@ import { mount as derived } from "./derived/march.tsx"
 import { mount as theme } from "./theme/march.tsx"
 import { mount as hover } from "./hover/march.tsx"
 import { mount as counters } from "./counters/march.tsx"
+import { mount as store } from "./store/march.tsx"
 
-export const scenarios = { ticker, tree, derived, theme, hover, counters }
+export const scenarios = { ticker, tree, derived, theme, hover, counters, store }

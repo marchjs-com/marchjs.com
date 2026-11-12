@@ -7,5 +7,6 @@ import { mount as derived } from "./derived/react.ts"
 import { mount as theme } from "./theme/react.ts"
 import { mount as hover } from "./hover/react.ts"
 import { mount as counters } from "./counters/react.ts"
+import { mount as store } from "./store/react.ts"
 
-export const scenarios = { ticker, tree, derived, theme, hover, counters }
+export const scenarios = { ticker, tree, derived, theme, hover, counters, store }

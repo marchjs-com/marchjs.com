@@ -6,5 +6,6 @@ import { mount as derived } from "./derived/lit.ts"
 import { mount as theme } from "./theme/lit.ts"
 import { mount as hover } from "./hover/lit.ts"
 import { mount as counters } from "./counters/lit.ts"
+import { mount as store } from "./store/lit.ts"
 
-export const scenarios = { ticker, tree, derived, theme, hover, counters }
+export const scenarios = { ticker, tree, derived, theme, hover, counters, store }
