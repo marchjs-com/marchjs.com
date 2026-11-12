@@ -127,7 +127,7 @@ if (!quota.take()) toast(\`\${Math.ceil(quota.resetIn() / 1000)} sn sonra\`)`}>
       <Button variant="ghost" on:click={() => r.pause("demo.export", 5000)}>429 geldi: 5 sn duraklat</Button>
     </div>
     <Card title="Seçenekler" subtitle="RateLimit">
-      <Field label="Debounce süresi (ms)"><Slider value={() => $ms} onChange={setMs} min={100} max={1500} step={100} /></Field>
+      <Field label="Debounce süresi (ms)"><Slider value={$ms} onChange={setMs} min={100} max={1500} step={100} /></Field>
     </Card>
   </Demo>
 }

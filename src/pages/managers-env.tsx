@@ -1,7 +1,7 @@
 // Environment managers: Idle, Sync (offline queue over net), Device, Permission, Location, Notification, Window,
 // Scroll, Session and Presence — each with a live demo — and the `managers` channel every one of them reports to.
 // The demos live in env-managers/; Sync brings net, the mock server and its manager as a lazy part (sync-server.ts).
-import { onCleanup } from "hadi-march";
+import { onCleanup, untrack } from "hadi-march";
 import { Button, Card, Badge, Toggle, Slider, Field, TextInput, Progress, Chip } from "hadi-march/ui";
 import { onManager, managerChannel, type ManagerMessage } from "hadi-march/managers/channels";
 import { idle, configureIdle } from "hadi-march/managers/idle";
@@ -64,6 +64,9 @@ function DeviceDemo() {
   let $storage = ""
   let $lowMem = 2
   let $lowCores = 2
+  // read once: configureDevice() re-creates the manager, so a region that reads d() redraws on every slider step
+  // (the slider would be rebuilt mid-drag); memory and cores never change while the page is open
+  const hasMem = untrack(() => d().memory() !== null), hasCores = untrack(() => d().cores() !== null)
   onCleanup(() => configureDevice({ lowMemory: 2, lowCores: 2 }))
   const measure = async () => { const s = await device().storage(); $storage = s ? `${(s.usage / 1e6).toFixed(1)} MB / ${(s.quota / 1e9).toFixed(1)} GB${s.persisted ? " · kalıcı" : ""}` : "bu tarayıcıda yok" }
   return <Demo wide title="Device: bu cihaz neler yapabilir?" desc="Bellek, çekirdek, dokunma noktası, piksel oranı, ağ türü ve pil sinyal olarak; yeteneklerin listesi. Ağ ayarını (DevTools › Network) değiştir ya da pencereyi başka ekrana taşı: değerler güncellenir."
@@ -86,9 +89,9 @@ d().supports("share")   await d().storage()   d().vibrate(40)`}>
       <Button variant="secondary" on:click={measure}>Depolamayı ölç</Button>{() => ($storage ? <span>{$storage}</span> : null)}
       {d().supports("vibrate") ? <Button variant="ghost" on:click={() => d().vibrate([60, 40, 60])}>Titret</Button> : null}
     </div>
-    {d().memory() !== null || d().cores() !== null ? <Card title="Seçenekler" subtitle="lowEnd() eşikleri">
-      {d().memory() !== null ? <Field label={() => `Bellek ≤ ${$lowMem} GB`}><Slider value={$lowMem} onChange={(v: number) => { $lowMem = v; configureDevice({ lowMemory: v }) }} min={0.5} max={16} step={0.5} /></Field> : null}
-      {d().cores() !== null ? <Field label={() => `Çekirdek ≤ ${$lowCores}`}><Slider value={$lowCores} onChange={(v: number) => { $lowCores = v; configureDevice({ lowCores: v }) }} min={1} max={32} step={1} /></Field> : null}
+    {hasMem || hasCores ? <Card title="Seçenekler" subtitle="lowEnd() eşikleri">
+      {hasMem ? <Field label={() => `Bellek ≤ ${$lowMem} GB`}><Slider value={$lowMem} onChange={(v: number) => { $lowMem = v; configureDevice({ lowMemory: v }) }} min={0.5} max={16} step={0.5} /></Field> : null}
+      {hasCores ? <Field label={() => `Çekirdek ≤ ${$lowCores}`}><Slider value={$lowCores} onChange={(v: number) => { $lowCores = v; configureDevice({ lowCores: v }) }} min={1} max={32} step={1} /></Field> : null}
       <p class="hm-muted">lowEnd() şimdi: {() => (device().lowEnd() ? "düşük donanım — efektleri azalt" : "yeterli")}</p>
     </Card> : null}
   </Demo>
