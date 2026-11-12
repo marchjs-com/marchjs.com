@@ -4,9 +4,8 @@ import { tween, reveal, magnet } from "hadi-march/motion";
 import { Particles, confetti } from "hadi-march/fx";
 import { Button, LinkCard, Kbd, Card, Badge, Grid, openPalette, ThemeSwatch, colorThemes, setColorTheme, colorTheme } from "hadi-march/ui";
 import { arrowRight, command, sparkles } from "hadi-march/icons";
-import { PAGES } from "../nav.ts";
+import { pages } from "../app.tsx";
 import { Demo } from "../demo.tsx";
-import { PAGE_META } from "../nav-meta.ts";
 
 function Counter(props: { to: number; suffix?: string; label: string }) {
   let $target = 0
@@ -61,8 +60,8 @@ export default function Home() {
       </section>
 
       <Grid cols={4} minCol="17rem" gap={3} fill="stretch" equal>
-        {PAGES.filter((p) => p.path !== "/").map((p, i) => <div use:reveal={{ delay: i * 40 }}>
-          <LinkCard href={p.path} icon={PAGE_META[p.path]?.icon} tone={(["primary", "info", "success", "violet", "warn", "pink", "teal", "danger", "neutral", "primary"] as const)[i % 10]} title={p.title} description={PAGE_META[p.path]?.desc} />
+        {pages().filter((p) => p.path !== "/").map((p, i) => <div use:reveal={{ delay: i * 40 }}>
+          <LinkCard href={p.path} icon={p.icon} tone={(["primary", "info", "success", "violet", "warn", "pink", "teal", "danger", "neutral", "primary"] as const)[i % 10]} title={p.title} description={p.desc} />
         </div>)}
       </Grid>
 

@@ -14,6 +14,8 @@ export const PAGES: PageInfo[] = [
   { path: "/feedback", title: "Durumlar" },
   { path: "/motion", title: "Hareket ve efektler" },
   { path: "/animation", title: "Animasyon motoru" },
+  { path: "/text-motion", title: "Metin animasyonları" },
+  { path: "/transitions", title: "Sayfa geçişleri" },
   { path: "/speed", title: "Hız" },
   { path: "/messaging", title: "Haberleşme" },
   { path: "/network", title: "Ağ ve hatalar" },
@@ -22,4 +24,9 @@ export const PAGES: PageInfo[] = [
   { path: "/overlay", title: "Overlay" },
   { path: "/language", title: "March dili" },
   { path: "/managers", title: "Yöneticiler" },
+  { path: "/managers-data", title: "Yöneticiler: veri ve durum" },
+  { path: "/managers-ops", title: "Yöneticiler: bayrak, günlük, performans" },
+  { path: "/seo", title: "SEO" },
+  { path: "/managers-a11y", title: "Yöneticiler: erişilebilirlik" },
+  { path: "/managers-env", title: "Ortam yöneticileri" },
 ];

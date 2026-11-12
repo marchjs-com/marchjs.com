@@ -10,6 +10,10 @@ export interface PageParams {
   "/icons": {  };
   "/language": {  };
   "/layout": {  };
+  "/managers-a11y": {  };
+  "/managers-data": {  };
+  "/managers-env": {  };
+  "/managers-ops": {  };
   "/managers": {  };
   "/messaging": {  };
   "/motion": {  };
@@ -17,10 +21,13 @@ export interface PageParams {
   "/network": {  };
   "/overlay": {  };
   "/overlays": {  };
+  "/seo": {  };
   "/speed": {  };
   "/start": {  };
+  "/text-motion": {  };
   "/themes": {  };
+  "/transitions": {  };
 }
 declare module "hadi-march/router" {
-  interface Register { routes: "/animation" | "/buttons" | "/charts" | "/data" | "/feedback" | "/forms" | "/home" | "/icons" | "/language" | "/layout" | "/managers" | "/messaging" | "/motion" | "/navigation" | "/network" | "/overlay" | "/overlays" | "/speed" | "/start" | "/themes" }
+  interface Register { routes: "/animation" | "/buttons" | "/charts" | "/data" | "/feedback" | "/forms" | "/home" | "/icons" | "/language" | "/layout" | "/managers-a11y" | "/managers-data" | "/managers-env" | "/managers-ops" | "/managers" | "/messaging" | "/motion" | "/navigation" | "/network" | "/overlay" | "/overlays" | "/seo" | "/speed" | "/start" | "/text-motion" | "/themes" | "/transitions" }
 }
