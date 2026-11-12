@@ -45,6 +45,7 @@ const sig: Record<string, Record<string, string>> = {
   "render": "function render(fn: () => unknown, container: Element | DocumentFragment | ShadowRoot | null | undefined): () => void",
   "runWithOwner": "function runWithOwner<T>(owner: Owner | null, fn: () => T): T",
   "safeUrl": "function safeUrl(v: unknown, tag?: string): string",
+  "selector": "function selector<T>(source: () => T, equals: (key: T, value: T) => boolean = Object.is): (key: T) => boolean",
   "setFallbackLocale": "function setFallbackLocale(loc: string): void",
   "setFlipHook": "function setFlipHook(fn: FlipHook | null): void",
   "setLocale": "function setLocale(loc: string): Promise<void>",

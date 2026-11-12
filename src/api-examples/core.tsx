@@ -1,7 +1,7 @@
 // API examples of the core entry (hadi-march): reactivity, rendering, control flow, portals, pipes, i18n, sx.
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
 import {
-  signal, computed, effect, batch, untrack, onCleanup, createRoot, getOwner, runWithOwner, catchError, context, provide,
+  signal, computed, effect, batch, untrack, selector, onCleanup, createRoot, getOwner, runWithOwner, catchError, context, provide,
   useContext, reactive, isReactive, read, DEV, _enter, _leave, store, patch, unwrap, h, Fragment, insert, lazyChildren,
   safeUrl, registerTransition, If, Else, For, Switch, Match, Try, Await, Dynamic, setFlipHook, Portal, PortalTarget,
   portalTarget, openLayer, layers, render, define, pipe, applyPipe, toDate, t, locale, messages, missing,
@@ -419,6 +419,20 @@ installFlip()   // calls setFlipHook(flip): <For animate> moves rows smoothly`,
         // only this demo's text: the page language stays as it is
         return <Row><Segmented value={lang} onChange={(v: string) => lang.set(v)} options={[{ value: "tr", label: "tr" }, { value: "en", label: "en" }]} aria-label="Dil" />
           <Out label='t("api.ex.hello")' value={() => (lang() === locale() ? t("api.ex.hello") : lang() === "en" ? "Hello" : "Merhaba")} /></Row>
+      },
+    },
+    selector: {
+      code: `const isSelected = selector(() => $selected)
+<For each={$rows} key="id">{(row) =>
+  <tr class={isSelected(row().id) ? "danger" : ""}>…</tr>}</For>
+// choosing a row wakes two rows (the old and the new one), not all of them`,
+      run: () => {
+        const sel = signal(2), wakes = signal(0)
+        const isSel = selector(sel)
+        const ids = [1, 2, 3, 4, 5]
+        // one effect per row, counting how often a row wakes up
+        for (const id of ids) effect(() => { isSel(id); untrack(() => wakes.update((x) => x + 1)) })
+        return <div class="sc-stack"><Row>{ids.map((id) => <Button variant={isSel(id) ? "primary" : "secondary"} onClick={() => sel.set(id)}>{id}</Button>)}</Row><Out label="satır uyanması (toplam)" value={wakes} /></div>
       },
     },
     signal: {

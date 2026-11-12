@@ -1,13 +1,15 @@
-// Benchmark app: HADI March. A keyed <For> over a signal holding the rows; each row binds its own text and class.
-import { render, For } from "hadi-march"
+// Benchmark app: HADI March, written the way the library recommends: a keyed <For> over a signal holding the rows,
+// a selector() for the selected row (choosing one row wakes two rows, not all), and plain onClick handlers.
+import { render, For, selector } from "hadi-march"
 import type { BenchApp, Row } from "../core.ts"
 
 export function mount(host: HTMLElement): BenchApp {
   let $rows: Row[] = []
   let $sel = 0
+  const isSelected = selector(() => $sel)
   const remove = (id: number) => { $rows = $rows.filter((r) => r.id !== id) }
   const dispose = render(() => <table class="bt"><tbody>
-    <For each={$rows} key="id">{(row) => <tr class={$sel === row().id ? "danger" : ""}>
+    <For each={$rows} key="id">{(row) => <tr class={isSelected(row().id) ? "danger" : ""}>
       <td class="c1">{row().id}</td>
       <td class="c4"><a class="lbl" onClick={() => { $sel = row().id }}>{row().label}</a></td>
       <td class="c1"><a class="rm" onClick={() => remove(row().id)}>×</a></td>
