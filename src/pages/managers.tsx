@@ -5,10 +5,19 @@ import { Button, Menu, Card, Badge, Toggle, Segmented, Slider, Field, Alert, Kbd
 import { command as commandIcon, refresh, trash, download, copy, settings } from "hadi-march/icons";
 import { viewport, configureViewport } from "hadi-march/managers/viewport";
 import { consent, configureConsent } from "hadi-march/managers/consent";
-import { ConsentBanner, ConsentGate, openConsentPreferences, showConsentBanner } from "hadi-march/managers/consent/ui";
+import { lazy } from "hadi-march/lazy";
+import type { ConsentBannerProps, ConsentGateProps } from "hadi-march/components/composite/consent-banner";
+
+// the consent UI is lazy (as its docs recommend): it loads with this section, not with the page
+const consentUi = () => import("hadi-march/components/composite/consent-banner")
+const ConsentBanner = lazy<ConsentBannerProps>(consentUi, { pick: "ConsentBanner", placeholder: "none" })
+const ConsentGate = lazy<ConsentGateProps>(consentUi, { pick: "ConsentGate", placeholder: "card" })
+const showConsentBanner = (): void => { void consentUi().then((m) => m.showConsentBanner()) }
+const openConsentPreferences = (): void => { void consentUi().then((m) => m.openConsentPreferences()) }
 import { command, commands, onCommandRun } from "hadi-march/managers/command";
 import { commandItems, CommandButton, CommandToolbar, bindCommandKeys } from "hadi-march/managers/command/ui";
 import { Demo, Section } from "../demo.tsx";
+import { ComponentDemo } from "../component-demo.tsx";
 
 const yes = (v: boolean) => <Badge tone={v ? "success" : "neutral"} dot>{v ? "evet" : "hayır"}</Badge>
 
@@ -104,6 +113,7 @@ send("tıklama")   // rıza yoksa undefined, ağ isteği yok`}>
     <Demo title="Üçüncü taraf içerik" desc="ConsentGate: izin verilene kadar yer tutucu; yerinde izin verilebilir. whenGranted() yükler, geri çekilince kaldırır.">
       <ConsentGate category="thirdParty"><div class="sc-mgr-map"><strong>Harita yüklendi</strong><span class="hm-muted">(örnek gömülü içerik)</span></div></ConsentGate>
     </Demo>
+    <ComponentDemo folder="composite/consent-banner" title="ConsentBanner: seçenekler" desc="Karmaşık bileşen: şeridin metni ve üçüncü taraf yer tutucusu. Şerit sayfanın içinde ve her zaman görünür; bir seçim yine kapatır. Parçaları aşağıdaki satırda." />
     <Card title="Seçenekler" subtitle="Consent">
       <Toggle bind:value={$inline} label="Banner'ı sayfanın içinde göster (kapalıysa sayfanın altında, en üst katmanda)" />
       <Field label="Politika sürümü"><Segmented bind:value={$version} onChange={setVersion} options={[{ value: "1", label: "1" }, { value: "2", label: "2 (yeniden sor)" }]} /></Field>
