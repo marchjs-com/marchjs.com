@@ -27,6 +27,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/motion": { desc: "Yay, FLIP listeler, parallax, parçacık", group: "Hareket", icon: activity },
   "/messaging": { desc: "Habersiz bileşenler arası türlü kanallar, sekmeler arası", group: "Altyapı", icon: message },
   "/speed": { desc: "Tembel yükleme, ön yükleme ve önbellek: canlı ağ paneli", group: "Altyapı", icon: gauge },
+  "/bench": { desc: "React, Vue, Svelte, Solid, Preact, Lit ve vanilla JS ile canlı render ve hız testi", group: "Altyapı", icon: gauge },
   "/network": { desc: "İstek politikaları, middleware, mock, WebSocket, hata kuralları", group: "Altyapı", icon: server },
   "/layout": { desc: "Grid: taşmasız sütunlar, fill ve balance", group: "Yerleşim", icon: grid },
   "/navigation": { desc: "NavSidebar: arama, son kullanılanlar, kategoriler", group: "Gezinme", icon: menu },

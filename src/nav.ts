@@ -20,6 +20,7 @@ export const PAGES: PageInfo[] = [
   { path: "/text-motion", title: "Metin animasyonları" },
   { path: "/transitions", title: "Sayfa geçişleri" },
   { path: "/speed", title: "Hız" },
+  { path: "/bench", title: "Hız: karşılaştırma" },
   { path: "/messaging", title: "Haberleşme" },
   { path: "/network", title: "Ağ ve hatalar" },
   { path: "/layout", title: "Yerleşim" },
