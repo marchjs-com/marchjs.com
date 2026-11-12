@@ -8,7 +8,7 @@ import { drawPath, morphPath, followPath } from "hadi-march/motion/svg.ts";
 import { clipReveal, type ClipShape, type ClipSide } from "hadi-march/motion/clip.ts";
 import { filterBlur, displace, goo } from "hadi-march/motion/svg-filter.ts";
 import { Section } from "../../demo.tsx";
-import { MotionDemo, opt, EASES } from "../../motion-kit.tsx";
+import { MotionDemo, opt, EASES } from "../../playground.tsx";
 
 const star = (n: number, r1: number, r2: number): string => {
   const p: string[] = [];
