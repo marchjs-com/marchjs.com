@@ -1,7 +1,9 @@
 // Showcase pages: path and title only (start-up needs them for the breadcrumb and the document title). Descriptions,
 // groups, icons and the menu group order live in nav-meta.ts (the menu manifest), which only the side menu (on first
 // idle) and the home page load.
-export interface PageInfo { path: string; title: string }
+import { TOPIC_PAGES } from "./topics.ts";
+
+export interface PageInfo { path: string; title: string; /** The page this one is listed under in the menu. */ parent?: string; desc?: string }
 export const PAGES: PageInfo[] = [
   { path: "/", title: "Merhaba" },
   { path: "/start", title: "İlk Adımlar" },
@@ -48,7 +50,9 @@ export const SUB_PAGES: PageInfo[] = [
   { path: "/motion/micro", title: "Mikro etkileşimler" },
   { path: "/motion/scroll", title: "Kaydırma animasyonları" },
   { path: "/motion/lists", title: "Liste animasyonları" },
-  { path: "/web/product", title: "Ürün tanıtım sayfası" },
-  { path: "/web/portfolio", title: "Kişisel portfolyo" },
-  { path: "/web/slides", title: "Sunum" },
+  { path: "/web/product", title: "Ürün tanıtım sayfası", parent: "/web" },
+  { path: "/web/portfolio", title: "Kişisel portfolyo", parent: "/web" },
+  { path: "/web/slides", title: "Sunum", parent: "/web" },
+  // one page per topic of a section (topics.ts): /editors/terminal, /forms/select…
+  ...TOPIC_PAGES,
 ];

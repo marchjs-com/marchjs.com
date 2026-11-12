@@ -11,7 +11,7 @@ const ShellTools = lazy(() => import("./shell-tools.tsx"), { fallback: () => <di
 const ShellLate = lazy(() => import("./shell-late.tsx"), { fallback: () => null })
 
 /** A showcase page as the menu and the home page show it. */
-export interface PageEntry { path: string; title: string; desc?: string | undefined; group?: string | undefined; icon?: unknown; /** A page under another one's route (menu only). */ sub?: boolean }
+export interface PageEntry { path: string; title: string; desc?: string | undefined; group?: string | undefined; icon?: unknown; /** The page this one is listed under. */ parent?: string | undefined; /** A page under another one's route (menu only). */ sub?: boolean }
 // The page list and the title lookup are installed by src/routes.ts (a start-up chunk) before anything renders: the
 // entry carries no page list, so adding a page never grows it
 let pageList: readonly PageEntry[] = []

@@ -55,4 +55,8 @@ export const PAGE_META: Record<string, PageMeta> = {
 
 export { MENU_GROUPS } from "hadi-march/components/categories.ts";
 /** The pages with their menu metadata (the start-up list has paths and titles only). */
-export const withMeta = <P extends { path: string }>(list: readonly P[]): (P & Partial<PageMeta>)[] => list.map((p) => ({ ...p, ...PAGE_META[p.path] }));
+// a page listed under another (parent) takes the parent's group (and its icon when it has none of its own)
+export const withMeta = <P extends { path: string; parent?: string | undefined }>(list: readonly P[]): (P & Partial<PageMeta>)[] => list.map((p) => {
+  const up = p.parent ? PAGE_META[p.parent] : undefined;
+  return { ...p, ...(up ? { group: up.group, icon: up.icon } : {}), ...PAGE_META[p.path] };
+});

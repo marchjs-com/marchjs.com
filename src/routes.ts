@@ -3,6 +3,7 @@
 // (test/entry-pages.test.js checks it).
 import type { RouteTarget } from "hadi-march/router";
 import { PAGES, SUB_PAGES } from "./nav.ts";
+import { HUBS } from "./topics.ts";
 import { SHELL, setPages } from "./app.tsx";
 import GEN from "./routes.gen.js";
 export { restoreFrameRoute } from "./frame-reload.ts";
@@ -19,6 +20,8 @@ export const ROUTES = {
   "/transitions/*": { load: LOADERS["/transitions"], layouts: [SHELL], title: PAGES.find((p) => p.path === "/transitions")?.title },
   // API page: /api/<subpath>/<name> opens one export (the same page module)
   "/api/*": { load: LOADERS["/api"], layouts: [SHELL], title: "API", keep: true },
+  // sections with one page per topic (topics.ts): the section's page module draws the overview and each topic
+  ...Object.fromEntries(Object.keys(HUBS).map((base) => [`${base}/*`, { load: LOADERS[base], layouts: [SHELL], title: PAGES.find((p) => p.path === base)?.title }])),
   // sample websites (/web/product, /web/portfolio, /web/slides): the web page module shows one by its path
   "/web/*": { load: LOADERS["/web"], layouts: [SHELL], title: "Web siteleri" },
   // motion library pages (/motion/svg, /motion/morph…): one route, each page its own lazy chunk
