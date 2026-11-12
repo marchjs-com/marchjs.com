@@ -1,4 +1,11 @@
 // HADI March showcase: `node ../../cli/march.js dev` or `node build.mjs` (static, relative paths → dist/).
+// Speed › Comparison (/bench): each compared third-party library is a lazy chunk fetched only when its own test runs
+// (never at start-up, never with a page). A UI library runtime does not fit the 25 KB part budget, so these chunks
+// alone get an argued, measured limit. Only third-party benchmark apps: no March code, no showcase page (test/bench-libs.test.js).
+const BENCH_PARTS = {
+  "src/bench/apps/react.ts": { limit: 72 * 1024, why: "React 19 + react-dom client runtime (67.6 KB gzip measured), loaded only when its benchmark runs" },
+};
+
 export default {
   entry: "src/main.tsx",
   outdir: "dist",
@@ -21,7 +28,7 @@ export default {
   // the build fails when the entry, a route or a lazy part (lazy() component, shell piece) grows past it
   // boot: the route table and the shell pieces load at start-up, so a route row counts only what its own navigation downloads
   // bootLimit: start-up as a whole; the packer folds shared code into start-up chunks only below it
-  budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, bootLimit: 52 * 1024, boot: ["src/routes.ts", "src/shell-nav.tsx", "src/shell-tools.tsx", "src/shell-late.tsx"], fail: true },
+  budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, bootLimit: 52 * 1024, boot: ["src/routes.ts", "src/shell-nav.tsx", "src/shell-tools.tsx", "src/shell-late.tsx"], fail: true, parts: BENCH_PARTS },
   // no output file under 10 KB (before gzip): small shared code folds, small lazy modules join their parent or a group
   // allow: a locale dictionary stays its own file (only that locale downloads it; grouping it would make every
   // Turkish visitor download pages, or every English visitor the dictionary)

@@ -1,0 +1,28 @@
+/* Speed › Comparison */
+.bt-controls { display: flex; flex-direction: column; gap: var(--hm-space-3); }
+.bt-pick { display: flex; flex-wrap: wrap; gap: var(--hm-space-2); }
+.bt-run { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--hm-space-3); }
+.bt-status { display: flex; flex-direction: column; gap: var(--hm-space-2); }
+.bt-status-text { margin: 0; color: var(--hm-muted); font-size: var(--hm-text-sm); font-variant-numeric: tabular-nums; }
+/* the measurement stage: every library's table is drawn here, one at a time (fixed size, so layout work is equal) */
+.bt-stage { block-size: 12rem; overflow: hidden; contain: strict; border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-3); background: var(--hm-surface-2, var(--hm-surface)); }
+.bt-stage:empty { display: none; }
+.bt-host { inline-size: 100%; }
+.bt { inline-size: 100%; border-collapse: collapse; font-size: var(--hm-text-sm); }
+.bt td { padding: .25rem .5rem; border-block-end: 1px solid var(--hm-border); }
+.bt .c1 { inline-size: 8%; } .bt .c4 { inline-size: 33%; } .bt .c6 { inline-size: 50%; }
+.bt tr.danger { background: color-mix(in srgb, var(--hm-danger) 14%, transparent); }
+.bt a { cursor: pointer; color: var(--hm-text); }
+.bt-results { display: flex; flex-direction: column; gap: var(--hm-space-4); min-inline-size: 0; }
+.bt-table-wrap { overflow-x: auto; max-inline-size: 100%; }
+.bt-table { inline-size: 100%; font-variant-numeric: tabular-nums; }
+.bt-table th, .bt-table td { text-align: start; white-space: nowrap; }
+.bt-factor { color: var(--hm-muted); font-size: var(--hm-text-xs); }
+.bt-env { display: flex; flex-direction: column; gap: var(--hm-space-2); font-size: var(--hm-text-sm); overflow-wrap: anywhere; }
+.bt-env p { margin: 0; color: var(--hm-muted); }
+.bt-empty { margin: 0; color: var(--hm-muted); }
+.bt-method { margin: 0; padding-inline-start: 1.2rem; display: flex; flex-direction: column; gap: var(--hm-space-2); line-height: 1.55; }
+.bt-code { display: flex; flex-direction: column; gap: var(--hm-space-3); min-inline-size: 0; }
+.bt-licenses { display: flex; flex-direction: column; gap: var(--hm-space-2); }
+.bt-license summary { cursor: pointer; font-weight: 600; }
+.bt-license pre { max-block-size: 16rem; overflow: auto; white-space: pre-wrap; font-size: var(--hm-text-xs); color: var(--hm-muted); }
