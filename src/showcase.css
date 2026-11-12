@@ -260,3 +260,16 @@
 .sc-budget-near .sc-budget-value { color: var(--hm-warn-text, var(--hm-warn)); font-weight: 600; }
 .sc-budget-over > td:first-child { box-shadow: inset 3px 0 0 var(--hm-danger); }
 .sc-budget-near > td:first-child { box-shadow: inset 3px 0 0 var(--hm-warn); }
+
+/* Managers page */
+.sc-mgr-signals { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr)); gap: var(--hm-space-2); margin: 0; }
+.sc-mgr-signal { display: flex; justify-content: space-between; align-items: center; gap: var(--hm-space-2); padding: var(--hm-space-2) var(--hm-space-3);
+  border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); background: var(--hm-surface); min-width: 0; }
+.sc-mgr-signal dt, .sc-mgr-signal dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.sc-mgr-signal dt code { font-size: var(--hm-text-xs); }
+.sc-mgr-box { resize: horizontal; overflow: auto; inline-size: 100%; max-inline-size: 100%; min-inline-size: 10rem; padding: var(--hm-space-3);
+  border: 1px dashed var(--hm-border-strong, var(--hm-border)); border-radius: var(--hm-radius-2); }
+.sc-mgr-box[data-hm-bp="md"], .sc-mgr-box[data-hm-bp="lg"] { background: var(--hm-surface-sunken, var(--hm-surface)); }
+.sc-mgr-log { margin: 0; padding-inline-start: var(--hm-space-5); color: var(--hm-muted); font-size: var(--hm-text-sm); min-block-size: 6rem; }
+.sc-mgr-map { display: grid; place-items: center; gap: var(--hm-space-1); min-block-size: 9rem; border-radius: var(--hm-radius-3);
+  background: linear-gradient(135deg, var(--hm-cat-2, var(--hm-info)) 0%, var(--hm-cat-3, var(--hm-success)) 100%); color: #fff; }
