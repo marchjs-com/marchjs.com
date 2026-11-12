@@ -1,0 +1,21 @@
+/* Showcase › Yerleşim: stages of the layout component cards (src/components/layout/<name>/demo.tsx). */
+.sc-shell-frame { border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); overflow: hidden; }
+.sc-shell-frame .hm-shell { min-height: 0; height: 16rem; }
+.sc-shell-frame .hm-shell-nav { position: static; height: auto; }
+.sc-shell-frame .hm-shell-body { overflow: auto; }
+.sc-shell-nav { display: flex; flex-direction: column; gap: var(--hm-space-2); min-width: 9rem; padding: var(--hm-space-3); background: var(--hm-bg-subtle); border-inline-end: 1px solid var(--hm-border); }
+.sc-shell-banner { padding: var(--hm-space-2) var(--hm-space-3); background: var(--hm-primary-soft); color: var(--hm-primary-text); font-weight: 500; }
+.sc-shell-page { padding: var(--hm-space-4); }
+.sc-shell-page h4 { margin: 0 0 var(--hm-space-2); }
+.sc-spacer-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-2); padding: var(--hm-space-2) var(--hm-space-3); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); background: var(--hm-surface); }
+.sc-split-frame { height: 12rem; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); overflow: hidden; }
+.sc-split-frame .hm-splitter { height: 100%; }
+.sc-split-list { margin: 0; padding: var(--hm-space-3); list-style: none; display: grid; gap: var(--hm-space-2); min-width: 0; }
+.sc-split-list li { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.sc-split-preview { padding: var(--hm-space-3); overflow-wrap: break-word; }
+.sc-acc-demo, .sc-disc-demo { display: grid; gap: var(--hm-space-3); min-width: 0; }
+.sc-stack-demo { display: grid; gap: var(--hm-space-4); min-width: 0; }
+.sc-stack-box { padding: var(--hm-space-3); border: 1px dashed var(--hm-border-strong); border-radius: var(--hm-radius-2); min-height: 6rem; }
+.sc-stack-item { padding: var(--hm-space-2) var(--hm-space-3); border-radius: var(--hm-radius); background: var(--hm-bg-subtle); border: 1px solid var(--hm-border); }
+.sc-stack-item-1 { padding-block: var(--hm-space-4); }
+.sc-stack-item-2 { padding-block: var(--hm-space-1); }
