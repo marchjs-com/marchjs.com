@@ -7,7 +7,8 @@ import { computed, signal, effect, onCleanup } from "hadi-march";
 import { Link, query, navigate } from "hadi-march/router";
 import { colorThemes, loadTheme, ThemeSwatch } from "hadi-march/ui";
 import { Icon, arrowLeft, arrowRight, maximize, minimize, externalLink, rotateCw } from "hadi-march/icons";
-import { DevicePreview, OverlayScope } from "hadi-march/components/layout/index.ts";
+import { DevicePreview } from "hadi-march/components/layout/index.ts";
+import { appUrl } from "hadi-march/base";
 import { Section } from "../demo.tsx";
 import { ComponentDemo, demoId } from "../component-demo.tsx";
 import { lazy } from "hadi-march/lazy";
@@ -112,11 +113,17 @@ function SampleView(props: { sample: Sample; view: () => unknown }) {
     </div>
     <div class="sc-sample-stage">
       {() => {
-        // the preview is its own world: its drawers and dialogs open inside it (OverlayScope), not on the showcase
-        const site = <div class="sc-sample-site" data-hm-theme={() => (theme() && ready() ? theme() : undefined)} dir={() => (rtl() ? "rtl" : undefined)}>{props.view()}</div>
+        // the site runs in its own window (an iframe of /web/<view>?bare=1): its own viewport, scrolling, sticky menu,
+        // media queries and layers — exactly as the real page; theme and direction go to it in the address
+        const src = (): string => {
+          const u = new URLSearchParams({ bare: "1" })
+          if (theme()) u.set("theme", theme())
+          if (rtl()) u.set("dir", "rtl")
+          return `${appUrl(`web/${s.view}`)}?${u}`
+        }
         return device() === "desktop"
-          ? <OverlayScope class="sc-sample-device">{site}</OverlayScope>
-          : <DevicePreview device={device()} landscape={rotate}>{site}</DevicePreview>
+          ? <iframe class="sc-sample-frame" src={src} title={`${s.title} önizleme`} />
+          : <DevicePreview device={device()} landscape={rotate} src={src} />
       }}
     </div>
     <nav class="sc-sample-pager" aria-label="Örnek siteler">
@@ -137,6 +144,14 @@ export default function WebPage(props: { params?: { rest?: string } }) {
     const sample = SAMPLES.find((x) => x.view === v)
     if (!sample) return <Blocks />
     const S = v === "product" ? ProductSample : v === "portfolio" ? PortfolioSample : SlidesSample
+    // inside the preview iframe (?bare=1): the site alone, with the theme and direction the preview bar picked
+    if (query()["bare"] !== undefined) {
+      const q = query(), root = document.documentElement
+      if (q["dir"] === "rtl") root.setAttribute("dir", "rtl")
+      const th = String(q["theme"] ?? "")
+      if (th) void loadTheme(th).then(() => root.setAttribute("data-hm-theme", th))
+      return <div class="sc-sample-page sc-sample-bare"><S /></div>
+    }
     return <SampleView sample={sample} view={() => <S />} />
   }}</>
 }
