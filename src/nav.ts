@@ -13,6 +13,7 @@ export const PAGES: PageInfo[] = [
   { path: "/feedback", title: "Durumlar" },
   { path: "/motion", title: "Hareket ve efektler" },
   { path: "/speed", title: "Hız" },
+  { path: "/messaging", title: "Haberleşme" },
   { path: "/layout", title: "Yerleşim" },
   { path: "/navigation", title: "Gezinme" },
   { path: "/overlay", title: "Overlay" },
