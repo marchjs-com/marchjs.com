@@ -49,7 +49,7 @@ export default function Layout(props: { params?: { rest?: string } }) {
     return <Grid cols={cols} gap={3} balance fill="stretch">{items}</Grid>
   }
   const RENDER: Record<string, () => unknown> = {
-    "canli-karsilastirma": () => <Demo wide title="Canlı karşılaştırma" desc="Kart sayısını, sütunu ve kapsayıcı genişliğini değiştir; seçili mod tam genişlikte, altında beşi yan yana."
+    "grid-live": () => <Demo wide title="Canlı karşılaştırma" desc="Kart sayısını, sütunu ve kapsayıcı genişliğini değiştir; seçili mod tam genişlikte, altında beşi yan yana."
     code={`<Grid cols={4} gap={3}>…</Grid>                 // default: aligned columns
 rid cols={4} fill="stretch">…</Grid>           // the last row shares the space
 rid cols={4} fill="last">…</Grid>              // son kart kalan alana uzar
@@ -64,7 +64,7 @@ rid min="17rem" fill="stretch">…</Grid>        // automatic columns + fill`}>
     <div class={() => `sc-grid-frame sc-w-${$width}`}>{() => grid($mode)}</div>
     </Playground>
   </Demo>,
-    "bes-mod-yan-yana": () => <Demo wide title="Beş mod yan yana" desc="Aynı kart ve sütun sayısıyla; her kutu sabit bir sanal genişlikte (sütun başına 10rem) çizilip sığacak kadar küçültülür, böylece son satır farkı her ekranda görünür. Tek kart artınca stretch ile last aynı görünür; fark iki ve daha fazla artan kartta.">
+    "grid-modes": () => <Demo wide title="Beş mod yan yana" desc="Aynı kart ve sütun sayısıyla; her kutu sabit bir sanal genişlikte (sütun başına 10rem) çizilip sığacak kadar küçültülür, böylece son satır farkı her ekranda görünür. Tek kart artınca stretch ile last aynı görünür; fark iki ve daha fazla artan kartta.">
     <div class="sc-grid-compare">
       {MODES.map((m) => <Card title={m.label}><div class="sc-grid-frame">
         <div class="sc-fit-preview" ref={fitPreview} style={() => ({ width: `${Number($cols) * 10}rem` })}>{() => grid(m.value)}</div>

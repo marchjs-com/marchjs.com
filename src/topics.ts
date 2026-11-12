@@ -112,8 +112,8 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "follow-button", title: "FollowButton", desc: "Takip et → Takip ediliyor: genişlik yaylanır, dolgu çerçeveye döner, + tike çevrilir, dört renk parlar.", group: "Sosyal" },
   ],
   "/layout": [
-    { slug: "canli-karsilastirma", title: "Canlı karşılaştırma", desc: "Kart sayısını, sütunu ve kapsayıcı genişliğini değiştir; seçili mod tam genişlikte, altında beşi yan yana.", group: "Örnekler" },
-    { slug: "bes-mod-yan-yana", title: "Beş mod yan yana", desc: "Aynı kart ve sütun sayısıyla; her kutu sabit bir sanal genişlikte (sütun başına 10rem) çizilip sığacak…", group: "Örnekler" },
+    { slug: "grid-live", title: "Canlı karşılaştırma", desc: "Kart sayısını, sütunu ve kapsayıcı genişliğini değiştir; seçili mod tam genişlikte, altında beşi yan yana.", group: "Örnekler" },
+    { slug: "grid-modes", title: "Beş mod yan yana", desc: "Aynı kart ve sütun sayısıyla; her kutu sabit bir sanal genişlikte (sütun başına 10rem) çizilip sığacak…", group: "Örnekler" },
     { slug: "grid", title: "Grid", desc: "Sütun sayısı, son satırın davranışı ve dengeleme.", group: "Yerleşim" },
     { slug: "stack", title: "Stack, Toolbar ve Divider", desc: "Satır ya da sütun, boşluk belirteçleri (0–8), hizalama ve satır kaydırma; etiketli araç çubuğu ve ayraçlar.", group: "Yerleşim" },
     { slug: "spacer", title: "Spacer", desc: "Kendinden sonrakileri satırın mantıksal sonuna iter; RTL'de aynalanır.", group: "Yerleşim" },
