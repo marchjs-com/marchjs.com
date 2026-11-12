@@ -1,8 +1,12 @@
 // Data: a 10,000-row table (sorting, filters, selection, virtual scrolling, column sizing), tree, kanban, steps, pagination,
 // accordion, timeline, key-value, splitter, carousel.
-import { Table } from "hadi-march/table";
+import { lazy } from "hadi-march/lazy";
+
+// heavy parts load when they come into view, with a table / card shaped placeholder of the same size
+const Table = lazy(() => import("hadi-march/table/render.ts"), { pick: "Table", when: "visible", placeholder: "table", height: "30rem" })
+const Kanban = lazy(() => import("hadi-march/ui/kanban.ts"), { pick: "Kanban", when: "visible", placeholder: "card", height: "22rem" })
 import {
-  Badge, Avatar, Tree, Kanban, Steps, Pagination, Accordion, Timeline, KeyValue, Splitter, Carousel, Card, Button, Chip, toast, action, Stack, IconTile, Rating,
+  Badge, Avatar, Tree, Steps, Pagination, Accordion, Timeline, KeyValue, Splitter, Carousel, Card, Button, Chip, toast, action, Stack, IconTile, Rating,
 } from "hadi-march/ui";
 import { folder, fileText, image, code, settings, trash, mail, check, packageBox, truck, users, zap, shieldCheck, creditCard } from "hadi-march/icons";
 import { Demo, Section } from "../demo.tsx";

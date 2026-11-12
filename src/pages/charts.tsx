@@ -1,5 +1,14 @@
 // Charts: stats, line/area (zoom), bar, pie, bar list, heatmap, progress ring. Colors come from the theme.
-import { LineChart, AreaChart, BarChart, PieChart, Stat, BarList, Heatmap, ProgressRing, Sparkline } from "hadi-march/charts";
+import { Stat, BarList, ProgressRing, Sparkline } from "hadi-march/charts";
+import { lazy } from "hadi-march/lazy";
+
+// the big charts load when they come into view (chart-shaped placeholder, same height); each from its own module
+const xy = () => import("hadi-march/charts/xy.ts")
+const LineChart = lazy(xy, { pick: "LineChart", when: "visible", placeholder: "chart", height: "15rem" })
+const AreaChart = lazy(xy, { pick: "AreaChart", when: "visible", placeholder: "chart", height: "15rem" })
+const BarChart = lazy(() => import("hadi-march/charts/bar.ts"), { pick: "BarChart", when: "visible", placeholder: "chart", height: "15rem" })
+const PieChart = lazy(() => import("hadi-march/charts/pie.ts"), { pick: "PieChart", when: "visible", placeholder: "chart", height: "15rem" })
+const Heatmap = lazy(() => import("hadi-march/charts/heatmap.ts"), { pick: "Heatmap", when: "visible", placeholder: "chart", height: "12rem" })
 import { Card, Button, Grid } from "hadi-march/ui";
 import { users, activity, diamond, message, plus } from "hadi-march/icons";
 import { Demo, Section } from "../demo.tsx";
@@ -19,7 +28,7 @@ export default function Charts() {
       code={`<Stat icon={users} label="Toplam üye" value={48210} delta={0.214} spark={seri} hint="önceki döneme göre" />`}>
       <Grid cols={4} gap={4}>
         <Card><Stat icon={users} label="Toplam üye" value={48210} delta={0.214} hint="önceki döneme göre" spark={$rows.map((r) => r.active)} /></Card>
-        <Card><Stat icon={activity} label="Günlük active" value={9640} delta={0.068} hint="önceki döneme göre" spark={$rows.map((r) => r.active)} /></Card>
+        <Card><Stat icon={activity} label="Günlük aktif" value={9640} delta={0.068} hint="önceki döneme göre" spark={$rows.map((r) => r.active)} /></Card>
         <Card><Stat icon={diamond} label="Gelir" value={$rows.reduce((s, r) => s + r.revenue, 0)} delta={0.105} format={["money", "TRY"]} spark={$rows.map((r) => r.revenue)} /></Card>
         <Card><Stat icon={message} label="Gider" value={$rows.reduce((s, r) => s + r.expenses, 0)} delta={-0.031} invert format={["money", "TRY"]} spark={$rows.map((r) => r.expenses)} /></Card>
       </Grid>
@@ -28,7 +37,7 @@ export default function Charts() {
     <Demo wide title="Çizgi ve alan" desc="Sürükleyerek yakınlaştır; noktalar arasında ← → ile gez. Yeni gün ekle: grafik akar.">
       <div class="sc-row"><Button size="sm" icon={plus} on:click={addDay}>Gün ekle</Button></div>
       <Grid cols={2} gap={4}>
-        <Card title="Gelir ve expenses"><LineChart data={$rows} x="day" y={["revenue", "expenses"]} series={{ revenue: "Gelir", expenses: "Gider" }} format={["money", "TRY"]} xFormat="date" zoom height={240} title="Gelir ve expenses" /></Card>
+        <Card title="Gelir ve gider"><LineChart data={$rows} x="day" y={["revenue", "expenses"]} series={{ revenue: "Gelir", expenses: "Gider" }} format={["money", "TRY"]} xFormat="date" zoom height={240} title="Gelir ve gider" /></Card>
         <Card title="Etkin kullanıcı"><AreaChart data={$rows} x="day" y="active" series={{ active: "Etkin" }} xFormat="date" height={240} title="Etkin kullanıcı" legend={false} /></Card>
       </Grid>
     </Demo>

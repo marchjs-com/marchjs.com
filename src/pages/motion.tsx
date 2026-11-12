@@ -1,5 +1,6 @@
 // Motion and effects: spring/tween, FLIP lists, transitions, timeline + stagger, drag, magnet, tilt, parallax,
 // spotlight, particles, confetti, reveal on scroll. All of it honours "reduce motion".
+import "hadi-march/motion/install"; // fly, blur… transitions and <For animate> on this page (the shell installs them later, when idle)
 import { spring, tween, timeline, stagger, drag, magnet, tilt, press, parallax, reveal, inView } from "hadi-march/motion";
 import { Particles, confetti, spotlight } from "hadi-march/fx";
 import { Button, Card, Badge, Slider, Field, toast } from "hadi-march/ui";
