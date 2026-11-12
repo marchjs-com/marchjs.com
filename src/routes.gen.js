@@ -23,9 +23,11 @@ export default {
   "/managers": () => import("./pages/managers.tsx"),
   "/messaging": () => import("./pages/messaging.tsx"),
   "/motion": () => import("./pages/motion.tsx"),
+  "/motion/lists": () => import("./pages/motion/lists.tsx"),
   "/motion/micro": () => import("./pages/motion/micro.tsx"),
   "/motion/morph": () => import("./pages/motion/morph.tsx"),
   "/motion/pages": () => import("./pages/motion/pages.tsx"),
+  "/motion/scroll": () => import("./pages/motion/scroll.tsx"),
   "/motion/svg": () => import("./pages/motion/svg.tsx"),
   "/navigation": () => import("./pages/navigation.tsx"),
   "/network": () => import("./pages/network.tsx"),
@@ -38,4 +40,5 @@ export default {
   "/text-motion": () => import("./pages/text-motion.tsx"),
   "/themes": () => import("./pages/themes.tsx"),
   "/transitions": () => import("./pages/transitions.tsx"),
+  "/web": () => import("./pages/web.tsx"),
 };
