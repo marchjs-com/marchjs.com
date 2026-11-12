@@ -99,7 +99,7 @@ export default function ApiPage() {
   effect(() => {
     const onKeys = (e: KeyboardEvent): void => {
       const tg = e.target as HTMLElement | null
-      if (e.ctrlKey || e.metaKey || e.altKey || tg?.closest("input, textarea, select, [contenteditable]")) return
+      if (e.ctrlKey || e.metaKey || e.altKey || (tg instanceof Element && tg.closest("input, textarea, select, [contenteditable]"))) return
       if (e.key === "/") { e.preventDefault(); (listEl?.parentElement?.querySelector("input") as HTMLInputElement | null)?.focus(); return }
       const n = Number(e.key)
       if (n >= 1 && n <= 5) setFilter("kind", n === 1 ? null : KINDS[n - 2]!)
