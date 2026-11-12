@@ -3,6 +3,8 @@
 // files with the first name of each one's alphabetical range.
 import type { ApiExampleModule } from "./api-examples/types.ts";
 const groups: Record<string, () => Promise<ApiExampleModule>> = {
+  "app-router": () => import("./api-examples/app-router.tsx"),
+  "app": () => import("./api-examples/app.tsx"),
   "core": () => import("./api-examples/core.tsx"),
   "flow": () => import("./api-examples/flow.tsx"),
   "managers-a": () => import("./api-examples/managers-a.tsx"),
@@ -22,8 +24,10 @@ const bySubpath: Record<string, [group: string, first: string][]> = {
   "hadi-march/channel": [["platform","ChannelScope"]],
   "hadi-march/context-menu": [["platform","ContextMenu"]],
   "hadi-march/flow": [["flow","FLOW_NODE"]],
+  "hadi-march/i18n": [["app","dir"]],
   "hadi-march/icons": [["platform","Icon"]],
   "hadi-march/icons/catalog": [["platform","ICONS"]],
+  "hadi-march/lazy": [["app","chunksOf"]],
   "hadi-march/managers": [["managers-a","DEFAULT_CATEGORIES"]],
   "hadi-march/managers/accessibility/ui": [["platform","AccessibilitySettings"]],
   "hadi-march/managers/command/ui": [["platform","CommandButton"]],
@@ -32,6 +36,8 @@ const bySubpath: Record<string, [group: string, first: string][]> = {
   "hadi-march/managers/shortcut-hint/ui": [["platform","ShortcutHelp"]],
   "hadi-march/managers/undo": [["platform","undoHistory"]],
   "hadi-march/managers/undo/history": [["platform","create"]],
+  "hadi-march/router": [["app-router","Link"]],
+  "hadi-march/store": [["app","derive"]],
   "hadi-march/theme": [["platform","COLOR_TOKENS"]],
   "hadi-march/ui": [["ui-e","accent"],["ui-e2","defineMeta"]],
 };
