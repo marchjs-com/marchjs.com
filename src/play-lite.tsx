@@ -2,7 +2,7 @@
 // look (sc-play) and the same rules (an option shows only while it has an effect, booleans are switches), but every
 // choice is a Segmented control (a feature page's options are few) and a spec is read from playground.ts directly.
 // The full Playground (ChoicePicker: chips, cards, grids, Combobox) lives in playground.tsx.
-import { untrack, signal } from "hadi-march";
+import { signal, untrack, If } from "hadi-march";
 import { Segmented, Toggle, Field } from "hadi-march/forms";
 import type { PlaygroundOption, PlaygroundSpec } from "hadi-march/ui";
 
@@ -21,7 +21,10 @@ export function LitePlayground<V>(props: { spec: PlaygroundSpec<V>; view: View<V
   return <div class="sc-play"><div class="sc-play-inner">
     <div class="sc-play-stage"><View values={live} /></div>
     <div class="sc-play-panel" role="group" aria-label={props.label ?? "Seçenekler"}>
-      {opts.map((o) => () => (o.visibleWhen && !o.visibleWhen(values() as V) ? null : untrack(() => <div class="sc-play-opt">{control(o)}</div>)))}
+      {opts.map((o) => (o.visibleWhen
+        // If redraws only when the visibility flips: a value change never rebuilds the control (focus, pointer capture stay)
+        ? If({ when: () => o.visibleWhen!(values() as V), children: () => <div class="sc-play-opt">{control(o)}</div> })
+        : untrack(() => <div class="sc-play-opt">{control(o)}</div>)))}
     </div>
   </div></div>
 }
