@@ -175,8 +175,8 @@
 .sc-w-90 { width: 90%; }
 .sc-w-100 { width: 100%; }
 /* the comparison preview: viewport caps off (the virtual width decides), zoomed to fit by fitPreview() */
-.sc-mini { margin-inline: auto; max-width: none; }
-.sc-mini .hm-grid.hm-grid { --hm-cols-md: 99; --hm-cols-sm: 99; }
+.sc-fit-preview { margin-inline: auto; max-width: none; overflow: hidden; }
+.sc-fit-preview .hm-grid.hm-grid { --hm-cols-md: 99; --hm-cols-sm: 99; }
 .sc-grid-compare { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(22rem, 100%), 1fr)); gap: var(--hm-space-3); }
 @media (max-width: 640px) { .sc-grid-controls { grid-template-columns: minmax(0, 1fr); } }
 

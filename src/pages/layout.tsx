@@ -64,7 +64,7 @@ export default function Layout() {
     <Demo wide title="Beş mod yan yana" desc="Aynı kart ve sütun sayısıyla; her kutu sabit bir sanal genişlikte (sütun başına 10rem) çizilip sığacak kadar küçültülür, böylece son satır farkı her ekranda görünür. Tek kart artınca stretch ile last aynı görünür; fark iki ve daha fazla artan kartta.">
       <div class="sc-grid-compare">
         {MODES.map((m) => <Card title={m.label}><div class="sc-grid-frame">
-          <div class="sc-mini" ref={fitPreview} style={() => ({ width: `${Number($cols) * 10}rem` })}>{() => grid(m.value)}</div>
+          <div class="sc-fit-preview" ref={fitPreview} style={() => ({ width: `${Number($cols) * 10}rem` })}>{() => grid(m.value)}</div>
         </div></Card>)}
       </div>
     </Demo>
