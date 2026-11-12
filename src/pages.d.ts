@@ -9,8 +9,8 @@ export interface PageParams {
   "/icons": {  };
   "/language": {  };
   "/layout": {  };
-  "/messaging": {  };
   "/managers": {  };
+  "/messaging": {  };
   "/motion": {  };
   "/navigation": {  };
   "/overlay": {  };
