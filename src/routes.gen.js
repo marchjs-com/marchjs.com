@@ -14,6 +14,7 @@ export default {
   "/messaging": () => import("./pages/messaging.tsx"),
   "/motion": () => import("./pages/motion.tsx"),
   "/motion/morph": () => import("./pages/motion/morph.tsx"),
+  "/motion/pages": () => import("./pages/motion/pages.tsx"),
   "/motion/svg": () => import("./pages/motion/svg.tsx"),
   "/navigation": () => import("./pages/navigation.tsx"),
   "/network": () => import("./pages/network.tsx"),

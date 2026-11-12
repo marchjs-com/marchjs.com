@@ -83,3 +83,17 @@
 /* morph: shape */
 .sc-mo-shape { inline-size: min(100%, 12rem); aspect-ratio: 1; background: conic-gradient(from 210deg, var(--hm-brand-orange), var(--hm-brand-purple), var(--hm-brand-blue), var(--hm-brand-green), var(--hm-brand-orange)); }
 
+/* page transition variants */
+.sc-mo-scene { position: relative; overflow: hidden; display: grid; align-content: end; justify-items: start; gap: var(--hm-space-2); inline-size: 100%; min-block-size: 15rem; padding: var(--hm-space-5); border-radius: var(--hm-radius-4, 1rem); }
+.sc-mo-scene p { margin: 0; max-inline-size: 46ch; position: relative; }
+.sc-mo-scene-kicker { position: relative; font-size: var(--hm-text-sm, .875rem); opacity: .85; }
+.sc-mo-scene-title { position: relative; font-size: clamp(1.75rem, 6vw, 3rem); line-height: 1; }
+.sc-mo-scene-ring { position: absolute; inset-block-start: -4rem; inset-inline-end: -3rem; inline-size: 14rem; aspect-ratio: 1; border-radius: 50%; border: 1.5rem solid color-mix(in oklab, currentColor 22%, transparent); }
+.sc-mo-scene-ball { position: absolute; inset-block-start: 2rem; inset-inline-end: 8rem; inline-size: 3rem; aspect-ratio: 1; border-radius: 50%; background: color-mix(in oklab, currentColor 30%, transparent); }
+.sc-mo-scene .hm-btn { position: relative; }
+.sc-mo-t-p { background: var(--hm-brand-purple); color: var(--hm-on-brand-purple); }
+.sc-mo-variants { inline-size: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr)); gap: var(--hm-space-2); margin-block-start: var(--hm-space-3); }
+.sc-mo-variant { display: grid; place-items: center; min-block-size: 3.25rem; padding: var(--hm-space-2); border-radius: var(--hm-radius-3); text-decoration: none; font-weight: 600; text-align: center; }
+.sc-mo-variant:hover { transform: translateY(-2px); }
+.sc-mo-variant[aria-current="page"] { outline: 3px solid var(--hm-text); outline-offset: 2px; }
+.sc-mo-variant:focus-visible { outline: 3px solid var(--hm-accent, var(--hm-primary)); outline-offset: 2px; }

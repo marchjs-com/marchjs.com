@@ -2,7 +2,11 @@
 // (blur, displacement, goo). Every animation is an engine Playback: global speed and "Stop all" reach it.
 import "../motion-pages.css";
 import { onCleanup } from "hadi-march";
-import { animate, drawPath, morphPath, followPath, clipReveal, filterBlur, displace, goo, type ClipShape, type ClipSide, type Playback } from "hadi-march/motion";
+// each helper from its own module: the page carries only what it uses (the same names are on "hadi-march/motion")
+import { animate, type Playback } from "hadi-march/motion/engine/playback.ts";
+import { drawPath, morphPath, followPath } from "hadi-march/motion/svg.ts";
+import { clipReveal, type ClipShape, type ClipSide } from "hadi-march/motion/clip.ts";
+import { filterBlur, displace, goo } from "hadi-march/motion/svg-filter.ts";
 import { Section } from "../../demo.tsx";
 import { MotionDemo, opt, EASES } from "../../motion-kit.tsx";
 
