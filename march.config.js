@@ -40,5 +40,6 @@ export default {
     "src/motion/scroll.ts": "motion values, scroll and pointer (4 KB) shared by /flow, the home page group and four demos: start-up is at its budget and any page host would push a demo part past 25 KB",
     "src/pages/editors.tsx": "a page of lazy editor cards (each card loads its own editor): grouping it would make its neighbours download nothing useful and regroup the other pages",
     "src/components/composite/wizard/demo.tsx": "Wizard card's stage: it brings the form engine; folded into the component registry, every page with a component card would download it",
+    "src/schema/index.ts": "the schema engine (9 KB), shared by the form pages, the Wizard card and the editors: the editors part is at its 25 KB budget, so no host fits it",
   } },
 };
