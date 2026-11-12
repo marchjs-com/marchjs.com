@@ -8,5 +8,6 @@ export default function BigDataPage() {
     <ComponentDemo folder="data/data-grid" title="DataGrid" desc="100 bin satır, sanal satır ve sütun. Başlığı tıklayarak sırala (Shift ile ekle), sürükleyerek taşı, kenarından boyutla; ⋮ menüsünden grupla, sabitle, gizle. Hücreye çift tıkla ya da yazmaya başla; ok tuşları, Boşluk, Shift+↓, Ctrl+C." />
     <ComponentDemo folder="data/tree-view" title="TreeView" desc="Yaklaşık 3 000 düğüm; “eski” klasörleri açılınca tembel yüklenir. Ara: eşleşmeye giden yol açık kalır, eşleşme vurgulanır. Sürükle: önüne, arkasına ya da içine bırak (kapalı klasörün üstünde bekle, açılır). Alt+↑/↓ klavyeyle taşır." />
     <ComponentDemo folder="data/scheduler" title="Takvim (Scheduler)" desc="Ay, hafta ve gün görünümü. Etkinliği sürükleyerek taşı (15 dakikaya oturur, sütunlar arası gün değiştirir), kenarından boyutla; boş saate sürükleyerek yeni etkinlik oluştur. Tarih dili değişince gün adları, haftanın ilk günü ve saat biçimi Intl ile değişir." />
+    <ComponentDemo folder="data/gantt" title="Gantt" desc="Bağımlılık okları, bugün çizgisi, gün/hafta/ay ölçeği. Çubuğu sürükleyerek taşı, uçlarından boyutla, altındaki tutamaçla ilerlemeyi ayarla; ardıl görevler gerekirse ileri itilir. Klavye: ↑↓ görev seç, Alt+←→ taşı." />
   </Section>
 }
