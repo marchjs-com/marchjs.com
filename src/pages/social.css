@@ -1,0 +1,20 @@
+/* Social page (showcase): stage sizes for the social component demos. */
+.sc-social-post, .sc-social-mgrid { display: flex; flex-direction: column; gap: var(--hm-space-2); width: 100%; max-width: 30rem; margin-inline: auto; min-width: 0; }
+.sc-social-roll { align-items: center; gap: var(--hm-space-3); }
+.sc-social-roll-num { font-size: var(--hm-text-4xl); font-weight: 800; letter-spacing: var(--hm-tracking-tighter); min-width: 5ch; color: var(--hm-text); }
+.sc-social-like { align-items: center; gap: var(--hm-space-5); }
+.sc-social-burst-tile { position: relative; display: grid; place-items: center; gap: var(--hm-space-1); width: 9rem; aspect-ratio: 1; border: 1px dashed var(--hm-border-strong);
+  border-radius: var(--hm-radius-4); background: var(--hm-surface-2); color: var(--hm-text-2); font: inherit; cursor: pointer; }
+.sc-social-burst-tile:focus-visible { outline: 2px solid var(--hm-primary); outline-offset: 2px; }
+.sc-social-burst-mark { display: inline-block; font-size: 2.5rem; line-height: 1; color: var(--hm-accent, var(--hm-brand-pink, var(--hm-danger))); }
+.sc-social-vlist-wrap, .sc-social-feed-wrap { display: flex; flex-direction: column; gap: var(--hm-space-2); width: 100%; min-width: 0; }
+.sc-social-vlist { height: 22rem; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); overflow: hidden; background: var(--hm-surface); }
+.sc-social-vlist .hm-vlist { padding: var(--hm-space-2); box-sizing: border-box; }
+.sc-social-vrow { display: flex; flex-direction: column; gap: .25rem; padding: .75rem .875rem; border-radius: var(--hm-radius-2); border-inline-start: 4px solid var(--sc-c);
+  background: color-mix(in srgb, var(--sc-c) 7%, var(--hm-surface)); font-size: var(--hm-text-sm); }
+.sc-social-vrow span { color: var(--hm-text-2); }
+.sc-social-vrow-c1 { --sc-c: var(--hm-brand-orange, var(--hm-cat-1)); } .sc-social-vrow-c2 { --sc-c: var(--hm-brand-blue, var(--hm-cat-2)); }
+.sc-social-vrow-c3 { --sc-c: var(--hm-brand-green, var(--hm-cat-3)); } .sc-social-vrow-c4 { --sc-c: var(--hm-brand-purple, var(--hm-cat-4)); }
+/* a phone frame for the app-like demos */
+.sc-social-phone { position: relative; width: 100%; max-width: 24rem; height: 40rem; max-height: 80vh; margin-inline: auto; border: 1px solid var(--hm-border); border-radius: 1.75rem;
+  overflow: hidden; background: var(--hm-bg); box-shadow: var(--hm-shadow-3); display: flex; flex-direction: column; }
