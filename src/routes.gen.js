@@ -13,6 +13,7 @@ export default {
   "/messaging": () => import("./pages/messaging.tsx"),
   "/motion": () => import("./pages/motion.tsx"),
   "/navigation": () => import("./pages/navigation.tsx"),
+  "/network": () => import("./pages/network.tsx"),
   "/overlay": () => import("./pages/overlay.tsx"),
   "/overlays": () => import("./pages/overlays.tsx"),
   "/speed": () => import("./pages/speed.tsx"),

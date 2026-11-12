@@ -13,11 +13,12 @@ export interface PageParams {
   "/messaging": {  };
   "/motion": {  };
   "/navigation": {  };
+  "/network": {  };
   "/overlay": {  };
   "/overlays": {  };
   "/speed": {  };
   "/themes": {  };
 }
 declare module "hadi-march/router" {
-  interface Register { routes: "/buttons" | "/charts" | "/data" | "/feedback" | "/forms" | "/home" | "/icons" | "/language" | "/layout" | "/managers" | "/messaging" | "/motion" | "/navigation" | "/overlay" | "/overlays" | "/speed" | "/themes" }
+  interface Register { routes: "/buttons" | "/charts" | "/data" | "/feedback" | "/forms" | "/home" | "/icons" | "/language" | "/layout" | "/managers" | "/messaging" | "/motion" | "/navigation" | "/network" | "/overlay" | "/overlays" | "/speed" | "/themes" }
 }

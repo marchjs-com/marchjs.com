@@ -14,6 +14,7 @@ export const PAGES: PageInfo[] = [
   { path: "/motion", title: "Hareket ve efektler" },
   { path: "/speed", title: "Hız" },
   { path: "/messaging", title: "Haberleşme" },
+  { path: "/network", title: "Ağ ve hatalar" },
   { path: "/layout", title: "Yerleşim" },
   { path: "/navigation", title: "Gezinme" },
   { path: "/overlay", title: "Overlay" },
