@@ -95,14 +95,14 @@ function Categories() {
     const meta = group === "Yöneticiler" ? `${S.managers} yönetici` : n ? `${n} bileşen` : `${own.length} sayfa`
     return { group, own, meta }
   }).filter((c) => c.own.length)
-  return <section class="sc-section sc-cats" aria-labelledby="sc-cat-h">
+  return <section class="sc-section sc-home-cats" aria-labelledby="sc-cat-h">
     <header class="sc-section-head">
       <p class="sc-eyebrow">Katalog</p>
       <h2 id="sc-cat-h" class="sc-section-title">Her şey bir kategoride</h2>
       <p class="sc-section-sub">Kategori başına kayıtlı bileşenler ve sayfalar; her kart ilgili vitrine götürür.</p>
     </header>
     <Grid cols={4} minCol="16rem" gap={3} fill="stretch" equal>
-      {cards.map((c, i) => <div class="sc-cat" use:reveal={{ delay: (i % 4) * 60 }}>
+      {cards.map((c, i) => <div class="sc-home-cat" use:reveal={{ delay: (i % 4) * 60 }}>
         <LinkCard href={c.own[0]!.path} icon={c.own[0]!.icon} tone={TONES[i % TONES.length]} title={c.group} meta={c.meta}
           description={c.own.map((p) => p.title.replace(/^[^:]+:\s*/, "")).join(" · ")} />
       </div>)}

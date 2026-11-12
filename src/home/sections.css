@@ -24,8 +24,8 @@
 .sc-eyebrow { margin: 0; font-size: var(--hm-text-xs); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--hm-primary); }
 .sc-section-title { margin: 0; font-family: var(--hm-font-display); font-weight: var(--hm-display-weight); font-size: clamp(1.75rem, 3.6vw, 2.75rem); line-height: 1.1; letter-spacing: -.03em; }
 .sc-section-sub { margin: 0; color: var(--hm-text-2); line-height: 1.6; }
-.sc-cat { display: flex; min-inline-size: 0; }
-.sc-cat > .hm-link-card { flex: 1; }
+.sc-home-cat { display: flex; min-inline-size: 0; }
+.sc-home-cat > .hm-link-card { flex: 1; }
 
 /* highlights */
 /* seven cards, the first twice as wide: 4 columns = two full rows, 2 columns = four full rows */
@@ -147,6 +147,6 @@
 .sc-pv-avatar { display: grid; place-items: center; flex: none; inline-size: 2rem; block-size: 2rem; border-radius: 50%; background: var(--hm-brand-purple, var(--hm-cat-4)); color: var(--hm-on-accent); font-weight: 700; }
 .sc-start-pre { margin: 0; padding: var(--hm-space-4) var(--hm-space-5); overflow-x: auto; border-radius: var(--hm-radius-3); background: var(--hm-surface); border: 1px solid var(--hm-border);
   font-family: var(--hm-font-mono); font-size: var(--hm-text-sm); line-height: 1.7; direction: ltr; text-align: left; box-shadow: var(--hm-shadow-1); }
-.sc-cat .hm-link-card-desc { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+.sc-home-cat .hm-link-card-desc { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
 /* Grid's span mode lays its gutters out as a -6px margin: clip it sideways so the section never scrolls */
-.sc-cats { overflow-x: clip; overflow-clip-margin: 0; padding-block: var(--hm-space-1); }
+.sc-home-cats { overflow-x: clip; overflow-clip-margin: 0; padding-block: var(--hm-space-1); }
