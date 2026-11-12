@@ -13,7 +13,7 @@ function ChannelDemo(p: { own: boolean; api: Api }) {
   if (p.own) managerChannelOf("sepet").on((m) => note(`${m.type} ${JSON.stringify(m.detail ?? "")}`))
   else managerChannel.on((m) => { if (m.manager === "sepet") note(`${m.topic} @ ${clock()}`) })
   return <div class="sc-ex-stack">
-    <Row><Button onClick={() => emit("sepet", "ekle", { urun: "çay" })}>sepet:ekle</Button><Button variant="secondary" onClick={() => emit("sepet", "bosalt")}>sepet:bosalt</Button></Row>
+    <Row><Button onClick={() => emit("sepet", "ekle", { item: "çay" })}>sepet:ekle</Button><Button variant="secondary" onClick={() => emit("sepet", "bosalt")}>sepet:bosalt</Button></Row>
     <Log lines={lines} label="Gelen mesajlar" />
   </div>
 }

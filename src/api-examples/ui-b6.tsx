@@ -80,7 +80,7 @@ export default examples({
           {() => { const b = p.values.back, e = p.values.empty; return <ListDetail selected={sel} {...(b ? { onBack: () => sel.set(null) } : {})} listLabel="Siparişler"
             empty={e ? <Empty icon={inbox} title="Bir sipariş seç" /> : undefined}
             list={<div class="sc-ex-stack">{orders.map((o) => <Button variant={() => (sel()?.id === o.id ? "primary" : "ghost")} aria-pressed={() => String(sel()?.id === o.id)} onClick={() => sel.set(o)}>{o.id} · {o.who}</Button>)}</div>}
-            detail={() => <KeyValue items={() => (sel() ? { Sipariş: sel()!.id, Müşteri: sel()!.who, Tutar: sel()!.total } : {})} />} /> }}
+            detail={() => <KeyValue items={() => (sel() ? { "Sipariş": sel()!.id, "Müşteri": sel()!.who, "Tutar": sel()!.total } : {})} />} /> }}
         </div>
       },
     },
@@ -105,7 +105,7 @@ export default examples({
         return <div class="sc-ex-stack">
           <Row><Button onClick={load} disabled={busy}>Yenile</Button></Row>
           <div class="sc-ex-ui-b-loader">
-            {() => (busy() && !p.values.overlay ? null : <KeyValue items={{ Kullanıcı: 128, Etkin: 97, Bekleyen: 4 }} />)}
+            {() => (busy() && !p.values.overlay ? null : <KeyValue items={{ "Kullanıcı": 128, "Etkin": 97, "Bekleyen": 4 }} />)}
             {() => busy() && <Loader overlay={p.values.overlay} {...(p.values.text ? { text: "Kullanıcılar yükleniyor…" } : {})} />}
           </div>
         </div>

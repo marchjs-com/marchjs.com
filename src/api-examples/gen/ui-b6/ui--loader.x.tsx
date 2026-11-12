@@ -17,7 +17,7 @@ const example: ApiExample<any> = {
         return <div class="sc-ex-stack">
           <Row><Button onClick={load} disabled={busy}>Yenile</Button></Row>
           <div class="sc-ex-ui-b-loader">
-            {() => (busy() && !p.values.overlay ? null : <KeyValue items={{ Kullanıcı: 128, Etkin: 97, Bekleyen: 4 }} />)}
+            {() => (busy() && !p.values.overlay ? null : <KeyValue items={{ "Kullanıcı": 128, "Etkin": 97, "Bekleyen": 4 }} />)}
             {() => busy() && <Loader overlay={p.values.overlay} {...(p.values.text ? { text: "Kullanıcılar yükleniyor…" } : {})} />}
           </div>
         </div>

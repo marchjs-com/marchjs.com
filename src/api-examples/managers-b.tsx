@@ -319,7 +319,7 @@ function HotkeyLabelDemo() {
 function LoggerDemo() {
   const mem = memoryTransport(8)
   lend([logManager, { transports: [mem], level: "debug" }])
-  const log = logger().child("ödeme", { sepet: 3 })
+  const log = logger().child("ödeme", { cart: 3 })
   const level = signal<Level>("debug")
   return <div class="sc-ex-stack">
     <Row><Button onClick={() => log.info("ödendi", { tutar: 42, card: "4242 4242" })}>info</Button><Button variant="secondary" onClick={() => log.warn("yavaş yanıt")}>warn</Button><Button variant="secondary" onClick={() => log.error(new Error("Bağlantı koptu"))}>error</Button><Button variant="secondary" onClick={() => log.debug("ayrıntı")}>debug</Button></Row>
@@ -345,7 +345,7 @@ function ChannelDemo(p: { own: boolean; api: Api }) {
   if (p.own) managerChannelOf("sepet").on((m) => note(`${m.type} ${JSON.stringify(m.detail ?? "")}`))
   else managerChannel.on((m) => { if (m.manager === "sepet") note(`${m.topic} @ ${clock()}`) })
   return <div class="sc-ex-stack">
-    <Row><Button onClick={() => emit("sepet", "ekle", { urun: "çay" })}>sepet:ekle</Button><Button variant="secondary" onClick={() => emit("sepet", "bosalt")}>sepet:bosalt</Button></Row>
+    <Row><Button onClick={() => emit("sepet", "ekle", { item: "çay" })}>sepet:ekle</Button><Button variant="secondary" onClick={() => emit("sepet", "bosalt")}>sepet:bosalt</Button></Row>
     <Log lines={lines} label="Gelen mesajlar" />
   </div>
 }
@@ -545,7 +545,7 @@ disposeViewport()            // medya dinleyicileri kalkar`, run: disposeEx(view
 disposeWindow()              // sekme kanalı kapanır`, run: disposeEx(windowManager, "windowManager.get()", "disposeWindow()", () => windowManager.get(), disposeWindow, [[windowManager, { channel: "hm-ex:window" }]]) },
     distance: { code: `distance({ lat: 41.0082, lng: 28.9784 }, { lat: 39.9334, lng: 32.8597 })
 // ≈ 350 000 (metre)`, run: () => <DistanceDemo /> },
-    emit: { code: `emit("sepet", "ekle", { urun: "çay" })      // topic: sepet:ekle
+    emit: { code: `emit("sepet", "ekle", { item: "çay" })      // topic: sepet:ekle
 onManager("sepet:*", (m) => console.log(m.topic))`, run: () => <Lazy>{(api) => <ChannelDemo own={false} api={api} />}</Lazy> },
     flags: { code: `configureFlags({ flags: { beta: true, pricing: { variants: { control: 50, annual: 50 } } } })
 flags().on("beta")    flags().variant("pricing")
@@ -578,7 +578,7 @@ locationManager.get()    locationManager.dispose()`, run: handleEx(locationManag
     locator: { code: `const loc = locator()
 button.onclick = () => loc.locate()          // tıklamadan istenir
 loc.position()    loc.status()    loc.distanceTo({ lat: 39.93, lng: 32.86 })`, run: () => <LocatorDemo /> },
-    logger: { code: `const log = logger().child("ödeme", { sepet: 3 })
+    logger: { code: `const log = logger().child("ödeme", { cart: 3 })
 log.info("ödendi", { tutar: 42, card: "4242…" })   // card gizlenir
 logger().setLevel("warn")`, run: () => <LoggerDemo /> },
     logManager: { code: `logManager.configure({ level: "debug" })

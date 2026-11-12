@@ -31,7 +31,7 @@ interface Doc {
 
 const TEXT = {
   tr: { title: "API", lead: "Her alt yolun her dışa aktarımı: imza, parametreler, açıklama, örnekler ve canlı demo.", search: "Ara: signal, createRouter, toast…",
-    label: "API ara", allKinds: "Tümü", kindFilter: "Türe göre süz", subFilter: "Alt yol", allSubs: "Tüm alt yollar", kinds: { component: "bileşen", function: "işlev", class: "sınıf", const: "değer" } as Record<Kind, string>,
+    label: "API ara", allKinds: "Tümü", kindFilter: "Türe göre süz", subFilter: "Alt yol", allSubs: "Tüm alt yollar", kinds: { component: "bileşen", function: "işlev", ["class"]: "sınıf", const: "değer" } as Record<Kind, string>,
     status: { stable: "kararlı", experimental: "deneysel", deprecated: "kullanımdan kalkıyor" } as Record<string, string>,
     sig: "İmza", params: "Parametreler", props: "Prop'lar", returns: "Dönüş", name: "Ad", type: "Tür", def: "Varsayılan", desc: "Açıklama",
     ctor: "Yapıcı (constructor)", members: "Üyeler", statics: "Statik üyeler", ext: "Kalıtım", events: "Olaylar", value: "İçerik", valueType: "Tür",

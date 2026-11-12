@@ -21,7 +21,7 @@ const example: ApiExample<any> = {
           dark: { ...hadi.dark, primary: accent(), solid: accent(), onSolid: onBrandFill(accent()) } }))
         return <Stack>
           <Row><Segmented value={accent} options={brand.slice(0, 4).map(([k, v]) => ({ value: v, label: k }))} aria-label="Vurgu rengi" />
-            <Button variant="ghost" onClick={() => { try { defineTheme({ ...hadi, id: "HADİ Tema" }) } catch (e) { err.set((e as Error).message) } }}>Geçersiz id dene</Button></Row>
+            <Button variant="ghost" onClick={() => { try { defineTheme({ ...hadi, id: "My Theme!" }) } catch (e) { err.set((e as Error).message) } }}>Geçersiz id dene</Button></Row>
           <ThemeBox def={def} />
           <Out label="hata" value={err} />
         </Stack>

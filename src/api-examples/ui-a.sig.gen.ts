@@ -8,7 +8,7 @@ const sig: Record<string, Record<string, string>> = {
   "ActionButton": "function ActionButton<A extends unknown[], R>(props: ActionButtonProps<A, R>): () => unknown",
   "ActivityBar": "function ActivityBar(props: ActivityBarProps): Element",
   "Alert": "function Alert(props: AlertProps): () => unknown",
-  "AppShell": "function AppShell(props: AppShellProps): Element",
+  "AppShell": "const AppShell: LayoutComponent",
   "AuthLayout": "function AuthLayout(props: AuthLayoutProps): Element",
   "Avatar": "function Avatar(props: AvatarProps): Element",
   "AvatarGroup": "function AvatarGroup(props: AvatarGroupProps): Element",

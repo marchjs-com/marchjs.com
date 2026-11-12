@@ -36,7 +36,7 @@ const sig: Record<string, Record<string, string>> = {
   "messages": "function messages(loc: string, dict: Dict): void",
   "missing": "const missing = (): Record<string, string[]> =>",
   "onCleanup": "function onCleanup(fn: Cleanup): Cleanup",
-  "openLayer": "function openLayer(kind: LayerKind, node: Node): () => void",
+  "openLayer": "function openLayer(kind: LayerKind, node: Node, scope?: HTMLElement | null): () => void",
   "patch": "function patch<T extends object>(target: T, partial: Partial<T> | Record<string, unknown>): T",
   "pipe": "function pipe(name: string, fn: PipeFn): void",
   "portalTarget": "const portalTarget = (name: string): Element | null =>",

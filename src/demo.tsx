@@ -10,7 +10,8 @@ const DemoCode = lazy(() => import("./demo-code.tsx"), { placeholder: "text", he
 
 /** `code`: the Code tab's source, or a loader for it (fetched on the first click on Kod, like the viewer itself). */
 /** A section anchor from a title (same as tools/gen-sections.js: the palette jumps to it). */
-export const demoSlug = (s: string): string => s.toLocaleLowerCase("tr").replace(/ı/g, "i").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60)
+/** A section anchor from its title: a short hash (ids stay language-neutral; the title is user-visible text). */
+export const demoSlug = (s: string): string => { let x = 5381; for (const ch of s) x = (Math.imul(x, 33) ^ ch.codePointAt(0)!) >>> 0; return x.toString(36); };
 
 export function Demo(props: { title: string; desc?: string; code?: string | (() => Promise<string>); lang?: string; wide?: boolean; id?: string; children?: unknown }) {
   const preview = <div class="sc-stage">{props.children}</div>

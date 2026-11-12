@@ -4,6 +4,6 @@ import { Lazy } from "./_lazy.tsx";
 import { ChannelDemo } from "./_channel-demo.tsx";
 import type { ApiExample } from "../../types.ts";
 
-const example: ApiExample<any> = { code: `emit("sepet", "ekle", { urun: "çay" })      // topic: sepet:ekle
+const example: ApiExample<any> = { code: `emit("sepet", "ekle", { item: "çay" })      // topic: sepet:ekle
 onManager("sepet:*", (m) => console.log(m.topic))`, run: () => <Lazy>{(api) => <ChannelDemo own={false} api={api} />}</Lazy> };
 export default example;

@@ -18,7 +18,7 @@ const example: ApiExample<any> = {
           {() => { const b = p.values.back, e = p.values.empty; return <ListDetail selected={sel} {...(b ? { onBack: () => sel.set(null) } : {})} listLabel="Siparişler"
             empty={e ? <Empty icon={inbox} title="Bir sipariş seç" /> : undefined}
             list={<div class="sc-ex-stack">{orders.map((o) => <Button variant={() => (sel()?.id === o.id ? "primary" : "ghost")} aria-pressed={() => String(sel()?.id === o.id)} onClick={() => sel.set(o)}>{o.id} · {o.who}</Button>)}</div>}
-            detail={() => <KeyValue items={() => (sel() ? { Sipariş: sel()!.id, Müşteri: sel()!.who, Tutar: sel()!.total } : {})} />} /> }}
+            detail={() => <KeyValue items={() => (sel() ? { "Sipariş": sel()!.id, "Müşteri": sel()!.who, "Tutar": sel()!.total } : {})} />} /> }}
         </div>
       },
     };

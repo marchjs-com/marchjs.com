@@ -42,7 +42,7 @@ export default examples({
         const log = useLog()
         return <div class="sc-ex-stack">
           {() => <Disclosure title="Teslimat ayrıntıları" open={p.values.open} onToggle={(o) => log.push(o ? "açıldı" : "kapandı")}>
-            <KeyValue items={{ Kargo: "HADİ Lojistik", Süre: "2 iş günü", Ücret: "Ücretsiz" }} />
+            <KeyValue items={{ "Kargo": "HADİ Lojistik", "Süre": "2 iş günü", "Ücret": "Ücretsiz" }} />
           </Disclosure>}
           <Log lines={log.lines} />
         </div>

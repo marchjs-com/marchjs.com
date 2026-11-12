@@ -8,7 +8,7 @@ import { lend } from "./_lend.tsx";
 function LoggerDemo() {
   const mem = memoryTransport(8)
   lend([logManager, { transports: [mem], level: "debug" }])
-  const log = logger().child("ödeme", { sepet: 3 })
+  const log = logger().child("ödeme", { cart: 3 })
   const level = signal<Level>("debug")
   return <div class="sc-ex-stack">
     <Row><Button onClick={() => log.info("ödendi", { tutar: 42, card: "4242 4242" })}>info</Button><Button variant="secondary" onClick={() => log.warn("yavaş yanıt")}>warn</Button><Button variant="secondary" onClick={() => log.error(new Error("Bağlantı koptu"))}>error</Button><Button variant="secondary" onClick={() => log.debug("ayrıntı")}>debug</Button></Row>

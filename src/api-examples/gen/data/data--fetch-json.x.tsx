@@ -4,6 +4,7 @@ import { signal } from "hadi-march";
 import { fetchJson } from "hadi-march/data";
 import { Out, Row } from "../../_kit.tsx";
 import { Button } from "hadi-march/ui";
+import { appUrl } from "hadi-march/base";
 import { usersUrl } from "./_users-url.tsx";
 import type { ApiExample } from "../../types.ts";
 import "../../data.css";
@@ -26,7 +27,7 @@ await fetchJson("/api/users", { method: "POST", body: { name: "Ada" } })
         return <div class="sc-ex-data-stack">
           <Row>
             <Button onClick={() => load(usersUrl())}>users.json oku</Button>
-            <Button variant="ghost" onClick={() => load(new URL("demo-api/yok.json", document.baseURI).href)}>Olmayan adres</Button>
+            <Button variant="ghost" onClick={() => load(appUrl("demo-api/yok.json"))}>Olmayan adres</Button>
           </Row>
           <Out label="sonuç" value={out} />
         </div>

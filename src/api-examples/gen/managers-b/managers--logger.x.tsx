@@ -3,7 +3,7 @@
 import { LoggerDemo } from "./_logger-demo.tsx";
 import type { ApiExample } from "../../types.ts";
 
-const example: ApiExample<any> = { code: `const log = logger().child("ödeme", { sepet: 3 })
+const example: ApiExample<any> = { code: `const log = logger().child("ödeme", { cart: 3 })
 log.info("ödendi", { tutar: 42, card: "4242…" })   // card gizlenir
 logger().setLevel("warn")`, run: () => <LoggerDemo /> };
 export default example;
