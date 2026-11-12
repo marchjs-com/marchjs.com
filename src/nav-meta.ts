@@ -7,6 +7,7 @@ export const SUB_PAGES: { path: string; title: string }[] = [
   { path: "/motion/svg", title: "SVG animasyonları" },
   { path: "/motion/morph", title: "Morph" },
   { path: "/motion/pages", title: "Sayfa geçişi efektleri" },
+  { path: "/motion/micro", title: "Mikro etkileşimler" },
 ]
 export const PAGE_META: Record<string, PageMeta> = {
   "/": { desc: "HADI March'a genel bakış", icon: dashboard },
@@ -23,6 +24,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/motion/svg": { desc: "Yol çizimi, şekil morph, yol boyunca, kırpma, SVG filtreleri", group: "Hareket", icon: activity },
   "/motion/morph": { desc: "Düğme → diyalog, kart → sayfa, paylaşılan öğe, ikon ve şekil morph", group: "Hareket", icon: layers },
   "/motion/pages": { desc: "Daire, silme, yığın, küp, çevir, perde, panjur, piksel, morph", group: "Hareket", icon: layers },
+  "/motion/micro": { desc: "Dalga, mıknatıs, eğim ve katman parallax, yaylı basma, durum morph", group: "Hareket", icon: zap },
   "/motion": { desc: "Yay, FLIP listeler, parallax, parçacık", group: "Hareket", icon: activity },
   "/messaging": { desc: "Habersiz bileşenler arası türlü kanallar, sekmeler arası", group: "Temel", icon: message },
   "/speed": { desc: "Tembel yükleme, ön yükleme ve önbellek: canlı ağ paneli", group: "Temel", icon: gauge },

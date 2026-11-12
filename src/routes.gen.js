@@ -13,6 +13,7 @@ export default {
   "/managers": () => import("./pages/managers.tsx"),
   "/messaging": () => import("./pages/messaging.tsx"),
   "/motion": () => import("./pages/motion.tsx"),
+  "/motion/micro": () => import("./pages/motion/micro.tsx"),
   "/motion/morph": () => import("./pages/motion/morph.tsx"),
   "/motion/pages": () => import("./pages/motion/pages.tsx"),
   "/motion/svg": () => import("./pages/motion/svg.tsx"),
