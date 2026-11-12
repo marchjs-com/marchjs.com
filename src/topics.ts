@@ -111,6 +111,22 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "profile-header", title: "ProfileHeader", desc: "Kapak, hikâye halkalı avatar, ad ve biyografi, sayaçlı istatistikler.", group: "Karmaşık bileşenler" },
     { slug: "follow-button", title: "FollowButton", desc: "Takip et → Takip ediliyor: genişlik yaylanır, dolgu çerçeveye döner, + tike çevrilir, dört renk parlar.", group: "Sosyal" },
   ],
+  "/layout": [
+    { slug: "canli-karsilastirma", title: "Canlı karşılaştırma", desc: "Kart sayısını, sütunu ve kapsayıcı genişliğini değiştir; seçili mod tam genişlikte, altında beşi yan yana.", group: "Örnekler" },
+    { slug: "bes-mod-yan-yana", title: "Beş mod yan yana", desc: "Aynı kart ve sütun sayısıyla; her kutu sabit bir sanal genişlikte (sütun başına 10rem) çizilip sığacak…", group: "Örnekler" },
+    { slug: "grid", title: "Grid", desc: "Sütun sayısı, son satırın davranışı ve dengeleme.", group: "Yerleşim" },
+    { slug: "stack", title: "Stack, Toolbar ve Divider", desc: "Satır ya da sütun, boşluk belirteçleri (0–8), hizalama ve satır kaydırma; etiketli araç çubuğu ve ayraçlar.", group: "Yerleşim" },
+    { slug: "spacer", title: "Spacer", desc: "Kendinden sonrakileri satırın mantıksal sonuna iter; RTL'de aynalanır.", group: "Yerleşim" },
+    { slug: "splitter", title: "Splitter", desc: "Tutamacı sürükleyin ya da odaklayıp ← → (RTL'de aynalı), Home / End; Enter başlangıç payına döndürür.", group: "Yerleşim" },
+    { slug: "accordion", title: "Accordion", desc: "Varsayılan tek açık bölüm; birden çok açık seçeneği, yükseklik animasyonu, başlıklar arasında ↑ ↓ Home End.", group: "Yerleşim" },
+    { slug: "disclosure", title: "Disclosure", desc: "Yerel details / summary üzerinde: klavye ve ekran okuyucu desteği hazır, açılıp kapanma animasyonlu.", group: "Yerleşim" },
+    { slug: "layout", title: "Layout", desc: "Değiştirilebilir sayfa çerçevesi", group: "Yerleşim" },
+    { slug: "bottom-right-controls", title: "Sayfa köşeleri", desc: "Sayfa çapı denetimler dört köşeden birine sırayla yerleşir, üst üste binmez; sağdan sola yazımda aynalanır.", group: "Yerleşim" },
+    { slug: "overlay-scope", title: "OverlayScope", desc: "İçinde açılan çekmece, pencere, menü ve bildirim bu kutuda kalır; kipli pencere yalnız kutuyu kilitler.", group: "Yerleşim" },
+    { slug: "window", title: "Window", desc: "Başlıktan sürükle; kenara bırakınca yarısına, üste bırakınca tamamına yerleşir; başlığa çift tıkla: alanı…", group: "Yerleşim" },
+    { slug: "device-preview", title: "DevicePreview", desc: "Telefon ve tablet kasası, çentik, durum çubuğu, gerçek ekran boyu, döndürme; fare parmak gibi:…", group: "Yerleşim" },
+    { slug: "app-shell", title: "AppShell", desc: "Kenar çubuğu sütunu, üst duyuru ve kayan ana alan; önce gelen 'İçeriğe geç' bağlantısı.", group: "Yerleşim" },
+  ],
 };
 
 /** Every topic as a sub page under its section (path, title, parent) for the routes, the breadcrumb and the menu. */
