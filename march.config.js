@@ -1,8 +1,13 @@
 // HADI March showcase: `node ../../cli/march.js dev` or `node build.mjs` (static, relative paths → dist/).
+import { readFileSync } from "node:fs";
+
+// every page of the menu (nav.ts), also the ones under a wildcard route (/motion/svg…): each gets its own index.html
+const NAV_PATHS = [...readFileSync(new URL("./src/nav.ts", import.meta.url), "utf8").matchAll(/path: "([^"]+)"/g)].map((m) => m[1]);
+
 export default {
   entry: "src/main.tsx",
   outdir: "dist",
-  base: "./", // relative asset URLs: the showcase is published under a sub-path
+  base: "./", // relative asset URLs: the same build works at a domain root, in a sub-folder, from files and in an artifact
   publicDir: "public",
   pagesDir: "src/pages",
   components: "src/components",
@@ -15,9 +20,9 @@ export default {
   stableNames: true,
   // no _headers file: the publishing host refuses names starting with "_" (caching is set on the host)
   headers: false,
-  // the start page is written into index.html at build time (hadi-march/seo); hash routing: other routes stay
-  // client-side, and main.tsx drops the prerendered page at once when the URL asks for another route
-  seo: { prerender: true },
+  // every page is written as <route>/index.html at build time (hadi-march/seo), so each opens directly on a static host
+  // without rewrites; addresses with params (/navigation/router/item/7) go through 404.html (docs/hosting.md)
+  seo: { prerender: true, routes: NAV_PATHS },
   // the build fails when the entry, a route or a lazy part (lazy() component, shell piece) grows past it
   // boot: the route table and the shell pieces load at start-up, so a route row counts only what its own navigation downloads
   // bootLimit: start-up as a whole; the packer folds shared code into start-up chunks only below it
@@ -32,7 +37,7 @@ export default {
     "src/router/outlets.ts": "named / modal outlets (1.8 KB, no dependencies): joining any page group would make it pull that page",
     "src/demo-code.tsx": "a demo card's Code tab (code widget + highlighter), loaded on the first click on Kod: inlined into the card it would load with every page",
     "src/shell-menu.tsx": "the side menu with its manifest, loaded on first idle by shell-nav: inlined into it, the menu would be part of start-up again",
-    "src/seo/hydrate.ts": "takes over the prerendered start page (1 KB): loaded only on that page, never with a page group",
+    "src/seo/hydrate.ts": "takes over a prerendered page (1 KB): loaded only on a page's first load, never with a page group",
     "src/pages/navigation.tsx": "page whose code is mostly shared (NavSidebar, router): any page group would push its route past the 60 KB budget",
     "src/components/composite/dock-layout/demo.tsx": "IDE shell component demo: loads with its card only (folded into the registry, every page with a component card would download it)",
     "src/components/actions/overflow-toolbar/demo.tsx": "IDE shell component demo: loads with its card only (folded into the registry, every page with a component card would download it)",

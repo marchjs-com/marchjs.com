@@ -3,13 +3,17 @@ import { Overlay, Button, TextInput, Card, Grid, toast } from "hadi-march/ui";
 import type { DrawFn } from "hadi-march/ui";
 import { Demo, Section } from "../demo.tsx";
 import { Playground } from "../playground.tsx";
+import { appUrl } from "hadi-march/base";
+
+// public files under the showcase's root (a relative "media/…" would resolve against the route's address)
+const DUSK = appUrl("media/dusk.jpg"), WAVES = appUrl("media/hadi-waves.webm"), WAVES_POSTER = appUrl("media/hadi-waves.jpg");
 
 const EFFECTS = ["glass", "gradient", "mesh", "noise", "vignette", "spotlight", "grid", "dots"] as const;
 const BLENDS = ["normal", "multiply", "screen", "overlay", "soft-light"] as const;
 /** Effect card preview: the effect itself on a small tile. */
 const effectPreview = (e: (typeof EFFECTS)[number]) => () => <span class="sc-ov-prev"><Overlay effect={e} /></span>;
 /** Blend tile preview: the same photo and colour layer, mixed with this mode (class, no inline style). */
-const blendPreview = (b: (typeof BLENDS)[number]) => () => <span class="sc-ov-blend"><img src="media/dusk.jpg" alt="" loading="lazy" decoding="async" /><span class={`sc-ov-blend-top sc-blend-${b}`} /></span>;
+const blendPreview = (b: (typeof BLENDS)[number]) => () => <span class="sc-ov-blend"><img src={DUSK} alt="" loading="lazy" decoding="async" /><span class={`sc-ov-blend-top sc-blend-${b}`} /></span>;
 
 /** HADİ four-color waves drawn on a canvas (theme colors, follows the pointer). */
 const waves: DrawFn = (ctx, { width: w, height: h, time, theme, pointer }) => {
@@ -50,7 +54,7 @@ export default function OverlayPage() {
   <h3>…</h3> <TextInput … /> <Button …>Katıl</Button>             // content stays on top and clickable
 </div>`}>
       <div class="sc-ov-hero">
-        <Overlay src="media/hadi-waves.webm" poster="media/hadi-waves.jpg" />
+        <Overlay src={WAVES} poster={WAVES_POSTER} />
         <Overlay effect="glass" inset={5} />
         <div class="sc-ov-hero-body">
           <h3 class="sc-ov-title">Topluluğa katıl</h3>
@@ -65,7 +69,7 @@ export default function OverlayPage() {
 
     <Demo wide title="Resim: cover / contain / fill" desc="Aynı resim üç sığdırma biçiminde; position ile odak noktası seçilir.">
       <Grid cols={3} gap={3} minCol="10rem">
-        {(["cover", "contain", "fill"] as const).map((fit) => <div class="sc-ov-tile"><Overlay src="media/dusk.jpg" fit={fit} /><code class="sc-ov-label">{fit}</code></div>)}
+        {(["cover", "contain", "fill"] as const).map((fit) => <div class="sc-ov-tile"><Overlay src={DUSK} fit={fit} /><code class="sc-ov-label">{fit}</code></div>)}
       </Grid>
     </Demo>
 
@@ -96,8 +100,8 @@ export default function OverlayPage() {
         {() => {
           const kind = $kind, fit = $fit as "cover", inset = $inset, opacity = $opacity / 100, blend = $blend, effect = $effect as "glass", front = $front
           return [
-            kind === "video" ? <Overlay src="media/hadi-waves.webm" poster="media/hadi-waves.jpg" fit={fit} inset={inset} opacity={opacity} blend={blend} front={front} />
-              : kind === "image" ? <Overlay src="media/dusk.jpg" fit={fit} inset={inset} opacity={opacity} blend={blend} front={front} />
+            kind === "video" ? <Overlay src={WAVES} poster={WAVES_POSTER} fit={fit} inset={inset} opacity={opacity} blend={blend} front={front} />
+              : kind === "image" ? <Overlay src={DUSK} fit={fit} inset={inset} opacity={opacity} blend={blend} front={front} />
               : kind === "svg" ? <Overlay svg={<Pattern />} inset={inset} opacity={opacity} blend={blend} front={front} />
               : kind === "canvas" ? <Overlay draw={waves} animate inset={inset} opacity={opacity} blend={blend} front={front} />
               : <Overlay effect={effect} inset={inset} opacity={opacity} blend={blend} front={front} />,

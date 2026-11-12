@@ -5,6 +5,7 @@ import type { RouteTarget } from "hadi-march/router";
 import { PAGES, SUB_PAGES } from "./nav.ts";
 import { SHELL, setPages } from "./app.tsx";
 import GEN from "./routes.gen.js";
+export { restoreFrameRoute } from "./frame-reload.ts";
 
 const ROUTER_DEMO = () => import("./router-demo/_layout.tsx");
 /** Lazy page loaders (path → module): generated from src/pages/ by `march gen routes` (a page file is the only line a
