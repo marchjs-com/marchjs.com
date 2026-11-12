@@ -1,0 +1,4 @@
+/* IDE kabuğu sayfası (Karmaşık bileşenler) */
+.sc-dock-stage { height: 26rem; min-width: 0; }
+.sc-dock-pane { display: grid; align-content: start; gap: .25rem; padding: .75rem 1rem; font-size: var(--hm-text-sm); }
+.sc-dock-pane p { margin: 0; white-space: pre; overflow: hidden; text-overflow: ellipsis; }

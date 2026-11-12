@@ -8,6 +8,7 @@ export default {
   "/forms": () => import("./pages/forms.tsx"),
   "/home": () => import("./pages/home.tsx"),
   "/icons": () => import("./pages/icons.tsx"),
+  "/ide": () => import("./pages/ide.tsx"),
   "/language": () => import("./pages/language.tsx"),
   "/layout": () => import("./pages/layout.tsx"),
   "/managers-data": () => import("./pages/managers-data.tsx"),
