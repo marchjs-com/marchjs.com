@@ -21,5 +21,6 @@ export default {
   "/overlay": () => import("./pages/overlay.tsx"),
   "/overlays": () => import("./pages/overlays.tsx"),
   "/speed": () => import("./pages/speed.tsx"),
+  "/start": () => import("./pages/start.tsx"),
   "/themes": () => import("./pages/themes.tsx"),
 };

@@ -10,6 +10,7 @@ import { PAGES } from "./nav.ts";
 /** Lazy page loaders (path → module). */
 export const LOADERS: Record<string, () => Promise<unknown>> = {
   "/": () => import("./pages/home.tsx"),
+  "/start": () => import("./pages/start.tsx"),
   "/themes": () => import("./pages/themes.tsx"),
   "/icons": () => import("./pages/icons.tsx"),
   "/buttons": () => import("./pages/buttons.tsx"),

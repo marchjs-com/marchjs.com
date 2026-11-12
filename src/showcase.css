@@ -311,3 +311,7 @@
 .sc-blend-screen { mix-blend-mode: screen; }
 .sc-blend-overlay { mix-blend-mode: overlay; }
 .sc-blend-soft-light { mix-blend-mode: soft-light; }
+/* "Şunlardan oluşur": the parts of a component (meta.composedOf), linked to their pages */
+.sc-parts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-2); margin: 0 0 var(--hm-space-3); font-size: var(--hm-text-sm); color: var(--hm-muted); }
+.sc-part { padding-block: 2px; padding-inline: var(--hm-space-2); border: 1px solid var(--hm-border-subtle); border-radius: var(--hm-radius-full); font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); color: var(--hm-text); text-decoration: none; transition: border-color var(--hm-dur-fast), color var(--hm-dur-fast); }
+a.sc-part:hover, a.sc-part:focus-visible { border-color: var(--hm-primary); color: var(--hm-primary-text); }

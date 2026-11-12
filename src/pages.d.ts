@@ -21,8 +21,9 @@ export interface PageParams {
   "/overlay": {  };
   "/overlays": {  };
   "/speed": {  };
+  "/start": {  };
   "/themes": {  };
 }
 declare module "hadi-march/router" {
-  interface Register { routes: "/animation" | "/buttons" | "/charts" | "/data" | "/feedback" | "/forms" | "/home" | "/icons" | "/ide" | "/language" | "/layout" | "/managers-data" | "/managers-ops" | "/managers" | "/messaging" | "/motion" | "/navigation" | "/network" | "/overlay" | "/overlays" | "/speed" | "/themes" }
+  interface Register { routes: "/animation" | "/buttons" | "/charts" | "/data" | "/feedback" | "/forms" | "/home" | "/icons" | "/ide" | "/language" | "/layout" | "/managers-data" | "/managers-ops" | "/managers" | "/messaging" | "/motion" | "/navigation" | "/network" | "/overlay" | "/overlays" | "/speed" | "/start" | "/themes" }
 }
