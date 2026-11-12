@@ -1,28 +1,36 @@
-// Router demo layout: kept alive while its pages change (type in the box, switch tabs: the text stays). A list whose
-// rows open in the named outlet "aside" (beside, in the URL) or as a modal route (over the page, back closes it).
-import { Outlet, Link } from "hadi-march/router";
-import { TextInput, Field, Badge } from "hadi-march/ui";
+// Router demo layout: the frame of this demo is built once and stays while its tabs change below it.
+// The counter counts how often the frame was built during this visit (it starts again when you leave the demo).
+import { Outlet, Link, path } from "hadi-march/router";
+import { onCleanup } from "hadi-march";
+import { TextInput, Field, Badge, Card, Grid } from "hadi-march/ui";
 import { Section } from "../demo.tsx";
-import { PEOPLE } from "./data.ts";
 
-let mounts = 0
+let builds = 0
 
 export default function RouterDemoLayout() {
-  mounts++
+  builds++
+  // leaving the demo (not just switching its tabs) starts a new visit
+  onCleanup(() => { setTimeout(() => { if (!path().startsWith("/navigation/router")) builds = 0 }, 0) })
   let $note = ""
-  return <Section kicker="Gezinme" title="Yönlendirici" lead="Kalıcı yerleşim: bu bölümün çerçevesi bir kez kurulur; alttaki sekme değişse de yerinde kalır. Kutuya bir şey yaz, sekme değiştir: metin silinmez. Satırları yanda (adlı outlet, adreste ?~aside=) ya da pencerede (modal rota, geri tuşu kapatır) aç. Üst çubuktaki düğmeleri sayfa kendisi gönderir (Portal), sayfadan çıkınca kalkar.">
-    <div class="sc-row">
-      <Field label="Not (yerleşimde, sekme değişince kalır)"><TextInput bind:value={$note} placeholder="Bir şey yaz…" /></Field>
-      <Badge tone="info">{`yerleşim kurulma sayısı: ${mounts}`}</Badge>
-    </div>
-    <nav class="hm-tabs-bar sc-row" aria-label="Demo sekmeleri">
+  return <Section kicker="Gezinme" title="Yönlendirici" lead="Bu sayfanın çerçevesi bir kez kurulur. Alttaki sekmeler değişince yalnız sekmenin içi değişir.">
+    <Card>
+      <Field label="Buraya yaz, sonra alttaki sekmeyi değiştir; yazdığın kalır (çerçeve yeniden kurulmaz).">
+        <TextInput bind:value={$note} placeholder="Bir şey yaz…" />
+      </Field>
+      <Badge tone="info">{`Çerçeve kaç kez kuruldu: ${builds}`}</Badge>
+    </Card>
+    <nav class="sc-row" aria-label="Demo sekmeleri">
       <Link href="/navigation/router" exact class="hm-btn hm-btn-secondary hm-btn-sm">Liste</Link>
       <Link href="/navigation/router/about" class="hm-btn hm-btn-secondary hm-btn-sm">Hakkında</Link>
     </nav>
     <div class="sc-router-cols">
       <div class="sc-router-pane"><Outlet /></div>
-      <div class="sc-router-pane"><Outlet name="aside" empty={<p class="hm-muted">Yanda açmak için bir satırdaki "Yanda aç"a bas.</p>} /></div>
+      <div class="sc-router-pane"><Outlet name="aside" empty={<p class="hm-muted">Yan panel boş. Listede "Yanda aç"a bas.</p>} /></div>
     </div>
-    <p class="hm-muted">{`${PEOPLE.length} kayıt. Kayıt sayfasını doğrudan açarsan (adres çubuğu, yenile) tam sayfa gelir.`}</p>
+    <Grid cols={3} gap={3} minCol="14rem">
+      <Card title="Yan panel"><p>"Yanda aç" kaydı sağdaki panelde açar; adres de değişir, paylaşınca aynı görünüm gelir.</p></Card>
+      <Card title="Pencerede açma"><p>"Pencerede aç" kaydı listenin üstünde açar; tarayıcının geri tuşu pencereyi kapatır.</p></Card>
+      <Card title="Üst çubuk düğmeleri"><p>Üst çubuktaki düğmeyi bu sekme koyar; başka sekmede ya da sayfada kalkar.</p></Card>
+    </Grid>
   </Section>
 }
