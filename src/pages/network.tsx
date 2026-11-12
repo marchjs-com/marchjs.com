@@ -10,14 +10,19 @@ import { net, Api, api, cache, timing, normalizeErrors, isAbort, ManagedSocket, 
 import { crud, reply, mockSocketServer, type MockController } from "hadi-march/net/mock";
 import { errors, ErrorPage, ErrorInline, type Captured } from "hadi-march/errors";
 import { Try } from "hadi-march";
+import { appUrl } from "hadi-march/base";
 import { Demo, Section } from "../demo.tsx";
 
 // ------------------------------------------------------------------ the app's API (one class) + the mock behind it
 interface User { id: string; name: string; email: string; role: string }
 interface Notice { topic: string; data: { id: number; text: string; at: string } }
 
+// public/demo-api under the showcase's root, on every route and under any base path (the mock answers the same paths)
+const API = appUrl("demo-api");
+const API_PATH = new URL(API).pathname;
+
 class UsersApi extends Api {
-  base = "demo-api";
+  base = API;
   category = "users";
   list = this.get<User[]>("/users.json");
   cached = this.get<User[]>("/users.json", { cache: "10s", category: "users-cached" });
@@ -28,20 +33,20 @@ class UsersApi extends Api {
 }
 const users = api(UsersApi);
 
-const people = crud<User & Record<string, unknown>>("/demo-api/users", (f) => f.list(12, (i) => {
+const people = crud<User & Record<string, unknown>>(`${API_PATH}/users`, (f) => f.list(12, (i) => {
   const name = f.name();
   return { id: String(i + 1), name, email: f.email(name), role: f.pick(["admin", "editor", "viewer"]) };
 }), { seed: 7 });
 const HANDLERS = {
   ...people,
   // the static file paths of the "real" mode, answered from the stateful list
-  "GET /demo-api/users.json": (r: { query: Record<string, string> }) => {
+  [`GET ${API_PATH}/users.json`]: (r: { query: Record<string, string> }) => {
     const q = (r.query["q"] ?? "").toLocaleLowerCase("tr");
     return people.rows().filter((u) => !q || u.name.toLocaleLowerCase("tr").includes(q) || u.email.includes(q));
   },
-  "GET /demo-api/me.json": () => reply(401, { message: "Oturum süresi doldu", code: "SESSION_EXPIRED" }),
-  "POST /demo-api/profile.json": (r: { body: { name?: string } }) => (r.body?.name ? { id: "1", name: r.body.name } : reply(422, { message: "Ad boş olamaz", fields: { name: "Zorunlu alan" } })),
-  "POST /demo-api/crash.json": () => reply(500, { message: "Veritabanı yanıt vermiyor" }),
+  [`GET ${API_PATH}/me.json`]: () => reply(401, { message: "Oturum süresi doldu", code: "SESSION_EXPIRED" }),
+  [`POST ${API_PATH}/profile.json`]: (r: { body: { name?: string } }) => (r.body?.name ? { id: "1", name: r.body.name } : reply(422, { message: "Ad boş olamaz", fields: { name: "Zorunlu alan" } })),
+  [`POST ${API_PATH}/crash.json`]: () => reply(500, { message: "Veritabanı yanıt vermiyor" }),
 };
 
 // module-level state: survives leaving and re-opening the page
@@ -276,7 +281,7 @@ net.pending("users")   // reactive count`}>
     </Demo>
     <Demo title="dedupe: 3 bileşen, 1 istek" desc="Aynı anahtar uçuştayken gelen istekler aynı yanıtı paylaşır; birinin iptali ötekileri bozmaz."
       code={`class UsersApi extends Api {
-  base = "demo-api"
+  base = appUrl("demo-api")   // public/demo-api, on every route
   list = this.get<User[]>("/users.json")   // GET → dedupe
 }
 const users = api(UsersApi)

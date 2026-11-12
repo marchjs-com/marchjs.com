@@ -112,7 +112,7 @@ hydrate(() => <Router />, document.getElementById("app"))
 
 // bir rotanın head'i
 createRouter({ routes: { "/product/:id": { load, head: (to) => ({ title: \`Ürün \${to.params.id}\` }) } } })`}>
-      <p class="hm-muted">Hash rotalarda zararsız: #/seo gibi başka bir rota açılırsa ön işlenmiş açılış sayfası hemen kaldırılır, yanlış içerik görünmez.</p>
+      <p class="hm-muted">Her rotanın kendi index.html dosyası var; adres başka bir rotayı gösterirse (404 yedeği, eski bir hash bağlantısı) ön işlenmiş içerik hemen kaldırılır, yanlış içerik görünmez.</p>
     </Demo>
   </Section>
 }

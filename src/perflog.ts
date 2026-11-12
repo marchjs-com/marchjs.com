@@ -2,6 +2,7 @@
 // loaded on, when, its size and where it came from (network, HTTP cache, service worker, preload). The Speed page shows
 // it live. Data only: no inline styles, no innerHTML.
 import { signal } from "hadi-march";
+import { appBase, appBaseUrl } from "hadi-march/base";
 import { measured, wireBytes, reportKey, type Timing } from "./netsize.ts";
 
 export interface NetEntry extends Timing {
@@ -18,10 +19,12 @@ export interface NetEntry extends Timing {
   ms: number;
 }
 
-const routes: Array<{ t: number; route: string }> = [{ t: 0, route: location.hash.slice(1) || "/" }];
-// the router navigates with history.pushState (no hashchange): the Navigation API sees every change, popstate /
+// the route of the address: /motion under the app's base, or #/motion where the router falls back to hash addresses
+const here = (): string => (/^#\//.test(location.hash) ? location.hash.slice(1).split("?")[0] ?? "/" : location.pathname.slice(appBase().length).replace(/\/(index\.html?)?$/, "").replace(/\/+$/, "")) || "/";
+const routes: Array<{ t: number; route: string }> = [{ t: 0, route: here() }];
+// the router navigates with history.pushState (no event): the Navigation API sees every change, popstate /
 // hashchange are the fallback
-const noteRoute = (): void => { const route = location.hash.slice(1).split("?")[0] || "/"; if (routes[routes.length - 1]!.route !== route) routes.push({ t: performance.now(), route }); };
+const noteRoute = (): void => { const route = here(); if (routes[routes.length - 1]!.route !== route) routes.push({ t: performance.now(), route }); };
 const nav = (globalThis as { navigation?: EventTarget }).navigation;
 if (nav) nav.addEventListener("currententrychange", noteRoute);
 addEventListener("hashchange", noteRoute);
@@ -45,7 +48,7 @@ function add(list: PerformanceEntryList): void {
     const cached = !sw && e.transferSize === 0 && measured(e);
     rows.push({
       t: Math.round(e.startTime), route: routeAt(e.startTime), file: url.pathname.split("/").pop() || url.pathname, kind: kindOf(url.pathname),
-      key: reportKey(e.name, document.baseURI), transferSize: e.transferSize, encodedBodySize: e.encodedBodySize, decodedBodySize: e.decodedBodySize, workerStart: e.workerStart,
+      key: reportKey(e.name, appBaseUrl()?.href ?? document.baseURI), transferSize: e.transferSize, encodedBodySize: e.encodedBodySize, decodedBodySize: e.decodedBodySize, workerStart: e.workerStart,
       bytes: measured(e) ? wireBytes(e) : 0, source: sw ? "service worker" : cached ? "önbellek" : "ağ",
       preload: preloaded(e.name), ms: Math.round(e.duration),
     });

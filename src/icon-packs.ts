@@ -2,6 +2,7 @@
 // `march icons gallery`), fetched when a pack is opened and kept for the visit. No JavaScript bundle carries icon data.
 import type { IconDef } from "hadi-march/icons";
 import { packIcon } from "hadi-march/icons/packs";
+import { appUrl } from "hadi-march/base";
 
 /** [name, export name, shapes, flags?, evenOdd?] — flags: 1 mirrors in RTL, 2 filled; evenOdd: shapes filled even-odd. */
 export type PackRow = [name: string, exp: string, d: string[], flags?: number, eo?: number[]];
@@ -16,7 +17,7 @@ const memo = new Map<string, Promise<unknown>>();
 function json<T>(file: string): Promise<T> {
   let p = memo.get(file) as Promise<T> | undefined;
   if (!p) {
-    p = fetch(`icon-packs/${file}`).then((r) => { if (!r.ok) throw new Error(`${file}: ${r.status}`); return r.json() as Promise<T> });
+    p = fetch(appUrl(`icon-packs/${file}`)).then((r) => { if (!r.ok) throw new Error(`${file}: ${r.status}`); return r.json() as Promise<T> });
     memo.set(file, p);
     p.catch(() => memo.delete(file)); // a failed load may be retried
   }

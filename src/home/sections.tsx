@@ -4,6 +4,7 @@
 import "./sections.css";
 import { reveal, inView, animate, tween, reducedMotion } from "hadi-march/motion";
 import { Link } from "hadi-march/router";
+import { appUrl } from "hadi-march/base";
 import { Button, CountRoll, MadeWithMarch, ThemeSwatch, colorThemes, colorTheme, setColorTheme, type IconTone } from "hadi-march/ui";
 import { Icon, activity, arrowRight, edit, film, gauge, globe, heart, layers, palette, eye, sliders, packageBox, panelLeft } from "hadi-march/icons";
 import { CATEGORIES } from "hadi-march/components/categories.ts";
@@ -197,7 +198,7 @@ function Performance(props: { report: () => Report | null }) {
 
 export default function HomeSections(props: { categories?: unknown; start?: unknown }) {
   let $report: Report | null = null
-  void fetch("march-report.json").then((r) => (r.ok ? r.json() : null)).then((x: Report | null) => { $report = x }, () => {})
+  void fetch(appUrl("march-report.json")).then((r) => (r.ok ? r.json() : null)).then((x: Report | null) => { $report = x }, () => {})
   const report = () => $report
   return <div class="sc-home-rest">
     <StatsBand report={report} />

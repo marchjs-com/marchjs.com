@@ -182,7 +182,7 @@ function AccessibilityDemo() {
     <img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="40" height="40" />
     <button type="button" class="hm-btn hm-btn-secondary hm-btn-sm"></button>
     <input class="hm-input" placeholder="etiketsiz alan" />
-    <a href="#/managers-a11y" tabindex="2">tabindex 2</a>
+    <a href="#sc-a11y-sample" tabindex="2">tabindex 2</a>
     <span id="sc-a11y-dup">a</span><span id="sc-a11y-dup">b</span>
   </div>) as HTMLElement
   const run = () => {

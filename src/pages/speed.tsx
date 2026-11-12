@@ -7,6 +7,7 @@ import { slow, SLOW_MS } from "../slow.ts";
 import { registerServiceWorker, unregisterServiceWorker, swState } from "hadi-march/sw";
 import { netLog, clearNetLog, type NetEntry } from "../perflog.ts";
 import { resolveSize, type FileSize } from "../netsize.ts";
+import { appUrl } from "hadi-march/base";
 import { Demo, Section } from "../demo.tsx";
 
 interface ReportRow { name: string; kind?: string; js: number; css: number; limit?: number | null; over?: boolean; files?: string[] }
@@ -47,7 +48,7 @@ const SW_TEXT: Record<string, string> = {
 export default function Speed() {
   let $report: Report | null = null
   let $reportError = ""
-  void fetch("march-report.json").then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status))))).then((x: Report) => { $report = x }, () => { $reportError = "Rapor yalnız derlenmiş vitrinde var (march build)." })
+  void fetch(appUrl("march-report.json")).then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status))))).then((x: Report) => { $report = x }, () => { $reportError = "Rapor yalnız derlenmiş vitrinde var (march build)." })
 
   const rows = (): NetEntry[] => netLog().filter((e) => e.kind !== "diğer")
   // measured by the browser when it may; otherwise (cross-origin without Timing-Allow-Origin: ~300 B of headers) the

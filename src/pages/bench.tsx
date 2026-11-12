@@ -4,6 +4,7 @@
 import { Button, Chip, Progress, Stack, toast } from "hadi-march/ui";
 import { lazy } from "hadi-march/lazy";
 import { query, setQuery } from "hadi-march/router";
+import { appUrl } from "hadi-march/base";
 import { OPS, stats, factor, rank, encodeResult, decodeResult, type RunResult, type Stats } from "../bench/core.ts";
 import { LIBS, BASELINE, libById } from "../bench/libs.ts";
 import { runBench, type Progress as RunProgress } from "../bench/runner.ts";
@@ -67,7 +68,7 @@ export default function Bench() {
   let stage!: HTMLDivElement
   let ctrl: AbortController | null = null
 
-  void fetch("march-report.json").then((r) => (r.ok ? r.json() : null)).then((x: { files?: Record<string, FileSize> } | null) => { if (x?.files) $sizes = chunkSizes(x.files) }, () => {})
+  void fetch(appUrl("march-report.json")).then((r) => (r.ok ? r.json() : null)).then((x: { files?: Record<string, FileSize> } | null) => { if (x?.files) $sizes = chunkSizes(x.files) }, () => {})
   // a shared link: #/bench?r=<deflated result>
   const shared = query().r
   if (shared) void decodeResult(shared).then((r) => { if (r) { $result = r; $shared = true; $view = OPS.find((o) => r.samples[BASELINE]?.[o.id]?.length)?.id ?? $view } else toast("Bağlantıdaki sonuç okunamadı", { kind: "warn" }) })
@@ -113,12 +114,12 @@ export default function Bench() {
   const share = async () => {
     if (!$result) return
     const r = await encodeResult($result)
-    const url = `${location.href.split("#")[0]}#/bench?r=${r}`
+    const url = `${appUrl("bench")}?r=${r}`
     await copy(url, "Paylaşılabilir bağlantı kopyalandı")
     void setQuery({ r })
   }
-  const loadSources = () => { if (!$sources) void fetch("bench/sources.json").then((r) => r.json()).then((x: Record<string, string>) => { $sources = x }, () => { $sources = {} }) }
-  const loadLicenses = () => { if (!$licenses) void fetch("bench/licenses.json").then((r) => r.json()).then((x: License[]) => { $licenses = x }, () => { $licenses = [] }) }
+  const loadSources = () => { if (!$sources) void fetch(appUrl("bench/sources.json")).then((r) => r.json()).then((x: Record<string, string>) => { $sources = x }, () => { $sources = {} }) }
+  const loadLicenses = () => { if (!$licenses) void fetch(appUrl("bench/licenses.json")).then((r) => r.json()).then((x: License[]) => { $licenses = x }, () => { $licenses = [] }) }
   const pct = () => ($progress && $progress.total ? Math.round(($progress.done / $progress.total) * 100) : 0)
 
   return <Section kicker="Hız" title="Karşılaştırma" lead="Aynı tablo uygulaması her kitaplıkla ayrı yazıldı ve senin tarayıcında, bu sayfada ölçülüyor. Her kitaplığın kodu yalnız onun testi başlayınca iner; sonuçlar bu cihaza ve tarayıcıya özgüdür. Değerler işlemin başlangıcından sonraki ilk boyamaya kadar geçen süredir; küçük olan daha hızlıdır.">
