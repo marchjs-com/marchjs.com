@@ -27,7 +27,7 @@ createRouter({
     "/navigation/router/item/:id": { load: () => import("./router-demo/item.tsx"), layouts: [SHELL] },
   },
   outlets: { aside: { "/item/:id": () => import("./router-demo/item.tsx") } },
-  title: (to: { path: string }) => { if (to.path.startsWith("/navigation/router")) return "Yönlendirici · HADI March"; const p = PAGES.find((x) => x.path === to.path); return p && p.path !== "/" ? `${p.title} · HADI March` : "HADI March · Vitrin"; },
+  title: (to: { path: string }) => { const t = to.path.startsWith("/navigation/router") ? "Yönlendirici" : to.path !== "/" && PAGES.find((x) => x.path === to.path)?.title; return t ? `${t} · HADI March` : "HADI March · Vitrin"; },
 });
 
 const el = document.getElementById("app");

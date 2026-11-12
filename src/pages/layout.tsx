@@ -15,9 +15,25 @@ function Tile(props: { n: number }) {
   return <div class="sc-tile"><Badge tone="primary">{props.n}</Badge><span>Kart {props.n}</span></div>
 }
 
+// Draws the grid at its virtual width and zooms it down to the frame, so container and viewport queries see the
+// virtual width (not the narrow card) and every mode keeps its own last row.
+function fitPreview(mini: HTMLElement) {
+  const fit = () => {
+    const frame = mini.parentElement
+    if (!frame) return
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
+    const cs = getComputedStyle(frame), room = frame.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)
+    const zoom = String(Math.min(1, Math.floor(room / (parseFloat(mini.style.width) * rem) * 1000) / 1000))
+    if (room > 0 && mini.style.getPropertyValue("zoom") !== zoom) mini.style.setProperty("zoom", zoom)
+  }
+  new MutationObserver(fit).observe(mini, { attributes: true, attributeFilter: ["style"] })
+  queueMicrotask(() => { if (mini.parentElement) new ResizeObserver(fit).observe(mini.parentElement); fit() })
+}
+
 export default function Layout() {
-  let $count = 5
-  let $cols = "4"
+  // 7 cards in 5 columns: the only small setup where all five modes end differently (5+2, halves, one wide, 4+3, thirds)
+  let $count = 7
+  let $cols = "5"
   let $width = 100
   let $mode = "stretch"
   const grid = (mode: string) => {
@@ -45,9 +61,11 @@ export default function Layout() {
       </div>
       <div class={() => `sc-grid-frame sc-w-${$width}`}>{() => grid($mode)}</div>
     </Demo>
-    <Demo wide title="Beş mod yan yana" desc="Aynı kart ve sütun sayısıyla.">
+    <Demo wide title="Beş mod yan yana" desc="Aynı kart ve sütun sayısıyla; her kutu sabit bir sanal genişlikte (sütun başına 10rem) çizilip sığacak kadar küçültülür, böylece son satır farkı her ekranda görünür. Tek kart artınca stretch ile last aynı görünür; fark iki ve daha fazla artan kartta.">
       <div class="sc-grid-compare">
-        {MODES.map((m) => <Card title={m.label}><div class={() => `sc-grid-frame sc-w-${$width}`}>{() => grid(m.value)}</div></Card>)}
+        {MODES.map((m) => <Card title={m.label}><div class="sc-grid-frame">
+          <div class="sc-mini" ref={fitPreview} style={() => ({ width: `${Number($cols) * 10}rem` })}>{() => grid(m.value)}</div>
+        </div></Card>)}
       </div>
     </Demo>
   </Section>
