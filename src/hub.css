@@ -18,8 +18,13 @@
 /* a topic page: the demo's own heading repeats the page title, so a lone demo shows only its description */
 .sc-topic-body { display: flex; flex-direction: column; gap: var(--hm-space-5); min-inline-size: 0; }
 .sc-topic-body > .sc-demo:only-child .sc-demo-title { display: none; }
-.sc-topic-pager { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--hm-space-3); margin-block-start: var(--hm-space-4);
-  padding-block-start: var(--hm-space-5); border-block-start: 1px solid var(--hm-border-subtle); }
+/* a topic page fills the screen; the previous / next bar sits at the bottom of the screen at any content height, and
+   the content scrolls above it */
+.sc-page:has(> .sc-demos > .sc-topic-pager) { min-block-size: calc(100dvh - var(--hm-topbar-h, 3.5rem)); padding-block-end: 0; box-sizing: border-box; }
+.sc-demos:has(> .sc-topic-pager) { flex: 1; grid-template-rows: 1fr auto; }
+.sc-topic-pager { position: sticky; inset-block-end: 0; z-index: 5; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--hm-space-3);
+  margin-inline: calc(var(--hm-space-6) * -1); padding: var(--hm-space-3) var(--hm-space-6); border-block-start: 1px solid var(--hm-border-subtle);
+  background: color-mix(in srgb, var(--hm-bg) 90%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .sc-topic-step { display: inline-flex; align-items: center; gap: var(--hm-space-2); color: var(--hm-text); text-decoration: none; }
 .sc-topic-step span { display: flex; flex-direction: column; }
 .sc-topic-step small { color: var(--hm-muted); font-size: var(--hm-text-xs); }
@@ -27,4 +32,4 @@
 .sc-topic-next { justify-self: end; text-align: end; }
 .sc-topic-all { color: var(--hm-muted); font-size: var(--hm-text-sm); }
 .sc-topic-step .hm-svg:dir(rtl) { scale: -1 1; }
-@media (max-width: 600px) { .sc-topic-pager { grid-template-columns: 1fr 1fr; } .sc-topic-all { grid-column: 1 / -1; grid-row: 2; justify-self: center; } }
+@media (max-width: 640px) { .sc-topic-pager { grid-template-columns: 1fr 1fr; margin-inline: calc(var(--hm-space-4) * -1); padding-inline: var(--hm-space-4); } .sc-topic-all { grid-column: 1 / -1; grid-row: 2; justify-self: center; } }
