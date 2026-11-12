@@ -33,9 +33,6 @@ const blockName = (folder: string): string => folder.split("-").map((w) => w[0]!
 
 function Blocks() {
   return <Section kicker="Bileşenler" title="Web siteleri" lead="Tanıtım, ana sayfa, portfolyo ve sunum için bloklar. Her blok mevcut bileşenlerden kurulur, hareket motoruyla canlanır, temaya, RTL'ye ve dile uyar. Yalnız kullanılan blok derlenir.">
-    <div class="sc-samples">
-      {SAMPLES.map((s) => <Link class="sc-sample" href={`/web/${s.view}` as never}><strong>{s.title}</strong><span>{s.desc}</span></Link>)}
-    </div>
     <ComponentDemo folder="landing/hero" title="Hero" desc="Yedi görünüm, tek yapı: üst etiket, gradyan vurgulu başlık, açıklama, eylemler. Ürün varyantında kare kaydırdıkça düzleşir; parallax'ta katmanlar farklı hızda kayar." />
     <ComponentDemo folder="landing/site-nav" title="Site menüsü" desc="Saydamdan cama geçen, kaydırınca küçülen ya da yüzen hap görünümlü üst çubuk. Bağlantıların altında hap kayar; dar ekranda menü çekmeceye taşınır." />
     <ComponentDemo folder="landing/feature-grid" title="Özellik ızgarası" desc="Kartlar (imleç ışığıyla), sade, liste ya da bento. Kartlar sırayla belirir; bir satırdaki kutular eşit boyludur." />
