@@ -1,6 +1,6 @@
 // Navigation: NavSidebar — title, a "search or ask" box (Ctrl K), a featured item with a live badge, recent items,
 // collapsible categories (with counts, "expand/collapse all"). The showcase's own side menu is the same component.
-import { NavSidebar, Button, Card, Kbd, Stack, OverflowText, Marquee, Segmented, Toggle, Field, Slider } from "hadi-march/ui";
+import { NavSidebar, Button, Card, Kbd, Stack, Segmented, Toggle, Field, Slider } from "hadi-march/ui";
 import {
   inbox, users, crown, shieldCheck, hourglass, wallet, diamond, receipt, creditCard, image, flag, eye, barChart, gauge, globe, settings, store, truck, packageBox, plus, minus,
 } from "hadi-march/icons";
@@ -8,14 +8,8 @@ import { Demo, Section } from "../demo.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
 import { Playground } from "../playground.tsx";
 import { Link } from "hadi-march/router";
+import "./navigation.css";
 
-const SAMPLES = [
-  ["TR", "Haftalık etkinlik özeti: Kadıköy koşu grubu, Moda sahili buluşması ve akşam yemeği"],
-  ["EN", "Weekly digest: Saturday running club, beach clean-up meetup and the community dinner"],
-  ["AR", "ملخص الأسبوع: نادي الجري يوم السبت، لقاء تنظيف الشاطئ وعشاء المجتمع"],
-  ["Karışık", "HADİ Sosyal — مرحبا بكم في المجتمع — welcome to the community"],
-  ["Kısa", "Sığan metin kaymaz"],
-] as const
 const CATEGORY_ICONS = { "Üyeler ve roller": users, "Ekonomi ve ödemeler": wallet, "İçerik ve moderasyon": image, "Raporlar ve analiz": barChart, "Mağaza ve ticaret": store }
 const ITEMS = [
   { id: "owners", label: "Yöneticiler", icon: crown, group: "Üyeler ve roller" },
@@ -39,14 +33,12 @@ const ITEMS = [
 export default function Navigation() {
   let $waiting = 0
   let $picked = "—"
-  let $trigger = "hover"
   let $resizable = true
   let $collapse = true
   let $startWidth = 280
   let $minWidth = 200
   let $maxWidth = 440
   let $liveWidth = 280
-  let $mode = "bounce"
   const items = ITEMS.map((x) => ({ ...x, onSelect: () => { $picked = x.label } }))
   const featured = [{ id: "support", label: "Destek talepleri", icon: inbox, badge: () => $waiting,
     sub: () => ($waiting ? `${$waiting} talep yanıt bekliyor` : "Yanıt bekleyen talep yok"), onSelect: () => { $picked = "Destek talepleri" } }]
@@ -105,24 +97,14 @@ export default function Navigation() {
       </Playground>
     </Demo>
 
-    <Demo wide title="Taşan metin: OverflowText ve Marquee" desc="Yalnız sığmayan metin kayar; sığan metin yerinde durur. Kenarlar mantıksal yönde solar; Arapça (RTL) ters yöne kayar; ekran okuyucu metni bir kez okur; azaltılmış harekette kaymaz, uç solar ve tam metin ipucunda. Yukarıdaki kenar çubuğunda uzun öğenin üzerine gel."
-      code={`<OverflowText text={title} />                         // hover + odak, gidip gelir
-<OverflowText trigger="visible" mode="loop" text={…} />  // endless ticker while visible
-<OverflowText trigger="always" mode="once" speed={60} pause={800} />
-<Marquee text="Duyuru · …" separator="✦" />          // trigger=visible, mode=loop`}>
-      <Playground options={[
-        { label: "Tetik (trigger)", get: () => $trigger, set: (v: string) => { $trigger = v }, options: ["hover", "focus", "always", "visible"] },
-        { label: "Mod", get: () => $mode, set: (v: string) => { $mode = v }, options: ["bounce", "loop", "once"] },
-      ]}>
-      {() => { const trigger = $trigger as "hover", mode = $mode as "bounce"; return <div class="sc-mq-list">
-        {SAMPLES.map(([lang, text]) => <button type="button" class="sc-mq-row"><span class="sc-mq-lang">{lang}</span><OverflowText class="sc-mq-text" text={text} trigger={trigger} mode={mode} /></button>)}
-      </div> }}
-      </Playground>
-      <div class="sc-mq-ticker"><Marquee text="Yeni: HADİ March vitrini · Grid fill ve balance · Taşan metin · Dört resmi renk" separator="✦" speed={50} /></div>
-    </Demo>
     <ComponentDemo folder="composite/nav-sidebar" title="NavSidebar: seçenekler" desc="Karmaşık bileşen: kategori sırası, ilk açılışta hangi kategorilerin açık olduğu, ikon rayına daraltma ve son kullanılanlar sayısı. Parçaları aşağıdaki satırda, her biri kendi sayfasına bağlı." />
     <ComponentDemo folder="composite/bottom-nav" title="BottomNav: mobil sekme çubuğu" desc="Etkin sekmeye kayan renkli baloncuk, sayı ve nokta rozetleri, ortada dört HADİ rengiyle dönen halkalı Oluştur düğmesi. Sohbet sekmesine geçince rozet sıfırlanır; Oluştur rozeti artırır." />
     <ComponentDemo folder="navigation/stepper" title="Stepper: morph geçişli adımlar" desc="Vurgu eski adımdan yenisine sıvı gibi uzayıp oturur; adım içeriği gidiş yönüne göre bulanıklaşıp kayarak değişir (RTL'de aynalı), çerçeve yüksekliği izler. Adıma tıklayın ya da Geri / İleri." />
     <ComponentDemo folder="feedback/pull-to-refresh" title="PullToRefresh: çekerek yenile" desc="Listenin en üstünde aşağı çekin (dokunma ya da fare). Eşiği geçince bırakın: gösterge döner, yenileme bitince içerik yerine oturur. Klavyede Tab ile gelen Yenile düğmesi aynı işi yapar." />
+    <ComponentDemo folder="navigation/tabs" title="Tabs: sekmeli paneller" desc="Ok tuşlarıyla gezinme (RTL'de aynalı), sayı rozeti, devre dışı sekme; yalnız etkin panel çizilir. Üyeler sekmesindeki daveti onaylayınca rozet azalır." />
+    <ComponentDemo folder="navigation/steps" title="Steps: aşamalar" desc="Biten adımlar onaylı, geçerli adım vurgulu. onSelect verilince her adım bir düğme; dikey düzende açıklamalar alt alta." />
+    <ComponentDemo folder="navigation/pagination" title="Pagination: sayfalama" desc="İlk ve son sayfa, geçerli sayfa ve komşuları görünür; aradakiler üç noktaya katlanır. Önceki / Sonraki uçlarda devre dışı." />
+    <ComponentDemo folder="navigation/nav-menu" title="NavMenu: uygulama menüsü" desc="Gruplar, sabitlenen ve son kullanılan öğeler, süzme kutusu, ikon rayı. Dar ekranda menü düğmesiyle açılan çekmece olur." />
+    <ComponentDemo folder="typography/overflow-text" title="Taşan metin: OverflowText ve Marquee" desc="Yalnız sığmayan metin kayar; sığan metin yerinde durur. Kenarlar mantıksal yönde solar; Arapça (RTL) ters yöne kayar; ekran okuyucu metni bir kez okur; azaltılmış harekette kaymaz." />
   </Section>
 }

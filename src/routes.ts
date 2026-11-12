@@ -2,9 +2,8 @@
 // the shell pieces), not part of the entry: adding a page adds a line here and a chunk, never entry bytes
 // (test/entry-pages.test.js checks it).
 import type { RouteTarget } from "hadi-march/router";
-import { PAGES } from "./nav.ts";
+import { PAGES, SUB_PAGES } from "./nav.ts";
 import { SHELL, setPages } from "./app.tsx";
-import { PAGE_META, SUB_PAGES } from "./nav-meta.ts";
 import GEN from "./routes.gen.js";
 
 const ROUTER_DEMO = () => import("./router-demo/_layout.tsx");
@@ -28,6 +27,7 @@ export const ROUTES = {
 export const OUTLETS = { aside: { "/item/:id": () => import("./router-demo/item.tsx") } };
 
 const titleOf = (p: string): string | undefined => (p.startsWith("/navigation/router") ? ROUTER_TITLE : (PAGES.find((x) => x.path === p) ?? SUB_PAGES.find((x) => p === x.path || p.startsWith(`${x.path}/`)))?.title);
-setPages([...PAGES.map((p) => ({ ...p, ...PAGE_META[p.path] })), ...SUB_PAGES.map((p) => ({ ...p, ...PAGE_META[p.path], sub: true }))], titleOf);
+// paths and titles only: descriptions, groups and icons (nav-meta.ts) load with the side menu, not at start-up
+setPages([...PAGES, ...SUB_PAGES.map((p) => ({ ...p, sub: true }))], titleOf);
 /** Document title of a route. */
 export const pageTitle = (to: RouteTarget): string => { const t = to.path !== "/" && titleOf(to.path); return t ? `${t} · HADI March` : "HADI March · Vitrin"; };
