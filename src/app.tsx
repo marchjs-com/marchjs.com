@@ -30,6 +30,7 @@ export const LOADERS: Record<string, () => Promise<unknown>> = {
   "/managers": () => import("./pages/managers.tsx"),
   "/managers-data": () => import("./pages/managers-data.tsx"),
   "/managers-ops": () => import("./pages/managers-ops.tsx"),
+  "/flow": () => import("./pages/flow.tsx"),
 };
 
 const ShellNav = lazy(() => import("./shell-nav.tsx"), { fallback: () => <div class="sc-nav-placeholder" aria-hidden="true" /> })

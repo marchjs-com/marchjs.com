@@ -3,7 +3,7 @@
 //     phone), so options appearing or going never move the stage;
 //   - no drop-down for a few values: choices go through ChoicePicker (2–6 → Segmented, more → chips, `preview` →
 //     preview cards, kind "grid" → square tiles, 10+ → Combobox); booleans are switches, numbers sliders.
-import { ChoicePicker, Toggle, Slider, Field, type PickerKind } from "hadi-march/ui";
+import { ChoicePicker, Toggle, Slider, FieldFrame, type PickerKind } from "hadi-march/ui";
 import { untrack } from "hadi-march";
 
 export interface PlayOption {
@@ -26,8 +26,8 @@ export interface PlayOption {
 
 function control(o: PlayOption): unknown {
   const set = o.set as (v: unknown) => void;
-  if (o.options) return <Field label={o.label}><ChoicePicker value={o.get()} onChange={set} options={o.options} kind={o.kind} /></Field>
-  if (o.min != null && o.max != null) return <Field label={`${o.label}: ${String(o.get())}${o.unit ?? ""}`}><Slider value={o.get() as number} onChange={set} min={o.min} max={o.max} step={o.step ?? 1} /></Field>
+  if (o.options) return <FieldFrame label={o.label}><ChoicePicker value={o.get()} onChange={set} options={o.options} kind={o.kind} /></FieldFrame>
+  if (o.min != null && o.max != null) return <FieldFrame label={`${o.label}: ${String(o.get())}${o.unit ?? ""}`}><Slider value={o.get() as number} onChange={set} min={o.min} max={o.max} step={o.step ?? 1} /></FieldFrame>
   return <Toggle value={!!o.get()} onChange={set} label={o.label} />
 }
 

@@ -121,6 +121,7 @@ export default function Navigation() {
       <div class="sc-mq-ticker"><Marquee text="Yeni: HADİ March vitrini · Grid fill ve balance · Taşan metin · Dört resmi renk" separator="✦" speed={50} /></div>
     </Demo>
     <ComponentDemo folder="composite/bottom-nav" title="BottomNav: mobil sekme çubuğu" desc="Etkin sekmeye kayan renkli baloncuk, sayı ve nokta rozetleri, ortada dört HADİ rengiyle dönen halkalı Oluştur düğmesi. Sohbet sekmesine geçince rozet sıfırlanır; Oluştur rozeti artırır." />
+    <ComponentDemo folder="navigation/stepper" title="Stepper: morph geçişli adımlar" desc="Vurgu eski adımdan yenisine sıvı gibi uzayıp oturur; adım içeriği gidiş yönüne göre bulanıklaşıp kayarak değişir (RTL'de aynalı), çerçeve yüksekliği izler. Adıma tıklayın ya da Geri / İleri." />
     <ComponentDemo folder="feedback/pull-to-refresh" title="PullToRefresh: çekerek yenile" desc="Listenin en üstünde aşağı çekin (dokunma ya da fare). Eşiği geçince bırakın: gösterge döner, yenileme bitince içerik yerine oturur. Klavyede Tab ile gelen Yenile düğmesi aynı işi yapar." />
   </Section>
 }
