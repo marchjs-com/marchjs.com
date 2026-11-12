@@ -45,7 +45,7 @@ await net.get("/todos", { query: { q: "süt" } })`,
         const n = mockNet(todos, 80), list = signal<{ id: string; title: string }[]>([]), title = signal("Ekmek al")
         const refresh = () => n.get<{ id: string; title: string }[]>("/todos", { policy: "parallel" }).then((l) => list.set(l))
         void refresh()
-        return <div class="sc-stack"><Row><Text label="Başlık" value={title} /><Button onClick={() => n.post("/todos", { title: title() }).then(refresh)}>Ekle</Button></Row>
+        return <div class="sc-ex-stack"><Row><Text label="Başlık" value={title} /><Button onClick={() => n.post("/todos", { title: title() }).then(refresh)}>Ekle</Button></Row>
           <ul class="sc-ex-net-tags" aria-label="Görevler">{() => list().map((t) => <li>{t.title} <Button size="sm" variant="ghost" aria-label={`${t.title} sil`} onClick={() => n.delete(`/todos/${t.id}`).then(refresh)}>×</Button></li>)}</ul></div>
       },
     },
@@ -56,7 +56,7 @@ f.list(3, () => ({ id: f.id(), email: f.email() }))`,
       run: () => {
         const seed = signal(7)
         const rows = () => { const f = fake(seed()); return f.list(3, () => { const name = f.name(); return `${name} · ${f.email(name)} · ${f.date(30)}` }) }
-        return <div class="sc-stack"><Row>{[1, 7, 42].map((s) => <Button variant={() => (seed() === s ? "primary" : "secondary")} onClick={() => seed.set(s)}>{`seed ${s}`}</Button>)}</Row><Tags label="Sahte veri" items={rows} /></div>
+        return <div class="sc-ex-stack"><Row>{[1, 7, 42].map((s) => <Button variant={() => (seed() === s ? "primary" : "secondary")} onClick={() => seed.set(s)}>{`seed ${s}`}</Button>)}</Row><Tags label="Sahte veri" items={rows} /></div>
       },
     },
     fromOpenApi: {
@@ -64,7 +64,7 @@ f.list(3, () => ({ id: f.id(), email: f.email() }))`,
 net.mock(handlers)   // net.mock(openapiDoc) does the same`,
       run: () => {
         const h = fromOpenApi(PETS), n = mockNet(h, 80), out = signal("—")
-        return <div class="sc-stack"><Tags label="Rotalar" items={() => Object.keys(h)} />
+        return <div class="sc-ex-stack"><Tags label="Rotalar" items={() => Object.keys(h)} />
           <Row><Button onClick={() => n.get("/pets", { policy: "parallel" }).then((r) => out.set(J(r)))}>GET /pets</Button><Button variant="ghost" onClick={() => n.get("/pets/3", { policy: "parallel" }).then((r) => out.set(J(r)))}>GET /pets/3</Button></Row><Pre text={out} /></div>
       },
     },
@@ -78,7 +78,7 @@ m.restore()                 // back to the real transport`,
         onCleanup(() => m.restore())
         const setRate = (r: number) => { rate.set(r); m.set({ errorRate: r }) }
         const go = () => n.get<{ name: string }>("/me", { policy: "parallel", retry: 0, report: false }).then((u) => log.push(`✓ ${u.name}`), (e) => log.push(`✖ ${msg(e)}`))
-        return <div class="sc-stack"><Row><Button onClick={go}>GET /me</Button>{[0, 0.5].map((r) => <Button variant={() => (rate() === r ? "primary" : "ghost")} onClick={() => setRate(r)}>{`hata %${r * 100}`}</Button>)}
+        return <div class="sc-ex-stack"><Row><Button onClick={go}>GET /me</Button>{[0, 0.5].map((r) => <Button variant={() => (rate() === r ? "primary" : "ghost")} onClick={() => setRate(r)}>{`hata %${r * 100}`}</Button>)}
           <Out label="Yanıtlanan" value={m.transport.hits} /></Row><Log lines={log} /></div>
       },
     },
@@ -106,7 +106,7 @@ srv.publish("/prices", "EURTRY", 36.1)   // to subscribers of the topic`,
         const off = s.subscribe("EURTRY", (m) => log.push(`EURTRY ${m.data.toFixed(2)}`))
         onCleanup(() => { off(); s.close() })
         const pub = () => { price.update((p) => p + 0.13); log.push(`publish → ${srv.publish("/prices", "EURTRY", price.peek())} istemci`) }
-        return <div class="sc-stack"><Row><Button onClick={pub}>Yayınla</Button><Button variant="ghost" onClick={() => srv.drop("/prices")}>Bağlantıları düşür</Button><Out label="Durum" value={() => s.state()} /></Row><Log lines={log} /></div>
+        return <div class="sc-ex-stack"><Row><Button onClick={pub}>Yayınla</Button><Button variant="ghost" onClick={() => srv.drop("/prices")}>Bağlantıları düşür</Button><Out label="Durum" value={() => s.state()} /></Row><Log lines={log} /></div>
       },
     },
     MockTransport: {
@@ -136,7 +136,7 @@ t.set({ delay: 2000 })   // slow network at run time`,
 r()   // 0.6011… — the same sequence for the same seed`,
       run: () => {
         const seed = signal("42")
-        return <div class="sc-stack"><Text label="Tohum" value={seed} /><Tags label="Sayılar" items={() => { const r = rng(Number(seed()) || 0); return [1, 2, 3, 4, 5].map(() => r().toFixed(4)) }} /></div>
+        return <div class="sc-ex-stack"><Text label="Tohum" value={seed} /><Tags label="Sayılar" items={() => { const r = rng(Number(seed()) || 0); return [1, 2, 3, 4, 5].map(() => r().toFixed(4)) }} /></div>
       },
     },
     sample: {
@@ -145,7 +145,7 @@ r()   // 0.6011… — the same sequence for the same seed`,
       run: () => {
         const seed = signal(1)
         const schema = { type: "object", properties: { id: { type: "integer", minimum: 1, maximum: 500 }, name: { type: "string" }, email: { type: "string", format: "email" }, joined: { type: "string", format: "date" }, plan: { type: "string", enum: ["free", "pro", "team"] } } }
-        return <div class="sc-stack"><Row><Button onClick={() => seed.update((s) => s + 1)}>Yeni tohum</Button><Out label="seed" value={seed} /></Row><Pre text={() => J(sample(schema, {}, fake(seed())))} /></div>
+        return <div class="sc-ex-stack"><Row><Button onClick={() => seed.update((s) => s + 1)}>Yeni tohum</Button><Out label="seed" value={seed} /></Row><Pre text={() => J(sample(schema, {}, fake(seed())))} /></div>
       },
     },
   },
@@ -169,7 +169,7 @@ r()   // 0.6011… — the same sequence for the same seed`,
           const ok = "serviceWorker" in navigator && /^https?:$/.test(location.protocol)
           plan.set(ok ? `kaydedilecek: ${new URL("sw.js", location.href).pathname} (burada çağrılmadı)` : "desteklenmiyor → null döner")
         }
-        return <div class="sc-stack"><Row><Button onClick={dry}>Kuru deneme</Button><Out label="Parametre sayısı" value={String(registerServiceWorker.length)} /><Out label="swState" value={swState} /></Row><Out label="Plan" value={plan} /></div>
+        return <div class="sc-ex-stack"><Row><Button onClick={dry}>Kuru deneme</Button><Out label="Parametre sayısı" value={String(registerServiceWorker.length)} /><Out label="swState" value={swState} /></Row><Out label="Plan" value={plan} /></div>
       },
     },
     swState: {
@@ -184,7 +184,7 @@ toast("Çevrimdışı veriler silindi")`,
         const names = signal<string[]>([])
         const look = async () => { const all = globalThis.caches ? await caches.keys() : []; names.set(all.filter((k) => k.startsWith("march-")).concat(all.some((k) => k.startsWith("march-")) ? [] : ["(march-* önbelleği yok)"])) }
         void look()
-        return <div class="sc-stack"><Row><Button variant="ghost" onClick={look}>Yenile</Button><Out label="Silinecekler" value={() => `${names().length} kayıt`} /><Out label="İşlev" value={typeof unregisterServiceWorker} /></Row><Tags label="Önbellekler" items={names} /></div>
+        return <div class="sc-ex-stack"><Row><Button variant="ghost" onClick={look}>Yenile</Button><Out label="Silinecekler" value={() => `${names().length} kayıt`} /><Out label="İşlev" value={typeof unregisterServiceWorker} /></Row><Tags label="Önbellekler" items={names} /></div>
       },
     },
   },
@@ -200,7 +200,7 @@ toast("Çevrimdışı veriler silindi")`,
           try { emitError(new AppError("Senkron başarısız", { type: "server" })) } finally { restoreSink(had) }
           log.push(`önceki toplayıcı ${had ? "geri kondu" : "yoktu, yine yok"}`)
         }
-        return <div class="sc-stack"><Button onClick={go}>emitError()</Button><Log lines={log} /></div>
+        return <div class="sc-ex-stack"><Button onClick={go}>emitError()</Button><Log lines={log} /></div>
       },
     },
     ErrorInline: {
@@ -212,7 +212,7 @@ toast("Çevrimdışı veriler silindi")`,
         const show = () => errors.inline(target).set(new AppError(p.values.type === "conflict" ? "Profil başka bir sekmede değişti" : "Profil kaydedilemedi", { type: p.values.type, context: { target, ...(p.values.fields ? { fields: { email: "Geçerli bir e-posta girin", phone: "En az 10 hane" } } : {}) } }))
         effect(() => { p.values.type; p.values.fields; if (errors.inline(target).peek()) show() })
         onCleanup(() => errors.clear({ target }))
-        return <div class="sc-stack"><ErrorInline target={target} /><Row><Button onClick={show}>Hatayı göster</Button></Row></div>
+        return <div class="sc-ex-stack"><ErrorInline target={target} /><Row><Button onClick={show}>Hatayı göster</Button></Row></div>
       },
     },
     ErrorPage: {
@@ -224,7 +224,7 @@ toast("Çevrimdışı veriler silindi")`,
         const show = () => errors.page.set(new AppError("Sayfa açılamadı", { type: p.values.type, status: { auth: 401, server: 503, notFound: 404 }[p.values.type], context: p.values.retry ? { retry: () => tries.update((x) => x + 1) } : {} }))
         effect(() => { p.values.type; p.values.retry; if (errors.page.peek()) show() })
         onCleanup(() => errors.clear("page"))
-        return <div class="sc-stack"><Row><Button onClick={show}>Hata sayfasını göster</Button><Out label="Yeniden deneme" value={tries} /></Row>
+        return <div class="sc-ex-stack"><Row><Button onClick={show}>Hata sayfasını göster</Button><Out label="Yeniden deneme" value={tries} /></Row>
           <ErrorPage><p class="hm-muted">Sayfa içeriği: hata yokken burada görünür.</p></ErrorPage></div>
       },
     },
@@ -237,7 +237,7 @@ errors.list()   // recent, de-duplicated`,
         const last = signal("—")
         const go = (status: number) => { const e = errors.capture(new AppError(`Örnek hata ${status}`, { status, context: { ex: "api" } })); last.set(errors.message(e)) }
         const mine = () => errors.list().filter((c) => c.error.context["ex"] === "api").map((c) => `${c.error.type} ×${c.count}`)
-        return <div class="sc-stack"><Row>{[404, 429, 503].map((s) => <Button onClick={() => go(s)}>{String(s)}</Button>)}<Out label="Kullanıcıya" value={last} /></Row><Tags label="errors.list()" items={mine} /></div>
+        return <div class="sc-ex-stack"><Row>{[404, 429, 503].map((s) => <Button onClick={() => go(s)}>{String(s)}</Button>)}<Out label="Kullanıcıya" value={last} /></Row><Tags label="errors.list()" items={mine} /></div>
       },
     },
     setErrorSink: {
@@ -251,7 +251,7 @@ setErrorSink(null)                       // reported errors go nowhere`,
           setErrorSink((e) => log.push(`kendi kaydedicin: ${e.source} · ${e.status} · ${e.message}`))
           n.get("/down", { retry: 0, policy: "parallel" }).catch(() => undefined).finally(() => restoreSink(had))
         }
-        return <div class="sc-stack"><Button onClick={go}>Başarısız istek</Button><Log lines={log} /></div>
+        return <div class="sc-ex-stack"><Button onClick={go}>Başarısız istek</Button><Log lines={log} /></div>
       },
     },
   },

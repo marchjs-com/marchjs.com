@@ -31,7 +31,7 @@ await dialog         // kapanınca 0`,
         const n = signal(0)
         const sync = () => n.set(openDialogs())
         const open = (): void => {
-          const done = openDialog((close: (v?: unknown) => void) => <div class="sc-stack">
+          const done = openDialog((close: (v?: unknown) => void) => <div class="sc-ex-stack">
             <Out label="açık pencere" value={n} />
             <Row><Button onClick={open}>Bir tane daha aç</Button><Button variant="primary" onClick={() => close()}>Kapat</Button></Row>
           </div>, { title: "Pencere", size: "sm" })
@@ -48,7 +48,7 @@ await dialog         // kapanınca 0`,
       run: () => {
         const out = signal("—")
         const go = async () => {
-          const v = await openDrawer<string>((close) => <div class="sc-stack">
+          const v = await openDrawer<string>((close) => <div class="sc-ex-stack">
             <p>Çekmece sayfanın yanından açılır; Esc ya da dış alan tıklaması kapatır.</p>
             <Row><Button variant="primary" onClick={() => close("kaydet")}>Kaydet</Button><Button onClick={() => close("sil")}>Sil</Button></Row>
           </div>, { title: "Ayarlar", side: "right", dismissValue: "iptal" })
@@ -99,7 +99,7 @@ parse("rengarenk")          // null`,
       run: () => {
         const text = signal("oklch(0.72 0.17 55)")
         const c = computed(() => parse(text()))
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><Field sig={text} label="Renk" /><Swatch color={() => (c() ? text() : "")} /></Row>
           <Row>{["#336699", "hsl(24 90% 53%)", "rgb(10 200 120 / .5)", "rengarenk"].map((s) => <Button size="sm" variant="ghost" onClick={() => text.set(s)}>{s}</Button>)}</Row>
           <Out label="sonuç" value={() => { const v = c(); return v ? json({ r: Math.round(v.r), g: Math.round(v.g), b: Math.round(v.b), a: Math.round(v.a * 100) / 100 }) : "null" }} />
@@ -113,7 +113,7 @@ parseBezier("ease-out")                          // eğri adını da çözer`,
         const text = signal("cubic-bezier(.34, 1.56, .64, 1)")
         const b = computed(() => parseBezier(text()))
         const d = () => { const v = b(); return v ? `M0,100 C${v[0] * 100},${100 - v[1] * 100} ${v[2] * 100},${100 - v[3] * 100} 100,0` : "" }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Field sig={text} label="Eğri" />
           <Row>{["ease-out", "back", "linear", "bilinmeyen"].map((s) => <Button size="sm" variant="ghost" onClick={() => text.set(s)}>{s}</Button>)}</Row>
           <Row>
@@ -129,7 +129,7 @@ parseDate("3/14/26", "en-US")      // "2026-03-14"
 parseDate("")                      // null (boş)  ·  parseDate("32.13.2026") // undefined (geçersiz)`,
       run: () => {
         const text = signal("14.03.2026"), loc = signal("tr-TR")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><Field sig={text} label="Tarih" /><Pick sig={loc} label="Yerel ayar" options={[["tr-TR", "tr"], ["en-US", "en"]]} /></Row>
           <Out label="sonuç" value={() => { const v = parseDate(text(), loc()); return v === null ? "null (boş)" : v === undefined ? "undefined (geçersiz)" : v }} />
         </div>
@@ -141,7 +141,7 @@ parseDate("")                      // null (boş)  ·  parseDate("32.13.2026") /
       run: () => {
         const text = signal("linear-gradient(to right, red 0%, blue 100%)")
         const g = computed(() => parseGradient(text()))
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Field sig={text} label="Geçiş" />
           <Row>{["linear-gradient(135deg, orange, purple)", "radial-gradient(circle, white 0%, teal 100%)", "düz renk"].map((s) => <Button size="sm" variant="ghost" onClick={() => text.set(s)}>{s.split("(")[0]}</Button>)}</Row>
           <Row><Swatch wide color={() => { const v = g(); return v ? gradientCss(v) : "" }} /></Row>
@@ -156,7 +156,7 @@ r.line        // 1  ·  r.column  // 16`,
       run: () => {
         const text = signal('{\n  "ad": "Acme",\n  "adet": 3,\n}')
         const r = computed(() => parseJson(text()))
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Textarea value={text} rows={4} aria-label="JSON" />
           <Out label="sonuç" value={() => { const v = r(); return v.error !== undefined ? `hata: ${v.error} (satır ${v.line}, sütun ${v.column})` : `geçerli, ${typeOf(v.value)}` }} />
         </div>
@@ -167,7 +167,7 @@ r.line        // 1  ·  r.column  // 16`,
 parseKey("alt+esc")       // "esc" → "escape"`,
       run: () => {
         const combo = signal("mod+shift+k")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Field sig={combo} label="Kısayol" />
           <Out label="sonuç" value={() => json(parseKey(combo()))} />
         </div>
@@ -179,7 +179,7 @@ parseNumber("1,234.56", "en-US")   // 1234.56
 parseNumber("")  // null   ·   parseNumber("abc")  // NaN`,
       run: () => {
         const text = signal("1.234,56"), loc = signal("tr-TR")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><Field sig={text} label="Sayı" /><Pick sig={loc} label="Yerel ayar" options={[["tr-TR", "tr"], ["en-US", "en"]]} /></Row>
           <Row>{["1.234", "1,234", "-12,5", "abc"].map((s) => <Button size="sm" variant="ghost" onClick={() => text.set(s)}>{s}</Button>)}</Row>
           <Out label="sonuç" value={() => String(parseNumber(text(), loc()))} />
@@ -194,7 +194,7 @@ pickMain([view], { lang: "tsx" })?.id   // "tsx"`,
         const lang = signal("tsx")
         const off = DEMO_POINT.provide({ id: "tsx", order: 1, when: (i) => i.lang === "tsx", render: () => <code>TSX görünümü</code> })
         onCleanup(off)
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Pick sig={lang} label="Dil" options={[["tsx", "tsx"], ["css", "css"]]} />
           <Out label="seçilen sağlayıcı" value={() => pickMain([DEMO_POINT], { lang: lang() })?.id ?? "yok"} />
         </div>
@@ -208,7 +208,7 @@ pickerKind(manyOptions)                                                 // "comb
         const scenario = signal("few")
         const opts = (n: number, len: number, preview = false) => Array.from({ length: n }, (_, i) => ({ value: i, label: "Seçenek".padEnd(len, "x") + i, ...(preview ? { preview: "·" } : {}) }))
         const sets: Record<string, ReturnType<typeof opts>> = { few: opts(3, 5), long: opts(5, 12), preview: opts(3, 5, true), many: opts(12, 5) }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Pick sig={scenario} label="Senaryo" options={[["few", "3 kısa"], ["long", "5 uzun"], ["preview", "önizlemeli"], ["many", "12 seçenek"]]} />
           <Out label="pickerKind" value={() => pickerKind(sets[scenario()]!)} />
           <Out label="zorlanan: chips" value={() => pickerKind(sets[scenario()]!, "chips")} />
@@ -225,7 +225,7 @@ pickerKind(manyOptions)                                                 // "comb
         const calc = () => out.set(json(place(anchor, panel, placement() as "bottom-start")))
         queueMicrotask(calc)
         effect(() => { placement(); untrack(() => { if (anchor) calc() }) })
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Pick sig={placement} label="Yerleşim" options={[["bottom-start", "alt-baş"], ["bottom-end", "alt-son"], ["top", "üst"], ["top-end", "üst-son"]]} />
           <Row>
             <span ref={(el: HTMLElement) => { anchor = el }}><Button onClick={calc}>Bağlı öğe</Button></span>
@@ -241,7 +241,7 @@ pointer([])                        // "" (kök)`,
       run: () => {
         const text = signal("users, 0, e/posta")
         const path = () => text().split(",").map((s) => s.trim()).filter(Boolean).map((s) => (/^\d+$/.test(s) ? Number(s) : s))
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Field sig={text} label="Yol (virgülle)" />
           <Out label="JSON pointer" value={() => json(pointer(path()))} />
         </div>
@@ -291,7 +291,7 @@ else playVideo()`,
       run: () => {
         const day = signal(todayIso())
         const list = computed(() => rangePresets(parseDate(day()) ?? todayIso()))
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><Field sig={day} label="Bugün (YYYY-AA-GG)" /><Button variant="ghost" onClick={() => day.set(todayIso())}>Gerçek bugün</Button></Row>
           <ul class="sc-ex-ui-f-list">{() => list().map((p) => <li><strong>{p.label}</strong><code class="sc-ex-val">{`${p.range.from} → ${p.range.to}`}</code></li>)}</ul>
         </div>
@@ -303,7 +303,7 @@ else playVideo()`,
       run: () => {
         const q = signal("kul")
         const items = [{ title: "Kullanıcılar", keywords: "üye hesap" }, { title: "Kural motoru", keywords: "otomasyon" }, { title: "Rapor", keywords: "kullanım" }, { title: "Faturalar" }, { title: "Ayarlar", keywords: "tercih" }]
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Field sig={q} label="Arama" />
           <ul class="sc-ex-ui-f-list">{() => { const r = rank(q(), items); return r.length ? r.map((x) => <li><strong>{x.item.title}</strong><code class="sc-ex-val">{x.score.toFixed(1)}</code></li>) : <li class="hm-muted">Eşleşme yok</li> }}</ul>
         </div>
@@ -329,7 +329,7 @@ renderFields(form)`,
       run: () => {
         registerInput("stars", Stars)
         const form = useForm({ rating: { type: "number", control: "stars", label: "Puan", default: 3 } })
-        return <div class="sc-stack">{renderFields(form)}<Out label="rating" value={() => String(form.values["rating"])} /></div>
+        return <div class="sc-ex-stack">{renderFields(form)}<Out label="rating" value={() => String(form.values["rating"])} /></div>
       },
     },
     registerPages: {
@@ -357,7 +357,7 @@ colorThemes().some((t) => t.id === "acme")   // true → ThemePicker listeler`,
       run: () => {
         const doc = signal<unknown>(DOC)
         const target = signal("tags,0")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Pick sig={target} label="Silinecek yol" options={[["tags,0", "tags/0"], ["owner,id", "owner/id"], ["name", "name"]]} />
           <Row><Button onClick={() => doc.set(removeAt(doc(), target().split(",").map((s) => (/^\d+$/.test(s) ? Number(s) : s))))}>Sil</Button><Button variant="ghost" onClick={() => doc.set(DOC)}>Sıfırla</Button></Row>
           <pre class="sc-ex-ui-f-code">{() => JSON.stringify(doc(), null, 2)}</pre>
@@ -369,7 +369,7 @@ colorThemes().some((t) => t.id === "acme")   // true → ThemePicker listeler`,
       run: () => {
         const doc = signal<unknown>(DOC)
         const to = signal("title")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><Field sig={to} label="Yeni anahtar" /><Button onClick={() => to().trim() && doc.set(renameAt(doc(), ["name"], to().trim()))}>“name” anahtarını yeniden adlandır</Button><Button variant="ghost" onClick={() => doc.set(DOC)}>Sıfırla</Button></Row>
           <pre class="sc-ex-ui-f-code">{() => JSON.stringify(doc(), null, 2)}</pre>
         </div>
@@ -381,7 +381,7 @@ renderFields(form, null, { layout: "grid", cols: 2 })`,
       run: () => {
         const layout = signal("stack")
         const form = useForm({ name: { type: "text", label: "Ad", required: true }, email: { type: "email", label: "E-posta" }, plan: { type: "text", label: "Plan" }, note: { type: "text", label: "Not" } }, { name: "Ada" })
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Pick sig={layout} label="Yerleşim" options={[["stack", "alt alta"], ["grid", "ızgara"]]} />
           {() => renderFields(form, null, { layout: layout() as "stack", cols: 2 })}
         </div>

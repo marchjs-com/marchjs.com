@@ -44,7 +44,7 @@ accent()                   // "brand-green"`,
       run: () => {
         const was = accent.peek()
         onCleanup(() => { setAccent(was) })
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row>{ACCENT_CHOICES.slice(0, 6).map((c) => <Button size="sm" variant="secondary" onClick={() => setAccent(c)}>{c}</Button>)}</Row>
           <Row><Button onClick={() => setAccent(was)} variant="ghost">Önceki vurgu</Button><Button>Birincil düğme</Button><Out label="accent()" value={accent} /></Row>
         </div>
@@ -56,7 +56,7 @@ accepts({ name: "veri.csv", type: "text/csv" }, "image/*,.pdf")    // false`,
       run: () => {
         const list = signal("image/*,.pdf")
         const files = [{ name: "foto.png", type: "image/png" }, { name: "rapor.pdf", type: "application/pdf" }, { name: "veri.csv", type: "text/csv" }, { name: "not.txt", type: "text/plain" }]
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Field value={list} label="accept listesi" />
           <ul class="sc-ex-ui-e-table">{files.map((f) => <li><code>{f.name}</code><Badge color={() => (accepts(f, list()) ? "success" : "danger")}>{() => (accepts(f, list()) ? "kabul" : "red")}</Badge></li>)}</ul>
         </div>
@@ -80,7 +80,7 @@ addDays("2026-03-01", -1)   // "2026-02-28"`,
       run: () => {
         const d = signal("2026-01-31"), n = signal("1")
         const ok = () => /^\d{4}-\d{2}-\d{2}$/.test(d())
-        return <div class="sc-stack"><Row><Field value={d} label="Tarih" /><Pick value={n} options={["-7", "-1", "1", "30"]} label="Gün" /></Row>
+        return <div class="sc-ex-stack"><Row><Field value={d} label="Tarih" /><Pick value={n} options={["-7", "-1", "1", "30"]} label="Gün" /></Row>
           <Out label="addDays" value={() => (ok() ? addDays(d(), Number(n())) : "geçersiz tarih")} /></div>
       },
     },
@@ -90,7 +90,7 @@ addMonths("2026-05-15", -6)  // "2025-11-15"`,
       run: () => {
         const d = signal("2026-01-31"), n = signal("1")
         const ok = () => /^\d{4}-\d{2}-\d{2}$/.test(d())
-        return <div class="sc-stack"><Row><Field value={d} label="Tarih" /><Pick value={n} options={["-6", "-1", "1", "12"]} label="Ay" /></Row>
+        return <div class="sc-ex-stack"><Row><Field value={d} label="Tarih" /><Pick value={n} options={["-6", "-1", "1", "12"]} label="Ay" /></Row>
           <Out label="addMonths" value={() => (ok() ? addMonths(d(), Number(n())) : "geçersiz tarih")} /></div>
       },
     },
@@ -114,7 +114,7 @@ const r = await askReason({ purposes: [{ value: "dup", label: "Yinelenen" }] }) 
       run: () => {
         const name = signal("back")
         const curve = () => EASING_PRESETS.find((p) => p.name === name())!.value
-        return <div class="sc-stack"><Pick value={name} options={EASING_PRESETS.map((p) => p.name)} label="Eğri" />
+        return <div class="sc-ex-stack"><Pick value={name} options={EASING_PRESETS.map((p) => p.name)} label="Eğri" />
           <Out label="bezierCss" value={() => bezierCss(curve())} /></div>
       },
     },
@@ -128,7 +128,7 @@ bootLoader.done()   // fades #hm-boot out and removes it`,
         const out = signal("—")
         const done = () => out.set(String(bootLoader.done({ id: "sc-ex-ui-e-boot", fade: 250 })))
         const reset = () => { box.replaceChildren(make()); out.set("—") }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <div ref={(x: HTMLElement) => { box = x; x.append(make()) }} />
           <Row><Button onClick={done}>done()</Button><Button variant="ghost" onClick={reset}>Yeniden göster</Button><Out label="Döndürdü" value={out} /></Row>
         </div>
@@ -140,7 +140,7 @@ clampPan(st, 1600, 900, 400, 400)   // [x, y] kept inside the image`,
       run: () => {
         const zoom = signal("1.5"), x = signal(0.5)
         const st = () => ({ ...DEFAULT_CROP, zoom: Number(zoom()), x: x() })
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><Pick value={zoom} options={["1", "1.5", "2"]} label="Yakınlaştırma" /><Slider value={x} min={-1} max={1} step={0.05} aria-label="Kaydırma x" /></Row>
           <Out label="istenen x" value={() => x().toFixed(2)} />
           <Out label="clampPan" value={() => clampPan(st(), 1600, 900, 400, 400).map((v) => v.toFixed(3)).join(", ")} />
@@ -154,7 +154,7 @@ copy.items.push("ek")       // order.items is unchanged`,
         const order = { id: 7, items: ["kalem", "defter"], note: { rush: false } }
         const copy = signal(clone(order)), tick = signal(0)
         const edit = () => { const c = clone(copy.peek()); c.items.push("ek"); c.note.rush = true; copy.set(c); tick.update((x) => x + 1) }
-        return <div class="sc-stack"><Row><Button onClick={edit}>Kopyayı değiştir</Button><Button variant="ghost" onClick={() => copy.set(clone(order))}>Sıfırla</Button></Row>
+        return <div class="sc-ex-stack"><Row><Button onClick={edit}>Kopyayı değiştir</Button><Button variant="ghost" onClick={() => copy.set(clone(order))}>Sıfırla</Button></Row>
           <Out label="özgün" value={json(order)} /><Out label="kopya" value={() => json(copy())} /></div>
       },
     },
@@ -185,7 +185,7 @@ closePalette()   // e.g. after running a command`,
 codeView.provide({ id: "editor", render: (input) => <MyEditor {...input} /> })   // replaces the viewer`,
       run: () => {
         const lang = signal("ts")
-        return <div class="sc-stack"><Pick value={lang} options={["ts", "css"]} label="Dil" />
+        return <div class="sc-ex-stack"><Pick value={lang} options={["ts", "css"]} label="Dil" />
           {() => <Widget sources={[codeView]} input={{ source: CODE_SRC[lang()]!, lang: lang() }} />}</div>
       },
     },
@@ -195,7 +195,7 @@ colorAt(g, 50)   // the blended color at 50%`,
       run: () => {
         const at = signal(50)
         const g = { type: "linear" as const, angle: 90, stops: [{ color: format(warm()), at: 0 }, { color: format(cool()), at: 100 }] }
-        return <div class="sc-stack"><div class="sc-ex-ui-e-bar" style={{ background: gradientCss(g) }} />
+        return <div class="sc-ex-stack"><div class="sc-ex-ui-e-bar" style={{ background: gradientCss(g) }} />
           <Row><Slider value={at} min={0} max={100} aria-label="Konum" /><Swatch color={() => colorAt(g, at())} /><Out label="colorAt" value={() => colorAt(g, at())} /></Row></div>
       },
     },
@@ -220,7 +220,7 @@ colorAt(g, 50)   // the blended color at 50%`,
       run: () => {
         const v = signal(60)
         const ratio = () => contrastOf(hsvToRgb({ h: 28, s: 0.9, v: v() / 100, a: 1 }), hsvToRgb({ h: 0, s: 0, v: 1, a: 1 }))
-        return <div class="sc-stack"><Row><Slider value={v} min={10} max={100} aria-label="Metin parlaklığı" /><Swatch color={() => format(hsvToRgb({ h: 28, s: 0.9, v: v() / 100, a: 1 }))} /></Row>
+        return <div class="sc-ex-stack"><Row><Slider value={v} min={10} max={100} aria-label="Metin parlaklığı" /><Swatch color={() => format(hsvToRgb({ h: 28, s: 0.9, v: v() / 100, a: 1 }))} /></Row>
           <Row><Out label="oran" value={() => ratio().toFixed(2)} /><Badge color={() => (ratio() >= 4.5 ? "success" : "danger")}>{() => (ratio() >= 4.5 ? "AA geçer" : "AA geçmez")}</Badge></Row></div>
       },
     },
@@ -231,7 +231,7 @@ convert("evet", "boolean")       // true`,
       run: () => {
         const samples: Record<string, unknown> = { "12,5": "12,5", "evet": "evet", "[1,2]": [1, 2], "{a:1}": { a: 1 }, "null": null }
         const src = signal("12,5"), to = signal("number")
-        return <div class="sc-stack"><Row><Pick value={src} options={Object.keys(samples)} label="Değer" /><Pick value={to} options={["string", "number", "boolean", "array", "object", "null"]} label="Tür" /></Row>
+        return <div class="sc-ex-stack"><Row><Pick value={src} options={Object.keys(samples)} label="Değer" /><Pick value={to} options={["string", "number", "boolean", "array", "object", "null"]} label="Tür" /></Row>
           <Out label="convert" value={() => json(convert(samples[src()], to() as "string"))} /></div>
       },
     },
@@ -241,7 +241,7 @@ countLabel(120)      // "99+"
 countLabel(120, 999) // "120"`,
       run: () => {
         const n = signal(120), max = signal("99")
-        return <div class="sc-stack"><Row><Slider value={n} min={0} max={1500} step={10} aria-label="Sayı" /><Pick value={max} options={["9", "99", "999"]} label="Üst sınır" /></Row>
+        return <div class="sc-ex-stack"><Row><Slider value={n} min={0} max={1500} step={10} aria-label="Sayı" /><Pick value={max} options={["9", "99", "999"]} label="Üst sınır" /></Row>
           <Row><Out label="countLabel" value={() => countLabel(n(), Number(max()))} /><Badge>{() => countLabel(n(), Number(max()))}</Badge></Row></div>
       },
     },
@@ -250,7 +250,7 @@ countLabel(120, 999) // "120"`,
 coverScale(1600, 900, 400, 400, 45)   // larger when rotated`,
       run: () => {
         const deg = signal("0")
-        return <div class="sc-stack"><Pick value={deg} options={["0", "15", "45", "90"]} label="Açı" />
+        return <div class="sc-ex-stack"><Pick value={deg} options={["0", "15", "45", "90"]} label="Açı" />
           <Out label="coverScale" value={() => coverScale(1600, 900, 400, 400, Number(deg())).toFixed(3)} /></div>
       },
     },
@@ -260,7 +260,7 @@ document.body.append(canvas)`,
       run: () => {
         const src = makeSource(), zoom = signal("1"), rotate = signal("0"), flip = signal("hayır")
         const out = computed(() => cropToCanvas(src, { ...DEFAULT_CROP, zoom: Number(zoom()), rotate: Number(rotate()), flip: flip() === "evet" }, { width: 320, height: 200 }, { width: 240 }))
-        return <div class="sc-stack"><Row><Pick value={zoom} options={["1", "1.5", "2.5"]} label="Yakınlaştırma" /><Pick value={rotate} options={["0", "90", "180"]} label="Döndürme" /><Pick value={flip} options={["hayır", "evet"]} label="Ayna" /></Row>
+        return <div class="sc-ex-stack"><Row><Pick value={zoom} options={["1", "1.5", "2.5"]} label="Yakınlaştırma" /><Pick value={rotate} options={["0", "90", "180"]} label="Döndürme" /><Pick value={flip} options={["hayır", "evet"]} label="Ayna" /></Row>
           <Row><canvas class="sc-ex-ui-e-canvas" width="160" height="100" ref={(c: HTMLCanvasElement) => c.getContext("2d")!.drawImage(src, 0, 0, 160, 100)} />{() => { const c = out(); c.className = "sc-ex-ui-e-canvas"; return c }}</Row></div>
       },
     },
@@ -269,7 +269,7 @@ document.body.append(canvas)`,
 currencyInfo("de-DE", "EUR")   // { symbol: "€", prefix: false, digits: 2 }`,
       run: () => {
         const loc = signal("tr-TR"), cur = signal("TRY")
-        return <div class="sc-stack"><Row><Pick value={loc} options={["tr-TR", "en-US", "de-DE"]} label="Yerel" /><Pick value={cur} options={["TRY", "USD", "EUR", "JPY"]} label="Para birimi" /></Row>
+        return <div class="sc-ex-stack"><Row><Pick value={loc} options={["tr-TR", "en-US", "de-DE"]} label="Yerel" /><Pick value={cur} options={["TRY", "USD", "EUR", "JPY"]} label="Para birimi" /></Row>
           <Out label="currencyInfo" value={() => json(currencyInfo(loc(), cur()))} /></div>
       },
     },
@@ -279,7 +279,7 @@ dayLabel(new Date(Date.now() - 864e5))        // "Dün"
 dayLabel(new Date("2026-01-05"))              // "5 Oca 2026"`,
       run: () => {
         const ago = signal("0")
-        return <div class="sc-stack"><Pick value={ago} options={["0", "1", "3", "40"]} label="Gün önce" />
+        return <div class="sc-ex-stack"><Pick value={ago} options={["0", "1", "3", "40"]} label="Gün önce" />
           <Out label="dayLabel" value={() => dayLabel(new Date(Date.now() - Number(ago()) * 864e5))} /></div>
       },
     },
@@ -295,7 +295,7 @@ deepEqual({ a: 1 }, { a: "1" })                        // false`,
           ["sayı ve metin", { a: 1 }, { a: "1" }],
           ["dizi", [1, 2, 3], flip() ? [1, 2, 3] : [1, 2]],
         ]
-        return <div class="sc-stack"><Button onClick={() => flip.update((x) => !x)}>Son dizi: {() => (flip() ? "eşitle" : "farklılaştır")}</Button>
+        return <div class="sc-ex-stack"><Button onClick={() => flip.update((x) => !x)}>Son dizi: {() => (flip() ? "eşitle" : "farklılaştır")}</Button>
           <ul class="sc-ex-ui-e-table">{() => cases().map(([label, a, b]) => <li><span>{label}</span><Badge color={deepEqual(a, b) ? "success" : "danger"}>{String(deepEqual(a, b))}</Badge></li>)}</ul></div>
       },
     },

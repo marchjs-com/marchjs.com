@@ -22,7 +22,7 @@ export default examples({
           for (let i = 1; i <= 4; i++) { await wait(150); ctx.onProgress(i / 4) }
           return `acme://dosya/${file.name}`
         }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const m = p.values.multiple, a = p.values.accept; return <FileUpload value={value} multiple={m} accept={a || undefined} maxSize={2_000_000} upload={upload}
             label="Dosya bırak ya da seç (en çok 2 MB)" onError={(msg: string) => log.push(msg)} onChange={() => log.push("değer değişti")} /> }}
           <Out label="Değer" value={() => JSON.stringify(value())} />
@@ -36,7 +36,7 @@ export default examples({
       play: { options: [{ key: "private", label: "Gizli hesap", default: false }, { key: "size", label: "Boyut", default: "md", options: ["sm", "md"] }] },
       run: (p: { values: { private: boolean; size: "sm" | "md" } }) => {
         const state = signal<FollowState>("follow"), log = useLog()
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><strong>Acme</strong><FollowButton state={state} private={() => p.values.private} size={() => p.values.size} name="Acme" onChange={(n) => { state.set(n); log.push(n) }} /></Row>
           <Log lines={log.lines} />
         </div>
@@ -49,7 +49,7 @@ export default examples({
       play: { options: [{ key: "layout", label: "Yerleşim", default: "stack", options: [{ value: "stack", label: "alt alta" }, { value: "grid", label: "ızgara" }] }, { key: "requireDirty", label: "Değişince etkin", default: false }] },
       run: (p: { values: { layout: "stack" | "grid"; requireDirty: boolean } }) => {
         const log = useLog()
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const l = p.values.layout, rd = p.values.requireDirty; return <Form schema={Profile} layout={l} cols={2} requireDirty={rd} initial={{ name: "Ada" }} cancel submitLabel="Kaydet"
             onSubmit={async (v: Record<string, unknown>) => { await wait(400); if (String(v.email).startsWith("taken")) throw Object.assign(new Error("Reddedildi"), { fieldErrors: { email: "Bu adres kayıtlı" } }); log.push(`gönderildi: ${v.name} · ${v.email} · ${v.team}`) }} /> }}
           <p class="hm-muted">İpucu: "taken@acme.test" sunucu hatası verir.</p>
@@ -65,7 +65,7 @@ export default examples({
       play: { options: [{ key: "cancel", label: "Vazgeç düğmesi", default: true }, { key: "requireDirty", label: "Değişince etkin", default: true }] },
       run: (p: { values: { cancel: boolean; requireDirty: boolean } }) => {
         const log = useLog()
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Form schema={Profile} actions={false} initial={{ name: "Ada", email: "ada@acme.test" }} onSubmit={async (v: Record<string, unknown>) => { await wait(500); log.push(`kaydedildi: ${v.name}`) }}>
             <Field name="name" />
             {() => { const c = p.values.cancel, rd = p.values.requireDirty; return <FormActions cancel={c} requireDirty={rd} submitLabel="Kaydet" busyLabel="Kaydediliyor…"

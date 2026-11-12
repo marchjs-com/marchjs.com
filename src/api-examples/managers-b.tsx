@@ -35,7 +35,7 @@ type Api = Record<string, any>
 function Lazy(p: { children: (api: Api) => unknown }) {
   const api = signal<Api | null>(null)
   import("hadi-march/managers").then((m) => api.set(m))
-  return <div class="sc-stack">{() => { const m = api(); return m ? p.children(m) : <span class="hm-muted">Yükleniyor…</span> }}</div>
+  return <div class="sc-ex-stack">{() => { const m = api(); return m ? p.children(m) : <span class="hm-muted">Yükleniyor…</span> }}</div>
 }
 const clock = () => new Date().toLocaleTimeString("tr-TR")
 const yes = (b: boolean) => (b ? "evet" : "hayır")
@@ -65,7 +65,7 @@ function Dispose(p: { m: Manager<any, any>; start: string; stop: string; run: ()
   const lines = signal<string[]>([])
   onManager(`${p.m.name}:*`, (m) => lines.update((l) => keep(l, `${clock()} ${m.topic}`, 4)))
   const after = (f: () => unknown) => () => { f(); alive.set(p.m.alive()) }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={after(p.run)}>{p.start}</Button><Button variant="secondary" onClick={after(p.off)}>{p.stop}</Button><Out label="Çalışıyor" value={() => yes(alive())} /></Row>
     <Log lines={lines} label="Yaşam döngüsü" />
   </div>
@@ -80,7 +80,7 @@ function Handle(p: { m: Manager<any, any>; patch: Record<string, unknown>; deps?
   const go = (f: () => unknown) => () => { f(); tick.update((n) => n + 1) }
   const keys = Object.keys(p.patch)
   const view = () => { tick(); const c = p.m.config() as Record<string, unknown>; return JSON.stringify(Object.fromEntries(keys.map((k) => [k, c[k]]))) }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={go(() => p.m.get())}>get()</Button>
       <Button variant="secondary" onClick={go(() => p.m.configure(p.patch))}>configure(…)</Button>
@@ -102,7 +102,7 @@ function IdleDemo() {
   onCleanup(() => clearInterval(timer))
   onCleanup(i.onIdle(() => lines.update((l) => keep(l, `${clock()} boşa düştü`, 3))))
   onCleanup(i.onActive((ms) => lines.update((l) => keep(l, `${clock()} döndü (${Math.round(ms / 1000)} sn sonra)`, 3))))
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Out label="Durum" value={() => (i.paused() ? "durduruldu" : i.idle() ? "boşta" : "etkin")} /><Out label="Kalan" value={() => `${left()} sn`} /></Row>
     <Row><Button variant="secondary" onClick={() => i.pause()}>pause()</Button><Button variant="secondary" onClick={() => i.resume()}>resume()</Button><Button variant="ghost" onClick={() => i.reset()}>reset()</Button></Row>
     <Log lines={lines} label="Boşta olayları" />
@@ -124,7 +124,7 @@ function LayerDemo() {
     open.update((l) => [...l, h])
   }
   const live = () => layer.stack().filter((l) => l.label?.startsWith("Katman")).length
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={add}>Katman aç</Button><Button variant="ghost" onClick={() => layer.escape()}>escape()</Button></Row>
     <Row><Out label="Açık örnek katmanı" value={live} /><Out label="Üstteki" value={() => layer.top()?.label ?? "—"} /><Out label="Kaydırma kilidi" value={() => yes(layer.scrollLocked())} /></Row>
   </div>
@@ -138,7 +138,7 @@ function LocatorDemo() {
   onCleanup(() => loc.stop())
   const pos = () => { const p = loc.position(); return p ? `${p.lat.toFixed(3)}, ${p.lng.toFixed(3)} (±${Math.round(p.accuracy)} m)` : "—" }
   const far = () => { const d = loc.distanceTo(ANKARA); return Number.isNaN(d) ? "—" : `${Math.round(d / 1000)} km` }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={() => { loc.locate().catch(() => undefined) }}>Konumumu bul</Button><Out label="Durum" value={() => loc.status()} /></Row>
     <Out label="Konum" value={pos} />
     <Out label="Ankara'ya uzaklık" value={far} />
@@ -150,7 +150,7 @@ function DistanceDemo() {
   const cities: [string, { lat: number; lng: number }][] = [["Ankara", ANKARA], ["İzmir", { lat: 38.4237, lng: 27.1428 }], ["Antalya", { lat: 36.8969, lng: 30.7133 }]]
   const to = signal("Ankara")
   const km = () => Math.round(distance(ISTANBUL, cities.find((c) => c[0] === to())![1]) / 1000)
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Segmented value={to} onChange={(v: string) => to.set(v)} options={cities.map(([v]) => ({ value: v, label: v }))} aria-label="Hedef" />
     <Out label="İstanbul'dan uzaklık" value={() => `${km()} km`} />
   </div>
@@ -166,7 +166,7 @@ function NotifyDemo() {
     last.set(r.via)
   }
   const last = signal("—")
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={send}>notify()</Button><Button variant="secondary" onClick={() => n.markRead()}>Hepsini okundu yap</Button><Button variant="ghost" onClick={() => n.clear()}>clear()</Button></Row>
     <Row><Out label="Okunmamış" value={() => n.unread()} /><Out label="Gelen kutusu" value={() => n.inbox().length} /><Out label="Giden yol" value={last} /><Out label="Tarayıcı izni" value={() => n.permission()} /></Row>
   </div>
@@ -185,7 +185,7 @@ function PerfDemo() {
     busy.set(false)
   }
   const vital = (n: VitalName) => { const v = p.vital(n); return v ? `${Math.round(v.value * 100) / 100} (${v.rating})` : "ölçülmedi" }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button disabled={busy} onClick={run}>Ölç</Button><Out label="FCP" value={() => vital("fcp")} /><Out label="Uzun görev" value={() => p.longTasks()} /></Row>
     <Log lines={() => p.measures().map((m) => `${m.name}: ${m.duration.toFixed(1)} ms`)} label="Ölçümler" />
   </div>
@@ -196,7 +196,7 @@ function PermissionDemo() {
   const p = permissions()
   const result = signal("—")
   const asked = () => { p.request("geolocation").then((r) => result.set(r)) }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>{(["notifications", "camera", "geolocation"] as const).map((k) => <Badge tone={p.state(k) === "granted" ? "success" : "neutral"} dot>{() => `${k}: ${p.state(k)}`}</Badge>)}</Row>
     <Row><Button onClick={asked}>Konum iste (onay gerekli)</Button><Out label="Sonuç" value={result} /><Out label="Onaylı mı" value={() => yes(p.consented("geolocation"))} /></Row>
   </div>
@@ -205,7 +205,7 @@ function PermissionDemo() {
 function PresenceDemo() {
   lend([presenceManager, { shareTabs: false }], [idleManager, { timeout: 5000 }], [windowManager])
   const p = presence()
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Out label="Bu sekme" value={() => p.state()} /><Out label="Genel" value={() => p.overall()} /><Out label="Sekme" value={() => p.tabs().length} /></Row>
     <Row><Button variant="secondary" onClick={() => p.setPeer("ada", "active", { name: "Ada" })}>Ada çevrimiçi</Button><Button variant="secondary" onClick={() => p.setPeer("ada", "away")}>Ada uzakta</Button><Button variant="ghost" onClick={() => p.removePeer("ada")}>Ada'yı kaldır</Button></Row>
     <Log lines={() => p.peers().map((x) => `${x.id}: ${x.state}`)} label="Kişiler" />
@@ -219,7 +219,7 @@ function ScrollDemo() {
   const release = signal<(() => void) | null>(null)
   onCleanup(() => release()?.())
   const lock = () => { const r = release(); if (r) { r(); release.set(null) } else release.set(s.lock()) }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Out label="y" value={() => Math.round(s.y())} /><Out label="Yön" value={() => s.direction()} /><Out label="İlerleme" value={() => `${Math.round(s.progress() * 100)}%`} /></Row>
     <Row><Button variant="secondary" onClick={() => { s.save("ex"); saved.set(`${Math.round(s.y())} px`) }}>Konumu kaydet</Button><Button variant="secondary" onClick={() => { if (!s.restore("ex")) saved.set("kayıt yok") }}>Geri dön</Button><Button variant="ghost" onClick={lock}>{() => (release() ? "Kilidi aç" : "Kaydırmayı kilitle")}</Button></Row>
     <Row><Out label="Kayıtlı" value={saved} /><Out label="Kilitli" value={() => yes(s.locked())} /></Row>
@@ -229,7 +229,7 @@ function ScrollDemo() {
 function SessionDemo() {
   lend([sessionManager, { duration: 20_000, warnBefore: 8000, storageKey: null, extendOnActivity: false }], [idleManager])
   const s = session()
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={() => s.start()}>start()</Button><Button variant="secondary" onClick={() => s.extend()}>extend()</Button><Button variant="ghost" onClick={() => s.end()}>end()</Button></Row>
     <Row><Out label="Etkin" value={() => yes(s.active())} /><Out label="Kalan" value={() => `${Math.ceil(s.remaining() / 1000)} sn`} />
       {() => (s.warning() ? <Badge tone="warn" dot>Süre bitiyor</Badge> : s.expired() ? <Badge tone="danger" dot>Süre doldu</Badge> : null)}</Row>
@@ -241,7 +241,7 @@ function ShortcutHintDemo() {
   const hits = signal(0)
   hotkeys.bind("alt+shift+k", () => hits.update((n) => n + 1), { description: "Örnek eylem", group: "Örnek" })
   onCleanup(() => shortcutHints.hide())
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={() => shortcutHints.show()}>show()</Button><Button variant="secondary" onClick={() => shortcutHints.hide()}>hide()</Button><Out label="Görünür" value={() => yes(shortcutHints.visible())} /></Row>
     <Log lines={() => shortcutHints.entries().map((e) => `${e.label} · ${e.description}${e.group ? ` (${e.group})` : ""}`)} label="Kısayollar" />
   </div>
@@ -250,7 +250,7 @@ function ShortcutHintDemo() {
 function ViewportDemo() {
   lend([viewportManager])
   const vp = viewport()
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Out label="Kırılım" value={() => vp.breakpoint()} /><Out label="Genişlik" value={() => `${vp.width()} px`} /><Out label="Mobil" value={() => yes(vp.mobile())} /><Out label="Masaüstü" value={() => yes(vp.desktop())} /></Row>
     <Row><Out label="Koyu" value={() => yes(vp.dark())} /><Out label="Az hareket" value={() => yes(vp.reducedMotion())} /><Out label="Dokunmatik" value={() => yes(vp.touch())} /><Out label="Çevrimiçi" value={() => yes(vp.online())} /></Row>
   </div>
@@ -258,14 +258,14 @@ function ViewportDemo() {
 
 function WindowDemo() {
   lend([windowManager, { channel: "hm-ex:window" }])
-  return <div class="sc-stack"><Row><Out label="Açık sekme" value={() => windowManager.get().count()} /><Out label="Lider" value={() => yes(windowManager.get().leader())} /><Out label="Görünür" value={() => yes(windowManager.get().visible())} /></Row></div>
+  return <div class="sc-ex-stack"><Row><Out label="Açık sekme" value={() => windowManager.get().count()} /><Out label="Lider" value={() => yes(windowManager.get().leader())} /><Out label="Görünür" value={() => yes(windowManager.get().visible())} /></Row></div>
 }
 
 // ---- data and ops managers
 function FlagsDemo() {
   lend([flagsManager, { flags: { beta: true, newCheckout: { percent: 50 }, pricing: { variants: { control: 50, annual: 50 } } }, user: () => "ada", overrideKey: null }])
   const f = flags()
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button variant="secondary" onClick={() => f.override("beta", !f.on("beta"))}>beta'yı çevir</Button><Button variant="ghost" onClick={() => f.clearOverrides()}>Geçersiz kılmaları sil</Button></Row>
     <Row><Out label="beta" value={() => yes(f.on("beta"))} /><Out label="pricing" value={() => f.variant("pricing")} /></Row>
     <Log lines={() => f.list().map((x) => `${x.name} = ${x.value} · ${x.source} · ${x.rule}`)} label="Bayraklar" />
@@ -276,7 +276,7 @@ function FlagsHandleDemo() {
   lend([flagsManager, { flags: {}, overrideKey: null }])
   const names = signal<string[]>(Object.keys(flagsManager.config().flags))
   const add = () => { flagsManager.configure({ flags: { ...flagsManager.config().flags, [`ozellik${names().length + 1}`]: true } }); names.set(Object.keys(flagsManager.config().flags)) }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={add}>Bayrak ekle</Button><Out label="Çalışıyor" value={() => (names(), yes(flagsManager.alive()))} /></Row>
     <Out label="Bayraklar" value={() => names().join(", ") || "—"} />
   </div>
@@ -289,7 +289,7 @@ function FocusDemo() {
     <Button size="sm" variant="secondary">Bir</Button><Button size="sm" variant="secondary">İki</Button>
     <Button size="sm" onClick={() => { release?.(); release = null }}>Bırak</Button></Row></div>) as HTMLElement
   onCleanup(() => release?.())
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={() => { if (!release) release = focus.trap(panel, { contain: false }) }}>Tuzağı kur</Button><Out label="Tuzak" value={() => yes(focus.trapped())} /><Out label="Giriş" value={() => focus.modality()} /></Row>
     {panel}
   </div>
@@ -301,7 +301,7 @@ function HotkeyDemo() {
   const seq = signal(0)
   hotkeys.bind("alt+shift+j", () => hits.update((n) => n + 1), { description: "Say", group: "Örnek" })
   hotkeys.bind("g j", () => seq.update((n) => n + 1), { description: "Diziyle say", group: "Örnek" })
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={() => hotkeys.trigger("alt+shift+j")}>trigger("alt+shift+j")</Button><Out label="Alt+Shift+J" value={hits} /><Out label="G, J" value={seq} /><Out label="Bekleyen" value={() => hotkeys.pending() || "—"} /></Row>
     <Log lines={() => hotkeys.list().map((i) => `${i.label} · ${i.description}`)} label="Bağlamalar" />
   </div>
@@ -310,7 +310,7 @@ function HotkeyDemo() {
 function HotkeyLabelDemo() {
   const combo = signal("mod+shift+k")
   const label = () => { try { return hotkeyLabel(combo()) } catch { return "geçersiz" } }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <TextInput value={combo} on:input={(e: Event) => combo.set((e.target as HTMLInputElement).value)} aria-label="Kısayol" />
     <Out label="Etiket" value={label} />
   </div>
@@ -321,7 +321,7 @@ function LoggerDemo() {
   lend([logManager, { transports: [mem], level: "debug" }])
   const log = logger().child("ödeme", { sepet: 3 })
   const level = signal<Level>("debug")
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={() => log.info("ödendi", { tutar: 42, card: "4242 4242" })}>info</Button><Button variant="secondary" onClick={() => log.warn("yavaş yanıt")}>warn</Button><Button variant="secondary" onClick={() => log.error(new Error("Bağlantı koptu"))}>error</Button><Button variant="secondary" onClick={() => log.debug("ayrıntı")}>debug</Button></Row>
     <Segmented value={level} onChange={(v: Level) => { level.set(v); logger().setLevel(v) }} options={(["debug", "info", "warn", "error"] as const).map((v) => ({ value: v, label: v }))} aria-label="Seviye" />
     <Log lines={() => mem.entries().map((e) => `${e.level} [${e.scope}] ${e.msg} ${e.data ? JSON.stringify({ ...e.data, error: undefined }) : ""}`)} label="Günlük" />
@@ -332,7 +332,7 @@ function MemoryDemo() {
   const mem = memoryTransport(3)
   lend([logManager, { transports: [mem], level: "info" }])
   let n = 0
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={() => logger().info(`kayıt ${++n}`)}>Kayıt yaz</Button><Button variant="ghost" onClick={() => mem.clear()}>clear()</Button><Out label="Tutulan" value={() => mem.entries().length} /></Row>
     <Log lines={() => mem.entries().map((e) => e.msg)} label="Son 3 kayıt (yeni üstte)" />
   </div>
@@ -344,7 +344,7 @@ function ChannelDemo(p: { own: boolean; api: Api }) {
   const note = (s: string) => lines.update((l) => keep(l, s, 4))
   if (p.own) managerChannelOf("sepet").on((m) => note(`${m.type} ${JSON.stringify(m.detail ?? "")}`))
   else managerChannel.on((m) => { if (m.manager === "sepet") note(`${m.topic} @ ${clock()}`) })
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={() => emit("sepet", "ekle", { urun: "çay" })}>sepet:ekle</Button><Button variant="secondary" onClick={() => emit("sepet", "bosalt")}>sepet:bosalt</Button></Row>
     <Log lines={lines} label="Gelen mesajlar" />
   </div>
@@ -353,7 +353,7 @@ function ChannelDemo(p: { own: boolean; api: Api }) {
 function NormalizeDemo() {
   const combo = signal("mod+shift+k")
   const out = () => { try { return normalizeShortcut(combo()) } catch { return "geçersiz" } }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <TextInput value={combo} on:input={(e: Event) => combo.set((e.target as HTMLInputElement).value)} aria-label="Kısayol" />
     <Out label="Kurallı biçim" value={out} />
   </div>
@@ -364,7 +364,7 @@ function CommandRunDemo() {
   const lines = signal<string[]>([])
   const save = command({ id: "ex.save", title: "Kaydet", run: () => "kaydedildi" })
   onCleanup(onCommandRun((r) => lines.update((l) => keep(l, `${clock()} ${r.id} → ${String(r.result)}`, 4))))
-  return <div class="sc-stack"><Row><Button onClick={() => save.run()}>Kaydet komutunu çalıştır</Button></Row><Log lines={lines} label="Çalışan komutlar" /></div>
+  return <div class="sc-ex-stack"><Row><Button onClick={() => save.run()}>Kaydet komutunu çalıştır</Button></Row><Log lines={lines} label="Çalışan komutlar" /></div>
 }
 
 function PatternDemo(p: { api: Api }) {
@@ -372,7 +372,7 @@ function PatternDemo(p: { api: Api }) {
   const pats = ["demo:kaydet", "demo:*", "*"]
   const counts = pats.map(() => signal(0))
   pats.forEach((pt, i) => onManager(pt, () => counts[i]!.update((n) => n + 1)))
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={() => emit("demo", "kaydet")}>demo:kaydet</Button><Button variant="secondary" onClick={() => emit("demo", "sil")}>demo:sil</Button></Row>
     <Row>{pats.map((pt, i) => <Out label={pt} value={counts[i]!} />)}</Row>
   </div>
@@ -384,7 +384,7 @@ function PublisherDemo(p: { api: Api }) {
   onManager("fatura:*", (m) => lines.update((l) => keep(l, `${m.topic} ${JSON.stringify(m.detail ?? "")}`, 4)))
   const pub = publisher("fatura")
   let n = 0
-  return <div class="sc-stack"><Row><Button onClick={() => pub("kesildi", { no: ++n })}>pub("kesildi", …)</Button><Button variant="secondary" onClick={() => pub("iptal")}>pub("iptal")</Button></Row><Log lines={lines} label="fatura:*" /></div>
+  return <div class="sc-ex-stack"><Row><Button onClick={() => pub("kesildi", { no: ++n })}>pub("kesildi", …)</Button><Button variant="secondary" onClick={() => pub("iptal")}>pub("iptal")</Button></Row><Log lines={lines} label="fatura:*" /></div>
 }
 
 function PersistedDemo() {
@@ -392,7 +392,7 @@ function PersistedDemo() {
   const s = storage()
   const count = persisted("ex.sayac", 0, { area: "session" })
   onCleanup(() => s.session.removeSync("ex.sayac"))
-  return <div class="sc-stack"><Row><Button onClick={() => count.update((n) => n + 1)}>Artır</Button><Button variant="ghost" onClick={() => count.set(0)}>Sıfırla</Button><Out label="Kalıcı sayaç" value={count} /></Row></div>
+  return <div class="sc-ex-stack"><Row><Button onClick={() => count.update((n) => n + 1)}>Artır</Button><Button variant="ghost" onClick={() => count.set(0)}>Sıfırla</Button><Out label="Kalıcı sayaç" value={count} /></Row></div>
 }
 
 function PickDemo() {
@@ -405,7 +405,7 @@ function PickDemo() {
     ids: () => pickCommands(["ex.undo", "ex.open"])().map((c) => c.title()),
     filter: () => pickCommands((c) => c.id.endsWith("e") || c.id === "ex.open")().map((c) => c.title()),
   }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Segmented value={kind} onChange={(v: string) => kind.set(v)} options={[{ value: "group", label: "grup" }, { value: "ids", label: "kimlikler" }, { value: "filter", label: "süzgeç" }]} aria-label="Seçim" />
     <Out label="Seçilen" value={() => picks[kind()]!().join(", ") || "—"} />
   </div>
@@ -422,7 +422,7 @@ function RateDemo() {
   const left = signal(q.remaining())
   const timer = setInterval(() => left.set(q.remaining()), 300)
   onCleanup(() => clearInterval(timer))
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <TextInput placeholder="Ara…" on:input={(e: Event) => search((e.target as HTMLInputElement).value)} aria-label="Arama" />
     <Row><Out label="Arama çalıştı" value={last} /><Out label="Bekliyor" value={() => yes(search.pending())} /></Row>
     <Row><Button onClick={() => { tries.update((n) => n + 1); if (q.take()) sent.update((n) => n + 1); left.set(q.remaining()) }}>Dışa aktar (3 / 10 sn)</Button>
@@ -436,7 +436,7 @@ function RateVitalDemo() {
   const value = computed(() => { const [good, poor] = THRESHOLDS[name()]; return [good * 0.5, (good + poor) / 2, poor * 1.5][step()]! })
   const rating = computed(() => rateVital(name(), value()))
   const tone = () => (rating() === "good" ? "success" : rating() === "poor" ? "danger" : "warn")
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Segmented value={name} onChange={(v: VitalName) => name.set(v)} options={(["lcp", "cls", "inp", "fcp", "ttfb"] as const).map((v) => ({ value: v, label: v }))} aria-label="Ölçüt" />
     <Segmented value={() => String(step())} onChange={(v: string) => step.set(Number(v))} options={[{ value: "0", label: "düşük" }, { value: "1", label: "orta" }, { value: "2", label: "yüksek" }]} aria-label="Değer" />
     <Row><Out label="Değer" value={() => String(Math.round(value() * 100) / 100)} /><Badge tone={tone()} dot>{rating}</Badge></Row>
@@ -452,7 +452,7 @@ function StorageDemo() {
   onCleanup(() => { for (const a of ["local", "session", "memory"] as const) s[a].removeSync("not") })
   const save = () => { s.area(area()).set("not", text(), { ttl: "1m" }).then(() => out.set("yazıldı")) }
   const read = () => { s.area(area()).get<string>("not").then((v) => out.set(v ?? "yok")) }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><TextInput value={text} on:input={(e: Event) => text.set((e.target as HTMLInputElement).value)} aria-label="Not" />
       <Segmented value={area} onChange={(v: "local" | "session" | "memory") => area.set(v)} options={["local", "session", "memory"].map((v) => ({ value: v, label: v }))} aria-label="Alan" /></Row>
     <Row><Button onClick={save}>Kaydet (1 dk)</Button><Button variant="secondary" onClick={read}>Oku</Button><Out label="Sonuç" value={out} /><Out label="Kalıcı" value={() => yes(s.persistent(area()))} /></Row>
@@ -466,7 +466,7 @@ function SyncDemo() {
     n.mock({ "POST /demo/notes": () => ({ saved: true }) }, { delay: 400 })
     net.set(n)
   })
-  return <div class="sc-stack">{() => (net() ? <SyncBody n={net()} /> : <span class="hm-muted">Yükleniyor…</span>)}</div>
+  return <div class="sc-ex-stack">{() => (net() ? <SyncBody n={net()} /> : <span class="hm-muted">Yükleniyor…</span>)}</div>
 }
 function SyncBody(p: { n: any }) {
   const n = p.n
@@ -474,7 +474,7 @@ function SyncBody(p: { n: any }) {
   const s = sync()
   const online = signal(true)
   let k = 0
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={() => s.enqueue({ url: "/demo/notes", method: "POST", body: { text: `Not ${++k}` } })}>Not ekle</Button>
       <Segmented value={() => (online() ? "on" : "off")} onChange={(v: string) => { online.set(v === "on"); n.setOnline(v === "on") }} options={[{ value: "on", label: "çevrimiçi" }, { value: "off", label: "çevrimdışı" }]} aria-label="Bağlantı" /></Row>
     <Row><Out label="Durum" value={() => s.status()} /><Out label="Bekleyen" value={() => s.pending()} /><Out label="Başarısız" value={() => s.failed()} /></Row>
@@ -487,7 +487,7 @@ function UndoDemo() {
   const u = undoStack()
   const n = signal(0)
   const step = (d: number) => u.run(d > 0 ? "Artır" : "Azalt", () => n.update((x) => x + d), () => n.update((x) => x - d))
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={() => step(1)}>Artır</Button><Button variant="secondary" onClick={() => step(-1)}>Azalt</Button><Button variant="ghost" disabled={() => !u.canUndo()} onClick={() => u.undo()}>Geri al</Button><Button variant="ghost" disabled={() => !u.canRedo()} onClick={() => u.redo()}>İleri al</Button></Row>
     <Out label="Değer" value={n} />
     <Log lines={() => u.past()} label="Geri alınabilir adımlar (yeni üstte)" />
@@ -500,7 +500,7 @@ function UndoCommandsDemo() {
   const rows = signal<string[]>([])
   const [undo, redo] = undoCommands("Düzen")
   const add = () => { const row = `Satır ${rows().length + 1}`; u.run("Satır ekle", () => rows.update((l) => [...l, row]), () => rows.update((l) => l.slice(0, -1))) }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={add}>Satır ekle</Button><Button variant="secondary" disabled={() => !undo.enabled()} onClick={() => undo.run()}>{() => undo.title()}</Button><Button variant="secondary" disabled={() => !redo.enabled()} onClick={() => redo.run()}>{() => redo.title()}</Button></Row>
     <Out label="Satırlar" value={() => rows().join(", ") || "—"} />
   </div>

@@ -25,7 +25,7 @@ animate(card, frames, { easing: curve() })   // hadi-march/motion: a name or "cu
       play: { options: [{ key: "preview", label: "Önizleme", default: "move", options: [{ value: "move", label: "kayma" }, { value: "scale", label: "büyüme" }, { value: "fade", label: "solma" }, { value: "none", label: "yok" }] }, { key: "presets", label: "Hazır eğriler", default: true }] },
       run: (p: { values: { preview: "move" | "scale" | "fade" | "none"; presets: boolean } }) => {
         const curve = signal("back")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const pv = p.values.preview, pr = p.values.presets; return <EasingCurveEditor value={curve} preview={pv} presets={pr ? undefined : false} duration={700} aria-label="Hareket eğrisi" /> }}
           <Out label="Değer" value={curve} />
         </div>
@@ -38,7 +38,7 @@ animate(card, frames, { easing: curve() })   // hadi-march/motion: a name or "cu
       run: (p: { values: { layout: "stack" | "grid"; readonly: boolean } }) => {
         const db: { name: string; email: string; team: string | null } = { name: "Ada", email: "ada@acme.test", team: "web" }
         const log = useLog()
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const l = p.values.layout, ro = p.values.readonly; return <EditForm schema={Profile} layout={l} cols={2} readonly={ro} title="Profil" submitLabel="Kaydet"
             load={async () => { await wait(400); return { ...db } }}
             save={async (v: typeof db, ctx: { changed: Partial<typeof db> }) => { await wait(300); Object.assign(db, v); log.push(`kaydedildi: ${Object.keys(ctx.changed).join(", ") || "değişiklik yok"}`); return v }}
@@ -54,7 +54,7 @@ animate(card, frames, { easing: curve() })   // hadi-march/motion: a name or "cu
       run: (p: { values: { disabled: boolean } }) => {
         const mail = signal("  ada@acme.test ")
         const ok = () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail())
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const d = p.values.disabled; return <Field label="E-posta" help="Baştaki ve sondaki boşluklar silinir"><EmailInput value={mail} disabled={d} placeholder="ad@acme.test" /></Field> }}
           <Row><Out label="Değer" value={() => JSON.stringify(mail())} /><Badge tone={() => (ok() ? "success" : "danger")}>{() => (ok() ? "geçerli" : "geçersiz")}</Badge></Row>
         </div>
@@ -67,9 +67,9 @@ animate(card, frames, { easing: curve() })   // hadi-march/motion: a name or "cu
       play: { options: [{ key: "icon", label: "Simge", default: true }, { key: "action", label: "Eylem düğmesi", default: true }] },
       run: (p: { values: { icon: boolean; action: boolean } }) => {
         const items = signal<string[]>([])
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => (items().length
-            ? <div class="sc-stack">{items().map((x) => <Row><Icon of={fileText} /> {x}</Row>)}<Button size="sm" variant="ghost" onClick={() => items.set([])}>Temizle</Button></div>
+            ? <div class="sc-ex-stack">{items().map((x) => <Row><Icon of={fileText} /> {x}</Row>)}<Button size="sm" variant="ghost" onClick={() => items.set([])}>Temizle</Button></div>
             : <Empty icon={p.values.icon ? inbox : undefined} title="Henüz rapor yok"
               action={p.values.action ? <Button variant="primary" onClick={() => items.set(["Acme · Ekim raporu", "Acme · Kasım raporu"])}>Örnek rapor ekle</Button> : undefined}>
               Oluşturduğun raporlar burada listelenir.
@@ -83,7 +83,7 @@ animate(card, frames, { easing: curve() })   // hadi-march/motion: a name or "cu
       run: (p: { values: { title: boolean; retry: boolean } }) => {
         const tries = signal(1), ok = signal(false)
         const retry = async () => { tries.update((n) => n + 1); await wait(300); if (tries() >= 3) ok.set(true) }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => (ok()
             ? <Row><Badge tone="success">Yüklendi</Badge><Button size="sm" variant="ghost" onClick={() => { ok.set(false); tries.set(1) }}>Baştan</Button></Row>
             : <ErrorBox {...(p.values.title ? { title: "Siparişler yüklenemedi" } : {})} error={() => new Error(`Sunucu yanıt vermedi (deneme ${tries()})`)} {...(p.values.retry ? { retry } : {})} />)}
@@ -115,7 +115,7 @@ animate(card, frames, { easing: curve() })   // hadi-march/motion: a name or "cu
       run: (p: { values: { inline: boolean; required: boolean } }) => {
         const nick = signal("ad")
         const err = () => (nick().trim().length < 3 ? "En az 3 karakter" : nick().length > 20 ? "En çok 20 karakter" : null)
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const inl = p.values.inline, req = p.values.required; return <Field label="Takma ad" help="3–20 karakter" error={err()} required={req} inline={inl}><TextInput value={nick} /></Field> }}
           <Out label="Hata" value={() => err() ?? "yok"} />
         </div>
@@ -130,7 +130,7 @@ animate(card, frames, { easing: curve() })   // hadi-march/motion: a name or "cu
         const v = signal("")
         const Own = () => {
           const f = useContext(FieldContext)
-          return <div class="sc-stack"><input class="hm-input" id={f?.id ?? ""} aria-describedby={() => f?.describedby?.() ?? null} aria-invalid={() => String(!!f?.invalid?.())} value={v()} onInput={(e: Event) => v.set((e.target as HTMLInputElement).value)} />
+          return <div class="sc-ex-stack"><input class="hm-input" id={f?.id ?? ""} aria-describedby={() => f?.describedby?.() ?? null} aria-invalid={() => String(!!f?.invalid?.())} value={v()} onInput={(e: Event) => v.set((e.target as HTMLInputElement).value)} />
             <Out label="id" value={f?.id ?? "—"} /><Out label="describedby" value={() => f?.describedby?.() || "—"} /></div>
         }
         return <Field label="Kendi denetimim" help="Etiket bu girdiyi bulur"><Own /></Field>

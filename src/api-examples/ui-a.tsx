@@ -23,7 +23,7 @@ export default examples({
 <AccentPicker choices={ACCENT_CHOICES.filter((c) => c.startsWith("brand-"))} />`,
       run: () => {
         const pick = signal<string>(ACCENT_CHOICES[1]!)
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <div class="sc-ex-ui-a-swatches" role="radiogroup" aria-label="Vurgu seçenekleri">
             {ACCENT_CHOICES.map((c) => <button type="button" role="radio" class="sc-ex-ui-a-swatch" data-hm-color={c} aria-checked={() => String(pick() === c)} onClick={() => pick.set(c)}><span aria-hidden="true" />{c}</button>)}
           </div>
@@ -43,7 +43,7 @@ export default examples({
       ] },
       run: (p: { values: { set: string; placement: "bottom-start" | "bottom-end" } }) => {
         const choices = () => ACCENT_CHOICES.filter((c) => p.values.set === "all" || (p.values.set === "brand" ? c === "primary" || c.startsWith("brand-") : !c.startsWith("brand-")))
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row>
             {() => <AccentPicker label="Vurgu" choices={choices()} placement={p.values.placement} />}
             <Button variant="ghost" disabled={() => accent() === "primary"} onClick={() => setAccent("primary")}>Temaya dön</Button>
@@ -85,7 +85,7 @@ export default examples({
         const [lines, log] = logOf()
         const done = signal(0)
         const docs = [{ name: "Teklif.pdf" }, { name: "Sözleşme.docx" }]
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => {
             const { confirm, danger, iconOnly } = p.values
             const run = action("Arşivle", (doc: { name: string }) => new Promise<string>((r) => setTimeout(() => r(doc.name), 700)), {
@@ -137,7 +137,7 @@ export default examples({
       run: (p: { values: { tone: "info" | "success" | "warn" | "danger"; title: boolean; dismissable: boolean } }) => {
         const n = signal(0)
         const TEXT = { info: "Yeni sürüm hazır.", success: "Yedekleme tamamlandı.", warn: "2 GB alanın %92'si kullanılıyor.", danger: "Ödeme alınamadı." }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { n(); const { tone, title, dismissable } = p.values; return <Alert tone={tone} title={title ? "Acme hesabı" : undefined} dismissable={dismissable} onDismiss={() => toast("Uyarı kapatıldı")}>{TEXT[tone]}</Alert> }}
           <Button variant="ghost" size="sm" onClick={() => n.update((x) => x + 1)}>Yeniden göster</Button>
         </div>
@@ -179,7 +179,7 @@ export default examples({
           {() => { const { aside, footer } = p.values; return <AuthLayout brand={<Brand name="Acme" mark={sparkles} />} title="Giriş yap" subtitle="Bağlantıyı e-postanıza gönderelim"
             aside={aside ? { headline: "Ekibiniz tek yerde", text: "Projeler, belgeler ve sohbet.", points: [{ icon: shieldCheck, title: "Güvenli", text: "Parolasız giriş" }, { icon: zap, title: "Hızlı", text: "Saniyeler içinde" }] } : undefined}
             footer={footer ? <span class="hm-muted">Hesabınız yok mu? Kaydolun.</span> : undefined}>
-            {() => (sent() ? <Alert tone="success">Bağlantı {email() || "adresinize"} gönderildi.</Alert> : <form class="sc-stack" onSubmit={(e: Event) => { e.preventDefault(); sent.set(true) }}>
+            {() => (sent() ? <Alert tone="success">Bağlantı {email() || "adresinize"} gönderildi.</Alert> : <form class="sc-ex-stack" onSubmit={(e: Event) => { e.preventDefault(); sent.set(true) }}>
               <input class="hm-input" type="email" placeholder="ada@acme.example" aria-label="E-posta" value={email} onInput={(e: Event) => email.set((e.target as HTMLInputElement).value)} />
               <Button type="submit" variant="primary" block>Bağlantı gönder</Button>
             </form>)}
@@ -196,7 +196,7 @@ export default examples({
       ] },
       run: (p: { values: { size: "sm" | "md" | "lg"; photo: boolean } }) => {
         const name = signal("Ada Yılmaz")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row>
             <Avatar name={name} size={() => p.values.size} src={() => (p.values.photo ? "/yok/acme-avatar.png" : null)} />
             {["Grace Hopper", "Linus", "Acme Destek"].map((n) => <Avatar name={n} size={() => p.values.size} />)}
@@ -214,7 +214,7 @@ export default examples({
       run: (p: { values: { max: number; size: "sm" | "md" | "lg" } }) => {
         const ALL = ["Ada Yılmaz", "Grace Hopper", "Linus Torvalds", "Margaret Hamilton", "Alan Kay", "Barbara Liskov", "Ken Thompson"]
         const names = signal(ALL.slice(0, 5))
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => <AvatarGroup names={names} max={p.values.max} size={p.values.size} />}
           <Row>
             <Button size="sm" disabled={() => names().length >= ALL.length} onClick={() => names.update((l) => ALL.slice(0, l.length + 1))}>Üye ekle</Button>
@@ -234,7 +234,7 @@ export default examples({
       ] },
       run: (p: { values: { tone: "neutral" | "primary" | "success" | "warn" | "danger" | "info"; showZero: boolean } }) => {
         const n = signal(4)
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { tone, showZero } = p.values; return <Row>
             <Badge tone={tone}>Etkin</Badge>
             <span class="sc-ex-ui-a-bell"><Button size="sm" icon={bell} aria-label="Bildirimler" /><Badge tone={tone} count={n} max={9} showZero={showZero} label="okunmamış" /></span>
@@ -294,7 +294,7 @@ export default examples({
       run: (p: { values: { icons: boolean } }) => {
         const path = signal(["Acme", "Pazarlama", "2026", "Kampanya"])
         const items = () => path().map((x, i) => ({ id: `${i}-${x}`, label: x, icon: p.values.icons ? (i ? folder : home) : undefined, onSelect: () => path.set(path().slice(0, i + 1)) }))
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Breadcrumbs label="Konum" items={items} />
           <Row>
             <Button size="sm" icon={plus} onClick={() => path.update((l) => [...l, ["Taslaklar", "Görseller", "Arşiv"][l.length % 3]!])}>Alt klasöre gir</Button>
@@ -315,7 +315,7 @@ export default examples({
       run: (p: { values: { variant: "primary" | "secondary" | "ghost" | "danger" | "dark"; size: "sm" | "md" | "lg"; icon: boolean; block: boolean } }) => {
         const saving = signal(false), saved = signal(0)
         const save = () => { saving.set(true); setTimeout(() => { saving.set(false); saved.update((x) => x + 1) }, 900) }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { icon, block } = p.values; return <Button variant={() => p.values.variant} size={() => p.values.size} icon={icon ? download : undefined} block={block} loading={saving} onClick={save}>Kaydet</Button> }}
           <Out label="kaydedildi" value={saved} />
         </div>

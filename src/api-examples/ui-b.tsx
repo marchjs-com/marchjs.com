@@ -22,7 +22,7 @@ export default examples({
       run: (p: { values: { size: "sm" | "md" | "lg"; dismissable: boolean } }) => {
         const open = signal(false), log = useLog()
         const close = (why: string) => { open.set(false); log.push(why) }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><Button variant="primary" onClick={() => open.set(true)}>Projeyi sil…</Button></Row>
           {() => { const d = p.values.dismissable; return <Dialog open={open} onClose={() => close("kapatıldı")} title="Acme projesini sil" size={() => p.values.size} dismissable={d}
             footer={<Row><Button variant="ghost" onClick={() => close("vazgeçildi")}>Vazgeç</Button><Button variant="danger" onClick={() => close("silindi")}>Sil</Button></Row>}>
@@ -40,7 +40,7 @@ export default examples({
       play: { options: [{ key: "open", label: "Açık başlasın", default: false }] },
       run: (p: { values: { open: boolean } }) => {
         const log = useLog()
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => <Disclosure title="Teslimat ayrıntıları" open={p.values.open} onToggle={(o) => log.push(o ? "açıldı" : "kapandı")}>
             <KeyValue items={{ Kargo: "Acme Lojistik", Süre: "2 iş günü", Ücret: "Ücretsiz" }} />
           </Disclosure>}
@@ -55,10 +55,10 @@ export default examples({
       play: { options: [{ key: "kind", label: "Biçim", default: "label", options: [{ value: "plain", label: "çizgi" }, { value: "label", label: "etiketli" }, { value: "vertical", label: "dikey" }] }] },
       run: (p: { values: { kind: string } }) => {
         const or = signal("ya da")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => p.values.kind === "vertical"
             ? <Row><Button variant="ghost">Kaydet</Button><Divider vertical /><Button variant="ghost">Paylaş</Button><Divider vertical /><Button variant="ghost">Sil</Button></Row>
-            : <div class="sc-stack"><Button variant="primary">E-postayla giriş</Button>{p.values.kind === "label" ? <Divider label={or} /> : <Divider />}<Button>Acme hesabıyla giriş</Button></div>}
+            : <div class="sc-ex-stack"><Button variant="primary">E-postayla giriş</Button>{p.values.kind === "label" ? <Divider label={or} /> : <Divider />}<Button>Acme hesabıyla giriş</Button></div>}
           {() => p.values.kind === "label" && <Row><TextInput value={or} aria-label="Ayırıcı etiketi" /></Row>}
         </div>
       },
@@ -79,7 +79,7 @@ export default examples({
           { id: "editor", title: "app.ts", icon: fileText, content: () => <div class="sc-ex-ui-b-pane"><Button size="sm" onClick={() => dirty.update((d) => !d)}>{() => (dirty() ? "Kaydet" : "Değiştir")}</Button></div>, dirty: dirty },
           { id: "log", title: "Günlük", content: () => <div class="sc-ex-ui-b-pane"><Button size="sm" onClick={() => errors.update((n) => n + 1)}>Hata ekle</Button></div>, badge: () => errors() || null },
         ]
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><Button size="sm" onClick={() => dock?.open("log")}>Günlüğe geç</Button><Button size="sm" variant="ghost" onClick={() => dock?.reset()}>Yerleşimi sıfırla</Button></Row>
           <div class="sc-ex-ui-b-dock">{() => {
             const s = p.values.split
@@ -131,7 +131,7 @@ EASING_PRESETS.find((p) => p.name === "back")!.value   // [0.34, 1.56, 0.64, 1]`
       run: () => {
         const i = signal(0)
         const cur = () => EASING_PRESETS[i()]!
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row>{EASING_PRESETS.map((p, n) => <Button size="sm" variant={() => (i() === n ? "primary" : "ghost")} aria-pressed={() => String(i() === n)} onClick={() => i.set(n)}>{p.name}</Button>)}</Row>
           <Out label="value" value={() => `[${cur().value.join(", ")}]`} />
           <Out label="CSS" value={() => `cubic-bezier(${cur().value.join(", ")})`} />
@@ -144,7 +144,7 @@ EASING_PRESETS.find((p) => p.name === "back")!.value   // [0.34, 1.56, 0.64, 1]`
       run: () => {
         const from = signal(0), picked = signal("—")
         const page = () => EMOJI_SET.slice(from(), from() + 12)
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><Button size="sm" variant="ghost" onClick={() => from.update((n) => (n + 12) % EMOJI_SET.length)}>Sonraki 12</Button><Out label="Toplam" value={EMOJI_SET.length} /><Out label="Seçilen" value={picked} /></Row>
           <div class="sc-ex-ui-b-emoji" role="group" aria-label="Emojiler">{() => page().map((e) => <button type="button" aria-label={e} onClick={() => picked.set(e)}>{e}</button>)}</div>
         </div>

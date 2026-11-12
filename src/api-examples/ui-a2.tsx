@@ -30,7 +30,7 @@ export default examples({
       run: (p: { values: { attached: boolean } }) => {
         const align = signal<"start" | "center" | "end">("start")
         const OPTS = [["start", "Sol"], ["center", "Orta"], ["end", "Sağ"]] as const
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => <ButtonGroup label="Hizalama" attached={p.values.attached}>
             {OPTS.map(([v, l]) => <Button variant={() => (align() === v ? "primary" : "secondary")} aria-pressed={() => String(align() === v)} onClick={() => align.set(v)}>{l}</Button>)}
           </ButtonGroup>}
@@ -48,7 +48,7 @@ export default examples({
         const day = signal<string | null>(null)
         const [lines, log] = logOf(2)
         const weekend = (d: string) => { const w = new Date(`${d}T12:00`).getDay(); return w === 0 || w === 6 }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { weekends, firstDay } = p.values; return <Calendar value={day} min={addDays(0)} firstDay={firstDay} isDisabled={weekends ? weekend : undefined} onPick={(d) => log(`randevu: ${d}`)} /> }}
           <Row><Out label="value" value={() => day() ?? "—"} /></Row>
           <Log lines={lines} />
@@ -81,7 +81,7 @@ export default examples({
       run: (p: { values: { perView: 1 | 2 | 3 } }) => {
         const SLIDES = [["Başlangıç", "₺0"], ["Ekip", "₺290"], ["Pro", "₺590"], ["Kurumsal", "Teklif"], ["Eğitim", "₺90"]]
         const pick = signal("—")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => <Carousel label="Planlar" perView={p.values.perView}>
             {SLIDES.map(([n, price], i) => <div class="sc-ex-ui-a-slide" data-hm-color={(["brand-orange", "brand-blue", "brand-green", "brand-purple", "brand-pink"] as const)[i]}>
               <strong>{n}</strong><span>{price}</span><Button size="sm" onClick={() => pick.set(n!)}>Seç</Button>
@@ -173,7 +173,7 @@ export default examples({
         const all = computed(() => items.every((s) => s()))
         const some = computed(() => items.some((s) => s()) && !all())
         const LABELS = ["E-posta", "SMS", "Anlık bildirim"]
-        return () => { const { variant, size } = p.values; return <div class="sc-stack">
+        return () => { const { variant, size } = p.values; return <div class="sc-ex-stack">
           <Checkbox variant={variant} size={size} value={all()} indeterminate={some()} onChange={(v) => items.forEach((s) => s.set(v))} label="Tümü" hint={() => `${items.filter((s) => s()).length} / 3 seçili`} />
           <div class="sc-ex-ui-a-indent">{items.map((s, i) => <Checkbox variant={variant} size={size} value={s} label={LABELS[i]} />)}</div>
         </div> }
@@ -190,7 +190,7 @@ export default examples({
       run: (p: { values: { variant: "classic" | "chip" | "card"; inline: boolean; brand: boolean } }) => {
         const days = signal<string[]>(["mon", "wed"])
         const OPTS = [{ value: "mon", label: "Pzt" }, { value: "tue", label: "Sal" }, { value: "wed", label: "Çar" }, { value: "thu", label: "Per" }, { value: "fri", label: "Cum", hint: "yarım gün" }]
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { variant, inline, brand } = p.values; return <CheckboxGroup value={days} variant={variant} inline={inline} colors={brand ? "brand" : undefined} options={OPTS} aria-label="Çalışma günleri" /> }}
           <Out label="value" value={() => JSON.stringify(days())} />
         </div>
@@ -206,7 +206,7 @@ export default examples({
         const tags = signal(["tasarım", "ürün", "acme"])
         const draft = signal("")
         const add = (e: Event) => { e.preventDefault(); const v = draft().trim(); if (v && !tags().includes(v)) tags.update((l) => [...l, v]); draft.set("") }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row>{() => tags().map((t) => <Chip tone={p.values.tone} size={p.values.size} onRemove={() => tags.update((l) => l.filter((x) => x !== t))}>{t}</Chip>)}</Row>
           <form class="sc-row" onSubmit={add}>
             <input class="hm-input sc-ex-ui-a-narrow" placeholder="Etiket ekle" aria-label="Etiket" value={draft} onInput={(e: Event) => draft.set((e.target as HTMLInputElement).value)} />
@@ -225,7 +225,7 @@ export default examples({
       run: (p: { values: { count: number; kind: "auto" | "segmented" | "chips" | "combobox" } }) => {
         const CITIES = ["Ankara", "İstanbul", "İzmir", "Bursa", "Antalya", "Konya", "Adana", "Trabzon", "Eskişehir", "Samsun", "Kayseri", "Mersin"]
         const city = signal<string | null>("Ankara")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { count, kind } = p.values; return <ChoicePicker value={city} kind={kind} options={CITIES.slice(0, count)} aria-label="Şehir" /> }}
           <Out label="value" value={() => city() ?? "—"} />
         </div>

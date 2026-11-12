@@ -87,7 +87,7 @@ export default examples({
           <div class="sc-ex-motion-b-stage"><div class="sc-ex-motion-b-card" ref={(el: HTMLElement) => { card = el }}>Bu kart</div></div>
           <div class="sc-ex-motion-b-meter" aria-hidden="true"><i ref={(el: HTMLElement) => { bar = el }} /></div>
           <Out label="geçiş" value={() => Math.round(seen() * 100) + "%"} />
-          <p class="sc-api-note">Sayfayı kaydırın: kart görünüm alanından geçerken değer 0'dan 1'e gider.</p>
+          <p class="sc-apip-note">Sayfayı kaydırın: kart görünüm alanından geçerken değer 0'dan 1'e gider.</p>
         </div>
       },
     },

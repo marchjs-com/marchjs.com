@@ -76,7 +76,7 @@ function Cfg<C extends object>(p: { m: Manager<any, C>; fn: (c: Partial<C>) => v
     on.set(false)
   }
   onCleanup(() => { undo(); if (!was) p.m.dispose() })
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={apply} disabled={on}>Yapılandırmayı uygula</Button>
       <Button variant="ghost" onClick={undo} disabled={() => !on()}>Eski haline döndür</Button>
@@ -94,7 +94,7 @@ function ManagerPanel(p: { m: Manager<any, any> }) {
   const off = onManager(`${p.m.name}:*`, (e) => queueMicrotask(() => log.update((l) => [...l.slice(-4), `${now()} ${e.topic}`])))
   onCleanup(off)
   leaveAsFound(p.m)
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={() => { p.m.get(); n.update((x) => x + 1) }}>get()</Button>
       <Button variant="ghost" onClick={() => { p.m.dispose(); n.update((x) => x + 1) }}>dispose()</Button>
@@ -111,7 +111,7 @@ function Dispose(p: { m: Manager<any, any>; use: () => void; stop: () => void; r
   const n = refresh(p.m)
   leaveAsFound(p.m)
   onCleanup(() => p.end?.())
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={() => { p.use(); n.update((x) => x + 1) }}>{p.useLabel}</Button>
       <Button variant="secondary" onClick={() => { p.stop(); n.update((x) => x + 1) }}>{p.stopLabel}</Button>
@@ -126,7 +126,7 @@ function Dispose(p: { m: Manager<any, any>; use: () => void; stop: () => void; r
 // ------------------------------------------------------------------ constants
 function CategoriesDemo() {
   const list = signal<{ id: string; title: string; required?: boolean }[]>([...DEFAULT_CATEGORIES])
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <div class="sc-ex-managers-a-grid">{() => list().map((c) => <div class="sc-ex-managers-a-cell"><code>{c.id}</code><span>{c.title}</span>{c.required ? <Badge tone="warning">her zaman açık</Badge> : <Badge tone="neutral">isteğe bağlı</Badge>}</div>)}</div>
     <Row>
       <Button onClick={() => list.update((l) => (l.some((c) => c.id === "survey") ? l : [...l, { id: "survey", title: "Anketler" }]))}>Kendi kategorini ekle</Button>
@@ -139,7 +139,7 @@ function CategoriesDemo() {
 function PrefsDemo() {
   const changed = signal<Record<string, unknown>>({})
   const flip = (k: "strongFocus" | "contrast" | "underlineLinks") => changed.update((c) => ({ ...c, [k]: !(c[k] ?? DEFAULT_PREFS[k]) }))
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={() => flip("strongFocus")}>strongFocus</Button>
       <Button onClick={() => flip("contrast")}>contrast</Button>
@@ -153,7 +153,7 @@ function PrefsDemo() {
 
 function LevelsDemo() {
   const min = signal<string>("warn")
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Segmented aria-label="En düşük düzey" value={min()} onChange={(v: string) => min.set(v)} options={LEVELS.map((l) => ({ value: l, label: l }))} />
     <div class="sc-ex-managers-a-grid">{() => LEVELS.map((l, i) => {
       const written = i >= LEVELS.indexOf(min() as (typeof LEVELS)[number])
@@ -168,7 +168,7 @@ function ThresholdsDemo() {
   const names = Object.keys(THRESHOLDS) as (keyof typeof THRESHOLDS)[]
   const value = () => { const [good, poor] = THRESHOLDS[name()]; return [good * 0.6, (good + poor) / 2, poor * 1.4][pos()]! }
   const rating = () => { const [good, poor] = THRESHOLDS[name()]; const v = value(); return v <= good ? "good" : v <= poor ? "needs-improvement" : "poor" }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Segmented aria-label="Ölçüm" value={name()} onChange={(v: keyof typeof THRESHOLDS) => name.set(v)} options={names.map((k) => ({ value: k, label: k }))} />
     <Segmented aria-label="Örnek değer" value={pos()} onChange={(v: number) => pos.set(v)} options={[{ value: 0, label: "düşük" }, { value: 1, label: "orta" }, { value: 2, label: "yüksek" }]} />
     <Out label={() => `THRESHOLDS.${name()}`} value={() => fmt(THRESHOLDS[name()])} />
@@ -181,7 +181,7 @@ function ThresholdsDemo() {
 function A11yDemo(p: { values: { fontScale: number; strongFocus: boolean } }) {
   useConfig(a11yManager, { storage: null })
   effect(() => { const fontScale = p.values.fontScale, strongFocus = p.values.strongFocus; untrack(() => a11y.set({ fontScale, strongFocus })) })
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={() => a11y.set({ contrast: !a11y.prefs().contrast })}>Yüksek karşıtlık</Button>
       <Button onClick={() => a11y.set({ underlineLinks: !a11y.prefs().underlineLinks })}>Bağlantıları altı çizili yap</Button>
@@ -196,7 +196,7 @@ function AnnounceDemo(p: { values: { politeness: "polite" | "assertive" } }) {
   leaveAsFound(announcerManager)
   let n = 0
   const say = (text: string) => announce(text, { politeness: p.values.politeness })
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={() => say("Kaydedildi")}>"Kaydedildi"</Button>
       <Button onClick={() => say(`${++n + 2} sonuç bulundu`)}>Sonuç sayısı</Button>
@@ -208,7 +208,7 @@ function AnnounceDemo(p: { values: { politeness: "polite" | "assertive" } }) {
 
 function AnnouncerDemo() {
   leaveAsFound(announcerManager)
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={() => announcer.announce("Dosya yüklendi")}>Nazikçe duyur</Button>
       <Button onClick={() => announcer.announce("Oturum süresi doldu", { politeness: "assertive" })}>Hemen duyur</Button>
@@ -232,7 +232,7 @@ function AuditDemo() {
     </div>) as HTMLElement
     return audit(root)
   }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row><Button onClick={() => fixed.update((v) => !v)}>{() => (fixed() ? "Sorunları geri getir" : "Sorunları düzelt")}</Button><Out label="bulunan" value={() => String(issues().length)} /></Row>
     <ul class="sc-ex-managers-a-sample">{() => (issues().length ? issues().map((i) => <li><code>{i.rule}</code> {i.message}</li>) : <li>Sorun bulunmadı.</li>)}</ul>
   </div>
@@ -240,7 +240,7 @@ function AuditDemo() {
 
 function AriaKeysDemo() {
   const combo = signal("mod+shift+k")
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Segmented aria-label="Kısayol" value={combo()} onChange={(v: string) => combo.set(v)} options={["mod+s", "mod+shift+k", "alt+enter"].map((v) => ({ value: v, label: v }))} />
     <Out label="ariaKeys(combo)" value={() => ariaKeys(combo())} />
   </div>
@@ -259,7 +259,7 @@ function BeaconDemo(p: { values: { batch: number } }) {
   onCleanup(() => transport.dispose?.())
   let seq = 0
   const write = (level: "info" | "warn" | "error") => { transport.write({ level, scope: "demo", msg: `olay ${++seq}`, at: Date.now(), seq }); queued.set(transport.queued()) }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button variant="ghost" onClick={() => write("info")}>info (atlanır)</Button>
       <Button onClick={() => write("warn")}>warn</Button>
@@ -274,7 +274,7 @@ function BeaconDemo(p: { values: { batch: number } }) {
 
 function BucketDemo(p: { values: { percent: number } }) {
   let $id = "ada"
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <TextInput bind:value={$id} aria-label="Kullanıcı kimliği" />
     <Out label={() => `bucket("${$id}", "newCheckout")`} value={() => String(bucket($id, "newCheckout"))} />
     <Out label={() => `bucket("${$id}", "pricing")`} value={() => String(bucket($id, "pricing"))} />
@@ -287,7 +287,7 @@ function ConsoleTransportDemo() {
   const level = signal<"debug" | "info" | "warn" | "error">("info")
   const last = signal("—")
   const write = () => { const msg = `${level()} kaydı`; t.write({ level: level(), scope: "demo", msg, at: Date.now(), seq: 1, data: { user: "Ada" } }); last.set(`[demo] ${msg}`) }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Segmented aria-label="Düzey" value={level()} onChange={(v: "debug" | "info" | "warn" | "error") => level.set(v)} options={LEVELS.map((l) => ({ value: l, label: l }))} />
     <Row><Button onClick={write}>Konsola yaz</Button><Out label="transport.name" value={t.name} /><Out label="yazılan" value={last} /></Row>
     <p class="hm-muted">Tarayıcı konsolunu açın: satır seçilen düzeyin yöntemiyle (console.info, console.warn…) yazılır.</p>
@@ -304,7 +304,7 @@ function CacheDemo(p: { values: { ttl: string } }) {
     const user = await appCache().wrap("demo:user", async () => { loads.update((n) => n + 1); await wait(250); return { name: "Ada", at: now() } }, { ttl: p.values.ttl, tags: ["demo"] })
     shown.set(`${user.name} · alındığı an ${user.at}`)
   }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={get}>Kullanıcıyı getir</Button>
       <Button variant="secondary" onClick={() => appCache().invalidate("demo")}>"demo" etiketini geçersiz kıl</Button>
@@ -318,7 +318,7 @@ function CacheDemo(p: { values: { ttl: string } }) {
 function ConfigDemo() {
   useConfig(configManager, { defaults: { ui: { density: "comfortable" }, api: { timeout: 30000 } } })
   const c = () => appConfig()
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={() => c().set("ui.density", "compact")}>set("ui.density", "compact")</Button>
       <Button variant="ghost" onClick={() => c().reset("ui.density")}>reset("ui.density")</Button>
@@ -334,7 +334,7 @@ function WindowDemo() {
   const w = appWindow()
   const log = signal<string[]>([])
   w.on("demo:ping", (data, from) => log.update((l) => [...l.slice(-4), `${now()} · ${from.slice(0, 6)}: ${fmt(data)}`]))
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={() => w.broadcast("demo:ping", { hello: "Ada" })}>Diğer sekmelere mesaj gönder</Button>
       <Out label="id" value={w.id.slice(0, 8)} />
@@ -355,7 +355,7 @@ function ClipboardDemo() {
   onCleanup(() => clipboard().clearHistory())
   const text = signal("INV-2026-001")
   const board = clipboard()
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={() => { void clipboard().copy(text()) }}>{() => (clipboard().copied() ? "Kopyalandı" : "Kopyala")}</Button>
       <Button variant="ghost" onClick={() => clipboard().clearHistory()}>Geçmişi temizle</Button>
@@ -375,7 +375,7 @@ function CommandDemo() {
     run: async ({ signal }) => { await wait(1500, signal); return "Kaydedildi" },
   })
   const run = async () => { const r = await save.run(); log.update((l) => [...l.slice(-4), `${now()} · ${r ?? "atlandı ya da iptal edildi"}`]) }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={run} disabled={() => !save.enabled()}>{() => (save.busy() ? "Kaydediliyor…" : save.title())}</Button>
       <Button variant="ghost" onClick={() => save.cancel()} disabled={() => !save.busy()}>İptal et</Button>
@@ -397,7 +397,7 @@ function CommandsDemo() {
     if (extra) { extra.dispose(); extra = null } else extra = command({ id: "demo.open2", title: () => "Aç (ikinci)", shortcut: "mod+o", palette: false, run: () => "ikinci" })
     tick.update((n) => n + 1)
   }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={async () => result.set(String(await commands.run("demo.open")))}>commands.run("demo.open")</Button>
       <Button variant="ghost" onClick={toggleConflict}>{() => { tick(); return extra ? "Çakışmayı kaldır" : "Aynı kısayolla ikinci komut ekle" }}</Button>
@@ -415,7 +415,7 @@ function ConsentDemo() {
   const log = signal<string[]>([])
   const track = consent.gate("analytics", (event: string) => log.update((l) => [...l.slice(-4), `${now()} · gönderildi: ${event}`]))
   const send = () => { if (track("sayfa_görüldü") === undefined) log.update((l) => [...l.slice(-4), `${now()} · engellendi (onay yok)`]) }
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={() => consent.acceptAll()}>acceptAll()</Button>
       <Button variant="secondary" onClick={() => consent.rejectAll()}>rejectAll()</Button>
@@ -435,7 +435,7 @@ function DeviceDemo() {
   const d = device()
   const store = signal("—")
   const checks = ["share", "vibrate", "webgl2", "serviceWorker", "clipboard"] as const
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Out label="mobile()" value={yes(d.mobile())} /><Out label="touch()" value={yes(d.touch())} /><Out label="platform()" value={d.platform()} />
       <Out label="cores()" value={String(d.cores() ?? "—")} /><Out label="memory()" value={String(d.memory() ?? "—")} />
@@ -455,7 +455,7 @@ function DirtyDemo() {
   const d = dirtyState()
   const answer = signal("—")
   d.track("note", () => $text !== saved(), "Not", () => saved.set($text))
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <TextInput bind:value={$text} aria-label="Not" />
     <Out label="any()" value={() => yes(d.any())} />
     <Out label="list()" value={() => d.list().map((e) => e.label).join(", ") || "—"} />
@@ -476,7 +476,7 @@ function DefineDemo() {
   const log = signal<string[]>([])
   const off = onManager("api-demo-counter:*", (e) => queueMicrotask(() => log.update((l) => [...l.slice(-4), `${now()} · ${e.topic}`])))
   onCleanup(() => { off(); counter.dispose() })
-  return <div class="sc-stack">
+  return <div class="sc-ex-stack">
     <Row>
       <Button onClick={() => counter.get().inc()}>get().inc()</Button>
       <Button variant="secondary" onClick={() => counter.configure({ step: 5 })}>configure({"{ step: 5 }"})</Button>
@@ -850,7 +850,7 @@ function DisposeFlags() {
 function DisposeFocus() {
   const box = (<div class="sc-ex-managers-a-box"><Button size="sm" variant="secondary">İçerideki düğme</Button></div>) as HTMLElement
   let release: (() => void) | null = null
-  return <div class="sc-stack">{box}<Dispose m={focusManager} label="trapped()" useLabel="focus.trap(kutu)" stopLabel="disposeFocus()"
+  return <div class="sc-ex-stack">{box}<Dispose m={focusManager} label="trapped()" useLabel="focus.trap(kutu)" stopLabel="disposeFocus()"
     use={() => { release?.(); release = focus.trap(box, { contain: false }) }} stop={() => disposeFocus()}
     read={() => { const t = focus.trapped(); if (t) box.setAttribute("data-on", ""); else box.removeAttribute("data-on"); return t }}
     end={() => release?.()} /></div>

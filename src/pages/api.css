@@ -44,3 +44,4 @@
 .sc-ex-log { display: grid; gap: 2px; max-height: 9rem; margin: 0; padding: var(--hm-space-2); overflow: auto; border-radius: var(--hm-radius-1); background: var(--hm-surface-2); font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); list-style: none; }
 .sc-ex-target { min-height: 2.5rem; padding: var(--hm-space-2); border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-1); }
 .sc-ex-layer { position: fixed; inset-block-end: var(--hm-space-4); inset-inline-end: var(--hm-space-4); padding: var(--hm-space-3); }
+.sc-ex-stack { display: grid; gap: var(--hm-space-2); min-width: 0; }

@@ -52,7 +52,7 @@ export default examples({
           applyHead([], {}, d)
           out.set(["sıfırlamadan sonra applyHead([]) hiçbir şeyi silmedi:", ...headOf(d)])
         }
-        return <div class="sc-stack"><Button onClick={go}>Taslak belgede dene</Button><Pre text={() => out().join("\n")} /></div>
+        return <div class="sc-ex-stack"><Button onClick={go}>Taslak belgede dene</Button><Pre text={() => out().join("\n")} /></div>
       },
     },
     _resetSeo: {
@@ -66,7 +66,7 @@ export default examples({
           _resetSeo()
           log.push(`_resetSeo sonrası: ${headTags().length} etiket`)
         }
-        return <div class="sc-stack"><Button onClick={go}>Ekle ve sıfırla</Button><Log lines={log} /></div>
+        return <div class="sc-ex-stack"><Button onClick={go}>Ekle ve sıfırla</Button><Log lines={log} /></div>
       },
     },
     applyHead: {
@@ -82,7 +82,7 @@ applyHead([])   // removes what it wrote, restores what it changed`,
           applyHead([], {}, d)
           out.set(`yazıldı:\n${written.join("\n")}\n\napplyHead([]) sonrası:\n${headOf(d).join("\n")}`)
         }
-        return <div class="sc-stack"><Row><Text label="Başlık" value={title} /><Button onClick={go}>Taslak belgeye yaz</Button></Row><Pre text={out} /></div>
+        return <div class="sc-ex-stack"><Row><Text label="Başlık" value={title} /><Button onClick={go}>Taslak belgeye yaz</Button></Row><Pre text={out} /></div>
       },
     },
     checkHtml: {
@@ -91,7 +91,7 @@ issues.filter((i) => i.level === "error")   // title, description, canonical, im
       run: () => {
         const html = signal(PAGE)
         const issues = () => checkHtml(html())
-        return <div class="sc-stack"><Area label="HTML" value={html} />
+        return <div class="sc-ex-stack"><Area label="HTML" value={html} />
           <Row><Button variant="ghost" onClick={() => html.set(html().replace("</head>", `  <meta name="description" content="Acme mağazasında her mevsim için rahat ve şık ayakkabılar.">\n</head>`))}>Açıklama ekle</Button>
             <Out label="Hata" value={() => String(issues().filter((i) => i.level === "error").length)} /><Out label="Uyarı" value={() => String(issues().filter((i) => i.level === "warn").length)} /></Row>
           <Tags label="Sorunlar" items={() => issues().map((i) => `${i.level} · ${i.rule}`)} /></div>
@@ -102,7 +102,7 @@ issues.filter((i) => i.level === "error")   // title, description, canonical, im
 // dist/index.html: error description        missing <meta name="description">`,
       run: () => {
         const file = signal("dist/ayakkabi.html")
-        return <div class="sc-stack"><Text label="Dosya" value={file} /><Pre text={() => formatIssues(file(), checkHtml(PAGE)) || "sorun yok"} /></div>
+        return <div class="sc-ex-stack"><Text label="Dosya" value={file} /><Pre text={() => formatIssues(file(), checkHtml(PAGE)) || "sorun yok"} /></div>
       },
     },
     headTags: {
@@ -113,7 +113,7 @@ headTags().find((t) => t.key === "title")`,
         const on = signal(false)
         const toggle = () => { if (off) { off(); off = null; on.set(false) } else { off = useHead({ meta: [{ name: "x-api-ornek", content: "acik" }] }); on.set(true) } }
         onCleanup(() => off?.())
-        return <div class="sc-stack"><Row><Button onClick={toggle}>{() => (on() ? "Etiketi kaldır" : "useHead ile etiket ekle")}</Button><Out label="Etiket" value={() => String(headTags().length)} /></Row>
+        return <div class="sc-ex-stack"><Row><Button onClick={toggle}>{() => (on() ? "Etiketi kaldır" : "useHead ile etiket ekle")}</Button><Out label="Etiket" value={() => String(headTags().length)} /></Row>
           <Tags label="Etiketler" items={() => headTags().map((t) => t.key)} /></div>
       },
     },
@@ -122,7 +122,7 @@ headTags().find((t) => t.key === "title")`,
 headToHtml(tags, { mark: true })   // data-hm-head: adopted by the client`,
       run: () => {
         const title = signal("Ürünler"), mark = signal(false)
-        return <div class="sc-stack"><Row><Text label="Başlık" value={title} /><Button variant={() => (mark() ? "primary" : "secondary")} onClick={() => mark.set(!mark())}>mark</Button></Row>
+        return <div class="sc-ex-stack"><Row><Text label="Başlık" value={title} /><Button variant={() => (mark() ? "primary" : "secondary")} onClick={() => mark.set(!mark())}>mark</Button></Row>
           <Pre text={() => headToHtml(resolveHead([{ title: title(), description: "Acme ürünleri", og: {}, twitter: {} }]), { mark: mark() })} /></div>
       },
     },
@@ -134,7 +134,7 @@ headToHtml(tags, { mark: true })   // data-hm-head: adopted by the client`,
 })`,
       run: () => {
         const tpl = signal("%s · Acme")
-        return <div class="sc-stack"><Row><Text label="titleTemplate" value={tpl} /><Out label="Kurulu" value={() => String(headBusy())} /></Row>
+        return <div class="sc-ex-stack"><Row><Text label="titleTemplate" value={tpl} /><Out label="Kurulu" value={() => String(headBusy())} /></Row>
           <Out label="Ürünler sayfasının başlığı" value={() => { const t = resolveHead([{ titleTemplate: tpl() }, { title: "Ürünler" }]).find((x) => x.tag === "title"); return t && "text" in t ? t.text : "—" }} />
           <Out label="installSeo" value={`${typeof installSeo} (uygulama açılışında bir kez)`} /></div>
       },
@@ -144,7 +144,7 @@ headToHtml(tags, { mark: true })   // data-hm-head: adopted by the client`,
 // {"name":"\\u003c/script\\u003e\\u003cb\\u003e"} — can never close the element`,
       run: () => {
         const name = signal("Acme </script><img src=x>")
-        return <div class="sc-stack"><Text label="Ad" value={name} /><Pre text={() => jsonLdText({ "@type": "Organization", name: name() })} /></div>
+        return <div class="sc-ex-stack"><Text label="Ad" value={name} /><Pre text={() => jsonLdText({ "@type": "Organization", name: name() })} /></div>
       },
     },
     ld: {
@@ -160,7 +160,7 @@ headToHtml(tags, { mark: true })   // data-hm-head: adopted by the client`,
           faq: () => ld.faq([["Kargo ücretli mi?", "500 TL üzeri ücretsiz."]]),
           breadcrumbs: () => ld.breadcrumbs([["Ana sayfa", "/"], ["Ayakkabı", "/ayakkabi"]], "https://shop.acme.example"),
         })[kind()]()
-        return <div class="sc-stack"><Row>{(["product", "article", "faq", "breadcrumbs"] as const).map((k) => <Button variant={() => (kind() === k ? "primary" : "secondary")} onClick={() => kind.set(k)}>{k}</Button>)}</Row><Pre text={() => JSON.stringify(data(), null, 1)} /></div>
+        return <div class="sc-ex-stack"><Row>{(["product", "article", "faq", "breadcrumbs"] as const).map((k) => <Button variant={() => (kind() === k ? "primary" : "secondary")} onClick={() => kind.set(k)}>{k}</Button>)}</Row><Pre text={() => JSON.stringify(data(), null, 1)} /></div>
       },
     },
     ogTags: {
@@ -168,7 +168,7 @@ headToHtml(tags, { mark: true })   // data-hm-head: adopted by the client`,
 // [{ property: "og:type", content: "website" }, { property: "og:title", … }, …]`,
       run: () => {
         const title = signal("Koşu ayakkabısı"), img = signal(true)
-        return <div class="sc-stack"><Row><Text label="Başlık" value={title} /><Button variant={() => (img() ? "primary" : "secondary")} onClick={() => img.set(!img())}>Görsel</Button></Row>
+        return <div class="sc-ex-stack"><Row><Text label="Başlık" value={title} /><Button variant={() => (img() ? "primary" : "secondary")} onClick={() => img.set(!img())}>Görsel</Button></Row>
           <Tags label="og" items={() => ogTags({ title: title(), siteName: "Acme", ...(img() ? { image: { url: "https://acme.example/og.png", width: 1200, height: 630 } } : {}) }).map((m) => `${m.property}=${m.content}`)} /></div>
       },
     },
@@ -181,7 +181,7 @@ headToHtml(tags, { mark: true })   // data-hm-head: adopted by the client`,
       run: () => {
         const comp = signal(true)
         const tags = () => resolveHead([{ titleTemplate: "%s · Acme", og: { siteName: "Acme" } }, { title: "Ayakkabılar", description: "Her mevsim için" }, comp() ? { title: "Koşu ayakkabısı" } : null], { site: "https://shop.acme.example", path: "/ayakkabi" })
-        return <div class="sc-stack"><Button variant={() => (comp() ? "primary" : "secondary")} onClick={() => comp.set(!comp())}>{() => (comp() ? "Bileşen kaynağı açık" : "Bileşen kaynağı kapalı")}</Button>
+        return <div class="sc-ex-stack"><Button variant={() => (comp() ? "primary" : "secondary")} onClick={() => comp.set(!comp())}>{() => (comp() ? "Bileşen kaynağı açık" : "Bileşen kaynağı kapalı")}</Button>
           <Pre text={() => headToHtml(tags())} /></div>
       },
     },
@@ -189,7 +189,7 @@ headToHtml(tags, { mark: true })   // data-hm-head: adopted by the client`,
       code: `scanTags(html).filter((t) => t.name === "meta")   // start tags with attributes, no DOM`,
       run: () => {
         const html = signal(`<title>Acme</title><meta name="description" content="Ayakkabı &amp; çanta"><img src="a.png" alt="">`)
-        return <div class="sc-stack"><Text label="HTML" value={html} /><Tags label="Etiketler" items={() => scanTags(html()).map((t) => `${t.name} ${t.text ?? J(t.attrs)}`)} /></div>
+        return <div class="sc-ex-stack"><Text label="HTML" value={html} /><Tags label="Etiketler" items={() => scanTags(html()).map((t) => `${t.name} ${t.text ?? J(t.attrs)}`)} /></div>
       },
     },
     tagKey: {
@@ -199,7 +199,7 @@ tagKey("link", { rel: "canonical", href: "/x" }) // "link:canonical"`,
       run: () => {
         const cases: [string, Record<string, string>][] = [["meta", { name: "description" }], ["meta", { property: "og:image" }], ["meta", { charset: "utf-8" }], ["link", { rel: "canonical", href: "/a" }], ["link", { rel: "alternate", hreflang: "en", href: "/en" }], ["script", { type: "module" }]]
         const pick = signal(0)
-        return <div class="sc-stack"><Row>{cases.map(([t, a], i) => <Button variant={() => (pick() === i ? "primary" : "ghost")} onClick={() => pick.set(i)}>{`${t} ${Object.values(a)[0]}`}</Button>)}</Row>
+        return <div class="sc-ex-stack"><Row>{cases.map(([t, a], i) => <Button variant={() => (pick() === i ? "primary" : "ghost")} onClick={() => pick.set(i)}>{`${t} ${Object.values(a)[0]}`}</Button>)}</Row>
           <Out label="Anahtar" value={() => { const [t, a] = cases[pick()]!; return String(tagKey(t, a)) }} /></div>
       },
     },
@@ -208,7 +208,7 @@ tagKey("link", { rel: "canonical", href: "/x" }) // "link:canonical"`,
 // card: "summary_large_image" because there is an image`,
       run: () => {
         const img = signal(true), site = signal("@acme")
-        return <div class="sc-stack"><Row><Text label="site" value={site} /><Button variant={() => (img() ? "primary" : "secondary")} onClick={() => img.set(!img())}>Görsel</Button></Row>
+        return <div class="sc-ex-stack"><Row><Text label="site" value={site} /><Button variant={() => (img() ? "primary" : "secondary")} onClick={() => img.set(!img())}>Görsel</Button></Row>
           <Tags label="twitter" items={() => twitterTags({ site: site(), title: "Acme", ...(img() ? { image: "https://acme.example/og.png" } : {}) }).map((m) => `${m.name}=${m.content}`)} /></div>
       },
     },
@@ -221,7 +221,7 @@ tagKey("link", { rel: "canonical", href: "/x" }) // "link:canonical"`,
         const on = signal(false), desc = signal("Acme: her mevsim için ayakkabı")
         useHead(() => (on() ? { description: desc() } : null))
         const current = () => { headTags(); return document.head.querySelector("meta[name=description]")?.getAttribute("content") ?? "(yok)" }
-        return <div class="sc-stack"><Row><Text label="Açıklama" value={desc} /><Button variant={() => (on() ? "primary" : "secondary")} onClick={() => on.set(!on())}>{() => (on() ? "Etkin" : "Kapalı")}</Button></Row>
+        return <div class="sc-ex-stack"><Row><Text label="Açıklama" value={desc} /><Button variant={() => (on() ? "primary" : "secondary")} onClick={() => on.set(!on())}>{() => (on() ? "Etkin" : "Kapalı")}</Button></Row>
           <Out label="Sayfanın meta description'ı" value={current} /></div>
       },
     },
@@ -243,7 +243,7 @@ hydrate(() => <App />, document.getElementById("app")!)   // swaps in one step w
         }
         onCleanup(() => stop?.())
         go()
-        return <div class="sc-stack"><Row><Button onClick={go}>Yeniden dene</Button><Out label="Durum" value={status} /></Row>{host}</div>
+        return <div class="sc-ex-stack"><Row><Button onClick={go}>Yeniden dene</Button><Out label="Durum" value={status} /></Row>{host}</div>
       },
     },
     prerenderedFor: {
@@ -251,7 +251,7 @@ hydrate(() => <App />, document.getElementById("app")!)   // swaps in one step w
       run: () => {
         const pre = signal(location.pathname)
         const el = () => { const e = document.createElement("div"); e.setAttribute("data-hm-prerender", pre()); return e }
-        return <div class="sc-stack"><Row><Text label="data-hm-prerender" value={pre} />{[location.pathname, "/baska-sayfa", "#/"].map((p) => <Button variant="ghost" onClick={() => pre.set(p)}>{p}</Button>)}</Row>
+        return <div class="sc-ex-stack"><Row><Text label="data-hm-prerender" value={pre} />{[location.pathname, "/baska-sayfa", "#/"].map((p) => <Button variant="ghost" onClick={() => pre.set(p)}>{p}</Button>)}</Row>
           <Row><Out label="Adres" value={location.pathname + location.hash} /><Out label="prerenderedFor" value={() => String(prerenderedFor(el()))} /></Row></div>
       },
     },
@@ -264,7 +264,7 @@ parseHtml(html, { tags: { p: [], strong: [] } })   // your own, smaller one`,
         const own = signal(false), src = `<h2>Başlık</h2><p><b>Kalın</b>, <i>eğik</i>, <a href="https://acme.example">bağlantı</a></p>`
         const out = box("")
         effect(() => { out.replaceChildren(parseHtml(src, own() ? { tags: { p: [], strong: [] }, rename: { b: "strong" } } : RICH_SCHEMA)) })
-        return <div class="sc-stack"><Row><Button variant={() => (own() ? "secondary" : "primary")} onClick={() => own.set(false)}>RICH_SCHEMA</Button><Button variant={() => (own() ? "primary" : "secondary")} onClick={() => own.set(true)}>Yalnız p + strong</Button></Row>
+        return <div class="sc-ex-stack"><Row><Button variant={() => (own() ? "secondary" : "primary")} onClick={() => own.set(false)}>RICH_SCHEMA</Button><Button variant={() => (own() ? "primary" : "secondary")} onClick={() => own.set(true)}>Yalnız p + strong</Button></Row>
           {out}<Tags label="İzinli etiketler" items={() => Object.keys(RICH_SCHEMA.tags)} /></div>
       },
     },
@@ -282,7 +282,7 @@ BLOCKS.has("strong") // false (inline)`,
       code: `decodeEntities("Ayakkabı &amp; çanta &#x1F45F;")   // "Ayakkabı & çanta 👟"`,
       run: () => {
         const s = signal("Ayakkabı &amp; çanta &#x1F45F; &laquo;yeni&raquo; &hellip;")
-        return <div class="sc-stack"><Text label="Metin" value={s} /><Out label="Sonuç" value={() => decodeEntities(s())} /></div>
+        return <div class="sc-ex-stack"><Text label="Metin" value={s} /><Out label="Sonuç" value={() => decodeEntities(s())} /></div>
       },
     },
     normalizeBlocks: {
@@ -293,7 +293,7 @@ normalizeBlocks(root, { topHeading: 2 })   // h1 → h2`,
         const src = `serbest metin <b>kalın</b><div><h1>Başlık</h1><p>paragraf</p></div><li>yalnız madde</li>`
         const shape = (n: Node) => Array.from(n.childNodes).map((c) => c.nodeName.toLowerCase())
         const after = () => { const f = parseHtml(src); return shape(normalizeBlocks(f, top() ? { topHeading: 2 } : {})) }
-        return <div class="sc-stack"><Button variant={() => (top() ? "primary" : "secondary")} onClick={() => top.set(!top())}>topHeading: 2</Button>
+        return <div class="sc-ex-stack"><Button variant={() => (top() ? "primary" : "secondary")} onClick={() => top.set(!top())}>topHeading: 2</Button>
           <Out label="Önce" value={shape(parseHtml(src)).join(" · ")} /><Out label="Sonra" value={() => after().join(" · ")} /></div>
       },
     },
@@ -304,7 +304,7 @@ editor.append(frag)`,
         const html = signal(`<p onclick="steal()">Merhaba <b>Ada</b> <a href="javascript:alert(1)">tıkla</a> <a href="https://acme.example">site</a></p><script>steal()</script><iframe src="//x"></iframe>`)
         const out = box("")
         effect(() => { out.replaceChildren(parseHtml(html())) })
-        return <div class="sc-stack"><Area label="Gelen HTML" value={html} />{out}<Out label="Bağlantılar" value={() => { html(); return Array.from(out.querySelectorAll("a")).map((a) => a.getAttribute("href")).join(", ") || "(yok)" }} /></div>
+        return <div class="sc-ex-stack"><Area label="Gelen HTML" value={html} />{out}<Out label="Bağlantılar" value={() => { html(); return Array.from(out.querySelectorAll("a")).map((a) => a.getAttribute("href")).join(", ") || "(yok)" }} /></div>
       },
     },
     sanitizeNode: {
@@ -318,7 +318,7 @@ editor.append(frag)`,
         ed.querySelector("p")?.append(dirty)
         const clean = () => out.replaceChildren(sanitizeNode(ed))
         clean()
-        return <div class="sc-stack"><p class="hm-muted">Düzenle ya da bir şey yapıştır:</p>{ed}<Button onClick={clean}>sanitizeNode()</Button>{out}</div>
+        return <div class="sc-ex-stack"><p class="hm-muted">Düzenle ya da bir şey yapıştır:</p>{ed}<Button onClick={clean}>sanitizeNode()</Button>{out}</div>
       },
     },
   },
@@ -329,7 +329,7 @@ save({ body: md })`,
       run: () => {
         const ed = box(RICH, true), md = signal(toMarkdown(ed))
         ed.addEventListener("input", () => md.set(toMarkdown(ed)))
-        return <div class="sc-stack">{ed}<Pre text={md} /></div>
+        return <div class="sc-ex-stack">{ed}<Pre text={md} /></div>
       },
     },
   },

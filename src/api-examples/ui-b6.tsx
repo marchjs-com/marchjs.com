@@ -24,7 +24,7 @@ export default examples({
           { id: "a", target: "Kart", prop: "x" as const, color: "brand-orange" as const, keys: [{ at: 0, value: 0 }, { at: 1500, value: 120 }] },
           { id: "b", target: "Kart", prop: "opacity" as const, color: "brand-blue" as const, keys: [{ at: 0, value: 0.2 }, { at: 600, value: 1 }] },
         ] })
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const s = p.values.snap, st = p.values.stage; return <KeyframeTimeline value={anim} snap={s} stage={st} aria-label="Kart animasyonu" /> }}
           <Out label="Anahtar kare" value={() => anim().tracks.reduce((n, t) => n + t.keys.length, 0)} />
         </div>
@@ -39,7 +39,7 @@ export default examples({
       play: { options: [{ key: "columns", label: "Sütun", default: 2, options: [1, 2, 3] }] },
       run: (p: { values: { columns: number } }) => {
         const seats = signal(12), owner = signal<string | null>("Ada")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><Button size="sm" onClick={() => seats.update((n) => n + 1)}>Koltuk +1</Button><Button size="sm" variant="ghost" onClick={() => owner.update((o) => (o ? null : "Ada"))}>Sahibi değiştir</Button></Row>
           {() => { const c = p.values.columns; return <KeyValue columns={c} items={[
             { label: "Kuruluş", value: "Acme" }, { label: "Plan", value: "Ekip" }, { label: "Koltuk", value: seats, hint: "en çok 50" },
@@ -54,7 +54,7 @@ export default examples({
       play: { options: [{ key: "numbers", label: "Sayıları dönüştür", default: true }] },
       run: (p: { values: { numbers: boolean } }) => {
         const headers = signal<Record<string, string | number>>({ "X-Team": "acme", Retry: 3 })
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const n = p.values.numbers; return <KeyValueEditor value={headers} numbers={n} keyPlaceholder="Başlık" valuePlaceholder="Değer" aria-label="İstek başlıkları" /> }}
           <Out label="Değer" value={() => JSON.stringify(headers())} />
         </div>
@@ -79,7 +79,7 @@ export default examples({
       play: { options: [{ key: "tone", label: "Ton", default: "info", options: [{ value: "info", label: "bilgi" }, { value: "success", label: "başarı" }, { value: "violet", label: "mor" }] }, { key: "meta", label: "Sağdaki bilgi", default: true }] },
       run: (p: { values: { tone: "info" | "success" | "violet"; meta: boolean } }) => {
         const n = signal(3)
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <LinkCard href="/forms" icon={edit} tone={() => p.values.tone} title="Formlar" description="Alanlar, doğrulama ve şemalar" meta={() => (p.values.meta ? `${n()} örnek` : null)} />
           <LinkCard href="/layout" icon={folder} tone={() => p.values.tone} title="Yerleşim" description="Izgara, yığın ve paneller" meta={() => (p.values.meta ? "yeni" : null)} />
           <Row><Button size="sm" variant="ghost" onClick={() => n.update((x) => x + 1)}>Sayıyı artır</Button></Row>
@@ -97,7 +97,7 @@ export default examples({
         return <div class="sc-ex-ui-b-ld">
           {() => { const b = p.values.back, e = p.values.empty; return <ListDetail selected={sel} {...(b ? { onBack: () => sel.set(null) } : {})} listLabel="Siparişler"
             empty={e ? <Empty icon={inbox} title="Bir sipariş seç" /> : undefined}
-            list={<div class="sc-stack">{orders.map((o) => <Button variant={() => (sel()?.id === o.id ? "primary" : "ghost")} aria-pressed={() => String(sel()?.id === o.id)} onClick={() => sel.set(o)}>{o.id} · {o.who}</Button>)}</div>}
+            list={<div class="sc-ex-stack">{orders.map((o) => <Button variant={() => (sel()?.id === o.id ? "primary" : "ghost")} aria-pressed={() => String(sel()?.id === o.id)} onClick={() => sel.set(o)}>{o.id} · {o.who}</Button>)}</div>}
             detail={() => <KeyValue items={() => (sel() ? { Sipariş: sel()!.id, Müşteri: sel()!.who, Tutar: sel()!.total } : {})} />} /> }}
         </div>
       },
@@ -107,7 +107,7 @@ export default examples({
       play: { options: [{ key: "unique", label: "Tekrarı engelle", default: true }, { key: "max", label: "En çok", default: 5, options: [3, 5, 10] }] },
       run: (p: { values: { unique: boolean; max: number } }) => {
         const tags = signal<string[]>(["tasarım", "web"])
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const u = p.values.unique, m = p.values.max; return <ListEditor value={tags} unique={u} max={m} placeholder="Etiket ekle" addLabel="Ekle" aria-label="Etiketler" /> }}
           <Out label="Değer" value={() => JSON.stringify(tags())} />
         </div>
@@ -120,7 +120,7 @@ export default examples({
       run: (p: { values: { overlay: boolean; text: boolean } }) => {
         const busy = signal(false)
         const load = async () => { busy.set(true); await wait(1500); busy.set(false) }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><Button onClick={load} disabled={busy}>Yenile</Button></Row>
           <div class="sc-ex-ui-b-loader">
             {() => (busy() && !p.values.overlay ? null : <KeyValue items={{ Kullanıcı: 128, Etkin: 97, Bekleyen: 4 }} />)}

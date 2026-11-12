@@ -51,7 +51,7 @@ applyPipe("bytes", 3_500_000)     // "3,5 MB"
 applyPipe("relative", Date.now() - 90_000)`,
       run: () => {
         const v = signal(1499.9)
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><Button onClick={() => v.update((x) => x * 7.3)}>Değeri büyüt</Button><Button variant="ghost" onClick={() => v.set(1499.9)}>Sıfırla</Button></Row>
           {(["money", "number", "compact", "bytes", "percent"] as const).map((p) => <Out label={p} value={() => applyPipe(p, p === "percent" ? v() / 10000 : v())} />)}
         </div>
@@ -65,7 +65,7 @@ applyPipe("relative", Date.now() - 90_000)`,
       run: (p: { values: { result: string; ms: number } }) => {
         const tick = signal(0)
         const load = () => { tick(); const fail = p.values.result === "fail", ms = p.values.ms; return new Promise<string>((ok, no) => setTimeout(() => (fail ? no(new Error("Sunucu yanıt vermedi")) : ok("Acme")), ms)) }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Await for={load} loading={<p class="hm-muted">Yükleniyor…</p>} catch={(e: Error) => <p role="alert">{e.message}</p>}>
             {(name: string) => <p>Merhaba, <strong>{name}</strong></p>}
           </Await>
@@ -126,7 +126,7 @@ stop()   // the effect is gone`,
         const n = signal(0), log = signal<string[]>([])
         let stop: (() => void) | null = null
         const start = () => { if (stop) return; stop = createRoot((dispose) => { effect(() => { const v = n(); untrack(() => log.update((l) => [...l, `efekt: ${v}`])) }); return dispose }) }
-        return <div class="sc-stack"><Row>
+        return <div class="sc-ex-stack"><Row>
           <Button onClick={start}>Kök aç</Button><Button onClick={() => n.update((x) => x + 1)}>Değer +1</Button>
           <Button variant="ghost" onClick={() => { stop?.(); stop = null; log.update((l) => [...l, "kök kapandı"]) }}>dispose()</Button>
         </Row><Log lines={log} /></div>
@@ -169,7 +169,7 @@ stop()   // dispose`,
       run: () => {
         const n = signal(0), log = signal<string[]>([])
         effect(() => { const v = n(); untrack(() => log.update((l) => [...l.slice(-5), `${now()} n = ${v}`])) })
-        return <div class="sc-stack"><Button onClick={() => n.update((x) => x + 1)}>n +1</Button><Log lines={log} /></div>
+        return <div class="sc-ex-stack"><Button onClick={() => n.update((x) => x + 1)}>n +1</Button><Log lines={log} /></div>
       },
     },
     Else: {
@@ -189,7 +189,7 @@ stop()   // dispose`,
         const items = signal([{ id: 1, name: "Ankara" }, { id: 2, name: "İzmir" }, { id: 3, name: "Bursa" }])
         let next = 4
         const shown = () => (p.values.empty ? [] : [...items()].sort((a, b) => a.name.localeCompare(b.name, "tr") * (p.values.order === "asc" ? 1 : -1)))
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Button onClick={() => items.update((l) => [...l, { id: next, name: ["Antalya", "Eskişehir", "Konya", "Trabzon"][next++ % 4]! }])}>Şehir ekle</Button>
           <ol class="sc-ex-log"><For each={shown} key="id" fallback={<li>Liste boş</li>}>{(c: () => { name: string }, i: () => number) => <li>{() => `${i() + 1}. ${c().name}`}</li>}</For></ol>
         </div>
@@ -242,7 +242,7 @@ isReactive(() => 1)      // false (plain function)`,
       run: () => {
         const list = signal<string[]>([])
         const read = () => list.set(layers().map((l, i) => `${i + 1}. ${l.kind}`))
-        return <div class="sc-stack"><Button onClick={read}>Açık katmanları oku</Button><Log lines={list} /></div>
+        return <div class="sc-ex-stack"><Button onClick={read}>Açık katmanları oku</Button><Log lines={list} /></div>
       },
     },
     lazyChildren: {
@@ -252,7 +252,7 @@ h(Card, null, lazyChildren(() => [h("p", null, "…")]))`,
         const made = signal(0)
         const kids = lazyChildren(() => { made.update((x) => x + 1); return <p>Çocuklar şimdi oluşturuldu</p> })
         const show = signal(false)
-        return <div class="sc-stack"><Row><Button onClick={() => show.set(true)}>Göster</Button><Out label="oluşturma" value={made} /></Row>{() => (show() ? kids() : null)}</div>
+        return <div class="sc-ex-stack"><Row><Button onClick={() => show.set(true)}>Göster</Button><Out label="oluşturma" value={made} /></Row>{() => (show() ? kids() : null)}</div>
       },
     },
     locale: {
@@ -289,7 +289,7 @@ onCleanup(() => clearInterval(id))`,
       run: () => {
         const on = signal(true), log = signal<string[]>([])
         const Timer = () => { const n = signal(0); const id = setInterval(() => n.update((x) => x + 1), 500); onCleanup(() => { clearInterval(id); log.update((l) => [...l, "onCleanup: zamanlayıcı durdu"]) }); return <Out label="sayaç" value={n} /> }
-        return <div class="sc-stack"><Row><Button onClick={() => on.update((x) => !x)}>{() => (on() ? "Kaldır" : "Geri ekle")}</Button>{() => (on() ? <Timer /> : null)}</Row><Log lines={log} /></div>
+        return <div class="sc-ex-stack"><Row><Button onClick={() => on.update((x) => !x)}>{() => (on() ? "Kaldır" : "Geri ekle")}</Button>{() => (on() ? <Timer /> : null)}</Row><Log lines={log} /></div>
       },
     },
     openLayer: {
@@ -325,7 +325,7 @@ patch(user, { address: { city: "Ankara" } })   // one batch, deep merge`,
       code: `<Portal to="toolbar"><button>Kaydet</button></Portal>   // rendered in <PortalTarget name="toolbar">
 <Portal layer="popover">…</Portal>`,
       play: { options: [{ key: "show", label: "Portal açık", default: true }] },
-      run: (p: { values: { show: boolean } }) => <div class="sc-stack">
+      run: (p: { values: { show: boolean } }) => <div class="sc-ex-stack">
         <PortalTarget name="api-ex-bar" class="sc-row sc-ex-target" label="Hedef" />
         <p class="hm-muted">Bu satırdaki kaynak, düğmeyi yukarıdaki hedefe çizer:</p>
         {() => (p.values.show ? <Portal to="api-ex-bar"><Button variant="primary">Kaydet (portal)</Button></Portal> : null)}
@@ -335,14 +335,14 @@ patch(user, { address: { city: "Ankara" } })   // one batch, deep merge`,
       code: `effect(() => console.log(portalTarget("toolbar")))   // Element | null`,
       run: () => {
         const on = signal(false)
-        return <div class="sc-stack"><Row><Button onClick={() => on.update((x) => !x)}>Hedefi aç / kapat</Button><Out label='portalTarget("api-ex-t")' value={() => (portalTarget("api-ex-t") ? "Element" : "null")} /></Row>{() => (on() ? <PortalTarget name="api-ex-t" /> : null)}</div>
+        return <div class="sc-ex-stack"><Row><Button onClick={() => on.update((x) => !x)}>Hedefi aç / kapat</Button><Out label='portalTarget("api-ex-t")' value={() => (portalTarget("api-ex-t") ? "Element" : "null")} /></Row>{() => (on() ? <PortalTarget name="api-ex-t" /> : null)}</div>
       },
     },
     PortalTarget: {
       code: `<PortalTarget name="actions" class="toolbar" />
 // anywhere below: <Portal to="actions">…</Portal>`,
       play: { options: [{ key: "n", label: "Kaynak sayısı", default: 2, options: [1, 2, 3] }] },
-      run: (p: { values: { n: number } }) => <div class="sc-stack">
+      run: (p: { values: { n: number } }) => <div class="sc-ex-stack">
         <PortalTarget name="api-ex-actions" class="sc-row sc-ex-target" label="Eylemler" />
         {() => Array.from({ length: p.values.n }, (_, i) => <Portal to="api-ex-actions" order={i}><Badge tone="primary">{`kaynak ${i + 1}`}</Badge></Portal>)}
       </div>,
@@ -400,7 +400,7 @@ setTimeout(() => runWithOwner(owner, () => onCleanup(stop)), 100)`,
     safeUrl: {
       code: `safeUrl("https://acme.example")     // kept
 safeUrl("javascript:alert(1)")      // "about:blank"`,
-      run: () => <div class="sc-stack">{["https://acme.example", "/docs", "mailto:info@acme.example", "javascript:alert(1)"].map((u) => <Out label={u} value={safeUrl(u)} />)}</div>,
+      run: () => <div class="sc-ex-stack">{["https://acme.example", "/docs", "mailto:info@acme.example", "javascript:alert(1)"].map((u) => <Out label={u} value={safeUrl(u)} />)}</div>,
     },
     setFallbackLocale: {
       code: `setFallbackLocale("en")   // missing Turkish keys show English`,
@@ -433,7 +433,7 @@ count.update((n) => n + 1)`,
 cart.items.push({ name: "Kalem" })   // only what read items updates`,
       run: () => {
         const cart = store({ items: [{ name: "Kalem" }] })
-        return <div class="sc-stack"><Row><Button onClick={() => cart.items.push({ name: `Ürün ${cart.items.length + 1}` })}>Ekle</Button><Out label="adet" value={() => cart.items.length} /></Row>
+        return <div class="sc-ex-stack"><Row><Button onClick={() => cart.items.push({ name: `Ürün ${cart.items.length + 1}` })}>Ekle</Button><Out label="adet" value={() => cart.items.length} /></Row>
           <ol class="sc-ex-log"><For each={() => cart.items}>{(i: () => { name: string }) => <li>{() => i().name}</li>}</For></ol></div>
       },
     },
@@ -450,7 +450,7 @@ cart.items.push({ name: "Kalem" })   // only what read items updates`,
     },
     sx: {
       code: `sx({ p: 3, radius: 2, shadow: 1 })   // "hm-p-3 hm-radius-2 hm-shadow-1"`,
-      run: () => <div class="sc-stack"><Out label="sx({ p: 3, radius: 2 })" value={sx({ p: 3, radius: 2 })} /><div class={sx({ p: 3, radius: 2 })}>sx ile kenar boşluğu ve köşe</div></div>,
+      run: () => <div class="sc-ex-stack"><Out label="sx({ p: 3, radius: 2 })" value={sx({ p: 3, radius: 2 })} /><div class={sx({ p: 3, radius: 2 })}>sx ile kenar boşluğu ve köşe</div></div>,
     },
     sxValue: {
       code: `<div sx={$big ? { p: 4 } : { p: 1 }} />   // compiler: class={sxValue(…)}`,
@@ -470,7 +470,7 @@ t("cart.items", { n: 3 })              // ICU plural`,
       code: `toDate(1700000000)            // epoch seconds
 toDate({ seconds: 1700000000 }) // Firestore-style
 toDate("bozuk")               // null`,
-      run: () => <div class="sc-stack">{[["1700000000", 1700000000], ["\"2026-11-12\"", "2026-11-12"], ["{ seconds }", { seconds: 1700000000 }], ["\"bozuk\"", "bozuk"]].map(([l, v]) => <Out label={l as string} value={toDate(v)?.toLocaleDateString("tr-TR") ?? "null"} />)}</div>,
+      run: () => <div class="sc-ex-stack">{[["1700000000", 1700000000], ["\"2026-11-12\"", "2026-11-12"], ["{ seconds }", { seconds: 1700000000 }], ["\"bozuk\"", "bozuk"]].map(([l, v]) => <Out label={l as string} value={toDate(v)?.toLocaleDateString("tr-TR") ?? "null"} />)}</div>,
     },
     Try: {
       code: `<Try fallback={(e, reset) => <ErrorBox error={e} onRetry={reset} />}>

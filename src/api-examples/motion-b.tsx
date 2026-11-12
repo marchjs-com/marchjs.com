@@ -247,7 +247,7 @@ off()                                                            // turn them of
         return <div class="sc-ex-motion-b-stack">
           <Pick sig={speed} label="Oran" options={[["-0.3", "-0,3"], ["0.1", "0,1"], ["0.3", "0,3"]]} />
           {() => <div class="sc-ex-motion-b-stage"><div class="sc-ex-motion-b-box sc-ex-motion-b-box-b" use:parallax={Number(speed())} ref={(e: HTMLElement) => { el = e }} /></div>}
-          <p class="sc-api-note">Sayfayı kaydırın: kutu sayfadan farklı hızda kayar.</p>
+          <p class="sc-apip-note">Sayfayı kaydırın: kutu sayfadan farklı hızda kayar.</p>
         </div>
       },
     },

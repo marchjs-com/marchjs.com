@@ -679,7 +679,7 @@ s.revert()   // the original nodes are back`,
 graphemes("Ağaç 🇹🇷 👨‍👩‍👧")   // ["A", "ğ", "a", "ç", " ", "🇹🇷", " ", "👨‍👩‍👧"]`,
       run: () => {
         const text = signal("Ağaç 🇹🇷 👨‍👩‍👧 İ")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <TextInput value={text} aria-label="Metin" />
           <Out label="Adet" value={() => `${graphemes(text()).length} (kod noktası: ${[...text()].length})`} />
           <Out label="Parçalar" value={() => graphemes(text()).join(" · ")} />
@@ -695,7 +695,7 @@ heading.dir = "rtl"; isRtl(heading)   // true`,
         let el: HTMLElement | undefined
         const res = signal("false")
         const set = (d: string) => { if (el) { el.dir = d; res.set(String(isRtl(el))) } }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <div class="sc-ex-text-stage"><span class="sc-ex-text-line" ref={(e: HTMLElement) => { el = e }}>Merhaba dünya</span></div>
           <Row><Button size="sm" variant="secondary" onClick={() => set("ltr")}>Soldan sağa</Button><Button size="sm" variant="secondary" onClick={() => set("rtl")}>Sağdan sola</Button></Row>
           <Out label="isRtl(el)" value={res} />
@@ -708,7 +708,7 @@ heading.dir = "rtl"; isRtl(heading)   // true`,
 order(5, "center")   // [2, 1, 0, 1, 2]
 order(5, "end")      // [4, 3, 2, 1, 0]`,
       play: { options: [from("center"), { key: "n", label: "Parça", default: 5, options: [3, 5, 7, 9] }] },
-      run: (p: V) => <div class="sc-stack">
+      run: (p: V) => <div class="sc-ex-stack">
         <Out label={`order(n, from)`} value={() => JSON.stringify(order(p.values["n"] as number, p.values["from"] as StaggerFrom))} />
         <div class="sc-ex-text-ranks">{() => order(p.values["n"] as number, p.values["from"] as StaggerFrom).map((r) => <span class="sc-ex-text-rank">{r}</span>)}</div>
       </div>,
@@ -720,7 +720,7 @@ parseNumber("₺12.500,75 KDV dahil")
 // { value: 12500.75, decimals: 2, before: "₺", after: " KDV dahil" }`,
       run: () => {
         const text = signal("₺12.500,75 KDV dahil")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <TextInput value={text} aria-label="Sayı içeren metin" />
           <Out label="Sonuç" value={() => JSON.stringify(parseNumber(text()))} />
         </div>
@@ -735,7 +735,7 @@ TEXT_ANIMATIONS.filter((a) => a.family === "loop").map((a) => a.name)`,
       play: { options: [{ key: "family", label: "Aile", default: "all", options: Object.keys(FAMILIES).map((v) => ({ value: v, label: FAMILIES[v]! })) }] },
       run: (p: V) => {
         const list = () => TEXT_ANIMATIONS.filter((a) => p.values["family"] === "all" || a.family === (p.values["family"] as TextFamily))
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Out label="Adet" value={() => list().length} />
           <div class="sc-ex-text-chips">{() => list().map((a) => <Badge tone="info">{a.name}</Badge>)}</div>
         </div>

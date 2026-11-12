@@ -30,7 +30,7 @@ export default examples({
       ] },
       run: (p: { values: { length: number; variant: "outline" | "filled" | "underline"; mask: boolean } }) => {
         const code = signal(""), result = signal("—")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { length, variant, mask } = p.values; code.set(""); result.set("—"); return <CodeInput value={code} length={length} variant={variant} mask={mask} groups={length === 6 ? [3, 3] : length === 8 ? [4, 4] : undefined} aria-label="Doğrulama kodu"
             onComplete={(c) => result.set(c === "123456".slice(0, length) || c === "12345678".slice(0, length) ? "doğru ✓" : "yanlış kod")} /> }}
           <Row><Out label="value" value={code} /><Out label="sonuç" value={result} /><span class="hm-muted">Doğru kod: 1234…</span></Row>
@@ -51,7 +51,7 @@ export default examples({
           css: () => `.acme-card {\n  padding: var(--hm-space-${n()});\n  border-radius: var(--hm-radius);\n}`,
           json: () => JSON.stringify({ name: "acme", seats: n() * 12, plan: "pro" }, null, 2),
         }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { lang, lineNumbers, wrap } = p.values; return <CodeView code={SRC[lang]} lang={lang} lineNumbers={lineNumbers} wrap={wrap} label="Örnek kod" /> }}
           <Row><Button size="sm" onClick={() => n.update((x) => x + 1)}>Değeri artır</Button><Out label="n" value={n} /></Row>
         </div>
@@ -71,7 +71,7 @@ export default examples({
       play: { options: [{ key: "readonly", label: "Salt okunur", default: false }] },
       run: (p: { values: { readonly: boolean } }) => {
         const color = signal("#1d9ad6")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => <ColorInput value={color} readonly={p.values.readonly} aria-label="Marka rengi" />}
           <Row><Out label="value" value={color} /><span class="sc-ex-ui-a-chipc" style={() => `--sc-ex-c: ${color()}`}>Önizleme</span></Row>
         </div>
@@ -86,7 +86,7 @@ export default examples({
       ] },
       run: (p: { values: { format: "hex" | "rgb" | "hsl"; alpha: boolean; palettes: boolean } }) => {
         const color = signal("#78be3a")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { format, alpha, palettes } = p.values; return <ColorPicker value={color} format={format} alpha={alpha} recent={0} eyedropper={false}
             palettes={palettes ? [{ label: "Acme", colors: ["#f2801f", "#1d9ad6", "#78be3a", "#a3338c"] }] : false} aria-label="Renk" /> }}
           <Out label="value" value={color} />
@@ -105,7 +105,7 @@ export default examples({
         const PEOPLE = ["Ada Yılmaz", "Grace Hopper", "Linus Torvalds", "Margaret Hamilton", "Alan Kay", "Barbara Liskov"].map((n, i) => ({ value: `u${i}`, label: n, hint: i % 2 ? "Tasarım" : "Mühendislik" }))
         const search = (q: string) => new Promise<typeof PEOPLE>((r) => setTimeout(() => r(PEOPLE.filter((x) => x.label.toLocaleLowerCase("tr").includes(q.toLocaleLowerCase("tr")))), 300))
         const value = signal<any>(null)
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { multiple, async, allowCustom } = p.values; value.set(multiple ? [] : null); return <Combobox value={value} multiple={multiple} allowCustom={allowCustom} placeholder="Kişi ara…" aria-label="Atanan"
             options={async ? undefined : PEOPLE} search={async ? search : undefined} labelOf={(v) => PEOPLE.find((x) => x.value === v)?.label ?? String(v)} /> }}
           <Out label="value" value={() => JSON.stringify(value())} />
@@ -132,7 +132,7 @@ export default examples({
           ],
         }
         // the app mounts one <CommandPalette/>; this example adds its commands to it while it is on screen
-        return () => { const set = SETS[p.values.set] ?? []; onCleanup(registerCommands(() => set)); return <div class="sc-stack">
+        return () => { const set = SETS[p.values.set] ?? []; onCleanup(registerCommands(() => set)); return <div class="sc-ex-stack">
           <Row><Button icon={search} onClick={openPalette}>Paleti aç</Button><span class="hm-muted">"{set[0]!.title.split(" ")[0]}" yazın</span><Out label="yakınlık" value={() => `%${zoom()}`} /></Row>
           <Log lines={lines} />
         </div> }
@@ -145,7 +145,7 @@ export default examples({
       run: (p: { values: { iconOnly: boolean } }) => {
         const team = signal("tasarim"), copies = signal(0)
         const link = () => `https://acme.example/davet/${team()}`
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><code class="sc-ex-val">{link}</code>{() => <CopyButton text={link} iconOnly={p.values.iconOnly} label="Bağlantıyı kopyala" onCopy={() => copies.update((x) => x + 1)} />}</Row>
           <Row>
             <Button size="sm" variant="ghost" onClick={() => team.set(team() === "tasarim" ? "muhendislik" : "tasarim")}>Ekibi değiştir</Button>
@@ -163,7 +163,7 @@ export default examples({
       ] },
       run: (p: { values: { format: "compact" | "full"; hideZero: boolean } }) => {
         const likes = signal(0), views = signal(1180)
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row>
             <Button size="sm" icon={heart} aria-label="Beğen" onClick={() => likes.update((x) => x + 1)}><CountRoll value={likes} hideZero={() => p.values.hideZero} format={() => p.values.format} /></Button>
             <span class="sc-ex-ui-a-count"><CountRoll value={views} format={() => p.values.format} duration={500} /> görüntülenme</span>
@@ -184,7 +184,7 @@ export default examples({
       ] },
       run: (p: { values: { limit: boolean; locale: string } }) => {
         const due = signal<string | null>(addDays(7))
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { limit, locale } = p.values; return <DatePicker value={due} min={limit ? addDays(0) : undefined} max={limit ? addDays(30) : undefined} locale={locale} aria-label="Son tarih" /> }}
           <Row><Out label="value" value={() => due() ?? "null"} /><Button size="sm" variant="ghost" onClick={() => due.set(null)}>Temizle</Button></Row>
         </div>
@@ -198,7 +198,7 @@ export default examples({
         const range = signal<{ from: string | null; to: string | null } | null>({ from: addDays(-6), to: addDays(0) })
         const days = () => { const r = range(); return r?.from && r.to ? Math.round((Date.parse(r.to) - Date.parse(r.from)) / 86_400_000) + 1 : 0 }
         const custom = [{ id: "w2", label: "Son 2 hafta", range: { from: addDays(-13), to: addDays(0) } }, { id: "y", label: "Dün", range: { from: addDays(-1), to: addDays(-1) } }]
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const k = p.values.presets; return <DateRangePicker value={range} max={addDays(0)} presets={k === "none" ? false : k === "custom" ? custom : undefined} aria-label="Rapor aralığı" /> }}
           <Row><Out label="from" value={() => range()?.from ?? "—"} /><Out label="to" value={() => range()?.to ?? "—"} /><Out label="gün" value={days} /></Row>
         </div>
@@ -211,7 +211,7 @@ export default examples({
       run: (p: { values: { defaultTime: string } }) => {
         const at = signal<string | null>(null)
         const left = () => { const v = at(); if (!v) return "—"; const h = Math.round((Date.parse(v) - Date.now()) / 3_600_000); return h >= 0 ? `${h} saat sonra` : `${-h} saat önce` }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => <DateTimeInput value={at} min={addDays(0)} defaultTime={p.values.defaultTime} aria-label="Toplantı başlangıcı" />}
           <Row><Out label="value" value={() => at() ?? "null"} /><Out label="kalan" value={left} /></Row>
           <Row><Button size="sm" variant="ghost" icon={calendar} onClick={() => at.set(`${addDays(1)}T${p.values.defaultTime}`)}>Yarın</Button></Row>
@@ -225,7 +225,7 @@ export default examples({
       run: () => {
         const crop = signal({ ...DEFAULT_CROP })
         const change = (f: (c: typeof DEFAULT_CROP) => Partial<typeof DEFAULT_CROP>) => crop.update((c) => ({ ...c, ...f(c) }))
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <div class="sc-ex-ui-a-crop" aria-hidden="true">
             <div class="sc-ex-ui-a-crop-img" style={() => { const c = crop(); return `transform: translate(${c.x * 100}%, ${c.y * 100}%) rotate(${c.rotate}deg) scale(${c.zoom * (c.flip ? -1 : 1)}, ${c.zoom})` }} />
             <div class="sc-ex-ui-a-crop-frame" style={() => `inline-size: ${crop().w * 100}%; block-size: ${crop().h * 100}%`} />
@@ -247,7 +247,7 @@ export default examples({
       run: () => {
         const off = signal(new Set<string>(["h3", "codeblock"]))
         const tools = () => DEFAULT_TOOLS.filter((t) => t === "|" || !off().has(t))
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row>{DEFAULT_TOOLS.filter((t) => t !== "|").map((t) => <Chip size="sm" selected={() => !off().has(t)} onClick={() => off.update((s) => { const n = new Set(s); if (n.has(t)) n.delete(t); else n.add(t); return n })}>{t}</Chip>)}</Row>
           <Out label="DEFAULT_TOOLS" value={`${DEFAULT_TOOLS.length} öğe`} />
           <code class="sc-ex-val sc-ex-ui-a-json">{() => `toolbar={${JSON.stringify(tools())}}`}</code>

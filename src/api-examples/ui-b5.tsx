@@ -49,7 +49,7 @@ const blob = await cropper.toBlob({ width: 256 })`,
       play: { options: [{ key: "grouping", label: "Basamak ayırıcı", default: true }, { key: "max", label: "En çok", default: 500, options: [10, 500, 100000] }] },
       run: (p: { values: { grouping: boolean; max: number } }) => {
         const seats = signal<number | null>(1250)
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const g = p.values.grouping, m = p.values.max; return <Field label="Koltuk" help={`1–${m}`}><IntInput value={seats} min={1} max={m} grouping={g} /></Field> }}
           <Row><Button size="sm" onClick={() => seats.update((n) => (n ?? 0) + 1)}>+1</Button><Out label="Değer" value={() => String(seats())} /><Out label="tür" value={() => typeof seats()} /></Row>
         </div>
@@ -61,7 +61,7 @@ const blob = await cropper.toBlob({ width: 256 })`,
       play: { options: [{ key: "mode", label: "İlk görünüm", default: "text", options: [{ value: "text", label: "metin" }, { value: "tree", label: "ağaç" }] }, { key: "readonly", label: "Salt okunur", default: false }] },
       run: (p: { values: { mode: "text" | "tree"; readonly: boolean } }) => {
         const config = signal<unknown>({ name: "acme", port: 8080, flags: ["fast", "safe"] })
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const m = p.values.mode, ro = p.values.readonly; return <JsonEditor value={config} mode={m} readonly={ro} rows={7} aria-label="Ayarlar"
             validate={(v: unknown) => (v && typeof v === "object" && "name" in v ? null : '"name" alanı gerekli')} /> }}
           <Out label="port" value={() => String((config() as { port?: unknown } | null)?.port ?? "—")} />
@@ -74,7 +74,7 @@ const blob = await cropper.toBlob({ width: 256 })`,
       run: (p: { values: { open: number } }) => {
         const n = signal(1)
         const data = () => ({ id: n(), name: "Acme", plan: { tier: "team", seats: 5 * n(), tags: ["beta", "eu"] }, active: n() % 2 === 1, owner: null })
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><Button size="sm" onClick={() => n.update((x) => x + 1)}>Sonraki kayıt</Button></Row>
           {() => { const o = p.values.open; return <JsonView value={data} open={o} /> }}
         </div>
@@ -91,7 +91,7 @@ const blob = await cropper.toBlob({ width: 256 })`,
         const log = useLog()
         const columns = (): KanbanColumn<Task>[] => meta.map(([id, title, tone]) => ({ id, title, ...(p.values.tones ? { tone } : {}), items: cols()[id] ?? [] }))
         const move = (t: Task, from: string, to: string) => { cols.update((c) => ({ ...c, [from]: c[from]!.filter((x) => x.id !== t.id), [to]: [...c[to]!, t] })); log.push(`${t.title}: ${from} → ${to}`) }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Kanban columns={columns} itemKey={(t: Task) => t.id} card={(t: Task) => <strong>{t.title}</strong>} onMove={move} />
           <Log lines={log.lines} />
         </div>
@@ -103,7 +103,7 @@ const blob = await cropper.toBlob({ width: 256 })`,
       play: { options: [{ key: "keys", label: "Kısayol", default: "mod+k", options: [{ value: "mod+k", label: "mod+k" }, { value: "shift+alt+f", label: "shift+alt+f" }, { value: "mod+shift+p", label: "mod+shift+p" }] }] },
       run: (p: { values: { keys: string } }) => {
         const custom = signal("ctrl+s")
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Row><span>Komut paleti:</span><Kbd keys={() => p.values.keys} /><span>Kapat:</span><Kbd>Esc</Kbd></Row>
           <Row><TextInput value={custom} aria-label="Kısayol yaz" placeholder="ctrl+s" /><Kbd keys={custom} /></Row>
         </div>

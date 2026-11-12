@@ -51,7 +51,7 @@ await api(UsersApi).byId({ id: "7" })`,
         const n = mockNet(crud("/users", [{ id: "1", name: "Ada" }, { id: "2", name: "Deniz" }, { id: "3", name: "Ece" }]))
         const users = api(UsersApi, { net: n }), out = signal("—"), id = signal("1")
         const go = (v: string) => { id.set(v); users.byId({ id: v }, { report: false }).then((u) => out.set(u.name), (e) => out.set(msg(e))) }
-        return <div class="sc-stack"><Row>{["1", "2", "3", "9"].map((v) => <Button variant={() => (id() === v ? "primary" : "secondary")} onClick={() => go(v)}>{`id ${v}`}</Button>)}</Row>
+        return <div class="sc-ex-stack"><Row>{["1", "2", "3", "9"].map((v) => <Button variant={() => (id() === v ? "primary" : "secondary")} onClick={() => go(v)}>{`id ${v}`}</Button>)}</Row>
           <Row><Out label="url" value={() => users.byId.url({ id: id() })} /><Out label="Sonuç" value={out} /></Row></div>
       },
     },
@@ -62,7 +62,7 @@ e.retryable   // true
 AppError.from(anything)   // normalize whatever was thrown`,
       run: () => {
         const e = signal(new AppError("Çok fazla istek", { status: 429 }))
-        return <div class="sc-stack"><Row>{[401, 404, 409, 422, 429, 503].map((s) => <Button onClick={() => e.set(new AppError(`HTTP ${s}`, { status: s }))}>{String(s)}</Button>)}
+        return <div class="sc-ex-stack"><Row>{[401, 404, 409, 422, 429, 503].map((s) => <Button onClick={() => e.set(new AppError(`HTTP ${s}`, { status: s }))}>{String(s)}</Button>)}
           <Button variant="ghost" onClick={() => e.set(AppError.from(new TypeError("Failed to fetch"), { source: "net" }))}>TypeError</Button></Row>
           <Row><Out label="type" value={() => e().type} /><Out label="code" value={() => e().code} /><Out label="severity" value={() => e().severity} /><Out label="retryable" value={() => String(e().retryable)} /></Row></div>
       },
@@ -78,7 +78,7 @@ AppError.from(anything)   // normalize whatever was thrown`,
         const n = mockNet({ "GET /me": (r) => (r.headers["authorization"] === "Bearer yeni" ? { name: "Ada" } : reply(401, { message: "Token süresi doldu" })) })
         n.use(auth({ token: () => token, refresh: async () => { log.push("401 → refresh()"); await sleep(250); token = "yeni" } }))
         const go = () => n.get<{ name: string }>("/me", { policy: "parallel", report: false }).then((u) => log.push(`${now()} ✓ ${u.name} (token: ${token})`), (e) => log.push(`✖ ${msg(e)}`))
-        return <div class="sc-stack"><Row><Button onClick={go}>GET /me</Button><Button variant="ghost" onClick={() => { token = "eski"; log.push("token eskidi") }}>Token'ı eskit</Button></Row><Log lines={log} /></div>
+        return <div class="sc-ex-stack"><Row><Button onClick={go}>GET /me</Button><Button variant="ghost" onClick={() => { token = "eski"; log.push("token eskidi") }}>Token'ı eskit</Button></Row><Log lines={log} /></div>
       },
     },
     backoff: {
@@ -88,7 +88,7 @@ backoff(n, { min: 200, max: 5000, factor: 3 })`,
       run: () => {
         const seed = signal(0), factor = signal(2)
         const row = () => { seed(); return [0, 1, 2, 3, 4, 5].map((n) => `${n}: ${backoff(n, { factor: factor(), max: 10_000 })} ms`) }
-        return <div class="sc-stack"><Row>{[2, 3].map((f) => <Button variant={() => (factor() === f ? "primary" : "secondary")} onClick={() => factor.set(f)}>{`factor ${f}`}</Button>)}
+        return <div class="sc-ex-stack"><Row>{[2, 3].map((f) => <Button variant={() => (factor() === f ? "primary" : "secondary")} onClick={() => factor.set(f)}>{`factor ${f}`}</Button>)}
           <Button variant="ghost" onClick={() => seed.update((x) => x + 1)}>Yeniden çek</Button></Row><Tags label="Bekleme" items={row} /></div>
       },
     },
@@ -97,7 +97,7 @@ backoff(n, { min: 200, max: 5000, factor: 3 })`,
 // "/users/7?q=ada&tag=a&tag=b"`,
       run: () => {
         const id = signal("7"), q = signal("ada lovelace")
-        return <div class="sc-stack"><Row><Text label="id" value={id} /><Text label="q" value={q} /></Row>
+        return <div class="sc-ex-stack"><Row><Text label="id" value={id} /><Text label="q" value={q} /></Row>
           <Out label="url" value={() => buildUrl("/users/:id", { id: id() }, { q: q(), tag: ["a", "b"], empty: "" })} /></div>
       },
     },
@@ -111,7 +111,7 @@ net.get("/rates", { cache: "5s" })   // fresh: from cache; stale: cache + refres
         n.use(cache())
         n.on("net:revalidate", () => log.push("arka planda yenilendi"))
         const go = () => n.send<{ usd: string; at: string }>({ url: "/rates", cache: "5s" }).then((r) => log.push(`${r.from} · ${r.data.usd} · ${r.data.at}`))
-        return <div class="sc-stack"><Row><Button onClick={go}>GET /rates</Button><Out label="Sunucuya giden" value={() => { log(); return String(hits) }} /></Row><Log lines={log} /></div>
+        return <div class="sc-ex-stack"><Row><Button onClick={go}>GET /rates</Button><Out label="Sunucuya giden" value={() => { log(); return String(hits) }} /></Row><Log lines={log} /></div>
       },
     },
     closeSockets: {
@@ -138,7 +138,7 @@ await run(ctx)   // a → b → transport → b → a`,
           log.set([])
           await compose([step("a"), step("b")], async () => { log.push("taşıyıcı") })({ steps: [], start: 0, req: { transport: "demo" } } as unknown as Ctx)
         }
-        return <div class="sc-stack"><Button onClick={go}>Zinciri çalıştır</Button><Log lines={log} /></div>
+        return <div class="sc-ex-stack"><Button onClick={go}>Zinciri çalıştır</Button><Log lines={log} /></div>
       },
     },
     createNet: {
@@ -147,7 +147,7 @@ shop.use(auth({ token }))
 await shop.get("/orders")`,
       run: () => {
         const shop = createNet({ baseUrl: "https://api.acme.example", timeout: 5000 }), path = signal("/orders")
-        return <div class="sc-stack"><Row><Text label="Yol" value={path} /></Row>
+        return <div class="sc-ex-stack"><Row><Text label="Yol" value={path} /></Row>
           <Out label="İstek adresi" value={() => shop.normalize({ url: path() }).url} />
           <Row><Out label="Taşıyıcılar" value={[...shop.transports.keys()].join(", ")} /><Out label="timeout" value={`${shop.config.timeout} ms`} /></Row></div>
       },
@@ -166,7 +166,7 @@ duration(250)     // 250`,
 headersOf(res.headers)   // { "content-type": "application/json", … }`,
       run: () => {
         const id = signal("REQ-42")
-        return <div class="sc-stack"><Row><Text label="X-Request-Id" value={id} /></Row>
+        return <div class="sc-ex-stack"><Row><Text label="X-Request-Id" value={id} /></Row>
           <Pre text={() => J(headersOf(new Headers({ "Content-Type": "application/json", "X-Request-Id": id(), "Cache-Control": "no-store" })))} /></div>
       },
     },
@@ -177,7 +177,7 @@ new HttpTransport(myFetch)   // any fetch-compatible function (tests, proxies)`,
         const fakeFetch = (async (url: RequestInfo | URL, init?: RequestInit) => new Response(J({ url: String(url), method: init?.method }), { status: 200, headers: { "content-type": "application/json", "x-served-by": "örnek" } })) as typeof fetch
         const n = new Net().transport(new HttpTransport(fakeFetch)), out = signal("—")
         const go = () => n.send({ url: "/api/hello", query: { q: "ada" } }).then((r) => out.set(`${r.status} · ${J(r.data)} · x-served-by: ${r.headers["x-served-by"]}`))
-        return <div class="sc-stack"><Button onClick={go}>Gönder</Button><Out label="Yanıt" value={out} /></div>
+        return <div class="sc-ex-stack"><Button onClick={go}>Gönder</Button><Out label="Yanıt" value={out} /></div>
       },
     },
     idempotencyKey: {
@@ -187,7 +187,7 @@ net.post("/orders", order)  // retried safely`,
         const log = lines()
         const n = mockNet({ "POST /orders": (r) => reply(201, { key: r.headers["idempotency-key"] }), "PUT /orders/1": (r) => ({ key: r.headers["idempotency-key"] ?? "yok" }) })
         n.use(idempotencyKey())
-        return <div class="sc-stack"><Row>
+        return <div class="sc-ex-stack"><Row>
           <Button onClick={() => n.post<{ key: string }>("/orders", { sku: "A-1" }).then((r) => log.push(`POST → ${r.key.slice(0, 13)}…`))}>POST /orders</Button>
           <Button variant="ghost" onClick={() => n.put<{ key: string }>("/orders/1", { sku: "A-1" }).then((r) => log.push(`PUT → ${r.key}`))}>PUT /orders/1</Button>
         </Row><Log lines={log} /></div>
@@ -201,7 +201,7 @@ catch (e) { if (isAbort(e)) return; showError(e) }   // a cancel is not a failur
         const n = mockNet({ "GET /slow": { ok: true }, "GET /broken": () => reply(500, { message: "Sunucu hatası" }) }, 900)
         let ctl = new AbortController()
         const go = (url: string) => { ctl = new AbortController(); out.set("bekleniyor…"); n.get(url, { signal: ctl.signal, retry: 0, report: false }).then(() => out.set("tamam"), (e) => out.set(`isAbort: ${isAbort(e)} · ${msg(e)}`)) }
-        return <div class="sc-stack"><Row><Button onClick={() => go("/slow")}>Yavaş istek</Button><Button variant="danger" onClick={() => ctl.abort()}>İptal</Button><Button variant="ghost" onClick={() => go("/broken")}>Hatalı istek</Button></Row><Out label="Sonuç" value={out} /></div>
+        return <div class="sc-ex-stack"><Row><Button onClick={() => go("/slow")}>Yavaş istek</Button><Button variant="danger" onClick={() => ctl.abort()}>İptal</Button><Button variant="ghost" onClick={() => go("/broken")}>Hatalı istek</Button></Row><Out label="Sonuç" value={out} /></div>
       },
     },
     jsonProtocol: {
@@ -211,7 +211,7 @@ new ManagedSocket(url, { protocol: { ...jsonProtocol, encode: msgpack } })`,
       run: () => {
         const raw = signal(`{"re":"r1","data":{"name":"Ada"}}`)
         const dec = () => jsonProtocol.decode(raw())
-        return <div class="sc-stack"><Text label="Gelen çerçeve" value={raw} />
+        return <div class="sc-ex-stack"><Text label="Gelen çerçeve" value={raw} />
           <Row>{[`{"topic":"prices","data":12}`, `{"type":"pong"}`, "düz metin"].map((x) => <Button variant="ghost" onClick={() => raw.set(x)}>{x.slice(0, 16)}</Button>)}</Row>
           <Out label="topicOf" value={() => String(jsonProtocol.topicOf(dec()))} /><Out label="replyTo" value={() => J(jsonProtocol.replyTo(dec()) ?? null)} /><Out label="isPong" value={() => String(jsonProtocol.isPong(dec()))} />
           <Out label="sub()" value={J(jsonProtocol.sub("prices"))} /></div>
@@ -225,7 +225,7 @@ net.use(log({ out: (line) => panel.add(line), filter: (ctx) => ctx.req.method !=
         const n = mockNet({ "GET /users": [{ id: 1 }], "POST /users": () => reply(201, { id: 2 }) })
         n.use(log({ out: (l) => out.push(l) }))
         const go = (p: Promise<unknown>) => p.catch(() => undefined)
-        return <div class="sc-stack"><Row>
+        return <div class="sc-ex-stack"><Row>
           <Button onClick={() => go(n.get("/users", { policy: "parallel" }))}>GET</Button><Button onClick={() => go(n.post("/users", { name: "Ada" }))}>POST</Button>
           <Button variant="ghost" onClick={() => go(n.get("/yok", { report: false }))}>404</Button>
         </Row><Log lines={out} /></div>
@@ -242,7 +242,7 @@ chat.state()   // "open" | "reconnecting" | …`,
         const chat = new ManagedSocket<unknown, { type: string; text: string }>("ws://mock.local/chat", { factory: srv.factory, heartbeat: false, reconnect: { min: 400 } })
         chat.on("*", (m) => log.push(`← ${J(m)}`))
         onCleanup(() => chat.close())
-        return <div class="sc-stack"><Row>
+        return <div class="sc-ex-stack"><Row>
           <Button onClick={() => chat.request<{ text: string }>({ type: "echo", text: "selam" }).then((r) => log.push(`yanıt: ${r.text}`), (e) => log.push(msg(e)))}>request()</Button>
           <Button variant="ghost" onClick={() => chat.drop()}>Hattı kes</Button>
           <Badge tone={() => (chat.state() === "open" ? "success" : "warn")}>{() => chat.state()}</Badge><Out label="Deneme" value={chat.attempts} />
@@ -257,7 +257,7 @@ net.use(trace)   // shown as "trace" in ctx.steps and the request inspector`,
         const n = mockNet({ "GET /ping": { ok: true } })
         n.use(named("trace", (ctx, next) => { ctx.req.headers["x-trace"] = "t-1"; return next() }), (_ctx, next) => next())
         n.on("net:done", ({ ctx }) => steps.set(ctx.steps.map((s) => `${s.name} ${Math.round(s.ms)} ms`)))
-        return <div class="sc-stack"><Button onClick={() => n.get("/ping", { policy: "parallel" })}>GET /ping</Button><Tags label="Adımlar" items={steps} /></div>
+        return <div class="sc-ex-stack"><Button onClick={() => n.get("/ping", { policy: "parallel" })}>GET /ping</Button><Tags label="Adımlar" items={steps} /></div>
       },
     },
     net: {
@@ -276,7 +276,7 @@ n.get("/search", { query: { q }, category: "search", policy: "latest" })   // th
         const q = signal(""), result = signal("—"), aborted = signal(0)
         const n = mockNet({ "GET /search": (r) => ({ q: r.query["q"], hits: r.fake.int(1, 40) }) }, [300, 700])
         const go = (v: string) => { q.set(v); n.get<{ q: string; hits: number }>("/search", { query: { q: v }, category: "search", policy: "latest", report: false }).then((r) => result.set(`"${r.q}": ${r.hits} sonuç`), (e) => isAbort(e) && aborted.update((x) => x + 1)) }
-        return <div class="sc-stack"><input class="hm-input sc-ex-net-in" aria-label="Ara" placeholder="Hızlı yaz…" value={q} onInput={(e: Event) => go((e.target as HTMLInputElement).value)} />
+        return <div class="sc-ex-stack"><input class="hm-input sc-ex-net-in" aria-label="Ara" placeholder="Hızlı yaz…" value={q} onInput={(e: Event) => go((e.target as HTMLInputElement).value)} />
           <Row><Out label="Uçuşta" value={() => String(n.pending("search"))} /><Out label="İptal edilen" value={aborted} /><Out label="Son" value={result} /></Row></div>
       },
     },
@@ -288,7 +288,7 @@ catch (e) { form.setErrors(e.context.fields) }`,
         const n = mockNet({ "POST /signup": () => reply(422, { message: "Form hatalı", errors: { email: "Geçerli bir e-posta girin", name: "Boş olamaz" } }) })
         n.use(normalizeErrors())
         const go = () => n.post("/signup", { email: "ada@" }, { report: false }).catch((e: AppError) => { out.set(`${e.type} · ${e.message}`); fields.set(Object.entries(e.context["fields"] as Record<string, string>).map(([k, v]) => `${k}: ${v}`)) })
-        return <div class="sc-stack"><Row><Button onClick={go}>POST /signup</Button><Out label="Hata" value={out} /></Row><Tags label="Alanlar" items={fields} /></div>
+        return <div class="sc-ex-stack"><Row><Button onClick={go}>POST /signup</Button><Out label="Hata" value={out} /></Row><Tags label="Alanlar" items={fields} /></div>
       },
     },
     onInvalidate: {
@@ -297,7 +297,7 @@ net.invalidate("users")   // after a write: net cache + your layer`,
       run: () => {
         const log = lines(), n = new Net()
         onCleanup(onInvalidate((p) => log.push(`${now()} geçersiz: ${p}`)))
-        return <div class="sc-stack"><Row>{["ex-users", "ex-orders"].map((c) => <Button onClick={() => n.invalidate(c)}>{`invalidate("${c}")`}</Button>)}</Row><Log lines={log} /></div>
+        return <div class="sc-ex-stack"><Row>{["ex-users", "ex-orders"].map((c) => <Button onClick={() => n.invalidate(c)}>{`invalidate("${c}")`}</Button>)}</Row><Log lines={log} /></div>
       },
     },
     parseBody: {
@@ -306,7 +306,7 @@ parseBody("", "json")           // null
 parseBody("<oops>", "json")     // "<oops>" (stays text)`,
       run: () => {
         const text = signal(`{"id":1,"name":"Ada"}`), type = signal("json")
-        return <div class="sc-stack"><Text label="Gövde" value={text} />
+        return <div class="sc-ex-stack"><Text label="Gövde" value={text} />
           <Row>{["json", "text", "none"].map((t) => <Button variant={() => (type() === t ? "primary" : "secondary")} onClick={() => type.set(t)}>{t}</Button>)}
             <Button variant="ghost" onClick={() => text.set("<oops>")}>Bozuk JSON</Button></Row>
           <Out label="Sonuç" value={() => { const v = parseBody(text(), type()); return `${v === null ? "null" : typeof v} · ${J(v)}` }} /></div>
@@ -321,7 +321,7 @@ net.use(record(tape))
         const n = mockNet({ "GET /users": [{ id: 1, name: "Ada" }], "GET /users/:id": (r) => ({ id: r.params["id"] }) })
         n.use(record(tape))
         const go = (url: string, query?: Record<string, unknown>) => n.get(url, { query, policy: "parallel" }).then(() => keys.set(Object.entries(tape).map(([k, v]) => `${k} → ${v.status}`)))
-        return <div class="sc-stack"><Row><Button onClick={() => go("/users")}>/users</Button><Button onClick={() => go("/users/7")}>/users/7</Button><Button onClick={() => go("/users", { limit: 5 })}>?limit=5</Button></Row><Tags label="Kayıt" items={keys} /></div>
+        return <div class="sc-ex-stack"><Row><Button onClick={() => go("/users")}>/users</Button><Button onClick={() => go("/users/7")}>/users/7</Button><Button onClick={() => go("/users", { limit: 5 })}>?limit=5</Button></Row><Tags label="Kayıt" items={keys} /></div>
       },
     },
     replay: {
@@ -331,7 +331,7 @@ await n.get("/me")   // from the recording, no server`,
         const tape: Recording = { "GET /me": { status: 200, headers: {}, data: { name: "Ada" } }, "GET /status": { status: 503, headers: {}, data: { message: "Bakımda" } } }
         const n = new Net().use(replay(tape, { strict: true })), out = signal("—")
         const go = (url: string) => n.send({ url, policy: "parallel", report: false }).then((r) => out.set(`${r.from} · ${J(r.data)}`), (e: AppError) => out.set(`✖ ${e.type} · ${e.message}`))
-        return <div class="sc-stack"><Row>{["/me", "/status", "/orders"].map((u) => <Button onClick={() => go(u)}>{u}</Button>)}</Row><Out label="Sonuç" value={out} /></div>
+        return <div class="sc-ex-stack"><Row>{["/me", "/status", "/orders"].map((u) => <Button onClick={() => go(u)}>{u}</Button>)}</Row><Out label="Sonuç" value={out} /></div>
       },
     },
     resolveUrl: {
@@ -339,7 +339,7 @@ await n.get("/me")   // from the recording, no server`,
 resolveUrl("sse:/events", "http") // "https://this.site/events"`,
       run: () => {
         const p = signal("/live?room=1")
-        return <div class="sc-stack"><Text label="Yol" value={p} /><Out label="ws" value={() => resolveUrl(`ws:${p()}`, "ws")} /><Out label="http" value={() => resolveUrl(`sse:${p()}`, "http")} /></div>
+        return <div class="sc-ex-stack"><Text label="Yol" value={p} /><Out label="ws" value={() => resolveUrl(`ws:${p()}`, "ws")} /><Out label="http" value={() => resolveUrl(`sse:${p()}`, "http")} /></div>
       },
     },
     retry: {
@@ -352,7 +352,7 @@ resolveUrl("sse:/events", "http") // "https://this.site/events"`,
         n.use(retry({ count: 3, delay: 120, max: 400 }))
         n.on("net:retry", ({ ctx, error }) => log.push(`deneme ${ctx.attempt + 1}: ${error?.message} → yeniden`))
         const go = (k: number) => { fails = k; log.set([]); n.get("/flaky", { policy: "parallel", report: false }).then(() => log.push("✓ başarılı"), (e) => log.push(`✖ vazgeçildi: ${msg(e)}`)) }
-        return <div class="sc-stack"><Row><Button onClick={() => go(2)}>2 hata, sonra başarı</Button><Button variant="ghost" onClick={() => go(5)}>5 hata</Button></Row><Log lines={log} /></div>
+        return <div class="sc-ex-stack"><Row><Button onClick={() => go(2)}>2 hata, sonra başarı</Button><Button variant="ghost" onClick={() => go(5)}>5 hata</Button></Row><Log lines={log} /></div>
       },
     },
     routeLoads: {
@@ -364,7 +364,7 @@ routeLoads(null)   // load them directly`,
         const set = (v: boolean) => { on.set(v); routeLoads(v ? n : net) }
         onCleanup(() => routeLoads())
         const load = () => runLoad(() => sleep(300).then(() => "ok"), { kind: "part", key: "ex-part" }).then(() => log.push(`${now()} parça yüklendi`))
-        return <div class="sc-stack"><Row>
+        return <div class="sc-ex-stack"><Row>
           <Button variant={() => (on() ? "primary" : "secondary")} onClick={() => set(!on())}>{() => (on() ? "Bu Net'ten geçiyor" : "Varsayılan net")}</Button>
           <Button variant="ghost" onClick={load}>Parça yükle</Button>
         </Row><Log lines={log} /></div>
@@ -426,7 +426,7 @@ const stop = net.transports.get("sse")!.stream!("sse:/prices", (m) => …, {})`,
         const on = signal(false)
         const toggle = () => { if (stop) { stop(); stop = null; on.set(false); return } stop = t.stream("sse:/prices", (m) => log.push(J(m)), {}); on.set(true) }
         onCleanup(() => stop?.())
-        return <div class="sc-stack"><Button onClick={toggle}>{() => (on() ? "Durdur" : "Akışı başlat")}</Button><Log lines={log} /></div>
+        return <div class="sc-ex-stack"><Button onClick={toggle}>{() => (on() ? "Durdur" : "Akışı başlat")}</Button><Log lines={log} /></div>
       },
     },
     timing: {

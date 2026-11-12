@@ -18,7 +18,7 @@ export default examples({
       play: { options: [{ key: "description", label: "Açıklama", default: true }, { key: "actions", label: "Eylem düğmesi", default: true }] },
       run: (p: { values: { description: boolean; actions: boolean } }) => {
         const on = signal(false), edits = signal(0)
-        return <div class="sc-stack">{() => { const { description, actions } = p.values; return <Section title="Güvenlik" description={description ? "Oturum ve parola ayarları" : undefined}
+        return <div class="sc-ex-stack">{() => { const { description, actions } = p.values; return <Section title="Güvenlik" description={description ? "Oturum ve parola ayarları" : undefined}
           actions={actions ? <Button size="sm" onClick={() => edits.update((x) => x + 1)}>Düzenle</Button> : undefined}>
           <Toggle value={on} label="İki adımlı doğrulama" />
         </Section> }}<Row><Out label="doğrulama" value={() => (on() ? "açık" : "kapalı")} /><Out label="düzenle" value={edits} /></Row></div>
@@ -31,7 +31,7 @@ export default examples({
       run: (p: { values: { color: string; disabled: boolean } }) => {
         const view = signal<string | null>("list")
         const opts = [{ value: "list", label: "Liste" }, { value: "grid", label: "Izgara" }, { value: "board", label: "Pano" }]
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { color, disabled } = p.values; return <Segmented aria-label="Görünüm" value={view} options={opts} color={color as ColorToken} disabled={disabled} /> }}
           <Out label="görünüm" value={view} />
         </div>
@@ -46,7 +46,7 @@ export default examples({
         const city = signal<number | null>(null)
         const base = [{ value: 34, label: "İstanbul" }, { value: 6, label: "Ankara" }, { value: 35, label: "İzmir" }]
         const extra = [{ value: 16, label: "Bursa" }, { value: 7, label: "Antalya" }, { value: 61, label: "Trabzon", disabled: true }]
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Select aria-label="Şehir" value={city} placeholder="Şehir seçin" options={() => (p.values.more ? [...base, ...extra] : base)} disabled={p.values.disabled} />
           <Row><Out label="plaka" value={() => String(city())} /><Out label="tür" value={() => typeof city()} /></Row>
         </div>
@@ -61,7 +61,7 @@ export default examples({
         let timer: ReturnType<typeof setTimeout> | undefined
         onCleanup(() => clearTimeout(timer))
         const load = () => { ready.set(false); clearTimeout(timer); timer = setTimeout(() => ready.set(true), 1200) }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { lines, block, colors } = p.values; return ready() ? <p>Acme hesabı: 3 proje, 12 üye.</p> : <Skeleton lines={lines} block={block} height="lg" colors={(colors || undefined) as "single"} /> }}
           <Row><Button onClick={load}>Yükle (1,2 sn)</Button><Button variant="ghost" onClick={() => { clearTimeout(timer); ready.set(false) }}>İskelete dön</Button></Row>
         </div>
@@ -72,7 +72,7 @@ export default examples({
       play: { options: [{ key: "step", label: "Adım", default: 5, options: [1, 5, 25] }, { key: "money", label: "Para biçimi", default: false }] },
       run: (p: { values: { step: number; money: boolean } }) => {
         const v = signal(40)
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <Slider aria-label="Bütçe" value={v} min={0} max={100} step={p.values.step} format={(x: number) => (p.values.money ? tl(x * 100) : `%${x}`)} />
           <Row><Out label="değer" value={v} /><Button variant="ghost" size="sm" onClick={() => v.set(40)}>Sıfırla</Button></Row>
         </div>
@@ -87,7 +87,7 @@ export default examples({
       play: { options: [{ key: "spacer", label: "Spacer", default: true }] },
       run: (p: { values: { spacer: boolean } }) => {
         const clicks = signal(0)
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <div class="sc-ex-ui-d-bar"><strong>Acme</strong>{() => (p.values.spacer ? <Spacer /> : null)}<Button size="sm" variant="ghost">Fiyatlar</Button><Button size="sm" variant="primary" onClick={() => clicks.update((x) => x + 1)}>Giriş</Button></div>
           <Out label="giriş tıklaması" value={clicks} />
         </div>
@@ -114,7 +114,7 @@ export default examples({
       play: { options: [{ key: "orientation", label: "Yön", default: "horizontal", options: [{ value: "horizontal", label: "yatay" }, { value: "vertical", label: "dikey" }] }, { key: "min", label: "En küçük pay", default: 0.2, options: [{ value: 0.1, label: "%10" }, { value: 0.2, label: "%20" }, { value: 0.35, label: "%35" }] }] },
       run: (p: { values: { orientation: string; min: number } }) => {
         const share = signal(0.4)
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { orientation, min } = p.values; return <Splitter class="sc-ex-ui-d-split" label="Panel ayırıcı" orientation={orientation as "horizontal"} min={min} initial={0.4}
             value={share} onChange={(s: number) => share.set(s)}
             start={<div class="sc-ex-ui-d-pane"><strong>Dosyalar</strong><span>Tutamacı sürükleyin ya da ok tuşlarını kullanın</span></div>}
@@ -131,7 +131,7 @@ export default examples({
       run: (p: { values: { direction: string; justify: string; gap: number } }) => {
         const tags = signal(["Tasarım", "Geliştirme", "Yayın"])
         const more = ["Destek", "Pazarlama", "Satış"]
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { direction, justify, gap } = p.values; return <Stack class="sc-ex-ui-d-box" direction={direction as "row"} justify={justify as "start"} gap={gap} wrap>
             {tags().map((x, i) => <Badge color={(["brand-orange", "brand-blue", "brand-green", "brand-purple"] as const)[i % 4]}>{x}</Badge>)}
           </Stack> }}
@@ -148,7 +148,7 @@ export default examples({
       run: (p: { values: { online: boolean } }) => {
         const pending = signal(2), synced = signal("—")
         const flush = () => { if (!p.values.online) return; pending.set(0); synced.set(now()) }
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           <StatusBar label="Eşitleme" items={[
             { id: "net", text: () => (p.values.online ? "Çevrim içi" : "Çevrim dışı"), tone: () => (p.values.online ? "success" : "warn") },
             { id: "user", text: "Acme" },
@@ -166,7 +166,7 @@ export default examples({
       run: (p: { values: { nav: boolean; vertical: boolean } }) => {
         const step = signal(0), done = signal("—")
         const panels = [<p>Sepette 2 ürün: {tl(840)}</p>, <p>Teslimat: Acme Sok. 12, İstanbul</p>, <p>Kartla ödeme, 3 taksit</p>]
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { nav, vertical } = p.values; return <Stepper steps={[{ title: "Sepet" }, { title: "Adres" }, { title: "Ödeme" }]} current={step} onSelect={(i: number) => step.set(i)}
             panels={panels} nav={nav} vertical={vertical} finishLabel="Siparişi ver" onFinish={() => done.set(now())} /> }}
           <Row><Out label="adım" value={() => step() + 1} /><Out label="sipariş" value={done} /></Row>
@@ -180,7 +180,7 @@ export default examples({
       run: (p: { values: { color: string; vertical: boolean } }) => {
         const step = signal(1)
         const steps = [{ title: "Hesap", description: "E-posta" }, { title: "Ekip", description: "Üyeler" }, { title: "Bitti" }]
-        return <div class="sc-stack">
+        return <div class="sc-ex-stack">
           {() => { const { color, vertical } = p.values; return <Steps steps={steps} current={step} onSelect={(i: number) => step.set(i)} color={color as ColorToken} vertical={vertical} /> }}
           <Row><Button size="sm" variant="ghost" disabled={() => step() === 0} onClick={() => step.update((x) => x - 1)}>Geri</Button><Button size="sm" disabled={() => step() === 2} onClick={() => step.update((x) => x + 1)}>İleri</Button></Row>
         </div>
