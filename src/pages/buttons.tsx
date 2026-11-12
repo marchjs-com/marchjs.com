@@ -31,7 +31,7 @@ export default function Buttons(props: { params?: { rest?: string } }) {
     </div>
   </Demo>,
     "chip": () => <ComponentDemo folder="actions/chip" title="Chip: seçenekler" desc="Bileşen klasöründen (src/components/actions/chip) gelen demo: seçenekler playground.ts'den, kod docs.md'den. Renk yalnız süzgeç çipinde ya da primary tonda etkili olduğu için yalnız o zaman görünür." />,
-    "made-with-march": () => <ComponentDemo folder="actions/made-with-march" title="MadeWithMarch: kredi satırı" desc="İsteğe bağlı: \"March ve 💗 ile geliştirildi\". Lisans MIT olarak kalır; kullanmak rica, zorunluluk değil. Bağlantı adresi tek bir sabittedir (MARCH_URL)." />,
+    "made-with-march": () => <ComponentDemo folder="actions/made-with-march" title="MadeWithMarch: kredi satırı" desc="İsteğe bağlı: &quot;March ve 💗 ile geliştirildi&quot;. Lisans MIT olarak kalır; kullanmak rica, zorunluluk değil. Bağlantı adresi tek bir sabittedir (MARCH_URL)." />,
     "avatars": () => <Demo title="Avatarlar" desc="Baş harfler tema paletiyle; grup ve +N.">
     <div class="sc-row"><Avatar name="Elif Yılmaz" size="lg" /><Avatar name="Mert Demir" /><Avatar name="Zeynep Kaya" size="sm" />
       <AvatarGroup names={["Ada", "Linus", "Grace", "Zeynep", "Can", "Ece", "Onur"]} max={5} /></div>
