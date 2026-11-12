@@ -2,6 +2,7 @@
 // columns and container width are adjustable. All CSS (flex-wrap + :has()), no JS measuring.
 import { Grid, Segmented, Slider, Field, Card, Badge } from "hadi-march/ui";
 import { Demo, Section } from "../demo.tsx";
+import { Playground } from "../playground.tsx";
 
 const MODES = [
   { value: "default", label: "Varsayılan" },
@@ -51,15 +52,14 @@ export default function Layout() {
 <Grid cols={4} fill="last">…</Grid>              // son kart kalan alana uzar
 <Grid cols={4} balance>…</Grid>                  // 5 cards → 3 + 2 (not 4 + 1)
 <Grid min="17rem" fill="stretch">…</Grid>        // automatic columns + fill`}>
-      <div class="sc-row sc-row-between">
-        <Segmented bind:value={$mode} aria-label="Mod" options={MODES} />
-        <Segmented bind:value={$cols} aria-label="Sütun" options={["2", "3", "4", "5", "6"].map((v) => ({ value: v, label: `${v} sütun` }))} />
-      </div>
-      <div class="sc-grid-controls">
-        <Field label={() => `Kart sayısı: ${$count}`}><Slider bind:value={$count} min={1} max={16} /></Field>
-        <Field label={() => `Kapsayıcı genişliği: %${$width}`}><Slider bind:value={$width} min={30} max={100} step={10} /></Field>
-      </div>
+      <Playground options={[
+        { label: "Mod", get: () => $mode, set: (v: string) => { $mode = v }, options: MODES },
+        { label: "Sütun", get: () => $cols, set: (v: string) => { $cols = v }, options: ["2", "3", "4", "5", "6"] },
+        { label: "Kart sayısı", get: () => $count, set: (v: number) => { $count = v }, min: 1, max: 16 },
+        { label: "Kapsayıcı genişliği", get: () => $width, set: (v: number) => { $width = v }, min: 30, max: 100, step: 10, unit: "%" },
+      ]}>
       <div class={() => `sc-grid-frame sc-w-${$width}`}>{() => grid($mode)}</div>
+      </Playground>
     </Demo>
     <Demo wide title="Beş mod yan yana" desc="Aynı kart ve sütun sayısıyla; her kutu sabit bir sanal genişlikte (sütun başına 10rem) çizilip sığacak kadar küçültülür, böylece son satır farkı her ekranda görünür. Tek kart artınca stretch ile last aynı görünür; fark iki ve daha fazla artan kartta.">
       <div class="sc-grid-compare">

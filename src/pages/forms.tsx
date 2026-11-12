@@ -9,6 +9,7 @@ import type { ColorToken } from "hadi-march/theme";
 import { shapesFor } from "hadi-march/ui";
 import { Stack } from "hadi-march/ui";
 import { Demo, Section } from "../demo.tsx";
+import { Playground } from "../playground.tsx";
 
 const Signup = schema({
   name: { type: "text", label: "Ad soyad", required: true, max: 60, autocomplete: "name" },
@@ -90,12 +91,13 @@ export default function Forms() {
 <CheckboxGroup variant="chip" colors="brand" options={days} />      // one HADİ color per option
 <RadioGroup variant="card" options={[{ value, label, hint, icon }]} />
 <Checkbox variant="soft" indeterminate label="Kısmen" />`}>
-      <div class="sc-row">
-        <Segmented bind:value={$chVariant} aria-label="Varyant" options={[...VARIANTS].map((v) => ({ value: v, label: v }))} />
-        <Segmented bind:value={$chSize} aria-label="Boyut" options={["sm", "md", "lg"]} />
-        <Segmented bind:value={$chShape} aria-label="Köşe" options={() => ["square", "rounded", "circle"].map((v) => ({ value: v, label: v, disabled: !shapesFor($chVariant as "chip", "checkbox").includes(v as "square") }))} />
-        <Toggle bind:value={$chBrand} label="HADİ renkleri (colors=brand)" />
-      </div>
+      <Playground options={[
+        { label: "Varyant", get: () => $chVariant, set: (v: string) => { $chVariant = v }, options: [...VARIANTS] },
+        { label: "Boyut", get: () => $chSize, set: (v: string) => { $chSize = v }, options: ["sm", "md", "lg"] },
+        // only the corners this variant can have; hidden when it has a single one
+        { label: "Köşe", get: () => $chShape, set: (v: string) => { $chShape = v }, options: () => shapesFor($chVariant as "chip", "checkbox"), visibleWhen: () => shapesFor($chVariant as "chip", "checkbox").length > 1 },
+        { label: "HADİ renkleri (colors=brand)", get: () => $chBrand, set: (v: boolean) => { $chBrand = v } },
+      ]}>
       <p class="hm-muted sc-choice-note">{() => $chVariant === "card" ? "Kart köşesi yalnız square ya da rounded olabilir (kart yuvarlak olmaz)." : $chVariant === "chip" ? "chip: circle hap şeklidir; rounded ve square köşeleri keskinleştirir." : "Radio kutusu her zaman yuvarlaktır; köşe seçimi checkbox'ları ve chip / toggle / card biçimlerini etkiler."}</p>
       {() => <DayPicker variant={$chVariant as "chip"} size={$chSize as "md"} shape={$chShape as "rounded"} colors={$chBrand ? "brand" : undefined} />}
       <div class="sc-choice-compare">
@@ -109,6 +111,7 @@ export default function Forms() {
             <Checkbox value={false} disabled label="Devre dışı" />
           </Stack></div>
       </div>
+      </Playground>
     </Demo>
     <Demo wide title="Şemadan form" desc="Koşullu alanlar (plan = ekip), canlı doğrulama, gönderimde yükleniyor; sunucu hatası alana düşer (deneme: …@taken.com)."
       code={`const SignUp = schema({
@@ -167,16 +170,18 @@ export default function Forms() {
       code={`<CodeInput length={6} groups={[3, 3]} onComplete={verify} />            // HADİ: brand colors + display font
 <CodeInput length={8} pattern="alphanumeric" colors="palette" font="mono" variant="filled" />
 <CodeInput length={4} mask size="lg" />                                     // PIN`}>
-      <div class="sc-row">
-        <Field label={() => `Uzunluk: ${$otpLen}`}><Slider bind:value={$otpLen} min={3} max={12} /></Field>
-        <Segmented bind:value={$otpPattern} aria-label="Kod karakteri" options={["numeric", "alpha", "alphanumeric"]} />
-        <Segmented bind:value={$otpColors} aria-label="Kod renkleri" options={["brand", "palette", "single"]} />
-        <Segmented bind:value={$otpFont} aria-label="Kod yazı tipi" options={["display", "mono", "body"]} />
-        <Segmented bind:value={$otpSize} aria-label="Kod boyutu" options={["sm", "md", "lg"]} />
-        <Segmented bind:value={$otpVariant} aria-label="Kod biçimi" options={["outline", "filled", "underline"]} />
-        <Toggle bind:value={$otpGroups} label="Gruplu" />
-        <Toggle bind:value={$otpMask} label="Gizli (PIN)" />
-      </div>
+      <Playground options={[
+        { label: "Uzunluk", get: () => $otpLen, set: (v: number) => { $otpLen = v }, min: 3, max: 12 },
+        { label: "Kod karakteri", get: () => $otpPattern, set: (v: string) => { $otpPattern = v }, options: ["numeric", "alpha", "alphanumeric"] },
+        { label: "Kod renkleri", get: () => $otpColors, set: (v: string) => { $otpColors = v }, options: ["brand", "palette", "single"] },
+        // a masked code shows dots: the font has no effect then
+        { label: "Kod yazı tipi", get: () => $otpFont, set: (v: string) => { $otpFont = v }, options: ["display", "mono", "body"], visibleWhen: () => !$otpMask },
+        { label: "Kod boyutu", get: () => $otpSize, set: (v: string) => { $otpSize = v }, options: ["sm", "md", "lg"] },
+        { label: "Kod biçimi", get: () => $otpVariant, set: (v: string) => { $otpVariant = v }, options: ["outline", "filled", "underline"] },
+        // two groups need at least four boxes
+        { label: "Gruplu", get: () => $otpGroups, set: (v: boolean) => { $otpGroups = v }, visibleWhen: () => $otpLen >= 4 },
+        { label: "Gizli (PIN)", get: () => $otpMask, set: (v: boolean) => { $otpMask = v } },
+      ]}>
       {() => {
         // length, pattern, colors and groups shape the boxes: the preview is rebuilt when they change
         const n = $otpLen, pattern = $otpPattern as "numeric", colors = $otpColors as "brand", grouped = $otpGroups
@@ -185,6 +190,7 @@ export default function Forms() {
         return <CodeInput bind:value={$code} length={n} pattern={pattern} colors={colors} font={$otpFont as "display"} size={$otpSize as "md"} variant={$otpVariant as "outline"}
           groups={grouped ? [Math.ceil(n / 2), Math.floor(n / 2)] : undefined} mask={$otpMask} aria-label="Doğrulama kodu" onComplete={(c: string) => toast(`Kod: ${c}`, { kind: "success" })} />
       }}
+      </Playground>
     </Demo>
 
     <Demo title="Dosya yükleme" desc="Sürükle bırak, tür ve boyut denetimi, önizleme.">

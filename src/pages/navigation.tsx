@@ -5,6 +5,7 @@ import {
   inbox, users, crown, shieldCheck, hourglass, wallet, diamond, receipt, creditCard, image, flag, eye, barChart, gauge, globe, settings, store, truck, packageBox, plus, minus,
 } from "hadi-march/icons";
 import { Demo, Section } from "../demo.tsx";
+import { Playground } from "../playground.tsx";
 import { Link } from "hadi-march/router";
 
 const SAMPLES = [
@@ -83,15 +84,15 @@ export default function Navigation() {
     <Demo wide title="Genişletilebilir kenar çubuğu" desc="İç kenardaki ince tutamağı sürükle (dokunmatikte de), çift tıkla: başlangıç genişliği. Tutamağa Tab ile gel: ← → 16 px (Shift: 64), Home/End en dar/en geniş. collapseBelow altına çekince yalnız ikon moduna geçer. Bu vitrinin sol menüsü de böyle."
       code={`<NavSidebar items={items} resizable width="18rem" minWidth={220} maxWidth={420}
   collapseBelow={150} persist onResize={(w) => console.log(w)} />`}>
-      <div class="sc-row sc-row-between">
-        <Toggle bind:value={$resizable} label="resizable" />
-        <Toggle bind:value={$collapse} label="collapseBelow={150}" />
-        <span class="hm-muted">Genişlik: <strong>{() => `${$liveWidth} px`}</strong></span>
-      </div>
-      <div class="sc-grid-controls">
-        <Field label={() => `width (başlangıç): ${$startWidth} px`}><Slider bind:value={$startWidth} min={220} max={400} step={10} /></Field>
-        <Field label={() => `minWidth – maxWidth: ${$minWidth} – ${$maxWidth} px`}><Stack gap={2}><Slider bind:value={$minWidth} min={160} max={300} step={10} /><Slider bind:value={$maxWidth} min={320} max={600} step={10} /></Stack></Field>
-      </div>
+      <p class="hm-muted">Genişlik: <strong>{() => `${$liveWidth} px`}</strong></p>
+      <Playground options={[
+        { label: "resizable", get: () => $resizable, set: (v: boolean) => { $resizable = v } },
+        // without resizing, the limits and collapseBelow have no effect
+        { label: "collapseBelow={150}", get: () => $collapse, set: (v: boolean) => { $collapse = v }, visibleWhen: () => $resizable },
+        { label: "width (başlangıç)", get: () => $startWidth, set: (v: number) => { $startWidth = v }, min: 220, max: 400, step: 10, unit: " px" },
+        { label: "minWidth", get: () => $minWidth, set: (v: number) => { $minWidth = v }, min: 160, max: 300, step: 10, unit: " px", visibleWhen: () => $resizable },
+        { label: "maxWidth", get: () => $maxWidth, set: (v: number) => { $maxWidth = v }, min: 320, max: 600, step: 10, unit: " px", visibleWhen: () => $resizable },
+      ]}>
       <div class="sc-resize-frame">
         {() => {
           const opts = { resizable: $resizable, width: $startWidth, minWidth: $minWidth, maxWidth: $maxWidth, collapseBelow: $collapse ? 150 : undefined }
@@ -100,6 +101,7 @@ export default function Navigation() {
         }}
         <div class="sc-resize-content"><p class="hm-muted">Sayfa içeriği: kenar çubuğu genişledikçe bu alan daralır.</p></div>
       </div>
+      </Playground>
     </Demo>
 
     <Demo wide title="Taşan metin: OverflowText ve Marquee" desc="Yalnız sığmayan metin kayar; sığan metin yerinde durur. Kenarlar mantıksal yönde solar; Arapça (RTL) ters yöne kayar; ekran okuyucu metni bir kez okur; azaltılmış harekette kaymaz, uç solar ve tam metin ipucunda. Yukarıdaki kenar çubuğunda uzun öğenin üzerine gel."
@@ -107,13 +109,14 @@ export default function Navigation() {
 <OverflowText trigger="visible" mode="loop" text={…} />  // endless ticker while visible
 <OverflowText trigger="always" mode="once" speed={60} pause={800} />
 <Marquee text="Duyuru · …" separator="✦" />          // trigger=visible, mode=loop`}>
-      <div class="sc-row sc-row-between">
-        <Segmented bind:value={$trigger} aria-label="Tetik" options={["hover", "focus", "always", "visible"].map((v) => ({ value: v, label: v }))} />
-        <Segmented bind:value={$mode} aria-label="Mod" options={["bounce", "loop", "once"].map((v) => ({ value: v, label: v }))} />
-      </div>
+      <Playground options={[
+        { label: "Tetik (trigger)", get: () => $trigger, set: (v: string) => { $trigger = v }, options: ["hover", "focus", "always", "visible"] },
+        { label: "Mod", get: () => $mode, set: (v: string) => { $mode = v }, options: ["bounce", "loop", "once"] },
+      ]}>
       {() => { const trigger = $trigger as "hover", mode = $mode as "bounce"; return <div class="sc-mq-list">
         {SAMPLES.map(([lang, text]) => <button type="button" class="sc-mq-row"><span class="sc-mq-lang">{lang}</span><OverflowText class="sc-mq-text" text={text} trigger={trigger} mode={mode} /></button>)}
       </div> }}
+      </Playground>
       <div class="sc-mq-ticker"><Marquee text="Yeni: HADİ March vitrini · Grid fill ve balance · Taşan metin · Dört resmi renk" separator="✦" speed={50} /></div>
     </Demo>
   </Section>

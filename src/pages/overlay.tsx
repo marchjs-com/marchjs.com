@@ -1,6 +1,14 @@
 // Overlay: layers inside a container — video, image, SVG, canvas drawing and CSS effects — that never take input.
-import { Overlay, Button, TextInput, Segmented, Slider, Field, Toggle, Select, Card, Grid, toast, type DrawFn } from "hadi-march/ui";
+import { Overlay, Button, TextInput, Card, Grid, toast, type DrawFn } from "hadi-march/ui";
 import { Demo, Section } from "../demo.tsx";
+import { Playground } from "../playground.tsx";
+
+const EFFECTS = ["glass", "gradient", "mesh", "noise", "vignette", "spotlight", "grid", "dots"] as const;
+const BLENDS = ["normal", "multiply", "screen", "overlay", "soft-light"] as const;
+/** Effect card preview: the effect itself on a small tile. */
+const effectPreview = (e: (typeof EFFECTS)[number]) => () => <span class="sc-ov-prev"><Overlay effect={e} /></span>;
+/** Blend tile preview: the same photo and colour layer, mixed with this mode (class, no inline style). */
+const blendPreview = (b: (typeof BLENDS)[number]) => () => <span class="sc-ov-blend"><img src="media/dusk.jpg" alt="" loading="lazy" decoding="async" /><span class={`sc-ov-blend-top sc-blend-${b}`} /></span>;
 
 /** HADİ four-color waves drawn on a canvas (theme colors, follows the pointer). */
 const waves: DrawFn = (ctx, { width: w, height: h, time, theme, pointer }) => {
@@ -68,21 +76,21 @@ export default function OverlayPage() {
       <div class="sc-ov-tile sc-ov-tall"><Overlay draw={waves} animate /><strong class="sc-ov-label">Üzerinde gezin</strong></div>
     </Demo>
 
-    <Demo wide title="Katmanlar ve seçenekler" desc="Kaynak türü, sığdırma, kenar boşluğu, saydamlık, karışım, efekt ve ön/arka seçilebilir. Alttaki düğmeye her durumda tıklanabilir."
+    <Demo wide title="Katmanlar ve seçenekler" desc="Kaynak türü, sığdırma, kenar boşluğu, saydamlık, karışım, efekt ve ön/arka seçilebilir. Bir seçenek yalnız etkiliyken görünür (sığdırma: video ve resim; efekt: effect kaynağı). Alttaki düğmeye her durumda tıklanabilir."
       code={`<Overlay src="photo.jpg" fit="cover" inset={4} opacity={0.8} blend="multiply" />
 <Overlay effect="spotlight" front />           // above the content, still not clickable
 <Overlay draw={(ctx, { width, height, time, theme, pointer }) => …} animate />`}>
-      <div class="sc-row">
-        <Segmented bind:value={$kind} aria-label="Kaynak" options={["video", "image", "svg", "canvas", "effect"]} />
-        <Segmented bind:value={$fit} aria-label="Sığdırma" options={() => ["cover", "contain", "fill"].map((v) => ({ value: v, label: v, disabled: $kind !== "image" && $kind !== "video" }))} />
-        <Select bind:value={$effect} aria-label="Efekt" options={["glass", "gradient", "mesh", "noise", "vignette", "spotlight", "grid", "dots"]} />
-        <Select bind:value={$blend} aria-label="Karışım" options={["normal", "multiply", "screen", "overlay", "soft-light"]} />
-        <Toggle bind:value={$front} label="front" />
-      </div>
-      <div class="sc-grid-controls">
-        <Field label={() => `inset: ${$inset}`}><Slider bind:value={$inset} min={0} max={8} /></Field>
-        <Field label={() => `opacity: %${$opacity}`}><Slider bind:value={$opacity} min={10} max={100} step={10} /></Field>
-      </div>
+      <Playground options={[
+        { label: "Kaynak", get: () => $kind, set: (v: string) => { $kind = v }, options: ["video", "image", "svg", "canvas", "effect"] },
+        // fit only changes video and image
+        { label: "Sığdırma", get: () => $fit, set: (v: string) => { $fit = v }, options: ["cover", "contain", "fill"], visibleWhen: () => $kind === "image" || $kind === "video" },
+        // the effect only exists for the "effect" source
+        { label: "Efekt", get: () => $effect, set: (v: string) => { $effect = v }, options: EFFECTS.map((e) => ({ value: e, label: e, preview: effectPreview(e) })), visibleWhen: () => $kind === "effect" },
+        { label: "Karışım (blend)", get: () => $blend, set: (v: string) => { $blend = v }, kind: "grid", options: BLENDS.map((b) => ({ value: b, label: b, preview: blendPreview(b) })) },
+        { label: "front (içeriğin üstünde)", get: () => $front, set: (v: boolean) => { $front = v } },
+        { label: "inset", get: () => $inset, set: (v: number) => { $inset = v }, min: 0, max: 8 },
+        { label: "opacity", get: () => $opacity, set: (v: number) => { $opacity = v }, min: 10, max: 100, step: 10, unit: "%" },
+      ]}>
       <div class="sc-ov-stage">
         {() => {
           const kind = $kind, fit = $fit as "cover", inset = $inset, opacity = $opacity / 100, blend = $blend, effect = $effect as "glass", front = $front
@@ -96,6 +104,7 @@ export default function OverlayPage() {
           ]
         }}
       </div>
+      </Playground>
     </Demo>
   </Section>
 }
