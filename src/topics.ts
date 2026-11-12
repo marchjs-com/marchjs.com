@@ -142,6 +142,15 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "kbd", title: "Kbd", desc: "mod macOS'ta ⌘, ötekilerde Ctrl yazılır; kısayol dizisi key() ve kısayol listesiyle aynı biçimde okunur.", group: "Tipografi" },
     { slug: "cards-tabs", title: "Kartlar ve sekmeler", desc: "Card, LinkCard, IconTile; Tabs (alt çizgi kayar, panel yükselerek gelir).", group: "Örnekler" },
   ],
+  "/overlays": [
+    { slug: "dialog-drawer", title: "Dialog ve çekmece", desc: "openDialog / openDrawer: içerik bir fonksiyon, sonuç close(değer).", group: "Örnekler" },
+    { slug: "toasts", title: "Bildirimler (toast)", desc: "Dört tür, eylem düğmesi (geri al), kendiliğinden kapanma; ekran okuyucuya duyurulur.", group: "Örnekler" },
+    { slug: "palette", title: "Komut paleti", desc: "Sayfalar ve eylemler kendiliğinden kayıtlı; bulanık arama, Türkçe karakter katlama (ı/i, ş/s).", group: "Örnekler" },
+    { slug: "command-palette", title: "CommandPalette", desc: "Karmaşık bileşen: uygulamanın tek paleti; bu kart ekranda olduğu sürece kendi komutlarını ekler, kart…", group: "Karmaşık bileşenler" },
+    { slug: "dialog", title: "Dialog", desc: "Odak pencerenin içinde döner, Escape en üsttekini kapatır, kapanınca odak açan düğmeye döner.", group: "Katmanlar" },
+    { slug: "toast", title: "Toast", desc: "Engellemeyen kısa ileti; en fazla beş üst üste.", group: "Katmanlar" },
+    { slug: "drawer", title: "Drawer", desc: "Dört kenar, sürükle, durma noktaları", group: "Katmanlar" },
+  ],
 };
 
 /** Every topic as a sub page under its section (path, title, parent) for the routes, the breadcrumb and the menu. */
