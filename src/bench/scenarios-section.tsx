@@ -23,6 +23,7 @@ function Choice(props: { label: string; value: string; set: (v: string) => void;
 export default function BenchScenarios() {
   let $libs: string[] = LIBS.map((l) => l.id)
   let $scen: string[] = SCENARIOS.map((s) => s.id)
+  let $large = false
   let $running = false
   let $progress: ScenarioProgress | null = null
   let $result: ScenarioRun | null = null
@@ -41,7 +42,7 @@ export default function BenchScenarios() {
     ctrl = new AbortController()
     $running = true; $result = null
     if (!$scen.includes($view)) $view = scenarios[0]!.id
-    try { $result = await runScenarios({ scenarios, libs: LIBS.map((l) => l.id).filter((id) => $libs.includes(id)), stage, signal: ctrl.signal, onProgress: (p) => { $progress = p } }) }
+    try { $result = await runScenarios({ scenarios, libs: LIBS.map((l) => l.id).filter((id) => $libs.includes(id)), stage, large: $large, signal: ctrl.signal, onProgress: (p) => { $progress = p } }) }
     finally { $running = false; $progress = null; ctrl = null }
   }
   const pct = () => ($progress && $progress.total ? Math.round(($progress.done / $progress.total) * 100) : 0)
@@ -61,29 +62,36 @@ export default function BenchScenarios() {
         <div class="bt-pick" role="group" aria-label="Kitaplıklar">
           {LIBS.map((l) => <Chip selected={() => $libs.includes(l.id)} onClick={() => { $libs = toggle($libs, l.id) }}>{l.name}</Chip>)}
         </div>
+        <div class="bt-pick" role="group" aria-label="Boyut">
+          <Chip selected={() => !$large} onClick={() => { $large = false }}>Varsayılan boyut</Chip>
+          <Chip selected={() => $large} onClick={() => { $large = true }}>Büyük boyut</Chip>
+        </div>
         <div class="bt-run"><Button variant={$running ? "secondary" : "primary"} onClick={start}>{$running ? "Durdur" : "Senaryoları başlat"}</Button></div>
       </div>
       <div class="bt-status" aria-live="polite">
         <Progress value={pct()} max={100} label="Senaryo ilerlemesi" />
         <p class="bt-status-text">{$progress ? `${scenarioById($progress.scenario)?.label ?? ""} · ${libById($progress.lib)?.name ?? ""} · %${pct()}` : $result ? "Senaryolar bitti." : "Hazır."}</p>
       </div>
-      <ul class="bt-method">{SCENARIOS.map((s) => <li><strong>{s.label}:</strong> {s.desc}</li>)}</ul>
+      <ul class="bt-method">{SCENARIOS.map((s) => <li><strong>{s.label}:</strong> {s.desc}{s.large ? <> <em>Büyük boyut ({s.large.label}):</em> {s.large.note}</> : null}</li>)}</ul>
+      <p class="bt-empty">Varsayılan boyut kitaplığın kendi işini ölçecek kadar büyüktür; büyük boyutta tarayıcının stil, yerleşim ve boyama işi baskınlaşır.</p>
       <div class="bt-stage" ref={(el: HTMLDivElement) => { stage = el }} aria-hidden="true" />
     </Demo>
 
-    <Demo wide title="Senaryo sonuçları" desc="Kare süresinin medyanı (işlem + stil + yerleşim + boyama), %95'lik dilim ve düşen kare sayısı. Katsayı vanilla JS'e göredir.">
+    <Demo wide title="Senaryo sonuçları" desc="Kare süresinin medyanı (işlem + stil + yerleşim + boyama), %95'lik dilim ve düşen kare sayısı; katsayı vanilla JS'e göredir. Kurulum: sayfanın kurulup ilk kez boyanması (kitaplık kodu önceden inmiş). Bellek: kurulan sayfanın JS yığını artışı (yalnız performance.memory veren tarayıcılarda, kaba).">
       {() => $result ? <div class="bt-results">
         <Choice label="Senaryo" value={$view} set={(v) => { $view = v }} options={SCENARIOS.filter((s) => $result!.results[s.id]).map((s) => ({ value: s.id, label: s.label }))} />
         {() => { const bad = rows().filter((x) => unreliable(x.stats)).map((x) => libById(x.id)?.name ?? x.id); return bad.length ? <p class="bt-warn" role="status">Sonuç güvenilir değil, makine meşgul: {bad.join(", ")} için sapma ya da güven aralığı medyanın %15'inden büyük.</p> : null }}
         <div class="bt-table-wrap">
           <table class="hm-table bt-table">
-            <thead><tr><th scope="col">Kitaplık</th><th scope="col">Kare (medyan)</th><th scope="col">%95</th><th scope="col">Düşen kare</th><th scope="col">Katsayı</th></tr></thead>
+            <thead><tr><th scope="col">Kitaplık</th><th scope="col">Kare (medyan)</th><th scope="col">%95</th><th scope="col">Düşen kare</th><th scope="col">Katsayı</th><th scope="col">Kurulum</th><th scope="col">Bellek</th></tr></thead>
             <tbody>{rows().map((x) => <tr>
               <th scope="row">{libById(x.id)?.name ?? x.id}</th>
               <td title={x.error ?? undefined}>{x.error ? "hata" : `${ms(x.stats.median)} ms`}</td>
               <td>{ms(p95(x.samples))} ms</td>
               <td>{x.dropped} / {x.samples.length}</td>
               <td>{Number.isFinite(base()) ? `×${factor(x.stats.median, base()).toFixed(2)}` : "—"}</td>
+              <td>{x.mountMs !== undefined ? `${ms(x.mountMs)} ms` : "—"}</td>
+              <td>{x.heapMB !== undefined ? `${x.heapMB.toFixed(1)} MB` : "—"}</td>
             </tr>)}</tbody>
           </table>
         </div>
