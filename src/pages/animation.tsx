@@ -9,7 +9,8 @@ import {
 } from "hadi-march/motion";
 import { Button, Badge, Slider, Field, CodeView } from "hadi-march/ui";
 import { Segmented, Toggle } from "hadi-march/forms";
-import { Demo, Section } from "../demo.tsx";
+import { Demo } from "../demo.tsx";
+import { Hub } from "../hub.tsx";
 
 installPresets();
 const NAMES = Object.keys(PRESETS) as PresetName[];
@@ -268,55 +269,56 @@ function Stagger200() {
   </div>
 }
 
-export default function Animation() {
-  return <Section kicker="Hareket" title="Animasyon motoru" lead="Tek keyframe motoru: değer katmanı hedeften bağımsız; DOM (WAAPI), CSS değişkeni, canvas, WebGL ve düz nesneler aynı timeline'da oynar. Tek saat, global hız, durdurma ve 'hareketi azalt' her animasyona — saf CSS animasyonlarına bile — ulaşır.">
-    <Demo wide title="Global denetim" desc="motion.config: hız, tümünü durdur, azaltılmış hareket, karakter ve yavaş çekim. Ayar kalıcıdır; fps ve uzun görevler canlı ölçülür. Tümünü durdur bütün vitrini durdurur: başka sayfaya geç, iskeletler, kayan yazılar, canvas katmanları, ilerleme çubukları ve sayfa geçişleri de durur; alttaki uyarı her sayfada kalır."
-      code={`motion.config({ speed: 0.5 })      // tüm animasyonlar yarı hızda
-motion.pauseAll(); motion.resumeAll()  // WAAPI, canvas, WebGL, yaylar, CSS animasyonları
-motion.config({ reduce: "reduce" })    // ya da "system" (prefers-reduced-motion)
-motion.config({ character: "calm" })   // temalar hareket karakteri verir
-const m = frameMonitor(); m.fps(); m.drops(); m.longTasks()`}>
-      <Control />
-    </Demo>
-    <Demo wide title="Tek motor" desc="Aynı timeline: bir kart (DOM, WAAPI), bir canvas dalgası ve bir WebGL gradyanı. Tek Duraklat düğmesi ve hız kaydırıcısı üçünü birden yönetir."
-      code={`const wave = canvas2d(canvas, (s, ctx) => draw(s, ctx), { phase: 0, amp: 10, hue: "#3b82f6" })
-const sky = webgl(gl, program, { state: { uTime: 0, uColorA: "#1e3a8a" }, draw: (gl) => gl.drawArrays(gl.TRIANGLES, 0, 6) })
-const tl = timeline({ defaults: { duration: 3000, easing: "in-out" } })
-  .add(card, [{ transform: "translateX(0%)" }, { transform: "translateX(60%)" }], { at: 0, iterations: Infinity, direction: "alternate" })
-  .add(wave, { phase: [0, 12.57], amp: [10, 38], hue: ["#3b82f6", "#ec4899"] }, { at: 0, iterations: Infinity, direction: "alternate" })
-  .add(sky, { uTime: [0, 1], uColorA: ["#1e3a8a", "#7c3aed"] }, { at: 0, iterations: Infinity, direction: "alternate" })
-tl.play(); tl.pause(); tl.playbackRate = 2`}>
-      <OneEngine />
-    </Demo>
-    <Demo title="Keyframe galerisi" desc="installPresets(): adla oynat — animate(el, 'pop'). Döngüler tıklayınca durur. Hepsi transform / opacity / filter: compositor'da çalışır."
-      code={`installPresets()
-animate(el, "pop")                       // yay eğrisi CSS linear() ile, WAAPI'de
-keyframes("myIn", { opacity: [0, 1] }, { duration: 200 })
-timeline().add(".card", "fadeUp", { stagger: stagger(40, { from: "center" }) }).play()`}>
-      <Gallery />
-    </Demo>
-    <Demo title="Zaman çizelgesi düzenleyici" desc="Çubukları sürükle (ya da oklarla kaydır), oynat, ters çevir; seek kaydırıcısı zamanı doğrudan ayarlar."
-      code={`const tl = timeline()
-  .add(title, "fadeDown", { at: 0, duration: 500 })
-  .add(card, "zoomIn", { at: 300, duration: 600 })
-  .label("cta").add(button, "pop", { at: "cta-=100" })
-tl.seek(450); tl.play(); tl.reverse(); await tl.finished`}>
-      <TimelineEditor />
-    </Demo>
-    <Demo title="Eğri editörü" desc="Tutamaçları sürükle: cubic-bezier. Yay ve sekme fizikten hesaplanır ve CSS linear() olarak WAAPI'ye gider."
-      code={`ease("out")  ease("--hm-ease-expo")  ease("steps(5, end)")
-springEase({ stiffness: 170, damping: 14 }).css   // "linear(0, 0.07 4%, …, 1)"
-defineEasing("brand", "cubic-bezier(.2,.9,.1,1)")`}>
-      <CurveEditor />
-    </Demo>
-    <Demo title="200 öğe stagger" desc="200 nokta, ızgara stagger'ı ortadan. Başlatma süresi, düşen kareler ve uzun görevler ölçülür."
-      code={`const m = frameMonitor()
-await timeline().add(dots, frames, { stagger: stagger(4, { grid: [20, 10], from: "center" }) }).play()
-m.drops(); m.longTasks()`}>
-      <Stagger200 />
-    </Demo>
-    <Demo wide title="Keyframe'ler → tek CSS dosyası" desc="keyframesCss() (ya da tools/gen-motion-css.js) kayıtlardan @keyframes ve .hm-anim-* sınıfları üretir; azaltılmış harekette hemen biter.">
-      <CodeView code={keyframesCss({ names: ["fadeUp", "pop", "spin"] }).trim()} lang="css" copy />
-    </Demo>
-  </Section>
+export default function Animation(props: { params?: { rest?: string } }) {
+  const RENDER: Record<string, () => unknown> = {
+    "global-control": () => <Demo wide title="Global denetim" desc="motion.config: hız, tümünü durdur, azaltılmış hareket, karakter ve yavaş çekim. Ayar kalıcıdır; fps ve uzun görevler canlı ölçülür. Tümünü durdur bütün vitrini durdurur: başka sayfaya geç, iskeletler, kayan yazılar, canvas katmanları, ilerleme çubukları ve sayfa geçişleri de durur; alttaki uyarı her sayfada kalır."
+    code={`motion.config({ speed: 0.5 })      // tüm animasyonlar yarı hızda
+tion.pauseAll(); motion.resumeAll()  // WAAPI, canvas, WebGL, yaylar, CSS animasyonları
+tion.config({ reduce: "reduce" })    // ya da "system" (prefers-reduced-motion)
+tion.config({ character: "calm" })   // temalar hareket karakteri verir
+nst m = frameMonitor(); m.fps(); m.drops(); m.longTasks()`}>
+    <Control />
+  </Demo>,
+    "one-engine": () => <Demo wide title="Tek motor" desc="Aynı timeline: bir kart (DOM, WAAPI), bir canvas dalgası ve bir WebGL gradyanı. Tek Duraklat düğmesi ve hız kaydırıcısı üçünü birden yönetir."
+    code={`const wave = canvas2d(canvas, (s, ctx) => draw(s, ctx), { phase: 0, amp: 10, hue: "#3b82f6" })
+nst sky = webgl(gl, program, { state: { uTime: 0, uColorA: "#1e3a8a" }, draw: (gl) => gl.drawArrays(gl.TRIANGLES, 0, 6) })
+nst tl = timeline({ defaults: { duration: 3000, easing: "in-out" } })
+.add(card, [{ transform: "translateX(0%)" }, { transform: "translateX(60%)" }], { at: 0, iterations: Infinity, direction: "alternate" })
+.add(wave, { phase: [0, 12.57], amp: [10, 38], hue: ["#3b82f6", "#ec4899"] }, { at: 0, iterations: Infinity, direction: "alternate" })
+.add(sky, { uTime: [0, 1], uColorA: ["#1e3a8a", "#7c3aed"] }, { at: 0, iterations: Infinity, direction: "alternate" })
+.play(); tl.pause(); tl.playbackRate = 2`}>
+    <OneEngine />
+  </Demo>,
+    "presets": () => <Demo title="Keyframe galerisi" desc="installPresets(): adla oynat — animate(el, 'pop'). Döngüler tıklayınca durur. Hepsi transform / opacity / filter: compositor'da çalışır."
+    code={`installPresets()
+imate(el, "pop")                       // yay eğrisi CSS linear() ile, WAAPI'de
+yframes("myIn", { opacity: [0, 1] }, { duration: 200 })
+meline().add(".card", "fadeUp", { stagger: stagger(40, { from: "center" }) }).play()`}>
+    <Gallery />
+  </Demo>,
+    "timeline-editor": () => <Demo title="Zaman çizelgesi düzenleyici" desc="Çubukları sürükle (ya da oklarla kaydır), oynat, ters çevir; seek kaydırıcısı zamanı doğrudan ayarlar."
+    code={`const tl = timeline()
+.add(title, "fadeDown", { at: 0, duration: 500 })
+.add(card, "zoomIn", { at: 300, duration: 600 })
+.label("cta").add(button, "pop", { at: "cta-=100" })
+.seek(450); tl.play(); tl.reverse(); await tl.finished`}>
+    <TimelineEditor />
+  </Demo>,
+    "curve-editor": () => <Demo title="Eğri editörü" desc="Tutamaçları sürükle: cubic-bezier. Yay ve sekme fizikten hesaplanır ve CSS linear() olarak WAAPI'ye gider."
+    code={`ease("out")  ease("--hm-ease-expo")  ease("steps(5, end)")
+ringEase({ stiffness: 170, damping: 14 }).css   // "linear(0, 0.07 4%, …, 1)"
+fineEasing("brand", "cubic-bezier(.2,.9,.1,1)")`}>
+    <CurveEditor />
+  </Demo>,
+    "stagger-200": () => <Demo title="200 öğe stagger" desc="200 nokta, ızgara stagger'ı ortadan. Başlatma süresi, düşen kareler ve uzun görevler ölçülür."
+    code={`const m = frameMonitor()
+ait timeline().add(dots, frames, { stagger: stagger(4, { grid: [20, 10], from: "center" }) }).play()
+drops(); m.longTasks()`}>
+    <Stagger200 />
+  </Demo>,
+    "keyframes-css": () => <Demo wide title="Keyframe'ler → tek CSS dosyası" desc="keyframesCss() (ya da tools/gen-motion-css.js) kayıtlardan @keyframes ve .hm-anim-* sınıfları üretir; azaltılmış harekette hemen biter.">
+    <CodeView code={keyframesCss({ names: ["fadeUp", "pop", "spin"] }).trim()} lang="css" copy />
+  </Demo>,
+  }
+  return <Hub base="/animation" kicker="Hareket" title="Animasyon motoru" lead="Tek keyframe motoru: değer katmanı hedeften bağımsız; DOM (WAAPI), CSS değişkeni, canvas, WebGL ve düz nesneler aynı timeline'da oynar. Tek saat, global hız, durdurma ve 'hareketi azalt' her animasyona — saf CSS animasyonlarına bile — ulaşır." render={RENDER} params={props.params} />
 }
