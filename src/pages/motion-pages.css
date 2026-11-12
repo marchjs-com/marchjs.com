@@ -97,3 +97,21 @@
 .sc-mo-variant:hover { transform: translateY(-2px); }
 .sc-mo-variant[aria-current="page"] { outline: 3px solid var(--hm-text); outline-offset: 2px; }
 .sc-mo-variant:focus-visible { outline: 3px solid var(--hm-accent, var(--hm-primary)); outline-offset: 2px; }
+
+/* micro-interactions */
+.sc-mo-micro { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--hm-space-4); inline-size: 100%; }
+.sc-mo-ripple-card { display: grid; gap: var(--hm-space-1); min-inline-size: 10rem; padding: var(--hm-space-4); border-radius: var(--hm-radius-3); background: var(--hm-brand-purple); color: var(--hm-on-brand-purple); cursor: pointer; user-select: none; }
+.sc-mo-ripple-card:focus-visible, .sc-mo-magnet:focus-visible, .sc-mo-press:focus-visible { outline: 2px solid var(--hm-accent, var(--hm-primary)); outline-offset: 3px; }
+.sc-mo-magnet { display: grid; place-items: center; inline-size: 4.5rem; aspect-ratio: 1; border: 0; border-radius: 50%; cursor: pointer; box-shadow: var(--hm-shadow-2); }
+.sc-mo-magnet .hm-svg { inline-size: 1.6rem; block-size: 1.6rem; }
+.sc-mo-plx { position: relative; overflow: hidden; inline-size: min(100%, 30rem); aspect-ratio: 16 / 9; border-radius: var(--hm-radius-4, 1rem); background: linear-gradient(180deg, var(--hm-brand-blue), color-mix(in oklab, var(--hm-brand-blue) 40%, var(--hm-brand-purple))); box-shadow: var(--hm-shadow-2); }
+.sc-mo-plx-sun { position: absolute; inset-block-start: 14%; inset-inline-end: 16%; inline-size: 18%; aspect-ratio: 1; border-radius: 50%; background: var(--hm-brand-orange); }
+.sc-mo-plx-hill { position: absolute; inset-inline: -10%; border-radius: 50% 50% 0 0; }
+.sc-mo-plx-h1 { inset-block-end: -30%; block-size: 70%; background: color-mix(in oklab, var(--hm-brand-green) 70%, var(--hm-brand-blue)); }
+.sc-mo-plx-h2 { inset-block-end: -45%; block-size: 70%; inset-inline: 20% -30%; background: var(--hm-brand-green); }
+.sc-mo-plx-text { position: absolute; inset-block-end: 10%; inset-inline-start: 7%; display: grid; color: var(--hm-on-brand-green); }
+.sc-mo-plx-text strong { font-size: var(--hm-text-2xl, 1.5rem); }
+.sc-mo-plx-spark { position: absolute; inset-block-start: 12%; inset-inline-start: 10%; color: var(--hm-on-brand-blue); }
+.sc-mo-press { min-inline-size: 7rem; padding: var(--hm-space-3) var(--hm-space-5); border: 0; border-radius: 999px; font: inherit; font-weight: 600; cursor: pointer; user-select: none; }
+.sc-mo-press-ghost { background: var(--hm-surface); color: var(--hm-text); border: 2px solid var(--hm-brand-orange); }
+.sc-mo-save { min-block-size: 2.75rem; }

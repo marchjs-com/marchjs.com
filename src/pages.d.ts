@@ -18,6 +18,7 @@ export interface PageParams {
   "/managers": {  };
   "/messaging": {  };
   "/motion": {  };
+  "/motion/micro": {  };
   "/motion/morph": {  };
   "/motion/pages": {  };
   "/motion/svg": {  };
@@ -34,5 +35,5 @@ export interface PageParams {
   "/transitions": {  };
 }
 declare module "hadi-march/router" {
-  interface Register { routes: "/animation" | "/big-data" | "/buttons" | "/charts" | "/data" | "/feedback" | "/forms" | "/home" | "/icons" | "/language" | "/layout" | "/managers-a11y" | "/managers-data" | "/managers-env" | "/managers-ops" | "/managers" | "/messaging" | "/motion" | "/motion/morph" | "/motion/pages" | "/motion/svg" | "/navigation" | "/network" | "/overlay" | "/overlays" | "/seo" | "/social" | "/speed" | "/start" | "/text-motion" | "/themes" | "/transitions" }
+  interface Register { routes: "/animation" | "/big-data" | "/buttons" | "/charts" | "/data" | "/feedback" | "/forms" | "/home" | "/icons" | "/language" | "/layout" | "/managers-a11y" | "/managers-data" | "/managers-env" | "/managers-ops" | "/managers" | "/messaging" | "/motion" | "/motion/micro" | "/motion/morph" | "/motion/pages" | "/motion/svg" | "/navigation" | "/network" | "/overlay" | "/overlays" | "/seo" | "/social" | "/speed" | "/start" | "/text-motion" | "/themes" | "/transitions" }
 }
