@@ -1,0 +1,16 @@
+/* API examples of the charts group (hadi-march/charts). */
+.sc-ex-charts-stack { display: grid; gap: var(--hm-space-3); min-width: 0; }
+.sc-ex-charts-svg { display: block; inline-size: 100%; max-inline-size: 22rem; block-size: auto; overflow: visible; }
+.sc-ex-charts-svg text { fill: currentColor; font-size: 10px; }
+.sc-ex-charts-fill { fill: var(--hm-c); }
+.sc-ex-charts-soft { fill: var(--hm-c); opacity: .35; }
+.sc-ex-charts-stroke { fill: none; stroke: var(--hm-c); stroke-width: 2; }
+.sc-ex-charts-axis { stroke: var(--hm-border); stroke-width: 1; }
+.sc-ex-charts-tick { stroke: var(--hm-border); stroke-width: 1; }
+.sc-ex-charts-dot { fill: var(--hm-c); stroke: var(--hm-surface); stroke-width: 2; }
+.sc-ex-charts-swatches { display: flex; flex-wrap: wrap; gap: var(--hm-space-2); margin: 0; padding: 0; list-style: none; font-size: var(--hm-text-xs); }
+.sc-ex-charts-swatches > li { display: grid; justify-items: center; gap: 2px; }
+.sc-ex-charts-swatches svg { inline-size: 1.75rem; block-size: 1.75rem; }
+.sc-ex-charts-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: var(--hm-space-3); }
+.sc-ex-charts-list { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; font-size: var(--hm-text-sm); }
+.sc-ex-charts-list > li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--hm-space-2); padding: var(--hm-space-1) var(--hm-space-2); border-radius: var(--hm-radius-1); background: var(--hm-surface-2); }
