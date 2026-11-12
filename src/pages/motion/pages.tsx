@@ -42,7 +42,7 @@ const NAMES = PAGE_VARIANTS.map((v) => v.name)
 let rtlOn = false
 
 export default function MotionPages() {
-  document.title = "Sayfa geçişi efektleri · HADI March"
+  document.title = "Sayfa geçişi efektleri · March"
   const current = (): string => { const r = path().split("/")[3] ?? ""; return INFO[r] ? r : "circle" }
   const v = current(), info = INFO[v]!
   let $dur = pageFx.duration.peek()

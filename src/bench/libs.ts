@@ -5,7 +5,7 @@ import type { MountFn } from "./core.ts"
 export interface Lib { id: string; name: string; version: string; /** manifest key of its lazy chunk */ src: string; load: () => Promise<{ mount: MountFn }> }
 export const LIBS: Lib[] = [
   { id: "vanilla", name: "Vanilla JS", version: "", src: "src/bench/apps/vanilla.ts", load: () => import("./apps/vanilla.ts") },
-  { id: "march", name: "HADI March", version: "0.1.0", src: "src/bench/apps/march.tsx", load: () => import("./apps/march.tsx") },
+  { id: "march", name: "March", version: "0.1.0", src: "src/bench/apps/march.tsx", load: () => import("./apps/march.tsx") },
   { id: "react", name: "React", version: "19.3.1", src: "src/bench/apps/react.ts", load: () => import("./apps/react.ts") },
   { id: "preact", name: "Preact", version: "10.29.8", src: "src/bench/apps/preact.ts", load: () => import("./apps/preact.ts") },
   { id: "vue", name: "Vue", version: "3.5.45", src: "src/bench/apps/vue.ts", load: () => import("./apps/vue.ts") },

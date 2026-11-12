@@ -19,7 +19,7 @@ interface Item { id: number; name: string; tone: number }
 
 export default function MotionLists(props: { kit: typeof Kit }) {
   const { MotionDemo, opt } = props.kit
-  document.title = "Liste animasyonları · HADI March"
+  document.title = "Liste animasyonları · March"
 
   // 1 · FLIP list
   let $enter = "pop" as ListPreset, $exit = "scale" as ListPreset, $dur = 450

@@ -246,7 +246,7 @@ export default function Bench() {
     <header class="sc-page-head">
       <span class="sc-kicker">{t("Hız")}</span>
       <h1 class="sc-h1">{t("Karşılaştırma")}</h1>
-      <p class="sc-lead">{t("HADI March'ı React, Vue, Svelte, Solid, Preact, Lit ve vanilla JS ile senin tarayıcında, canlı ölçer; sonuçlar bu cihaza özgüdür.")}</p>
+      <p class="sc-lead">{t("March'ı React, Vue, Svelte, Solid, Preact, Lit ve vanilla JS ile senin tarayıcında, canlı ölçer; sonuçlar bu cihaza özgüdür.")}</p>
     </header>
     <Tabs class="bt-tabs" query="tab" label={t("Karşılaştırma bölümleri")} tabs={[
       { id: "basic", label: t("Temel testler"), disabled: lock("basic"), content: basic },

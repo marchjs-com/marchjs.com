@@ -100,7 +100,7 @@ export default function ApiPage() {
   return <div class="sc-page sc-apip">
     <header class="sc-page-head">
       <span class="sc-kicker">{() => T().title}</span>
-      <h1 class="sc-h1">{() => `HADI March API`}</h1>
+      <h1 class="sc-h1">{() => `March API`}</h1>
       <p class="sc-lead">{() => T().lead}</p>
     </header>
     <div class="sc-apip-grid">

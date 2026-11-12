@@ -26,7 +26,7 @@ function Topbar() {
   return <>
     <nav class="hm-crumbs" aria-label="Konum">
       <ol>
-        <li><Link href="/">HADI March</Link></li>
+        <li><Link href="/">March</Link></li>
         {() => { const t = title(); return t ? <li><span aria-current="page">{t}</span></li> : null }}
       </ol>
     </nav>

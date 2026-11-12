@@ -6,7 +6,7 @@ import { HOME_STATS } from "./home-stats.gen.ts";
 
 export interface PageMeta { desc: string; group?: string; icon: unknown }
 export const PAGE_META: Record<string, PageMeta> = {
-  "/": { desc: "HADI March'a genel bakış", icon: dashboard },
+  "/": { desc: "March'a genel bakış", icon: dashboard },
   "/start": { desc: "Kurulum, ilk bileşen, march CLI, proje yapısı", group: "İlk Adımlar", icon: zap },
   "/api": { desc: "Her dışa aktarım: imza, parametreler, örnekler, canlı demo", group: "İlk Adımlar", icon: code },
   "/themes": { desc: "7 tema, renkler, yazı, yarıçap, gölge", group: "Temel", icon: palette },

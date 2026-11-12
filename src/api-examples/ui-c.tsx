@@ -50,13 +50,13 @@ export default examples({
       </div>,
     },
     MARCH_URL: {
-      code: `<a href={MARCH_URL} target="_blank" rel="noopener">HADI March</a>`,
+      code: `<a href={MARCH_URL} target="_blank" rel="noopener">March</a>`,
       run: () => {
         const u = new URL(MARCH_URL)
         return <div class="sc-ex-ui-c-stack">
           <Out label="MARCH_URL" value={MARCH_URL} />
           <Row><Out label="host" value={u.host} /><Out label="path" value={u.pathname} /></Row>
-          <a href={MARCH_URL} target="_blank" rel="noopener">HADI March bağlantısı</a>
+          <a href={MARCH_URL} target="_blank" rel="noopener">March bağlantısı</a>
         </div>
       },
     },

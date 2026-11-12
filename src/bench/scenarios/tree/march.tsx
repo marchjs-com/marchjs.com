@@ -1,4 +1,4 @@
-// One value deep in a large tree, HADI March: a recursive TreeNode component per node (components run once); each
+// One value deep in a large tree, March: a recursive TreeNode component per node (components run once); each
 // leaf's value is a signal, bound to its text node. A step sets the target leaf's signal and only that text updates:
 // no component runs again and nothing is compared.
 import { render, signal } from "hadi-march"

@@ -1,4 +1,4 @@
-// Theme change, HADI March: the theme is provided at the top with context(); its accent is a signal. Each card's
+// Theme change, March: the theme is provided at the top with context(); its accent is a signal. Each card's
 // badge reads it with useContext() and binds it to its class, so a change updates only those 2.000 class bindings:
 // the cards themselves and the list never run again.
 import { render, signal, context, useContext, type Accessor } from "hadi-march"

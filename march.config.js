@@ -1,4 +1,4 @@
-// HADI March showcase: `node ../../cli/march.js dev` or `node build.mjs` (static, relative paths → dist/).
+// March showcase: `node ../../cli/march.js dev` or `node build.mjs` (static, relative paths → dist/).
 import { readFileSync } from "node:fs";
 
 // every page of the menu (nav.ts), also the ones under a wildcard route (/motion/svg…): each gets its own index.html

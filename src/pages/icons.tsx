@@ -1,4 +1,4 @@
-// Icons: the HADI March set, open-source icon packs (hadi-march/icons/<pack>), icons by name, stroke / fill / RTL.
+// Icons: the March set, open-source icon packs (hadi-march/icons/<pack>), icons by name, stroke / fill / RTL.
 // The March gallery reads the catalog (one separate module); pack galleries fetch JSON (dist/icon-packs) only when a
 // pack is opened, so no icon data rides along with this page or the start-up.
 import { ICONS } from "hadi-march/icons/catalog";
@@ -189,7 +189,7 @@ function ByName() {
   let $ref = "lucide:rocket"
   const shown = ["user", "lucide:rocket", "tabler:chart-bar", "phosphor:planet", "material-symbols:bolt", "simple-icons:github"]
   void loadIndex().then(registerGalleryPacks, () => {})
-  return <Demo wide title="İsimle ikon" desc="Paketi kaydet, ikonu adıyla çağır: önek paketi seçer, öneksiz ad HADI March setidir. Paket ilk kullanımda tembel yüklenir."
+  return <Demo wide title="İsimle ikon" desc="Paketi kaydet, ikonu adıyla çağır: önek paketi seçer, öneksiz ad March setidir. Paket ilk kullanımda tembel yüklenir."
     code={`import { registerIconPack, icon, Icon } from "hadi-march/icons/packs"
 import lucide from "hadi-march/icons/lucide/pack"
 import tabler from "hadi-march/icons/tabler/pack"
@@ -198,7 +198,7 @@ registerIconPack(lucide)
 registerIconPack(tabler)
 
 <Icon name="lucide:rocket" size="xl" />
-<Icon name="user" />                 // no prefix: the HADI March set
+<Icon name="user" />                 // no prefix: the March set
 <Button icon={icon("tabler:chart-bar")}>Rapor</Button>  // any icon prop; reactive, empty until the pack loads
 
 // your own set: { id, name, license, resolve(name) → IconDef | Promise }

@@ -10,7 +10,7 @@ import { LIBS } from "./libs.ts"
 /** The tab whose test is running (null: none): the other tabs stay put (the stage the apps are drawn in must stay in the page). */
 export const busy = signal<string | null>(null)
 
-// one theme color per library (category tokens; HADI March gets the brand orange, vanilla JS the neutral baseline)
+// one theme color per library (category tokens; March gets the brand orange, vanilla JS the neutral baseline)
 const COLOR: Record<string, string> = { march: "cat-1", react: "cat-2", vue: "cat-3", svelte: "cat-4", solid: "cat-5", preact: "cat-6", lit: "cat-7" }
 export const libColor = (id: string): string => (COLOR[id] ? `var(--hm-${COLOR[id]})` : "var(--hm-faint)")
 

@@ -1,4 +1,4 @@
-// Shared store, HADI March: one store() (src/core/store.ts) holds all the cells; each Cell component reads
+// Shared store, March: one store() (src/core/store.ts) holds all the cells; each Cell component reads
 // app.cells[i] and so tracks only that path. A step writes the 50 cells inside batch(): only the 50 readers update,
 // the sections and the other cells never run again.
 import { render, batch, store } from "hadi-march"
