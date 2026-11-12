@@ -1,75 +1,29 @@
 // Buttons, menus, tooltips, badges, chips, avatars, cards, tabs.
 import {
-  Button, IconButton, ButtonGroup, Menu, Dropdown, Tooltip, CopyButton, Badge, Chip, Avatar, AvatarGroup, Card, LinkCard, IconTile, Tabs,
-  Segmented, toast, action, Stack, Divider,
+  Button, IconButton, Chip, Avatar, AvatarGroup, Card, LinkCard, IconTile, Tabs,
+  Stack, Divider,
 } from "hadi-march/ui";
 import {
-  plus, download, trash, edit, copy, more, settings, send, heart, star, bell, search, filter, users, zap, shieldCheck, sparkles, globe, logOut, arrowRight, check,
+  plus, more, bell, search, filter, users, zap, shieldCheck,
 } from "hadi-march/icons";
 import { Demo, Section } from "../demo.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
 
 export default function Buttons() {
-  let $saving = false
   let $tags = ["Tasarım", "Ürün", "Pazarlama", "Destek"]
   let $filters = new Set(["Açık"])
-  let $view = "liste"
-  const save = async () => { $saving = true; await new Promise((r) => setTimeout(r, 1200)); $saving = false; toast("Kaydedildi", { kind: "success" }) }
-  const remove = action("Sil", async () => { await new Promise((r) => setTimeout(r, 400)) }, { icon: trash, danger: true, confirm: "Bu öğe silinsin mi? Bu işlem geri alınamaz.", success: "Silindi" })
   const toggleFilter = (f: string) => { const n = new Set($filters); if (n.has(f)) n.delete(f); else n.add(f); $filters = n }
   return <Section kicker="Bileşenler" title="Düğmeler ve rozetler" lead="Dört varyant, üç boyut; yükleniyor, devre dışı, odak halkası ve basma geri bildirimi. Hepsi klavyeyle tam kullanılır.">
-    <Demo title="Varyantlar" desc="primary · secondary · ghost · danger"
-      code={`<Button variant="primary" icon={plus}>Yeni</Button>
-<Button>İkincil</Button>
-<Button variant="ghost">Hayalet</Button>
-<Button variant="danger" icon={trash}>Sil</Button>
-<Button variant="dark">Onayla</Button>   // ink fill (HADİ navy)`}>
-      <div class="sc-row"><Button variant="primary" icon={plus}>Yeni proje</Button><Button icon={download}>Dışa aktar</Button><Button variant="ghost" icon={send}>Paylaş</Button><Button variant="danger" icon={trash}>Sil</Button><Button variant="dark" icon={check}>Onayla</Button></div>
-      <div class="sc-row"><Button variant="primary" disabled>Devre dışı</Button><Button disabled>Devre dışı</Button><Button variant="primary" iconEnd={arrowRight}>Devam</Button></div>
-    </Demo>
+    <ComponentDemo folder="actions/button" title="Button: varyant, boyut, yükleniyor" desc="Beş varyant, üç boyut; yükleniyor düğmeyi kilitler ve ikonun yerinde çark döner. Alttaki ActionButton bir action()'ı onay ve bildirimle çalıştırır." />
 
-    <Demo title="Boyutlar ve yükleniyor" desc="sm · md · lg; loading düğmeyi kilitler ve dönen çark gösterir."
-      code={`let $saving = false
-<Button variant="primary" loading={$saving} on:click={save}>{t\`Save\`}</Button>`}>
-      <div class="sc-row"><Button size="sm" variant="primary">Küçük</Button><Button variant="primary">Orta</Button><Button size="lg" variant="primary">Büyük</Button></div>
-      <div class="sc-row"><Button variant="primary" loading={$saving} on:click={save} icon={check}>{() => ($saving ? "Kaydediliyor…" : "Kaydet")}</Button><Button block variant="secondary">Tam genişlik</Button></div>
-    </Demo>
+    <ComponentDemo folder="actions/icon-button" title="IconButton: yalnız ikon" desc="Erişilebilir ad zorunlu; aynı ad ipucu olarak da görünür. Kalp düğmesi aria-pressed ile açılıp kapanır." />
+    <ComponentDemo folder="actions/button-group" title="ButtonGroup: ilişkili düğmeler" desc="Aralıklı ya da bitişik; bitişik şeritte yuvarlak uçlar RTL'de de dışta kalır." />
+    <ComponentDemo folder="actions/copy-button" title="CopyButton: panoya kopyala" desc="Kopyalandı der ve bunu ekran okuyucuya duyurur; pano yoksa bildirimle söyler." />
 
-    <Demo title="İkon düğmeleri ve gruplar" desc="Erişilebilir ad zorunlu; ipucu kendiliğinden.">
-      <div class="sc-row">
-        <IconButton icon={heart} label="Beğen" /><IconButton icon={star} label="Yıldızla" /><IconButton icon={bell} label="Bildirimler" /><IconButton icon={settings} label="Ayarlar" />
-        <IconButton icon={trash} label="Sil" variant="danger" />
-        <CopyButton text="npm i hadi-march" iconOnly label="Komutu kopyala" />
-      </div>
-      <div class="sc-row">
-        <ButtonGroup attached label="Hizalama"><Button>Sol</Button><Button>Orta</Button><Button>Sağ</Button></ButtonGroup>
-        <Segmented bind:value={$view} aria-label="Görünüm" options={[{ value: "liste", label: "Liste" }, { value: "kart", label: "Kart" }, { value: "takvim", label: "Takvim" }]} />
-      </div>
-    </Demo>
+    <ComponentDemo folder="actions/menu" title="Menu ve Dropdown" desc="Ok tuşları, Home/End, Esc; kısayollar platforma göre yazılır, action() onaylı silme ve bildirimi getirir. Dropdown herhangi bir içeriği açar." />
+    <ComponentDemo folder="overlays/tooltip" title="Tooltip: kısa ipucu" desc="Üstüne gelince kısa bir gecikmeyle, klavye odağında hemen görünür; aria-describedby ile bağlanır, Esc gizler." />
 
-    <Demo title="Menüler, açılır panel, ipucu" desc="Ok tuşları, Home/End, Esc; action() ile onaylı silme ve bildirim."
-      code={`const remove = action("Sil", api.remove, { icon: trash, danger: true, confirm: { title: "Silinsin mi?" } })
-<Menu label="Eylemler" icon={more} items={[{ label: "Düzenle", icon: edit }, "-", remove]} />`}>
-      <div class="sc-row">
-        <Menu label="Eylemler" icon={more} items={[
-          { label: "Düzenle", icon: edit, shortcut: "E", onSelect: () => toast("Düzenle") },
-          { label: "Kopyala", icon: copy, shortcut: "mod+c", onSelect: () => toast("Kopyalandı", { kind: "success" }) },
-          { label: "Paylaş", icon: share, onSelect: () => toast("Paylaşım bağlantısı hazır") },
-          "-", remove,
-        ]} />
-        <Menu label="Hesap" variant="secondary" items={[{ label: "Dil: English", icon: globe }, { label: "Güvenlik", icon: shieldCheck }, "-", { label: "Çıkış yap", icon: logOut, danger: true }]} />
-        <Dropdown label="Süzgeç" variant="secondary">
-          <Stack gap={2}>
-            <strong>Durum</strong>
-            <div class="sc-row">{["Açık", "Bekliyor", "Çözüldü"].map((f) => <Chip selected={() => $filters.has(f)} on:click={() => toggleFilter(f)}>{f}</Chip>)}</div>
-          </Stack>
-        </Dropdown>
-        <Tooltip text="Bu bir ipucu: odakla ya da üstüne gel"><Button variant="ghost" icon={sparkles}>Üstüme gel</Button></Tooltip>
-      </div>
-    </Demo>
-
-    <Demo title="Rozetler ve çipler" desc="Ton, nokta, sayaç; seçilebilir süzgeç çipleri ve kaldırılabilir etiketler.">
-      <div class="sc-row"><Badge>Nötr</Badge><Badge tone="primary">Vurgu</Badge><Badge tone="success" dot>Etkin</Badge><Badge tone="warn">Bekliyor</Badge><Badge tone="danger">Hata</Badge><Badge tone="info">Bilgi</Badge><Badge count={7} /><Badge count={128} /></div>
+    <Demo title="Çipler" desc="Seçilebilir süzgeç çipleri ve kaldırılabilir etiketler.">
       <div class="sc-row">{["Açık", "Bekliyor", "Çözüldü", "Atanmamış"].map((f) => <Chip selected={() => $filters.has(f)} on:click={() => toggleFilter(f)}>{f}</Chip>)}</div>
       <div class="sc-row">
         <For each={$tags} key={(x: string) => x}>{(tag: () => string) => <Chip tone="primary" onRemove={() => { $tags = $tags.filter((x) => x !== tag()) }}>{tag()}</Chip>}</For>
