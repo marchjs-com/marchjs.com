@@ -6,7 +6,12 @@ import { FRAME_MS, type Scenario, type ScenarioApp } from "./core.ts"
 import { SCENARIO_LIBS, type ScenarioMounts } from "./libs.ts"
 
 export interface ScenarioResult { samples: number[]; stats: Stats; dropped: number; /** mount call to its first paint (ms) */ mountMs?: number; /** JS heap growth from the mounted page (MB), where the browser reports it */ heapMB?: number; error?: string }
-export interface ScenarioRun { /** scenario id → library id → result */ results: Record<string, Record<string, ScenarioResult>> }
+export interface ScenarioRun {
+  /** scenario id → library id → result */
+  results: Record<string, Record<string, ScenarioResult>>
+  /** scenario ids that ran while the machine stayed busy (empty frames slow before the scenario, even after waiting) */
+  busy: string[]
+}
 export interface ScenarioProgress { scenario: string; lib: string; done: number; total: number }
 
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
@@ -24,17 +29,34 @@ export function frame(fn: () => void): Promise<number> {
     })
   })
 }
+/** Median time of empty frames: a quiet machine paints an empty frame in a few ms. */
+async function emptyFrame(n = 20): Promise<number> {
+  const xs: number[] = []
+  for (let i = 0; i < n; i++) xs.push(await frame(() => {}))
+  return stats(xs).median
+}
+/** Waits (up to ~10 s) for the machine to go quiet; false when it stays busy. */
+async function calm(signal?: AbortSignal): Promise<boolean> {
+  for (let i = 0; i < 6 && !signal?.aborted; i++) {
+    if ((await emptyFrame()) < BUSY_MS) return true
+    await sleep(1500)
+  }
+  return false
+}
+/** An empty frame slower than this means another program is using the machine. */
+export const BUSY_MS = 8
 const visible = (): Promise<void> => (document.hidden ? new Promise((r) => { const on = () => { if (!document.hidden) { document.removeEventListener("visibilitychange", on); r() } }; document.addEventListener("visibilitychange", on) }) : Promise.resolve())
 
 export async function runScenarios(o: { scenarios: Scenario[]; libs: string[]; stage: HTMLElement; seed?: number; onProgress?: (p: ScenarioProgress) => void; signal?: AbortSignal; /** the scenarios' large size */ large?: boolean; /** library id → its scenario apps (default: the registered ones) */ registry?: Record<string, () => Promise<ScenarioMounts>> }): Promise<ScenarioRun> {
   const reg = o.registry ?? SCENARIO_LIBS
-  const seed = o.seed ?? 7, res: ScenarioRun = { results: {} }
+  const seed = o.seed ?? 7, res: ScenarioRun = { results: {}, busy: [] }
   const libs = o.libs.filter((l) => reg[l])
   const total = o.scenarios.reduce((s, sc) => s + libs.length * (sc.steps + sc.warm), 0)
   let done = 0
   for (const sc of o.scenarios) {
     const per: Record<string, ScenarioResult> = (res.results[sc.id] = {})
     const data = sc.data(seed, o.large && !!sc.large), plan = sc.plan(data, seed, sc.warm + sc.steps)
+    if (!(await calm(o.signal))) res.busy.push(sc.id)
     for (const lib of libs) {
       if (o.signal?.aborted) break
       gc(); await sleep(300); await visible()
@@ -53,7 +75,9 @@ export async function runScenarios(o: { scenarios: Scenario[]; libs: string[]; s
         await frame(() => {})
         warm.destroy()
         host.textContent = ""
-        gc(); await sleep(50)
+        // some libraries tear down after a frame (Svelte): let that finish, so the heap baseline is clean
+        await frame(() => {}); await frame(() => {}); await sleep(100)
+        gc(); gc(); await sleep(50)
         const h0 = heap(), t0 = performance.now()
         app = await mount(host, data as never)
         await new Promise<void>((r) => { requestAnimationFrame(() => { const ch = new MessageChannel(); ch.port1.onmessage = () => { ch.port1.close(); r() }; ch.port2.postMessage(0) }) }) // the first paint
