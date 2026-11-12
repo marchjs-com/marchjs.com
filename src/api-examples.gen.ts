@@ -4,9 +4,21 @@
 import type { ApiExampleModule } from "./api-examples/types.ts";
 const groups: Record<string, () => Promise<ApiExampleModule>> = {
   "core": () => import("./api-examples/core.tsx"),
+  "mock": () => import("./api-examples/mock.tsx"),
+  "net": () => import("./api-examples/net.tsx"),
+  "seo": () => import("./api-examples/seo.tsx"),
 };
 const bySubpath: Record<string, [group: string, first: string][]> = {
   "hadi-march": [["core","Await"]],
+  "hadi-march/dom/safe": [["seo","RICH_SCHEMA"]],
+  "hadi-march/dom/sanitize": [["seo","BLOCKS"]],
+  "hadi-march/dom/to-markdown": [["seo","toMarkdown"]],
+  "hadi-march/errors": [["mock","ErrorInline"]],
+  "hadi-march/net": [["net","Api"]],
+  "hadi-march/net/mock": [["mock","MockReply"]],
+  "hadi-march/seo": [["seo","_resetHead"]],
+  "hadi-march/seo/hydrate": [["seo","hydrate"]],
+  "hadi-march/sw": [["mock","applyUpdate"]],
 };
 /** The example file of an export (a lazy part, loaded once), or null when its subpath has none yet. */
 export const loadExamples = (subpath: string, name: string): Promise<ApiExampleModule> | null => {
