@@ -7,6 +7,7 @@
 import "./api.css";
 import { SearchBox, Badge, Markdown, registerCommands } from "hadi-march/ui";
 import { Link, navigate, params, type Href } from "hadi-march/router";
+import { appUrl } from "hadi-march/base";
 import { locale, effect, onCleanup, Try, signal, computed, untrack } from "hadi-march";
 import { fold } from "hadi-march/ui";
 import { lazy } from "hadi-march/lazy";
@@ -51,7 +52,8 @@ const TEXT = {
 type Lang = keyof typeof TEXT
 const langOf = (loc: string): Lang => (loc.split("-")[0] === "tr" ? "tr" : "en")
 const TONE: Record<Kind, string> = { component: "primary", function: "info", class: "warn", const: "neutral" }
-const asset = (p: string) => new URL(`api/${p}`, document.baseURI).href
+// app-root relative (appUrl): on /api/core/batch a page-relative "api/…" would point to /api/core/api/…
+const asset = (p: string) => appUrl(`api/${p}`)
 const json = <T,>(p: string): Promise<T> => fetch(asset(p)).then((r) => { if (!r.ok) throw new Error(`${r.status} ${p}`); return r.json() as Promise<T> })
 const indexes = new Map<Lang, Promise<Index>>()
 const docFiles = new Map<number, Promise<Record<string, Doc>>>()

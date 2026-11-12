@@ -2,6 +2,7 @@
 // (hadi-march/schema) and the component registry (loaded when its example opens).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
 import { signal, computed, effect, untrack, onCleanup, Await } from "hadi-march";
+import { appUrl } from "hadi-march/base";
 import {
   access, aggregate, aggregates, can, Can, clearCache, configure, denied, fetchJson, Gate, groupRows, hasMethod, hasRole,
   invalidate, mutation, query, resource, role, setAccess, signedIn, VirtualList, type AccessInput, type Denial,
@@ -64,7 +65,7 @@ const fetchStock = async (page: number, signal?: AbortSignal) => {
   if (signal?.aborted) throw Object.assign(new Error("Aborted"), { name: "AbortError" })
   return Array.from({ length: 3 }, (_, i) => `Ürün ${page * 3 + i + 1} · stok ${((page * 7 + i * 5 + server.version * 3) % 40) + 1}`)
 }
-const usersUrl = () => new URL("demo-api/users.json", document.baseURI).href
+const usersUrl = () => appUrl("demo-api/users.json")
 
 export default examples({
   "hadi-march/data": {
@@ -217,7 +218,7 @@ await fetchJson("/api/users", { method: "POST", body: { name: "Ada" } })
         return <div class="sc-ex-data-stack">
           <Row>
             <Button onClick={() => load(usersUrl())}>users.json oku</Button>
-            <Button variant="ghost" onClick={() => load(new URL("demo-api/yok.json", document.baseURI).href)}>Olmayan adres</Button>
+            <Button variant="ghost" onClick={() => load(appUrl("demo-api/yok.json"))}>Olmayan adres</Button>
           </Row>
           <Out label="sonuç" value={out} />
         </div>
