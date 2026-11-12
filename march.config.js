@@ -19,8 +19,8 @@ export default {
   // client-side, and main.tsx drops the prerendered page at once when the URL asks for another route
   seo: { prerender: true },
   // the build fails when the entry, a route or a lazy part (lazy() component, shell piece) grows past it
-  // boot: the shell pieces load at start-up, so a route row counts only what its own navigation downloads
-  budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, boot: ["src/shell-nav.tsx", "src/shell-tools.tsx", "src/shell-late.tsx"], fail: true },
+  // boot: the route table and the shell pieces load at start-up, so a route row counts only what its own navigation downloads
+  budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, boot: ["src/routes.ts", "src/shell-nav.tsx", "src/shell-tools.tsx", "src/shell-late.tsx", "src/motion-late.ts"], fail: true },
   // no output file under 10 KB (before gzip): small shared code folds, small lazy modules join their parent or a group
   // allow: a locale dictionary stays its own file (only that locale downloads it; grouping it would make every
   // Turkish visitor download pages, or every English visitor the dictionary)
