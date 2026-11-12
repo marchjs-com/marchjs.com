@@ -21,8 +21,9 @@ export default function Buttons() {
       code={`<Button variant="primary" icon={plus}>Yeni</Button>
 <Button>İkincil</Button>
 <Button variant="ghost">Hayalet</Button>
-<Button variant="danger" icon={trash}>Sil</Button>`}>
-      <div class="sc-row"><Button variant="primary" icon={plus}>Yeni proje</Button><Button icon={download}>Dışa aktar</Button><Button variant="ghost" icon={send}>Paylaş</Button><Button variant="danger" icon={trash}>Sil</Button></div>
+<Button variant="danger" icon={trash}>Sil</Button>
+<Button variant="dark">Onayla</Button>   // ink fill (HADİ navy)`}>
+      <div class="sc-row"><Button variant="primary" icon={plus}>Yeni proje</Button><Button icon={download}>Dışa aktar</Button><Button variant="ghost" icon={send}>Paylaş</Button><Button variant="danger" icon={trash}>Sil</Button><Button variant="dark" icon={check}>Onayla</Button></div>
       <div class="sc-row"><Button variant="primary" disabled>Devre dışı</Button><Button disabled>Devre dışı</Button><Button variant="primary" iconEnd={arrowRight}>Devam</Button></div>
     </Demo>
 
