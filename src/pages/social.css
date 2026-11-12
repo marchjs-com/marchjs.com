@@ -18,3 +18,10 @@
 /* a phone frame for the app-like demos */
 .sc-social-phone { position: relative; width: 100%; max-width: 24rem; height: 40rem; max-height: 80vh; margin-inline: auto; border: 1px solid var(--hm-border); border-radius: 1.75rem;
   overflow: hidden; background: var(--hm-bg); box-shadow: var(--hm-shadow-3); display: flex; flex-direction: column; }
+.sc-social-sprog { width: 100%; max-width: 22rem; margin-inline: auto; padding: var(--hm-space-4); border-radius: var(--hm-radius-4); color: var(--hm-on-scrim);
+  background: linear-gradient(160deg, var(--hm-brand-blue, var(--hm-cat-2)), var(--hm-brand-purple, var(--hm-cat-4))); }
+.sc-social-sprog p { margin: var(--hm-space-3) 0 0; font-weight: 700; font-size: var(--hm-text-sm); }
+.sc-social-tray { display: flex; gap: var(--hm-space-3); width: 100%; overflow-x: auto; padding: var(--hm-space-1) var(--hm-space-1) var(--hm-space-2); scrollbar-width: thin; }
+.sc-social-tray > * { flex: none; }
+.sc-social-stories { display: flex; flex-direction: column; gap: var(--hm-space-2); width: 100%; min-width: 0; }
+.sc-social-link { align-self: flex-start; padding: 0; border: 0; background: none; color: var(--hm-primary-text); font: inherit; font-weight: 700; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
