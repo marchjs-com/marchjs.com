@@ -3,7 +3,7 @@
 // The demos live in env-managers/; Sync brings net, the mock server and its manager as a lazy part (sync-server.ts).
 import { onCleanup } from "hadi-march";
 import { Button, Card, Badge, Toggle, Slider, Field, TextInput, Progress, Chip } from "hadi-march/ui";
-import { connectManagerChannels, onManager, managerChannel, type ManagerMessage } from "hadi-march/managers/channels";
+import { onManager, managerChannel, type ManagerMessage } from "hadi-march/managers/channels";
 import { idle, configureIdle } from "hadi-march/managers/idle";
 import { device, configureDevice, type DeviceFeature } from "hadi-march/managers/device";
 import { appWindow } from "hadi-march/managers/window";
@@ -19,17 +19,17 @@ import { PermissionDemo, LocationDemo, NotificationDemo } from "../env-managers/
 // ------------------------------------------------------------------ the managers channel
 const NAMES = ["idle", "sync", "device", "permission", "location", "notification", "window", "scroll", "session", "presence"]
 function EventFeed() {
-  connectManagerChannels()
   let $log: ManagerMessage[] = managerChannel.history().filter((m) => NAMES.includes(m.manager)).slice(-12).reverse()
   let $only = new Set<string>()
   let $paused = false
   onManager("*", (m) => { if (!$paused && NAMES.includes(m.manager)) $log = [m, ...$log].slice(0, 40) })
   const toggle = (n: string) => { const s = new Set($only); s.has(n) ? s.delete(n) : s.add(n); $only = s }
   const shown = () => $log.filter((m) => !$only.size || $only.has(m.manager)).slice(0, 12)
-  return <Demo wide title="Olay akışı: managers kanalı" desc="Her yönetici olaylarını tek kanala yayınlar (konu <yönetici>:<olay>). Bileşenler yöneticiyi tanımadan dinler. Aşağıdaki demoları kullan: olaylar burada anında görünür."
-    code={`connectManagerChannels()                    // bir kez, açılışta
-onManager("session:*", (m) => …)            // m.topic "session:warn", m.detail
-onManager("*", log)                          // her şey; bileşenle birlikte kalkar`}>
+  return <Demo wide title="Olay akışı: managers kanalı" desc="Her yönetici olaylarını kanala yayınlar (konu <yönetici>:<olay>; ayrıca managers.<yönetici> kanalı). Bağlamak gerekmez; bileşenler yöneticiyi tanımadan, istedikleri kadar dinleyiciyle dinler. Aşağıdaki demoları kullan: olaylar burada anında görünür."
+    code={`onManager("session:*", (m) => …)            // m.topic "session:warn", m.detail
+onManager("*", log)                          // her şey; bileşenle birlikte kalkar
+managerChannelOf("undo").on((e) => …)       // tek yöneticinin kanalı: { type, detail }
+onChannels("managers.*", (m) => …)           // hadi-march/channel joker karakteriyle`}>
     <div class="sc-row">{NAMES.map((n) => <Chip selected={() => $only.has(n)} on:click={() => toggle(n)}>{n}</Chip>)}</div>
     <div class="sc-row"><Toggle bind:value={$paused} label="Akışı duraklat" /><Button variant="ghost" on:click={() => { $log = [] }}>Temizle</Button></div>
     <ol class="sc-mgr-feed" aria-live="polite">{() => shown().length ? shown().map((m) => <li><code>{m.topic}</code><span class="hm-muted">{time(m.at)}</span>{m.detail !== undefined ? <span class="sc-mgr-detail">{JSON.stringify(m.detail)}</span> : null}</li>) : <li class="hm-muted">Henüz olay yok.</li>}</ol>
