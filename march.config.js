@@ -26,11 +26,9 @@ export default {
   // Turkish visitor download pages, or every English visitor the dictionary)
   chunks: { minSize: 10 * 1024, allow: {
     "src/i18n/tr.ts": "locale dictionary: downloaded only for Turkish, never grouped",
-    "src/components/composite/dock-layout/demo.tsx": "complex component demo: loads with its card only (folded into the registry, every page with a component card would download it)",
-    "src/components/composite/property-grid/demo.tsx": "complex component demo: loads with its card only (folded into the registry, every page with a component card would download it)",
-    "src/components/actions/overflow-toolbar/demo.tsx": "complex component demo: loads with its card only (folded into the registry, every page with a component card would download it)",
     "src/router/outlets.ts": "named / modal outlets (1.8 KB, no dependencies): joining any page group would make it pull that page",
     "src/seo/hydrate.ts": "takes over the prerendered start page (1 KB): loaded only on that page, never with a page group",
+    "src/pages/navigation.tsx": "page whose code is mostly shared (NavSidebar, router): any page group would push its route past the 60 KB budget",
     "src/env-managers/sync-server.ts": "Sync demo of the environment managers page: net and its mock arrive only when that demo is drawn",
   } },
 };

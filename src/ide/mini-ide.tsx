@@ -1,13 +1,8 @@
 // IDE shell demo: a small editor built only from March pieces — ActivityBar, DockLayout (file tree, editor tabs,
 // inspector, console), PropertyGrid, OverflowToolbar, Breadcrumbs, StatusBar and the command palette (every action is
 // a command: Ctrl+K finds it). Demo data is neutral ("acme" project).
-import { signal, computed, onCleanup } from "hadi-march";
-import { Tree, PaletteButton, toast } from "hadi-march/ui";
-import { DockLayout, type DockApi, type DockPanel } from "hadi-march/composite";
-import { PropertyGrid, type PropertySpec } from "hadi-march/composite";
-import { OverflowToolbar } from "hadi-march/actions";
-import { StatusBar } from "hadi-march/layout";
-import { ActivityBar, Breadcrumbs } from "hadi-march/navigation";
+import { signal, computed, effect, onCleanup } from "hadi-march";
+import { Tree, PaletteButton, toast, DockLayout, PropertyGrid, OverflowToolbar, StatusBar, ActivityBar, Breadcrumbs, type DockApi, type DockPanel, type PropertySpec } from "hadi-march/ui";
 import { command } from "hadi-march/managers/command";
 import { bindCommandKeys } from "hadi-march/managers/command/ui";
 import { dirtyState } from "hadi-march/managers/dirty";
@@ -60,7 +55,8 @@ export default function MiniIde() {
   function openFile(n: string) {
     if (!open().includes(n)) open.set([...open(), n])
     active.set(n)
-    queueMicrotask(() => dock?.open(`file:${n}`, open().map((x) => `file:${x}`).find((x) => x !== `file:${n}` && dock?.state() && true)))
+    // next to the other editors (the group of an open editor), else where the focus is
+    queueMicrotask(() => dock?.open(`file:${n}`, open().map((x) => `file:${x}`).find((x) => x !== `file:${n}`)))
   }
   function format() {
     const n = active(), f = file(n)
@@ -123,8 +119,8 @@ export default function MiniIde() {
       caret.set({ line: before.length, col: (before[before.length - 1]?.length ?? 0) + 1 })
       active.set(n)
     }
-    return <div class={() => ["sc-ide-editor", settingsVal()["wrap"] ? "is-wrap" : "", settingsVal()["lineNumbers"] ? "" : "no-gutter", `accent-${settingsVal()["accent"]}`].join(" ")}
-      style={{ "--sc-ide-fs": () => `${settingsVal()["fontSize"]}px`, "--sc-ide-tab": () => String(settingsVal()["tabSize"]) }}>
+    const sizes = (el: HTMLElement) => effect(() => { el.style.setProperty("--sc-ide-fs", `${settingsVal()["fontSize"]}px`); el.style.setProperty("--sc-ide-tab", String(settingsVal()["tabSize"])) })
+    return <div ref={sizes} class={() => ["sc-ide-editor", settingsVal()["wrap"] ? "is-wrap" : "", settingsVal()["lineNumbers"] ? "" : "no-gutter", `accent-${settingsVal()["accent"]}`].join(" ")}>
       <div class="sc-ide-gutter" aria-hidden="true">{() => Array.from({ length: lines() }, (_, i) => <span>{i + 1}</span>)}</div>
       <textarea class="sc-ide-code" spellcheck={false} aria-label={`${n} içeriği`} value={() => f()?.text ?? ""}
         on:input={(e: Event) => { setText(n, (e.target as HTMLTextAreaElement).value); onCaret(e) }} on:keyup={onCaret} on:click={onCaret} on:focus={onCaret} />
