@@ -2,6 +2,7 @@
 export default {
   entry: "src/main.tsx",
   outdir: "dist",
+  base: "./", // relative asset URLs: the showcase is published under a sub-path
   publicDir: "public",
   pagesDir: "src/pages",
   components: "src/components",
