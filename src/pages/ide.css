@@ -12,3 +12,11 @@
 .sc-pg-card.is-center { text-align: center; }
 .sc-pg-card.is-accent { border-color: var(--sc-pg-accent); background: color-mix(in srgb, var(--sc-pg-accent) 12%, var(--hm-surface)); }
 .sc-pg-panel { height: 26rem; min-width: 0; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); background: var(--hm-surface); overflow: hidden; }
+.sc-otb-stage { width: min(100%, var(--sc-otb-w, 520px)); padding: var(--hm-space-1); border: 1px dashed var(--hm-border-strong); border-radius: var(--hm-radius-2); background: var(--hm-surface);
+  transition: width var(--hm-dur) var(--hm-ease); }
+.sc-sbar-stage { width: min(100%, var(--sc-sbar-w, 640px)); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); overflow: hidden; transition: width var(--hm-dur) var(--hm-ease); }
+.sc-bc-stage { width: min(100%, var(--sc-bc-w, 560px)); padding: var(--hm-space-1); border: 1px dashed var(--hm-border-strong); border-radius: var(--hm-radius-2); transition: width var(--hm-dur) var(--hm-ease); }
+.sc-ab-stage { display: grid; grid-template-columns: auto minmax(0, 1fr); height: 18rem; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); overflow: hidden; }
+.sc-ab-stage.is-h { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
+.sc-ab-stage.is-h > .hm-ab { order: 2; }
+.sc-ab-view { display: grid; place-items: center; padding: var(--hm-space-4); background: var(--hm-surface); }
