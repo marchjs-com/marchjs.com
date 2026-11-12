@@ -4,8 +4,8 @@ export const HOME_STATS = {
   "dependencies": 0,
   "components": 192,
   "registered": 62,
-  "exports": 944,
-  "subpaths": 91,
+  "exports": 950,
+  "subpaths": 93,
   "categories": [
     {
       "id": "layout",
@@ -84,8 +84,8 @@ export const HOME_STATS = {
     "pageFx": 10
   },
   "managers": 30,
-  "tests": 659,
-  "testFiles": 157,
+  "tests": 679,
+  "testFiles": 161,
   "budget": {
     "entry": 15360,
     "boot": 53248,
