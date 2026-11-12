@@ -47,6 +47,14 @@ function DayPicker(props: { variant: (typeof VARIANTS)[number]; color?: ColorTok
 }
 
 export default function Forms() {
+  let $otpLen = 6
+  let $otpPattern = "numeric"
+  let $otpColors = "brand"
+  let $otpFont = "display"
+  let $otpSize = "md"
+  let $otpVariant = "outline"
+  let $otpGroups = true
+  let $otpMask = false
   let $chVariant = "chip"
   let $chSize = "md"
   let $chShape = "rounded"
@@ -153,6 +161,30 @@ export default function Forms() {
       <Field label="Tarih"><DatePicker bind:value={$date} /></Field>
       <Field label="Rapor dönemi" group><DateRangePicker bind:value={$range} /></Field>
       <Field label="SMS kodu" group><CodeInput length={6} onComplete={(c: string) => toast(`Kod: ${c}`, { kind: "success" })} /></Field>
+    </Demo>
+
+    <Demo wide title="Doğrulama kodu (CodeInput)" desc="HADİ uygulamalarındaki gibi: her kutu sırayla dört HADİ renginden birini alır, rakamlar başlık yazı tipinde, girince hafifçe büyür. Uzunluk 3–12, karakter türü, gruplama, renk, yazı tipi, boyut ve biçim seçilebilir; dar ekranda kutular küçülür, yapıştırınca fazlası kırpılır."
+      code={`<CodeInput length={6} groups={[3, 3]} onComplete={verify} />            // HADİ: brand colors + display font
+<CodeInput length={8} pattern="alphanumeric" colors="palette" font="mono" variant="filled" />
+<CodeInput length={4} mask size="lg" />                                     // PIN`}>
+      <div class="sc-row">
+        <Field label={() => `Uzunluk: ${$otpLen}`}><Slider bind:value={$otpLen} min={3} max={12} /></Field>
+        <Segmented bind:value={$otpPattern} aria-label="Kod karakteri" options={["numeric", "alpha", "alphanumeric"]} />
+        <Segmented bind:value={$otpColors} aria-label="Kod renkleri" options={["brand", "palette", "single"]} />
+        <Segmented bind:value={$otpFont} aria-label="Kod yazı tipi" options={["display", "mono", "body"]} />
+        <Segmented bind:value={$otpSize} aria-label="Kod boyutu" options={["sm", "md", "lg"]} />
+        <Segmented bind:value={$otpVariant} aria-label="Kod biçimi" options={["outline", "filled", "underline"]} />
+        <Toggle bind:value={$otpGroups} label="Gruplu" />
+        <Toggle bind:value={$otpMask} label="Gizli (PIN)" />
+      </div>
+      {() => {
+        // length, pattern, colors and groups shape the boxes: the preview is rebuilt when they change
+        const n = $otpLen, pattern = $otpPattern as "numeric", colors = $otpColors as "brand", grouped = $otpGroups
+        const sample = (pattern === "numeric" ? "482915730264" : pattern === "alpha" ? "HADIMARCHKOD" : "H4D1M4RCHK0D").slice(0, n)
+        let $code = sample
+        return <CodeInput bind:value={$code} length={n} pattern={pattern} colors={colors} font={$otpFont as "display"} size={$otpSize as "md"} variant={$otpVariant as "outline"}
+          groups={grouped ? [Math.ceil(n / 2), Math.floor(n / 2)] : undefined} mask={$otpMask} aria-label="Doğrulama kodu" onComplete={(c: string) => toast(`Kod: ${c}`, { kind: "success" })} />
+      }}
     </Demo>
 
     <Demo title="Dosya yükleme" desc="Sürükle bırak, tür ve boyut denetimi, önizleme.">
