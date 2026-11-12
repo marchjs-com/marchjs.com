@@ -3,7 +3,7 @@
 // (palette, toasts, motion extras) are lazy chunks with placeholders of the same size, so the entry stays small.
 import { Outlet, Link, path } from "hadi-march/router";
 import { AppShell, Spacer } from "hadi-march/ui";
-import { lazy } from "hadi-march/lazy";
+import { lazy, skeleton } from "hadi-march/lazy";
 
 export { PAGES, type PageInfo } from "./nav.ts";
 import { PAGES } from "./nav.ts";
@@ -53,3 +53,5 @@ export function App() {
 /** The shell as a layout loader (it is in the entry: resolves at once, so the frame paints before the page arrives). */
 export const SHELL = async () => ({ default: App })
 export const PAGE_LOADING = <div class="hm-loader" role="status" aria-label="Yükleniyor"><span class="hm-loading hm-spin-lg" /></div>
+/** A page that is not here 100 ms after a click: its heading, lead and two cards as skeletons (no layout jump). */
+export const PAGE_SKELETON = () => <div class="sc-page-skel" role="status" aria-label="Yükleniyor">{skeleton("text")}{skeleton("card")}{skeleton("card")}</div>

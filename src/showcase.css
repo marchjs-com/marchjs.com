@@ -23,7 +23,7 @@
 .sc-stage { display: flex; flex-direction: column; gap: var(--hm-space-3); min-width: 0; }
 .sc-grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--hm-space-4); align-items: start; }
 @media (max-width: 1100px) { .sc-demos { grid-template-columns: minmax(0, 1fr); } .sc-grid3 { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 640px) { .sc-page { padding: var(--hm-space-5) var(--hm-space-4) var(--hm-space-7); } .sc-demo { padding: var(--hm-space-4); border-radius: var(--hm-radius-3); } }
+@media (max-width: 640px) { .sc-page, .sc-page-skel { padding: var(--hm-space-5) var(--hm-space-4) var(--hm-space-7); } .sc-demo { padding: var(--hm-space-4); border-radius: var(--hm-radius-3); } }
 
 /* hero */
 .sc-hero { position: relative; overflow: hidden; isolation: isolate; padding: clamp(3rem, 9vw, 7rem) var(--hm-space-6) clamp(2.5rem, 6vw, 5rem); background: var(--hm-stage); color: #fff; }
@@ -228,6 +228,12 @@
 .sc-ov-label { padding: .125rem .5rem; border-radius: var(--hm-radius-1); background: color-mix(in srgb, var(--hm-surface) 85%, transparent); font-size: var(--hm-text-sm); }
 .sc-ov-stage { min-height: 16rem; display: grid; place-items: center; padding: var(--hm-space-5); border: 1px dashed var(--hm-border-strong); border-radius: var(--hm-radius-3); overflow: hidden; }
 .sc-ov-content { width: min(18rem, 100%); }
+
+/* page skeleton while a page loads (router skeleton) */
+.sc-page-skel { width: 100%; max-width: 76rem; margin: 0 auto; padding: var(--hm-space-6) var(--hm-space-6) var(--hm-space-8); display: grid; gap: var(--hm-space-6); }
+.sc-page-skel > .hm-lazy-skel { --hm-sk: var(--hm-border); }
+.sc-page-skel > .hm-lazy-skel-text { max-width: 46rem; min-height: 5.5rem; }
+.sc-page-skel > .hm-lazy-skel-card { min-height: 14rem; padding: var(--hm-space-5); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3, var(--hm-radius)); background-origin: content-box; background-clip: content-box; }
 
 /* shell placeholders (lazy side menu and top bar tools): same size, no layout shift */
 .sc-nav-placeholder { width: var(--hm-sb-w, 17.5rem); height: 100%; background: var(--hm-surface); border-inline-end: 1px solid var(--hm-border); }

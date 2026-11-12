@@ -2,6 +2,7 @@
 // the cache), the build's per-route size report and the optional service worker.
 import { Button, Badge, Card, Grid, Stack, Toggle, toast } from "hadi-march/ui";
 import { lazy } from "hadi-march/lazy";
+import { Link } from "hadi-march/router";
 import { slow, SLOW_MS } from "../slow.ts";
 import { registerServiceWorker, unregisterServiceWorker, swState } from "hadi-march/sw";
 import { netLog, clearNetLog, type NetEntry } from "../perflog.ts";
@@ -83,6 +84,16 @@ const Pie = lazy(() => import("hadi-march/charts/pie.ts"), { pick: "PieChart", p
       <div class="sc-speed-lazy">{() => ($showPie ? <PieChart data={SHARE} donut title="Kanal payı" legend="right" width={320} height={200} /> : <p class="hm-muted">Grafik burada, tembel bir parçadan gelir.</p>)}</div>
     </Demo>
 
+    <Demo wide title="Anında geçiş" desc="Menüde bir sayfaya tıklayınca adres, etkin bağlantı ve konum çubuğu hemen değişir. Sayfa 100 ms içinde gelmezse yerini iskeleti alır (kabuk yerinde kalır); 150 ms'den uzun sürerse üstte ince bir çizgi ve tıklanan bağlantıda küçük bir dönen simge görünür. Yeni bir tıklama öncekini iptal eder: yalnız son sayfa açılır. Yavaş 3G'yi açıp iki sayfaya art arda tıkla."
+      code={`<Router loading={<Spinner />} skeleton={() => <PageSkeleton />} />   // every page
+createRouter({ routes: { "/data": { load: () => import("./data.tsx"), skeleton: () => <TableSkeleton /> } } })   // one route
+fetch(url, { signal: navigationSignal() })   // aborted when the user clicks elsewhere`}>
+      <div class="sc-row">
+        <Toggle value={slow} label="Yavaş 3G" />
+        <Link href="/data" class="hm-btn hm-btn-secondary hm-btn-sm">Veri sayfasına git</Link>
+        <Link href="/charts" class="hm-btn hm-btn-secondary hm-btn-sm">Grafikler sayfasına git</Link>
+      </div>
+    </Demo>
     <Demo wide title="Canlı parça listesi" desc="Derlemedeki her tembel birim (sayfalar, lazy bileşenler, kabuk parçaları, dil paketi) ve bu sekmede inip inmediği. Sayfalar arasında gez ya da Yavaş 3G'yi aç: satırlar indikçe güncellenir.">
       <p class="hm-muted">{() => { const l = parts(); return `${l.filter((p) => p.hit).length} / ${l.length} parça indi` }}</p>
       <div class="sc-speed-scroll" role="region" aria-label="Tembel parçalar" tabindex="0">

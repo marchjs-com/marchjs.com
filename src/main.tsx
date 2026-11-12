@@ -8,7 +8,7 @@ import "./showcase.css";
 import { render, setLocale } from "hadi-march";
 import { loadLocale } from "hadi-march/i18n";
 import { createRouter, Router } from "hadi-march/router";
-import { SHELL, PAGE_LOADING, PAGES, LOADERS } from "./app.tsx";
+import { SHELL, PAGE_LOADING, PAGE_SKELETON, PAGES, LOADERS } from "./app.tsx";
 const ROUTER_DEMO = () => import("./router-demo/_layout.tsx");
 
 // the Turkish pack is a lazy chunk (library texts switch to Turkish when it arrives)
@@ -31,4 +31,4 @@ createRouter({
 });
 
 const el = document.getElementById("app");
-if (el) { render(() => <Router loading={PAGE_LOADING} />, el); document.getElementById("hm-boot")?.remove(); }
+if (el) { render(() => <Router loading={PAGE_LOADING} skeleton={PAGE_SKELETON} />, el); document.getElementById("hm-boot")?.remove(); }
