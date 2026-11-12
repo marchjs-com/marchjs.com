@@ -4,9 +4,13 @@
 import type { ApiExampleModule } from "./api-examples/types.ts";
 const groups: Record<string, () => Promise<ApiExampleModule>> = {
   "core": () => import("./api-examples/core.tsx"),
+  "ui-a": () => import("./api-examples/ui-a.tsx"),
+  "ui-a2": () => import("./api-examples/ui-a2.tsx"),
+  "ui-a3": () => import("./api-examples/ui-a3.tsx"),
 };
 const bySubpath: Record<string, [group: string, first: string][]> = {
   "hadi-march": [["core","Await"]],
+  "hadi-march/ui": [["ui-a","ACCENT_CHOICES"],["ui-a2","ButtonGroup"],["ui-a3","CodeInput"]],
 };
 /** The example file of an export (a lazy part, loaded once), or null when its subpath has none yet. */
 export const loadExamples = (subpath: string, name: string): Promise<ApiExampleModule> | null => {
