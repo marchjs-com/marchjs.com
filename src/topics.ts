@@ -161,6 +161,16 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "type-scale", title: "Yazı ölçeği", desc: "Gövde ve başlık yazı tipi temadan gelir (HADİ: Figtree + Bricolage Grotesque).", group: "Tokenlar" },
     { slug: "radius-elevation", title: "Yarıçap ve yükselti", desc: "Yarıçap ölçeği temanın tek değerinden türer; gölgeler koyu görünümde halkaya dönüşür.", group: "Tokenlar" },
   ],
+  "/overlay": [
+    { slug: "video-glass", title: "Video arka plan + cam panel", desc: "Kartın arkasında sessiz, döngülü video (görünmezken durur; veri tasarrufu ya da hareketi azalt tercihinde…", group: "Katman türleri" },
+    { slug: "image", title: "Resim", desc: "Aynı resim üç sığdırma biçiminde; position ile odak noktası seçilir.", group: "Katman türleri" },
+    { slug: "svg-pattern", title: "SVG desen", desc: "Satır içi SVG; currentColor ile tema rengini alır.", group: "Katman türleri" },
+    { slug: "canvas", title: "Canvas çizimi", desc: "draw işlevi: kapsayıcı boyutunda, keskin (devicePixelRatio), tema renkleriyle; animate açıkken görünürken…", group: "Katman türleri" },
+    { slug: "layers", title: "Katmanlar ve seçenekler", desc: "Kaynak türü, sığdırma, kenar boşluğu, saydamlık, karışım, efekt ve ön/arka seçilebilir.", group: "Katman türleri" },
+    { slug: "overlay", title: "Overlay", desc: "Kartın içinde, içeriğin arkasında ya da önünde; katman tıklama almaz, düğme çalışmaya devam eder.", group: "Medya" },
+    { slug: "media", title: "Media", desc: "Kabına sığar, türü uzantıdan anlar; yüklenemezse yedek metin gösterir.", group: "Medya" },
+    { slug: "carousel", title: "Carousel", desc: "Geniş ekranda 1–4 slayt, telefonda bir slayt ve sonrakinin ucu; oklar uçlarda gizlenir, noktalar konumu…", group: "Medya" },
+  ],
 };
 
 /** Every topic as a sub page under its section (path, title, parent) for the routes, the breadcrumb and the menu. */
