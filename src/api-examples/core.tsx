@@ -2,7 +2,7 @@
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
 import {
   signal, computed, effect, batch, untrack, selector, onCleanup, createRoot, getOwner, runWithOwner, catchError, context, provide,
-  useContext, reactive, isReactive, read, DEV, _enter, _leave, store, patch, unwrap, h, Fragment, insert, lazyChildren,
+  useContext, reactive, isReactive, read, DEV, _enter, _leave, _tpl, _prop, store, patch, unwrap, h, Fragment, insert, lazyChildren,
   safeUrl, registerTransition, If, Else, For, Switch, Match, Try, Await, Dynamic, setFlipHook, Portal, PortalTarget,
   portalTarget, openLayer, layers, render, define, pipe, applyPipe, toDate, t, locale, messages, missing,
   setFallbackLocale, sx, sxValue, version,
@@ -35,6 +35,28 @@ async function Profile() {
           lines.update((l) => [...l, `${now()} await sonrası sahip: ${getOwner() ? "var" : "yok"} (${v})`])
         }
         return <Row><Button onClick={go}>Bekle ve devam et</Button><Log lines={lines} /></Row>
+      },
+    },
+    _prop: {
+      code: `// written by the compiler for a template clone, not by hand:
+<a class={$cls} onClick={go}>…</a>   // → _prop(a, "a", "class", …); _prop(a, "a", "onClick", go)`,
+      run: () => {
+        const on = signal(false)
+        const a = _tpl(["button", [["type", "button"], ["class", "hm-btn"]], "Değiştir"])()
+        _prop(a, "button", "aria-pressed", reactive(() => String(on())))
+        _prop(a, "button", "onClick", () => on.update((x) => !x))
+        return <Row>{a}<Out label="aria-pressed" value={() => String(on())} /></Row>
+      },
+    },
+    _tpl: {
+      code: `// written by the compiler, not by hand: <tr class="row"><td>{id}</td></tr> →
+const _$t1 = _tpl(["tr", [["class", "row"]], ["td", []]])   // built once, cloned per row
+_$t1((r) => { insert(r.firstChild, () => row().id, null) })`,
+      run: () => {
+        const row = _tpl(["li", [["class", "sc-tpl-row"]], "Satır ", ["b", [], ""]])
+        const n = signal(0)
+        const list = <ul class="sc-stack">{() => Array.from({ length: n() }, (_, i) => row((r) => { (r.lastChild as Element).textContent = String(i + 1) }))}</ul>
+        return <div class="sc-stack"><Row><Button onClick={() => n.update((x) => x + 1)}>Satır ekle (kopya)</Button></Row>{list}</div>
       },
     },
     _leave: {

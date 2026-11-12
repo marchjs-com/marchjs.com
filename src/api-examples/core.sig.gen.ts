@@ -16,6 +16,8 @@ const sig: Record<string, Record<string, string>> = {
   "Try": "function Try(props: TryProps): () => unknown",
   "_enter": "function _enter<T>(owner: Owner | null, value: T): T",
   "_leave": "function _leave<T>(value: T): T",
+  "_prop": "function _prop(el: Element, tag: string, key: string, value: unknown): void",
+  "_tpl": "function _tpl(spec: TemplateSpec): (wire?: (root: Element) => void) => Element",
   "applyPipe": "function applyPipe(name: TextPipe, value: unknown, ...args: unknown[]): string",
   "batch": "function batch<T>(fn: () => T): T",
   "catchError": "function catchError<T>(fn: () => T, handler: (e: unknown) => void): T | undefined",
