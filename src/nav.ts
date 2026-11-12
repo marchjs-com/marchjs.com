@@ -9,6 +9,7 @@ export const PAGES: PageInfo[] = [
   { path: "/buttons", title: "Düğmeler ve rozetler" },
   { path: "/forms", title: "Formlar" },
   { path: "/data", title: "Veri" },
+  { path: "/big-data", title: "Büyük veri" },
   { path: "/charts", title: "Grafikler" },
   { path: "/overlays", title: "Pencereler ve bildirimler" },
   { path: "/feedback", title: "Durumlar" },
