@@ -60,7 +60,7 @@ export default function Home() {
       </section>
 
       <Grid cols={4} minCol="17rem" gap={3} fill="stretch" equal>
-        {pages().filter((p) => p.path !== "/").map((p, i) => <div use:reveal={{ delay: i * 40 }}>
+        {pages().filter((p) => p.path !== "/" && !p.sub).map((p, i) => <div use:reveal={{ delay: i * 40 }}>
           <LinkCard href={p.path} icon={p.icon} tone={(["primary", "info", "success", "violet", "warn", "pink", "teal", "danger", "neutral", "primary"] as const)[i % 10]} title={p.title} description={p.desc} />
         </div>)}
       </Grid>
