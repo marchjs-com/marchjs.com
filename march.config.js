@@ -10,5 +10,6 @@ export default {
   alias: { "hadi-march": "../../src" },
   // sw.js only for the local preview (build.mjs --serve): the published showcase must not leave a worker registered
   sw: process.env.MARCH_SHOWCASE_SW === "1",
-  budget: { entry: 15 * 1024, route: 60 * 1024, fail: true }, // the build fails when the entry or a route grows past it
+  // the build fails when the entry, a route or a lazy part (lazy() component, shell piece) grows past it
+  budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, fail: true },
 };

@@ -5,8 +5,12 @@ import { registerServiceWorker, unregisterServiceWorker, swState } from "hadi-ma
 import { netLog, clearNetLog, type NetEntry } from "../perflog.ts";
 import { Demo, Section } from "../demo.tsx";
 
-interface ReportRow { name: string; js: number; css: number; files?: string[] }
-interface Report { entry: ReportRow; routes: ReportRow[]; budget: { entry: number; route: number } | null }
+interface ReportRow { name: string; kind?: string; js: number; css: number; limit?: number | null; over?: boolean; files?: string[] }
+interface Report { entry: ReportRow; routes: ReportRow[]; parts?: ReportRow[]; budget: { entry: number; route: number; part?: number } | null }
+/** "../../src/charts/xy.ts" → "hadi-march/charts/xy.ts" (library parts by their import name) */
+const LIB_PATH = /^(?:\.\.\/)+src\//
+const shortName = (n: string): string => n.replace(LIB_PATH, "hadi-march/")
+const KIND: Record<string, string> = { entry: "giriş", route: "sayfa", part: "parça" }
 
 const kb = (n: number): string => (n >= 1024 ? `${(n / 1024).toFixed(1)} KB` : `${n} B`);
 const SW_TEXT: Record<string, string> = {
@@ -62,17 +66,20 @@ const Map = lazy(() => import("./Map.tsx"))
       </div>
     </Demo>
 
-    <Demo wide title="Rota başına boyut (gzip)" desc="march build her derlemede yazar (march-report.json); bütçe aşılınca uyarır, march.config.js › budget.fail ile derlemeyi durdurur."
+    <Demo wide title="Rota başına boyut (gzip)" desc="march build her derlemede yazar (march-report.json): giriş, her sayfa (yoluyla) ve her tembel parça (lazy bileşen, dil paketi). Bütçe aşılınca derleme durur ve aşan satırı adıyla söyler."
       code={`// march.config.js
-export default { budget: { entry: 15 * 1024, route: 60 * 1024, fail: true } }`}>
+export default { budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, routes: { "/data": 80 * 1024 }, fail: true } }
+// ✖ over budget: /data JS 82.3 KB > 80.0 KB`}>
       {() => $report ? <div class="sc-speed-scroll" tabindex="0" role="region" aria-label="Boyut raporu">
         <table class="sc-speed-table">
-          <thead><tr><th scope="col">Parça</th><th scope="col">JS</th><th scope="col">CSS</th><th scope="col">Dosya</th></tr></thead>
+          <thead><tr><th scope="col">Ad</th><th scope="col">Tür</th><th scope="col">JS</th><th scope="col">CSS</th><th scope="col">Bütçe</th><th scope="col">Dosya</th></tr></thead>
           <tbody>
-            {[$report.entry, ...$report.routes].map((r) => <tr>
-              <td>{r.name}</td>
-              <td class="sc-num">{kb(r.js)}{$report?.budget && r.js > (r === $report.entry ? $report.budget.entry : $report.budget.route) ? <Badge tone="danger">bütçe</Badge> : null}</td>
+            {[{ ...$report.entry, kind: "entry" }, ...$report.routes.map((r) => ({ kind: "route", ...r })), ...($report.parts ?? []).map((r) => ({ kind: "part", ...r }))].map((r) => <tr>
+              <td class="sc-speed-file">{shortName(r.name)}</td>
+              <td>{KIND[r.kind] ?? r.kind}</td>
+              <td class="sc-num">{kb(r.js)}{r.over ? <Badge tone="danger">aştı</Badge> : null}</td>
               <td class="sc-num">{kb(r.css)}</td>
+              <td class="sc-num">{r.limit ? kb(r.limit) : "—"}</td>
               <td class="sc-num">{r.files?.length ?? ""}</td>
             </tr>)}
           </tbody>
