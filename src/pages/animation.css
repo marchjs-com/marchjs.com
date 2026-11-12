@@ -1,0 +1,53 @@
+/* Showcase › Animation engine page (sc-an-*). Theme tokens only; logical properties (RTL). */
+.sc-an-row { display: flex; flex-wrap: wrap; align-items: end; gap: var(--hm-space-3); min-width: 0; }
+.sc-an-row > .hm-field { flex: 1 1 14rem; min-width: 0; }
+.sc-an-control { display: grid; gap: var(--hm-space-4); }
+.sc-an-meters { display: flex; flex-wrap: wrap; gap: var(--hm-space-2); }
+.sc-an-meter { display: inline-flex; align-items: center; gap: var(--hm-space-2); padding: var(--hm-space-1) var(--hm-space-3); border-radius: var(--hm-radius-full); background: var(--hm-surface-2); font-size: .875rem; }
+.sc-an-meter b { font-variant-numeric: tabular-nums; min-width: 2ch; text-align: end; }
+.sc-an-spinner { inline-size: 1rem; block-size: 1rem; border-radius: 50%; border: 2px solid var(--hm-border-strong); border-block-start-color: var(--hm-accent, var(--hm-primary)); animation: sc-an-spin 1s linear infinite; }
+@keyframes sc-an-spin { to { transform: rotate(360deg); } }
+
+.sc-an-one { display: grid; gap: var(--hm-space-4); }
+.sc-an-one-stage { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--hm-space-3); }
+@media (max-width: 760px) { .sc-an-one-stage { grid-template-columns: minmax(0, 1fr); } }
+.sc-an-lane { position: relative; display: flex; align-items: center; block-size: 9rem; padding: var(--hm-space-3); border-radius: var(--hm-radius-3); background: var(--hm-surface-2); overflow: hidden; }
+.sc-an-tag { position: absolute; inset-block-start: var(--hm-space-2); inset-inline-start: var(--hm-space-2); z-index: 1; font-size: .75rem; padding: 0 var(--hm-space-2); border-radius: var(--hm-radius-full); background: var(--hm-surface); color: var(--hm-text-muted, inherit); }
+.sc-an-card { inline-size: 40%; padding: var(--hm-space-3); border-radius: var(--hm-radius-2); background: var(--hm-accent, var(--hm-primary)); color: var(--hm-on-primary-fill, #fff); font-weight: 600; text-align: center; box-shadow: var(--hm-shadow-2, none); }
+.sc-an-canvas { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; }
+
+.sc-an-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr)); gap: var(--hm-space-2); }
+.sc-an-kf { display: grid; justify-items: center; gap: var(--hm-space-2); padding: var(--hm-space-3) var(--hm-space-2); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); background: var(--hm-surface); color: inherit; font: inherit; cursor: pointer; }
+.sc-an-kf:focus-visible { outline: 2px solid var(--hm-accent, var(--hm-primary)); outline-offset: 2px; }
+.sc-an-kf-box { inline-size: 2.25rem; block-size: 2.25rem; border-radius: var(--hm-radius-2); background: var(--hm-accent, var(--hm-primary)); }
+.sc-an-kf-name { font-size: .8rem; overflow-wrap: anywhere; }
+
+.sc-an-tl-stage { overflow: hidden; display: flex; flex-wrap: wrap; gap: var(--hm-space-2); min-block-size: 4rem; align-items: center; padding: var(--hm-space-3); border-radius: var(--hm-radius-3); background: var(--hm-surface-2); }
+.sc-an-tl-item { padding: var(--hm-space-2) var(--hm-space-3); border-radius: var(--hm-radius-2); color: #fff; font-weight: 600; }
+.sc-an-tl-1 { background: var(--hm-cat-1); } .sc-an-tl-2 { background: var(--hm-cat-2); } .sc-an-tl-3 { background: var(--hm-cat-3); } .sc-an-tl-4 { background: var(--hm-cat-4); }
+.sc-an-tracks { display: grid; gap: var(--hm-space-1); position: relative; }
+.sc-an-track { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); align-items: center; gap: var(--hm-space-2); }
+.sc-an-track-name { font-size: .8rem; }
+.sc-an-track-lane { position: relative; block-size: 1.75rem; border-radius: var(--hm-radius-1); background: var(--hm-surface-2); }
+.sc-an-bar { position: absolute; inset-block: 2px; border: 0; border-radius: var(--hm-radius-1); color: #fff; font: inherit; font-size: .7rem; cursor: grab; touch-action: none; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 0 var(--hm-space-1); }
+.sc-an-bar:active { cursor: grabbing; }
+.sc-an-bar:focus-visible { outline: 2px solid var(--hm-text); outline-offset: 1px; }
+.sc-an-playhead-lane { position: absolute; inset-block: 0; inset-inline: calc(4.5rem + var(--hm-space-2)) 0; pointer-events: none; }
+.sc-an-playhead { position: absolute; inset-block: 0; inline-size: 2px; background: var(--hm-danger, red); }
+
+.sc-an-curve { display: grid; grid-template-columns: minmax(0, 12rem) minmax(0, 1fr); gap: var(--hm-space-4); align-items: start; }
+@media (max-width: 520px) { .sc-an-curve { grid-template-columns: minmax(0, 1fr); } }
+.sc-an-curve-svg { inline-size: 100%; aspect-ratio: 1; touch-action: none; overflow: visible; }
+.sc-an-curve-box { fill: var(--hm-surface-2); stroke: var(--hm-border); }
+.sc-an-curve-path { fill: none; stroke: var(--hm-accent, var(--hm-primary)); stroke-width: 3; }
+.sc-an-curve-arm { stroke: var(--hm-border-strong); stroke-width: 1.5; }
+.sc-an-curve-handle { fill: var(--hm-surface); stroke: var(--hm-accent, var(--hm-primary)); stroke-width: 3; cursor: grab; }
+.sc-an-curve-side { display: grid; gap: var(--hm-space-3); min-width: 0; }
+.sc-an-chips { display: flex; flex-wrap: wrap; gap: var(--hm-space-1); }
+.sc-an-css-out { display: block; padding: var(--hm-space-2); border-radius: var(--hm-radius-1); background: var(--hm-surface-2); font-size: .75rem; overflow-wrap: anywhere; max-block-size: 6rem; overflow: auto; }
+.sc-an-ball-lane { position: relative; block-size: 2.5rem; border-radius: var(--hm-radius-full); background: var(--hm-surface-2); overflow: hidden; }
+.sc-an-ball { position: absolute; inset-block-start: .25rem; inset-inline-start: .25rem; inline-size: 2rem; block-size: 2rem; border-radius: 50%; background: var(--hm-accent, var(--hm-primary)); }
+
+.sc-an-dots { display: grid; grid-template-columns: repeat(20, minmax(0, 1fr)); gap: 3px; }
+.sc-an-dot { aspect-ratio: 1; border-radius: 30%; }
+.sc-an-result { font-size: .875rem; font-variant-numeric: tabular-nums; }

@@ -16,5 +16,6 @@ export default {
   // no _headers file: the publishing host refuses names starting with "_" (caching is set on the host)
   headers: false,
   // the build fails when the entry, a route or a lazy part (lazy() component, shell piece) grows past it
-  budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, fail: true },
+  // the two motion pages carry the whole motion engine (~11 KB gzip: keyframes, timeline, easing, drivers, clock)
+  budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, routes: { "/motion": 64 * 1024, "/animation": 64 * 1024 }, fail: true },
 };

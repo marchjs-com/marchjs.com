@@ -1,5 +1,5 @@
 // Page descriptions, groups and icons for the side menu and the home page (kept out of the entry).
-import { activity, alertCircle, barChart, code, dashboard, edit, gauge, grid, layers, menu, message, palette, zap } from "hadi-march/icons";
+import { activity, film, alertCircle, barChart, code, dashboard, edit, gauge, grid, layers, menu, message, palette, zap } from "hadi-march/icons";
 
 export interface PageMeta { desc: string; group?: string; icon: unknown }
 export const PAGE_META: Record<string, PageMeta> = {
@@ -12,6 +12,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/charts": { desc: "Çizgi, alan, çubuk, pasta, ısı haritası", group: "Bileşenler", icon: barChart },
   "/overlays": { desc: "Dialog, çekmece, toast, komut paleti", group: "Bileşenler", icon: message },
   "/feedback": { desc: "Uyarı, ilerleme, iskelet, boş, hata", group: "Bileşenler", icon: alertCircle },
+  "/animation": { desc: "Tek motor: keyframe, timeline, eğri, global hız ve durdurma", group: "Hareket", icon: film },
   "/motion": { desc: "Yay, FLIP listeler, parallax, parçacık", group: "Hareket", icon: activity },
   "/speed": { desc: "Tembel yükleme, ön yükleme ve önbellek: canlı ağ paneli", group: "Temel", icon: gauge },
   "/layout": { desc: "Grid: taşmasız sütunlar, fill ve balance", group: "Bileşenler", icon: grid },
