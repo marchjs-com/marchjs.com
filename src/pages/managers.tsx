@@ -5,7 +5,7 @@ import { Button, Menu, Card, Badge, Toggle, Segmented, Slider, Field, Alert, Kbd
 import { command as commandIcon, refresh, trash, download, copy, settings } from "hadi-march/icons";
 import { viewport, configureViewport } from "hadi-march/managers/viewport";
 import { consent, configureConsent } from "hadi-march/managers/consent";
-import { ConsentBanner, ConsentGate, openConsentPreferences } from "hadi-march/managers/consent/ui";
+import { ConsentBanner, ConsentGate, openConsentPreferences, showConsentBanner } from "hadi-march/managers/consent/ui";
 import { command, commands, onCommandRun } from "hadi-march/managers/command";
 import { commandItems, CommandButton, CommandToolbar, bindCommandKeys } from "hadi-march/managers/command/ui";
 import { Demo, Section } from "../demo.tsx";
@@ -75,19 +75,20 @@ size.name()   size.up("md")   // [data-hm-bp="md"] ile CSS de kullanabilir`}>
 function ConsentDemo() {
   configureConsent({ storageKey: "sc.consent.demo", version: "1", policyHref: null })
   let $version = "1"
-  let $inline = true
+  let $inline = false
   let $log: string[] = []
   const send = consent.gate("analytics", (name: string) => { $log = [`gönderildi: ${name}`, ...$log].slice(0, 5); return true })
   const track = (name: string) => { if (!send(name)) $log = [`engellendi (rıza yok): ${name}`, ...$log].slice(0, 5) }
   const setVersion = (v: string) => { $version = v; configureConsent({ version: v }) }
   onCleanup(() => configureConsent({ storageKey: "hm.consent", version: "1" }))
   return <>
-    <Demo wide title="Rıza: banner ve tercihler" desc="Zorunlu, tercih, analitik, pazarlama ve üçüncü taraf kategorileri. Reddet ile Kabul et aynı ağırlıkta. Kayıt sürümlü ve tarihli; politika sürümü değişince yeniden sorulur."
+    <Demo wide title="Rıza: banner ve tercihler" desc="Zorunlu, tercih, analitik, pazarlama ve üçüncü taraf kategorileri. Reddet ile Kabul et aynı ağırlıkta; ikisi de banner'ı kapatır. Banner en üst katmanda (toast). Kayıt sürümlü ve tarihli; politika sürümü değişince yeniden sorulur."
       code={`configureConsent({ version: "2026-11", policyHref: "/gizlilik" })
 <ConsentBanner text={t\`…uygulamanın hukuki metni…\`} />
-openConsentPreferences()   consent.withdraw()   consent.record()`}>
+openConsentPreferences()   showConsentBanner()   consent.withdraw()   consent.record()`}>
       {() => ($inline ? <ConsentBanner inline always /> : <ConsentBanner />)}
       <div class="sc-row">
+        <Button variant="secondary" on:click={() => showConsentBanner()}>Banner'ı yeniden göster</Button>
         <Button icon={settings} on:click={() => openConsentPreferences()}>Tercihler</Button>
         <Button variant="ghost" on:click={() => consent.withdraw()}>Rızayı geri çek</Button>
       </div>
@@ -104,7 +105,7 @@ send("tıklama")   // rıza yoksa undefined, ağ isteği yok`}>
       <ConsentGate category="thirdParty"><div class="sc-mgr-map"><strong>Harita yüklendi</strong><span class="hm-muted">(örnek gömülü içerik)</span></div></ConsentGate>
     </Demo>
     <Card title="Seçenekler" subtitle="Consent">
-      <Toggle bind:value={$inline} label="Banner'ı sayfanın içinde göster (kapalıysa alt katmanda, yalnız karar yokken)" />
+      <Toggle bind:value={$inline} label="Banner'ı sayfanın içinde göster (kapalıysa sayfanın altında, en üst katmanda)" />
       <Field label="Politika sürümü"><Segmented bind:value={$version} onChange={setVersion} options={[{ value: "1", label: "1" }, { value: "2", label: "2 (yeniden sor)" }]} /></Field>
     </Card>
   </>
