@@ -19,4 +19,5 @@ export default {
   "/overlays": () => import("./pages/overlays.tsx"),
   "/speed": () => import("./pages/speed.tsx"),
   "/themes": () => import("./pages/themes.tsx"),
+  "/transitions": () => import("./pages/transitions.tsx"),
 };
