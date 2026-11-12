@@ -3,6 +3,8 @@
 import { Grid, Segmented, Slider, Field, Card, Badge } from "hadi-march/ui";
 import { Demo, Section } from "../demo.tsx";
 import { Playground } from "../playground.tsx";
+import { ComponentDemo } from "../component-demo.tsx";
+import "./layout.css";
 
 const MODES = [
   { value: "default", label: "Varsayılan" },
@@ -45,7 +47,7 @@ export default function Layout() {
     if (mode === "balance") return <Grid cols={cols} gap={3} balance>{items}</Grid>
     return <Grid cols={cols} gap={3} balance fill="stretch">{items}</Grid>
   }
-  return <Section kicker="Bileşenler" title="Yerleşim" lead="Grid hiçbir genişlikte yatay taşmaz. Son satır için isteğe bağlı fill (stretch: kalan alanı eşit paylaş, last: son kart genişlesin) ve balance (satırlara dengeli dağıt). Yalnız CSS; telefonda tek sütun.">
+  return <Section kicker="Yerleşim" title="Yerleşim" lead="Grid hiçbir genişlikte yatay taşmaz. Son satır için isteğe bağlı fill (stretch: kalan alanı eşit paylaş, last: son kart genişlesin) ve balance (satırlara dengeli dağıt). Yalnız CSS; telefonda tek sütun.">
     <Demo wide title="Canlı karşılaştırma" desc="Kart sayısını, sütunu ve kapsayıcı genişliğini değiştir; seçili mod tam genişlikte, altında beşi yan yana."
       code={`<Grid cols={4} gap={3}>…</Grid>                 // default: aligned columns
 <Grid cols={4} fill="stretch">…</Grid>           // the last row shares the space
@@ -68,5 +70,12 @@ export default function Layout() {
         </div></Card>)}
       </div>
     </Demo>
+    <ComponentDemo folder="layout/grid" title="Grid: seçenekler" desc="Sütun sayısı, son satırın davranışı ve dengeleme. Dar ekranda sütunlar kendiliğinden azalır." />
+    <ComponentDemo folder="layout/stack" title="Stack, Toolbar ve Divider" desc="Satır ya da sütun, boşluk belirteçleri (0–8), hizalama ve satır kaydırma; etiketli araç çubuğu ve ayraçlar." />
+    <ComponentDemo folder="layout/spacer" title="Spacer: esnek boşluk" desc="Kendinden sonrakileri satırın mantıksal sonuna iter; RTL'de aynalanır." />
+    <ComponentDemo folder="layout/splitter" title="Splitter: boyutlandırılabilir bölmeler" desc="Tutamacı sürükleyin ya da odaklayıp ← → (RTL'de aynalı), Home / End; Enter başlangıç payına döndürür." />
+    <ComponentDemo folder="layout/accordion" title="Accordion: açılır bölümler" desc="Varsayılan tek açık bölüm; birden çok açık seçeneği, yükseklik animasyonu, başlıklar arasında ↑ ↓ Home End." />
+    <ComponentDemo folder="layout/disclosure" title="Disclosure: katlanır bölüm" desc="Yerel details / summary üzerinde: klavye ve ekran okuyucu desteği hazır, açılıp kapanma animasyonlu." />
+    <ComponentDemo folder="layout/app-shell" title="AppShell: uygulama çerçevesi" desc="Kenar çubuğu sütunu, üst duyuru ve kayan ana alan; önce gelen 'İçeriğe geç' bağlantısı. Dar ekranda tam genişlik." />
   </Section>
 }
