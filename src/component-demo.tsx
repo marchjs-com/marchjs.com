@@ -5,7 +5,7 @@
 import { signal } from "hadi-march";
 import { lazy } from "hadi-march/lazy";
 import { Link, type Href } from "hadi-march/router";
-import { registry } from "hadi-march/components/registry.gen.ts";
+import { cards, cardCode } from "hadi-march/components/cards.gen.ts";
 import type { PlaygroundOption, PlaygroundSpec } from "hadi-march/ui";
 import { Demo } from "./demo.tsx";
 import { Playground, type PlayOption } from "./playground.tsx";
@@ -34,7 +34,7 @@ export function PlayStage(props: { view: View; spec: PlaygroundSpec<never> }) {
 }
 
 function Stage(props: { folder: string }) {
-  const entry = registry.find((e) => e.folder === props.folder)!
+  const entry = cards.find((e) => e.f === props.folder)!
   const Body = lazy(async () => {
     const [{ default: view }, { default: spec }] = await Promise.all([entry.demo(), entry.playground()])
     return { default: () => <PlayStage view={view} spec={spec} /> }
@@ -47,16 +47,16 @@ export function ComposedOf(props: { parts: readonly string[] }) {
   if (!props.parts.length) return null
   return <p class="sc-parts"><span class="sc-parts-label">Şunlardan oluşur:</span>
     {props.parts.map((name) => {
-      const page = registry.find((e) => e.meta.name === name)?.meta.showcase
+      const page = cards.find((e) => e.n === name)?.w
       return page ? <Link class="sc-part" href={page as Href}>{name}</Link> : <code class="sc-part">{name}</code>
     })}
   </p>
 }
 
 export function ComponentDemo(props: { folder: string; title?: string; desc?: string; code?: string; view?: View; spec?: PlaygroundSpec<never> }) {
-  const entry = registry.find((e) => e.folder === props.folder)!
-  return <Demo wide title={props.title ?? entry.meta.name} desc={props.desc ?? entry.meta.summary} code={props.code ?? entry.code}>
-    <ComposedOf parts={entry.meta.composedOf} />
+  const entry = cards.find((e) => e.f === props.folder)!
+  return <Demo wide title={props.title ?? entry.n} desc={props.desc ?? entry.s} code={props.code ?? (() => cardCode(props.folder))}>
+    <ComposedOf parts={entry.p ?? []} />
     {props.view && props.spec ? <PlayStage view={props.view} spec={props.spec} /> : <Stage folder={props.folder} />}
   </Demo>
 }
