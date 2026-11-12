@@ -71,8 +71,8 @@
 .sc-rm-demo { max-width: 40rem; }
 
 /* sample pages inside the showcase shell: full bleed, the site bar sticks under the shell's top bar */
-.sc-sample-wrap { --hm-site-nav-top: var(--hm-topbar-h, 0px); min-width: 0; }
-.sc-sample-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-2) var(--hm-space-3); padding: var(--hm-space-2) var(--hm-space-4); border-block-end: 1px solid var(--hm-border); font-size: var(--hm-text-sm); background: var(--hm-surface); }
+.sc-sample-wrap { --sc-bar-h: 2.9rem; --hm-site-nav-top: calc(var(--hm-topbar-h, 0px) + var(--sc-bar-h)); min-width: 0; }
+.sc-sample-bar { position: sticky; top: var(--hm-topbar-h, 0px); z-index: calc(var(--hm-z-sticky) - 1); min-block-size: var(--sc-bar-h); box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-2) var(--hm-space-3); padding: var(--hm-space-2) var(--hm-space-4); border-block-end: 1px solid var(--hm-border); font-size: var(--hm-text-sm); background: var(--hm-surface); }
 .sc-sample-back { display: inline-flex; align-items: center; gap: var(--hm-space-1); }
 .sc-sample-back svg, .sc-sample-step svg, .sc-chip-src svg, .sc-seg-solo svg { inline-size: 1rem; block-size: 1rem; }
 .sc-sample-name { margin-inline-end: auto; }
@@ -89,15 +89,17 @@
 .sc-chip-link { display: inline-flex; align-items: center; gap: var(--hm-space-1); padding: 2px var(--hm-space-2); border: 1px solid var(--hm-border); border-radius: 999px; text-decoration: none; color: var(--hm-text); }
 .sc-chip-link:hover { border-color: var(--hm-primary); color: var(--hm-primary); }
 .sc-sample-stage { padding: 0; background: var(--hm-surface-2); }
-.sc-sample-device { inline-size: min(100%, var(--sc-device-w, 100%)); margin-inline: auto; background: var(--hm-bg); color: var(--hm-text); }
-.sc-sample-device[style*="390px"], .sc-sample-device[style*="834px"] { margin-block: var(--hm-space-4); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-lg); box-shadow: var(--hm-shadow-3); overflow: clip; container-type: inline-size; }
+.sc-sample-device { inline-size: min(100%, var(--sc-device-w, 100%)); margin-inline: auto; background: var(--hm-bg); color: var(--hm-text);
+  /* the blocks answer to this width (hm-site container: @container rules, cqi sizes), so a phone frame is a real phone */
+  container: hm-site / inline-size; }
+.sc-sample-device[style*="390px"], .sc-sample-device[style*="834px"] { margin-block: var(--hm-space-4); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-lg); box-shadow: var(--hm-shadow-3); overflow: clip; }
 .sc-sample-pager { display: flex; justify-content: space-between; gap: var(--hm-space-3); padding: var(--hm-space-5) var(--hm-space-4); border-block-start: 1px solid var(--hm-border); }
 .sc-sample-step { display: inline-flex; align-items: center; gap: var(--hm-space-2); text-decoration: none; color: var(--hm-text); }
 .sc-sample-step small { display: block; color: var(--hm-muted); font-size: var(--hm-text-xs); }
 .sc-sample-step-next { text-align: end; margin-inline-start: auto; }
 /* full screen: the sample covers the window (the shell stays underneath); Esc comes back */
-.sc-sample-wrap.is-full { position: fixed; inset: 0; z-index: var(--hm-z-dialog); overflow: auto; background: var(--hm-bg); --hm-site-nav-top: 0px; }
-.sc-sample-wrap.is-full .sc-sample-bar { position: sticky; top: 0; z-index: 2; }
+.sc-sample-wrap.is-full { position: fixed; inset: 0; z-index: var(--hm-z-dialog); overflow: auto; background: var(--hm-bg); --hm-site-nav-top: var(--sc-bar-h); }
+.sc-sample-wrap.is-full .sc-sample-bar { top: 0; z-index: 2; }
 .sc-sample-page { position: relative; min-width: 0; overflow-x: clip; background: var(--hm-bg); }
 .sc-sample-slides { display: flex; flex-direction: column; gap: var(--hm-space-3); max-width: 72rem; margin-inline: auto; padding: var(--hm-space-5) var(--hm-space-4); }
 .sc-slides-help { margin: 0; text-align: center; font-size: var(--hm-text-sm); }
