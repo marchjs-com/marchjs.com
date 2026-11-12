@@ -4,18 +4,18 @@
 // keyed by full path ("/path": () => import(…)) so the size report budgets them as routes.
 import { lazy } from "hadi-march/lazy";
 import { motionTransition } from "./motion-route-meta.ts";
-import * as kit from "./motion-kit.tsx";
 import MotionMorph from "./pages/motion/morph.tsx";
 import MotionPages from "./pages/motion/pages.tsx";
+import MotionMicro from "./pages/motion/micro.tsx";
 
 // each page may pick its own transition (the page transition variants page: one per variant)
 export const meta = { transition: motionTransition }
 
-type Page = (p: { kit: typeof kit }) => unknown;
+type Page = (p: object) => unknown;
 const LAZY: Record<string, () => Promise<{ default: Page }>> = {
   "/motion/svg": () => import("./pages/motion/svg.tsx"),
 }
-const LOCAL: Record<string, Page> = { "/motion/morph": MotionMorph, "/motion/pages": MotionPages }
+const LOCAL: Record<string, Page> = { "/motion/morph": MotionMorph, "/motion/pages": MotionPages, "/motion/micro": MotionMicro }
 const VIEWS = new Map<string, Page>()
 
 export default function MotionHub(props: { params: { rest?: string } }) {
@@ -27,5 +27,5 @@ export default function MotionHub(props: { params: { rest?: string } }) {
   if (!load) return <p class="sc-lead">Sayfa bulunamadı.</p>
   let View = VIEWS.get(key)
   if (!View) VIEWS.set(key, (View = lazy(load, { placeholder: "card", height: "40rem" }) as Page))
-  return <View kit={kit} />
+  return <View />
 }

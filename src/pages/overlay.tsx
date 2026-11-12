@@ -1,5 +1,6 @@
 // Overlay: layers inside a container — video, image, SVG, canvas drawing and CSS effects — that never take input.
-import { Overlay, Button, TextInput, Card, Grid, toast, type DrawFn } from "hadi-march/ui";
+import { Overlay, Button, TextInput, Card, Grid, toast } from "hadi-march/ui";
+import type { DrawFn } from "hadi-march/ui";
 import { Demo, Section } from "../demo.tsx";
 import { Playground } from "../playground.tsx";
 

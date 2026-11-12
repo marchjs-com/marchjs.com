@@ -8,8 +8,7 @@ import { drawPath, morphPath, followPath } from "hadi-march/motion/svg.ts";
 import { clipReveal, type ClipShape, type ClipSide } from "hadi-march/motion/clip.ts";
 import { filterBlur, displace, goo } from "hadi-march/motion/svg-filter.ts";
 import { Section } from "../../demo.tsx";
-// the demo kit comes from the /motion/* hub (already loaded): importing it here would split 1 KB into a file of its own
-import type * as Kit from "../../motion-kit.tsx";
+import { MotionDemo, opt, EASES } from "../../playground.tsx";
 
 const star = (n: number, r1: number, r2: number): string => {
   const p: string[] = [];
@@ -27,8 +26,7 @@ const SHAPES: Record<string, { label: string; d: string }> = {
 
 const ROAD = "M20 128C70 20 130 18 160 84S250 160 300 36"
 
-export default function MotionSvg(props: { kit: typeof Kit }) {
-  const { MotionDemo, opt, EASES } = props.kit
+export default function MotionSvg() {
   document.title = "SVG animasyonları · HADI March"
   const live = new Set<Playback>()
   const keep = (p: Playback): Playback => { live.add(p); p.finished.then(() => live.delete(p), () => live.delete(p)); return p }

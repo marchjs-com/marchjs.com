@@ -4,7 +4,7 @@ import "../motion-pages.css";
 import { morph, morphBack, morphIcon, shapeMorph, MORPH_ICONS, type MorphIconName, type ShapeName } from "hadi-march/motion/morph.ts";
 import { Button } from "hadi-march/ui";
 import { Section } from "../../demo.tsx";
-import { MotionDemo, opt, EASES } from "../../motion-kit.tsx";
+import { MotionDemo, opt, EASES } from "../../playground.tsx";
 
 const PEOPLE = [
   { id: "a", name: "Ada", role: "Tasarım", tone: 1 },
