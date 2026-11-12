@@ -77,7 +77,7 @@ export default function Buttons() {
       </div>
     </Demo>
 
-    <ComponentDemo folder="chip" title="Chip: seçenekler" desc="Bileşen klasöründen (src/components/chip) gelen demo: seçenekler playground.ts'den, kod docs.md'den. Renk yalnız süzgeç çipinde ya da primary tonda etkili olduğu için yalnız o zaman görünür." />
+    <ComponentDemo folder="actions/chip" title="Chip: seçenekler" desc="Bileşen klasöründen (src/components/actions/chip) gelen demo: seçenekler playground.ts'den, kod docs.md'den. Renk yalnız süzgeç çipinde ya da primary tonda etkili olduğu için yalnız o zaman görünür." />
 
     <Demo title="Avatarlar ve klavye" desc="Baş harfler tema paletiyle; grup ve +N.">
       <div class="sc-row"><Avatar name="Elif Yılmaz" size="lg" /><Avatar name="Mert Demir" /><Avatar name="Zeynep Kaya" size="sm" />
