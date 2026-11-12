@@ -232,3 +232,16 @@
 .sc-tools { display: flex; align-items: center; gap: var(--hm-space-2); }
 .sc-tools-placeholder { width: 27rem; height: 2.25rem; }
 @media (max-width: 900px) { .sc-tools-placeholder { width: 8rem; } }
+
+/* shell portal targets: take no room while empty */
+.sc-target-title:empty, .sc-target-toolbar:empty, .sc-target-aside:empty, .sc-target-bottom:empty { display: none; }
+.sc-target-title, .sc-target-toolbar { display: flex; align-items: center; gap: var(--hm-space-2); }
+.sc-target-aside { position: fixed; inset-block: 4.5rem var(--hm-space-4); inset-inline-end: var(--hm-space-4); width: min(20rem, calc(100vw - 2rem)); overflow: auto; z-index: var(--hm-z-sticky);
+  padding: var(--hm-space-4); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); background: var(--hm-surface-raised); box-shadow: var(--hm-shadow-2); }
+/* router demo */
+.sc-router-cols { display: grid; gap: var(--hm-space-4); grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+@media (max-width: 760px) { .sc-router-cols { grid-template-columns: minmax(0, 1fr); } }
+.sc-router-list { display: grid; gap: var(--hm-space-2); margin: 0; padding: 0; list-style: none; }
+.sc-router-list li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-2); padding: var(--hm-space-2) var(--hm-space-3); border: 1px solid var(--hm-border-subtle); border-radius: var(--hm-radius-2); }
+.sc-router-list strong { margin-inline-end: auto; }
+.sc-router-pane { padding: var(--hm-space-4); border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-3); min-height: 8rem; }

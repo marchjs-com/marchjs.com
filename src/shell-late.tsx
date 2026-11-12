@@ -1,7 +1,9 @@
 // What the first paint does not need: command palette, toasts, commands, motion extras, the Speed page's network log.
 // Loaded right after the shell (when idle).
 import { t } from "hadi-march";
-import { CommandPalette, ToastHost, registerCommands, toast, setColorTheme, colorThemes, setTheme } from "hadi-march/ui";
+import { CommandPalette, ToastHost, Dialog, registerCommands, toast, setColorTheme, colorThemes, setTheme } from "hadi-march/ui";
+import { PortalTarget } from "hadi-march";
+import { Outlet } from "hadi-march/router";
 import { installTransitions, installFlip, pageTransitions } from "hadi-march/motion";
 import { palette, moon, sun, sparkles } from "hadi-march/icons";
 import "./perflog.ts";
@@ -17,5 +19,12 @@ export default function ShellLate() {
     { id: "mode-light", title: "Açık görünüm", group: "Görünüm", icon: sun, run: () => setTheme("light") },
     { id: "hello", title: "Bir bildirim göster", group: "Eylemler", icon: sparkles, keywords: "toast", run: () => toast("Merhaba! Bu bir March bildirimi.", { kind: "info" }) },
   ])
-  return [<CommandPalette placeholder="Sayfa, tema ya da eylem ara…" />, <ToastHost />]
+  return [
+    <CommandPalette placeholder="Sayfa, tema ya da eylem ara…" />, <ToastHost />,
+    // a page opened with <Link modal> shows here, over the current page (back closes it)
+    <Outlet name="modal">{(page: () => unknown, close: () => void) => <Dialog open onClose={close} title="Ayrıntı" size="md">{page()}</Dialog>}</Outlet>,
+    // shell places that pages can fill: a side panel and the center action of a bottom bar
+    <PortalTarget name="aside" as="aside" class="sc-target-aside" label="Yan panel" />,
+    <PortalTarget name="bottom-action" class="sc-target-bottom" />,
+  ]
 }

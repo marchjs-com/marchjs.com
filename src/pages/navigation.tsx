@@ -5,6 +5,7 @@ import {
   inbox, users, crown, shieldCheck, hourglass, wallet, diamond, receipt, creditCard, image, flag, eye, barChart, gauge, globe, settings, store, truck, packageBox, plus, minus,
 } from "hadi-march/icons";
 import { Demo, Section } from "../demo.tsx";
+import { Link } from "hadi-march/router";
 
 const SAMPLES = [
   ["TR", "Haftalık etkinlik özeti: Kadıköy koşu grubu, Moda sahili buluşması ve akşam yemeği"],
@@ -48,6 +49,17 @@ export default function Navigation() {
   const featured = [{ id: "support", label: "Destek talepleri", icon: inbox, badge: () => $waiting,
     sub: () => ($waiting ? `${$waiting} talep yanıt bekliyor` : "Yanıt bekleyen talep yok"), onSelect: () => { $picked = "Destek talepleri" } }]
   return <Section kicker="Bileşenler" title="Gezinme" lead="NavSidebar: büyük panellerin kenar çubuğu. Arama kutusu bütün öğeleri süzer; son ziyaretler ve açık kategoriler hatırlanır; klavyeyle tam gezilir; dar ekranda çekmece, geniş ekranda ikon rayına daraltılır. Bu vitrinin sol menüsü de aynı bileşen.">
+    <Demo wide title="Yönlendirici: kalıcı yerleşim, adlı outlet, modal rota" desc="İç içe yerleşim (sekme değişince yerleşimdeki metin kalır), yanda açılan kayıt (adreste ?~aside=), pencerede açılan kayıt (geri tuşu kapatır, yenileyince tam sayfa) ve üst çubuğa sayfanın kendi düğmeleri (Portal)."
+      code={`createRouter({
+  routes: { "/team": { load: () => import("./list.tsx"), layouts: [shell, teamLayout] } },
+  outlets: { aside: { "/item/:id": () => import("./item.tsx") } },
+})
+// teamLayout: <Outlet /> + <Outlet name="aside" />
+<Link href="/item/3" outlet="aside">Open beside</Link>
+<Link href="/team/item/3" modal>Open over the list</Link>
+<Portal to="toolbar"><Button>New record</Button></Portal>`}>
+      <Link href="/navigation/router" class="hm-btn hm-btn-primary">Yönlendirici demosunu aç</Link>
+    </Demo>
     <Demo wide title="Kurucu paneli kenar çubuğu" desc="Yaz: süzer (ö/o, ı/i katlanır). ↑ ↓ Home End gez, → kategoriyi aç, ← kapat ya da kategoriye dön, Enter seç. Rozet canlı: talep ekle."
       code={`<NavSidebar title="HADİ Kurucu Paneli"
   items={[{ id: "members", label: "Üyeler", icon: users, href: "/members", group: "Üyeler ve roller" }, …]}

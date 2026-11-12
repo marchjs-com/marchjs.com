@@ -12,7 +12,7 @@ interface Report { entry: ReportRow; routes: ReportRow[]; parts?: ReportRow[]; b
 /** "../../src/charts/xy.ts" → "hadi-march/charts/xy.ts" (library parts by their import name) */
 const LIB_PATH = /^(?:\.\.\/)+src\//
 const shortName = (n: string): string => n.replace(LIB_PATH, "hadi-march/")
-const KIND: Record<string, string> = { entry: "giriş", route: "sayfa", part: "parça" }
+const KIND: Record<string, string> = { entry: "giriş", route: "sayfa", layout: "yerleşim", part: "parça" }
 
 // a lazy component for the slow 3G demo: skeleton on its first arrival, instant afterwards (no skeleton when cached)
 const PieChart = lazy(() => import("hadi-march/charts/pie.ts"), { pick: "PieChart", when: "immediate", placeholder: "chart", height: "14rem" })

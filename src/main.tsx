@@ -9,6 +9,7 @@ import { render, setLocale } from "hadi-march";
 import { loadLocale } from "hadi-march/i18n";
 import { createRouter, Router } from "hadi-march/router";
 import { SHELL, PAGE_LOADING, PAGES, LOADERS } from "./app.tsx";
+const ROUTER_DEMO = () => import("./router-demo/_layout.tsx");
 
 // the Turkish pack is a lazy chunk (library texts switch to Turkish when it arrives)
 loadLocale("tr", () => import("hadi-march/i18n/tr"));
@@ -17,8 +18,16 @@ void setLocale("tr");
 createRouter({
   mode: "hash",
   // every page sits in the shell layout (kept alive while pages change)
-  routes: Object.fromEntries(PAGES.map((p) => [p.path, { load: LOADERS[p.path], layouts: [SHELL] }])),
-  title: (to: { path: string }) => { const p = PAGES.find((x) => x.path === to.path); return p && p.path !== "/" ? `${p.title} · HADI March` : "HADI March · Vitrin"; },
+  routes: {
+    ...Object.fromEntries(PAGES.map((p) => [p.path, { load: LOADERS[p.path], layouts: [SHELL] }])),
+    // router demo: a section layout under the shell (nested, kept while its tabs change) and a record page that opens
+    // beside (named outlet), over the list (modal route) or in full (direct visit)
+    "/navigation/router": { load: () => import("./router-demo/list.tsx"), layouts: [SHELL, ROUTER_DEMO] },
+    "/navigation/router/about": { load: () => import("./router-demo/about.tsx"), layouts: [SHELL, ROUTER_DEMO] },
+    "/navigation/router/item/:id": { load: () => import("./router-demo/item.tsx"), layouts: [SHELL] },
+  },
+  outlets: { aside: { "/item/:id": () => import("./router-demo/item.tsx") } },
+  title: (to: { path: string }) => { if (to.path.startsWith("/navigation/router")) return "Yönlendirici · HADI March"; const p = PAGES.find((x) => x.path === to.path); return p && p.path !== "/" ? `${p.title} · HADI March` : "HADI March · Vitrin"; },
 });
 
 const el = document.getElementById("app");
