@@ -19,6 +19,12 @@ const groups: Record<string, () => Promise<ApiExampleModule>> = {
   "ui-b4": () => import("./api-examples/ui-b4.tsx"),
   "ui-b5": () => import("./api-examples/ui-b5.tsx"),
   "ui-b6": () => import("./api-examples/ui-b6.tsx"),
+  "ui-c": () => import("./api-examples/ui-c.tsx"),
+  "ui-c2": () => import("./api-examples/ui-c2.tsx"),
+  "ui-c3": () => import("./api-examples/ui-c3.tsx"),
+  "ui-c4": () => import("./api-examples/ui-c4.tsx"),
+  "ui-c5": () => import("./api-examples/ui-c5.tsx"),
+  "ui-c6": () => import("./api-examples/ui-c6.tsx"),
   "ui-e": () => import("./api-examples/ui-e.tsx"),
   "ui-e2": () => import("./api-examples/ui-e2.tsx"),
 };
@@ -53,7 +59,7 @@ const bySubpath: Record<string, [group: string, first: string][]> = {
   "hadi-march/router": [["app-router","Link"]],
   "hadi-march/store": [["app","derive"]],
   "hadi-march/theme": [["platform","COLOR_TOKENS"]],
-  "hadi-march/ui": [["ui-b","Dialog"],["ui-b2","EasingCurveEditor"],["ui-b3","FileUpload"],["ui-b4","GradientEditor"],["ui-b5","ImageCropper"],["ui-b6","KeyValue"],["ui-e","accent"],["ui-e2","defineMeta"]],
+  "hadi-march/ui": [["ui-b","Dialog"],["ui-b2","EasingCurveEditor"],["ui-b3","FileUpload"],["ui-b4","GradientEditor"],["ui-b5","ImageCropper"],["ui-b6","KeyValue"],["ui-c","LocaleSelect"],["ui-c2","Menu"],["ui-c3","OverflowToolbar"],["ui-c4","PostCard"],["ui-c5","QUICK_REACTIONS"],["ui-c6","RichTextEditor"],["ui-e","accent"],["ui-e2","defineMeta"]],
 };
 /** The example file of an export (a lazy part, loaded once), or null when its subpath has none yet. */
 export const loadExamples = (subpath: string, name: string): Promise<ApiExampleModule> | null => {
