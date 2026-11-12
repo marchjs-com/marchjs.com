@@ -6,6 +6,7 @@ import { effect, onCleanup } from "hadi-march";
 import { Link, path, back } from "hadi-march/router";
 import { motion } from "hadi-march/motion/engine/motion.ts";
 import { usePageTransitions, PAGE_VARIANTS } from "hadi-march/motion/page-fx.ts";
+import { definePageTransition } from "hadi-march/motion/page.ts";
 import { Button } from "hadi-march/ui";
 import { Section } from "../../demo.tsx";
 import { MotionDemo, opt } from "../../motion-kit.tsx";
@@ -13,6 +14,15 @@ import { pageFx } from "../../motion-route-meta.ts";
 
 // every variant usable as meta.transition from now on
 usePageTransitions(...PAGE_VARIANTS)
+
+// a transition of your own: keyframes per side and direction (back plays the old page out on top)
+let spin = 180, depth = 0.6
+definePageTransition("spiral", (side, dir, rtl) => {
+  const k = (dir === "back" ? -1 : 1) * (rtl ? -1 : 1)
+  const away = { opacity: 0, transform: `rotate(${-k * spin}deg) scale(${depth})` }, here = { opacity: 1, transform: "none" }
+  if (side === "in") return dir === "forward" ? [{ ...away, zIndex: 2 }, { ...here, zIndex: 2 }] : [{ opacity: 1 }, { opacity: 1 }]
+  return dir === "back" ? [{ ...here, zIndex: 2 }, { ...away, zIndex: 2 }] : [here, { opacity: 0.4, transform: "scale(.96)" }]
+})
 
 const INFO: Record<string, { label: string; text: string; tone: string }> = {
   circle: { label: "Daire", text: "Yeni sayfa son basılan noktadan büyüyen bir daire içinde açılır; geri dönünce aynı noktaya kapanır.", tone: "o" },
@@ -25,6 +35,7 @@ const INFO: Record<string, { label: string; text: string; tone: string }> = {
   blinds: { label: "Panjur", text: "Dikey şeritler aynı anda açılır.", tone: "p" },
   pixel: { label: "Piksel", text: "Yeni sayfa hücre hücre, karışık sırayla belirir.", tone: "o" },
   morph: { label: "Morph", text: "Yeni sayfa basılan bağlantının kutusundan sayfa boyutuna büyür.", tone: "b" },
+  spiral: { label: "Sarmal", text: "Bu sayfanın kendi tanımladığı geçiş: definePageTransition ile dönerek büyür.", tone: "g" },
 }
 const NAMES = PAGE_VARIANTS.map((v) => v.name)
 
@@ -36,6 +47,8 @@ export default function MotionPages() {
   const v = current(), info = INFO[v]!
   let $dur = pageFx.duration.peek()
   let $rtl = rtlOn
+  let $spin = spin, $depth = Math.round(depth * 100)
+  effect(() => { spin = $spin; depth = $depth / 100 })
   effect(() => { pageFx.duration.set($dur) })
   effect(() => { rtlOn = $rtl; document.documentElement.setAttribute("dir", $rtl ? "rtl" : "ltr") })
   onCleanup(() => { if (!path().startsWith("/motion/pages")) { rtlOn = false; document.documentElement.setAttribute("dir", "ltr") } })
@@ -56,7 +69,7 @@ createRouter({ routes: {
       ]}>
       <div class={`sc-mo-scene sc-mo-t-${info.tone}`}>
         <span class="sc-mo-scene-ring" aria-hidden="true" /><span class="sc-mo-scene-ball" aria-hidden="true" />
-        <span class="sc-mo-scene-kicker">{`${NAMES.indexOf(v) + 1} / ${NAMES.length}`}</span>
+        <span class="sc-mo-scene-kicker">{NAMES.includes(v) ? `${NAMES.indexOf(v) + 1} / ${NAMES.length}` : "definePageTransition"}</span>
         <strong class="sc-mo-scene-title">{info.label}</strong>
         <p>{info.text}</p>
         <Button size="sm" variant="secondary" on:click={() => back()}>Geri</Button>
@@ -64,6 +77,28 @@ createRouter({ routes: {
       <nav class="sc-mo-variants" aria-label="Geçişler">
         {NAMES.map((n) => <Link href={`/motion/pages/${n}`} class={`sc-mo-variant sc-mo-t-${INFO[n]!.tone}`} aria-current={n === v ? "page" : undefined}>{INFO[n]!.label}</Link>)}
       </nav>
+    </MotionDemo>
+
+    <MotionDemo title="Kendi geçişin" desc="definePageTransition ile yeni bir ad eklenir: her taraf (giden, gelen) ve yön (ileri, geri) için keyframe döndür. Bu sayfanın Sarmal geçişi böyle tanımlı; açıyı ve derinliği değiştirip dene."
+      call={() => `definePageTransition("spiral", …rotate(${$spin}deg) scale(${($depth / 100).toFixed(2)})…)`}
+      code={`import { definePageTransition } from "hadi-march/motion"
+
+definePageTransition("spiral", (side, dir, rtl) => {
+  const k = (dir === "back" ? -1 : 1) * (rtl ? -1 : 1)
+  const away = { opacity: 0, transform: \`rotate(\${-k * 180}deg) scale(.6)\` }
+  const here = { opacity: 1, transform: "none" }, still = [{ opacity: 1 }, { opacity: 1 }]
+  if (side === "in") return dir === "forward" ? [away, here] : still      // forward: the new page spins in
+  return dir === "back" ? [here, away] : still                           // back: the old one spins out
+})
+// route: meta: { transition: "spiral" }`}
+      options={[
+        opt("Dönüş", () => $spin, (x: number) => { $spin = x }, { min: 0, max: 360, step: 15, unit: "°" }),
+        opt("Derinlik", () => $depth, (x: number) => { $depth = x }, { min: 20, max: 100, step: 5, unit: "%" }),
+      ]}>
+      <div class="sc-mo-custom">
+        <span class="sc-mo-custom-dial" aria-hidden="true" style={{ transform: `rotate(${$spin}deg) scale(${$depth / 100})` }} />
+        <Link href="/motion/pages/spiral" class="hm-btn hm-btn-primary">Sarmal ile git</Link>
+      </div>
     </MotionDemo>
 
     <MotionDemo title="Tek motor" desc="Geçişin her karesi motorun bir animasyonu: global hız onu da yavaşlatır, Tümünü durdur açıkken sayfa anında değişir."
