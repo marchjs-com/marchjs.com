@@ -1,7 +1,11 @@
 // İlk Adımlar: install, the first component, the march CLI, the project layout and where to go next.
 import { Button, LinkCard, Grid, KeyValue } from "hadi-march/ui";
 import { arrowRight } from "hadi-march/icons";
+import { lazy } from "hadi-march/lazy";
 import { Demo, Section } from "../demo.tsx";
+
+// every export of every subpath, generated from the JSDoc of the sources (tools/api-coverage.js)
+const ApiReference = lazy(async () => (await import("../api-reference.tsx")).load(), { when: "visible", placeholder: "card", height: "24rem" })
 
 function Counter() {
   let $n = 0
@@ -83,6 +87,14 @@ public/                copied as is`}>
     <Demo wide title="5. Sonraki adımlar" desc="Vitrindeki sayfalar canlı örneklerdir; her kartın Kod sekmesi kopyalanabilir.">
       <Grid cols={3} gap={3}>{NEXT.map((n) => <LinkCard href={n.href} title={n.title} description={n.desc} />)}</Grid>
       <div class="sc-row"><Button variant="primary" href="/language" iconEnd={arrowRight}>March diline geç</Button></div>
+    </Demo>
+
+    <Demo wide title="6. API başvurusu" desc="Her alt yolun her dışa aktarımı: türü ve tek satırlık açıklaması. Açıklamalar kaynaktaki JSDoc'tan üretilir; açıklaması olmayan dışa aktarım testleri kırar."
+      code={`import { createRouter, Link, navigate } from "hadi-march/router"
+import { lazy } from "hadi-march/lazy"
+import { Chip } from "hadi-march/actions"      // bileşenler kategorisinin alt yolundan
+import { Button, toast } from "hadi-march/ui"  // ya da hepsi tek yerden`}>
+      <ApiReference />
     </Demo>
   </Section>
 }
