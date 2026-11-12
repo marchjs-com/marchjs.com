@@ -1,0 +1,35 @@
+/* İlk Adımlar › API başvurusu (a lazy part: loaded with the reference, not at start-up). */
+.sc-api { display: grid; gap: var(--hm-space-3); width: 100%; min-width: 0; }
+.sc-api-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-3); }
+.sc-api-search { flex: 1 1 16rem; min-width: 0; }
+.sc-api-count { margin: 0; font-size: var(--hm-text-sm); color: var(--hm-muted); }
+.sc-api-group { display: grid; gap: var(--hm-space-2); min-width: 0; }
+.sc-api-sub { display: flex; align-items: baseline; gap: var(--hm-space-2); margin: var(--hm-space-2) 0 0; font-size: var(--hm-text-md); }
+.sc-api-n { font-size: var(--hm-text-xs); color: var(--hm-muted); font-weight: 500; }
+.sc-api-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--hm-space-2); margin: 0; padding: 0; list-style: none; }
+.sc-api-row { display: grid; align-content: start; gap: var(--hm-space-1); min-width: 0; padding: var(--hm-space-2) var(--hm-space-3); border: 1px solid var(--hm-border-subtle); border-radius: var(--hm-radius-2); background: var(--hm-surface);
+  transition: border-color var(--hm-dur-fast), background-color var(--hm-dur-fast); }
+.sc-api-row:hover:not(.sc-api-row-open) { border-color: var(--hm-primary); background: var(--hm-primary-soft); }
+.sc-api-head { display: flex; align-items: center; justify-content: space-between; gap: var(--hm-space-2); min-width: 0; }
+.sc-api-name { min-width: 0; overflow-wrap: anywhere; font-weight: 600; }
+.sc-api-sum { margin: 0; font-size: var(--hm-text-sm); color: var(--hm-text-2); overflow-wrap: anywhere; }
+.sc-api-also { margin: 0; font-size: var(--hm-text-xs); color: var(--hm-muted); overflow-wrap: anywhere; }
+.sc-api-empty { margin: 0; color: var(--hm-muted); }
+/* a card opens in place across the whole row: signature, example code, live result */
+.sc-api-toggle { display: grid; gap: var(--hm-space-1); width: 100%; min-width: 0; margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: start; cursor: pointer; border-radius: var(--hm-radius-1); }
+.sc-api-toggle:focus-visible { outline: 2px solid var(--hm-focus); outline-offset: 4px; }
+.sc-api-sum, .sc-api-also { display: block; }
+.sc-api-row-open { grid-column: 1 / -1; border-color: var(--hm-primary); }
+.sc-api-detail { display: grid; gap: var(--hm-space-3); min-width: 0; padding-block-start: var(--hm-space-2); border-block-start: 1px solid var(--hm-border-subtle); }
+.sc-api-block { display: grid; gap: var(--hm-space-1); min-width: 0; }
+.sc-api-label { margin: 0; font-size: var(--hm-text-xs); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--hm-muted); }
+.sc-api-sig { margin: 0; padding: var(--hm-space-2) var(--hm-space-3); overflow-x: auto; border-radius: var(--hm-radius-1); background: var(--hm-surface-2); font-family: var(--hm-font-mono); font-size: var(--hm-text-sm); white-space: pre-wrap; overflow-wrap: anywhere; }
+.sc-api-stage { min-height: 4rem; }
+.sc-api-note { margin: 0; font-size: var(--hm-text-sm); color: var(--hm-muted); }
+.sc-api-retry { margin-inline-start: var(--hm-space-2); padding: 0; border: 0; background: none; color: var(--hm-primary-text, var(--hm-primary)); font: inherit; text-decoration: underline; cursor: pointer; }
+/* small result widgets shared by the examples: a value readout and a log */
+.sc-ex-out { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-2); min-width: 0; }
+.sc-ex-val { padding: 0 var(--hm-space-2); border-radius: var(--hm-radius-1); background: var(--hm-surface-2); font-family: var(--hm-font-mono); font-size: var(--hm-text-sm); overflow-wrap: anywhere; }
+.sc-ex-log { display: grid; gap: 2px; max-height: 9rem; margin: 0; padding: var(--hm-space-2); overflow: auto; border-radius: var(--hm-radius-1); background: var(--hm-surface-2); font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); list-style: none; }
+.sc-ex-target { min-height: 2.5rem; padding: var(--hm-space-2); border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-1); }
+.sc-ex-layer { position: fixed; inset-block-end: var(--hm-space-4); inset-inline-end: var(--hm-space-4); padding: var(--hm-space-3); }
