@@ -36,7 +36,7 @@ const PLANS = [
 const VARIANTS = ["classic", "soft", "chip", "card", "toggle"] as const
 const VARIANT_LABEL: Record<string, string> = { classic: "classic (cilalı)", soft: "soft (yumuşak)", chip: "chip (hap)", card: "card (kart)", toggle: "toggle (düğme)", segmented: "segmented" }
 
-/** The same day picker in one variant (founder comparison). */
+/** The same day picker in one variant (side-by-side comparison). */
 function DayPicker(props: { variant: (typeof VARIANTS)[number]; color?: ColorToken; colors?: "brand"; size?: "sm" | "md" | "lg"; shape?: "square" | "rounded" | "circle" }) {
   let $value = props.variant === "card" ? ["team"] : ["mon", "fri"]
   return <div class="sc-choice-case">

@@ -17,7 +17,7 @@ const SAMPLES = [
 ] as const
 const CATEGORY_ICONS = { "Üyeler ve roller": users, "Ekonomi ve ödemeler": wallet, "İçerik ve moderasyon": image, "Raporlar ve analiz": barChart, "Mağaza ve ticaret": store }
 const ITEMS = [
-  { id: "founders", label: "Kurucular", icon: crown, group: "Üyeler ve roller" },
+  { id: "owners", label: "Yöneticiler", icon: crown, group: "Üyeler ve roller" },
   { id: "members", label: "Üyeler", icon: users, group: "Üyeler ve roller" },
   { id: "invites", label: "Davet bağlantıları ve toplu üye içe aktarma geçmişi", icon: users, group: "Üyeler ve roller" },
   { id: "roles", label: "Roller", icon: shieldCheck, group: "Üyeler ve roller" },
@@ -61,15 +61,15 @@ export default function Navigation() {
 <Portal to="toolbar"><Button>New record</Button></Portal>`}>
       <Link href="/navigation/router" class="hm-btn hm-btn-primary">Yönlendirici demosunu aç</Link>
     </Demo>
-    <Demo wide title="Kurucu paneli kenar çubuğu" desc="Yaz: süzer (ö/o, ı/i katlanır). ↑ ↓ Home End gez, → kategoriyi aç, ← kapat ya da kategoriye dön, Enter seç. Rozet canlı: talep ekle."
-      code={`<NavSidebar title="HADİ Kurucu Paneli"
+    <Demo wide title="Yönetim paneli kenar çubuğu" desc="Yaz: süzer (ö/o, ı/i katlanır). ↑ ↓ Home End gez, → kategoriyi aç, ← kapat ya da kategoriye dön, Enter seç. Rozet canlı: talep ekle."
+      code={`<NavSidebar title="Acme Yönetim"
   items={[{ id: "members", label: "Üyeler", icon: users, href: "/members", group: "Üyeler ve roller" }, …]}
   featured={[{ id: "support", label: "Destek talepleri", icon: inbox, href: "/support-tickets",
               badge: () => $pending, sub: () => $pending ? \`\${$pending} talep yanıt bekliyor\` : "Yanıt bekleyen talep yok" }]}
   recent={5} groupIcons={CATEGORY_ICONS} collapsible />`}>
       <div class="sc-sb-demo">
         <div class="sc-sb-frame">
-          <NavSidebar items={items} featured={featured} title="HADİ Kurucu Paneli" groupIcons={CATEGORY_ICONS} storageKey="sc.sb.demo" hotkey={false} recent={5} palette={false} label="Örnek kenar çubuğu" />
+          <NavSidebar items={items} featured={featured} title="Acme Yönetim" groupIcons={CATEGORY_ICONS} storageKey="sc.sb.demo" hotkey={false} recent={5} palette={false} label="Örnek kenar çubuğu" />
         </div>
         <Card title="Durum">
           <Stack gap={3}>
