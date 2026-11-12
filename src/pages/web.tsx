@@ -6,7 +6,8 @@ import "./web.css";
 import { computed, signal, effect, onCleanup } from "hadi-march";
 import { Link, query, navigate } from "hadi-march/router";
 import { colorThemes, loadTheme, ThemeSwatch } from "hadi-march/ui";
-import { Icon, arrowLeft, arrowRight, maximize, minimize, externalLink } from "hadi-march/icons";
+import { Icon, arrowLeft, arrowRight, maximize, minimize, externalLink, rotateCw } from "hadi-march/icons";
+import { DevicePreview, OverlayScope } from "hadi-march/components/layout/index.ts";
 import { Section } from "../demo.tsx";
 import { ComponentDemo, demoId } from "../component-demo.tsx";
 import { lazy } from "hadi-march/lazy";
@@ -28,7 +29,8 @@ const SAMPLES = [
 ] as const
 type Sample = typeof SAMPLES[number]
 const SOURCE = "https://github.com/tlghn/hadimarch/blob/main/examples/showcase/src/web/"
-const DEVICES = [{ id: "desktop", label: "Masaüstü", width: "" }, { id: "tablet", label: "Tablet", width: "834px" }, { id: "phone", label: "Telefon", width: "390px" }] as const
+// desktop: the full frame; the others: a real device body (DevicePreview) with touch
+const DEVICES = [{ id: "desktop", label: "Masaüstü" }, { id: "iphone-15", label: "iPhone" }, { id: "pixel-8", label: "Pixel" }, { id: "ipad", label: "iPad" }] as const
 const blockName = (folder: string): string => folder.split("-").map((w) => w[0]!.toUpperCase() + w.slice(1)).join("")
 
 function Blocks() {
@@ -64,7 +66,16 @@ function SampleView(props: { sample: Sample; view: () => unknown }) {
   const s = props.sample
   const at = SAMPLES.findIndex((x) => x.view === s.view)
   const prev = SAMPLES[(at + SAMPLES.length - 1) % SAMPLES.length]!, next = SAMPLES[(at + 1) % SAMPLES.length]!
-  const device = signal<string>("desktop"), full = signal(false), theme = signal<string>(""), rtl = signal(false), ready = signal(true)
+  const full = signal(false), theme = signal<string>(""), rtl = signal(false), ready = signal(true)
+  // device and rotation live in the address (?device=iphone-15&rotate=1): a shared link opens the same preview
+  const device = computed(() => { const d = String(query()["device"] ?? ""); return DEVICES.some((x) => x.id === d) ? d : "desktop" })
+  const rotate = computed(() => query()["rotate"] === "1")
+  const setQuery = (k: string, v: string | null): void => {
+    const u = new URLSearchParams(globalThis.location?.search ?? "")
+    if (v) u.set(k, v); else u.delete(k)
+    const q = u.toString()
+    void navigate(`/web/${s.view}${q ? `?${q}` : ""}` as never, { replace: true })
+  }
   // a theme for this preview only: its stylesheet first, then the frame switches
   effect(() => { const id = theme(); if (!id) { ready.set(true); return } ready.set(false); void loadTheme(id).then(() => ready.set(true)) })
   // full screen: the frame covers the window; Esc comes back
@@ -74,7 +85,6 @@ function SampleView(props: { sample: Sample; view: () => unknown }) {
     globalThis.addEventListener("keydown", esc)
     onCleanup(() => globalThis.removeEventListener("keydown", esc))
   })
-  const width = (): string => DEVICES.find((d) => d.id === device())?.width || "100%"
   const fullLabel = (): string => (full() ? "Tam ekrandan çık (Esc)" : "Tam ekran")
   return <div class={() => (full() ? "sc-sample-wrap is-full" : "sc-sample-wrap")}>
     <div class="sc-sample-head">
@@ -82,8 +92,9 @@ function SampleView(props: { sample: Sample; view: () => unknown }) {
       <Link href="/web" class="sc-sample-back"><Icon of={arrowLeft} /><span>Bloklar</span></Link>
       <strong class="sc-sample-name">{s.title}</strong>
       <div class="sc-seg" role="radiogroup" aria-label="Cihaz">
-        {DEVICES.map((d) => <button type="button" role="radio" class="sc-seg-btn" aria-checked={() => String(device() === d.id)} on:click={() => device.set(d.id)}>{d.label}</button>)}
+        {DEVICES.map((d) => <button type="button" role="radio" class="sc-seg-btn" aria-checked={() => String(device() === d.id)} on:click={() => setQuery("device", d.id === "desktop" ? null : d.id)}>{d.label}</button>)}
       </div>
+      {() => (device() === "desktop" ? null : <button type="button" class="sc-seg-btn sc-seg-solo" aria-pressed={() => String(rotate())} aria-label="Döndür" title="Döndür" on:click={() => setQuery("rotate", rotate() ? null : "1")}><Icon of={rotateCw} /></button>)}
       <div class="sc-seg" role="radiogroup" aria-label="Önizleme teması">
         <button type="button" role="radio" class="sc-seg-btn" aria-checked={() => String(theme() === "")} on:click={() => theme.set("")}>Sayfanınki</button>
         {colorThemes().map((th) => <button type="button" role="radio" class="sc-sample-swatch" title={th.name} aria-label={th.name} aria-checked={() => String(theme() === th.id)} on:click={() => theme.set(th.id)}><ThemeSwatch id={th.id} /></button>)}
@@ -100,10 +111,13 @@ function SampleView(props: { sample: Sample; view: () => unknown }) {
     </details>
     </div>
     <div class="sc-sample-stage">
-      <div class="sc-sample-device" style={() => ({ "--sc-device-w": width() })}
-        data-hm-theme={() => (theme() && ready() ? theme() : undefined)} dir={() => (rtl() ? "rtl" : undefined)}>
-        {props.view()}
-      </div>
+      {() => {
+        // the preview is its own world: its drawers and dialogs open inside it (OverlayScope), not on the showcase
+        const site = <div class="sc-sample-site" data-hm-theme={() => (theme() && ready() ? theme() : undefined)} dir={() => (rtl() ? "rtl" : undefined)}>{props.view()}</div>
+        return device() === "desktop"
+          ? <OverlayScope class="sc-sample-device">{site}</OverlayScope>
+          : <DevicePreview device={device()} landscape={rotate}>{site}</DevicePreview>
+      }}
     </div>
     <nav class="sc-sample-pager" aria-label="Örnek siteler">
       <Link href={`/web/${prev.view}` as never} class="sc-sample-step"><Icon of={arrowLeft} /><span><small>Önceki örnek</small>{prev.title}</span></Link>

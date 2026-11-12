@@ -31,3 +31,14 @@
 .sc-corner-demo { display: grid; gap: var(--hm-space-3); }
 .sc-corner-demo .sc-row { display: flex; flex-wrap: wrap; gap: var(--hm-space-2); }
 .sc-layout-demo .hm-skip { display: none; }
+/* OverlayScope demo */
+.sc-scope-demo { min-block-size: 16rem; border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-lg); overflow: hidden; background: var(--hm-surface); }
+.sc-scope-bar { display: flex; align-items: center; gap: var(--hm-space-2); padding: var(--hm-space-3); border-block-end: 1px solid var(--hm-border); }
+.sc-scope-bar strong { margin-inline-end: auto; }
+.sc-scope-body { padding: var(--hm-space-4); margin: 0; }
+.sc-scope-list, .sc-dev-menu { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--hm-space-2); }
+/* DevicePreview demo app */
+.sc-dev-app { font-size: var(--hm-text-md); }
+.sc-dev-head { position: sticky; top: 0; display: flex; align-items: center; justify-content: space-between; padding: var(--hm-space-3) var(--hm-space-4); background: var(--hm-surface); border-block-end: 1px solid var(--hm-border); }
+.sc-dev-list { margin: 0; padding: 0; list-style: none; }
+.sc-dev-list li { padding: var(--hm-space-3) var(--hm-space-4); border-block-end: 1px solid var(--hm-border); }

@@ -83,10 +83,9 @@
 .sc-chip-link { display: inline-flex; align-items: center; gap: var(--hm-space-1); padding: 2px var(--hm-space-2); border: 1px solid var(--hm-border); border-radius: 999px; text-decoration: none; color: var(--hm-text); }
 .sc-chip-link:hover { border-color: var(--hm-primary); color: var(--hm-primary); }
 .sc-sample-stage { padding: 0; background: var(--hm-surface-2); }
-.sc-sample-device { inline-size: min(100%, var(--sc-device-w, 100%)); margin-inline: auto; background: var(--hm-bg); color: var(--hm-text);
+.sc-sample-device { inline-size: 100%; background: var(--hm-bg); color: var(--hm-text);
   /* the blocks answer to this width (hm-site container: @container rules, cqi sizes), so a phone frame is a real phone */
   container: hm-site / inline-size; }
-.sc-sample-device[style*="390px"], .sc-sample-device[style*="834px"] { margin-block: var(--hm-space-4); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-lg); box-shadow: var(--hm-shadow-3); overflow: clip; }
 .sc-sample-pager { display: flex; justify-content: space-between; gap: var(--hm-space-3); padding: var(--hm-space-5) var(--hm-space-4); border-block-start: 1px solid var(--hm-border); }
 .sc-sample-step { display: inline-flex; align-items: center; gap: var(--hm-space-2); text-decoration: none; color: var(--hm-text); }
 .sc-sample-step small { display: block; color: var(--hm-muted); font-size: var(--hm-text-xs); }
@@ -140,3 +139,4 @@
 .sc-contact { display: flex; flex-direction: column; gap: var(--hm-space-3); align-items: stretch; }
 .sc-contact-field { display: flex; flex-direction: column; gap: var(--hm-space-1); font-size: var(--hm-text-sm); font-weight: var(--hm-weight-medium); }
 .sc-contact > .hm-btn { align-self: flex-start; }
+.sc-sample-site { background: var(--hm-bg); color: var(--hm-text); min-block-size: 100%; }
