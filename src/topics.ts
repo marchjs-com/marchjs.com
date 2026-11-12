@@ -151,6 +151,16 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "toast", title: "Toast", desc: "Engellemeyen kısa ileti; en fazla beş üst üste.", group: "Katmanlar" },
     { slug: "drawer", title: "Drawer", desc: "Dört kenar, sürükle, durma noktaları", group: "Katmanlar" },
   ],
+  "/themes": [
+    { slug: "presets", title: "Hazır temalar", desc: "Her kart kendi temasıyla çizildi (data-hm-theme kapsamı).", group: "Temalar" },
+    { slug: "theme-menu", title: "ThemeMenu", desc: "Karmaşık bileşen: açık / koyu / sistem, renk teması ve vurgu rengi tek açılır menüde; bölümler ThemePicker…", group: "Temalar" },
+    { slug: "theme-editor", title: "Kendi temanı yaz", desc: "Renkleri, yazı tiplerini ve yarıçapı seç; temanı dışa aktar.", group: "Temalar" },
+    { slug: "brand-colors", title: "Marka renkleri", desc: "HADİ Sosyal'ın dört resmi rengi (hadi_colors.dart ile birebir).", group: "Tokenlar" },
+    { slug: "color-tokens", title: "Renk tokenları", desc: "Etkin temanın anlamsal renkleri; koyu görünümde kendiliğinden değişir.", group: "Tokenlar" },
+    { slug: "palette", title: "Kategorik palet", desc: "Grafikler, avatarlar ve etiketler için 8 renk (tema başına).", group: "Tokenlar" },
+    { slug: "type-scale", title: "Yazı ölçeği", desc: "Gövde ve başlık yazı tipi temadan gelir (HADİ: Figtree + Bricolage Grotesque).", group: "Tokenlar" },
+    { slug: "radius-elevation", title: "Yarıçap ve yükselti", desc: "Yarıçap ölçeği temanın tek değerinden türer; gölgeler koyu görünümde halkaya dönüşür.", group: "Tokenlar" },
+  ],
 };
 
 /** Every topic as a sub page under its section (path, title, parent) for the routes, the breadcrumb and the menu. */
