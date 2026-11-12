@@ -50,7 +50,7 @@ export default function Navigation() {
   const items = ITEMS.map((x) => ({ ...x, onSelect: () => { $picked = x.label } }))
   const featured = [{ id: "support", label: "Destek talepleri", icon: inbox, badge: () => $waiting,
     sub: () => ($waiting ? `${$waiting} talep yanıt bekliyor` : "Yanıt bekleyen talep yok"), onSelect: () => { $picked = "Destek talepleri" } }]
-  return <Section kicker="Bileşenler" title="Gezinme" lead="NavSidebar: büyük panellerin kenar çubuğu. Arama kutusu bütün öğeleri süzer; son ziyaretler ve açık kategoriler hatırlanır; klavyeyle tam gezilir; dar ekranda çekmece, geniş ekranda ikon rayına daraltılır. Bu vitrinin sol menüsü de aynı bileşen.">
+  return <Section kicker="Gezinme" title="Gezinme" lead="NavSidebar: büyük panellerin kenar çubuğu. Arama kutusu bütün öğeleri süzer; son ziyaretler ve açık kategoriler hatırlanır; klavyeyle tam gezilir; dar ekranda çekmece, geniş ekranda ikon rayına daraltılır. Bu vitrinin sol menüsü de aynı bileşen.">
     <Demo wide title="Yönlendirici: kalıcı yerleşim, adlı outlet, modal rota" desc="İç içe yerleşim (sekme değişince yerleşimdeki metin kalır), yanda açılan kayıt (adreste ?~aside=), pencerede açılan kayıt (geri tuşu kapatır, yenileyince tam sayfa) ve üst çubuğa sayfanın kendi düğmeleri (Portal)."
       code={`createRouter({
   routes: { "/team": { load: () => import("./list.tsx"), layouts: [shell, teamLayout] } },
@@ -120,6 +120,7 @@ export default function Navigation() {
       </Playground>
       <div class="sc-mq-ticker"><Marquee text="Yeni: HADİ March vitrini · Grid fill ve balance · Taşan metin · Dört resmi renk" separator="✦" speed={50} /></div>
     </Demo>
+    <ComponentDemo folder="composite/nav-sidebar" title="NavSidebar: seçenekler" desc="Karmaşık bileşen: kategori sırası, ilk açılışta hangi kategorilerin açık olduğu, ikon rayına daraltma ve son kullanılanlar sayısı. Parçaları aşağıdaki satırda, her biri kendi sayfasına bağlı." />
     <ComponentDemo folder="composite/bottom-nav" title="BottomNav: mobil sekme çubuğu" desc="Etkin sekmeye kayan renkli baloncuk, sayı ve nokta rozetleri, ortada dört HADİ rengiyle dönen halkalı Oluştur düğmesi. Sohbet sekmesine geçince rozet sıfırlanır; Oluştur rozeti artırır." />
     <ComponentDemo folder="feedback/pull-to-refresh" title="PullToRefresh: çekerek yenile" desc="Listenin en üstünde aşağı çekin (dokunma ya da fare). Eşiği geçince bırakın: gösterge döner, yenileme bitince içerik yerine oturur. Klavyede Tab ile gelen Yenile düğmesi aynı işi yapar." />
   </Section>
