@@ -7,6 +7,7 @@ import {
   plus, download, trash, edit, copy, more, settings, send, heart, star, bell, search, filter, users, zap, shieldCheck, sparkles, globe, logOut, arrowRight, check,
 } from "hadi-march/icons";
 import { Demo, Section } from "../demo.tsx";
+import { ComponentDemo } from "../component-demo.tsx";
 
 export default function Buttons() {
   let $saving = false
@@ -75,6 +76,8 @@ export default function Buttons() {
         <Button size="sm" variant="ghost" icon={plus} on:click={() => { $tags = [...$tags, `Etiket ${$tags.length + 1}`] }}>Ekle</Button>
       </div>
     </Demo>
+
+    <ComponentDemo folder="chip" title="Chip: seçenekler" desc="Bileşen klasöründen (src/components/chip) gelen demo: seçenekler playground.ts'den, kod docs.md'den. Renk yalnız süzgeç çipinde ya da primary tonda etkili olduğu için yalnız o zaman görünür." />
 
     <Demo title="Avatarlar ve klavye" desc="Baş harfler tema paletiyle; grup ve +N.">
       <div class="sc-row"><Avatar name="Elif Yılmaz" size="lg" /><Avatar name="Mert Demir" /><Avatar name="Zeynep Kaya" size="sm" />
