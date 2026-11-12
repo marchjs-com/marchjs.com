@@ -30,3 +30,4 @@
 /* corner demo */
 .sc-corner-demo { display: grid; gap: var(--hm-space-3); }
 .sc-corner-demo .sc-row { display: flex; flex-wrap: wrap; gap: var(--hm-space-2); }
+.sc-layout-demo .hm-skip { display: none; }
