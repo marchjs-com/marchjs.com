@@ -78,15 +78,15 @@ const $left = $todos.filter((x) => !x.done).length   // derived (computed)
     </Demo>
 
     <Demo title="sx ve class:" desc="sx derlemede statik sınıflara döner (satır içi stil üretmez); class:ad={koşul} sınıfı açar/kapatır."
-      code={`<div sx={{ p: 4, gap: 2, cols: 3, radius: 3, shadow: 2 }}>…</div>
-<Badge class:sc-pulse={$big}>Canlı</Badge>`}>
-      <Toggle bind:value={$big} label="Vurgula" />
+      code={`<div sx={{ p: 3, radius: 3, shadow: 2 }}>…</div>   // → class="hm-p-3 hm-radius-3 hm-shadow-2"
+<div class="box" class:is-hot={$big}>…</div>         // $big true → class="box is-hot"`}>
+      <div class="sc-options"><Toggle bind:value={$big} label="Vurgula (class:is-hot)" /></div>
       <div sx={{ cols: 3, gap: 2 }}>
-        <div class="sc-sx" sx={{ p: 3, radius: 2 }}>p-3</div>
-        <div class="sc-sx" sx={{ p: 3, radius: 3, shadow: 2 }}>shadow-2</div>
-        <div class="sc-sx" sx={{ p: 3, radius: 4, shadow: 3 }}>shadow-3</div>
+        <div class="sc-sx" class:is-hot={$big} sx={{ p: 3, radius: 2 }}><code>{"sx={{ p: 3, radius: 2 }}"}</code><span>→ .hm-p-3 .hm-radius-2</span></div>
+        <div class="sc-sx" class:is-hot={$big} sx={{ p: 3, radius: 3, shadow: 2 }}><code>{"sx={{ p: 3, shadow: 2 }}"}</code><span>→ .hm-p-3 .hm-shadow-2</span></div>
+        <div class="sc-sx" class:is-hot={$big} sx={{ p: 3, radius: 4, shadow: 3 }}><code>{"sx={{ p: 3, shadow: 3 }}"}</code><span>→ .hm-p-3 .hm-shadow-3</span></div>
       </div>
-      <Badge tone="danger" dot class:sc-pulse={$big}>Canlı</Badge>
+      <div class="sc-row"><Badge tone="danger" dot class:sc-pulse={$big}>Canlı</Badge><span class="hm-muted">{() => ($big ? "class:is-hot açık: vurgu kenarlığı, yumuşak zemin, hafif büyütme" : "class:is-hot kapalı")}</span></div>
     </Demo>
 
     <Demo wide title="Kod sekmesi bir widget noktası" desc="Bütün Kod sekmeleri <Widget sources={[codeView]} /> ile çizilir. Varsayılan sağlayıcı CodeViewer (renkli, salt okunur); Kopyala ve Tam ekran ayrı widget'lardır. Anahtarı açınca ikinci bir sağlayıcı kaydedilir ve vitrindeki bütün Kod sekmeleri onu gösterir. Bir canlı kod editörü aynı noktaya sağlayıcı olarak eklenebilir."

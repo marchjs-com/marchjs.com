@@ -135,7 +135,12 @@
 .sc-todo.is-done .sc-check { border-color: var(--hm-success-solid); background: var(--hm-success-solid); box-shadow: inset 0 0 0 3px var(--hm-surface); }
 .sc-kv { display: flex; justify-content: space-between; align-items: baseline; gap: var(--hm-space-3); padding: .5rem 0; border-bottom: 1px solid var(--hm-border-subtle); }
 .sc-kv code { color: var(--hm-muted); font-size: var(--hm-text-sm); }
-.sc-sx { background: var(--hm-surface-2); border: 1px solid var(--hm-border); font-size: var(--hm-text-sm); text-align: center; }
+.sc-sx { display: grid; gap: var(--hm-space-1); justify-items: center; background: var(--hm-surface-2); border: 1px solid var(--hm-border); font-size: var(--hm-text-sm); text-align: center;
+  transition: transform .2s var(--hm-ease), border-color .2s, background-color .2s; }
+.sc-sx code { font-size: var(--hm-text-xs); overflow-wrap: anywhere; }
+.sc-sx span { color: var(--hm-muted); font-size: var(--hm-text-xs); }
+.sc-sx.is-hot { border-color: var(--hm-primary); background: var(--hm-primary-soft); transform: scale(1.03); }
+@media (prefers-reduced-motion: reduce) { .sc-sx.is-hot { transform: none; } }
 .sc-pulse { animation: sc-pulse 1.2s ease-in-out infinite; }
 @keyframes sc-pulse { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--hm-danger) 18%, transparent); } }
 .sc-skel-av { width: 2.5rem; height: 2.5rem; border-radius: 50%; }

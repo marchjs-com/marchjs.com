@@ -25,9 +25,9 @@ function MiniApp(props: { id: string; name: string; desc: string }) {
       <div><strong class="sc-mini-name">{props.name}</strong><span class="sc-mini-desc">{props.desc}</span></div>
     </header>
     <div class="sc-mini-body">
-      <div class="sc-row"><Avatar name="Elif Yılmaz" size="sm" /><span class="sc-mini-text">Haftalık özet hazır</span><Badge tone="success" dot>Canlı</Badge></div>
+      <div class="sc-row"><Avatar name="Elif Yılmaz" size="sm" /><span class="sc-mini-text">Haftalık özet hazır</span>{() => <Badge tone={$on ? "success" : "neutral"} dot>{$on ? "Canlı" : "Durdu"}</Badge>}</div>
       <Progress value={68} label="Hedef" showValue size="sm" />
-      <div class="sc-row"><Chip tone="primary" size="sm">Tasarım</Chip><Chip size="sm">Ürün</Chip><Toggle bind:value={$on} aria-label="Açık" /></div>
+      <div class="sc-row"><Chip tone="primary" size="sm">Tasarım</Chip><Chip size="sm">Ürün</Chip><Toggle bind:value={$on} aria-label="Canlı yayın" /></div>
       <div class="sc-row">
         <Button variant="primary" size="sm" icon={colorTheme() === props.id ? check : undefined} on:click={() => setColorTheme(props.id)}>{() => (colorTheme() === props.id ? "Seçili" : "Bu temayı kullan")}</Button>
         <Button size="sm" variant="ghost">Önizle</Button>
