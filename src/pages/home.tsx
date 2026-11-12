@@ -104,7 +104,7 @@ function Categories() {
     <Grid cols={4} minCol="16rem" gap={3} fill="stretch" equal>
       {cards.map((c, i) => <div class="sc-home-cat" use:reveal={{ delay: (i % 4) * 60 }}>
         <LinkCard href={c.own[0]!.path} icon={c.own[0]!.icon} tone={TONES[i % TONES.length]} title={c.group} meta={c.meta}
-          description={c.own.map((p) => p.title.replace(/^[^:]+:\s*/, "")).join(" · ")} />
+          description={[...new Set(c.own.map((p) => p.title.replace(/^[^:]+:\s*/, "").trim()).filter(Boolean))].join(" · ")} />
       </div>)}
     </Grid>
   </section>
