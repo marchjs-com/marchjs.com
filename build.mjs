@@ -12,7 +12,7 @@ const dist = join(here, "dist");
 export const CSP = "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types 'none'";
 
 if (!process.argv.includes("--serve") || !existsSync(dist)) {
-  execFileSync(process.execPath, [join(here, "..", "..", "cli", "march.js"), "build"], { cwd: here, stdio: "inherit" });
+  execFileSync(process.execPath, [join(here, "..", "..", "cli", "march.js"), "build"], { cwd: here, stdio: "inherit", env: { ...process.env, MARCH_SHOWCASE_SW: process.argv.includes("--serve") ? "1" : "0" } });
   // index.html: kökten mutlak yollar → göreli (alt klasörde ya da dosyadan barındırma)
   const html = join(dist, "index.html");
   writeFileSync(html, readFileSync(html, "utf8").replace(/(src|href)="\/(?!\/)/g, '$1="./'));

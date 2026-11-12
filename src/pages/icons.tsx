@@ -1,10 +1,11 @@
 // İkonlar: bütün set, arama, boyutlar. Her ikon ayrı dışa aktarım (kullanılmayanlar pakete girmez).
-import * as icons from "hadi-march/icons";
-import { Icon, isIconDef, type IconDef } from "hadi-march/icons";
+// the gallery reads the catalog (one separate module), so the icon set does not load with every page
+import { ICONS } from "hadi-march/icons/catalog";
+import { Icon, type IconDef } from "hadi-march/icons";
 import { SearchBox, toast, Segmented } from "hadi-march/ui";
 import { Demo, Section } from "../demo.tsx";
 
-const ALL = Object.entries(icons).filter(([, v]) => isIconDef(v)) as [string, IconDef][];
+const ALL = Object.entries(ICONS) as [string, IconDef][];
 
 export default function Icons() {
   let $q = ""

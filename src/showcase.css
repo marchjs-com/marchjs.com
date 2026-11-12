@@ -185,3 +185,12 @@
 .sc-mq-lang { flex: none; min-width: 4.5rem; font-size: var(--hm-text-sm); color: var(--hm-muted); }
 .sc-mq-text { flex: 1 1 auto; }
 .sc-mq-ticker { max-width: 26rem; padding: var(--hm-space-2) var(--hm-space-3); border-radius: var(--hm-radius-2); background: var(--hm-primary-soft); color: var(--hm-primary); font-weight: 500; }
+
+/* speed page */
+.sc-speed-n { font-family: var(--hm-font-display); font-weight: var(--hm-display-weight); font-size: var(--hm-text-2xl); font-variant-numeric: tabular-nums; }
+.sc-speed-scroll { max-height: 26rem; overflow: auto; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); }
+.sc-speed-table { width: 100%; border-collapse: collapse; font-size: var(--hm-text-sm); }
+.sc-speed-table th { position: sticky; top: 0; z-index: 1; background: var(--hm-surface-2); text-align: start; font-weight: 600; }
+.sc-speed-table th, .sc-speed-table td { padding: .375rem .625rem; border-bottom: 1px solid var(--hm-border-subtle); white-space: nowrap; }
+.sc-speed-file { display: flex; align-items: center; gap: var(--hm-space-2); }
+.sc-num { text-align: end; font-variant-numeric: tabular-nums; }

@@ -8,4 +8,7 @@ export default {
   html: "index.html",
   port: 5180,
   alias: { "hadi-march": "../../src" },
+  // sw.js only for the local preview (build.mjs --serve): the published showcase must not leave a worker registered
+  sw: process.env.MARCH_SHOWCASE_SW === "1",
+  budget: { entry: 15 * 1024, route: 60 * 1024 },
 };

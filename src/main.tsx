@@ -5,6 +5,7 @@ import "hadi-march/css/tokens.css";
 import "hadi-march/css/sx.css"; // components bring their own CSS (only what is used, split per page)
 import "hadi-march/motion/motion.css";
 import "./showcase.css";
+import "./perflog.ts"; // Hız sayfasının ağ paneli: açılıştan itibaren kaydeder
 import { render, messages, setLocale } from "hadi-march";
 import { createRouter } from "hadi-march/router";
 import { installTransitions, installFlip, pageTransitions } from "hadi-march/motion";
