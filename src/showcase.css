@@ -355,3 +355,34 @@ a.sc-part:hover, a.sc-part:focus-visible { border-color: var(--hm-primary); colo
 .sc-step-demo { min-inline-size: 0; }
 .sc-step-pane { display: grid; gap: var(--hm-space-2); padding: var(--hm-space-4); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); background: var(--hm-surface); }
 .sc-step-pane p { margin: 0; color: var(--hm-muted); }
+
+/* component cards: feedback, overlays and media stages */
+.sc-col { display: grid; gap: var(--hm-space-3); inline-size: 100%; min-inline-size: 0; }
+.sc-skel-card { display: grid; gap: var(--hm-space-3); padding: var(--hm-space-4); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); background: var(--hm-surface); }
+.sc-skel-real { padding: var(--hm-space-4); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); background: var(--hm-surface); }
+.sc-skel-real p { margin: var(--hm-space-1) 0 0; }
+.sc-ok { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-2); margin: 0; padding: var(--hm-space-3) var(--hm-space-4); border-radius: var(--hm-radius-3); background: var(--hm-success-soft); color: var(--hm-success-text); }
+.sc-loader-box { position: relative; display: grid; gap: var(--hm-space-1); min-block-size: 10rem; padding: var(--hm-space-4); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); background: var(--hm-surface); overflow: hidden; }
+.sc-loader-box p, .sc-loader-done { margin: 0; }
+.sc-car-slide { display: grid; place-content: center; justify-items: center; gap: var(--hm-space-1); aspect-ratio: 4 / 3; border-radius: var(--hm-radius-3); }
+.sc-car-slide strong { font-size: var(--hm-text-2xl, 1.5rem); }
+.sc-car-0 { background: var(--hm-brand-orange); color: var(--hm-on-brand-orange, var(--hm-on-cat-1)); }
+.sc-car-1 { background: var(--hm-brand-blue); color: var(--hm-on-brand-blue, var(--hm-on-cat-2)); }
+.sc-car-2 { background: var(--hm-brand-green); color: var(--hm-on-brand-green, var(--hm-on-cat-3)); }
+.sc-car-3 { background: var(--hm-brand-purple); color: var(--hm-on-brand-purple, var(--hm-on-cat-4)); }
+.sc-ov-card { position: relative; display: grid; justify-items: start; gap: var(--hm-space-2); min-block-size: 12rem; padding: var(--hm-space-5); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); background: var(--hm-surface); overflow: hidden; }
+.sc-ov-card strong { font-size: var(--hm-text-xl, 1.25rem); }
+.sc-ov-card p { margin: 0; }
+.sc-call { display: block; min-inline-size: 0; overflow-wrap: anywhere; font-family: var(--hm-font-mono, ui-monospace, monospace); font-size: var(--hm-text-xs, .75rem); color: var(--hm-muted); background: var(--hm-surface-2, var(--hm-bg-subtle)); border-radius: var(--hm-radius-2); padding: var(--hm-space-1) var(--hm-space-2); }
+.sc-dlg-mini { display: grid; place-items: center; padding: var(--hm-space-4); border-radius: var(--hm-radius-3); background: var(--hm-overlay); }
+.sc-dlg-mini-panel { display: grid; inline-size: 50%; border-radius: var(--hm-radius-3); background: var(--hm-surface-raised); box-shadow: var(--hm-shadow-3); overflow: hidden; transition: inline-size var(--hm-dur-slow) var(--hm-ease-out); }
+.sc-dlg-sm .sc-dlg-mini-panel { inline-size: 36%; } .sc-dlg-lg .sc-dlg-mini-panel { inline-size: 72%; } .sc-dlg-full .sc-dlg-mini-panel { inline-size: 100%; }
+.sc-dlg-mini-head { display: flex; justify-content: space-between; align-items: center; gap: var(--hm-space-2); padding: var(--hm-space-2) var(--hm-space-3); font-size: var(--hm-text-sm); }
+.sc-dlg-mini-x { color: var(--hm-muted); }
+.sc-dlg-mini-body { display: grid; gap: var(--hm-space-1); padding: 0 var(--hm-space-3) var(--hm-space-3); }
+.sc-dlg-mini-body.is-long { max-block-size: 3.25rem; overflow: hidden; box-shadow: inset 0 -8px 8px -8px var(--hm-border-strong); }
+.sc-dlg-mini-body span { display: block; block-size: .375rem; border-radius: 999px; background: var(--hm-surface-3); }
+.sc-dlg-mini-body span:nth-child(3n) { inline-size: 60%; }
+.sc-dlg-mini-foot { display: flex; justify-content: flex-end; gap: var(--hm-space-1); padding: var(--hm-space-2) var(--hm-space-3); border-block-start: 1px solid var(--hm-border-subtle); background: var(--hm-bg-subtle); }
+.sc-dlg-mini-foot span { inline-size: 2.5rem; block-size: .875rem; border-radius: var(--hm-radius-1); background: var(--hm-surface-3); }
+.sc-dlg-mini-foot .is-primary { background: var(--hm-primary); }

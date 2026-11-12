@@ -2,15 +2,21 @@
 import { schema } from "hadi-march/schema";
 import {
   Form, Field, TextInput, PasswordInput, NumberInput, MoneyInput, PhoneInput, Select, Combobox, MultiSelect, Checkbox, Toggle, RadioGroup, CheckboxGroup, Segmented,
-  Slider, ColorInput, CodeInput, DatePicker, DateRangePicker, Textarea, FileUpload, Rating, toast, Card, Grid,
+  Slider, ColorInput, CodeInput, Textarea, FileUpload, Rating, toast, Card, Grid,
 } from "hadi-march/ui";
 import { Icon, search, users, zap, shieldCheck, globe } from "hadi-march/icons";
 import type { ColorToken } from "hadi-march/theme";
 import { shapesFor } from "hadi-march/ui";
 import { Stack } from "hadi-march/ui";
+import { lazy } from "hadi-march/lazy";
 import { Demo, Section } from "../demo.tsx";
 import { Playground } from "../playground.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
+// the date pickers load from the same lazy part the form registry uses (hadi-march/forms/date.ts): imported here
+// statically, the date code would be a small file shared by this page and that part
+const date = () => import("hadi-march/forms/date.ts");
+const DatePicker = lazy(date, { pick: "DatePicker", placeholder: "block", height: "2.5rem" });
+const DateRangePicker = lazy(date, { pick: "DateRangePicker", placeholder: "block", height: "2.5rem" });
 
 const Signup = schema({
   name: { type: "text", label: "Ad soyad", required: true, max: 60, autocomplete: "name" },
@@ -198,6 +204,7 @@ export default function Forms() {
       <FileUpload multiple accept="image/*" maxSize={5_000_000} label="Görselleri bırak ya da seç" />
     </Demo>
 
+    <ComponentDemo folder="forms/rating" title="Rating: yıldızla puan" desc="Radyo grubu: oklarla değişir (RTL'de aynalanır), üstüne gelince önizler; salt okunurken yarım yıldız gösterir." />
     <ComponentDemo folder="composite/wizard" title="Wizard: adım adım form" desc="Karmaşık bileşen: her adımın kendi şeması; ileri giderken doğrular, geri dönünce değerler korunur, önceki adımlar geçince sonraki adıma üstteki listeden atlanır. Parçaları aşağıdaki satırda." />
   </Section>
 }

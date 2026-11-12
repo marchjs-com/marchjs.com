@@ -3,6 +3,7 @@ import { Overlay, Button, TextInput, Card, Grid, toast } from "hadi-march/ui";
 import type { DrawFn } from "hadi-march/ui";
 import { Demo, Section } from "../demo.tsx";
 import { Playground } from "../playground.tsx";
+import { ComponentDemo } from "../component-demo.tsx";
 
 const EFFECTS = ["glass", "gradient", "mesh", "noise", "vignette", "spotlight", "grid", "dots"] as const;
 const BLENDS = ["normal", "multiply", "screen", "overlay", "soft-light"] as const;
@@ -107,5 +108,8 @@ export default function OverlayPage() {
       </div>
       </Playground>
     </Demo>
+    <ComponentDemo folder="media/overlay" title="Overlay: efekt katmanı" desc="Kartın içinde, içeriğin arkasında ya da önünde; katman tıklama almaz, düğme çalışmaya devam eder." />
+    <ComponentDemo folder="media/media" title="Media: resim, video, ses" desc="Kabına sığar, türü uzantıdan anlar; yüklenemezse yedek metin gösterir. Pencerede açmak için openMedia." />
+    <ComponentDemo folder="media/carousel" title="Carousel: kaydır ve yaslan" desc="Geniş ekranda 1–4 slayt, telefonda bir slayt ve sonrakinin ucu; oklar uçlarda gizlenir, noktalar konumu gösterir." />
   </Section>
 }
