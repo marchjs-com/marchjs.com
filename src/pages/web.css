@@ -2,7 +2,7 @@
 .sc-site-frame { --hm-site-nav-top: 0px; position: relative; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-4); overflow: hidden; background: var(--hm-bg); isolation: isolate; }
 .sc-hero-frame .hm-hero-size-md { min-height: 30rem; }
 .sc-site-placeholder { display: grid; place-items: center; min-height: 6rem; border: 1px dashed var(--hm-border-strong); border-radius: var(--hm-radius-3); color: var(--hm-muted); }
-.sc-col { display: flex; flex-direction: column; align-items: flex-start; gap: var(--hm-space-4); }
+.sc-web-col { display: flex; flex-direction: column; align-items: flex-start; gap: var(--hm-space-4); }
 .sc-reveal-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: var(--hm-space-3); width: 100%; }
 .sc-reveal-card { display: flex; flex-direction: column; gap: var(--hm-space-1); padding: var(--hm-space-4); border-radius: var(--hm-radius-3); border: 1px solid var(--hm-border); background: var(--hm-surface); }
 .sc-counter-stage { display: grid; place-items: center; min-height: 9rem; }
