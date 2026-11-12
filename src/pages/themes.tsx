@@ -5,6 +5,7 @@ import { Button, Badge, Chip, Toggle, Progress, Avatar, AvatarGroup, colorThemes
 import { THEMES } from "hadi-march/theme";
 import { check } from "hadi-march/icons";
 import { Demo, Section } from "../demo.tsx";
+import { ComponentDemo } from "../component-demo.tsx";
 
 const BRAND = [
   ["orange", "Heyecan", "Vurgu (primary)", "#F2801F", "#FEF0E3"],
@@ -47,6 +48,7 @@ setColorTheme("neon")          // <html data-hm-theme="neon">
 <section data-hm-theme="night">…</section>   // only this section uses Night Blue`}>
       <div class="sc-mini-grid">{THEMES.map((th) => <MiniApp id={th.id} name={t(th.name)} desc={t(th.description ?? "")} />)}</div>
     </Demo>
+    <ComponentDemo folder="composite/theme-menu" title="ThemeMenu: tek menüde görünüm" desc="Karmaşık bileşen: açık / koyu / sistem, renk teması ve vurgu rengi tek açılır menüde; bölümler ThemePicker ve AccentPicker ile aynı. Parçaları aşağıdaki satırda." />
 
     <Demo wide title="Kendi temanı yaz" desc="defineTheme ile renkleri ver, themeCss ile derleme anında .css üret, registerThemes ile seçiciye ekle."
       code={`import { defineTheme, themeCss } from "hadi-march/theme"
