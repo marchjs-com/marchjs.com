@@ -6,7 +6,6 @@ import { lazy } from "hadi-march/lazy";
 import { motionTransition } from "./motion-route-meta.ts";
 import MotionMorph from "./pages/motion/morph.tsx";
 import MotionPages from "./pages/motion/pages.tsx";
-import MotionMicro from "./pages/motion/micro.tsx";
 
 // each page may pick its own transition (the page transition variants page: one per variant)
 export const meta = { transition: motionTransition }
@@ -14,8 +13,11 @@ export const meta = { transition: motionTransition }
 type Page = (p: object) => unknown;
 const LAZY: Record<string, () => Promise<{ default: Page }>> = {
   "/motion/svg": () => import("./pages/motion/svg.tsx"),
+  "/motion/micro": () => import("./pages/motion/micro.tsx"),
+  "/motion/scroll": () => import("./pages/motion/scroll.tsx"),
+  "/motion/lists": () => import("./pages/motion/lists.tsx"),
 }
-const LOCAL: Record<string, Page> = { "/motion/morph": MotionMorph, "/motion/pages": MotionPages, "/motion/micro": MotionMicro }
+const LOCAL: Record<string, Page> = { "/motion/morph": MotionMorph, "/motion/pages": MotionPages }
 const VIEWS = new Map<string, Page>()
 
 export default function MotionHub(props: { params: { rest?: string } }) {
