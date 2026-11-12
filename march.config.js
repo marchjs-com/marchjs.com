@@ -33,5 +33,6 @@ export default {
     "src/components/composite/consent-banner/index.ts": "the consent UI (hadi-march/managers/consent/ui), lazy on purpose: loaded by the managers page and the ConsentBanner card, never folded into the component registry",
     ".demos.gen.ts": "component cards of one showcase page (tools/gen-registry.js): joining the registry would make every page with a component card load them",
     "src/pages/editors.tsx": "a page of lazy editor cards (each card loads its own editor): grouping it would make its neighbours download nothing useful and regroup the other pages",
+    "src/components/composite/wizard/demo.tsx": "Wizard card's stage: it brings the form engine; folded into the component registry, every page with a component card would download it",
   } },
 };

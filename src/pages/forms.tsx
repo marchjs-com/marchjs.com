@@ -2,7 +2,7 @@
 import { schema } from "hadi-march/schema";
 import {
   Form, Field, TextInput, PasswordInput, NumberInput, MoneyInput, PhoneInput, Select, Combobox, MultiSelect, Checkbox, Toggle, RadioGroup, CheckboxGroup, Segmented,
-  Slider, ColorInput, CodeInput, DatePicker, DateRangePicker, Textarea, FileUpload, Rating, Wizard, toast, Card, Grid,
+  Slider, ColorInput, CodeInput, DatePicker, DateRangePicker, Textarea, FileUpload, Rating, toast, Card, Grid,
 } from "hadi-march/ui";
 import { Icon, search, users, zap, shieldCheck, globe } from "hadi-march/icons";
 import type { ColorToken } from "hadi-march/theme";
@@ -10,6 +10,7 @@ import { shapesFor } from "hadi-march/ui";
 import { Stack } from "hadi-march/ui";
 import { Demo, Section } from "../demo.tsx";
 import { Playground } from "../playground.tsx";
+import { ComponentDemo } from "../component-demo.tsx";
 
 const Signup = schema({
   name: { type: "text", label: "Ad soyad", required: true, max: 60, autocomplete: "name" },
@@ -197,14 +198,6 @@ export default function Forms() {
       <FileUpload multiple accept="image/*" maxSize={5_000_000} label="Görselleri bırak ya da seç" />
     </Demo>
 
-    <Demo wide title="Adım adım sihirbaz" desc="Her adımın kendi şeması; ileri giderken doğrular, geri dönünce değerler korunur.">
-      <Card>
-        <Wizard steps={[
-          { title: "Hesap", schema: schema({ email: { type: "email", label: "E-posta", required: true } }) },
-          { title: "Profil", schema: schema({ name: { type: "text", label: "Görünen ad", required: true }, city: { type: "pick", label: "Şehir", options: CITIES } }) },
-          { title: "Tercihler", schema: schema({ news: { type: "bool", label: "Haber bülteni", control: "switch" } }) },
-        ]} submitLabel="Bitir" onSubmit={() => toast("Kurulum tamam!", { kind: "success" })} />
-      </Card>
-    </Demo>
+    <ComponentDemo folder="composite/wizard" title="Wizard: adım adım form" desc="Karmaşık bileşen: her adımın kendi şeması; ileri giderken doğrular, geri dönünce değerler korunur, önceki adımlar geçince sonraki adıma üstteki listeden atlanır. Parçaları aşağıdaki satırda." />
   </Section>
 }
