@@ -2,7 +2,7 @@
 import { Button } from "hadi-march/ui";
 import { Form } from "hadi-march/forms";
 import { schema } from "hadi-march/schema";
-import { SiteNav, Hero, SiteSection, ProjectGrid, ProjectDetail, FeatureGrid, Roadmap, StatsBand, HorizontalScroll, SiteFooter, type Project } from "hadi-march/landing";
+import { SiteNav, Hero, SiteSection, ProjectGrid, ProjectDetail, FeatureGrid, Roadmap, StatsBand, HorizontalScroll, SiteFooter, type Project } from "hadi-march/components/landing/index.ts";
 import { sharedTransition } from "hadi-march/motion";
 import { arrowRight, palette, code, zap, globe, layers, users, mail, message } from "hadi-march/icons";
 import { PROJECTS, Cover } from "hadi-march/components/landing/project-grid/demo.tsx";

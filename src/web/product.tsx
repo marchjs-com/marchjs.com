@@ -1,6 +1,6 @@
 // Sample page: a product landing page built only from the website blocks (hadi-march/landing).
 import { Button } from "hadi-march/ui";
-import { SiteNav, Hero, LogoCloud, SiteSection, FeatureGrid, ScrollStory, StatsBand, Pricing, Testimonials, Faq, CtaBand, SiteFooter, ScrollProgress } from "hadi-march/landing";
+import { SiteNav, Hero, LogoCloud, SiteSection, FeatureGrid, ScrollStory, StatsBand, Pricing, Testimonials, Faq, CtaBand, SiteFooter, ScrollProgress } from "hadi-march/components/landing/index.ts";
 import { arrowRight, sparkles, globe, message, mail } from "hadi-march/icons";
 import { MockApp, Wordmark, LOGO_NAMES } from "hadi-march/components/landing/demo-kit.tsx";
 import { FEATURES } from "hadi-march/components/landing/feature-grid/demo.tsx";
@@ -10,7 +10,7 @@ import { PLANS } from "hadi-march/components/landing/pricing/demo.tsx";
 import { QUOTES } from "hadi-march/components/landing/testimonials/demo.tsx";
 import { FAQ } from "hadi-march/components/landing/faq/demo.tsx";
 import { FOOTER_COLUMNS } from "hadi-march/components/landing/site-footer/demo.tsx";
-import { Counter } from "hadi-march/landing";
+import { Counter } from "hadi-march/components/landing/index.ts";
 
 const LINKS = [
   { label: "Özellikler", href: "#p-features" }, { label: "Nasıl çalışır", href: "#p-story" },

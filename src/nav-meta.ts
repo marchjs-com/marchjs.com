@@ -1,6 +1,6 @@
 // Page descriptions, groups and icons for the side menu and the home page (kept out of the entry). A group is one of
 // MENU_GROUPS (src/components/categories.ts): İlk Adımlar, Temel, the component categories, Yöneticiler, Altyapı.
-import { activity, globe, film, alertCircle, barChart, code, cpu, dashboard, edit, gauge, grid, layers, menu, message, palette, search, server, zap } from "hadi-march/icons";
+import { activity, film, alertCircle, barChart, code, cpu, dashboard, edit, gauge, grid, layers, menu, message, palette, search, server, zap } from "hadi-march/icons";
 
 export interface PageMeta { desc: string; group?: string; icon: unknown }
 export const PAGE_META: Record<string, PageMeta> = {
@@ -30,6 +30,6 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/seo": { desc: "Rota başına head, OG/Twitter, JSON-LD, prerender, sitemap", group: "Altyapı", icon: search },
   "/managers-a11y": { desc: "Katman, odak, kısayol, duyurucu, erişilebilirlik tercihleri, kısayol ipuçları", group: "Yöneticiler", icon: cpu },
   "/managers-env": { desc: "Yöneticiler: boşta, çevrimdışı eşitleme, cihaz, izin, konum, bildirim, sekme, kaydırma, oturum süresi, varlık", group: "Yöneticiler", icon: cpu },
-  "/web": { desc: "Hero, menü, fiyatlar, yorumlar, portfolyo, sunum; 3 örnek sayfa", group: "Landing", icon: globe },
+  "/web": { desc: "Hero, menü, fiyatlar, yorumlar, portfolyo, sunum; 3 örnek sayfa", group: "Landing", icon: layers },
   "/language": { desc: "$ değişkenler, <For>, bind:, borular, sx", group: "Temel", icon: code },
 };

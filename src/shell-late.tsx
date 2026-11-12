@@ -7,8 +7,10 @@ import { Outlet } from "hadi-march/router";
 import { palette, moon, sun, sparkles } from "hadi-march/icons";
 import "./perflog.ts";
 
-// the motion engine (transitions, <For animate> FLIP, page transitions) is its own lazy part: the shell stays small
-void import("./motion-late.ts");
+// the motion engine (transitions, <For animate> FLIP, page transitions) is its own lazy part: the shell stays small.
+// Started from a microtask: when the build puts both modules in one start-up group, an import() during the group's own
+// evaluation would re-enter its lazy initialiser before it has returned (undefined.then).
+queueMicrotask(() => void import("./motion-late.ts"));
 
 export default function ShellLate() {
   registerCommands([

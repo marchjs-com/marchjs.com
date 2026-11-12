@@ -111,3 +111,5 @@
 .sc-cover.a4 { --sc-c1: var(--hm-brand-purple, var(--hm-cat-4)); --sc-c2: var(--hm-brand-orange, var(--hm-cat-1)); }
 .sc-cover.a5 { --sc-c1: var(--hm-cat-5); --sc-c2: var(--hm-cat-6); }
 .sc-cover.a6 { --sc-c1: var(--hm-cat-7); --sc-c2: var(--hm-cat-8); }
+.sc-deck-title { font-size: 6.2cqw !important; line-height: 1.02; }
+.sc-slides-title { margin: 0; font-size: var(--hm-text-xl); }
