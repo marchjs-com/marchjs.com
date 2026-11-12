@@ -4,12 +4,12 @@ import { appUrl } from "hadi-march/base";
 import { Button, Chip, Progress, toast } from "hadi-march/ui";
 import { untrack } from "hadi-march";
 import { lazy } from "hadi-march/lazy";
-import { factor, rank, unreliable } from "./core.ts";
+import { factor, rank, unreliable, overlaps } from "./core.ts";
 import { LIBS, BASELINE, libById } from "./libs.ts";
 import { FRAME_MS } from "./scenarios/core.ts";
 import { SCENARIOS, scenarioById } from "./scenarios/list.ts";
 import { SCENARIO_LIBS } from "./scenarios/libs.ts";
-import { runScenarios, type ScenarioRun, type ScenarioProgress } from "./scenarios/runner.ts";
+import { runScenarios, BUSY_MS, type ScenarioRun, type ScenarioProgress } from "./scenarios/runner.ts";
 import { Demo } from "../demo.tsx";
 
 const DemoCode = lazy(() => import("../demo-code.tsx"), { placeholder: "text", height: "16rem" })
@@ -80,6 +80,7 @@ export default function BenchScenarios() {
     <Demo wide title="Senaryo sonuçları" desc="Kare süresinin medyanı (işlem + stil + yerleşim + boyama), %95'lik dilim ve düşen kare sayısı; katsayı vanilla JS'e göredir. Kurulum: sayfanın kurulup ilk kez boyanması (kitaplık kodu önceden inmiş). Bellek: kurulan sayfanın JS yığını artışı (yalnız performance.memory veren tarayıcılarda, kaba).">
       {() => $result ? <div class="bt-results">
         <Choice label="Senaryo" value={$view} set={(v) => { $view = v }} options={SCENARIOS.filter((s) => $result!.results[s.id]).map((s) => ({ value: s.id, label: s.label }))} />
+        {() => $result!.busy.includes($view) ? <p class="bt-warn" role="status">Makine meşgul: bu senaryodan önce boş bir kare bile {BUSY_MS} ms'den uzun sürdü ve beklemek düzeltmedi (başka bir program çalışıyor). Sonuçlar güvenilir değil; diğer uygulamaları kapatıp yeniden çalıştır.</p> : null}
         {() => { const bad = rows().filter((x) => unreliable(x.stats)).map((x) => libById(x.id)?.name ?? x.id); return bad.length ? <p class="bt-warn" role="status">Sonuç güvenilir değil, makine meşgul: {bad.join(", ")} için sapma ya da güven aralığı medyanın %15'inden büyük.</p> : null }}
         <div class="bt-table-wrap">
           <table class="hm-table bt-table">
@@ -89,7 +90,7 @@ export default function BenchScenarios() {
               <td title={x.error ?? undefined}>{x.error ? "hata" : `${ms(x.stats.median)} ms`}</td>
               <td>{ms(p95(x.samples))} ms</td>
               <td>{x.dropped} / {x.samples.length}</td>
-              <td>{Number.isFinite(base()) ? `×${factor(x.stats.median, base()).toFixed(2)}` : "—"}</td>
+              <td>{Number.isFinite(base()) ? `×${factor(x.stats.median, base()).toFixed(2)}` : "—"}{x !== rows()[0] && !x.error && rows()[0] && overlaps(x.stats, rows()[0]!.stats) ? <span class="bt-factor" title="%95 güven aralığı en hızlıyla örtüşüyor"> · fark gürültü içinde</span> : null}</td>
               <td>{x.mountMs !== undefined ? `${ms(x.mountMs)} ms` : "—"}</td>
               <td>{x.heapMB !== undefined ? `${x.heapMB.toFixed(1)} MB` : "—"}</td>
             </tr>)}</tbody>
