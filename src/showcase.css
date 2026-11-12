@@ -211,3 +211,15 @@
 .sc-multi > :last-child { grid-column: 1 / -1; }
 @media (max-width: 900px) { .sc-multi { grid-template-columns: minmax(0, 1fr); } }
 .sc-choice-note { margin: 0; font-size: var(--hm-text-sm); }
+
+/* overlay page */
+.sc-ov-hero { min-height: 20rem; display: grid; place-items: center; padding: var(--hm-space-6); border-radius: var(--hm-radius-4); overflow: hidden; color: #fff; }
+.sc-ov-hero-body { display: grid; gap: var(--hm-space-3); width: min(30rem, 100%); padding: var(--hm-space-6); text-align: center; }
+.sc-ov-hero-body p { margin: 0; color: rgb(255 255 255 / .85); }
+.sc-ov-hero-body .sc-row { justify-content: center; flex-wrap: wrap; }
+.sc-ov-title { margin: 0; font-family: var(--hm-font-display); font-size: var(--hm-text-2xl); }
+.sc-ov-tile { min-height: 10rem; display: grid; place-items: end start; padding: var(--hm-space-3); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); overflow: hidden; background: var(--hm-surface-2); }
+.sc-ov-tall { min-height: 14rem; }
+.sc-ov-label { padding: .125rem .5rem; border-radius: var(--hm-radius-1); background: color-mix(in srgb, var(--hm-surface) 85%, transparent); font-size: var(--hm-text-sm); }
+.sc-ov-stage { min-height: 16rem; display: grid; place-items: center; padding: var(--hm-space-5); border: 1px dashed var(--hm-border-strong); border-radius: var(--hm-radius-3); overflow: hidden; }
+.sc-ov-content { width: min(18rem, 100%); }

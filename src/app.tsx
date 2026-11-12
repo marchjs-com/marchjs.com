@@ -29,6 +29,7 @@ export const LOADERS: Record<string, () => Promise<unknown>> = {
   "/speed": () => import("./pages/speed.tsx"),
   "/layout": () => import("./pages/layout.tsx"),
   "/navigation": () => import("./pages/navigation.tsx"),
+  "/overlay": () => import("./pages/overlay.tsx"),
   "/language": () => import("./pages/language.tsx"),
 };
 

@@ -16,6 +16,7 @@ export const PAGES: PageInfo[] = [
   { path: "/speed", title: "Hız", desc: "Tembel yükleme, ön yükleme ve önbellek: canlı ağ paneli", icon: gauge, group: "Temel" },
   { path: "/layout", title: "Yerleşim", desc: "Grid: taşmasız sütunlar, fill ve balance", icon: grid, group: "Bileşenler" },
   { path: "/navigation", title: "Gezinme", desc: "NavSidebar: arama, son kullanılanlar, kategoriler", icon: menu, group: "Bileşenler" },
+  { path: "/overlay", title: "Overlay", desc: "Video, resim, SVG, canvas ve cam katmanları", icon: layers, group: "Hareket" },
   { path: "/language", title: "March dili", desc: "$ değişkenler, <For>, bind:, borular, sx", icon: code, group: "Hareket" },
 ];
 

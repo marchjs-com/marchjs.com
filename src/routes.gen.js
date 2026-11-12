@@ -11,6 +11,7 @@ export default {
   "/layout": () => import("./pages/layout.tsx"),
   "/motion": () => import("./pages/motion.tsx"),
   "/navigation": () => import("./pages/navigation.tsx"),
+  "/overlay": () => import("./pages/overlay.tsx"),
   "/overlays": () => import("./pages/overlays.tsx"),
   "/speed": () => import("./pages/speed.tsx"),
   "/themes": () => import("./pages/themes.tsx"),
