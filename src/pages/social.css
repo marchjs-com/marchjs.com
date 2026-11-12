@@ -25,3 +25,10 @@
 .sc-social-tray > * { flex: none; }
 .sc-social-stories { display: flex; flex-direction: column; gap: var(--hm-space-2); width: 100%; min-width: 0; }
 .sc-social-link { align-self: flex-start; padding: 0; border: 0; background: none; color: var(--hm-primary-text); font: inherit; font-weight: 700; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.sc-social-typing { align-items: center; min-height: 3rem; }
+.sc-social-react { display: flex; flex-direction: column; align-items: center; gap: var(--hm-space-3); width: 100%; max-width: 26rem; margin-inline: auto; }
+.sc-social-bubbles { display: flex; flex-direction: column; gap: 2px; width: 100%; max-width: 26rem; margin-inline: auto; padding: var(--hm-space-3); border-radius: var(--hm-radius-4); background: var(--hm-bg); }
+.sc-social-bubbles > .hm-msg-first { margin-block-start: 0; } .sc-social-bubbles > .hm-msg-single { margin-block-start: .5rem; }
+.sc-social-chat .hm-chat { flex: 1; }
+.sc-social-composer { display: flex; flex-direction: column; gap: var(--hm-space-2); width: 100%; max-width: 26rem; margin-inline: auto; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-4); overflow: hidden; }
+.sc-social-sent { display: flex; flex-direction: column; gap: .25rem; min-height: 6rem; margin: 0; padding: var(--hm-space-3); list-style: none; font-size: var(--hm-text-sm); }

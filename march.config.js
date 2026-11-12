@@ -24,5 +24,6 @@ export default {
   chunks: { minSize: 10 * 1024, allow: {
     "src/i18n/tr.ts": "locale dictionary: downloaded only for Turkish, never grouped",
     "src/router/outlets.ts": "named / modal outlets (1.8 KB, no dependencies): joining any page group would make it pull that page",
+    ".demos.gen.ts": "component cards of one showcase page (tools/gen-registry.js): joining the registry would make every page with a component card load them",
   } },
 };
