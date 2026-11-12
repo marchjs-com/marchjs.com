@@ -19,7 +19,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/overlays": { desc: "Dialog, çekmece, toast, komut paleti", group: "Katmanlar", icon: message },
   "/feedback": { desc: "Uyarı, ilerleme, iskelet, boş, hata", group: "Geri bildirim", icon: alertCircle },
   "/animation": { desc: "Tek motor: keyframe, timeline, eğri, global hız ve durdurma", group: "Hareket", icon: film },
-  "/text-motion": { desc: `${HOME_STATS.animations.text} metin animasyonu: giriş, döngü, süsleme, daktilo, sayaç`, group: "Hareket", icon: edit },
+  "/text-motion": { desc: HOME_STATS.animations.text + " metin animasyonu: giriş, döngü, süsleme, daktilo, sayaç", group: "Hareket", icon: edit },
   "/transitions": { desc: "Rota başına geçiş, geri yönde ters, paylaşılan öğe, RTL", group: "Hareket", icon: layers },
   "/motion/svg": { desc: "Yol çizimi, şekil morph, yol boyunca, kırpma, SVG filtreleri", group: "Hareket", icon: activity },
   "/motion/morph": { desc: "Düğme → diyalog, kart → sayfa, paylaşılan öğe, ikon ve şekil morph", group: "Hareket", icon: layers },
