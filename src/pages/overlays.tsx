@@ -1,4 +1,4 @@
-// Pencereler ve bildirimler: Dialog, Drawer, onay, metin isteme, gerekçe, toast (geri alma), komut paleti.
+// Overlays: Dialog, Drawer, confirm, prompt, reason, toast (undo), command palette.
 import {
   Button, openDialog, openDrawer, confirm, prompt, askReason, toast, openPalette, Field, TextInput, Toggle, Stack, Kbd, Alert, Avatar, Badge, Divider,
 } from "hadi-march/ui";

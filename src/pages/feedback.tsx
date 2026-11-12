@@ -1,4 +1,4 @@
-// Durumlar: uyarılar, ilerleme, iskelet, dönen çark, boş durum, hata kutusu, yükleyici, bilgi notu.
+// Feedback: alerts, progress, skeleton, spinner, empty state, error box, loader, notice.
 import { Alert, Progress, Skeleton, Spinner, Empty, ErrorBox, Button, Card, Loader, Grid, Stack } from "hadi-march/ui";
 import { onCleanup } from "hadi-march";
 import { inbox, plus } from "hadi-march/icons";

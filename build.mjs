@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Vitrini statik derler: dist/ her yerden açılabilir (göreli yollar, hash yönlendirme). Kullanım: node examples/showcase/build.mjs
-// Sonra yerelde: node examples/showcase/build.mjs --serve (http://127.0.0.1:5181, sıkı CSP başlığıyla).
+// Builds the showcase as static files: dist/ opens from anywhere (relative paths, hash routing). Usage: node examples/showcase/build.mjs
+// Then locally: node examples/showcase/build.mjs --serve (http://127.0.0.1:5181, with a strict CSP header).
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { createServer } from "node:http";
@@ -13,13 +13,13 @@ export const CSP = "default-src 'none'; script-src 'self'; style-src 'self'; img
 
 if (!process.argv.includes("--serve") || !existsSync(dist)) {
   execFileSync(process.execPath, [join(here, "..", "..", "cli", "march.js"), "build"], { cwd: here, stdio: "inherit", env: { ...process.env, MARCH_SHOWCASE_SW: process.argv.includes("--serve") ? "1" : "0" } });
-  // index.html: kökten mutlak yollar → göreli (alt klasörde ya da dosyadan barındırma)
+  // index.html: root-absolute paths → relative (hosting in a subfolder or from files)
   const html = join(dist, "index.html");
   writeFileSync(html, readFileSync(html, "utf8").replace(/(src|href)="\/(?!\/)/g, '$1="./'));
   const walk = (d) => readdirSync(d).flatMap((n) => { const p = join(d, n); return statSync(p).isDirectory() ? walk(p) : [p]; });
   const bad = walk(dist).filter((p) => /\.(js|css|html)$/.test(p)).filter((p) => /innerHTML\s*=|insertAdjacentHTML|document\.write\(/.test(readFileSync(p, "utf8")));
-  if (bad.length) { console.error("✖ yasak desen:", bad); process.exit(1); }
-  console.log(`✔ vitrin: ${dist}`);
+  if (bad.length) { console.error("✖ forbidden pattern:", bad); process.exit(1); }
+  console.log(`✔ showcase: ${dist}`);
 }
 if (process.argv.includes("--serve")) {
   const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".json": "application/json" };
@@ -28,5 +28,5 @@ if (process.argv.includes("--serve")) {
     if (!p.startsWith(dist) || !existsSync(p) || statSync(p).isDirectory()) p = join(dist, "index.html");
     res.writeHead(200, { "content-type": TYPES[extname(p)] ?? "application/octet-stream", "content-security-policy": CSP });
     res.end(readFileSync(p));
-  }).listen(5181, "127.0.0.1", () => console.log("vitrin: http://127.0.0.1:5181/"));
+  }).listen(5181, "127.0.0.1", () => console.log("showcase: http://127.0.0.1:5181/"));
 }

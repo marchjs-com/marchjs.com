@@ -1,4 +1,4 @@
-// March dili: $ değişkenler, türetilmiş değerler, <For>/<If>/<Switch>, bind:, on:…|prevent, class:, borular, sx, async bileşen.
+// The March language: $ variables, derived values, <For>/<If>/<Switch>, bind:, on:…|prevent, class:, pipes, sx, async components.
 import { Card, Button, TextInput, Field, Toggle, Badge, Stack, Segmented } from "hadi-march/ui";
 import { Demo, Section } from "../demo.tsx";
 
@@ -22,7 +22,7 @@ export default function Language() {
     <Demo wide title="Yapılacaklar: $, türetme, <For>, bind:, on:submit|prevent" desc="Bileşen bir kez çalışır; yalnız değişen satır güncellenir."
       code={`let $todos = [...]
 let $draft = ""
-const $left = $todos.filter((x) => !x.done).length   // türetilmiş (computed)
+const $left = $todos.filter((x) => !x.done).length   // derived (computed)
 
 <form on:submit|prevent={add}>
   <TextInput bind:value={$draft} />
@@ -51,9 +51,9 @@ const $left = $todos.filter((x) => !x.done).length   // türetilmiş (computed)
     </Demo>
 
     <Demo title="Borular (pipes)" desc="{değer | boru(arg)}: Intl tabanlı, dile duyarlı biçimleme."
-      code={`{$fiyat | money("TRY")}
-{$zaman | relative}
-{$ad | title}
+      code={`{$price | money("TRY")}
+{$time | relative}
+{$name | title}
 {1234567 | compact}`}>
       <Stack gap={2}>
         <div class="sc-kv"><code>money("TRY")</code><strong>{$price | money("TRY")}</strong></div>

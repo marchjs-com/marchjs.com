@@ -1,5 +1,5 @@
-// Yerleşim: Grid'in son satır davranışları (varsayılan / fill="stretch" / fill="last" / balance) yan yana; kart sayısı,
-// sütun sayısı ve kapsayıcı genişliği değiştirilebilir. Hepsi yalnız CSS (flex-wrap + :has()), JS ölçümü yok.
+// Layout: the Grid's last-row behaviours (default / fill="stretch" / fill="last" / balance) side by side; card count,
+// columns and container width are adjustable. All CSS (flex-wrap + :has()), no JS measuring.
 import { Grid, Segmented, Slider, Field, Card, Badge } from "hadi-march/ui";
 import { Demo, Section } from "../demo.tsx";
 
@@ -30,11 +30,11 @@ export default function Layout() {
   }
   return <Section kicker="Bileşenler" title="Yerleşim" lead="Grid hiçbir genişlikte yatay taşmaz. Son satır için isteğe bağlı fill (stretch: kalan alanı eşit paylaş, last: son kart genişlesin) ve balance (satırlara dengeli dağıt). Yalnız CSS; telefonda tek sütun.">
     <Demo wide title="Canlı karşılaştırma" desc="Kart sayısını, sütunu ve kapsayıcı genişliğini değiştir; seçili mod tam genişlikte, altında beşi yan yana."
-      code={`<Grid cols={4} gap={3}>…</Grid>                 // varsayılan: hizalı sütunlar
-<Grid cols={4} fill="stretch">…</Grid>           // son satır alanı eşit paylaşır
+      code={`<Grid cols={4} gap={3}>…</Grid>                 // default: aligned columns
+<Grid cols={4} fill="stretch">…</Grid>           // the last row shares the space
 <Grid cols={4} fill="last">…</Grid>              // son kart kalan alana uzar
-<Grid cols={4} balance>…</Grid>                  // 5 kart → 3 + 2 (4 + 1 değil)
-<Grid min="17rem" fill="stretch">…</Grid>        // otomatik sütun + doldur`}>
+<Grid cols={4} balance>…</Grid>                  // 5 cards → 3 + 2 (not 4 + 1)
+<Grid min="17rem" fill="stretch">…</Grid>        // automatic columns + fill`}>
       <div class="sc-row sc-row-between">
         <Segmented bind:value={$mode} aria-label="Mod" options={MODES} />
         <Segmented bind:value={$cols} aria-label="Sütun" options={["2", "3", "4", "5", "6"].map((v) => ({ value: v, label: `${v} sütun` }))} />

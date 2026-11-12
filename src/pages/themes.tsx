@@ -1,15 +1,16 @@
+import { t } from "hadi-march";
 import "hadi-march/css/themes.css"; // the gallery shows every theme at once (other pages load themes on demand)
-// Temalar ve tokenlar: her tema kendi kapsamında gerçek bileşenlerle (data-hm-theme), renk/yazı/yarıçap/gölge tokenları.
+// Themes and tokens: each theme scoped with real components (data-hm-theme); color, type, radius and shadow tokens.
 import { Button, Badge, Chip, Toggle, Progress, Avatar, AvatarGroup, colorThemes, setColorTheme, colorTheme, ThemeSwatch } from "hadi-march/ui";
 import { THEMES } from "hadi-march/theme";
 import { check } from "hadi-march/icons";
 import { Demo, Section } from "../demo.tsx";
 
 const BRAND = [
-  ["heyecan", "Heyecan", "Vurgu (primary)", "#F2801F", "#FEF0E3"],
-  ["aktivite", "Aktivite", "Bilgi (info)", "#1D9AD6", "#E5F4FB"],
-  ["dostluk", "Dostluk", "Başarı (success)", "#78BE3A", "#EEF7E5"],
-  ["iletisim", "İletişim", "Özel (special)", "#A3338C", "#F6E8F3"],
+  ["orange", "Heyecan", "Vurgu (primary)", "#F2801F", "#FEF0E3"],
+  ["blue", "Aktivite", "Bilgi (info)", "#1D9AD6", "#E5F4FB"],
+  ["green", "Dostluk", "Başarı (success)", "#78BE3A", "#EEF7E5"],
+  ["purple", "İletişim", "Özel (special)", "#A3338C", "#F6E8F3"],
 ] as const
 const COLORS = [
   ["bg", "Zemin"], ["surface", "Yüzey"], ["surface-2", "Yüzey 2"], ["border", "Çizgi"], ["text", "Metin"], ["muted", "İkincil metin"],
@@ -42,9 +43,9 @@ export default function Themes() {
       code={`import { setColorTheme, ThemePicker } from "hadi-march/ui"
 
 setColorTheme("neon")          // <html data-hm-theme="neon">
-<ThemePicker />                 // üst çubuk: tema + açık/koyu/sistem
-<section data-hm-theme="gece">…</section>   // yalnız bu bölüm Gece Mavisi`}>
-      <div class="sc-mini-grid">{THEMES.map((th) => <MiniApp id={th.id} name={th.name} desc={th.description ?? ""} />)}</div>
+<ThemePicker />                 // top bar: theme + light/dark/system
+<section data-hm-theme="night">…</section>   // only this section uses Night Blue`}>
+      <div class="sc-mini-grid">{THEMES.map((th) => <MiniApp id={th.id} name={t(th.name)} desc={t(th.description ?? "")} />)}</div>
     </Demo>
 
     <Demo wide title="Kendi temanı yaz" desc="defineTheme ile renkleri ver, themeCss ile derleme anında .css üret, registerThemes ile seçiciye ekle."
@@ -56,19 +57,19 @@ export const acme = defineTheme({
            primary: "#0E7490", solid: "#0E7490", onSolid: "#FFF", /* … */ },
   dark:  { /* … */ },
 })
-fs.writeFileSync("acme.css", themeCss(acme))   // derleme betiğinde
+fs.writeFileSync("acme.css", themeCss(acme))   // in the build script
 registerThemes([{ id: "acme", name: "Acme" }])   // uygulamada`}>
-      <p class="hm-muted">Hazır temalar: {colorThemes().map((x) => x.name).join(" · ")}</p>
+      <p class="hm-muted">Hazır temalar: {colorThemes().map((x) => t(x.name)).join(" · ")}</p>
     </Demo>
 
     <Demo wide title="Marka renkleri" desc="HADİ Sosyal'ın dört resmi rengi (hadi_colors.dart ile birebir). Yazı rengi zemine göre okunurluk kuralıyla seçilir: beyaz en az 2,6:1 veriyorsa beyaz, yoksa koyu; metin olarak kullanılan tonu AA (4,5:1) için koyulaştırılır."
-      code={`--hm-heyecan · --hm-heyecan-soft · --hm-on-heyecan · --hm-heyecan-text
---hm-aktivite · --hm-dostluk · --hm-iletisim (aynı dörtlü)
-primary/accent = Heyecan · info = Aktivite · success = Dostluk · special = İletişim · danger = error`}>
+      code={`--hm-brand-orange · --hm-brand-orange-soft · --hm-on-brand-orange · --hm-brand-orange-text
+--hm-brand-blue · --hm-brand-green · --hm-brand-purple (same four tokens each)
+primary = brand-orange · info = brand-blue · success = brand-green · special = brand-purple · danger = error`}>
       <div class="sc-brands" data-hm-theme="hadi">
         {BRAND.map(([id, name, role, hex, soft]) => <div class={`sc-brand sc-b-${id}`}>
           <div class="sc-brand-fill"><strong>{name}</strong><span>{hex}</span></div>
-          <div class="sc-brand-soft"><span class="sc-brand-text">{role}</span><code>--hm-{id}</code><span class="hm-muted">soft {soft}</span></div>
+          <div class="sc-brand-soft"><span class="sc-brand-text">{role}</span><code>--hm-brand-{id}</code><span class="hm-muted">soft {soft}</span></div>
         </div>)}
       </div>
       <div class="sc-ribbon" data-hm-theme="hadi" aria-hidden="true" />

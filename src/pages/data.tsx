@@ -1,5 +1,5 @@
-// Veri: 10.000 satırlık tablo (sıralama, süzgeç, seçim, sanal kaydırma, sütun boyutlama), ağaç, pano, adımlar, sayfalama,
-// akordeon, zaman çizelgesi, anahtar-değer, bölünebilir panel, kaydırmalı galeri.
+// Data: a 10,000-row table (sorting, filters, selection, virtual scrolling, column sizing), tree, kanban, steps, pagination,
+// accordion, timeline, key-value, splitter, carousel.
 import { Table } from "hadi-march/table";
 import {
   Badge, Avatar, Tree, Kanban, Steps, Pagination, Accordion, Timeline, KeyValue, Splitter, Carousel, Card, Button, Chip, toast, action, Stack, IconTile, Rating,
@@ -10,12 +10,14 @@ import { Demo, Section } from "../demo.tsx";
 const FIRST = ["Elif", "Mert", "Zeynep", "Can", "Ayşe", "Emre", "Selin", "Burak", "Ece", "Kerem", "Derya", "Onur", "Deniz", "Arda", "İpek", "Kaan"];
 const LAST = ["Yılmaz", "Demir", "Kaya", "Arslan", "Çelik", "Şahin", "Aydın", "Öztürk", "Koç", "Polat", "Aksoy", "Kılıç"];
 const CITY = ["İstanbul", "Ankara", "İzmir", "Bursa", "Antalya", "Konya", "Adana", "Trabzon"];
-const STATUS = ["Etkin", "Davetli", "Askıda"];
-const TONE: Record<string, string> = { Etkin: "success", Davetli: "info", Askıda: "warn" };
+const STATUS = ["active", "invited", "suspended"] as const;
+const STATUS_LABEL: Record<string, string> = { active: "Etkin", invited: "Davetli", suspended: "Askıda" };
+const STATUS_OPTIONS = STATUS.map((value) => ({ value, label: STATUS_LABEL[value] }));
+const TONE: Record<string, string> = { active: "success", invited: "info", suspended: "warn" };
 const rnd = (i: number, m: number) => ((i * 2654435761) >>> 0) % m;
 const ROWS = Array.from({ length: 10_000 }, (_, i) => ({
   id: i + 1, name: `${FIRST[rnd(i, FIRST.length)]} ${LAST[rnd(i * 7 + 3, LAST.length)]}`, city: CITY[rnd(i * 13 + 5, CITY.length)],
-  status: STATUS[rnd(i * 7 + 2, 10) < 6 ? 0 : rnd(i * 5 + 1, 10) < 6 ? 1 : 2], elmas: rnd(i * 31 + 7, 25000), joined: Date.UTC(2024, 0, 1) + rnd(i * 17, 680) * 864e5, score: 1 + rnd(i * 11, 5),
+  status: STATUS[rnd(i * 7 + 2, 10) < 6 ? 0 : rnd(i * 5 + 1, 10) < 6 ? 1 : 2], diamonds: rnd(i * 31 + 7, 25000), joined: Date.UTC(2024, 0, 1) + rnd(i * 17, 680) * 864e5, score: 1 + rnd(i * 11, 5),
 }))
 
 const FILES = [
@@ -45,17 +47,17 @@ export default function Data() {
   const suspend = action("Askıya al", async () => { await new Promise((r) => setTimeout(r, 300)) }, { icon: trash, danger: true, confirm: "Seçilenler askıya alınsın mı?", success: "Askıya alındı" })
   return <Section kicker="Bileşenler" title="Veri" lead="10.000 satır sanal kaydırmayla akar; yalnız görünen satırlar çizilir. Sıralama, süzgeç çipleri, seçim ve toplu işlemler, sütun gizleme/taşıma/boyutlama, CSV dışa aktarma.">
     <Demo wide title="Tablo · 10.000 satır" desc="Başlığa tıkla: sırala (Shift ile çoklu). Sütunlar menüsü, satır seçimi ve alttaki toplu işlem çubuğu."
-      code={`<Table rows={üyeler} virtual height={480} rowHeight={48} selectable
+      code={`<Table rows={members} virtual height={480} rowHeight={48} selectable
   columns={[{ key: "name", label: "Üye", render: (r) => <Avatar …/> },
-            { key: "status", filter: "select", options: DURUMLAR }, …]}
-  bulkActions={[davet, askıyaAl]} />`}>
-      <Table rows={ROWS} rowKey="id" virtual height={480} rowHeight={48} paging={false} selectable bulkActions={[invite, suspend]} filename="uyeler" caption="Üyeler"
+            { key: "status", filter: "select", options: STATUSES }, …]}
+  bulkActions={[invite, suspend]} />`}>
+      <Table rows={ROWS} rowKey="id" virtual height={480} rowHeight={48} paging={false} selectable bulkActions={[invite, suspend]} filename="members" caption="Üyeler"
         columns={[
           { key: "id", label: "#", align: "end", width: 64 },
           { key: "name", label: "Üye", width: 220, render: (r: typeof ROWS[number]) => <span class="sc-row sc-nowrap"><Avatar name={r.name} size="sm" />{r.name}</span> },
           { key: "city", label: "Şehir", filter: "select", options: CITY },
-          { key: "status", label: "Durum", filter: "select", options: STATUS, render: (r: typeof ROWS[number]) => <Badge tone={TONE[r.status]} dot>{r.status}</Badge> },
-          { key: "elmas", label: "Elmas", align: "end", format: "number" },
+          { key: "status", label: "Durum", filter: "select", options: STATUS_OPTIONS, render: (r: typeof ROWS[number]) => <Badge tone={TONE[r.status]} dot>{STATUS_LABEL[r.status]}</Badge> },
+          { key: "diamonds", label: "Elmas", align: "end", format: "number" },
           { key: "score", label: "Puan", render: (r: typeof ROWS[number]) => <Rating value={r.score} readonly size="sm" /> },
           { key: "joined", label: "Katılım", format: "date" },
         ]} />

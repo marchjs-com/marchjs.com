@@ -1,5 +1,5 @@
-// Hareket ve efektler: yay/tween, FLIP listeler, geçişler, zaman çizelgesi + stagger, sürükleme, mıknatıs, eğim, parallax,
-// spot ışığı, parçacıklar, konfeti, kayınca beliren öğeler. Hepsi "hareketi azalt" tercihine uyar.
+// Motion and effects: spring/tween, FLIP lists, transitions, timeline + stagger, drag, magnet, tilt, parallax,
+// spotlight, particles, confetti, reveal on scroll. All of it honours "reduce motion".
 import { spring, tween, timeline, stagger, drag, magnet, tilt, press, parallax, reveal, inView } from "hadi-march/motion";
 import { Particles, confetti, spotlight } from "hadi-march/fx";
 import { Button, Card, Badge, Slider, Field, toast } from "hadi-march/ui";
@@ -44,7 +44,7 @@ const x = spring(() => $hedef, { stiffness: 210, damping: 16 })
     </Demo>
 
     <Demo wide title="FLIP listeler" desc="Ekle, karıştır, sil: öğeler yeni yerlerine kayar (<For animate>). Kartlar imleçle eğilir."
-      code={`<For each={$öğeler} key="id" animate>{(ö) => <Card use:tilt>{ö().ad}</Card>}</For>`}>
+      code={`<For each={$items} key="id" animate>{(item) => <Card use:tilt>{item().name}</Card>}</For>`}>
       <div class="sc-row"><Button variant="primary" icon={plus} on:click={add}>Ekle</Button><Button icon={refresh} on:click={shuffle}>Karıştır</Button><Button variant="ghost" on:click={() => { $panel = !$panel }}>Paneli aç/kapat</Button></div>
       <ul class="sc-flip">
         <For each={$items} key="id" animate>{(it: () => Item) =>

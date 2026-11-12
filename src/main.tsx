@@ -1,11 +1,11 @@
-// HADI March vitrini: kitaplığın bütün bileşenleri, temaları ve animasyonları. Tamamen March ile yazıldı (satır içi stil yok,
-// innerHTML yok); temalar data-hm-theme ile, açık/koyu data-theme ile değişir. Yönlendirme hash kipinde (statik barındırma).
+// HADI March showcase: every component, theme and animation of the library. Written entirely in March (no inline styles,
+// no innerHTML); themes switch with data-hm-theme, light/dark with data-theme. Hash routing (static hosting).
 import "hadi-march/css/font.css";
 import "hadi-march/css/tokens.css";
 import "hadi-march/css/sx.css"; // components bring their own CSS (only what is used, split per page)
 import "hadi-march/motion/motion.css";
 import "./showcase.css";
-import "./perflog.ts"; // Hız sayfasının ağ paneli: açılıştan itibaren kaydeder
+import "./perflog.ts"; // network panel of the Speed page: records from the start
 import { render, messages, setLocale } from "hadi-march";
 import { createRouter } from "hadi-march/router";
 import { installTransitions, installFlip, pageTransitions } from "hadi-march/motion";

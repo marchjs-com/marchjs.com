@@ -1,4 +1,4 @@
-// İkonlar: bütün set, arama, boyutlar. Her ikon ayrı dışa aktarım (kullanılmayanlar pakete girmez).
+// Icons: the whole set, search, sizes. Each icon is its own export (unused ones are not bundled).
 // the gallery reads the catalog (one separate module), so the icon set does not load with every page
 import { ICONS } from "hadi-march/icons/catalog";
 import { Icon, type IconDef } from "hadi-march/icons";
@@ -16,7 +16,7 @@ export default function Icons() {
       code={`import { Icon, users, search } from "hadi-march/icons"
 
 <Icon of={users} size="lg" />
-<Button icon={search}>Ara</Button>   // her icon prop'u ikon alır`}>
+<Button icon={search}>Ara</Button>   // every icon prop takes an icon`}>
       <div class="sc-row sc-row-between">
         <SearchBox bind:value={$q} placeholder="İkon ara (ör. user, chart)" shortcut />
         <Segmented bind:value={$size} aria-label="Boyut" options={[{ value: "md", label: "16" }, { value: "lg", label: "20" }, { value: "xl", label: "24" }]} />

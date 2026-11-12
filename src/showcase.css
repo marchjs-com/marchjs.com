@@ -1,4 +1,4 @@
-/* Vitrin yerleşimi. Yalnız March tokenları; her tema ve açık/koyu görünüm kendiliğinden uyar. */
+/* Showcase layout. March tokens only; every theme and light/dark follows by itself. */
 .sc-nav-foot { margin: 0; padding: var(--hm-space-2); color: var(--hm-faint); font-size: var(--hm-text-xs); }
 .sc-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-2); }
 .sc-row-between { justify-content: space-between; } .sc-row-end { justify-content: flex-end; } .sc-row-center { justify-content: center; }
@@ -155,10 +155,10 @@
 .sc-brand-soft { display: flex; flex-direction: column; gap: .125rem; padding: var(--hm-space-3) var(--hm-space-4); font-size: var(--hm-text-sm); }
 .sc-brand-soft code { font-size: var(--hm-text-xs); color: var(--hm-muted); }
 .sc-brand-text { font-weight: 600; }
-.sc-b-heyecan .sc-brand-fill { background: var(--hm-heyecan); color: var(--hm-on-heyecan); } .sc-b-heyecan .sc-brand-soft { background: var(--hm-heyecan-soft); } .sc-b-heyecan .sc-brand-text { color: var(--hm-heyecan-text); }
-.sc-b-aktivite .sc-brand-fill { background: var(--hm-aktivite); color: var(--hm-on-aktivite); } .sc-b-aktivite .sc-brand-soft { background: var(--hm-aktivite-soft); } .sc-b-aktivite .sc-brand-text { color: var(--hm-aktivite-text); }
-.sc-b-dostluk .sc-brand-fill { background: var(--hm-dostluk); color: var(--hm-on-dostluk); } .sc-b-dostluk .sc-brand-soft { background: var(--hm-dostluk-soft); } .sc-b-dostluk .sc-brand-text { color: var(--hm-dostluk-text); }
-.sc-b-iletisim .sc-brand-fill { background: var(--hm-iletisim); color: var(--hm-on-iletisim); } .sc-b-iletisim .sc-brand-soft { background: var(--hm-iletisim-soft); } .sc-b-iletisim .sc-brand-text { color: var(--hm-iletisim-text); }
+.sc-b-orange .sc-brand-fill { background: var(--hm-brand-orange); color: var(--hm-on-brand-orange); } .sc-b-orange .sc-brand-soft { background: var(--hm-brand-orange-soft); } .sc-b-orange .sc-brand-text { color: var(--hm-brand-orange-text); }
+.sc-b-blue .sc-brand-fill { background: var(--hm-brand-blue); color: var(--hm-on-brand-blue); } .sc-b-blue .sc-brand-soft { background: var(--hm-brand-blue-soft); } .sc-b-blue .sc-brand-text { color: var(--hm-brand-blue-text); }
+.sc-b-green .sc-brand-fill { background: var(--hm-brand-green); color: var(--hm-on-brand-green); } .sc-b-green .sc-brand-soft { background: var(--hm-brand-green-soft); } .sc-b-green .sc-brand-text { color: var(--hm-brand-green-text); }
+.sc-b-purple .sc-brand-fill { background: var(--hm-brand-purple); color: var(--hm-on-brand-purple); } .sc-b-purple .sc-brand-soft { background: var(--hm-brand-purple-soft); } .sc-b-purple .sc-brand-text { color: var(--hm-brand-purple-text); }
 .sc-ribbon { height: .5rem; border-radius: 999px; background: var(--hm-mark); }
 @media (max-width: 900px) { .sc-brands { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 

@@ -1,4 +1,4 @@
-// Vitrin parçası: başlık, açıklama, canlı önizleme ve (varsa) kaynak kodu sekmesi.
+// Showcase block: title, description, live preview and (if given) a source code tab.
 import { Tabs, CodeView } from "hadi-march/ui";
 
 export function Demo(props: { title: string; desc?: string; code?: string; wide?: boolean; children?: unknown }) {
@@ -9,12 +9,12 @@ export function Demo(props: { title: string; desc?: string; code?: string; wide?
       {props.desc ? <p class="sc-demo-desc">{props.desc}</p> : null}
     </header>
     {props.code
-      ? <Tabs label={props.title} tabs={[{ id: "on", label: "Önizleme", content: preview }, { id: "kod", label: "Kod", content: <CodeView code={props.code.trim()} lang="tsx" copy /> }]} />
+      ? <Tabs label={props.title} tabs={[{ id: "on", label: "Önizleme", content: preview }, { id: "code", label: "Kod", content: <CodeView code={props.code.trim()} lang="tsx" copy /> }]} />
       : preview}
   </section>
 }
 
-/** Bölüm sayfası iskeleti: büyük başlık + demo ızgarası. */
+/** Section page frame: large heading + demo grid. */
 export function Section(props: { kicker: string; title: string; lead: string; children?: unknown }) {
   return <div class="sc-page">
     <header class="sc-page-head">

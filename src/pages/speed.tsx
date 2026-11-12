@@ -1,5 +1,5 @@
-// Hız: tembel yükleme ve önbelleği gözle görmek için canlı ağ paneli (hangi sayfa hangi parçayı ne zaman çekti, ağdan
-// mı önbellekten mi geldi), derlemenin rota başına boyut raporu ve isteğe bağlı service worker.
+// Speed: a live network panel to see lazy loading and caching (which page fetched which chunk when, from the network or
+// the cache), the build's per-route size report and the optional service worker.
 import { Button, Badge, Card, Grid, Stack, toast } from "hadi-march/ui";
 import { registerServiceWorker, unregisterServiceWorker, swState } from "hadi-march/sw";
 import { netLog, clearNetLog, type NetEntry } from "../perflog.ts";
@@ -32,11 +32,11 @@ export default function Speed() {
 
   return <Section kicker="Temel" title="Hız" lead="Uygulama tek sayfa ama hepsi açılışta inmez: giriş paketi yalnız kabuk ve yönlendiricidir; her sayfa, ağır bileşen ve tema kendi parçasıdır ve gerektiğinde gelir. Bağlantının üzerine gelince parçalar önceden çekilir, boşta kalınca da sayfadaki bağlantılar. Gelen her şey önbelleğe girer.">
     <Demo wide title="Canlı ağ paneli" desc="Bu sekme açıldığından beri yüklenen her dosya. Başka bir sayfaya git, sonra geri gel: yeni parçalar o sayfanın adıyla eklenir, ikinci gelişte önbellekten gelir. Kenar menüsündeki bir bağlantının üzerine gelmek ön yükleme satırı ekler."
-      code={`// sayfa parçası: yönlendirici kendisi böler
-createRouter({ routes: { "/rapor": () => import("./pages/rapor.tsx") } })
-// ağır bileşen: ilk görüldüğünde gelir, o sırada iskelet
-const Harita = lazy(() => import("./Harita.tsx"))
-<Link href="/rapor" prefetch="hover">Rapor</Link>   // varsayılan: üzerine gelince`}>
+      code={`// page chunk: the router splits it
+createRouter({ routes: { "/report": () => import("./pages/rapor.tsx") } })
+// heavy component: arrives on first render, a skeleton meanwhile
+const Map = lazy(() => import("./Map.tsx"))
+<Link href="/report" prefetch="hover">Rapor</Link>   // default: on hover`}>
       <Grid cols={5} gap={3} minCol="8rem">
         <Card><div class="sc-speed-n">{() => totals().files}</div><div class="hm-muted">dosya</div></Card>
         <Card><div class="sc-speed-n">{() => totals().net}</div><div class="hm-muted">ağdan</div></Card>

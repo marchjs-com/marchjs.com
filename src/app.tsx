@@ -1,4 +1,5 @@
-// Vitrin kabuğu: kenar menüsü (bölümler), üst çubuk (konum, Ctrl+K, tema seçici, açık/koyu), sayfalar.
+// Showcase shell: side menu (sections), top bar (location, Ctrl+K, theme picker, light/dark), pages.
+import { t } from "hadi-march";
 import { Router, Link, path, type Href } from "hadi-march/router";
 import {
   AppShell, NavSidebar, Brand, openPalette, Spacer, PaletteButton, ThemePicker, ThemeToggle, CommandPalette, ToastHost, Loader, registerCommands, toast,
@@ -8,27 +9,27 @@ import {
   defineIcon, sparkles, palette, grid, zap, edit, layers, barChart, message, alertCircle, activity, code, dashboard, moon, sun, command, menu,
 } from "hadi-march/icons";
 
-/** March işareti. */
+/** The March mark. */
 export const marchMark = defineIcon("march", ["M5 19V6.5l7 7 7-7V19"]);
 
 export { PAGES, type PageInfo } from "./nav.ts";
 import { PAGES } from "./nav.ts";
-/** Tembel sayfa yükleyicileri (yol → modül). */
+/** Lazy page loaders (path → module). */
 export const LOADERS: Record<string, () => Promise<unknown>> = {
   "/": () => import("./pages/home.tsx"),
-  "/temalar": () => import("./pages/themes.tsx"),
-  "/ikonlar": () => import("./pages/icons.tsx"),
-  "/dugmeler": () => import("./pages/buttons.tsx"),
-  "/formlar": () => import("./pages/forms.tsx"),
-  "/veri": () => import("./pages/data.tsx"),
-  "/grafikler": () => import("./pages/charts.tsx"),
-  "/katmanlar": () => import("./pages/overlays.tsx"),
-  "/durumlar": () => import("./pages/feedback.tsx"),
-  "/hareket": () => import("./pages/motion.tsx"),
-  "/hiz": () => import("./pages/speed.tsx"),
-  "/yerlesim": () => import("./pages/layout.tsx"),
-  "/gezinme": () => import("./pages/navigation.tsx"),
-  "/dil": () => import("./pages/language.tsx"),
+  "/themes": () => import("./pages/themes.tsx"),
+  "/icons": () => import("./pages/icons.tsx"),
+  "/buttons": () => import("./pages/buttons.tsx"),
+  "/forms": () => import("./pages/forms.tsx"),
+  "/data": () => import("./pages/data.tsx"),
+  "/charts": () => import("./pages/charts.tsx"),
+  "/overlays": () => import("./pages/overlays.tsx"),
+  "/feedback": () => import("./pages/feedback.tsx"),
+  "/motion": () => import("./pages/motion.tsx"),
+  "/speed": () => import("./pages/speed.tsx"),
+  "/layout": () => import("./pages/layout.tsx"),
+  "/navigation": () => import("./pages/navigation.tsx"),
+  "/language": () => import("./pages/language.tsx"),
 };
 
 function Topbar() {
@@ -49,7 +50,7 @@ function Topbar() {
 
 export function App() {
   registerCommands([
-    ...colorThemes().map((th) => ({ id: `theme-${th.id}`, title: `Tema: ${th.name}`, group: "Temalar", icon: palette, run: () => { setColorTheme(th.id); toast(`${th.name} teması açıldı`, { kind: "success" }) } })),
+    ...colorThemes().map((th) => ({ id: `theme-${th.id}`, title: `Tema: ${t(th.name)}`, group: "Temalar", icon: palette, run: () => { setColorTheme(th.id); toast(`${t(th.name)} teması açıldı`, { kind: "success" }) } })),
     { id: "mode-dark", title: "Koyu görünüm", group: "Görünüm", icon: moon, run: () => setTheme("dark") },
     { id: "mode-light", title: "Açık görünüm", group: "Görünüm", icon: sun, run: () => setTheme("light") },
     { id: "hello", title: "Bir bildirim göster", group: "Eylemler", icon: sparkles, keywords: "toast", run: () => toast("Merhaba! Bu bir March bildirimi.", { kind: "info" }) },
@@ -57,7 +58,7 @@ export function App() {
   const items = PAGES.filter((p) => p.path !== "/").map((p) => ({ id: p.path, label: p.title, sub: p.desc, href: p.path as Href, icon: p.icon, group: p.group, keywords: p.desc }))
   const featured = [
     { id: "/", label: "Merhaba", sub: "Genel bakış ve canlı sayaç", href: "/" as Href, icon: dashboard },
-    { id: "palet", label: "Komut paleti", sub: "Sayfa, tema ya da eylem ara", icon: command, onSelect: openPalette },
+    { id: "palette", label: "Komut paleti", sub: "Sayfa, tema ya da eylem ara", icon: command, onSelect: openPalette },
   ]
   return <AppShell header={<Topbar />} nav={
     <NavSidebar items={items} featured={featured} title={<Brand href="/" mark={marchMark} name="HADI March" sub="Arayüz kitaplığı" />}

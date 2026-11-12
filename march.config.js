@@ -1,4 +1,4 @@
-// HADI March vitrini (showcase): `node ../../cli/march.js dev` ya da `node build.mjs` (statik, göreli yollar → dist/).
+// HADI March showcase: `node ../../cli/march.js dev` or `node build.mjs` (static, relative paths → dist/).
 export default {
   entry: "src/main.tsx",
   outdir: "dist",

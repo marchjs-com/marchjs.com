@@ -1,6 +1,6 @@
-// Vitrin ağ günlüğü: açılıştan itibaren yüklenen her dosyayı (PerformanceObserver › resource) hangi sayfadayken,
-// ne zaman, ne boyutta ve nereden (ağ, HTTP önbelleği, service worker, ön yükleme) geldiğiyle kaydeder. "Hız" sayfası
-// bunu canlı gösterir. Satır içi stil ya da innerHTML yok; yalnız veri.
+// Showcase network log: records every file loaded since start (PerformanceObserver › resource) with the page it was
+// loaded on, when, its size and where it came from (network, HTTP cache, service worker, preload). The Speed page shows
+// it live. Data only: no inline styles, no innerHTML.
 import { signal } from "hadi-march";
 
 export interface NetEntry {

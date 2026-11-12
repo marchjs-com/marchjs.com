@@ -1,4 +1,4 @@
-// Düğmeler, menüler, ipuçları, rozetler, çipler, avatarlar, kartlar, sekmeler.
+// Buttons, menus, tooltips, badges, chips, avatars, cards, tabs.
 import {
   Button, IconButton, ButtonGroup, Menu, Dropdown, Tooltip, CopyButton, Badge, Chip, Avatar, AvatarGroup, Kbd, Card, LinkCard, IconTile, Tabs,
   Segmented, toast, action, Stack, Divider,
@@ -28,7 +28,7 @@ export default function Buttons() {
 
     <Demo title="Boyutlar ve yükleniyor" desc="sm · md · lg; loading düğmeyi kilitler ve dönen çark gösterir."
       code={`let $saving = false
-<Button variant="primary" loading={$saving} on:click={save}>Kaydet</Button>`}>
+<Button variant="primary" loading={$saving} on:click={save}>{t\`Save\`}</Button>`}>
       <div class="sc-row"><Button size="sm" variant="primary">Küçük</Button><Button variant="primary">Orta</Button><Button size="lg" variant="primary">Büyük</Button></div>
       <div class="sc-row"><Button variant="primary" loading={$saving} on:click={save} icon={check}>{() => ($saving ? "Kaydediliyor…" : "Kaydet")}</Button><Button block variant="secondary">Tam genişlik</Button></div>
     </Demo>
@@ -46,8 +46,8 @@ export default function Buttons() {
     </Demo>
 
     <Demo title="Menüler, açılır panel, ipucu" desc="Ok tuşları, Home/End, Esc; action() ile onaylı silme ve bildirim."
-      code={`const sil = action("Sil", api.sil, { icon: trash, danger: true, confirm: { title: "Silinsin mi?" } })
-<Menu label="Eylemler" icon={more} items={[{ label: "Düzenle", icon: edit }, "-", sil]} />`}>
+      code={`const remove = action("Sil", api.remove, { icon: trash, danger: true, confirm: { title: "Silinsin mi?" } })
+<Menu label="Eylemler" icon={more} items={[{ label: "Düzenle", icon: edit }, "-", remove]} />`}>
       <div class="sc-row">
         <Menu label="Eylemler" icon={more} items={[
           { label: "Düzenle", icon: edit, shortcut: "E", onSelect: () => toast("Düzenle") },
@@ -87,9 +87,9 @@ export default function Buttons() {
           <p class="hm-muted">Büyüme, etkin kullanıcılar ve gelir özetini ekibe e-postayla gönderir.</p>
         </Card>
         <Stack gap={2}>
-          <LinkCard href="/veri" icon={users} tone="primary" title="Üyeler" description="Ara, süz, toplu işlem" meta="48,2 B" />
-          <LinkCard href="/grafikler" icon={zap} tone="warn" title="Canlı metrikler" description="Gerçek zamanlı grafikler" />
-          <LinkCard href="/formlar" icon={filter} tone="success" title="Formlar" description="Doğrulama ve sihirbaz" />
+          <LinkCard href="/data" icon={users} tone="primary" title="Üyeler" description="Ara, süz, toplu işlem" meta="48,2 B" />
+          <LinkCard href="/charts" icon={zap} tone="warn" title="Canlı metrikler" description="Gerçek zamanlı grafikler" />
+          <LinkCard href="/forms" icon={filter} tone="success" title="Formlar" description="Doğrulama ve sihirbaz" />
         </Stack>
         <Card title="Sekmeler">
           <Tabs label="Örnek sekmeler" tabs={[

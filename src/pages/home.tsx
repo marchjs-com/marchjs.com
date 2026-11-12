@@ -1,4 +1,5 @@
-// Giriş: kahraman bölümü (tema renkleriyle parlayan sahne), hareketli sayılar, bölüm kartları, canlı sayaç.
+// Home: hero (a stage glowing in the theme colors), animated numbers, section cards, a live counter.
+import { t } from "hadi-march";
 import { tween, reveal, magnet } from "hadi-march/motion";
 import { Particles, confetti } from "hadi-march/fx";
 import { Button, LinkCard, Kbd, Card, Badge, Grid, openPalette, ThemeSwatch, colorThemes, setColorTheme, colorTheme } from "hadi-march/ui";
@@ -36,7 +37,7 @@ export default function Home() {
           sıkı CSP ve Trusted Types ile çalışır.
         </p>
         <div class="sc-hero-cta" use:reveal={{ duration: 800, delay: 280 }}>
-          <Button variant="primary" size="lg" href="/dugmeler" iconEnd={arrowRight}>Bileşenlere göz at</Button>
+          <Button variant="primary" size="lg" href="/buttons" iconEnd={arrowRight}>Bileşenlere göz at</Button>
           <Button size="lg" icon={command} onClick={openPalette}>Komut paleti <Kbd keys="mod+k" /></Button>
           <Button size="lg" variant="ghost" icon={sparkles} onClick={celebrate} use:magnet={{ strength: 0.3 }}>{() => ($clicks ? `Kutla (${$clicks})` : "Kutla")}</Button>
         </div>
@@ -53,7 +54,7 @@ export default function Home() {
       <section class="sc-themes-strip" aria-label="Temalar">
         <span class="sc-strip-label">Tema seç:</span>
         {colorThemes().map((th) => <button type="button" class={() => (colorTheme() === th.id ? "sc-theme-chip is-active" : "sc-theme-chip")} on:click={() => setColorTheme(th.id)}>
-          <ThemeSwatch id={th.id} />{th.name}
+          <ThemeSwatch id={th.id} />{t(th.name)}
         </button>)}
       </section>
 
@@ -66,11 +67,11 @@ export default function Home() {
       <div class="sc-demos">
         <Demo title="Yalnız değişen düğüm güncellenir" desc="Bileşen bir kez çalışır; $ ile başlayan değişkenler sinyaldir. Sanal DOM yok."
           code={`
-function Sayaç() {
+function Counter() {
   let $n = 0
-  const $çift = $n % 2 === 0
+  const $even = $n % 2 === 0
   return <Card title="Sayaç">
-    <p>{$n} kez tıklandı · {$çift ? "çift" : "tek"}</p>
+    <p>{$n} kez tıklandı · {$even ? "çift" : "tek"}</p>
     <Button variant="primary" on:click={() => $n++}>Artır</Button>
   </Card>
 }`}>

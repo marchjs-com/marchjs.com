@@ -1,4 +1,4 @@
-// Formlar: şemadan form + doğrulama, tek tek alanlar, seçiciler, puanlama, sihirbaz.
+// Forms: form from a schema + validation, single fields, pickers, rating, wizard.
 import { schema } from "hadi-march/schema";
 import {
   Form, Field, TextInput, PasswordInput, NumberInput, MoneyInput, PhoneInput, Select, Combobox, MultiSelect, Checkbox, Toggle, RadioGroup, CheckboxGroup, Segmented,
@@ -42,12 +42,12 @@ export default function Forms() {
   let $price = 1499.9
   return <Section kicker="Bileşenler" title="Formlar" lead="Şemadan form: alanlar, doğrulama, koşullu alanlar ve tür bilgisi tek tanımdan. Bütün alanlar bind: ile iki yönlü bağlanır.">
     <Demo wide title="Şemadan form" desc="Koşullu alanlar (plan = ekip), canlı doğrulama, gönderimde yükleniyor; sunucu hatası alana düşer (deneme: …@taken.com)."
-      code={`const Kayıt = schema({
+      code={`const SignUp = schema({
   email: { type: "email", required: true },
   plan:  { type: "pick", options: […], control: "segmented" },
   seats: { type: "int", min: 2, when: (v) => v.plan === "team" },
 })
-<Form schema={Kayıt} layout="grid" cols={2} onSubmit={api.kaydol} />`}>
+<Form schema={SignUp} layout="grid" cols={2} onSubmit={api.signUp} />`}>
       <Card>
         <Form schema={Signup} layout="grid" cols={2} submitLabel="Hesap oluştur"
           onSubmit={async (v: Record<string, unknown>) => {
