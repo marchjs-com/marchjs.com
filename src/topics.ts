@@ -219,6 +219,28 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "websocket", title: "WebSocket bildirim akışı (mock)", desc: "Yönetilen bağlantı: jitter'lı yeniden bağlanma, heartbeat, konu aboneliği (yeniden bağlanınca yenilenir),…", group: "Ağ" },
     { slug: "errors", title: "Hata kuralları", desc: "window hataları, yakalanmamış sözler, sınırlar, net ve WS hataları tek toplayıcıya gelir; aynı hata tekrar…", group: "Ağ" },
   ],
+  "/seo": [
+    { slug: "live-head", title: "Canlı head", desc: "Alanları değiştir: bu sayfanın <head> etiketleri anında güncellenir (sekme başlığına bak).", group: "SEO" },
+    { slug: "history-site", title: "Geçmiş yönlendirmeli bir sitede", desc: "Aynı girdi, site adresi ve yol ile: canonical ve og:url mutlak adres olur.", group: "SEO" },
+    { slug: "json-ld", title: "Üretilen JSON-LD", desc: "ld.product / ld.article / ld.website ve ld.breadcrumbs: schema.org nesneleri.", group: "SEO" },
+    { slug: "seo-check", title: "march seo check", desc: "Derlenen her sayfa için: eksik başlık, açıklama, canonical, alt metni, h1 ve geçersiz JSON-LD.", group: "SEO" },
+    { slug: "prerender", title: "Ön işleme (prerender) ve hidrasyon", desc: "march build, rotaları derleme sırasında HTML'e çevirir (head dahil) ve sitemap.xml ile robots.txt yazar;…", group: "SEO" },
+  ],
+  "/ide": [
+    { slug: "live", title: "Canlı demo", desc: "Bu sayfadaki bileşenlerin hepsiyle kurulu küçük bir editör: dosya ağacı, sekmeli editörler, ayarlar…", group: "Kabuk" },
+    { slug: "dock-layout", title: "DockLayout", desc: "Sekmeyi bir grubun kenarına bırak: yeni bölme; ortasına ya da sekmelerin arasına: sekme; alanın kenarına:…", group: "Karmaşık bileşenler" },
+    { slug: "property-grid", title: "PropertyGrid", desc: "Gruplu, aranabilir satırlar; her tür kendi form denetimiyle düzenlenir.", group: "Karmaşık bileşenler" },
+    { slug: "overflow-toolbar", title: "OverflowToolbar", desc: "Genişliği daralt: önceliği en düşük öğeler “Daha fazla” menüsüne geçer, yer açılınca kayarak geri gelir.", group: "Eylemler" },
+    { slug: "status-bar", title: "StatusBar", desc: "Başta ve sonda öğeler; düğmeler bir eylem ya da komut çalıştırır.", group: "Yerleşim" },
+    { slug: "activity-bar", title: "ActivityBar", desc: "Yan görünümü değiştirir; gösterge etkin simgeye kayar.", group: "Gezinme" },
+    { slug: "breadcrumbs", title: "Breadcrumbs", desc: "Dosya yolu; kardeşi olan parça menü açar.", group: "Gezinme" },
+  ],
+  "/language": [
+    { slug: "todos", title: "Yapılacaklar", desc: "$, türetme, <For>, bind:, on:submit|prevent", group: "Dil" },
+    { slug: "pipes", title: "Borular (pipes)", desc: "{değer | boru(arg)}: Intl tabanlı, dile duyarlı biçimleme.", group: "Dil" },
+    { slug: "sx-class", title: "sx ve class", desc: "sx derlemede statik sınıflara döner (satır içi stil üretmez); class:ad={koşul} sınıfı açar/kapatır.", group: "Dil" },
+    { slug: "code-widget", title: "Kod sekmesi bir widget noktası", desc: "Bütün Kod sekmeleri <Widget sources={[codeView]} /> ile çizilir.", group: "Dil" },
+  ],
 };
 
 /** Every topic as a sub page under its section (path, title, parent) for the routes, the breadcrumb and the menu. */

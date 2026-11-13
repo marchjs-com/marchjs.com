@@ -2,12 +2,13 @@
 import { Field, TextInput, Textarea, Segmented, Toggle, Button, Card, Stack, Badge } from "hadi-march/ui";
 import { installSeo, useHead, headTags, headToHtml, ld, checkHtml, formatIssues, resolveHead, type SeoIssue } from "hadi-march/seo";
 import { onCleanup } from "hadi-march";
-import { Demo, Section } from "../demo.tsx";
+import { Demo } from "../demo.tsx";
+import { Hub } from "../hub.tsx";
 
 const SAMPLE_BAD = `<html><head><title>Ürünler</title></head>
 <body><h1>Ürünler</h1><img src="kapak.jpg"></body></html>`
 
-export default function Seo() {
+export default function Seo(props: { params?: { rest?: string } }) {
   // route heads and useHead() from now on (the showcase turns it on only here; an app does it once at start-up)
   // jsonLd: false — this page runs under a Trusted Types CSP, where script text written at run time is blocked;
   // JSON-LD reaches such pages at build time (prerender) and is shown below instead
@@ -42,79 +43,73 @@ export default function Seo() {
   const first = setTimeout(runPage, 300)
   onCleanup(() => clearTimeout(first))
 
-  return <Section kicker="Temel" title="SEO" lead="Rota başına başlık ve meta, Open Graph ve Twitter kartları, JSON-LD, derlemede ön işleme (prerender), sitemap.xml ve robots.txt. Hepsi yönlendiriciyle bütünleşik.">
-    <Demo wide title="Canlı head: useHead()" desc="Alanları değiştir: bu sayfanın <head> etiketleri anında güncellenir (sekme başlığına bak). Sayfadan çıkınca kendi etiketleri kalkar."
-      code={`installSeo({ site: "https://shop.example", titleTemplate: "%s · Mağaza" })
+  const RENDER: Record<string, () => unknown> = {
+    "live-head": () => <Demo wide title="Canlı head: useHead()" desc="Alanları değiştir: bu sayfanın <head> etiketleri anında güncellenir (sekme başlığına bak). Sayfadan çıkınca kendi etiketleri kalkar."
+    code={`installSeo({ site: "https://shop.example", titleTemplate: "%s · Mağaza" })
+eHead(() => ({
+title: $title,
+description: $desc,
+og: { image: { url: $image, alt: $title } },
+twitter: { card: "summary_large_image" },
+jsonLd: ld.product({ name: $title, price: $price, currency: "TRY" }),
+)`}>
+    <Stack gap={3}>
+      <div class="sc-row">
+        <Toggle bind:value={$live} label="Bu sayfanın head'ine yaz" />
+        <Segmented bind:value={$type} aria-label="Sayfa türü" options={[{ value: "product", label: "Ürün" }, { value: "article", label: "Makale" }, { value: "website", label: "Site" }]} />
+      </div>
+      <Field label="Başlık"><TextInput bind:value={$title} /></Field>
+      <Field label="Açıklama" help={`${$desc.length} karakter (50–160 önerilir)`}><Textarea bind:value={$desc} rows={2} /></Field>
+      <div class="sc-row">
+        <div class="sc-grow"><Field label="Görsel (og:image)"><TextInput bind:value={$image} /></Field></div>
+        <Field label="Fiyat"><TextInput bind:value={$price} /></Field>
+      </div>
+      <Card>
+        <p class="hm-muted">document.head içinde şu an (useHead + rota):</p>
+        <pre class="sc-seo-code">{headToHtml(headTags())}</pre>
+      </Card>
+    </Stack>
+  </Demo>,
+    "history-site": () => <Demo title="Geçmiş yönlendirmeli bir sitede" desc="Aynı girdi, site adresi ve yol ile: canonical ve og:url mutlak adres olur. Hash yönlendirmede otomatik canonical yazılmaz.">
+    <pre class="sc-seo-code">{$preview}</pre>
+  </Demo>,
+    "json-ld": () => <Demo title="Üretilen JSON-LD" desc="ld.product / ld.article / ld.website ve ld.breadcrumbs: schema.org nesneleri. Metin </script> ile kapanamaz. Trusted Types CSP'li sayfalarda (bu vitrin gibi) JSON-LD derlemede yazılır: installSeo({ jsonLd: false }).">
+    <pre class="sc-seo-code">{JSON.stringify([$ld, crumbs], null, 2)}</pre>
+  </Demo>,
+    "seo-check": () => <Demo wide title="march seo check" desc="Derlenen her sayfa için: eksik başlık, açıklama, canonical, alt metni, h1 ve geçersiz JSON-LD. Aynı denetim tarayıcıda da çalışır."
+    code={`$ march build && march seo check
+st/index.html: error canonical          missing <link rel="canonical">
+st/product/index.html: warn  description-length description is 31 characters (aim for 50–160)
+2 page(s): 1 error(s), 1 warning(s)`} lang="sh">
+    <Stack gap={3}>
+      <Field label="Denetlenecek HTML"><Textarea bind:value={$html} rows={3} /></Field>
+      <div class="sc-row">
+        <Button variant="primary" on:click={runSample}>Denetle</Button>
+        <Button on:click={runPage}>Bu sayfayı denetle</Button>
+      </div>
+      <Report title="Örnek HTML" issues={$issues} />
+      <Report title="Bu sayfa (canlı DOM)" issues={$pageIssues} />
+    </Stack>
+  </Demo>,
+    "prerender": () => <Demo wide title="Ön işleme (prerender) ve hidrasyon" desc="march build, rotaları derleme sırasında HTML'e çevirir (head dahil) ve sitemap.xml ile robots.txt yazar; tarayıcıda hydrate() hazır sayfayı boş kare olmadan devralır. Bu vitrinin açılış sayfası da böyle gelir."
+    code={`// march.config.js
+port default {
+seo: {
+  site: "https://shop.example",
+  prerender: true,              // parametresiz her rota (hash yönlendirmede yalnız açılış sayfası)
+  sitemap: true,
+  robots: { disallow: ["/yonetim"] },
+  head: { jsonLd: ld.website({ name: "Mağaza", url: "https://shop.example" }) },
+},
 
-useHead(() => ({
-  title: $title,
-  description: $desc,
-  og: { image: { url: $image, alt: $title } },
-  twitter: { card: "summary_large_image" },
-  jsonLd: ld.product({ name: $title, price: $price, currency: "TRY" }),
-}))`}>
-      <Stack gap={3}>
-        <div class="sc-row">
-          <Toggle bind:value={$live} label="Bu sayfanın head'ine yaz" />
-          <Segmented bind:value={$type} aria-label="Sayfa türü" options={[{ value: "product", label: "Ürün" }, { value: "article", label: "Makale" }, { value: "website", label: "Site" }]} />
-        </div>
-        <Field label="Başlık"><TextInput bind:value={$title} /></Field>
-        <Field label="Açıklama" help={`${$desc.length} karakter (50–160 önerilir)`}><Textarea bind:value={$desc} rows={2} /></Field>
-        <div class="sc-row">
-          <div class="sc-grow"><Field label="Görsel (og:image)"><TextInput bind:value={$image} /></Field></div>
-          <Field label="Fiyat"><TextInput bind:value={$price} /></Field>
-        </div>
-        <Card>
-          <p class="hm-muted">document.head içinde şu an (useHead + rota):</p>
-          <pre class="sc-seo-code">{headToHtml(headTags())}</pre>
-        </Card>
-      </Stack>
-    </Demo>
-
-    <Demo title="Geçmiş yönlendirmeli bir sitede" desc="Aynı girdi, site adresi ve yol ile: canonical ve og:url mutlak adres olur. Hash yönlendirmede otomatik canonical yazılmaz.">
-      <pre class="sc-seo-code">{$preview}</pre>
-    </Demo>
-
-    <Demo title="Üretilen JSON-LD" desc="ld.product / ld.article / ld.website ve ld.breadcrumbs: schema.org nesneleri. Metin </script> ile kapanamaz. Trusted Types CSP'li sayfalarda (bu vitrin gibi) JSON-LD derlemede yazılır: installSeo({ jsonLd: false }).">
-      <pre class="sc-seo-code">{JSON.stringify([$ld, crumbs], null, 2)}</pre>
-    </Demo>
-
-    <Demo wide title="march seo check" desc="Derlenen her sayfa için: eksik başlık, açıklama, canonical, alt metni, h1 ve geçersiz JSON-LD. Aynı denetim tarayıcıda da çalışır."
-      code={`$ march build && march seo check
-dist/index.html: error canonical          missing <link rel="canonical">
-dist/product/index.html: warn  description-length description is 31 characters (aim for 50–160)
-✖ 2 page(s): 1 error(s), 1 warning(s)`} lang="sh">
-      <Stack gap={3}>
-        <Field label="Denetlenecek HTML"><Textarea bind:value={$html} rows={3} /></Field>
-        <div class="sc-row">
-          <Button variant="primary" on:click={runSample}>Denetle</Button>
-          <Button on:click={runPage}>Bu sayfayı denetle</Button>
-        </div>
-        <Report title="Örnek HTML" issues={$issues} />
-        <Report title="Bu sayfa (canlı DOM)" issues={$pageIssues} />
-      </Stack>
-    </Demo>
-
-    <Demo wide title="Ön işleme (prerender) ve hidrasyon" desc="march build, rotaları derleme sırasında HTML'e çevirir (head dahil) ve sitemap.xml ile robots.txt yazar; tarayıcıda hydrate() hazır sayfayı boş kare olmadan devralır. Bu vitrinin açılış sayfası da böyle gelir."
-      code={`// march.config.js
-export default {
-  seo: {
-    site: "https://shop.example",
-    prerender: true,              // parametresiz her rota (hash yönlendirmede yalnız açılış sayfası)
-    sitemap: true,
-    robots: { disallow: ["/yonetim"] },
-    head: { jsonLd: ld.website({ name: "Mağaza", url: "https://shop.example" }) },
-  },
-}
-
-// main.tsx
-hydrate(() => <Router />, document.getElementById("app"))
-
-// bir rotanın head'i
-createRouter({ routes: { "/product/:id": { load, head: (to) => ({ title: \`Ürün \${to.params.id}\` }) } } })`}>
-      <p class="hm-muted">Her rotanın kendi index.html dosyası var; adres başka bir rotayı gösterirse (404 yedeği, eski bir hash bağlantısı) ön işlenmiş içerik hemen kaldırılır, yanlış içerik görünmez.</p>
-    </Demo>
-  </Section>
+ main.tsx
+drate(() => <Router />, document.getElementById("app"))
+ bir rotanın head'i
+eateRouter({ routes: { "/product/:id": { load, head: (to) => ({ title: \`Ürün \${to.params.id}\` }) } } })`}>
+    <p class="hm-muted">Her rotanın kendi index.html dosyası var; adres başka bir rotayı gösterirse (404 yedeği, eski bir hash bağlantısı) ön işlenmiş içerik hemen kaldırılır, yanlış içerik görünmez.</p>
+  </Demo>,
+  }
+  return <Hub base="/seo" kicker="Temel" title="SEO" lead="Rota başına başlık ve meta, Open Graph ve Twitter kartları, JSON-LD, derlemede ön işleme (prerender), sitemap.xml ve robots.txt. Hepsi yönlendiriciyle bütünleşik." render={RENDER} params={props.params} />
 }
 
 function Report(props: { title: string; issues: SeoIssue[] }) {
