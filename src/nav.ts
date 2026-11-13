@@ -44,9 +44,6 @@ export const PAGES: PageInfo[] = [
 ];
 /** Pages under one wildcard route (the menu lists them under their parent; titles for the breadcrumb). */
 export const SUB_PAGES: PageInfo[] = [
-  { path: "/web/product", title: "Ürün tanıtım sayfası", parent: "/web" },
-  { path: "/web/portfolio", title: "Kişisel portfolyo", parent: "/web" },
-  { path: "/web/slides", title: "Sunum", parent: "/web" },
   // one page per topic of a section (topics.ts): /editors/terminal, /forms/select…
   ...TOPIC_PAGES,
 ];

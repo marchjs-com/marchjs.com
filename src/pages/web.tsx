@@ -9,7 +9,7 @@ import { colorThemes, loadTheme, ThemeSwatch } from "hadi-march/ui";
 import { Icon, arrowLeft, arrowRight, maximize, minimize, externalLink, rotateCw } from "hadi-march/icons";
 import { DevicePreview, previewFrame } from "hadi-march/components/layout/index.ts";
 import { appUrl } from "hadi-march/base";
-import { Section } from "../demo.tsx";
+import { Hub } from "../hub.tsx";
 import { ComponentDemo, demoId } from "../component-demo.tsx";
 import { lazy } from "hadi-march/lazy";
 
@@ -34,32 +34,33 @@ const SOURCE = "https://github.com/tlghn/hadimarch/blob/main/examples/showcase/s
 const DEVICES = [{ id: "desktop", label: "Masaüstü" }, { id: "iphone-15", label: "iPhone" }, { id: "pixel-8", label: "Pixel" }, { id: "ipad", label: "iPad" }] as const
 const blockName = (folder: string): string => folder.split("-").map((w) => w[0]!.toUpperCase() + w.slice(1)).join("")
 
-function Blocks() {
-  return <Section kicker="Bileşenler" title="Web siteleri" lead="Tanıtım, ana sayfa, portfolyo ve sunum için bloklar. Her blok mevcut bileşenlerden kurulur, hareket motoruyla canlanır, temaya, RTL'ye ve dile uyar. Yalnız kullanılan blok derlenir.">
-    <ComponentDemo folder="landing/hero" title="Hero" desc="Yedi görünüm, tek yapı: üst etiket, gradyan vurgulu başlık, açıklama, eylemler. Ürün varyantında kare kaydırdıkça düzleşir; parallax'ta katmanlar farklı hızda kayar." />
-    <ComponentDemo folder="landing/site-nav" title="Site menüsü" desc="Saydamdan cama geçen, kaydırınca küçülen ya da yüzen hap görünümlü üst çubuk. Bağlantıların altında hap kayar; dar ekranda menü çekmeceye taşınır." />
-    <ComponentDemo folder="landing/feature-grid" title="Özellik ızgarası" desc="Kartlar (imleç ışığıyla), sade, liste ya da bento. Kartlar sırayla belirir; bir satırdaki kutular eşit boyludur." />
-    <ComponentDemo folder="landing/logo-cloud" title="Logo bulutu" desc="Eşit hücreli ızgara ya da sonsuz kayan şerit. Tek ton; üzerine gelince renklenir." />
-    <ComponentDemo folder="landing/pricing" title="Fiyatlar" desc="Aylık / yıllık anahtarı: rakamlar odometre gibi döner, anahtarın başparmağı kayar, öne çıkan plan parlar." />
-    <ComponentDemo folder="landing/testimonials" title="Yorumlar" desc="Izgara, iki sıra kayan şerit, solarak biten duvar (Daha fazla göster) ya da kaydırmalı." />
-    <ComponentDemo folder="landing/faq" title="Sık sorulanlar" desc="Akordeon; iki sütunlu düzende yapışkan başlık; aramada aksan ve yazım hatasına dayanıklı sıralama." />
-    <ComponentDemo folder="landing/stats-band" title="Rakamlar" desc="Görününce sayan büyük rakamlar; sade, çizgili ya da kartlı." />
-    <ComponentDemo folder="landing/counter" title="Sayaç" desc="Görününce sayar, yeni değere süzülür; odometre modunda yalnız değişen basamaklar döner. Biçim Intl ile." />
-    <ComponentDemo folder="landing/roadmap" title="Yol haritası ve zaman çizelgesi" desc="Kaydırdıkça dolan çizgi; geçilen noktalar yanar, süren adım parlar. Deneyim ve şirket hikâyesi için de." />
-    <ComponentDemo folder="landing/scroll-story" title="Kaydırma hikâyesi" desc="Görsel sütunu sabit kalır, adımlar akar; etkin adımın görseli belirir, bölüm o adımın rengine geçer." />
-    <ComponentDemo folder="landing/horizontal-scroll" title="Yatay kaydırma" desc="Sayfa aşağı kayarken paneller yana akar; dokunmatikte ve azaltılmış harekette yerel yatay kaydırıcı." />
-    <ComponentDemo folder="landing/scroll-progress" title="Okuma ilerlemesi" desc="Sayfanın ya da bir makalenin ne kadarının okunduğunu gösteren ince çubuk." />
-    <ComponentDemo folder="landing/reveal" title="Kaydırınca belirme" desc="Solma, yükselme, baştan ya da sondan kayma (RTL'de aynalı), ölçek, bulanıklık, çevirme; sırayla ya da kaydırmaya bağlı." />
-    <ComponentDemo folder="landing/parallax" title="Parallax" desc="Her katman kendi hızında kayar; fare izleme açıkken derinliğine göre kayar. Yalnız transform." />
-    <ComponentDemo folder="landing/project-grid" title="Proje ızgarası" desc="Süzgeç çipleri; seçince kalanlar yeni yerlerine süzülür (FLIP). Açınca kapak Lightbox'ta ya da ayrıntı sayfasında." />
-    <ComponentDemo folder="landing/project-detail" title="Proje ayrıntısı" desc="Bir projeye tıkla: kapak ayrıntı sayfasındaki yerine büyür (paylaşılan öğe geçişi); geri dönüşte küçülür." />
-    <ComponentDemo folder="landing/presentation" title="Sunum" desc="Ok tuşları, boşluk, kaydırma, dokunma; adım adım maddeler; konuşmacı görünümü (sonraki slayt, notlar, süre)." />
-    <ComponentDemo folder="landing/video-background" title="Video arka plan" desc="Sessiz döngü, önce poster; görünmüyorken durur, veri tasarrufu ve azaltılmış harekette yalnız poster. Durdur düğmesi var." />
-    <ComponentDemo folder="landing/cta-band" title="Eylem bandı" desc="Sayfa sonundaki çağrı paneli: gradyan, ağ, cam, sade ya da video arka plan; imleç ışığı." />
-    <ComponentDemo folder="landing/newsletter" title="Bülten formu" desc="Doğrulama, bekleme düğmesi, başarıda beliren onay, hatada sallanan alan ve okunan ileti." />
-    <ComponentDemo folder="landing/site-footer" title="Altbilgi" desc="Marka, bağlantı sütunları, sosyal bağlantılar, bülten, yasal satır, başa dön ve büyük yazı." />
-    <ComponentDemo folder="landing/site-section" title="Bölüm çerçevesi" desc="Her bloğun çerçevesi: genişlik, dikey ritim, ton ve beliren başlık grubu." />
-  </Section>
+function Blocks(props: { params?: { rest?: string } | undefined }) {
+  const RENDER: Record<string, () => unknown> = {
+    "hero": () => <ComponentDemo folder="landing/hero" title="Hero" desc="Yedi görünüm, tek yapı: üst etiket, gradyan vurgulu başlık, açıklama, eylemler. Ürün varyantında kare kaydırdıkça düzleşir; parallax'ta katmanlar farklı hızda kayar." />,
+    "site-nav": () => <ComponentDemo folder="landing/site-nav" title="Site menüsü" desc="Saydamdan cama geçen, kaydırınca küçülen ya da yüzen hap görünümlü üst çubuk. Bağlantıların altında hap kayar; dar ekranda menü çekmeceye taşınır." />,
+    "feature-grid": () => <ComponentDemo folder="landing/feature-grid" title="Özellik ızgarası" desc="Kartlar (imleç ışığıyla), sade, liste ya da bento. Kartlar sırayla belirir; bir satırdaki kutular eşit boyludur." />,
+    "logo-cloud": () => <ComponentDemo folder="landing/logo-cloud" title="Logo bulutu" desc="Eşit hücreli ızgara ya da sonsuz kayan şerit. Tek ton; üzerine gelince renklenir." />,
+    "pricing": () => <ComponentDemo folder="landing/pricing" title="Fiyatlar" desc="Aylık / yıllık anahtarı: rakamlar odometre gibi döner, anahtarın başparmağı kayar, öne çıkan plan parlar." />,
+    "testimonials": () => <ComponentDemo folder="landing/testimonials" title="Yorumlar" desc="Izgara, iki sıra kayan şerit, solarak biten duvar (Daha fazla göster) ya da kaydırmalı." />,
+    "faq": () => <ComponentDemo folder="landing/faq" title="Sık sorulanlar" desc="Akordeon; iki sütunlu düzende yapışkan başlık; aramada aksan ve yazım hatasına dayanıklı sıralama." />,
+    "stats-band": () => <ComponentDemo folder="landing/stats-band" title="Rakamlar" desc="Görününce sayan büyük rakamlar; sade, çizgili ya da kartlı." />,
+    "counter": () => <ComponentDemo folder="landing/counter" title="Sayaç" desc="Görününce sayar, yeni değere süzülür; odometre modunda yalnız değişen basamaklar döner. Biçim Intl ile." />,
+    "roadmap": () => <ComponentDemo folder="landing/roadmap" title="Yol haritası ve zaman çizelgesi" desc="Kaydırdıkça dolan çizgi; geçilen noktalar yanar, süren adım parlar. Deneyim ve şirket hikâyesi için de." />,
+    "scroll-story": () => <ComponentDemo folder="landing/scroll-story" title="Kaydırma hikâyesi" desc="Görsel sütunu sabit kalır, adımlar akar; etkin adımın görseli belirir, bölüm o adımın rengine geçer." />,
+    "horizontal-scroll": () => <ComponentDemo folder="landing/horizontal-scroll" title="Yatay kaydırma" desc="Sayfa aşağı kayarken paneller yana akar; dokunmatikte ve azaltılmış harekette yerel yatay kaydırıcı." />,
+    "scroll-progress": () => <ComponentDemo folder="landing/scroll-progress" title="Okuma ilerlemesi" desc="Sayfanın ya da bir makalenin ne kadarının okunduğunu gösteren ince çubuk." />,
+    "reveal": () => <ComponentDemo folder="landing/reveal" title="Kaydırınca belirme" desc="Solma, yükselme, baştan ya da sondan kayma (RTL'de aynalı), ölçek, bulanıklık, çevirme; sırayla ya da kaydırmaya bağlı." />,
+    "parallax": () => <ComponentDemo folder="landing/parallax" title="Parallax" desc="Her katman kendi hızında kayar; fare izleme açıkken derinliğine göre kayar. Yalnız transform." />,
+    "project-grid": () => <ComponentDemo folder="landing/project-grid" title="Proje ızgarası" desc="Süzgeç çipleri; seçince kalanlar yeni yerlerine süzülür (FLIP). Açınca kapak Lightbox'ta ya da ayrıntı sayfasında." />,
+    "project-detail": () => <ComponentDemo folder="landing/project-detail" title="Proje ayrıntısı" desc="Bir projeye tıkla: kapak ayrıntı sayfasındaki yerine büyür (paylaşılan öğe geçişi); geri dönüşte küçülür." />,
+    "presentation": () => <ComponentDemo folder="landing/presentation" title="Sunum" desc="Ok tuşları, boşluk, kaydırma, dokunma; adım adım maddeler; konuşmacı görünümü (sonraki slayt, notlar, süre)." />,
+    "video-background": () => <ComponentDemo folder="landing/video-background" title="Video arka plan" desc="Sessiz döngü, önce poster; görünmüyorken durur, veri tasarrufu ve azaltılmış harekette yalnız poster. Durdur düğmesi var." />,
+    "cta-band": () => <ComponentDemo folder="landing/cta-band" title="Eylem bandı" desc="Sayfa sonundaki çağrı paneli: gradyan, ağ, cam, sade ya da video arka plan; imleç ışığı." />,
+    "newsletter": () => <ComponentDemo folder="landing/newsletter" title="Bülten formu" desc="Doğrulama, bekleme düğmesi, başarıda beliren onay, hatada sallanan alan ve okunan ileti." />,
+    "site-footer": () => <ComponentDemo folder="landing/site-footer" title="Altbilgi" desc="Marka, bağlantı sütunları, sosyal bağlantılar, bülten, yasal satır, başa dön ve büyük yazı." />,
+    "site-section": () => <ComponentDemo folder="landing/site-section" title="Bölüm çerçevesi" desc="Her bloğun çerçevesi: genişlik, dikey ritim, ton ve beliren başlık grubu." />,
+  }
+  return <Hub section="/web" kicker="Bileşenler" title="Web siteleri" lead="Tanıtım, ana sayfa, portfolyo ve sunum için bloklar. Her blok mevcut bileşenlerden kurulur, hareket motoruyla canlanır, temaya, RTL'ye ve dile uyar. Yalnız kullanılan blok derlenir." render={RENDER} params={props.params} />
 }
 
 /** A sample site in its frame, with the preview bar. */
@@ -142,7 +143,7 @@ export default function WebPage(props: { params?: { rest?: string } }) {
   return <>{() => {
     const v = view()
     const sample = SAMPLES.find((x) => x.view === v)
-    if (!sample) return <Blocks />
+    if (!sample) return <Blocks params={props.params} />
     const S = v === "product" ? ProductSample : v === "portfolio" ? PortfolioSample : SlidesSample
     // inside the preview iframe (?bare=1): the site alone, with the theme and direction the preview bar picked
     if (query()["bare"] !== undefined) {
