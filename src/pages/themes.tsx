@@ -42,9 +42,9 @@ export default function Themes(props: { params?: { rest?: string } }) {
   const RENDER: Record<string, () => unknown> = {
     "presets": () => <Demo wide title="Hazır temalar" desc="Her kart kendi temasıyla çizildi (data-hm-theme kapsamı). Seçtiğin tema bütün vitrine uygulanır; açık/koyu üst çubuktan."
     code={`import { setColorTheme, ThemePicker } from "hadi-march/ui"
-tColorTheme("neon")          // <html data-hm-theme="neon">
-hemePicker />                 // top bar: theme + light/dark/system
-ection data-hm-theme="night">…</section>   // only this section uses Night Blue`}>
+setColorTheme("neon")          // <html data-hm-theme="neon">
+<ThemePicker />                 // top bar: theme + light/dark/system
+<section data-hm-theme="night">…</section>   // only this section uses Night Blue`}>
     <div class="sc-mini-grid">{THEMES.map((th) => <MiniApp id={th.id} name={t(th.name)} desc={t(th.description ?? "")} />)}</div>
   </Demo>,
     "theme-menu": () => <ComponentDemo folder="composite/theme-menu" title="ThemeMenu: tek menüde görünüm" desc="Karmaşık bileşen: açık / koyu / sistem, renk teması ve vurgu rengi tek açılır menüde; bölümler ThemePicker ve AccentPicker ile aynı. Parçaları aşağıdaki satırda." />,
@@ -52,8 +52,8 @@ ection data-hm-theme="night">…</section>   // only this section uses Night Blu
     desc="Tema düzenleyici: hazır bir temadan ya da sıfırdan başla; açık ve koyu kip için her renk tokenı, ton ölçeği ve WCAG kontrast denetimi; yazı, biçim ve hareket tokenları. Önizleme yalnız bu kartta çizilir; istersen bütün vitrine uygula. Çıktı defineTheme kodu, CSS ve JSON; paylaşım bağlantısı ve tema seçiciye ekleme." />,
     "brand-colors": () => <Demo wide title="Marka renkleri" desc="HADİ Sosyal'ın dört resmi rengi (hadi_colors.dart ile birebir). Yazı rengi zemine göre okunurluk kuralıyla seçilir: beyaz en az 2,6:1 veriyorsa beyaz, yoksa koyu; metin olarak kullanılan tonu AA (4,5:1) için koyulaştırılır."
     code={`--hm-brand-orange · --hm-brand-orange-soft · --hm-on-brand-orange · --hm-brand-orange-text
-hm-brand-blue · --hm-brand-green · --hm-brand-purple (same four tokens each)
-imary = brand-orange · info = brand-blue · success = brand-green · special = brand-purple · danger = error`}>
+--hm-brand-blue · --hm-brand-green · --hm-brand-purple (same four tokens each)
+primary = brand-orange · info = brand-blue · success = brand-green · special = brand-purple · danger = error`}>
     <div class="sc-brands" data-hm-theme="hadi">
       {BRAND.map(([id, name, role, hex, soft]) => <div class={`sc-brand sc-b-${id}`}>
         <div class="sc-brand-fill"><strong>{name}</strong><span>{hex}</span></div>

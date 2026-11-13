@@ -54,7 +54,7 @@ export default function OverlayPage(props: { params?: { rest?: string } }) {
 <Overlay src="media/waves.webm" poster="media/waves.jpg" />      // first = lowest
 <Overlay effect="glass" inset={4} />                            // glass panel above the video
 <h3>…</h3> <TextInput … /> <Button …>Katıl</Button>             // content stays on top and clickable
-div>`}>
+</div>`}>
     <div class="sc-ov-hero">
       <Overlay src={WAVES} poster={WAVES_POSTER} />
       <Overlay effect="glass" inset={5} />
@@ -81,8 +81,8 @@ div>`}>
   </Demo>,
     "layers": () => <Demo wide title="Katmanlar ve seçenekler" desc="Kaynak türü, sığdırma, kenar boşluğu, saydamlık, karışım, efekt ve ön/arka seçilebilir. Bir seçenek yalnız etkiliyken görünür (sığdırma: video ve resim; efekt: effect kaynağı). Alttaki düğmeye her durumda tıklanabilir."
     code={`<Overlay src="photo.jpg" fit="cover" inset={4} opacity={0.8} blend="multiply" />
-verlay effect="spotlight" front />           // above the content, still not clickable
-verlay draw={(ctx, { width, height, time, theme, pointer }) => …} animate />`}>
+<Overlay effect="spotlight" front />           // above the content, still not clickable
+<Overlay draw={(ctx, { width, height, time, theme, pointer }) => …} animate />`}>
     <Playground options={[
       { label: "Kaynak", get: () => $kind, set: (v: string) => { $kind = v }, options: ["video", "image", "svg", "canvas", "effect"] },
       // fit only changes video and image

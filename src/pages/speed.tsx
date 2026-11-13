@@ -81,8 +81,8 @@ export default function Speed(props: { params?: { rest?: string } }) {
   const RENDER: Record<string, () => unknown> = {
     "slow-3g": () => <Demo wide title="Yavaş 3G" desc={`Açıkken her tembel parça ve sayfa yüklenmeden önce ${SLOW_MS / 1000} sn bekler (setLoadDelay ile benzetim). Böylece iskelet, ilerleme çizgisi ve yumuşak geliş görünür. Bu sekme boyunca açık kalır; Veri ya da Grafikler sayfasına gidip bak. Aynı parça ikinci kez istendiğinde önbellektedir, iskelet hiç görünmez.`}
     code={`import { setLoadDelay } from "hadi-march/lazy"
-tLoadDelay(1600)   // demo / test: every lazy() part and route waits 1.6 s
-nst Pie = lazy(() => import("hadi-march/charts/pie.ts"), { pick: "PieChart", placeholder: "chart", height: "14rem" })`}>
+setLoadDelay(1600)   // demo / test: every lazy() part and route waits 1.6 s
+const Pie = lazy(() => import("hadi-march/charts/pie.ts"), { pick: "PieChart", placeholder: "chart", height: "14rem" })`}>
     <div class="sc-row">
       <Toggle value={slow} label="Yavaş 3G" />
       <Button size="sm" on:click={() => { $showPie = !$showPie }}>{() => ($showPie ? "Grafiği kaldır" : "Grafiği göster")}</Button>
@@ -92,8 +92,8 @@ nst Pie = lazy(() => import("hadi-march/charts/pie.ts"), { pick: "PieChart", pla
   </Demo>,
     "instant": () => <Demo wide title="Anında geçiş" desc="Menüde bir sayfaya tıklayınca adres, etkin bağlantı ve konum çubuğu hemen değişir. Sayfa 100 ms içinde gelmezse yerini iskeleti alır (kabuk yerinde kalır); 150 ms'den uzun sürerse üstte ince bir çizgi ve tıklanan bağlantıda küçük bir dönen simge görünür. Yeni bir tıklama öncekini iptal eder: yalnız son sayfa açılır. Yavaş 3G'yi açıp iki sayfaya art arda tıkla."
     code={`<Router loading={<Spinner />} skeleton={() => <PageSkeleton />} />   // every page
-eateRouter({ routes: { "/data": { load: () => import("./data.tsx"), skeleton: () => <TableSkeleton /> } } })   // one route
-tch(url, { signal: navigationSignal() })   // aborted when the user clicks elsewhere`}>
+createRouter({ routes: { "/data": { load: () => import("./data.tsx"), skeleton: () => <TableSkeleton /> } } })   // one route
+fetch(url, { signal: navigationSignal() })   // aborted when the user clicks elsewhere`}>
     <div class="sc-row">
       <Toggle value={slow} label="Yavaş 3G" />
       <Link href="/data" class="hm-btn hm-btn-secondary hm-btn-sm">Veri sayfasına git</Link>
@@ -119,10 +119,10 @@ tch(url, { signal: navigationSignal() })   // aborted when the user clicks elsew
   </Demo>,
     "network-log": () => <Demo wide title="Canlı ağ paneli" desc="Bu sekme açıldığından beri yüklenen her dosya. Başka bir sayfaya git, sonra geri gel: yeni parçalar o sayfanın adıyla eklenir, ikinci gelişte önbellekten gelir. Kenar menüsündeki bir bağlantının üzerine gelmek ön yükleme satırı ekler."
     code={`// page chunk: the router splits it
-eateRouter({ routes: { "/report": () => import("./pages/rapor.tsx") } })
- heavy component: arrives on first render, a skeleton meanwhile
-nst Map = lazy(() => import("./Map.tsx"))
-ink href="/report" prefetch="hover">Rapor</Link>   // default: on hover`}>
+createRouter({ routes: { "/report": () => import("./pages/rapor.tsx") } })
+// heavy component: arrives on first render, a skeleton meanwhile
+const Map = lazy(() => import("./Map.tsx"))
+<Link href="/report" prefetch="hover">Rapor</Link>   // default: on hover`}>
     <Grid cols={5} gap={3} minCol="8rem">
       <Card><div class="sc-speed-n">{() => totals().files}</div><div class="hm-muted">dosya</div></Card>
       <Card><div class="sc-speed-n">{() => totals().net}</div><div class="hm-muted">ağdan</div></Card>
@@ -151,8 +151,8 @@ ink href="/report" prefetch="hover">Rapor</Link>   // default: on hover`}>
   </Demo>,
     "route-size": () => <Demo wide title="Rota başına boyut (gzip)" desc="march build her derlemede yazar (march-report.json): giriş, her sayfa (yoluyla) ve her tembel parça (lazy bileşen, dil paketi). Bütçe aşılınca derleme durur ve aşan satırı adıyla söyler."
     code={`// march.config.js
-port default { budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, routes: { "/data": 80 * 1024 }, fail: true } }
- ✖ over budget: /data JS 82.3 KB > 80.0 KB`}>
+export default { budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, routes: { "/data": 80 * 1024 }, fail: true } }
+// ✖ over budget: /data JS 82.3 KB > 80.0 KB`}>
     {() => {
       if (!$report) return <p class="hm-muted">{$reportError || "Yükleniyor…"}</p>
       const rows = reportRows($report)
@@ -197,7 +197,7 @@ port default { budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, ro
   </Demo>,
     "offline": () => <Demo title="Çevrimdışı önbellek (service worker)" desc="İsteğe bağlı: march.config.js › sw: true derlemede sw.js yazar. Parçalar ilk gelişte önbelleğe girer; ikinci ziyarette sayfa ağ olmadan açılır; yeni sürümde eski önbellek silinir."
     code={`import { registerServiceWorker, applyUpdate } from "hadi-march/sw"
-gisterServiceWorker({ onUpdate: () => toast("Yeni sürüm", { action: { label: "Yenile", onClick: applyUpdate } }) })`}>
+registerServiceWorker({ onUpdate: () => toast("Yeni sürüm", { action: { label: "Yenile", onClick: applyUpdate } }) })`}>
     <Stack gap={3}>
       <p>Durum: <strong>{() => SW_TEXT[swState()] ?? swState()}</strong></p>
       <div class="sc-row"><Button variant="primary" on:click={toggleSw}>{() => (swState() === "ready" || swState() === "update" ? "Kaldır" : "Etkinleştir")}</Button></div>

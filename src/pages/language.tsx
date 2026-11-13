@@ -35,15 +35,15 @@ export default function Language(props: { params?: { rest?: string } }) {
   const RENDER: Record<string, () => unknown> = {
     "todos": () => <Demo wide title="Yapılacaklar: $, türetme, <For>, bind:, on:submit|prevent" desc="Bileşen bir kez çalışır; yalnız değişen satır güncellenir."
     code={`let $todos = [...]
-t $draft = ""
-nst $left = $todos.filter((x) => !x.done).length   // derived (computed)
-orm on:submit|prevent={add}>
+let $draft = ""
+const $left = $todos.filter((x) => !x.done).length   // derived (computed)
+<form on:submit|prevent={add}>
 <TextInput bind:value={$draft} />
-form>
-or each={$shown} key="id" animate>{(t) =>
+</form>
+<For each={$shown} key="id" animate>{(t) =>
 <li class:done={t().done} on:click={() => toggle(t().id)}>{t().text}</li>}
-For>
->{$left} iş kaldı</p>`}>
+</For>
+<p>{$left} iş kaldı</p>`}>
     <Card>
       <Stack gap={3}>
         <form class="sc-row" on:submit|prevent={add}>
@@ -64,9 +64,9 @@ For>
   </Demo>,
     "pipes": () => <Demo title="Borular (pipes)" desc="{değer | boru(arg)}: Intl tabanlı, dile duyarlı biçimleme."
     code={`{$price | money("TRY")}
-time | relative}
-name | title}
-234567 | compact}`}>
+{$time | relative}
+{$name | title}
+{1234567 | compact}`}>
     <Stack gap={2}>
       <div class="sc-kv"><code>money("TRY")</code><strong>{$price | money("TRY")}</strong></div>
       <div class="sc-kv"><code>relative</code><strong>{$when | relative}</strong></div>
@@ -78,7 +78,7 @@ name | title}
   </Demo>,
     "sx-class": () => <Demo title="sx ve class:" desc="sx derlemede statik sınıflara döner (satır içi stil üretmez); class:ad={koşul} sınıfı açar/kapatır."
     code={`<div sx={{ p: 3, radius: 3, shadow: 2 }}>…</div>   // → class="hm-p-3 hm-radius-3 hm-shadow-2"
-iv class="box" class:is-hot={$big}>…</div>         // $big true → class="box is-hot"`}>
+<div class="box" class:is-hot={$big}>…</div>         // $big true → class="box is-hot"`}>
     <div class="sc-options"><Toggle bind:value={$big} label="Vurgula (class:is-hot)" /></div>
     <div sx={{ cols: 3, gap: 2 }}>
       <div class="sc-sx" class:is-hot={$big} sx={{ p: 3, radius: 2 }}><code>{"sx={{ p: 3, radius: 2 }}"}</code><span>→ .hm-p-3 .hm-radius-2</span></div>
@@ -89,12 +89,12 @@ iv class="box" class:is-hot={$big}>…</div>         // $big true → class="box
   </Demo>,
     "code-widget": () => <Demo wide title="Kod sekmesi bir widget noktası" desc="Bütün Kod sekmeleri <Widget sources={[codeView]} /> ile çizilir. Varsayılan sağlayıcı CodeViewer (renkli, salt okunur); Kopyala ve Tam ekran ayrı widget'lardır. Anahtarı açınca ikinci bir sağlayıcı kaydedilir ve vitrindeki bütün Kod sekmeleri onu gösterir. Bir canlı kod editörü aynı noktaya sağlayıcı olarak eklenebilir."
     code={`import { codeView } from "hadi-march/ui"
-nst off = codeView.provide({
+const off = codeView.provide({
 id: "plain",
 order: 1,                                  // higher than the default viewer (0)
 render: (input, ctx) => <pre>{input.source}</pre>,
-
-f()                                        // back to CodeViewer`}>
+})
+off()                                        // back to CodeViewer`}>
     <Toggle bind:value={$plain} label="Sahte sağlayıcıyı kaydet" />
     <Widget sources={[codeView]} input={{ lang: "tsx", source: 'export const Hello = () => <p class="hi">Merhaba</p>', files: [{ name: "hello.css", lang: "css", source: ".hi { color: var(--hm-primary-text); }" }, { name: "data.json", lang: "json", source: '{ "name": "March", "fast": true, "size": 15 }' }] }} />
   </Demo>,

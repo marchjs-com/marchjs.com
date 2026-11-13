@@ -276,43 +276,43 @@ export default function Network(props: { params?: { rest?: string } }) {
   const RENDER: Record<string, () => unknown> = {
     "monitor": () => <Demo wide title="Canlı istek izleyici" desc="Her istek: kategori, politika, öncelik, kaynak ve middleware adımlarının süreleri (satıra tıklayın). Başka bir sayfaya gidip dönün: sayfa parçaları da net'ten geçer (route önceliği)."
     code={`net.use(timing(), cache(), normalizeErrors())
-t.on("net:done", ({ ctx }) => console.log(ctx.req.key, ctx.steps))
-t.pending("users")   // reactive count`}>
+net.on("net:done", ({ ctx }) => console.log(ctx.req.key, ctx.steps))
+net.pending("users")   // reactive count`}>
     <Inspector />
   </Demo>,
     "dedupe": () => <Demo title="dedupe: 3 bileşen, 1 istek" desc="Aynı anahtar uçuştayken gelen istekler aynı yanıtı paylaşır; birinin iptali ötekileri bozmaz."
     code={`class UsersApi extends Api {
 base = appUrl("demo-api")   // public/demo-api, on every route
 list = this.get<User[]>("/users.json")   // GET → dedupe
-
-nst users = api(UsersApi)
-ait users.list()`}>
+}
+const users = api(UsersApi)
+await users.list()`}>
     <DedupeDemo />
   </Demo>,
     "latest": () => <Demo title="latest: arama iptali" desc="Aynı kategoride yeni istek eskisini iptal eder; yalnız son yazılanın sonucu gelir. Gecikmeyi artırınca iptaller çoğalır."
     code={`search = this.get<User[], { q: string }>("/users.json", { category: "search", policy: "latest" })
-ers.search({ q })   // the older search is aborted`}>
+users.search({ q })   // the older search is aborted`}>
     <LatestDemo />
   </Demo>,
     "mock": () => <Demo title="Mock ↔ gerçek, yavaş ağ, hata oranı" desc="Mock sağlayıcı tarayıcıda yanıt verir: tohumlu veri, durumlu CRUD, gecikme ve hata oranı."
     code={`import { crud, reply } from "hadi-march/net/mock"
-nst m = net.mock({ ...crud("/demo-api/users", seed), "GET /demo-api/me.json": () => reply(401) }, { delay: [300, 600] })
-set({ errorRate: 0.2 })      net.mock(false)   // back to the server
-t.setOnline(false)            // requests wait in the offline queue`}>
+const m = net.mock({ ...crud("/demo-api/users", seed), "GET /demo-api/me.json": () => reply(401) }, { delay: [300, 600] })
+m.set({ errorRate: 0.2 })      net.mock(false)   // back to the server
+net.setOnline(false)            // requests wait in the offline queue`}>
     <MockDemo />
   </Demo>,
     "websocket": () => <Demo title="WebSocket bildirim akışı (mock)" desc="Yönetilen bağlantı: jitter'lı yeniden bağlanma, heartbeat, konu aboneliği (yeniden bağlanınca yenilenir), korelasyonlu istek-yanıt."
     code={`const sock = socket<Notice>("ws:/live", { heartbeat: { interval: 25_000 } })
-ck.subscribe("notices", (m) => …)
-nst r = await sock.request({ type: "ask" })
-ck.state()   // "open" | "reconnecting" | …`}>
+sock.subscribe("notices", (m) => …)
+const r = await sock.request({ type: "ask" })
+sock.state()   // "open" | "reconnecting" | …`}>
     <SocketDemo />
   </Demo>,
     "errors": () => <Demo wide title="Hata kuralları" desc="window hataları, yakalanmamış sözler, sınırlar, net ve WS hataları tek toplayıcıya gelir; aynı hata tekrar gösterilmez, sayılır. report() kancası varsayılan olarak hiçbir yere göndermez."
     code={`errors.install()
-rors.rule({ type: "auth" }, "page")                       // <ErrorPage>
-ers.saveProfile(v, { meta: { target: "profile" } })        // 422 → <ErrorInline target="profile" />
-rors.report((e) => myLogger.send(e))                      // opt-in`}>
+errors.rule({ type: "auth" }, "page")                       // <ErrorPage>
+users.saveProfile(v, { meta: { target: "profile" } })        // 422 → <ErrorInline target="profile" />
+errors.report((e) => myLogger.send(e))                      // opt-in`}>
     <ErrorsDemo />
   </Demo>,
   }

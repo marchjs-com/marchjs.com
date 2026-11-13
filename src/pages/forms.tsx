@@ -67,9 +67,9 @@ export default function Forms(props: { params?: { rest?: string } }) {
   </Demo>
   <Demo wide title="Seçim kontrolleri: seçenekler" desc="Varyant, boyut ve köşe değiştir. Renk üst çubuktaki Vurgu rengi seçicisinden gelir; HADİ renkleri açıkken her seçenek sırayla turuncu, mavi, yeşil, mor olur."
     code={`<CheckboxGroup variant="chip" size="md" shape="rounded" color="brand-blue" options={days} />
-heckboxGroup variant="chip" colors="brand" options={days} />      // one HADİ color per option
-adioGroup variant="card" options={[{ value, label, hint, icon }]} />
-heckbox variant="soft" indeterminate label="Kısmen" />`}>
+<CheckboxGroup variant="chip" colors="brand" options={days} />      // one HADİ color per option
+<RadioGroup variant="card" options={[{ value, label, hint, icon }]} />
+<Checkbox variant="soft" indeterminate label="Kısmen" />`}>
     <Playground options={[
       { label: "Varyant", get: () => $chVariant, set: (v: string) => { $chVariant = v }, options: [...VARIANTS] },
       { label: "Boyut", get: () => $chSize, set: (v: string) => { $chSize = v }, options: ["sm", "md", "lg"] },
@@ -98,8 +98,8 @@ heckbox variant="soft" indeterminate label="Kısmen" />`}>
 email: { type: "email", required: true },
 plan:  { type: "pick", options: […], control: "segmented" },
 seats: { type: "int", min: 2, when: (v) => v.plan === "team" },
-
-orm schema={SignUp} layout="grid" cols={2} onSubmit={api.signUp} />`}>
+})
+<Form schema={SignUp} layout="grid" cols={2} onSubmit={api.signUp} />`}>
     <Card>
       <Form schema={Signup} layout="grid" cols={2} submitLabel="Hesap oluştur"
         onSubmit={async (v: Record<string, unknown>) => {

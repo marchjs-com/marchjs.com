@@ -48,11 +48,11 @@ export default function Navigation(props: { params?: { rest?: string } }) {
     code={`createRouter({
 routes: { "/team": { load: () => import("./list.tsx"), layouts: [shell, teamLayout] } },
 outlets: { aside: { "/item/:id": () => import("./item.tsx") } },
-
- teamLayout: <Outlet /> + <Outlet name="aside" />
-ink href="/item/3" outlet="aside">Open beside</Link>
-ink href="/team/item/3" modal>Open over the list</Link>
-ortal to="toolbar"><Button>New record</Button></Portal>`}>
+})
+// teamLayout: <Outlet /> + <Outlet name="aside" />
+<Link href="/item/3" outlet="aside">Open beside</Link>
+<Link href="/team/item/3" modal>Open over the list</Link>
+<Portal to="toolbar"><Button>New record</Button></Portal>`}>
     <Link href="/navigation/router" class="hm-btn hm-btn-primary">Yönlendirici demosunu aç</Link>
   </Demo>,
     "admin-sidebar": () => <Demo wide title="Yönetim paneli kenar çubuğu" desc="Yaz: süzer (ö/o, ı/i katlanır). ↑ ↓ Home End gez, → kategoriyi aç, ← kapat ya da kategoriye dön, Enter seç. Rozet canlı: talep ekle."

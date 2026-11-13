@@ -17,11 +17,11 @@ export default function Feedback(props: { params?: { rest?: string } }) {
     "progress": () => <ComponentDemo folder="feedback/progress" title="Progress: değer, belirsiz, renkler" desc="Ton tek renk verir; birden çok renk gradient, eşit parçalar ya da akan döngü olarak dizilir. Dolgu kırpılır, RTL'de aynalanır." />,
     "indicators": () => <Demo wide title="Çok renkli göstergeler" desc="HADİ temasında ilerleme çubuğu, çark ve iskelet varsayılan olarak dört marka rengini taşır (öteki temalarda tek renk). colors ile renkler, paint ile dizilim seçilir: gradient, segments ya da cycle (renkler akar). Hareketi azalt tercihinde durağan."
     code={`<Progress value={60} />                                   // HADİ: four brand colors by default
-rogress value={60} paint="segments" />                  // equal colored parts
-rogress paint="cycle" />                                // indeterminate, colors flow
-rogress value={60} colors={["brand-blue", "brand-green"]} />
-rogress value={60} colors="single" />                   // one color
-rogressRing value={72} colors="brand" />  <Spinner colors="brand" />`}>
+<Progress value={60} paint="segments" />                  // equal colored parts
+<Progress paint="cycle" />                                // indeterminate, colors flow
+<Progress value={60} colors={["brand-blue", "brand-green"]} />
+<Progress value={60} colors="single" />                   // one color
+<ProgressRing value={72} colors="brand" />  <Spinner colors="brand" />`}>
     <div class="sc-multi">
       <Stack gap={3}>
         <Progress value={$p} label="Varsayılan (gradient)" showValue />

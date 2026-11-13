@@ -33,8 +33,8 @@ export default function Motion(props: { params?: { rest?: string } }) {
   const RENDER: Record<string, () => unknown> = {
     "spring-tween": () => <Demo title="Yay ve tween" desc="Aynı hedef, iki fizik: yay (aşar ve oturur) ve sekme eğrili tween."
     code={`let $hedef = 120
-nst x = spring(() => $hedef, { stiffness: 210, damping: 16 })
-pan style={{ transform: \`translateX(\${x()}px)\` }} />`}>
+const x = spring(() => $hedef, { stiffness: 210, damping: 16 })
+<span style={{ transform: \`translateX(\${x()}px)\` }} />`}>
     <Field label={() => `Hedef: ${$target}px`}><Slider bind:value={$target} min={0} max={260} /></Field>
     <div class="sc-track"><span class="sc-ball" style={{ transform: `translateX(${x()}px)` }}>yay</span></div>
     <div class="sc-track"><span class="sc-ball sc-ball-2" style={{ transform: `translateX(${y()}px)` }}>tween</span></div>

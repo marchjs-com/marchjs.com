@@ -28,14 +28,14 @@ export default function Overlays(props: { params?: { rest?: string } }) {
   const RENDER: Record<string, () => unknown> = {
     "dialog-drawer": () => <Demo title="Dialog ve çekmece" desc="openDialog / openDrawer: içerik bir fonksiyon, sonuç close(değer)."
     code={`const ad = await openDialog((close) => <Form … onSubmit={(v) => close(v.ad)} />, { title: "Profili düzenle" })
-nst tamam = await confirm({ title: "Silinsin mi?", danger: true })`}>
+const tamam = await confirm({ title: "Silinsin mi?", danger: true })`}>
     <div class="sc-row"><Button variant="primary" icon={edit} on:click={edit1}>Profili düzenle</Button><Button icon={sliders} on:click={drawer}>Çekmeceyi aç</Button></div>
     <div class="sc-row"><Button variant="danger" icon={trash} on:click={del}>Onaylı sil</Button><Button on:click={rename}>Metin iste</Button><Button on:click={reason}>Gerekçe iste</Button></div>
     <p class="hm-muted">Son sonuç: {$last}</p>
   </Demo>,
     "toasts": () => <Demo title="Bildirimler (toast)" desc="Dört tür, eylem düğmesi (geri al), kendiliğinden kapanma; ekran okuyucuya duyurulur."
     code={`toast("Kaydedildi", { kind: "success" })
-ast("Silindi", { kind: "danger", action: { label: "Geri al", run: geriAl } })`}>
+toast("Silindi", { kind: "danger", action: { label: "Geri al", run: geriAl } })`}>
     <div class="sc-row">
       <Button icon={check} on:click={() => toast("Değişiklikler kaydedildi", { kind: "success" })}>Başarı</Button>
       <Button icon={info} on:click={() => toast("Yeni sürüm hazır: 2.4.0", { kind: "info" })}>Bilgi</Button>

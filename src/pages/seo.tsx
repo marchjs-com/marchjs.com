@@ -46,13 +46,13 @@ export default function Seo(props: { params?: { rest?: string } }) {
   const RENDER: Record<string, () => unknown> = {
     "live-head": () => <Demo wide title="Canlı head: useHead()" desc="Alanları değiştir: bu sayfanın <head> etiketleri anında güncellenir (sekme başlığına bak). Sayfadan çıkınca kendi etiketleri kalkar."
     code={`installSeo({ site: "https://shop.example", titleTemplate: "%s · Mağaza" })
-eHead(() => ({
+useHead(() => ({
 title: $title,
 description: $desc,
 og: { image: { url: $image, alt: $title } },
 twitter: { card: "summary_large_image" },
 jsonLd: ld.product({ name: $title, price: $price, currency: "TRY" }),
-)`}>
+}))`}>
     <Stack gap={3}>
       <div class="sc-row">
         <Toggle bind:value={$live} label="Bu sayfanın head'ine yaz" />
@@ -78,9 +78,9 @@ jsonLd: ld.product({ name: $title, price: $price, currency: "TRY" }),
   </Demo>,
     "seo-check": () => <Demo wide title="march seo check" desc="Derlenen her sayfa için: eksik başlık, açıklama, canonical, alt metni, h1 ve geçersiz JSON-LD. Aynı denetim tarayıcıda da çalışır."
     code={`$ march build && march seo check
-st/index.html: error canonical          missing <link rel="canonical">
-st/product/index.html: warn  description-length description is 31 characters (aim for 50–160)
-2 page(s): 1 error(s), 1 warning(s)`} lang="sh">
+dist/index.html: error canonical          missing <link rel="canonical">
+dist/product/index.html: warn  description-length description is 31 characters (aim for 50–160)
+✖ 2 page(s): 1 error(s), 1 warning(s)`} lang="sh">
     <Stack gap={3}>
       <Field label="Denetlenecek HTML"><Textarea bind:value={$html} rows={3} /></Field>
       <div class="sc-row">
@@ -93,7 +93,7 @@ st/product/index.html: warn  description-length description is 31 characters (ai
   </Demo>,
     "prerender": () => <Demo wide title="Ön işleme (prerender) ve hidrasyon" desc="march build, rotaları derleme sırasında HTML'e çevirir (head dahil) ve sitemap.xml ile robots.txt yazar; tarayıcıda hydrate() hazır sayfayı boş kare olmadan devralır. Bu vitrinin açılış sayfası da böyle gelir."
     code={`// march.config.js
-port default {
+export default {
 seo: {
   site: "https://shop.example",
   prerender: true,              // parametresiz her rota (hash yönlendirmede yalnız açılış sayfası)
@@ -101,11 +101,11 @@ seo: {
   robots: { disallow: ["/yonetim"] },
   head: { jsonLd: ld.website({ name: "Mağaza", url: "https://shop.example" }) },
 },
-
- main.tsx
-drate(() => <Router />, document.getElementById("app"))
- bir rotanın head'i
-eateRouter({ routes: { "/product/:id": { load, head: (to) => ({ title: \`Ürün \${to.params.id}\` }) } } })`}>
+}
+// main.tsx
+hydrate(() => <Router />, document.getElementById("app"))
+// bir rotanın head'i
+createRouter({ routes: { "/product/:id": { load, head: (to) => ({ title: \`Ürün \${to.params.id}\` }) } } })`}>
     <p class="hm-muted">Her rotanın kendi index.html dosyası var; adres başka bir rotayı gösterirse (404 yedeği, eski bir hash bağlantısı) ön işlenmiş içerik hemen kaldırılır, yanlış içerik görünmez.</p>
   </Demo>,
   }

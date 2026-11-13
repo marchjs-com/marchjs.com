@@ -51,10 +51,10 @@ export default function Layout(props: { params?: { rest?: string } }) {
   const RENDER: Record<string, () => unknown> = {
     "grid-live": () => <Demo wide title="Canlı karşılaştırma" desc="Kart sayısını, sütunu ve kapsayıcı genişliğini değiştir; seçili mod tam genişlikte, altında beşi yan yana."
     code={`<Grid cols={4} gap={3}>…</Grid>                 // default: aligned columns
-rid cols={4} fill="stretch">…</Grid>           // the last row shares the space
-rid cols={4} fill="last">…</Grid>              // son kart kalan alana uzar
-rid cols={4} balance>…</Grid>                  // 5 cards → 3 + 2 (not 4 + 1)
-rid min="17rem" fill="stretch">…</Grid>        // automatic columns + fill`}>
+<Grid cols={4} fill="stretch">…</Grid>           // the last row shares the space
+<Grid cols={4} fill="last">…</Grid>              // son kart kalan alana uzar
+<Grid cols={4} balance>…</Grid>                  // 5 cards → 3 + 2 (not 4 + 1)
+<Grid min="17rem" fill="stretch">…</Grid>        // automatic columns + fill`}>
     <Playground options={[
       { label: "Mod", get: () => $mode, set: (v: string) => { $mode = v }, options: MODES },
       { label: "Sütun", get: () => $cols, set: (v: string) => { $cols = v }, options: ["2", "3", "4", "5", "6"] },
