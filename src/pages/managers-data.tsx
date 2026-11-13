@@ -215,5 +215,5 @@ export default function ManagersData(props: { params?: { rest?: string } }) {
     "cache": () => <><ChannelPanel /><CacheDemo /></>,
     "config": () => <><ChannelPanel /><ConfigDemo /></>,
   }
-  return <Hub base="/managers-data" kicker="Temel › Yöneticiler" title="Veri ve durum yöneticileri" lead="Pano, geri alma, kaydedilmemiş değişiklik, depolama, önbellek ve yapılandırma: her biri tek örnek, ilk kullanımda başlar, olaylarını kanala yayınlar." render={RENDER} params={props.params} />
+  return <Hub section="/managers-data" kicker="Temel › Yöneticiler" title="Veri ve durum yöneticileri" lead="Pano, geri alma, kaydedilmemiş değişiklik, depolama, önbellek ve yapılandırma: her biri tek örnek, ilk kullanımda başlar, olaylarını kanala yayınlar." render={RENDER} params={props.params} />
 }

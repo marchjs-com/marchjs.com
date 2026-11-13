@@ -213,5 +213,5 @@ export default function ManagersEnv(props: { params?: { rest?: string } }) {
     "scroll": () => <><EventFeed /><ScrollDemo /></>,
     "device": () => <><EventFeed /><DeviceDemo /></>,
   }
-  return <Hub base="/managers-env" kicker="Temel › Yöneticiler" title="Ortam yöneticileri" lead="Kullanıcının ve cihazın durumu için uygulama genelinde hizmetler: boşta olma, çevrimdışı eşitleme, cihaz yetenekleri, izinler, konum, bildirimler, sekmeler, kaydırma, oturum süresi ve varlık. Hepsi tek örnek, ilk kullanımda başlar ve olaylarını managers kanalına yayınlar." render={RENDER} params={props.params} />
+  return <Hub section="/managers-env" kicker="Temel › Yöneticiler" title="Ortam yöneticileri" lead="Kullanıcının ve cihazın durumu için uygulama genelinde hizmetler: boşta olma, çevrimdışı eşitleme, cihaz yetenekleri, izinler, konum, bildirimler, sekmeler, kaydırma, oturum süresi ve varlık. Hepsi tek örnek, ilk kullanımda başlar ve olaylarını managers kanalına yayınlar." render={RENDER} params={props.params} />
 }

@@ -140,5 +140,5 @@ export default function ManagersOps(props: { params?: { rest?: string } }) {
     "perf": () => <><ChannelPanel /><PerfDemo /></>,
     "rate": () => <><ChannelPanel /><RateDemo /></>,
   }
-  return <Hub base="/managers-ops" kicker="Temel › Yöneticiler" title="Bayrak, günlük, performans ve hız yöneticileri" lead="Özellik bayrakları, günlük, Web Vitals ve hız sınırı: her biri tek örnek, ilk kullanımda başlar, olaylarını kanala yayınlar." render={RENDER} params={props.params} />
+  return <Hub section="/managers-ops" kicker="Temel › Yöneticiler" title="Bayrak, günlük, performans ve hız yöneticileri" lead="Özellik bayrakları, günlük, Web Vitals ve hız sınırı: her biri tek örnek, ilk kullanımda başlar, olaylarını kanala yayınlar." render={RENDER} params={props.params} />
 }

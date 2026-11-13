@@ -249,5 +249,5 @@ export default function ManagersA11y(props: { params?: { rest?: string } }) {
     "accessibility": () => <AccessibilityDemo />,
     "shortcut-hints": () => <ShortcutHintDemo />,
   }
-  return <Hub base="/managers-a11y" kicker="Temel › Yöneticiler" title="Erişilebilirlik yöneticileri" lead="Katman, odak, kısayol, duyurucu, erişilebilirlik tercihleri ve kısayol ipuçları: tek örnek, ilk kullanımda başlar, tek yerden yapılandırılır. Hepsi klavye ve ekran okuyucu ile çalışır." render={RENDER} params={props.params} />
+  return <Hub section="/managers-a11y" kicker="Temel › Yöneticiler" title="Erişilebilirlik yöneticileri" lead="Katman, odak, kısayol, duyurucu, erişilebilirlik tercihleri ve kısayol ipuçları: tek örnek, ilk kullanımda başlar, tek yerden yapılandırılır. Hepsi klavye ve ekran okuyucu ile çalışır." render={RENDER} params={props.params} />
 }

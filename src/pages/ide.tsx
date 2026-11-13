@@ -18,5 +18,5 @@ export default function IdePage(props: { params?: { rest?: string } }) {
     "activity-bar": () => <ComponentDemo folder="navigation/activity-bar" title="ActivityBar: görünüm çubuğu" desc="Yan görünümü değiştirir; gösterge etkin simgeye kayar. Etkin simgeye yeniden basınca yan görünüm kapanır. Rozetler, sonda duran öğeler, dikey ya da yatay." />,
     "breadcrumbs": () => <ComponentDemo folder="navigation/breadcrumbs" title="Breadcrumbs: yol çubuğu" desc="Dosya yolu; kardeşi olan parça menü açar. Daraltınca ortadaki parçalar “…” menüsünde toplanır, ilk ve son kalır." />,
   }
-  return <Hub base="/ide" kicker="Karmaşık bileşenler" title="IDE kabuğu" lead="Editör ve geliştirici araçları için yerleşim parçaları: sürükle-bırak panel yerleşimi, özellik düzenleyici, taşan araç çubuğu, durum ve etkinlik çubukları, yol çubuğu. Hepsi mevcut bileşenlerden kurulur ve komut paletine bağlanır." render={RENDER} params={props.params} />
+  return <Hub section="/ide" kicker="Karmaşık bileşenler" title="IDE kabuğu" lead="Editör ve geliştirici araçları için yerleşim parçaları: sürükle-bırak panel yerleşimi, özellik düzenleyici, taşan araç çubuğu, durum ve etkinlik çubukları, yol çubuğu. Hepsi mevcut bileşenlerden kurulur ve komut paletine bağlanır." render={RENDER} params={props.params} />
 }

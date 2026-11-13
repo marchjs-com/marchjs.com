@@ -18,5 +18,5 @@ const RENDER: Record<string, () => unknown> = {
 }
 
 export default function Editors(props: { params?: { rest?: string } }) {
-  return <Hub base="/editors" kicker="Bileşenler" title="Editörler" lead="Zengin metin, Markdown, JSON ağacı, renk ve gradyan, hareket eğrisi, anahtar kare zaman çizelgesi ve resim kırpma. Hepsi klavyeyle kullanılır, sağdan sola yazında aynalanır, geri alınabilir." render={RENDER} params={props.params} />
+  return <Hub section="/editors" kicker="Bileşenler" title="Editörler" lead="Zengin metin, Markdown, JSON ağacı, renk ve gradyan, hareket eğrisi, anahtar kare zaman çizelgesi ve resim kırpma. Hepsi klavyeyle kullanılır, sağdan sola yazında aynalanır, geri alınabilir." render={RENDER} params={props.params} />
 }

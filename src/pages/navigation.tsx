@@ -106,5 +106,5 @@ collapseBelow={150} persist onResize={(w) => console.log(w)} />`}>
     "nav-menu": () => <ComponentDemo folder="navigation/nav-menu" title="NavMenu: uygulama menüsü" desc="Gruplar, sabitlenen ve son kullanılan öğeler, süzme kutusu, ikon rayı. Dar ekranda menü düğmesiyle açılan çekmece olur." />,
     "overflow-text": () => <ComponentDemo folder="typography/overflow-text" title="Taşan metin: OverflowText ve Marquee" desc="Yalnız sığmayan metin kayar; sığan metin yerinde durur. Kenarlar mantıksal yönde solar; Arapça (RTL) ters yöne kayar; ekran okuyucu metni bir kez okur; azaltılmış harekette kaymaz." />,
   }
-  return <Hub base="/navigation" kicker="Gezinme" title="Gezinme" lead="NavSidebar: büyük panellerin kenar çubuğu. Arama kutusu bütün öğeleri süzer; son ziyaretler ve açık kategoriler hatırlanır; klavyeyle tam gezilir; dar ekranda çekmece, geniş ekranda ikon rayına daraltılır. Bu vitrinin sol menüsü de aynı bileşen." render={RENDER} params={props.params} />
+  return <Hub section="/navigation" kicker="Gezinme" title="Gezinme" lead="NavSidebar: büyük panellerin kenar çubuğu. Arama kutusu bütün öğeleri süzer; son ziyaretler ve açık kategoriler hatırlanır; klavyeyle tam gezilir; dar ekranda çekmece, geniş ekranda ikon rayına daraltılır. Bu vitrinin sol menüsü de aynı bileşen." render={RENDER} params={props.params} />
 }

@@ -145,5 +145,5 @@ seats: { type: "int", min: 2, when: (v) => v.plan === "team" },
     "rating": () => <ComponentDemo folder="forms/rating" title="Rating: yıldızla puan" desc="Radyo grubu: oklarla değişir (RTL'de aynalanır), üstüne gelince önizler; salt okunurken yarım yıldız gösterir." />,
     "wizard": () => <ComponentDemo folder="composite/wizard" title="Wizard: adım adım form" desc="Karmaşık bileşen: her adımın kendi şeması; ileri giderken doğrular, geri dönünce değerler korunur, önceki adımlar geçince sonraki adıma üstteki listeden atlanır. Parçaları aşağıdaki satırda." />,
   }
-  return <Hub base="/forms" kicker="Bileşenler" title="Formlar" lead="Şemadan form: alanlar, doğrulama, koşullu alanlar ve tür bilgisi tek tanımdan. Bütün alanlar bind: ile iki yönlü bağlanır." render={RENDER} params={props.params} />
+  return <Hub section="/forms" kicker="Bileşenler" title="Formlar" lead="Şemadan form: alanlar, doğrulama, koşullu alanlar ve tür bilgisi tek tanımdan. Bütün alanlar bind: ile iki yönlü bağlanır." render={RENDER} params={props.params} />
 }

@@ -57,5 +57,5 @@ export default function Charts(props: { params?: { rest?: string } }) {
     <Heatmap data={heat} x="h" y="d" value="v" yFormat={(d: number) => days[d]} title="Etkinlik" />
   </Demo>,
   }
-  return <Hub base="/charts" kicker="Bileşenler" title="Grafikler" lead="SVG, erişilebilir (ekran okuyucu için veri tablosu, klavyeyle nokta gezme), tema paletiyle renklenir. Veri sinyalse grafik kendiliğinden güncellenir." render={RENDER} params={props.params} />
+  return <Hub section="/charts" kicker="Bileşenler" title="Grafikler" lead="SVG, erişilebilir (ekran okuyucu için veri tablosu, klavyeyle nokta gezme), tema paletiyle renklenir. Veri sinyalse grafik kendiliğinden güncellenir." render={RENDER} params={props.params} />
 }

@@ -320,5 +320,5 @@ m.drops(); m.longTasks()`}>
     <CodeView code={keyframesCss({ names: ["fadeUp", "pop", "spin"] }).trim()} lang="css" copy />
   </Demo>,
   }
-  return <Hub base="/animation" kicker="Hareket" title="Animasyon motoru" lead="Tek keyframe motoru: değer katmanı hedeften bağımsız; DOM (WAAPI), CSS değişkeni, canvas, WebGL ve düz nesneler aynı timeline'da oynar. Tek saat, global hız, durdurma ve 'hareketi azalt' her animasyona — saf CSS animasyonlarına bile — ulaşır." render={RENDER} params={props.params} />
+  return <Hub section="/animation" kicker="Hareket" title="Animasyon motoru" lead="Tek keyframe motoru: değer katmanı hedeften bağımsız; DOM (WAAPI), CSS değişkeni, canvas, WebGL ve düz nesneler aynı timeline'da oynar. Tek saat, global hız, durdurma ve 'hareketi azalt' her animasyona — saf CSS animasyonlarına bile — ulaşır." render={RENDER} params={props.params} />
 }

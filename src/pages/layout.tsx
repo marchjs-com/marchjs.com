@@ -84,5 +84,5 @@ export default function Layout(props: { params?: { rest?: string } }) {
     "device-preview": () => <ComponentDemo folder="layout/device-preview" title="DevicePreview: gerçek cihaz önizlemesi" desc="Telefon ve tablet kasası, çentik, durum çubuğu, gerçek ekran boyu, döndürme; fare parmak gibi: sürükle-kaydır, fırlatma, uzun bas. Ekran bir OverlayScope: çekmece cihazın içinde açılır." />,
     "app-shell": () => <ComponentDemo folder="layout/app-shell" title="AppShell: uygulama çerçevesi" desc="Kenar çubuğu sütunu, üst duyuru ve kayan ana alan; önce gelen 'İçeriğe geç' bağlantısı. Dar ekranda tam genişlik." />,
   }
-  return <Hub base="/layout" kicker="Yerleşim" title="Yerleşim" lead="Grid hiçbir genişlikte yatay taşmaz. Son satır için isteğe bağlı fill (stretch: kalan alanı eşit paylaş, last: son kart genişlesin) ve balance (satırlara dengeli dağıt). Yalnız CSS; telefonda tek sütun." render={RENDER} params={props.params} />
+  return <Hub section="/layout" kicker="Yerleşim" title="Yerleşim" lead="Grid hiçbir genişlikte yatay taşmaz. Son satır için isteğe bağlı fill (stretch: kalan alanı eşit paylaş, last: son kart genişlesin) ve balance (satırlara dengeli dağıt). Yalnız CSS; telefonda tek sütun." render={RENDER} params={props.params} />
 }

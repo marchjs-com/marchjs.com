@@ -53,5 +53,5 @@ toast("Silindi", { kind: "danger", action: { label: "Geri al", run: geriAl } })`
     "toast": () => <ComponentDemo folder="overlays/toast" title="Toast: tür, geri al, süre" desc="Engellemeyen kısa ileti; en fazla beş üst üste. Geri al eylemi önce toast'ı kapatır, sonra çalışır." />,
     "drawer": () => <ComponentDemo folder="overlays/drawer" title="Drawer: dört kenar, sürükle, durma noktaları" desc="Başlangıç / bitiş kenarı yazı yönüne uyar (RTL'de yer değiştirir). Tutamaçtan ya da başlıktan sürükleyin; bırakınca en yakın durma noktasına oturur, kenara atınca kapanır. Modal kapalıyken sayfa kullanılabilir kalır." />,
   }
-  return <Hub base="/overlays" kicker="Bileşenler" title="Pencereler ve bildirimler" lead="Odak tuzağı, Esc ile kapanma, arka plan kaydırma kilidi, ekran okuyucu rolleri; mobilde alttan açılan sayfa. Hepsi Promise döndürür." render={RENDER} params={props.params} />
+  return <Hub section="/overlays" kicker="Bileşenler" title="Pencereler ve bildirimler" lead="Odak tuzağı, Esc ile kapanma, arka plan kaydırma kilidi, ekran okuyucu rolleri; mobilde alttan açılan sayfa. Hepsi Promise döndürür." render={RENDER} params={props.params} />
 }

@@ -173,5 +173,5 @@ export default function Managers(props: { params?: { rest?: string } }) {
     "consent": () => <ConsentDemo />,
     "command": () => <CommandDemo />,
   }
-  return <Hub base="/managers" kicker="Temel" title="Yöneticiler" lead="Uygulama genelindeki hizmetler: tek örnek, ilk kullanımda başlar, tek yerden yapılandırılır ve kapatılır. Viewport ortamın tek sinyal kaynağı, Consent çerez ve KVKK/GDPR rızası, Command tek eylem kaydı." render={RENDER} params={props.params} />
+  return <Hub section="/managers" kicker="Temel" title="Yöneticiler" lead="Uygulama genelindeki hizmetler: tek örnek, ilk kullanımda başlar, tek yerden yapılandırılır ve kapatılır. Viewport ortamın tek sinyal kaynağı, Consent çerez ve KVKK/GDPR rızası, Command tek eylem kaydı." render={RENDER} params={props.params} />
 }

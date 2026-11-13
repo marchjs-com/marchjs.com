@@ -204,5 +204,5 @@ registerServiceWorker({ onUpdate: () => toast("Yeni sürüm", { action: { label:
     </Stack>
   </Demo>,
   }
-  return <Hub base="/speed" kicker="Temel" title="Hız" lead="Uygulama tek sayfa ama hepsi açılışta inmez: giriş paketi yalnız kabuk ve yönlendiricidir; her sayfa, ağır bileşen ve tema kendi parçasıdır ve gerektiğinde gelir. Bağlantının üzerine gelince parçalar önceden çekilir, boşta kalınca da sayfadaki bağlantılar. Gelen her şey önbelleğe girer." render={RENDER} params={props.params} />
+  return <Hub section="/speed" kicker="Temel" title="Hız" lead="Uygulama tek sayfa ama hepsi açılışta inmez: giriş paketi yalnız kabuk ve yönlendiricidir; her sayfa, ağır bileşen ve tema kendi parçasıdır ve gerektiğinde gelir. Bağlantının üzerine gelince parçalar önceden çekilir, boşta kalınca da sayfadaki bağlantılar. Gelen her şey önbelleğe girer." render={RENDER} params={props.params} />
 }

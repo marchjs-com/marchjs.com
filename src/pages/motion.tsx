@@ -83,5 +83,5 @@ const x = spring(() => $hedef, { stiffness: 210, damping: 16 })
     <div class="sc-reveal-grid">{Array.from({ length: 6 }, (_, i) => <Card use:reveal={{ delay: i * 70, y: 24 }}><strong>Kart {i + 1}</strong><p class="hm-muted">Sırayla belirir.</p></Card>)}</div>
   </Demo>,
   }
-  return <Hub base="/motion" kicker="Hareket" title="Hareket ve efektler" lead="hadi-march/motion: yay fiziği, tween, FLIP, zaman çizelgesi, jestler ve kaydırma tetikleyicileri. hadi-march/fx: parçacıklar, konfeti, spot ışığı. Satır içi stil yerine CSS değişkenleri; 'hareketi azalt' açıkken sakinleşir." render={RENDER} params={props.params} />
+  return <Hub section="/motion" kicker="Hareket" title="Hareket ve efektler" lead="hadi-march/motion: yay fiziği, tween, FLIP, zaman çizelgesi, jestler ve kaydırma tetikleyicileri. hadi-march/fx: parçacıklar, konfeti, spot ışığı. Satır içi stil yerine CSS değişkenleri; 'hareketi azalt' açıkken sakinleşir." render={RENDER} params={props.params} />
 }

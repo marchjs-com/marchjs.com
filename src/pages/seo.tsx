@@ -109,7 +109,7 @@ createRouter({ routes: { "/product/:id": { load, head: (to) => ({ title: \`Ürü
     <p class="hm-muted">Her rotanın kendi index.html dosyası var; adres başka bir rotayı gösterirse (404 yedeği, eski bir hash bağlantısı) ön işlenmiş içerik hemen kaldırılır, yanlış içerik görünmez.</p>
   </Demo>,
   }
-  return <Hub base="/seo" kicker="Temel" title="SEO" lead="Rota başına başlık ve meta, Open Graph ve Twitter kartları, JSON-LD, derlemede ön işleme (prerender), sitemap.xml ve robots.txt. Hepsi yönlendiriciyle bütünleşik." render={RENDER} params={props.params} />
+  return <Hub section="/seo" kicker="Temel" title="SEO" lead="Rota başına başlık ve meta, Open Graph ve Twitter kartları, JSON-LD, derlemede ön işleme (prerender), sitemap.xml ve robots.txt. Hepsi yönlendiriciyle bütünleşik." render={RENDER} params={props.params} />
 }
 
 function Report(props: { title: string; issues: SeoIssue[] }) {

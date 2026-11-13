@@ -84,5 +84,5 @@ primary = brand-orange · info = brand-blue · success = brand-green · special 
     <div class="sc-elev">{[1, 2, 3, 4].map((i) => <div class={`sc-elev-box sc-elev-${i}`}><span>radius-{i}</span><span class="hm-muted">shadow-{i}</span></div>)}</div>
   </Demo>,
   }
-  return <Hub base="/themes" kicker="Temel" title="Temalar ve tokenlar" lead="Bir tema yaklaşık 25 renk, iki yazı tipi ve bir yarıçaptır; gerisi (yüzeyler, hover, yumuşak tonlar, gölgeler) color-mix ile türetilir. Tema değişimi tek bir özniteliktir; satır içi stil yok. Varsayılan tema HADİ Sosyal'in markası." render={RENDER} params={props.params} />
+  return <Hub section="/themes" kicker="Temel" title="Temalar ve tokenlar" lead="Bir tema yaklaşık 25 renk, iki yazı tipi ve bir yarıçaptır; gerisi (yüzeyler, hover, yumuşak tonlar, gölgeler) color-mix ile türetilir. Tema değişimi tek bir özniteliktir; satır içi stil yok. Varsayılan tema HADİ Sosyal'in markası." render={RENDER} params={props.params} />
 }

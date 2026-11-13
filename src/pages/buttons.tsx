@@ -59,5 +59,5 @@ export default function Buttons(props: { params?: { rest?: string } }) {
     <div class="sc-row">{(["primary", "info", "success", "warn", "danger", "violet", "pink", "teal", "neutral"] as const).map((tone) => <IconTile icon={search} tone={tone} />)}</div>
   </Demo>,
   }
-  return <Hub base="/buttons" kicker="Bileşenler" title="Düğmeler ve rozetler" lead="Dört varyant, üç boyut; yükleniyor, devre dışı, odak halkası ve basma geri bildirimi. Hepsi klavyeyle tam kullanılır." render={RENDER} params={props.params} />
+  return <Hub section="/buttons" kicker="Bileşenler" title="Düğmeler ve rozetler" lead="Dört varyant, üç boyut; yükleniyor, devre dışı, odak halkası ve basma geri bildirimi. Hepsi klavyeyle tam kullanılır." render={RENDER} params={props.params} />
 }
