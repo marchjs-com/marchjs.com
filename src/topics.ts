@@ -241,6 +241,44 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "sx-class", title: "sx ve class", desc: "sx derlemede statik sınıflara döner (satır içi stil üretmez); class:ad={koşul} sınıfı açar/kapatır.", group: "Dil" },
     { slug: "code-widget", title: "Kod sekmesi bir widget noktası", desc: "Bütün Kod sekmeleri <Widget sources={[codeView]} /> ile çizilir.", group: "Dil" },
   ],
+  "/managers": [
+    { slug: "viewport", title: "Viewport", desc: "Pencere ve kapsayıcı kırılma noktaları, dokunma, yön, tercihler: tek kaynaktan canlı sinyaller.", group: "Temel" },
+    { slug: "consent", title: "Rıza", desc: "Çerez ve depolama rızası: banner, tercihler, rıza yokken kapalı analitik, üçüncü taraf içerik.", group: "Temel" },
+    { slug: "command", title: "Komut", desc: "Tek kayıt: palette, menüde ve kısayolda aynı komut; çakışma ve geçmiş.", group: "Temel" },
+  ],
+  "/managers-data": [
+    { slug: "clipboard", title: "Pano", desc: "Kopyala ve yapıştır; izin ve yedek yol.", group: "Veri ve durum" },
+    { slug: "undo", title: "Geri al ve kaydedilmemiş", desc: "Geri al / yinele geçmişi, kaydedilmemiş değişiklik uyarısı.", group: "Veri ve durum" },
+    { slug: "storage", title: "Depolama", desc: "local, session ve IndexedDB tek arayüzle; kota ve süre.", group: "Veri ve durum" },
+    { slug: "cache", title: "Önbellek", desc: "Anahtarlı önbellek, tazelik, yeniden doğrulama.", group: "Veri ve durum" },
+    { slug: "config", title: "Yapılandırma", desc: "Katmanlı ayarlar, ortam değişkenleri, canlı değişim.", group: "Veri ve durum" },
+  ],
+  "/managers-ops": [
+    { slug: "flags", title: "Özellik bayrakları", desc: "Kullanıcıya ve yüzdeye göre açılan özellikler.", group: "İşletim" },
+    { slug: "log", title: "Günlük", desc: "Düzeyler, alt günlükler, sunucuya paketli gönderim.", group: "İşletim" },
+    { slug: "perf", title: "Performans", desc: "Ölçümler, Web Vitals, uzun görevler.", group: "İşletim" },
+    { slug: "rate", title: "Hız sınırı", desc: "Debounce, throttle ve kova sınırı.", group: "İşletim" },
+  ],
+  "/managers-a11y": [
+    { slug: "layer", title: "Katman", desc: "Yığın, en üstteki ve Esc sırası.", group: "Erişilebilirlik" },
+    { slug: "focus", title: "Odak", desc: "Odak tuzağı, geri dönüş, focus-visible, gezici odak.", group: "Erişilebilirlik" },
+    { slug: "hotkey", title: "Kısayol", desc: "Kapsam, dizi ve duraklatma.", group: "Erişilebilirlik" },
+    { slug: "announcer", title: "Duyurucu", desc: "Ekran okuyucuya canlı duyurular.", group: "Erişilebilirlik" },
+    { slug: "accessibility", title: "Erişilebilirlik tercihleri", desc: "Uygulama genelinde tercihler ve sayfa denetimi.", group: "Erişilebilirlik" },
+    { slug: "shortcut-hints", title: "Kısayol ipuçları", desc: "Alt tuşuyla görünen kısayol rozetleri.", group: "Erişilebilirlik" },
+  ],
+  "/managers-env": [
+    { slug: "idle", title: "Boşta", desc: "Kullanıcı boşta mı; süre, duraklatma.", group: "Ortam" },
+    { slug: "presence", title: "Varlık", desc: "Kim çevrimiçi, kim yazıyor.", group: "Ortam" },
+    { slug: "sync", title: "Sekme eşitleme", desc: "Sekmeler arası durum ve mesaj.", group: "Ortam" },
+    { slug: "session", title: "Oturum", desc: "Oturum süresi, yenileme, çıkış.", group: "Ortam" },
+    { slug: "permission", title: "İzinler", desc: "Tarayıcı izinleri: durum ve isteme.", group: "Ortam" },
+    { slug: "location", title: "Konum", desc: "Konum izni ve izleme.", group: "Ortam" },
+    { slug: "notification", title: "Bildirim", desc: "Sistem bildirimleri ve izin.", group: "Ortam" },
+    { slug: "window", title: "Pencere", desc: "Görünürlük, odak, tam ekran, boyut.", group: "Ortam" },
+    { slug: "scroll", title: "Kaydırma", desc: "Sayfa ilerlemesi ve scrollspy.", group: "Ortam" },
+    { slug: "device", title: "Cihaz", desc: "Ağ, pil, bellek, yetenekler.", group: "Ortam" },
+  ],
 };
 
 /** Every topic as a sub page under its section (path, title, parent) for the routes, the breadcrumb and the menu. */

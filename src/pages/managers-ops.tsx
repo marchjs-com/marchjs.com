@@ -6,7 +6,8 @@ import { flags, configureFlags, bucket } from "hadi-march/managers/flags";
 import { logger, configureLog, consoleTransport, memoryTransport, beaconTransport, type Level } from "hadi-march/managers/log";
 import { perf, type VitalName } from "hadi-march/managers/perf";
 import { rateLimit } from "hadi-march/managers/rate";
-import { Demo, Section } from "../demo.tsx";
+import { Demo } from "../demo.tsx";
+import { Hub } from "../hub.tsx";
 import { ticker, tone } from "../managers-data/ticker.ts";
 import { ChannelPanel } from "../managers-data/channel-panel.tsx";
 
@@ -132,12 +133,12 @@ if (!quota.take()) toast(\`\${Math.ceil(quota.resetIn() / 1000)} sn sonra\`)`}>
   </Demo>
 }
 
-export default function ManagersOps() {
-  return <Section kicker="Temel › Yöneticiler" title="Bayrak, günlük, performans ve hız yöneticileri" lead="Özellik bayrakları, günlük, Web Vitals ve hız sınırı: her biri tek örnek, ilk kullanımda başlar, olaylarını kanala yayınlar.">
-    <ChannelPanel />
-    <FlagsDemo />
-    <LogDemo />
-    <PerfDemo />
-    <RateDemo />
-  </Section>
+export default function ManagersOps(props: { params?: { rest?: string } }) {
+  const RENDER: Record<string, () => unknown> = {
+    "flags": () => <><ChannelPanel /><FlagsDemo /></>,
+    "log": () => <><ChannelPanel /><LogDemo /></>,
+    "perf": () => <><ChannelPanel /><PerfDemo /></>,
+    "rate": () => <><ChannelPanel /><RateDemo /></>,
+  }
+  return <Hub base="/managers-ops" kicker="Temel › Yöneticiler" title="Bayrak, günlük, performans ve hız yöneticileri" lead="Özellik bayrakları, günlük, Web Vitals ve hız sınırı: her biri tek örnek, ilk kullanımda başlar, olaylarını kanala yayınlar." render={RENDER} params={props.params} />
 }

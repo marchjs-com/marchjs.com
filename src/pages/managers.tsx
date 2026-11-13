@@ -16,7 +16,8 @@ const showConsentBanner = (): void => { void consentUi().then((m) => m.showConse
 const openConsentPreferences = (): void => { void consentUi().then((m) => m.openConsentPreferences()) }
 import { command, commands, onCommandRun } from "hadi-march/managers/command";
 import { commandItems, CommandButton, CommandToolbar, bindCommandKeys } from "hadi-march/managers/command/ui";
-import { Demo, Section } from "../demo.tsx";
+import { Demo } from "../demo.tsx";
+import { Hub } from "../hub.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
 
 const yes = (v: boolean) => <Badge tone={v ? "success" : "neutral"} dot>{v ? "evet" : "hayır"}</Badge>
@@ -166,10 +167,11 @@ function CommandDemo() {
   </>
 }
 
-export default function Managers() {
-  return <Section kicker="Temel" title="Yöneticiler" lead="Uygulama genelindeki hizmetler: tek örnek, ilk kullanımda başlar, tek yerden yapılandırılır ve kapatılır. Viewport ortamın tek sinyal kaynağı, Consent çerez ve KVKK/GDPR rızası, Command tek eylem kaydı.">
-    <ViewportDemo />
-    <ConsentDemo />
-    <CommandDemo />
-  </Section>
+export default function Managers(props: { params?: { rest?: string } }) {
+  const RENDER: Record<string, () => unknown> = {
+    "viewport": () => <ViewportDemo />,
+    "consent": () => <ConsentDemo />,
+    "command": () => <CommandDemo />,
+  }
+  return <Hub base="/managers" kicker="Temel" title="Yöneticiler" lead="Uygulama genelindeki hizmetler: tek örnek, ilk kullanımda başlar, tek yerden yapılandırılır ve kapatılır. Viewport ortamın tek sinyal kaynağı, Consent çerez ve KVKK/GDPR rızası, Command tek eylem kaydı." render={RENDER} params={props.params} />
 }

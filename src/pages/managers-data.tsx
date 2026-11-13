@@ -12,7 +12,8 @@ import { appCache, configureCache } from "hadi-march/managers/cache";
 import { appConfig, configureAppConfig } from "hadi-march/managers/config";
 import { command } from "hadi-march/managers/command";
 import { CommandButton, bindCommandKeys } from "hadi-march/managers/command/ui";
-import { Demo, Section } from "../demo.tsx";
+import { Demo } from "../demo.tsx";
+import { Hub } from "../hub.tsx";
 import { ticker } from "../managers-data/ticker.ts";
 import { ChannelPanel } from "../managers-data/channel-panel.tsx";
 
@@ -206,13 +207,13 @@ await appConfig().load(() => net.get("/config.json"))   appConfig().source("api.
   </Demo>
 }
 
-export default function ManagersData() {
-  return <Section kicker="Temel › Yöneticiler" title="Veri ve durum yöneticileri" lead="Pano, geri alma, kaydedilmemiş değişiklik, depolama, önbellek ve yapılandırma: her biri tek örnek, ilk kullanımda başlar, olaylarını kanala yayınlar.">
-    <ChannelPanel />
-    <ClipboardDemo />
-    <UndoDirtyDemo />
-    <StorageDemo />
-    <CacheDemo />
-    <ConfigDemo />
-  </Section>
+export default function ManagersData(props: { params?: { rest?: string } }) {
+  const RENDER: Record<string, () => unknown> = {
+    "clipboard": () => <><ChannelPanel /><ClipboardDemo /></>,
+    "undo": () => <><ChannelPanel /><UndoDirtyDemo /></>,
+    "storage": () => <><ChannelPanel /><StorageDemo /></>,
+    "cache": () => <><ChannelPanel /><CacheDemo /></>,
+    "config": () => <><ChannelPanel /><ConfigDemo /></>,
+  }
+  return <Hub base="/managers-data" kicker="Temel › Yöneticiler" title="Veri ve durum yöneticileri" lead="Pano, geri alma, kaydedilmemiş değişiklik, depolama, önbellek ve yapılandırma: her biri tek örnek, ilk kullanımda başlar, olaylarını kanala yayınlar." render={RENDER} params={props.params} />
 }

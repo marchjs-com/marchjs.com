@@ -13,7 +13,8 @@ import { a11y, type A11yIssue } from "hadi-march/managers/accessibility";
 import { AccessibilitySettings } from "hadi-march/managers/accessibility/ui";
 import { shortcutHints, disposeShortcutHints } from "hadi-march/managers/shortcut-hint";
 import { ShortcutHints } from "hadi-march/managers/shortcut-hint/ui";
-import { Demo, Section } from "../demo.tsx";
+import { Demo } from "../demo.tsx";
+import { Hub } from "../hub.tsx";
 
 const yes = (v: boolean) => <Badge tone={v ? "success" : "neutral"} dot>{v ? "evet" : "hayır"}</Badge>
 
@@ -239,13 +240,14 @@ shortcutHints.show()   shortcutHints.openHelp()`}>
   </Demo>
 }
 
-export default function ManagersA11y() {
-  return <Section kicker="Temel › Yöneticiler" title="Erişilebilirlik yöneticileri" lead="Katman, odak, kısayol, duyurucu, erişilebilirlik tercihleri ve kısayol ipuçları: tek örnek, ilk kullanımda başlar, tek yerden yapılandırılır. Hepsi klavye ve ekran okuyucu ile çalışır.">
-    <LayerDemo />
-    <FocusDemo />
-    <HotkeyDemo />
-    <AnnouncerDemo />
-    <AccessibilityDemo />
-    <ShortcutHintDemo />
-  </Section>
+export default function ManagersA11y(props: { params?: { rest?: string } }) {
+  const RENDER: Record<string, () => unknown> = {
+    "layer": () => <LayerDemo />,
+    "focus": () => <FocusDemo />,
+    "hotkey": () => <HotkeyDemo />,
+    "announcer": () => <AnnouncerDemo />,
+    "accessibility": () => <AccessibilityDemo />,
+    "shortcut-hints": () => <ShortcutHintDemo />,
+  }
+  return <Hub base="/managers-a11y" kicker="Temel › Yöneticiler" title="Erişilebilirlik yöneticileri" lead="Katman, odak, kısayol, duyurucu, erişilebilirlik tercihleri ve kısayol ipuçları: tek örnek, ilk kullanımda başlar, tek yerden yapılandırılır. Hepsi klavye ve ekran okuyucu ile çalışır." render={RENDER} params={props.params} />
 }

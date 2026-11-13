@@ -9,7 +9,8 @@ import { device, configureDevice, type DeviceFeature } from "hadi-march/managers
 import { appWindow } from "hadi-march/managers/window";
 import { scroll, configureScroll } from "hadi-march/managers/scroll";
 import { presence, configurePresence, type PresenceState } from "hadi-march/managers/presence";
-import { Demo, Section } from "../demo.tsx";
+import { Demo } from "../demo.tsx";
+import { Hub } from "../hub.tsx";
 import { yes, time, secs, clock, Signals } from "../env-managers/common.tsx";
 
 import { SyncDemo } from "../env-managers/sync.tsx";
@@ -199,18 +200,18 @@ presence().state()   presence().overall()   presence().tabs()   presence().setPe
   </Demo>
 }
 
-export default function ManagersEnv() {
-  return <Section kicker="Temel › Yöneticiler" title="Ortam yöneticileri" lead="Kullanıcının ve cihazın durumu için uygulama genelinde hizmetler: boşta olma, çevrimdışı eşitleme, cihaz yetenekleri, izinler, konum, bildirimler, sekmeler, kaydırma, oturum süresi ve varlık. Hepsi tek örnek, ilk kullanımda başlar ve olaylarını managers kanalına yayınlar.">
-    <EventFeed />
-    <IdleDemo />
-    <PresenceDemo />
-    <SyncDemo />
-    <SessionDemo />
-    <PermissionDemo />
-    <LocationDemo />
-    <NotificationDemo />
-    <WindowDemo />
-    <ScrollDemo />
-    <DeviceDemo />
-  </Section>
+export default function ManagersEnv(props: { params?: { rest?: string } }) {
+  const RENDER: Record<string, () => unknown> = {
+    "idle": () => <><EventFeed /><IdleDemo /></>,
+    "presence": () => <><EventFeed /><PresenceDemo /></>,
+    "sync": () => <><EventFeed /><SyncDemo /></>,
+    "session": () => <><EventFeed /><SessionDemo /></>,
+    "permission": () => <><EventFeed /><PermissionDemo /></>,
+    "location": () => <><EventFeed /><LocationDemo /></>,
+    "notification": () => <><EventFeed /><NotificationDemo /></>,
+    "window": () => <><EventFeed /><WindowDemo /></>,
+    "scroll": () => <><EventFeed /><ScrollDemo /></>,
+    "device": () => <><EventFeed /><DeviceDemo /></>,
+  }
+  return <Hub base="/managers-env" kicker="Temel › Yöneticiler" title="Ortam yöneticileri" lead="Kullanıcının ve cihazın durumu için uygulama genelinde hizmetler: boşta olma, çevrimdışı eşitleme, cihaz yetenekleri, izinler, konum, bildirimler, sekmeler, kaydırma, oturum süresi ve varlık. Hepsi tek örnek, ilk kullanımda başlar ve olaylarını managers kanalına yayınlar." render={RENDER} params={props.params} />
 }
