@@ -26,7 +26,7 @@ export default function LiveSample() {
     </SiteSection>
     <SiteSection eyebrow="Senin şehrinde" title="Yakınındakiler" lead="Kendi şehrindeki akışı görmek için HADİ'ye katıl.">
       <div class="sc-live-split">
-        <LiveFeed max={4} every={2200} next={activitySource()} label="Yakınındaki etkinlikler" />
+        <LiveFeed max={4} every={2200} enter="drop" leave="fall" next={activitySource()} label="Yakınındaki etkinlikler" />
         <div class="sc-live-aside">
           <LiveCounter from={214} rate={6} label="kişi şu an yakınında bir şeyler planlıyor" />
           <p class="hm-muted">Rakamlar ve akış bu örnekte temsilidir; gerçek sitede sunucudan gelir.</p>
