@@ -84,7 +84,7 @@ export const HOME_STATS = {
     "pageFx": 10
   },
   "managers": 30,
-  "tests": 1197,
+  "tests": 1198,
   "testFiles": 292,
   "budget": {
     "entry": 15360,
