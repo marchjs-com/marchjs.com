@@ -98,7 +98,7 @@ definePageTransition("spiral", (side, dir, rtl) => {
       ]}>
       <div class="sc-mo-custom">
         <span class="sc-mo-custom-dial" aria-hidden="true" style={{ transform: `rotate(${$spin}deg) scale(${$depth / 100})` }} />
-        <Link href="/motion/pages/spiral" class="hm-btn hm-btn-primary">Sarmal ile git</Link>
+        <Button href="/motion/pages/spiral" variant="primary">Sarmal ile git</Button>
       </div>
     </MotionDemo>
 

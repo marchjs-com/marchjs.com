@@ -1,15 +1,16 @@
 // IDE shell (Complex components): DockLayout, PropertyGrid, OverflowToolbar, StatusBar, ActivityBar, Breadcrumbs and the
 // command palette, each as its own card, then a mini editor built only from them.
 import "./ide.css";
+import { Button } from "hadi-march/ui";
 import { Hub } from "../hub.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
 import { Demo } from "../demo.tsx";
-import { Link } from "hadi-march/router";
+
 
 export default function IdePage(props: { params?: { rest?: string } }) {
   const RENDER: Record<string, () => unknown> = {
     "live": () => <Demo wide title="Canlı demo: mini editör" desc="Bu sayfadaki bileşenlerin hepsiyle kurulu küçük bir editör: dosya ağacı, sekmeli editörler, ayarlar (PropertyGrid), konsol, komut paleti. Kendi sayfasında açılır.">
-    <p><Link href="/ide-live" class="hm-btn hm-btn-primary">Mini editörü aç</Link></p>
+    <p><Button href="/ide-live" variant="primary">Mini editörü aç</Button></p>
   </Demo>,
     "dock-layout": () => <ComponentDemo folder="composite/dock-layout" title="DockLayout: sürükle, bırak, yerleştir" desc="Sekmeyi bir grubun kenarına bırak: yeni bölme; ortasına ya da sekmelerin arasına: sekme; alanın kenarına: tüm yerleşimin kenarı; dışına: yüzen pencere. Bırakma önizlemesi hareket motoruyla kayar. Grup düğmeleri büyütür, yüzdürür, küçültür. Klavye: F6 gruplar arası, Alt+Shift+oklar yerleştirir." />,
     "property-grid": () => <ComponentDemo folder="composite/property-grid" title="PropertyGrid: özellik düzenleyici" desc="Gruplu, aranabilir satırlar; her tür kendi form denetimiyle düzenlenir. Her değişiklik bir geri alma adımı (Ctrl+Z ya da başlıktaki düğmeler), kaydedilmemiş değişiklikler DirtyState’e kayıtlı: sayfadan ayrılırken sorulur. Değişen satır işaretlenir, tek tek sıfırlanır." />,

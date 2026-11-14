@@ -45,6 +45,7 @@ export default function Navigation(props: { params?: { rest?: string } }) {
     sub: () => ($waiting ? `${$waiting} talep yanıt bekliyor` : "Yanıt bekleyen talep yok"), onSelect: () => { $picked = "Destek talepleri" } }]
   const RENDER: Record<string, () => unknown> = {
     "page-dots": () => <ComponentDemo folder="navigation/page-dots" title="PageDots: sayfa noktaları" desc="Sayfa başına bir nokta; etkin olan uzar ve renklenir. onChange verilirse noktalar düğmedir (ok tuşları, Home / End), verilmezse yalnız konumu gösterir." />,
+    "period-nav": () => <ComponentDemo folder="navigation/period-nav" title="PeriodNav: dönem gezinme" desc="Takvimin dönemini adımlayan küçük grup: önceki, bugün, sonraki. Başlık verilirse dönemin adı okların arasında durur (Calendar ay satırı), verilmezse üç düğme bitişik tek denetimdir (Scheduler çubuğu). Oklar sağdan sola yazıda yer değiştirir." />,
     "routing": () => <Demo wide title="Yönlendirici: kalıcı yerleşim, adlı outlet, modal rota" desc="İç içe yerleşim (sekme değişince yerleşimdeki metin kalır), yanda açılan kayıt (adreste ?~aside=), pencerede açılan kayıt (geri tuşu kapatır, yenileyince tam sayfa) ve üst çubuğa sayfanın kendi düğmeleri (Portal)."
     code={`createRouter({
 routes: { "/team": { load: () => import("./list.tsx"), layouts: [shell, teamLayout] } },
@@ -54,7 +55,7 @@ outlets: { aside: { "/item/:id": () => import("./item.tsx") } },
 <Link href="/item/3" outlet="aside">Open beside</Link>
 <Link href="/team/item/3" modal>Open over the list</Link>
 <Portal to="toolbar"><Button>New record</Button></Portal>`}>
-    <Link href="/navigation/router" class="hm-btn hm-btn-primary">Yönlendirici demosunu aç</Link>
+    <Button href="/navigation/router" variant="primary">Yönlendirici demosunu aç</Button>
   </Demo>,
     "admin-sidebar": () => <Demo wide title="Yönetim paneli kenar çubuğu" desc="Yaz: süzer (ö/o, ı/i katlanır). ↑ ↓ Home End gez, → kategoriyi aç, ← kapat ya da kategoriye dön, Enter seç. Rozet canlı: talep ekle."
     code={`<NavSidebar title="HADİ Yönetim"

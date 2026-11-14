@@ -96,8 +96,8 @@ createRouter({ routes: { "/data": { load: () => import("./data.tsx"), skeleton: 
 fetch(url, { signal: navigationSignal() })   // aborted when the user clicks elsewhere`}>
     <div class="sc-row">
       <Toggle value={slow} label="Yavaş 3G" />
-      <Link href="/data" class="hm-btn hm-btn-secondary hm-btn-sm">Veri sayfasına git</Link>
-      <Link href="/charts" class="hm-btn hm-btn-secondary hm-btn-sm">Grafikler sayfasına git</Link>
+      <Button href="/data" size="sm">Veri sayfasına git</Button>
+      <Button href="/charts" size="sm">Grafikler sayfasına git</Button>
     </div>
   </Demo>,
     "parts": () => <Demo wide title="Canlı parça listesi" desc="Derlemedeki her tembel birim (sayfalar, lazy bileşenler, kabuk parçaları, dil paketi) ve bu sekmede inip inmediği. Sayfalar arasında gez ya da Yavaş 3G'yi aç: satırlar indikçe güncellenir.">

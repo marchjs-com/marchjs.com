@@ -1,6 +1,6 @@
 // Page transitions demo: one tile's page. The big tile carries the same data-hm-shared name as the small one in the
 // grid, so it moves from there to here. In the modal, the previous / next links swap the page inside it.
-import { Link, back } from "hadi-march/router";
+import { back } from "hadi-march/router";
 import { Button } from "hadi-march/ui";
 import { TILES } from "./tiles.ts";
 
@@ -14,8 +14,8 @@ export default function TilePage(props: { id: string; close?: () => void }) {
     <div class={`sc-tr-big sc-tr-c${t.tone}`} data-hm-shared={`tile-${t.id}`}>{t.name}</div>
     <p>{modal ? "Önceki ve sonraki kare pencerenin içini geçişle değiştirir." : "Kare ızgaradaki yerinden buraya taşındı. Geri dönünce yerine geri gider."}</p>
     <div class="sc-row">
-      <Link href={`/transitions/tile/${prev.id}`} modal={modal} replace={modal} class="hm-btn hm-btn-secondary hm-btn-sm">{`← ${prev.name}`}</Link>
-      <Link href={`/transitions/tile/${next.id}`} modal={modal} replace={modal} class="hm-btn hm-btn-secondary hm-btn-sm">{`${next.name} →`}</Link>
+      <Button href={`/transitions/tile/${prev.id}`} modal={modal} replace={modal} size="sm">{`← ${prev.name}`}</Button>
+      <Button href={`/transitions/tile/${next.id}`} modal={modal} replace={modal} size="sm">{`${next.name} →`}</Button>
       {modal ? <Button size="sm" variant="ghost" on:click={props.close}>Kapat</Button> : <Button size="sm" variant="ghost" on:click={() => back()}>Geri</Button>}
     </div>
   </div>

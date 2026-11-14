@@ -8,6 +8,8 @@ export const HUBS: Record<string, readonly Topic[]> = {
   "/editors": [
     { slug: "rich-text", title: "Zengin metin", name: "RichTextEditor", desc: "Biçimli metin, bağlantı, liste; Markdown giriş ve çıkış.", group: "Metin" },
     { slug: "markdown", title: "Markdown düzenleyici", name: "MarkdownEditor", desc: "Solda Markdown, sağda canlı önizleme; bölmeler birlikte kayar.", group: "Metin" },
+    { slug: "format-toolbar", title: "Biçimlendirme çubuğu", name: "FormatToolbar", desc: "Kalın, italik, başlık, liste, bağlantı, geri al: araçlar, adlar, ikonlar ve kısayol ipuçları sizin.", group: "Metin" },
+    { slug: "editor-frame", title: "Editör çerçevesi", name: "EditorFrame", desc: "Kenar ve odak halkası, üst çubuk, yazma alanı, alt çubuk: kendi editörünüz için aynı görünüm.", group: "Metin" },
     { slug: "json", title: "JSON düzenleyici", name: "JsonEditor", desc: "Aynı JSON metinde ve ağaçta; satır/sütunlu hata, biçimlendir.", group: "Veri" },
     { slug: "tree", title: "JSON ağacı", name: "TreeEditor", desc: "Satır satır düzenleme, tür rozetleri, şema doğrulaması, geri al.", group: "Veri" },
     { slug: "terminal", title: "Terminal", name: "Terminal", desc: "Komutlar, ANSI renkler, tablo ve JSON çıktısı; pencereli hâli.", group: "Veri" },
@@ -81,6 +83,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "error-box", title: "Hata kutusu", name: "ErrorBox", desc: "Hata ve yeniden dene.", group: "Bildirim" },
     { slug: "status-dot", title: "Durum noktası", name: "StatusDot", desc: "Tonlu nokta; halka ya da yanıp sönme.", group: "Bildirim" },
     { slug: "check-mark", title: "Onay işareti", name: "CheckMark", desc: "Evet, hayır, kısmen; okunur metniyle.", group: "Bildirim" },
+    { slug: "live-status", title: "Canlı durum satırı", name: "LiveStatus", desc: "Değişeni kibarca okutan satır: sayaç, aralık; görünür ya da yalnız okunur, yardım satırıyla.", group: "Bildirim" },
     { slug: "progress", title: "İlerleme", name: "Progress", desc: "Değer, belirsiz, renkler.", group: "Yükleme" },
     { slug: "indicators", title: "Çok renkli göstergeler", desc: "Bölümlü ve renkli ilerleme göstergeleri.", group: "Yükleme" },
     { slug: "skeleton", title: "İskelet", name: "Skeleton", desc: "İçerik gelmeden düzen.", group: "Yükleme" },
@@ -101,6 +104,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "pull-to-refresh", title: "Çekerek yenile", name: "PullToRefresh", desc: "Dokunmatikte aşağı çek, yenile.", group: "Sayfa içi" },
     { slug: "overflow-text", title: "Taşan metin", name: "OverflowText", desc: "OverflowText ve Marquee.", group: "Sayfa içi" },
     { slug: "page-dots", title: "Sayfa noktaları", name: "PageDots", desc: "Sayfa başına bir nokta, etkin olan uzun ve renkli; tıklanır ya da yalnız konumu gösterir.", group: "Sayfa içi" },
+    { slug: "period-nav", title: "Dönem gezinme", name: "PeriodNav", desc: "Önceki, bugün, sonraki; istenirse okların arasında dönemin adı.", group: "Sayfa içi" },
   ],
   "/social": [
     { slug: "post-card", title: "Gönderi kartı", name: "PostCard", desc: "Fotoğraflara çift dokunun: büyük kalp belirir ve dört HADİ rengiyle patlar.", group: "Karmaşık bileşenler" },
@@ -108,6 +112,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "chat-thread", title: "Sohbet akışı", name: "ChatThread", desc: "Bir mesaj gönderin: balon yaylanarak yükselir, karşı taraf yazmaya başlar ve yanıtlar.", group: "Karmaşık bileşenler" },
     { slug: "chat-composer", title: "Mesaj yazma alanı", name: "ChatComposer", desc: "Boşken mikrofon (turuncu), yazınca gönder (mavi) düğmesine dönüşür.", group: "Karmaşık bileşenler" },
     { slug: "chat-bubble", title: "Mesaj balonu", name: "ChatBubble", desc: "Benim balonum Aktivite mavisi, karşı taraf kart rengi; aynı göndericinin ardışık mesajlarında yalnız…", group: "Sosyal" },
+    { slug: "reply-quote", title: "Yanıt alıntısı", name: "ReplyQuote", desc: "Yanıtlanan mesaj: ad ve kısaltılmış metin renkli çubuğun arkasında; balonda alıntı, yazma alanında vazgeç düğmeli önizleme.", group: "Sosyal" },
     { slug: "typing-indicator", title: "Yazıyor göstergesi", name: "TypingIndicator", desc: "Üç nokta sırayla yükselir; kim yazıyorsa ekran okuyucuya bir kez söylenir.", group: "Sosyal" },
     { slug: "reaction-picker", title: "Tepki seçici", name: "ReactionPicker", desc: "Açılırken yaylanır, emojiler sırayla gelir; seçili olan yumuşak mavi dairede.", group: "Sosyal" },
     { slug: "story-viewer", title: "Hikâye görüntüleyici", name: "StoryViewer", desc: "Bir halkaya dokunun.", group: "Karmaşık bileşenler" },

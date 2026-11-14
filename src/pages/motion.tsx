@@ -3,8 +3,8 @@
 import "hadi-march/motion/install"; // fly, blur… transitions and <For animate> on this page (the shell installs them later, when idle)
 import { spring, tween, timeline, stagger, drag, magnet, tilt, press, parallax, reveal, inView } from "hadi-march/motion";
 import { Particles, confetti, spotlight } from "hadi-march/fx";
-import { Button, Card, Badge, Slider, Field, toast } from "hadi-march/ui";
-import { Icon, plus, refresh, sparkles, x as xIcon } from "hadi-march/icons";
+import { Button, IconButton, Card, Badge, Slider, Field, toast } from "hadi-march/ui";
+import { plus, refresh, sparkles, x as xIcon } from "hadi-march/icons";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 
@@ -50,7 +50,7 @@ const x = spring(() => $hedef, { stiffness: 210, damping: 16 })
       <For each={$items} key="id" animate>{(it: () => Item) =>
         <li class={`sc-flip-card sc-cat-bg-${it().tone}`} use:tilt={{ max: 8 }}>
           <strong>{it().name}</strong>
-          <button type="button" class="hm-icon-btn hm-btn-sm" aria-label="Kaldır" on:click={() => { $items = $items.filter((x) => x.id !== it().id) }}><Icon of={xIcon} /></button>
+          <IconButton size="sm" icon={xIcon} label="Kaldır" onClick={() => { $items = $items.filter((x) => x.id !== it().id) }} />
         </li>}
       </For>
     </ul>

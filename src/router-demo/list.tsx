@@ -1,5 +1,5 @@
 // Router demo: the list page (its own toolbar buttons through <Portal to="toolbar">).
-import { Link } from "hadi-march/router";
+
 import { Portal } from "hadi-march";
 import { Button, toast } from "hadi-march/ui";
 import { PEOPLE } from "./data.ts";
@@ -11,8 +11,8 @@ export default function RouterList() {
     <ul class="sc-router-list">
       {PEOPLE.map((p) => <li>
         <strong>{p.name}</strong>
-        <Link href={`/item/${p.id}`} outlet="aside" class="hm-btn hm-btn-ghost hm-btn-sm">Yanda aç</Link>
-        <Link href={`/navigation/router/item/${p.id}`} modal class="hm-btn hm-btn-ghost hm-btn-sm">Pencerede aç</Link>
+        <Button href={`/item/${p.id}`} outlet="aside" variant="ghost" size="sm">Yanda aç</Button>
+        <Button href={`/navigation/router/item/${p.id}`} modal variant="ghost" size="sm">Pencerede aç</Button>
       </li>)}
     </ul>
   </>

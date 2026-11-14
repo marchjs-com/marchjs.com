@@ -2,13 +2,15 @@
 // What the first paint needs (frame, breadcrumb). No page list here: routes, titles and loaders live in src/routes.ts,
 // a start-up chunk, so the entry does not grow with the number of pages. The side menu, the top bar tools and the rest
 // (palette, toasts, motion extras) are lazy chunks with placeholders of the same size, so the entry stays small.
-import { Outlet, Link, path } from "hadi-march/router";
-import { AppShell, Spacer } from "hadi-march/ui";
+import { Outlet, path } from "hadi-march/router";
+import { AppShell, Spacer, type BreadcrumbsProps } from "hadi-march/ui";
 import { lazy, skeleton } from "hadi-march/lazy";
 
 const ShellNav = lazy(() => import("./shell-nav.tsx"), { fallback: () => <div class="sc-nav-placeholder" aria-hidden="true" /> })
 const ShellTools = lazy(() => import("./shell-tools.tsx"), { fallback: () => <div class="sc-tools sc-tools-placeholder" aria-hidden="true" /> })
 const ShellLate = lazy(() => import("./shell-late.tsx"), { fallback: () => null })
+// the trail is the Breadcrumbs component in its own chunk (as <Page> loads it); its height is reserved, so nothing jumps
+const Crumbs = lazy<BreadcrumbsProps>(() => import("hadi-march/components/navigation/breadcrumbs"), { pick: "Breadcrumbs", placeholder: "none", height: "1.875rem" })
 
 /** A showcase page as the menu and the home page show it. */
 export interface PageEntry { path: string; title: string; desc?: string | undefined; group?: string | undefined; icon?: unknown; /** The page this one is listed under. */ parent?: string | undefined; /** A page under another one's route (menu only). */ sub?: boolean }
@@ -24,12 +26,7 @@ function Topbar() {
   // instant on the click: the path changes at once, the title is looked up from it
   const title = () => { const p = path(); return p !== "/" ? titleOf(p) : undefined }
   return <>
-    <nav class="hm-crumbs" aria-label="Konum">
-      <ol>
-        <li><Link href="/">March</Link></li>
-        {() => { const t = title(); return t ? <li><span aria-current="page">{t}</span></li> : null }}
-      </ol>
-    </nav>
+    <Crumbs label="Konum" separator="/" items={() => { const t = title(); return [{ id: "home", label: "March", href: "/" as const }, ...(t ? [{ id: "page", label: t }] : [])] }} />
     <Spacer />
     <ShellTools />
   </>

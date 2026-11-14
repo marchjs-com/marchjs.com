@@ -44,7 +44,7 @@ export default function Transitions(props: { params: { rest?: string }; close?: 
 } })
 pageTransitions({ type: "fade" })   // default for routes without their own`}>
       <nav class="sc-row" aria-label="Geçiş türleri">
-        {TABS.map((t) => <Link href={t.href} exact class="hm-btn hm-btn-secondary hm-btn-sm">{t.label}</Link>)}
+        {TABS.map((t) => <Button href={t.href} exact size="sm">{t.label}</Button>)}
         <Button size="sm" variant="ghost" on:click={() => back()}>Geri</Button>
         <Toggle bind:value={$rtl}>Sağdan sola (RTL)</Toggle>
       </nav>
@@ -62,7 +62,7 @@ pageTransitions({ type: "fade" })   // default for routes without their own`}>
           <Link href={`/transitions/tile/${t.id}`} class="sc-tr-link" aria-label={t.name}>
             <span class={`sc-tr-tile sc-tr-c${t.tone}`} data-hm-shared={`tile-${t.id}`}>{t.name}</span>
           </Link>
-          <Link href={`/transitions/tile/${t.id}`} modal class="hm-btn hm-btn-ghost hm-btn-sm">Pencerede aç</Link>
+          <Button href={`/transitions/tile/${t.id}`} modal variant="ghost" size="sm">Pencerede aç</Button>
         </li>)}
       </ul>
     </Demo>
@@ -70,7 +70,7 @@ pageTransitions({ type: "fade" })   // default for routes without their own`}>
       <Field label={() => `Global hız: ${$speed.toFixed(2)}×`}><Slider bind:value={$speed} min={0.1} max={3} step={0.05} /></Field>
       <div class="sc-row">
         <Button variant={motion.paused() ? "primary" : "secondary"} on:click={() => motion.togglePause()}>{() => motion.paused() ? "Tümünü sürdür" : "Tümünü durdur"}</Button>
-        <Link href="/animation" class="hm-btn hm-btn-ghost hm-btn-sm">Animasyon motoru</Link>
+        <Button href="/animation" variant="ghost" size="sm">Animasyon motoru</Button>
       </div>
     </Demo>
   </Section>

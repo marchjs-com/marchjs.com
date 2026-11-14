@@ -3,6 +3,7 @@
 import "hadi-march/motion/install";
 import { h, render } from "hadi-march";
 import { pageTransitions, motion } from "hadi-march/motion";
+import { Button } from "hadi-march/ui";
 
 pageTransitions({ type: "fade", duration: 180 });
 
@@ -12,4 +13,4 @@ const host = document.createElement("div");
 document.body.append(host);
 render(() => h("div", { class: "sc-paused", role: "status", hidden: () => !motion.paused() },
   h("span", {}, "Tüm animasyonlar durduruldu: her sayfada"),
-  h("button", { type: "button", class: "hm-btn hm-btn-primary hm-btn-sm", onClick: () => motion.resumeAll() }, "Sürdür")), host);
+  h(Button, { variant: "primary", size: "sm", onClick: () => motion.resumeAll() }, "Sürdür")), host);

@@ -1,6 +1,7 @@
 // Router demo layout: the frame of this demo is built once and stays while its tabs change below it.
 // The counter counts how often the frame was built during this visit (it starts again when you leave the demo).
-import { Outlet, Link, path } from "hadi-march/router";
+import { Outlet, path } from "hadi-march/router";
+import { Button } from "hadi-march/ui";
 import { onCleanup } from "hadi-march";
 import { TextInput, Field, Badge, Card, Grid } from "hadi-march/ui";
 import { Section } from "../demo.tsx";
@@ -20,8 +21,8 @@ export default function RouterDemoLayout() {
       <Badge tone="info">{`Çerçeve kaç kez kuruldu: ${builds}`}</Badge>
     </Card>
     <nav class="sc-row" aria-label="Demo sekmeleri">
-      <Link href="/navigation/router" exact class="hm-btn hm-btn-secondary hm-btn-sm">Liste</Link>
-      <Link href="/navigation/router/about" class="hm-btn hm-btn-secondary hm-btn-sm">Hakkında</Link>
+      <Button href="/navigation/router" exact size="sm">Liste</Button>
+      <Button href="/navigation/router/about" size="sm">Hakkında</Button>
     </nav>
     <div class="sc-router-cols">
       <div class="sc-router-pane"><Outlet /></div>

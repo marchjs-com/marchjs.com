@@ -82,7 +82,7 @@ function FocusDemo() {
   const stop = () => { $trapped = false; queueMicrotask(() => { release?.(); release = null }) } // the opener is enabled again before focus returns to it
   onCleanup(() => release?.())
   const toolbar = <div class="sc-fc-toolbar" role="toolbar" aria-label="Biçim" focus:roving="horizontal">
-    {["Kalın", "İtalik", "Altı çizili", "Üstü çizili", "Kod"].map((l) => <button type="button" class="hm-btn hm-btn-secondary hm-btn-sm">{l}</button>)}
+    {["Kalın", "İtalik", "Altı çizili", "Üstü çizili", "Kod"].map((l) => <Button size="sm">{l}</Button>)}
   </div>
   const label = (el: Element | null) => !el ? "—" : (el.getAttribute("aria-label") || el.textContent || el.tagName.toLowerCase()).trim().slice(0, 40)
   return <>
@@ -182,7 +182,7 @@ function AccessibilityDemo() {
     <h4>Örnek kart</h4>
     <h6>Atlanan başlık düzeyi</h6>
     <img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="40" height="40" />
-    <button type="button" class="hm-btn hm-btn-secondary hm-btn-sm"></button>
+    <Button size="sm"></Button>
     <input class="hm-input" placeholder="etiketsiz alan" />
     <a href="#sc-a11y-sample" tabindex="2">tabindex 2</a>
     <span id="sc-a11y-dup">a</span><span id="sc-a11y-dup">b</span>
