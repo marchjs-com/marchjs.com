@@ -90,7 +90,7 @@ const $left = $todos.filter((x) => !x.done).length   // derived (computed)
     <div class="sc-row"><Badge tone="danger" dot class:sc-pulse={$big}>Canlı</Badge><span class="m-muted">{() => ($big ? "class:is-hot açık: vurgu kenarlığı, yumuşak zemin, hafif büyütme" : "class:is-hot kapalı")}</span></div>
   </Demo>,
     "common-props": () => <Demo wide title="Ortak prop'lar: m:user-select" desc="m: ile başlayan prop'lar her yerel öğede ve her bileşende çalışır. m:user-select açıkken öğenin kendisi ve içindeki her şey (girdiler dahil) seçilemez; içerideki m:user-select={false} o parçada seçimi geri açar."
-    code={`<section m:user-select>…</section>            // sabit değer: derlemede bir özniteliğe döner, çalışma zamanı kodu yok
+    code={`<section m:user-select>…</section>            // sabit değer: derlemede tek bir özniteliğe döner
 <Card m:user-select={$locked}>…</Card>         // bileşen: kök öğesine uygulanır; değer canlı olabilir
 <code m:user-select={false}>HADI2026</code>    // kapalı alanın içinde: bu parça yine seçilebilir`}>
     <div class="sc-options"><Toggle bind:value={$locked} label="Seçimi kapat (m:user-select)" /></div>
