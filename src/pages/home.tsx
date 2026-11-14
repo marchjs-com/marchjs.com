@@ -41,8 +41,9 @@ function silk(): (ctx: CanvasRenderingContext2D, info: DrawContext) => void {
   let tx = 0, ty = 0, fx = 0, fy = 0, pull = 0, seen = false, stepped = -1
   const tint = (c: string, a: number): string => `color-mix(in srgb, ${c} ${Math.round(a * 100)}%, transparent)`
   return (ctx, { width: W, height: H, time, pointer }) => {
+    // read every frame: a new look shows on the very next frame (a theme wave draws both looks at once)
     let look = looks.get(ctx.canvas)
-    if (!look || time - look.read > 1500) {
+    if (!look || time !== look.read) {
       const cs = getComputedStyle(ctx.canvas)
       look = { colors: SILK.map((v) => cs.getPropertyValue(v).trim() || "gray"), dark: isDark(ctx, cs.getPropertyValue("--m-bg")), read: time }
       looks.set(ctx.canvas, look)
