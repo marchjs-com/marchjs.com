@@ -27,9 +27,25 @@ export interface PlayOption {
   visibleWhen?: () => boolean;
 }
 
+/** Roughly the width a segmented row of these labels needs, in characters (each button adds its padding). */
+const rowWidth = (labels: readonly string[]): number => labels.reduce((n, l) => n + l.length + 3, 0)
+/** The panel is narrow (about 34 characters a row): what fits one row is a segmented control, the rest are chips. */
+const ROW = 34
+/**
+ * One look for every choice in the panel: a segmented row while the labels fit one line, chips otherwise. Swatch
+ * grids, preview cards and long lists (Combobox) keep their own look.
+ */
+function look(o: PlayOption): PickerKind | "auto" {
+  const list = (typeof o.options === "function" ? o.options() : o.options) ?? []
+  if (o.kind === "grid" || o.kind === "combobox" || list.length > 9) return o.kind ?? "auto"
+  if (list.some((x) => typeof x === "object" && x !== null && "preview" in x)) return o.kind ?? "auto"
+  const labels = list.map((x) => String(typeof x === "object" && x !== null ? (x as { label?: unknown; value?: unknown }).label ?? (x as { value?: unknown }).value : x))
+  return rowWidth(labels) <= ROW ? "segmented" : "chips"
+}
+
 function control(o: PlayOption): unknown {
   const set = o.set as (v: unknown) => void;
-  if (o.options) return <Field label={o.label}><ChoicePicker value={o.get()} onChange={set} options={o.options} kind={o.kind} /></Field>
+  if (o.options) return <Field label={o.label}><ChoicePicker value={o.get()} onChange={set} options={o.options} kind={look(o)} /></Field>
   if (o.min != null && o.max != null) return <Field label={`${o.label}: ${String(o.get())}${o.unit ?? ""}`}><Slider value={o.get() as number} onChange={set} min={o.min} max={o.max} step={o.step ?? 1} /></Field>
   return <Toggle value={!!o.get()} onChange={set} label={o.label} />
 }
@@ -41,9 +57,10 @@ function control(o: PlayOption): unknown {
 const shown = (visibleWhen: (() => boolean) | undefined, draw: () => unknown): unknown =>
   visibleWhen ? If({ when: visibleWhen, children: () => <div class="sc-play-opt">{draw()}</div> }) : untrack(() => <div class="sc-play-opt">{draw()}</div>)
 
-export function Playground(props: { options: readonly PlayOption[]; label?: string; children?: unknown }) {
+/** `stage="center"`: a small component, centred in a framed stage (default: the demo takes the stage's width). */
+export function Playground(props: { options: readonly PlayOption[]; label?: string; stage?: "fill" | "center" | undefined; children?: unknown }) {
   return <div class="sc-play"><div class="sc-play-inner">
-    <div class="sc-play-stage">{props.children}</div>
+    <div class={props.stage === "center" ? "sc-play-stage sc-play-center" : "sc-play-stage"}>{props.children}</div>
     <div class="sc-play-panel" role="group" aria-label={props.label ?? "Seçenekler"}>
       {props.options.map((o) => shown(o.visibleWhen, () => control(o)))}
     </div>

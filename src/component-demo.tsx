@@ -30,7 +30,7 @@ export function PlayStage(props: { view: View; spec: PlaygroundSpec<never> }) {
     ownKeys: () => Reflect.ownKeys(values()),
     getOwnPropertyDescriptor: (_, k) => (k in values() ? { value: values()[k as string], enumerable: true, configurable: true } : undefined),
   })
-  return <Playground options={opts}><View values={live as never} /></Playground>
+  return <Playground options={opts} stage={spec.stage}><View values={live as never} /></Playground>
 }
 
 function Stage(props: { folder: string }) {
@@ -42,26 +42,44 @@ function Stage(props: { folder: string }) {
   return <Body />
 }
 
-/** "Şunlardan oluşur": the parts a component is built from (meta.composedOf), each linked to the page that shows it. */
-export function ComposedOf(props: { parts: readonly string[] }) {
-  if (!props.parts.length) return null
-  return <p class="sc-parts"><span class="sc-parts-label">Şunlardan oluşur:</span>
-    {props.parts.map((name) => {
-      // w is the page that draws the part's own demo (cards.gen.ts, from the page sources); the anchor is that demo
-      const part = cards.find((e) => e.n === name)
-      return part?.w ? <Link class="sc-part" href={`${part.w}#${demoId(part.f)}` as Href}>{name}</Link> : <code class="sc-part">{name}</code>
-    })}
-  </p>
+/** A part of a component (meta.composedOf), linked to the page that draws its own demo (cards.gen.ts › w). */
+function Part(props: { name: string }) {
+  const part = cards.find((e) => e.n === props.name)
+  return part?.w ? <Link class="sc-part" href={`${part.w}#${demoId(part.f)}` as Href}>{props.name}</Link> : <code class="sc-part">{props.name}</code>
+}
+
+/** How many parts the strip beside the tabs shows; the rest open with the "+N" button. */
+const PARTS_SHOWN = 3
+
+/**
+ * The strip at the end of a component card's tab row: "Şunlardan oluşur" (the first parts; "+N" opens the full list
+ * under the row) and the link to the component's API entry. One line, so the demo starts right under the tabs.
+ */
+function MetaStrip(props: { parts: readonly string[]; api?: string | undefined; open: () => boolean; toggle: () => void }) {
+  const rest = props.parts.length - PARTS_SHOWN
+  return <div class="sc-meta">
+    {props.parts.length ? <span class="sc-meta-parts">
+      <span class="sc-parts-label">Şunlardan oluşur</span>
+      {props.parts.slice(0, PARTS_SHOWN).map((name) => <Part name={name} />)}
+      <button type="button" class={rest > 0 ? "sc-part sc-part-more" : "sc-part sc-part-more sc-part-more-narrow"} aria-expanded={props.open() ? "true" : "false"} title="Bütün parçalar" on:click={props.toggle}>
+        <span class="sc-more-wide">{`+${rest}`}</span><span class="sc-more-narrow">{`${props.parts.length} parça`}</span>
+      </button>
+    </span> : null}
+    {props.api ? <Link class="sc-part sc-part-api" href={`/api/${props.api}` as Href} title="API başvurusu"><span aria-hidden="true">{"{ }"}</span>{props.api.split("/").pop()}</Link> : null}
+  </div>
 }
 
 /** The anchor of a component demo on its page ("landing/hero" → "c-landing-hero"). */
 export const demoId = (folder: string): string => "c-" + folder.split("/").join("-")
 
+/** `desc`: what to try in this card (the page heading already says what the component is). */
 export function ComponentDemo(props: { folder: string; title?: string; desc?: string; code?: string; view?: View; spec?: PlaygroundSpec<never> }) {
   const entry = cards.find((e) => e.f === props.folder)!
-  return <Demo wide id={demoId(props.folder)} title={props.title ?? entry.n} desc={props.desc ?? entry.s} code={props.code ?? (() => cardCode(props.folder))}>
-    <ComposedOf parts={entry.p ?? []} />
-    {entry.a ? <p class="sc-parts"><span class="sc-parts-label">API başvurusu:</span><Link class="sc-part" href={`/api/${entry.a}` as Href}>{entry.a.split("/").pop()}</Link></p> : null}
+  const parts = entry.p ?? []
+  const open = signal(false)
+  return <Demo wide id={demoId(props.folder)} title={props.title ?? entry.n} desc={props.desc} code={props.code ?? (() => cardCode(props.folder))}
+    meta={parts.length || entry.a ? <MetaStrip parts={parts} api={entry.a} open={open} toggle={() => open.set(!open.peek())} /> : undefined}>
+    {() => (open() ? <p class="sc-parts">{parts.map((name) => <Part name={name} />)}</p> : null)}
     {props.view && props.spec ? <PlayStage view={props.view} spec={props.spec} /> : <Stage folder={props.folder} />}
   </Demo>
 }

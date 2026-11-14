@@ -19,7 +19,7 @@ export function LitePlayground<V>(props: { spec: PlaygroundSpec<V>; view: View<V
     : <Toggle value={!!values()[o.key]} onChange={set(o.key)} label={o.label} />
   const View = props.view
   return <div class="sc-play"><div class="sc-play-inner">
-    <div class="sc-play-stage"><View values={live} /></div>
+    <div class={props.spec.stage === "center" ? "sc-play-stage sc-play-center" : "sc-play-stage"}><View values={live} /></div>
     <div class="sc-play-panel" role="group" aria-label={props.label ?? "Seçenekler"}>
       {opts.map((o) => (o.visibleWhen
         // If redraws only when the visibility flips: a value change never rebuilds the control (focus, pointer capture stay)

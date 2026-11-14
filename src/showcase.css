@@ -15,7 +15,7 @@
 .sc-h1 { margin: 0; font-family: var(--m-font-display); font-weight: var(--m-display-weight); font-size: clamp(2rem, 3.4vw, 2.75rem); letter-spacing: -.03em; line-height: 1.08; }
 .sc-lead { margin: 0; color: var(--m-muted); font-size: var(--m-text-lg); line-height: 1.6; }
 .sc-demos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--m-space-5); }
-.sc-demo { display: flex; flex-direction: column; gap: var(--m-space-3); min-width: 0; padding: var(--m-space-5); border: 1px solid var(--m-border); border-radius: var(--m-radius-4);
+.sc-demo { display: flex; flex-direction: column; gap: var(--m-space-3); min-width: 0; container-type: inline-size; padding: var(--m-space-5); border: 1px solid var(--m-border); border-radius: var(--m-radius-4);
   background: var(--m-surface); box-shadow: var(--m-shadow-1); }
 .sc-demo-wide { grid-column: 1 / -1; }
 .sc-demo-head { display: flex; flex-direction: column; gap: .25rem; }
@@ -308,6 +308,13 @@
 @container (min-width: 46rem) { .sc-play-inner { grid-template-columns: minmax(0, 1fr) minmax(15rem, 19rem); } }
 .sc-play-opt .m-segmented { max-width: 100%; overflow-x: auto; }
 .sc-play-stage { min-width: 0; }
+/* beside the panel the stage stays on screen while a long options panel scrolls: the demo is always in view */
+@container (min-width: 46rem) { .sc-play-stage { position: sticky; inset-block-start: calc(var(--m-topbar-h, 3.5rem) + var(--m-space-4)); } }
+/* a small component: centred in a framed stage with a fine dot grid (a shop window, not a corner of an empty box) */
+.sc-play-center { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--m-space-3); min-block-size: 16rem; padding: var(--m-space-6) var(--m-space-5);
+  border: var(--m-border-w, 1px) solid var(--m-border-subtle); border-radius: var(--m-radius-3);
+  background: radial-gradient(circle at 50% 0, color-mix(in srgb, var(--m-primary) 7%, transparent), transparent 60%), radial-gradient(color-mix(in srgb, var(--m-text) 13%, transparent) 1px, transparent 1.5px) 0 0 / 16px 16px, var(--m-surface); }
+.sc-play-center > * { max-inline-size: 100%; }
 .sc-ov-prev { position: absolute; inset: 0; background: linear-gradient(135deg, var(--m-cat-2), var(--m-cat-4)); }
 .sc-ov-blend { position: absolute; inset: 0; isolation: isolate; }
 .sc-ov-blend img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -317,10 +324,23 @@
 .sc-blend-screen { mix-blend-mode: screen; }
 .sc-blend-overlay { mix-blend-mode: overlay; }
 .sc-blend-soft-light { mix-blend-mode: soft-light; }
-/* "Şunlardan oluşur": the parts of a component (meta.composedOf), linked to their pages */
-.sc-parts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-2); margin: 0 0 var(--m-space-3); font-size: var(--m-text-sm); color: var(--m-muted); }
-.sc-part { padding-block: 2px; padding-inline: var(--m-space-2); border: 1px solid var(--m-border-subtle); border-radius: var(--m-radius-full); font-family: var(--m-font-mono); font-size: var(--m-text-xs); color: var(--m-text); text-decoration: none; transition: border-color var(--m-dur-fast), color var(--m-dur-fast); }
-a.sc-part:hover, a.sc-part:focus-visible { border-color: var(--m-primary); color: var(--m-primary-text); }
+/* "Şunlardan oluşur": the parts of a component (meta.composedOf), linked to their pages. The strip sits at the end of
+   the card's tab row; "+N" opens the full list under the row. */
+.sc-meta { display: flex; align-items: center; gap: var(--m-space-2); min-inline-size: 0; padding-block-end: var(--m-space-1); font-size: var(--m-text-sm); color: var(--m-muted); }
+.sc-meta-parts { display: flex; align-items: center; gap: var(--m-space-2); min-inline-size: 0; }
+.sc-parts-label { font-size: var(--m-text-xs); white-space: nowrap; }
+.sc-demo .m-tabs-actions { flex: 0 1 auto; min-inline-size: 0; margin-inline-start: auto; }
+.sc-demo-meta { display: flex; justify-content: flex-end; }
+.sc-parts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-2); margin: 0 0 var(--m-space-3); font-size: var(--m-text-sm); color: var(--m-muted); animation: m-fade-in var(--m-dur-fast) var(--m-ease); }
+.sc-part { display: inline-flex; align-items: center; gap: .35em; padding-block: 2px; padding-inline: var(--m-space-2); border: var(--m-border-w, 1px) solid var(--m-border-subtle); border-radius: var(--m-radius-full); background: none; font-family: var(--m-font-mono); font-size: var(--m-text-xs); color: var(--m-text); text-decoration: none; white-space: nowrap; transition: border-color var(--m-dur-fast), color var(--m-dur-fast); }
+button.sc-part { cursor: pointer; }
+.sc-part-more[aria-expanded="true"] { border-color: var(--m-primary); color: var(--m-primary-text); }
+.sc-part-api { border-color: color-mix(in srgb, var(--m-primary) 35%, var(--m-border-subtle)); color: var(--m-primary-text); }
+.sc-part-api > span { opacity: .7; }
+.sc-more-narrow, .sc-part-more-narrow { display: none; }
+/* a narrow card: the parts fold into one "N parça" button */
+@container (max-width: 44rem) { .sc-meta-parts > :not(.sc-part-more) { display: none; } .sc-part-more-narrow { display: inline-flex; } .sc-more-wide { display: none; } .sc-more-narrow { display: inline; } }
+button.sc-part:hover, button.sc-part:focus-visible, a.sc-part:hover, a.sc-part:focus-visible { border-color: var(--m-primary); color: var(--m-primary-text); }
 /* API başvurusu (İlk Adımlar): every export, generated from JSDoc */
 
 /* SEO page: head / JSON-LD / check output */

@@ -13,7 +13,8 @@ const DemoCode = lazy(() => import("./demo-code.tsx"), { placeholder: "text", he
 /** A section anchor from its title: a short hash (ids stay language-neutral; the title is user-visible text). */
 export const demoSlug = (s: string): string => { let x = 5381; for (const ch of s) x = (Math.imul(x, 33) ^ ch.codePointAt(0)!) >>> 0; return x.toString(36); };
 
-export function Demo(props: { title: string; desc?: string; code?: string | (() => Promise<string>); lang?: string; wide?: boolean; id?: string; children?: unknown }) {
+/** `meta`: a short strip at the end of the tab row (the parts and the API link of a component card). */
+export function Demo(props: { title: string; desc?: string; code?: string | (() => Promise<string>); lang?: string; wide?: boolean; id?: string; meta?: unknown; children?: unknown }) {
   const preview = <div class="sc-stage">{props.children}</div>
   return <section class={props.wide ? "sc-demo sc-demo-wide" : "sc-demo"} id={props.id ?? `d-${demoSlug(props.title)}`}>
     <header class="sc-demo-head">
@@ -21,8 +22,8 @@ export function Demo(props: { title: string; desc?: string; code?: string | (() 
       {props.desc ? <p class="sc-demo-desc">{props.desc}</p> : null}
     </header>
     {props.code
-      ? <Tabs label={props.title} tabs={[{ id: "on", label: "Önizleme", content: preview }, { id: "code", label: "Kod", content: () => { const c = props.code!; const view = (s: string) => <DemoCode source={s.trim()} lang={props.lang ?? "tsx"} />; return typeof c === "string" ? view(c) : <Await for={c}>{view}</Await> } }]} />
-      : preview}
+      ? <Tabs label={props.title} actions={props.meta} tabs={[{ id: "on", label: "Önizleme", content: preview }, { id: "code", label: "Kod", content: () => { const c = props.code!; const view = (s: string) => <DemoCode source={s.trim()} lang={props.lang ?? "tsx"} />; return typeof c === "string" ? view(c) : <Await for={c}>{view}</Await> } }]} />
+      : <>{props.meta ? <div class="sc-demo-meta">{props.meta}</div> : null}{preview}</>}
   </section>
 }
 
