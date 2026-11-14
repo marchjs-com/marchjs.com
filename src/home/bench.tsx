@@ -2,11 +2,11 @@
 // pointer (hoverParallax with `hold`: leaving the bench changes nothing, the cards keep the pose they were left in);
 // each card holds real March components. The theme card restyles the whole showcase: color theme, accent, dark mode
 // and the corner radius (the theme wave spreads from the pressed control). On a phone the cards stack and stay put.
-import { effect } from "hadi-march";
+import { effect, onCleanup } from "hadi-march";
 import { reveal, animate, inView, hoverParallax } from "hadi-march/motion";
 import { draggable } from "hadi-march/behaviors/drag";
 import { Button, Swatch, ThemeSwatch, Toggle, Slider, Rating, SectionLabel, ChatBubble, TypingIndicator, LikeButton, heartBurst,
-  colorThemes, colorTheme, setColorTheme, loadTheme, accent, setAccent, resolvedTheme, setTheme } from "hadi-march/ui";
+  colorThemes, colorTheme, setColorTheme, accent, setAccent, resolvedTheme, setTheme } from "hadi-march/ui";
 import { BarChart } from "hadi-march/charts";
 import { tokenColor, BRAND_COLORS, type ColorToken } from "hadi-march/theme/colors.ts";
 import { sparkles } from "hadi-march/icons";
@@ -66,8 +66,10 @@ function Tile(props: { class: string; depth: number; title: string; order: numbe
 
 function ThemeTile() {
   let $radius = radiusNow()
-  // the slider shows the theme's own radius after a theme change (its stylesheet may still be loading)
-  effect(() => { const id = colorTheme(); void loadTheme(id).then(() => { $radius = radiusNow() }) })
+  // the slider shows the theme's own radius once another theme is on the page (its stylesheet loads first, then the root changes)
+  const watch = new MutationObserver(() => { $radius = radiusNow() })
+  watch.observe(root(), { attributes: true, attributeFilter: ["data-m-theme"] })
+  onCleanup(() => watch.disconnect())
   const setRadius = (v: number): void => { $radius = v; root().style.setProperty(RADIUS, `${v}px`) }
   return <Tile class="sc-btile-theme" depth={0.3} order={0} title="Tema · dokun, sayfa değişsin">
     <div class="sc-btile-row" role="radiogroup" aria-label="Tema">

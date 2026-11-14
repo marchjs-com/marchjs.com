@@ -2,14 +2,16 @@
    in home.tsx), the turning title, glass cards that can be picked up (home/bench.tsx) and six "why March" cards, all
    inside the first screen. Theme tokens and logical properties only (RTL). The layout follows the room the page has
    (a container query: the side menu can be resized), not the window. Loaded with the home route, not at start-up. */
-.sc-home { overflow-x: clip; container: sc-home / inline-size; }
+/* the four brand colors (a theme without them gives its own first four category colors) */
+.sc-home { --sc-c1: var(--m-brand-orange, var(--m-cat-1)); --sc-c2: var(--m-brand-blue, var(--m-cat-2)); --sc-c3: var(--m-brand-green, var(--m-cat-3)); --sc-c4: var(--m-brand-purple, var(--m-cat-4));
+  overflow-x: clip; container: sc-home / inline-size; }
 .sc-hero { --sc-glass: color-mix(in srgb, var(--m-surface) 62%, transparent); --sc-glass-2: color-mix(in srgb, var(--m-surface) 86%, transparent); --sc-gutter: max(var(--m-space-6), calc((100cqi - 74rem) / 2));
   position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;
   min-block-size: calc(100dvh - var(--m-topbar-h)); padding: var(--m-space-4) var(--sc-gutter) 4.75rem; color: var(--m-text);
   border-end-start-radius: var(--m-radius-4); border-end-end-radius: var(--m-radius-4);
-  background: radial-gradient(56rem 31rem at 12% 8%, color-mix(in srgb, var(--m-brand-orange) 16%, transparent), transparent 60%),
-    radial-gradient(50rem 32rem at 88% 18%, color-mix(in srgb, var(--m-brand-blue) 16%, transparent), transparent 60%),
-    radial-gradient(44rem 30rem at 70% 100%, color-mix(in srgb, var(--m-brand-purple) 13%, transparent), transparent 60%), var(--m-surface); }
+  background: radial-gradient(56rem 31rem at 12% 8%, color-mix(in srgb, var(--sc-c1) 16%, transparent), transparent 60%),
+    radial-gradient(50rem 32rem at 88% 18%, color-mix(in srgb, var(--sc-c2) 16%, transparent), transparent 60%),
+    radial-gradient(44rem 30rem at 70% 100%, color-mix(in srgb, var(--sc-c4) 13%, transparent), transparent 60%), var(--m-surface); }
 :root[data-theme="dark"] .sc-hero { --sc-glass: color-mix(in srgb, var(--m-text) 6%, transparent); --sc-glass-2: color-mix(in srgb, var(--m-text) 11%, transparent); }
 .sc-hero-silk { opacity: .42; filter: blur(1.625rem) saturate(1.25); }
 :root[data-theme="dark"] .sc-hero-silk { opacity: .5; }
@@ -22,13 +24,13 @@
 /* the title: three lines; the middle one turns (home.tsx) and carries the brand ribbon, letter by letter while it moves */
 .sc-hero-title { margin: 0; display: flex; flex-direction: column; font-family: var(--m-font-display); font-weight: 800; font-size: clamp(2.75rem, 6.2cqi, 5.75rem); line-height: .98; letter-spacing: -.045em; }
 .sc-hero-word { display: block; }
-.sc-hero-turn { --sc-ribbon: linear-gradient(90deg, var(--m-brand-orange), var(--m-brand-blue) 38%, var(--m-brand-green) 68%, var(--m-brand-purple));
+.sc-hero-turn { --sc-ribbon: linear-gradient(90deg, var(--sc-c1), var(--sc-c2) 38%, var(--sc-c3) 68%, var(--sc-c4));
   display: block; min-block-size: 1.02em; white-space: nowrap; inline-size: fit-content; padding-inline-end: .06em;
   background: var(--sc-ribbon); -webkit-background-clip: text; background-clip: text; color: transparent; }
 /* split into letters by a text effect: each letter shows its own slice of the ribbon (--i: its index, set by splitText) */
 .sc-hero-turn .m-tx-char, .sc-hero-turn .m-tx-word:not(:has(.m-tx-char)) { background: var(--sc-ribbon); background-size: 1300% 100%; background-position: calc(var(--i, 0) * 8.33%) 0;
   -webkit-background-clip: text; background-clip: text; color: transparent; }
-.sc-hero-turn .m-tx-caret { background: var(--m-brand-blue); }
+.sc-hero-turn .m-tx-caret { background: var(--sc-c2); }
 .sc-hero-fx { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-2); margin: var(--m-space-3) 0 0; padding-block: .3125rem; padding-inline: .5rem .75rem; border-radius: var(--m-radius-full);
   border: var(--m-border-w, 1px) solid var(--m-border); background: var(--sc-glass); font-size: var(--m-text-sm); color: var(--m-muted); }
 .sc-hero-fx-dot { inline-size: .4375rem; block-size: .4375rem; border-radius: 50%; background: var(--m-success); box-shadow: 0 0 0 .25rem color-mix(in srgb, var(--m-success) 20%, transparent); }

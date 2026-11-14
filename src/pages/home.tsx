@@ -17,8 +17,8 @@ import Sections from "../home/sections.tsx";
 
 // ── silk ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-/** The four HADİ colors of the silk, as theme tokens (read from the page, so a theme that redefines them is followed). */
-const SILK = ["--m-brand-orange", "--m-brand-blue", "--m-brand-green", "--m-brand-purple"];
+/** The four colors of the silk: the brand colors as home.css resolves them for the theme in use (read from the page). */
+const SILK = ["--sc-c1", "--sc-c2", "--sc-c3", "--sc-c4"];
 /** Points along a band's edge. */
 const SEGMENTS = 48;
 
