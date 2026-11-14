@@ -22,7 +22,7 @@ export default function LiveSample() {
       </div>
     </SiteSection>
     <SiteSection id="l-wall" tone="muted" eyebrow="Az önce" title="HADİ'de şimdi neler oluyor" lead="Üstüne gelince durur; istersen düğmeyle tamamen durdur.">
-      <LiveFeed variant="wall" max={9} every={1400} next={activitySource()} label="HADİ'de az önce" />
+      <LiveFeed variant="wall" max={8} every={1400} next={activitySource()} label="HADİ'de az önce" />
     </SiteSection>
     <SiteSection eyebrow="Senin şehrinde" title="Yakınındakiler" lead="Kendi şehrindeki akışı görmek için HADİ'ye katıl.">
       <div class="sc-live-split">
