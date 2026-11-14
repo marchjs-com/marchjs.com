@@ -202,3 +202,5 @@
 .sc-bs-wave i:nth-child(2), .sc-bs-table i:nth-child(1) { border-radius: var(--hm-radius-4); }
 .sc-bs-dice i { border-radius: var(--hm-radius-3); transform: rotate(18deg); }
 .sc-story-wrap { max-inline-size: 64rem; margin-inline: auto; }
+.sc-lc-heart { inline-size: 1rem; block-size: 1rem; color: var(--hm-brand-pink, var(--hm-danger)); }
+.sc-lc-own { display: inline-block; padding: .1em .55em; border-radius: var(--hm-radius-full); background: var(--hm-brand-pink, var(--hm-danger)); color: var(--hm-bg); font-size: var(--hm-text-sm); font-weight: var(--hm-weight-semibold); white-space: nowrap; }
