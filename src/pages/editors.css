@@ -19,3 +19,15 @@
 /* TerminalWindow demo: the box the window moves and docks in */
 .sc-term-desk { position: relative; block-size: 24rem; overflow: hidden; border: 1px solid var(--m-border); border-radius: var(--m-radius-3); background: radial-gradient(circle at 80% 10%, color-mix(in srgb, var(--m-primary) 10%, transparent), transparent 55%), var(--m-bg-subtle); }
 .sc-term-reopen { position: absolute; inset-block-start: var(--m-space-3); inset-inline-end: var(--m-space-3); }
+
+/* FontPicker: the picker and an event card written in the chosen font */
+.sc-fp-demo { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--m-space-5); }
+.sc-fp-pick { flex: 1 1 18rem; min-width: 0; }
+.sc-fp-pick:has(.m-fp-inline) { flex-basis: 100%; }
+.sc-fp-card { flex: 1 1 16rem; display: flex; flex-direction: column; gap: var(--m-space-2); min-width: 0; padding: var(--m-space-5); border-radius: var(--m-radius-4);
+  border: 1px solid var(--m-border); background: linear-gradient(160deg, color-mix(in srgb, var(--m-brand-orange) 14%, var(--m-surface)), var(--m-surface) 60%); box-shadow: var(--m-shadow-2);
+  font-weight: var(--sc-fp-weight, 400); }
+.sc-fp-card b { font-size: var(--m-text-2xl); line-height: 1.15; font-weight: inherit; }
+.sc-fp-card p { margin: 0; font-size: var(--m-text-lg); line-height: 1.5; color: var(--m-text-2); }
+.sc-fp-kicker { font-size: var(--m-text-sm); color: var(--m-brand-orange-text, var(--m-brand-orange)); }
+.sc-fp-meta { margin-block-start: var(--m-space-2); font-family: var(--m-font-mono); font-size: var(--m-text-xs); color: var(--m-muted); overflow-wrap: anywhere; }
