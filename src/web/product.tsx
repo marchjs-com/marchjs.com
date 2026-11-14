@@ -42,8 +42,8 @@ export default function ProductSample() {
     <SiteSection space="sm">
       <StatsBand items={STATS} />
     </SiteSection>
-    <SiteSection id="p-pricing" eyebrow="Premium" title="HADİ ücretsiz; Premium isteğe bağlı" lead="Yıllık ödemede iki ay bizden.">
-      <Pricing plans={PLANS} currency="TRY" saving="2 ay bedava" />
+    <SiteSection id="p-pricing" eyebrow="Premium" title="HADİ ücretsiz; Premium isteğe bağlı" lead="Yıllık ödemede 4 ay bizden.">
+      <Pricing plans={PLANS} currency="TRY" saving="4 ay bedava" />
     </SiteSection>
     <ProductMore />
   </div>
