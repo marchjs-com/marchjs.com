@@ -154,7 +154,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "copy-button", title: "Kopyala düğmesi", name: "CopyButton", desc: "Kopyalandı der ve bunu ekran okuyucuya duyurur; pano yoksa bildirimle söyler.", group: "Eylemler" },
     { slug: "menu", title: "Menü ve açılır menü", name: "Menu · Dropdown", desc: "Ok tuşları, Home/End, Esc; kısayollar platforma göre yazılır, action() onaylı silme ve bildirimi getirir.", group: "Eylemler" },
     { slug: "tooltip", title: "İpucu", name: "Tooltip", desc: "Üstüne gelince kısa bir gecikmeyle, klavye odağında hemen görünür; aria-describedby ile bağlanır, Esc gizler.", group: "Katmanlar" },
-    { slug: "chip", title: "Çip", name: "Chip", desc: "Bileşen klasöründen (src/components/actions/chip) gelen demo: seçenekler playground.ts'den, kod docs.md'den.", group: "Eylemler" },
+    { slug: "chip", title: "Çip", name: "Chip", desc: "Etiket hapı: düz, seçilebilir süzgeç ya da kaldırılabilir; seçili işareti ve rengi değiştirilebilir.", group: "Eylemler" },
     { slug: "made-with-march", title: "March ile yapıldı", name: "MadeWithMarch", desc: "İsteğe bağlı küçük \"March ile yapıldı\" yazısı ya da rozeti.", group: "Eylemler" },
     { slug: "chevron", title: "Dönen ok", name: "Chevron", desc: "Açılınca döner; dört yön, RTL'de aynalanır, en yakın aria-expanded'ı kendisi izler.", group: "Eylemler" },
     { slug: "kbd", title: "Klavye tuşu", name: "Kbd", desc: "mod macOS'ta ⌘, ötekilerde Ctrl yazılır; kısayol dizisi key() ve kısayol listesiyle aynı biçimde okunur.", group: "Tipografi" },
