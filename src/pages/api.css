@@ -10,6 +10,7 @@
 .sc-apip-slash { position: absolute; inset-inline-end: .5rem; inset-block-start: 50%; translate: 0 -50%; pointer-events: none; }
 .sc-apip-q:focus-within .sc-apip-slash { display: none; }
 .sc-apip-kinds { display: flex; flex-wrap: wrap; gap: var(--m-space-1); }
+.sc-apip-kinds .sc-apip-dot { margin-inline-end: .375rem; }
 .sc-apip-n { margin-inline-start: .25rem; font-size: var(--m-text-xs); color: var(--m-muted); font-weight: 500; font-variant-numeric: tabular-nums; }
 .sc-apip-subf code { font-size: var(--m-text-xs); }
 /* the fold button exists on phones only */
