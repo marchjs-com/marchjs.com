@@ -181,3 +181,14 @@
 .sc-rd-read p { margin: 0; }
 .sc-rd-read.is-old { background: var(--hm-surface-2); font-size: var(--hm-text-xs); line-height: 1.25; color: var(--hm-muted); text-align: justify; }
 .sc-rd-read.is-new { font-size: var(--hm-text-lg); line-height: 1.6; }
+/* LiveFeed / LiveCounter stages and the live sample */
+.sc-lf-stage { max-inline-size: 44rem; }
+.sc-lc-stage { display: flex; flex-wrap: wrap; gap: var(--hm-space-6); }
+.sc-live-counters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--hm-space-5); }
+@media (max-width: 760px) { .sc-live-counters { grid-template-columns: minmax(0, 1fr); } }
+@container hm-site (max-width: 760px) { .sc-live-counters { grid-template-columns: minmax(0, 1fr); } }
+.sc-live-split { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--hm-space-6); align-items: start; }
+@media (max-width: 760px) { .sc-live-split { grid-template-columns: minmax(0, 1fr); } }
+@container hm-site (max-width: 760px) { .sc-live-split { grid-template-columns: minmax(0, 1fr); } }
+.sc-live-aside { display: grid; gap: var(--hm-space-4); }
+.sc-live-aside p { margin: 0; font-size: var(--hm-text-sm); }

@@ -53,6 +53,7 @@ export default {
     "src/web/slides.tsx": "Web siteleri sample deck: loaded only when /sites/slides opens it",
     "src/web/redesign.tsx": "redesign sample page: loaded only when /sites/redesign opens it",
     "src/web/honest.tsx": "honest sample page: loaded only when /sites/honest opens it",
+    "src/web/live.tsx": "live sample page: loaded only when /sites/live opens it",
     "src/i18n/tr.ts": "locale dictionary: downloaded only for Turkish, never grouped",
     "src/router/outlets.ts": "named / modal outlets (1.8 KB, no dependencies): joining any page group would make it pull that page",
     "src/demo-code.tsx": "a demo card's Code tab (code widget + highlighter), loaded on the first click on Kod: inlined into the card it would load with every page",
