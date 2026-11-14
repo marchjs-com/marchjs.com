@@ -16,6 +16,16 @@
 .sc-wb-frame { display: flex; flex-direction: column; gap: var(--m-space-3); min-inline-size: 0; flex: 1; }
 .sc-wb-center { align-items: center; justify-content: center; }
 .sc-wb-center > .sc-wb-frame { flex: none; align-items: center; max-inline-size: 100%; }
+/* the stage toolbar (OverflowToolbar): device, rotation, light / dark stage, direction; replay at the end */
+.sc-wb-bar { padding-block: var(--m-space-2); padding-inline: calc(var(--m-space-2) + var(--m-radius-pad, 0px)); border-block-end: var(--m-border-w, 1px) solid var(--m-border-subtle); background: var(--m-surface); min-inline-size: 0; }
+/* the stage in its own light / dark (stage-mode.ts writes that mode's tokens on it) */
+.sc-wb-light { color-scheme: light; }
+.sc-wb-dark { color-scheme: dark; }
+/* a device on the stage: its real screen size is written in the corner */
+.sc-wb-device { padding: var(--m-space-5) var(--m-space-2) var(--m-space-2); }
+.sc-wb-device > .m-device-stage { align-self: stretch; }
+.sc-wb-devinfo { position: absolute; inset-block-start: var(--m-space-2); inset-inline-start: var(--m-space-3); z-index: 1; font: 600 var(--m-text-xs) / 1.4 var(--m-font-mono); color: var(--m-muted); }
+.sc-wb-device .m-device-viewport > .sc-wb-frame { padding: var(--m-space-4); box-sizing: border-box; min-block-size: 100%; }
 /* the code under the stage: always there, never taller than a few lines (it scrolls) */
 .sc-wb-code { border-block-start: var(--m-border-w, 1px) solid var(--m-border); min-inline-size: 0; }
 .sc-wb-code .m-code { border: 0; border-radius: 0; }
