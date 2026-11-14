@@ -17,7 +17,7 @@ export default function HonestSample() {
       lead="HADİ sosyal ağ, sohbet, etkinlik ve tanışma; hepsi bir arada. Bu herkese göre değil. Sana uymayanların üstünü çiz, sonucu sen gör."
       actions={[{ label: "Kendini kontrol et", href: "#h-check", iconEnd: arrowRight }, { label: "Karşılaştırmaya geç", href: "#h-compare", variant: "secondary" }]} />
     <SiteSection id="h-check" eyebrow="Önce sen" title="Sana uymayanları ele" lead="Sen olmayan her satıra dokun, üstü çizilsin. Hepsini çizdiysen HADİ tam sana göre.">
-      <NotForYou check items={NOT_FOR_YOU} forYou={FOR_YOU} />
+      <NotForYou check markedHint="Sen bir HADİ'lisin" items={NOT_FOR_YOU} forYou={FOR_YOU} />
     </SiteSection>
     <SiteSection id="h-compare" tone="muted" eyebrow="Karşılaştırma" title="Sıradan bir etkinlik grubuyla yan yana" lead="Küçük bir grubun daha iyi olduğu yerleri de gösteriyoruz; yanında nedeni yazıyor.">
       <HonestCompare columns={COMPARE_COLUMNS} rows={COMPARE_ROWS} caption="HADİ ve küçük bir etkinlik grubu" />
