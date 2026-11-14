@@ -14,9 +14,9 @@ export default function HonestSample() {
   return <div class="sc-sample-page">
     <SiteNav mode="solid" brand={{ name: "HADİ", mark: sparkles }} links={LINKS} actions={<Button size="sm" variant="secondary">Yine de dene</Button>} />
     <Hero variant="centered" size="lg" eyebrow="Dürüst tanıtım" title="HADİ herkes için değil" highlight="herkes için değil"
-      lead="HADİ sosyal ağ, sohbet, etkinlik ve tanışma; hepsi bir arada. Bu herkese göre değil. Sana uyanları işaretle, sonucu sen gör."
+      lead="HADİ sosyal ağ, sohbet, etkinlik ve tanışma; hepsi bir arada. Bu herkese göre değil. Sana uymayanların üstünü çiz, sonucu sen gör."
       actions={[{ label: "Kendini kontrol et", href: "#h-check", iconEnd: arrowRight }, { label: "Karşılaştırmaya geç", href: "#h-compare", variant: "secondary" }]} />
-    <SiteSection id="h-check" eyebrow="Önce sen" title="Sana uyanları işaretle" lead="Sana uyan her satıra dokun. Yarısından fazlası uyuyorsa başka bir uygulama daha iyi olabilir.">
+    <SiteSection id="h-check" eyebrow="Önce sen" title="Sana uymayanları ele" lead="Sen olmayan her satıra dokun, üstü çizilsin. Hepsini çizdiysen HADİ tam sana göre.">
       <NotForYou check items={NOT_FOR_YOU} forYou={FOR_YOU} />
     </SiteSection>
     <SiteSection id="h-compare" tone="muted" eyebrow="Karşılaştırma" title="Sıradan bir etkinlik grubuyla yan yana" lead="Küçük bir grubun daha iyi olduğu yerleri de gösteriyoruz; yanında nedeni yazıyor.">
