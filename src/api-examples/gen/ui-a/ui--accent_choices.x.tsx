@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
             {ACCENT_CHOICES.map((c) => <button type="button" role="radio" class="sc-ex-ui-a-swatch" data-m-color={c} aria-checked={() => String(pick() === c)} onClick={() => pick.set(c)}><span aria-hidden="true" />{c}</button>)}
           </div>
           <Row><Out label="seçenek sayısı" value={ACCENT_CHOICES.length} /><Out label="seçili" value={pick} /></Row>
-          {() => <Row><Button variant="primary" color={pick() as never}>Kaydet</Button><Badge color={pick() as never} tone="primary">Yeni</Badge></Row>}
+          {() => <Row><Button variant="primary" m:color={pick() as never}>Kaydet</Button><Badge m:color={pick() as never} tone="primary">Yeni</Badge></Row>}
         </div>
       },
     };

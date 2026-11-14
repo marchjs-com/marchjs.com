@@ -470,8 +470,8 @@ const to = nearest([-120, 0, 120], rest)  // then snap`,
   },
   "hadi-march/theme": {
     COLOR_TOKENS: {
-      code: `<Badge color="brand-blue">Aktivite</Badge>   // a color prop takes a COLOR_TOKENS name, never a raw color`,
-      run: () => <Stack><div class="sc-row">{COLOR_TOKENS.map((c) => <Badge color={c}>{c}</Badge>)}</div><Out label="adet" value={COLOR_TOKENS.length} /></Stack>,
+      code: `<Badge m:color="brand-blue">Aktivite</Badge>   // a color prop takes a COLOR_TOKENS name, never a raw color`,
+      run: () => <Stack><div class="sc-row">{COLOR_TOKENS.map((c) => <Badge m:color={c}>{c}</Badge>)}</div><Out label="adet" value={COLOR_TOKENS.length} /></Stack>,
     },
     contrast: {
       code: `contrast("#FFFFFF", HADI.orange)   // 2.68 — WCAG ratio, 4.5 is AA for text`,

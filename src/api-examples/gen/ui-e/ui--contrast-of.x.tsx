@@ -13,7 +13,7 @@ const example: ApiExample<any> = {
         const v = signal(60)
         const ratio = () => contrastOf(hsvToRgb({ h: 28, s: 0.9, v: v() / 100, a: 1 }), hsvToRgb({ h: 0, s: 0, v: 1, a: 1 }))
         return <div class="sc-ex-stack"><Row><Slider value={v} min={10} max={100} aria-label="Metin parlaklığı" /><Swatch color={() => format(hsvToRgb({ h: 28, s: 0.9, v: v() / 100, a: 1 }))} /></Row>
-          <Row><Out label="oran" value={() => ratio().toFixed(2)} /><Badge color={() => (ratio() >= 4.5 ? "success" : "danger")}>{() => (ratio() >= 4.5 ? "AA geçer" : "AA geçmez")}</Badge></Row></div>
+          <Row><Out label="oran" value={() => ratio().toFixed(2)} /><Badge m:color={() => (ratio() >= 4.5 ? "success" : "danger")}>{() => (ratio() >= 4.5 ? "AA geçer" : "AA geçmez")}</Badge></Row></div>
       },
     };
 export default example;

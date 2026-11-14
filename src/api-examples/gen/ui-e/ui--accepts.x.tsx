@@ -14,7 +14,7 @@ accepts({ name: "veri.csv", type: "text/csv" }, "image/*,.pdf")    // false`,
         const files = [{ name: "foto.png", type: "image/png" }, { name: "rapor.pdf", type: "application/pdf" }, { name: "veri.csv", type: "text/csv" }, { name: "not.txt", type: "text/plain" }]
         return <div class="sc-ex-stack">
           <Field value={list} label="accept listesi" />
-          <ul class="sc-ex-ui-e-table">{files.map((f) => <li><code>{f.name}</code><Badge color={() => (accepts(f, list()) ? "success" : "danger")}>{() => (accepts(f, list()) ? "kabul" : "red")}</Badge></li>)}</ul>
+          <ul class="sc-ex-ui-e-table">{files.map((f) => <li><code>{f.name}</code><Badge m:color={() => (accepts(f, list()) ? "success" : "danger")}>{() => (accepts(f, list()) ? "kabul" : "red")}</Badge></li>)}</ul>
         </div>
       },
     };

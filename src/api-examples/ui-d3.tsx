@@ -32,7 +32,7 @@ toast("Kaydedildi", { kind: "success" })`,
       run: (p: { values: { color: string; disabled: boolean } }) => {
         const notify = signal(true), log = signal<string[]>([])
         return <div class="sc-ex-stack">
-          {() => { const { color, disabled } = p.values; return <Toggle value={notify} label="E-posta bildirimleri" color={color as ColorToken} disabled={disabled}
+          {() => { const { color, disabled } = p.values; return <Toggle value={notify} label="E-posta bildirimleri" m:color={color as ColorToken} disabled={disabled}
             onChange={(on: boolean) => log.update((l) => [...l.slice(-3), `${now()} kaydedildi: ${on ? "açık" : "kapalı"}`])} /> }}
           <Log lines={log} />
         </div>

@@ -14,7 +14,7 @@ isSafeLink("javascript:alert(1)")    // false`,
         const url = signal("https://hadisosyal.com")
         const samples = ["https://hadisosyal.com", "/docs/start", "mailto:ada@hadisosyal.com", "javascript:alert(1)", "data:text/html,x", "//evil.example"]
         return <div class="sc-ex-stack"><Row>{samples.map((s) => <Button size="sm" variant="ghost" onClick={() => url.set(s)}>{s.slice(0, 14)}</Button>)}</Row>
-          <Field value={url} label="Bağlantı" /><Row><Out label="isSafeLink" value={() => String(isSafeLink(url()))} /><Badge color={() => (isSafeLink(url()) ? "success" : "danger")}>{() => (isSafeLink(url()) ? "güvenli" : "engellenir")}</Badge></Row></div>
+          <Field value={url} label="Bağlantı" /><Row><Out label="isSafeLink" value={() => String(isSafeLink(url()))} /><Badge m:color={() => (isSafeLink(url()) ? "success" : "danger")}>{() => (isSafeLink(url()) ? "güvenli" : "engellenir")}</Badge></Row></div>
       },
     };
 export default example;

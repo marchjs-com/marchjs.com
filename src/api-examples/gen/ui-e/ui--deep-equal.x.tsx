@@ -18,7 +18,7 @@ deepEqual({ a: 1 }, { a: "1" })                        // false`,
           ["dizi", [1, 2, 3], flip() ? [1, 2, 3] : [1, 2]],
         ]
         return <div class="sc-ex-stack"><Button onClick={() => flip.update((x) => !x)}>Son dizi: {() => (flip() ? "eşitle" : "farklılaştır")}</Button>
-          <ul class="sc-ex-ui-e-table">{() => cases().map(([label, a, b]) => <li><span>{label}</span><Badge color={deepEqual(a, b) ? "success" : "danger"}>{String(deepEqual(a, b))}</Badge></li>)}</ul></div>
+          <ul class="sc-ex-ui-e-table">{() => cases().map(([label, a, b]) => <li><span>{label}</span><Badge m:color={deepEqual(a, b) ? "success" : "danger"}>{String(deepEqual(a, b))}</Badge></li>)}</ul></div>
       },
     };
 export default example;

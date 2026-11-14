@@ -238,7 +238,7 @@ isAction(save)                      // false`,
       run: () => {
         const save = () => {}
         const a = action("Kaydet", save)
-        return <ul class="sc-ex-ui-e-table"><li><code>action("Kaydet", save)</code><Badge color="success">{String(isAction(a))}</Badge></li><li><code>save</code><Badge color="danger">{String(isAction(save))}</Badge></li><li><code>{"{ kind: 'x' }"}</code><Badge color="danger">{String(isAction({ kind: "x" }))}</Badge></li></ul>
+        return <ul class="sc-ex-ui-e-table"><li><code>action("Kaydet", save)</code><Badge m:color="success">{String(isAction(a))}</Badge></li><li><code>save</code><Badge m:color="danger">{String(isAction(save))}</Badge></li><li><code>{"{ kind: 'x' }"}</code><Badge m:color="danger">{String(isAction({ kind: "x" }))}</Badge></li></ul>
       },
     },
     isMac: {
@@ -253,7 +253,7 @@ isSafeLink("javascript:alert(1)")    // false`,
         const url = signal("https://hadisosyal.com")
         const samples = ["https://hadisosyal.com", "/docs/start", "mailto:ada@hadisosyal.com", "javascript:alert(1)", "data:text/html,x", "//evil.example"]
         return <div class="sc-ex-stack"><Row>{samples.map((s) => <Button size="sm" variant="ghost" onClick={() => url.set(s)}>{s.slice(0, 14)}</Button>)}</Row>
-          <Field value={url} label="Bağlantı" /><Row><Out label="isSafeLink" value={() => String(isSafeLink(url()))} /><Badge color={() => (isSafeLink(url()) ? "success" : "danger")}>{() => (isSafeLink(url()) ? "güvenli" : "engellenir")}</Badge></Row></div>
+          <Field value={url} label="Bağlantı" /><Row><Out label="isSafeLink" value={() => String(isSafeLink(url()))} /><Badge m:color={() => (isSafeLink(url()) ? "success" : "danger")}>{() => (isSafeLink(url()) ? "güvenli" : "engellenir")}</Badge></Row></div>
       },
     },
     key: {

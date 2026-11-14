@@ -104,7 +104,7 @@ export default examples({
           { id: "team", label: "Ekip", badge: 4, content: () => <p>4 üye, 1 davet bekliyor</p> },
         ]
         return <div class="sc-ex-stack">
-          {() => { const { color, panel } = p.values; return <Tabs label="Hesap" tabs={tabs} value={tab} onChange={(id: string) => tab.set(id)} color={color as ColorToken} panel={panel} /> }}
+          {() => { const { color, panel } = p.values; return <Tabs label="Hesap" tabs={tabs} value={tab} onChange={(id: string) => tab.set(id)} m:color={color as ColorToken} panel={panel} /> }}
           <Row><Out label="etkin" value={tab} /><Button size="sm" variant="ghost" onClick={() => tab.set("billing")}>Faturaya git</Button></Row>
         </div>
       },

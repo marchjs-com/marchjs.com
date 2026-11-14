@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
         const view = signal<string | null>("list")
         const opts = [{ value: "list", label: "Liste" }, { value: "grid", label: "Izgara" }, { value: "board", label: "Pano" }]
         return <div class="sc-ex-stack">
-          {() => { const { color, disabled } = p.values; return <Segmented aria-label="Görünüm" value={view} options={opts} color={color as ColorToken} disabled={disabled} /> }}
+          {() => { const { color, disabled } = p.values; return <Segmented aria-label="Görünüm" value={view} options={opts} m:color={color as ColorToken} disabled={disabled} /> }}
           <Out label="görünüm" value={view} />
         </div>
       },

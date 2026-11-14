@@ -58,7 +58,7 @@ accepts({ name: "veri.csv", type: "text/csv" }, "image/*,.pdf")    // false`,
         const files = [{ name: "foto.png", type: "image/png" }, { name: "rapor.pdf", type: "application/pdf" }, { name: "veri.csv", type: "text/csv" }, { name: "not.txt", type: "text/plain" }]
         return <div class="sc-ex-stack">
           <Field value={list} label="accept listesi" />
-          <ul class="sc-ex-ui-e-table">{files.map((f) => <li><code>{f.name}</code><Badge color={() => (accepts(f, list()) ? "success" : "danger")}>{() => (accepts(f, list()) ? "kabul" : "red")}</Badge></li>)}</ul>
+          <ul class="sc-ex-ui-e-table">{files.map((f) => <li><code>{f.name}</code><Badge m:color={() => (accepts(f, list()) ? "success" : "danger")}>{() => (accepts(f, list()) ? "kabul" : "red")}</Badge></li>)}</ul>
         </div>
       },
     },
@@ -205,7 +205,7 @@ colorAt(g, 50)   // the blended color at 50%`,
     },
     colorThemes: {
       code: `for (const th of colorThemes()) console.log(th.id, th.name)`,
-      run: () => <ul class="sc-ex-ui-e-table">{() => colorThemes().map((th) => <li><code>{th.id}</code><span>{th.name}</span>{th.id === colorTheme() && <Badge color="success">etkin</Badge>}</li>)}</ul>,
+      run: () => <ul class="sc-ex-ui-e-table">{() => colorThemes().map((th) => <li><code>{th.id}</code><span>{th.name}</span>{th.id === colorTheme() && <Badge m:color="success">etkin</Badge>}</li>)}</ul>,
     },
     confirm: {
       code: `if (await confirm({ title: "Silinsin mi?", message: "Bu işlem geri alınamaz.", danger: true })) remove()`,
@@ -221,7 +221,7 @@ colorAt(g, 50)   // the blended color at 50%`,
         const v = signal(60)
         const ratio = () => contrastOf(hsvToRgb({ h: 28, s: 0.9, v: v() / 100, a: 1 }), hsvToRgb({ h: 0, s: 0, v: 1, a: 1 }))
         return <div class="sc-ex-stack"><Row><Slider value={v} min={10} max={100} aria-label="Metin parlaklığı" /><Swatch color={() => format(hsvToRgb({ h: 28, s: 0.9, v: v() / 100, a: 1 }))} /></Row>
-          <Row><Out label="oran" value={() => ratio().toFixed(2)} /><Badge color={() => (ratio() >= 4.5 ? "success" : "danger")}>{() => (ratio() >= 4.5 ? "AA geçer" : "AA geçmez")}</Badge></Row></div>
+          <Row><Out label="oran" value={() => ratio().toFixed(2)} /><Badge m:color={() => (ratio() >= 4.5 ? "success" : "danger")}>{() => (ratio() >= 4.5 ? "AA geçer" : "AA geçmez")}</Badge></Row></div>
       },
     },
     convert: {
@@ -286,7 +286,7 @@ deepEqual({ a: 1 }, { a: "1" })                        // false`,
           ["dizi", [1, 2, 3], flip() ? [1, 2, 3] : [1, 2]],
         ]
         return <div class="sc-ex-stack"><Button onClick={() => flip.update((x) => !x)}>Son dizi: {() => (flip() ? "eşitle" : "farklılaştır")}</Button>
-          <ul class="sc-ex-ui-e-table">{() => cases().map(([label, a, b]) => <li><span>{label}</span><Badge color={deepEqual(a, b) ? "success" : "danger"}>{String(deepEqual(a, b))}</Badge></li>)}</ul></div>
+          <ul class="sc-ex-ui-e-table">{() => cases().map(([label, a, b]) => <li><span>{label}</span><Badge m:color={deepEqual(a, b) ? "success" : "danger"}>{String(deepEqual(a, b))}</Badge></li>)}</ul></div>
       },
     },
   },

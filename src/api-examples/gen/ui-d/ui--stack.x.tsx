@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
         const more = ["Destek", "Pazarlama", "Satış"]
         return <div class="sc-ex-stack">
           {() => { const { direction, justify, gap } = p.values; return <Stack class="sc-ex-ui-d-box" direction={direction as "row"} justify={justify as "start"} gap={gap} wrap>
-            {tags().map((x, i) => <Badge color={(["brand-orange", "brand-blue", "brand-green", "brand-purple"] as const)[i % 4]}>{x}</Badge>)}
+            {tags().map((x, i) => <Badge m:color={(["brand-orange", "brand-blue", "brand-green", "brand-purple"] as const)[i % 4]}>{x}</Badge>)}
           </Stack> }}
           <Row><Button size="sm" disabled={() => tags().length >= 6} onClick={() => tags.update((l) => [...l, more[l.length - 3]!])}>Etiket ekle</Button><Button size="sm" variant="ghost" onClick={() => tags.set(tags.peek().slice(0, 3))}>Sıfırla</Button></Row>
         </div>

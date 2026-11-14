@@ -10,7 +10,7 @@ isAction(save)                      // false`,
       run: () => {
         const save = () => {}
         const a = action("Kaydet", save)
-        return <ul class="sc-ex-ui-e-table"><li><code>action("Kaydet", save)</code><Badge color="success">{String(isAction(a))}</Badge></li><li><code>save</code><Badge color="danger">{String(isAction(save))}</Badge></li><li><code>{"{ kind: 'x' }"}</code><Badge color="danger">{String(isAction({ kind: "x" }))}</Badge></li></ul>
+        return <ul class="sc-ex-ui-e-table"><li><code>action("Kaydet", save)</code><Badge m:color="success">{String(isAction(a))}</Badge></li><li><code>save</code><Badge m:color="danger">{String(isAction(save))}</Badge></li><li><code>{"{ kind: 'x' }"}</code><Badge m:color="danger">{String(isAction({ kind: "x" }))}</Badge></li></ul>
       },
     };
 export default example;

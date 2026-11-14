@@ -6,6 +6,6 @@ import "../../ui-e.css";
 
 const example: ApiExample<any> = {
       code: `for (const th of colorThemes()) console.log(th.id, th.name)`,
-      run: () => <ul class="sc-ex-ui-e-table">{() => colorThemes().map((th) => <li><code>{th.id}</code><span>{th.name}</span>{th.id === colorTheme() && <Badge color="success">etkin</Badge>}</li>)}</ul>,
+      run: () => <ul class="sc-ex-ui-e-table">{() => colorThemes().map((th) => <li><code>{th.id}</code><span>{th.name}</span>{th.id === colorTheme() && <Badge m:color="success">etkin</Badge>}</li>)}</ul>,
     };
 export default example;

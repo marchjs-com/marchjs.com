@@ -8,7 +8,7 @@ import type { ApiExample } from "../../types.ts";
 import "../../platform.css";
 
 const example: ApiExample<any> = {
-      code: `<Badge color="brand-blue">Aktivite</Badge>   // a color prop takes a COLOR_TOKENS name, never a raw color`,
-      run: () => <Stack><div class="sc-row">{COLOR_TOKENS.map((c) => <Badge color={c}>{c}</Badge>)}</div><Out label="adet" value={COLOR_TOKENS.length} /></Stack>,
+      code: `<Badge m:color="brand-blue">Aktivite</Badge>   // a color prop takes a COLOR_TOKENS name, never a raw color`,
+      run: () => <Stack><div class="sc-row">{COLOR_TOKENS.map((c) => <Badge m:color={c}>{c}</Badge>)}</div><Out label="adet" value={COLOR_TOKENS.length} /></Stack>,
     };
 export default example;

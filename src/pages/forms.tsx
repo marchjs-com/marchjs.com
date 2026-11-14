@@ -41,8 +41,8 @@ function DayPicker(props: { variant: (typeof VARIANTS)[number]; color?: ColorTok
   return <div class="sc-choice-case">
     <code class="sc-choice-name">{VARIANT_LABEL[props.variant]}</code>
     {props.variant === "card"
-      ? <CheckboxGroup bind:value={$value} variant="card" options={PLANS.map((x) => ({ ...x }))} color={props.color} colors={props.colors} size={props.size} shape={props.shape} aria-label="Plan özellikleri" />
-      : <CheckboxGroup bind:value={$value} inline variant={props.variant} options={DAYS} color={props.color} colors={props.colors} size={props.size} shape={props.shape} aria-label="Günler" />}
+      ? <CheckboxGroup bind:value={$value} variant="card" options={PLANS.map((x) => ({ ...x }))} m:color={props.color} colors={props.colors} size={props.size} shape={props.shape} aria-label="Plan özellikleri" />
+      : <CheckboxGroup bind:value={$value} inline variant={props.variant} options={DAYS} m:color={props.color} colors={props.colors} size={props.size} shape={props.shape} aria-label="Günler" />}
   </div>
 }
 
@@ -67,7 +67,7 @@ export default function Forms(props: { params?: { rest?: string } }) {
     </div>
   </Demo>
   <Demo wide title="Seçim kontrolleri: seçenekler" desc="Varyant, boyut ve köşe değiştir. Renk üst çubuktaki Vurgu rengi seçicisinden gelir; HADİ renkleri açıkken her seçenek sırayla turuncu, mavi, yeşil, mor olur."
-    code={`<CheckboxGroup variant="chip" size="md" shape="rounded" color="brand-blue" options={days} />
+    code={`<CheckboxGroup variant="chip" size="md" shape="rounded" m:color="brand-blue" options={days} />
 <CheckboxGroup variant="chip" colors="brand" options={days} />      // one HADİ color per option
 <RadioGroup variant="card" options={[{ value, label, hint, icon }]} />
 <Checkbox variant="soft" indeterminate label="Kısmen" />`}>
