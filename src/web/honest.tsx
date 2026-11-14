@@ -14,13 +14,13 @@ export default function HonestSample() {
   return <div class="sc-sample-page">
     <SiteNav mode="solid" brand={{ name: "HADİ", mark: sparkles }} links={LINKS} actions={<Button size="sm" variant="secondary">Yine de dene</Button>} />
     <Hero variant="centered" size="lg" eyebrow="Dürüst tanıtım" title="HADİ herkes için değil" highlight="herkes için değil"
-      lead="Zamanını boşa harcamamak için önce kimin için olmadığını söyleyelim. Sana uyanları işaretle; sonucu biz değil, sen göreceksin."
+      lead="HADİ sosyal ağ, sohbet, etkinlik ve tanışma; hepsi bir arada. Bu herkese göre değil. Sana uyanları işaretle, sonucu sen gör."
       actions={[{ label: "Kendini kontrol et", href: "#h-check", iconEnd: arrowRight }, { label: "Karşılaştırmaya geç", href: "#h-compare", variant: "secondary" }]} />
     <SiteSection id="h-check" eyebrow="Önce sen" title="Sana uyanları işaretle" lead="Sana uyan her satıra dokun. Yarısından fazlası uyuyorsa başka bir uygulama daha iyi olabilir.">
       <NotForYou check items={NOT_FOR_YOU} forYou={FOR_YOU} />
     </SiteSection>
-    <SiteSection id="h-compare" tone="muted" eyebrow="Karşılaştırma" title="Alternatiflerle yan yana" lead="Geride olduğumuz satırları da gösteriyoruz; yanında nedeni yazıyor.">
-      <HonestCompare columns={COMPARE_COLUMNS} rows={COMPARE_ROWS} caption="HADİ ve alternatifleri" />
+    <SiteSection id="h-compare" tone="muted" eyebrow="Karşılaştırma" title="Sıradan bir etkinlik grubuyla yan yana" lead="Küçük bir grubun daha iyi olduğu yerleri de gösteriyoruz; yanında nedeni yazıyor.">
+      <HonestCompare columns={COMPARE_COLUMNS} rows={COMPARE_ROWS} caption="HADİ ve küçük bir etkinlik grubu" />
     </SiteSection>
     <CtaBand variant="plain" title="Hâlâ buradaysan HADİ büyük ihtimalle sana göre" lead="Bir dene, sana uyup uymadığını kendin gör." actions={[{ label: "HADİ'yi aç", iconEnd: arrowRight }]} />
     <SiteFooter brand={{ name: "HADİ", mark: sparkles }} about="Yakınındaki insanlarla buluşmanın en kolay yolu. hadisosyal.com" columns={FOOTER_COLUMNS}
