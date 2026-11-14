@@ -40,6 +40,8 @@
 :dir(rtl) .sc-hero-fx-all::after { content: " ←"; }
 .sc-hero-fx-all:hover { text-decoration: underline; }
 .sc-hero-lead { margin: var(--m-space-3) 0 var(--m-space-3); max-inline-size: 34em; font-size: clamp(1.0625rem, .9rem + .5cqi, 1.21875rem); line-height: 1.5; color: var(--m-text-2); }
+/* the last sentence says where the cards are and what they do in this layout */
+.sc-hero-lead-mid, .sc-hero-lead-narrow { display: none; }
 .sc-hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: .625rem; }
 .sc-hero-cta .m-btn:not(.m-btn-primary) { background: var(--sc-glass-2); backdrop-filter: blur(10px); }
 .sc-hero-cta .m-btn-primary { box-shadow: 0 .75rem 2.5rem -.375rem var(--m-primary); }
@@ -89,6 +91,8 @@
 @container sc-home (max-width: 65rem) {
   .sc-hero { min-block-size: 0; padding-block-start: var(--m-space-6); }
   .sc-hero-in { grid-template-columns: minmax(0, 1fr); row-gap: var(--m-space-5); }
+  .sc-hero-lead-wide { display: none; }
+  .sc-hero-lead-mid { display: inline; }
   .sc-why { order: 2; }
   .sc-why-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sc-bench { order: 3; inline-size: 100%; max-inline-size: 40rem; margin-inline: auto; }
@@ -96,6 +100,8 @@
 /* a phone: the cards stack under each other and stay put (no drag, no pose) */
 @container sc-home (max-width: 47.5rem) {
   .sc-hero { --sc-gutter: var(--m-space-4); padding-block-end: 4.5rem; }
+  .sc-hero-lead-mid { display: none; }
+  .sc-hero-lead-narrow { display: inline; }
   .sc-why-grid { grid-template-columns: minmax(0, 1fr); gap: var(--m-space-3); }
   .sc-bench { block-size: auto; display: grid; gap: var(--m-space-3); perspective: none; }
   .sc-btile { position: relative; inset: auto; inline-size: auto; cursor: auto; touch-action: auto; translate: none !important; transform: none !important; rotate: none !important; }

@@ -156,7 +156,8 @@ export default function Home() {
             {`MIT · ${S.dependencies} bağımlılık · TypeScript`}
           </span>
           {title.view}
-          <p class="sc-hero-lead">Sinyallerle çalışan, sıfır bağımlılıklı TypeScript arayüz çatısı. Sağdaki kartları tut, sürükle; bir renge dokun: hepsi gerçek.</p>
+          <p class="sc-hero-lead">Sinyallerle çalışan, sıfır bağımlılıklı TypeScript arayüz çatısı. <span class="sc-hero-lead-wide">Sağdaki kartları tut, sürükle; bir renge dokun: hepsi gerçek.</span>
+            <span class="sc-hero-lead-mid">Aşağıdaki kartları tut, sürükle; bir renge dokun: hepsi gerçek.</span><span class="sc-hero-lead-narrow">Aşağıdaki kartlarda bir renge dokun: hepsi gerçek.</span></p>
           <div class="sc-hero-cta">
             <Button variant="primary" size="lg" href="/buttons" iconEnd={arrowRight}>Bileşenleri gez</Button>
             <Button size="lg" href="/social/post-card">Bir bileşeni parçala</Button>
