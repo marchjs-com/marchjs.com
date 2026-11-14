@@ -1,0 +1,30 @@
+/* The workbench of a component card (workbench.tsx): a stage box (toolbar, stage, code) beside the options panel.
+   The card itself has no frame: the stage box and the panel are the two surfaces. */
+.sc-wb-card { padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; gap: var(--m-space-3); }
+.sc-wb-card > .sc-demo-head { padding-inline: var(--m-space-1); }
+.sc-wb-parts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-2); min-inline-size: 0; font-size: var(--m-text-sm); color: var(--m-muted); }
+.sc-wb-parts > .sc-part-api { margin-inline-start: auto; }
+.sc-wb .sc-play-inner { gap: var(--m-space-4); }
+@container (min-width: 46rem) { .sc-wb .sc-play-inner { grid-template-columns: minmax(0, 1fr) minmax(16rem, 20rem); } }
+
+/* the stage box: one surface, the stage between its toolbar and its code; it stays on screen beside a long panel */
+.sc-wb-box { display: flex; flex-direction: column; min-inline-size: 0; border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); background: var(--m-surface); box-shadow: var(--m-shadow-2); overflow: clip; }
+@container (min-width: 46rem) { .sc-wb-box { position: sticky; inset-block-start: calc(var(--m-topbar-h, 3.5rem) + var(--m-space-3)); } }
+.sc-wb .sc-play-stage { position: relative; inset-block-start: auto; }
+.sc-wb-stage { display: flex; flex-direction: column; min-block-size: 20rem; padding: calc(var(--m-space-5) + var(--m-radius-pad, 0px)); color: var(--m-text);
+  background: radial-gradient(circle at 50% 0, color-mix(in srgb, var(--m-primary) 8%, transparent), transparent 62%), radial-gradient(color-mix(in srgb, var(--m-text) 14%, transparent) 1px, transparent 1.5px) 0 0 / 1rem 1rem, var(--m-surface); }
+.sc-wb-frame { display: flex; flex-direction: column; gap: var(--m-space-3); min-inline-size: 0; flex: 1; }
+.sc-wb-center { align-items: center; justify-content: center; }
+.sc-wb-center > .sc-wb-frame { flex: none; align-items: center; max-inline-size: 100%; }
+/* the code under the stage: always there, never taller than a few lines (it scrolls) */
+.sc-wb-code { border-block-start: var(--m-border-w, 1px) solid var(--m-border); min-inline-size: 0; }
+.sc-wb-code .m-code { border: 0; border-radius: 0; }
+.sc-wb-code .m-code-pre { max-block-size: 13rem; }
+
+/* the options panel: a card with its head ("Seçenekler" + Sıfırla) and one row per option, ruled */
+.sc-wb .sc-play-panel { gap: 0; padding: 0; border-radius: var(--m-radius-4); background: var(--m-surface); box-shadow: var(--m-shadow-2); overflow: clip; }
+.sc-wb-panel-head { display: flex; align-items: center; justify-content: space-between; gap: var(--m-space-2); padding-block: var(--m-space-2); padding-inline: calc(var(--m-space-4) + var(--m-radius-pad, 0px)) calc(var(--m-space-2) + var(--m-radius-pad, 0px)); border-block-end: var(--m-border-w, 1px) solid var(--m-border-subtle); }
+.sc-wb-panel-title { font-weight: 700; font-size: var(--m-text-sm); }
+.sc-wb .sc-play-opt { padding-block: var(--m-space-3); padding-inline: calc(var(--m-space-4) + var(--m-radius-pad, 0px)); border-block-end: var(--m-border-w, 1px) solid var(--m-border-subtle); }
+.sc-wb .sc-play-opt:last-child { border-block-end: 0; }
+.sc-wb-none { margin: 0; padding: var(--m-space-4); color: var(--m-muted); font-size: var(--m-text-sm); }

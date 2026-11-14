@@ -57,6 +57,9 @@ function control(o: PlayOption): unknown {
 const shown = (visibleWhen: (() => boolean) | undefined, draw: () => unknown): unknown =>
   visibleWhen ? If({ when: visibleWhen, children: () => <div class="sc-play-opt">{draw()}</div> }) : untrack(() => <div class="sc-play-opt">{draw()}</div>)
 
+/** One option of a panel as its row (`.sc-play-opt`), shown while the option has an effect. */
+export const optionRow = (o: PlayOption): unknown => shown(o.visibleWhen, () => control(o))
+
 /** `stage="center"`: a small component, centred in a framed stage (default: the demo takes the stage's width). */
 export function Playground(props: { options: readonly PlayOption[]; label?: string; stage?: "fill" | "center" | undefined; children?: unknown }) {
   return <div class="sc-play"><div class="sc-play-inner">
