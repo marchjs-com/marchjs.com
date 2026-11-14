@@ -1,51 +1,100 @@
-/* Home hero: the four HADİ colors as a drifting aurora (animated by the motion engine, see home.tsx), a live preview.
-   Theme tokens only, logical properties only (RTL). Loaded with the home route, not at start-up. */
-.sc-home { overflow-x: clip; }
-.sc-hero { position: relative; isolation: isolate; overflow: hidden; padding: clamp(2.5rem, 7vw, 6rem) var(--m-space-6) clamp(2.5rem, 6vw, 5rem);
-  background: var(--m-bg); color: var(--m-text); border-block-end: 1px solid var(--m-border); }
-.sc-hero-aurora { position: absolute; inset: -20% -10%; z-index: -2; filter: blur(72px) saturate(130%); opacity: .3; pointer-events: none; }
-.sc-hero-blob { position: absolute; inline-size: 36%; aspect-ratio: 1; border-radius: 50%; background: var(--sc-blob); will-change: transform; }
-.sc-hero-blob:nth-child(1) { inset-inline-start: 0; inset-block-start: 4%; }
-.sc-hero-blob:nth-child(2) { inset-inline-end: 4%; inset-block-start: -6%; }
-.sc-hero-blob:nth-child(3) { inset-inline-start: 26%; inset-block-end: -14%; }
-.sc-hero-blob:nth-child(4) { inset-inline-end: 18%; inset-block-end: -4%; }
-.sc-hero-mesh { position: absolute; inset: 0; z-index: -1; opacity: .5;
-  background-image: linear-gradient(var(--m-border-subtle) 1px, transparent 1px), linear-gradient(90deg, var(--m-border-subtle) 1px, transparent 1px);
-  background-size: 44px 44px; mask-image: radial-gradient(ellipse 70% 70% at 50% 35%, #000 25%, transparent 75%); }
-.sc-hero-inner { position: relative; max-inline-size: 76rem; margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(var(--m-space-6), 5vw, 4.5rem); align-items: center; }
-.sc-hero-copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--m-space-5); min-inline-size: 0; }
-.sc-pill { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-2); max-inline-size: 100%; padding-block: .25rem; padding-inline: .25rem .875rem; border-radius: var(--m-radius-full);
-  background: color-mix(in srgb, var(--m-surface) 70%, transparent); box-shadow: inset 0 0 0 1px var(--m-border); backdrop-filter: blur(10px); font-size: var(--m-text-sm); color: var(--m-text-2); }
-.sc-hero-title { margin: 0; font-family: var(--m-font-display); font-weight: var(--m-display-weight); font-size: clamp(3rem, 8vw, 6rem); line-height: .95; letter-spacing: -.045em; }
-.sc-hero-brand { background-image: linear-gradient(100deg, var(--m-text) 30%, color-mix(in srgb, var(--m-text) 55%, var(--m-primary))); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.sc-hero-lead { margin: 0; max-inline-size: 34rem; font-family: var(--m-font-display); font-size: clamp(1.375rem, 2.6vw, 2rem); line-height: 1.2; letter-spacing: -.02em; font-weight: 600; }
-.sc-hero-lead .m-gradient-text { background-image: linear-gradient(100deg, var(--m-brand-orange, var(--m-cat-1)), var(--m-brand-purple, var(--m-cat-4)) 45%, var(--m-brand-blue, var(--m-cat-2)) 75%, var(--m-brand-green, var(--m-cat-3))); }
-.sc-hero-sub { margin: 0; max-inline-size: 36rem; font-size: clamp(1rem, 1.4vw, 1.125rem); line-height: 1.65; color: var(--m-text-2); }
-.sc-hero-cta { display: flex; flex-wrap: wrap; gap: var(--m-space-3); }
-.sc-hero-demo { min-inline-size: 0; }
+/* Home hero: a stage in the theme's own light or dark. Silk bands in the four HADİ colors behind (canvas Overlay drawn
+   in home.tsx), the turning title, glass cards that can be picked up (home/bench.tsx) and six "why March" cards, all
+   inside the first screen. Theme tokens and logical properties only (RTL). The layout follows the room the page has
+   (a container query: the side menu can be resized), not the window. Loaded with the home route, not at start-up. */
+.sc-home { overflow-x: clip; container: sc-home / inline-size; }
+.sc-hero { --sc-glass: color-mix(in srgb, var(--m-surface) 62%, transparent); --sc-glass-2: color-mix(in srgb, var(--m-surface) 86%, transparent); --sc-gutter: max(var(--m-space-6), calc((100cqi - 74rem) / 2));
+  position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;
+  min-block-size: calc(100dvh - var(--m-topbar-h)); padding: var(--m-space-5) var(--sc-gutter) 5.25rem; color: var(--m-text);
+  border-end-start-radius: var(--m-radius-4); border-end-end-radius: var(--m-radius-4);
+  background: radial-gradient(56rem 31rem at 12% 8%, color-mix(in srgb, var(--m-brand-orange) 16%, transparent), transparent 60%),
+    radial-gradient(50rem 32rem at 88% 18%, color-mix(in srgb, var(--m-brand-blue) 16%, transparent), transparent 60%),
+    radial-gradient(44rem 30rem at 70% 100%, color-mix(in srgb, var(--m-brand-purple) 13%, transparent), transparent 60%), var(--m-surface); }
+:root[data-theme="dark"] .sc-hero { --sc-glass: color-mix(in srgb, var(--m-text) 6%, transparent); --sc-glass-2: color-mix(in srgb, var(--m-text) 11%, transparent); }
+.sc-hero-silk { opacity: .42; filter: blur(1.625rem) saturate(1.25); }
+:root[data-theme="dark"] .sc-hero-silk { opacity: .5; }
+.sc-hero-dots { opacity: .5; mask-image: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 75%); }
+.sc-hero-in { position: relative; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); column-gap: var(--m-space-6); row-gap: var(--m-space-4); align-items: center; }
+.sc-hero-copy { display: flex; flex-direction: column; align-items: flex-start; min-inline-size: 0; }
+.sc-hero-pill { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-2); max-inline-size: 100%; margin-block-end: var(--m-space-4); padding-block: .1875rem; padding-inline: .25rem .75rem;
+  border-radius: var(--m-radius-full); background: var(--sc-glass); border: var(--m-border-w, 1px) solid var(--m-border); backdrop-filter: blur(10px); font-size: var(--m-text-sm); font-weight: var(--m-weight-semibold); }
 
-/* live preview card */
-.sc-live { display: flex; flex-direction: column; gap: var(--m-space-4); padding: var(--m-space-5); border: 1px solid var(--m-border); border-radius: var(--m-radius-4);
-  background: color-mix(in srgb, var(--m-surface) 82%, transparent); backdrop-filter: blur(16px) saturate(140%); box-shadow: var(--m-shadow-4); }
-.sc-live-head { display: flex; align-items: center; gap: var(--m-space-2); min-inline-size: 0; }
-.sc-live-title { flex: 1; min-inline-size: 0; font-weight: 600; font-size: var(--m-text-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sc-live-dot { inline-size: .5rem; block-size: .5rem; border-radius: 50%; background: var(--m-success); box-shadow: 0 0 0 4px color-mix(in srgb, var(--m-success) 22%, transparent); }
-.sc-live-row { display: flex; flex-wrap: wrap; gap: var(--m-space-2); }
-.sc-live-theme, .sc-live-accent { box-sizing: border-box; display: inline-grid; place-items: center; inline-size: 2.25rem; block-size: 2.25rem; padding: 3px; border: 1px solid var(--m-border); border-radius: var(--m-radius-full);
-  background: var(--m-bg); cursor: pointer; transition: transform var(--m-dur) var(--m-ease), border-color var(--m-dur) var(--m-ease), box-shadow var(--m-dur) var(--m-ease); }
-.sc-live-theme:hover, .sc-live-accent:hover { transform: translateY(-2px); border-color: var(--m-border-strong); }
-.sc-live-theme[aria-checked="true"], .sc-live-accent[aria-checked="true"] { border-color: var(--m-primary); box-shadow: 0 0 0 3px var(--m-primary-soft); }
-.sc-live-theme:focus-visible, .sc-live-accent:focus-visible { outline: 2px solid var(--m-primary); outline-offset: 2px; }
-.sc-live-theme .m-swatch { inline-size: 100%; block-size: 100%; border-radius: var(--m-radius-full); }
-.sc-live-theme .m-swatch > span { border-radius: var(--m-radius-full); }
-.sc-live-dot-color, .sc-live-dot-theme { inline-size: 100%; block-size: 100%; border-radius: 50%; background: var(--sc-dot); }
-.sc-live-dot-theme { background: conic-gradient(var(--m-cat-1), var(--m-cat-2), var(--m-cat-3), var(--m-cat-4), var(--m-cat-1)); }
-.sc-live-sample { display: flex; flex-direction: column; gap: var(--m-space-4); padding-block-start: var(--m-space-4); border-block-start: 1px dashed var(--m-border); }
-.sc-live-chips, .sc-live-actions { display: flex; flex-wrap: wrap; gap: var(--m-space-2); }
+/* the title: three lines; the middle one turns (home.tsx) and carries the brand ribbon, letter by letter while it moves */
+.sc-hero-title { margin: 0; display: flex; flex-direction: column; font-family: var(--m-font-display); font-weight: 800; font-size: clamp(2.75rem, 6.2cqi, 5.75rem); line-height: .98; letter-spacing: -.045em; }
+.sc-hero-word { display: block; }
+.sc-hero-turn { --sc-ribbon: linear-gradient(90deg, var(--m-brand-orange), var(--m-brand-blue) 38%, var(--m-brand-green) 68%, var(--m-brand-purple));
+  display: block; min-block-size: 1.02em; white-space: nowrap; inline-size: fit-content; padding-inline-end: .06em;
+  background: var(--sc-ribbon); -webkit-background-clip: text; background-clip: text; color: transparent; }
+/* split into letters by a text effect: each letter shows its own slice of the ribbon (--i: its index, set by splitText) */
+.sc-hero-turn .m-tx-char, .sc-hero-turn .m-tx-word:not(:has(.m-tx-char)) { background: var(--sc-ribbon); background-size: 1300% 100%; background-position: calc(var(--i, 0) * 8.33%) 0;
+  -webkit-background-clip: text; background-clip: text; color: transparent; }
+.sc-hero-turn .m-tx-caret { background: var(--m-brand-blue); }
+.sc-hero-fx { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-2); margin: var(--m-space-3) 0 0; padding-block: .3125rem; padding-inline: .5rem .75rem; border-radius: var(--m-radius-full);
+  border: var(--m-border-w, 1px) solid var(--m-border); background: var(--sc-glass); font-size: var(--m-text-sm); color: var(--m-muted); }
+.sc-hero-fx-dot { inline-size: .4375rem; block-size: .4375rem; border-radius: 50%; background: var(--m-success); box-shadow: 0 0 0 .25rem color-mix(in srgb, var(--m-success) 20%, transparent); }
+.sc-hero-fx-name { min-inline-size: 5.5em; font-family: var(--m-font-mono); font-size: var(--m-text-xs); font-weight: var(--m-weight-semibold); color: var(--m-text); background: none; padding: 0; }
+.sc-hero-fx-all { color: var(--m-primary-text); font-weight: var(--m-weight-semibold); text-decoration: none; }
+.sc-hero-fx-all::after { content: " →"; }
+:dir(rtl) .sc-hero-fx-all::after { content: " ←"; }
+.sc-hero-fx-all:hover { text-decoration: underline; }
+.sc-hero-lead { margin: var(--m-space-3) 0 var(--m-space-4); max-inline-size: 34em; font-size: clamp(1.0625rem, .9rem + .5cqi, 1.21875rem); line-height: 1.5; color: var(--m-text-2); }
+.sc-hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: .625rem; }
+.sc-hero-cta .m-btn:not(.m-btn-primary) { background: var(--sc-glass-2); backdrop-filter: blur(10px); }
+.sc-hero-cta .m-btn-primary { box-shadow: 0 .75rem 2.5rem -.375rem var(--m-primary); }
+.sc-hero-npm { display: inline-flex; align-items: center; gap: .625rem; block-size: var(--m-control-h-lg); padding-inline: .875rem .375rem; border-radius: var(--m-radius-2); border: var(--m-border-w, 1px) dashed var(--m-border-strong);
+  background: var(--sc-glass); font-family: var(--m-font-mono); font-size: var(--m-text-sm); color: var(--m-text-2); }
+.sc-hero-npm code { background: none; padding: 0; user-select: text; -webkit-user-select: text; }
 
-@media (max-width: 960px) { .sc-hero-inner { grid-template-columns: minmax(0, 1fr); } .sc-hero-demo { max-inline-size: 30rem; } }
-@media (max-width: 640px) { .sc-hero { padding-inline: var(--m-space-4); } .sc-hero-aurora { filter: blur(48px) saturate(140%); } }
-.sc-live-meter { display: flex; flex-direction: column; gap: var(--m-space-2); font-size: var(--m-text-sm); color: var(--m-text-2); }
-.sc-live-meter-bar { display: block; block-size: .5rem; border-radius: var(--m-radius-full); background: var(--m-border-subtle); overflow: hidden; }
-.sc-live-meter-bar > span { display: block; block-size: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--m-primary), var(--m-brand-blue, var(--m-cat-2))); transition: inline-size var(--m-dur-slow) var(--m-ease-out); }
-[dir="rtl"] .sc-live-meter-bar > span { background: linear-gradient(-90deg, var(--m-primary), var(--m-brand-blue, var(--m-cat-2))); }
+/* the bench: glass cards in depth. A card's place is `translate` (drag), its pose `transform` (pointer), its lean `rotate` */
+.sc-bench { position: relative; block-size: calc(27rem + var(--m-radius-pad) * 6); perspective: 75rem; min-inline-size: 0; }
+.sc-tile { position: absolute; cursor: grab; touch-action: none; will-change: transform; transition: rotate var(--m-dur-slow) var(--m-ease), scale var(--m-dur-slow) var(--m-ease); }
+.sc-tile.is-held { cursor: grabbing; scale: 1.04; transition: scale var(--m-dur-slow) var(--m-ease); }
+.sc-tile-in { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: .625rem; padding: calc(var(--m-space-4) + var(--m-radius-pad)); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4);
+  background: color-mix(in srgb, var(--m-surface) 66%, transparent); backdrop-filter: blur(22px) saturate(1.4); box-shadow: inset 0 1px 0 color-mix(in srgb, white 16%, transparent), var(--m-shadow-4); }
+:root[data-theme="dark"] .sc-tile-in { background: color-mix(in srgb, var(--m-surface-2, var(--m-surface)) 72%, transparent); }
+/* the glare follows the pointer (hoverParallax `glare` writes its place inside each card) */
+.sc-tile-in::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(16rem circle at var(--m-glare-x, 50%) var(--m-glare-y, -40%), color-mix(in srgb, white 16%, transparent), transparent 65%); }
+.sc-tile-title { margin: 0; }
+.sc-tile-theme { inset-inline-start: 0; inset-block-start: 0; inline-size: 52%; }
+.sc-tile-chat { inset-inline-end: 0; inset-block-start: 4%; inline-size: 41%; }
+.sc-tile-chart { inset-inline-start: 4%; inset-block-end: 0; inline-size: 40%; }
+.sc-tile-ctl { inset-inline-end: 1%; inset-block-end: 3%; inline-size: 49%; }
+.sc-tile-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-2); }
+.sc-tile-themesw { padding: 0; overflow: hidden; }
+.sc-tile-themesw .m-swatch { inline-size: 100%; block-size: 100%; border-radius: inherit; }
+.sc-tile-toggle { display: flex; flex-direction: row-reverse; justify-content: space-between; inline-size: 100%; font-size: var(--m-text-sm); font-weight: var(--m-weight-semibold); }
+.sc-tile-range { display: flex; flex-direction: column; gap: var(--m-space-1); font-size: var(--m-text-sm); font-weight: var(--m-weight-semibold); }
+.sc-tile-chat .m-msg-text { font-size: var(--m-text-sm); }
+.sc-tile-chart .m-chart { inline-size: 100%; }
+.sc-tile-ctl-row { display: flex; flex-wrap: wrap; align-items: center; gap: .625rem; }
+
+/* why March: six answers on the first screen, 3 × 2 */
+.sc-why { grid-column: 1 / -1; display: flex; flex-direction: column; gap: var(--m-space-3); min-inline-size: 0; margin-block-start: var(--m-space-2); }
+.sc-why .m-section-label { margin: 0; }
+.sc-why-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--m-space-4); }
+.sc-why-card { gap: var(--m-space-4); padding: calc(1.25rem + var(--m-radius-pad)) calc(1.375rem + var(--m-radius-pad)); border-radius: var(--m-radius-3); background: var(--sc-glass); backdrop-filter: blur(14px); box-shadow: none; overflow: hidden; }
+.sc-why-card:hover { background: var(--sc-glass-2); border-color: color-mix(in srgb, var(--m-accent, var(--m-primary)) 70%, transparent); transform: translateY(-.25rem); box-shadow: none; }
+.sc-why-card .m-icon-tile { transition: transform var(--m-dur-slow) var(--m-ease-out); }
+.sc-why-card:hover .m-icon-tile { transform: scale(1.15) rotate(-8deg); }
+.sc-why-card .m-link-card-text { gap: .25rem; }
+.sc-why-card .m-link-card-title { font-family: var(--m-font-display); font-size: 1.09375rem; font-weight: 750; line-height: 1.25; letter-spacing: -.01em; white-space: normal; }
+.sc-why-card .m-link-card-desc { font-size: .90625rem; line-height: 1.45; color: var(--m-text-2); }
+.sc-why-card code { padding: 0 .25rem; border-radius: var(--m-radius-1); background: var(--sc-glass-2); font-size: .8125rem; }
+
+/* narrow room for the page: a small window beside the menu, a tablet */
+@container sc-home (max-width: 65rem) {
+  .sc-hero { min-block-size: 0; padding-block-start: var(--m-space-6); }
+  .sc-hero-in { grid-template-columns: minmax(0, 1fr); row-gap: var(--m-space-5); }
+  .sc-why { order: 2; }
+  .sc-why-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sc-bench { order: 3; inline-size: 100%; max-inline-size: 40rem; margin-inline: auto; }
+}
+/* a phone: the cards stack under each other and stay put (no drag, no pose) */
+@container sc-home (max-width: 47.5rem) {
+  .sc-hero { --sc-gutter: var(--m-space-4); padding-block-end: 4.5rem; }
+  .sc-why-grid { grid-template-columns: minmax(0, 1fr); gap: var(--m-space-3); }
+  .sc-bench { block-size: auto; display: grid; gap: var(--m-space-3); perspective: none; }
+  .sc-tile { position: relative; inset: auto; inline-size: auto; cursor: auto; touch-action: auto; translate: none !important; transform: none !important; rotate: none !important; }
+  .sc-hero-npm { inline-size: 100%; box-sizing: border-box; justify-content: space-between; }
+}
+@media (prefers-reduced-motion: reduce) { .sc-tile, .sc-why-card .m-icon-tile { transition: none; } .sc-why-card:hover, .sc-why-card:hover .m-icon-tile { transform: none; } }
