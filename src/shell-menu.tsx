@@ -64,7 +64,13 @@ export default function ShellMenu() {
     const again = listed.peek() === id && marked.peek() === id
     listed.set(id); marked.set(id); remember(id)
     if (narrow()) sheet.set(again ? !sheet.peek() : true)
+    else if (untrack(path) === "/") peek.set(again ? !peek.peek() : true)
   }
+  // on the start page only the rail shows (wide screens): a section picked there opens the menu beside it until the
+  // page changes; every other page has the menu open
+  const peek = signal(false)
+  effect(() => { path(); peek.set(false) })
+  const railOnly = (): boolean => path() === "/" && !peek()
   const rail = [{ id: HOME, label: "Ana sayfa", icon: home }, ...SECTIONS.map((s) => ({ id: s.id, label: s.label, short: s.short, icon: s.icon }))]
 
   // ---- the trail: March / section / category / page; every step lists what is beside it
@@ -84,7 +90,7 @@ export default function ShellMenu() {
   })
 
   return <>
-    <div class="sc-rail">
+    <div class="sc-rail" data-rail-only={() => (railOnly() ? "" : null)}>
       <Link href="/" class="sc-rail-logo" aria-label="March: ana sayfa"><Icon of={marchMark} /></Link>
       <ActivityBar class="sc-rail-bar" label="Bölümler" items={rail} value={() => marked()} onChange={pick} collapsible={false} showLabels tooltips={false}
         orientation={() => (narrow() ? "horizontal" : "vertical")} />

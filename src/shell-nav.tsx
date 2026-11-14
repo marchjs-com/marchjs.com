@@ -4,10 +4,11 @@
 // (test/boot-pages.test.js).
 import { signal } from "hadi-march";
 import { whenIdle } from "hadi-march/lazy";
+import { path } from "hadi-march/router";
 
 const menu = signal<(() => unknown) | null>(null);
 whenIdle(() => { void import("./shell-menu.tsx").then((m) => menu.set(() => m.default)); }, 1200);
 
 export default function ShellNav() {
-  return () => { const Menu = menu(); return Menu ? <Menu /> : <div class="sc-nav-placeholder" aria-hidden="true" /> }
+  return () => { const Menu = menu(); return Menu ? <Menu /> : <div class="sc-nav-placeholder" data-rail-only={() => (path() === "/" ? "" : null)} aria-hidden="true" /> }
 }

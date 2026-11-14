@@ -249,6 +249,14 @@
 /* ---------- shell: the section rail, the side menu beside it, the top bar (trail · search · look) */
 /* placeholders of the lazy rail + menu and of the top bar tools: same size, no layout shift */
 .sc-nav-placeholder { width: calc(4.75rem + var(--m-sb-w, 17.5rem)); height: 100%; background: var(--m-surface); border-inline-end: 1px solid var(--m-border); }
+/* the start page shows only the rail (wide screens; a section picked there opens the menu): shell-menu.tsx */
+.sc-nav-placeholder[data-rail-only] { width: 4.75rem; }
+@media (min-width: 901px) {
+  .sc-rail[data-rail-only] + .m-sb-wrap { display: none; }
+  .sc-rail:not([data-rail-only]) + .m-sb-wrap { animation: sc-menu-in var(--m-dur-slow) var(--m-ease-out); }
+}
+@keyframes sc-menu-in { from { opacity: 0; translate: -.75rem 0; } }
+@media (prefers-reduced-motion: reduce) { .sc-rail + .m-sb-wrap { animation: none; } }
 /* the tools are two items of the top bar itself: the search in the middle, the look controls at the end */
 .sc-tools { display: contents; }
 .sc-tools-placeholder { display: block; flex: 1 1 0; block-size: 2.375rem; }

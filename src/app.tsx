@@ -7,7 +7,7 @@ import { Outlet, path } from "hadi-march/router";
 import { AppShell, type BreadcrumbsProps, type Crumb } from "hadi-march/ui";
 import { lazy, skeleton } from "hadi-march/lazy";
 
-const ShellNav = lazy(() => import("./shell-nav.tsx"), { fallback: () => <div class="sc-nav-placeholder" aria-hidden="true" /> })
+const ShellNav = lazy(() => import("./shell-nav.tsx"), { fallback: () => <div class="sc-nav-placeholder" data-rail-only={() => (path() === "/" ? "" : null)} aria-hidden="true" /> })
 // the full trail (section / category / page, each with the pages beside it) comes with the side menu's manifest
 // (shell-menu.tsx, on first idle); until then the trail is March / page title
 const trail = signal<((path: string) => readonly Crumb[]) | null>(null)
