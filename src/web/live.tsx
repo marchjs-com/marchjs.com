@@ -22,11 +22,11 @@ export default function LiveSample() {
       </div>
     </SiteSection>
     <SiteSection id="l-wall" tone="muted" eyebrow="Az önce" title="HADİ'de şimdi neler oluyor" lead="Üstüne gelince durur; istersen düğmeyle tamamen durdur.">
-      <LiveFeed variant="wall" max={9} every={1800} next={activitySource()} label="HADİ'de az önce" />
+      <LiveFeed variant="wall" max={9} every={1400} next={activitySource()} label="HADİ'de az önce" />
     </SiteSection>
     <SiteSection eyebrow="Senin şehrinde" title="Yakınındakiler" lead="Kendi şehrindeki akışı görmek için HADİ'ye katıl.">
       <div class="sc-live-split">
-        <LiveFeed max={4} every={3200} next={activitySource()} label="Yakınındaki etkinlikler" />
+        <LiveFeed max={4} every={2200} next={activitySource()} label="Yakınındaki etkinlikler" />
         <div class="sc-live-aside">
           <LiveCounter from={214} rate={6} label="kişi şu an yakınında bir şeyler planlıyor" />
           <p class="hm-muted">Rakamlar ve akış bu örnekte temsilidir; gerçek sitede sunucudan gelir.</p>
