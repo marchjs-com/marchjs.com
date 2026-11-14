@@ -31,6 +31,11 @@ export default function Language(props: { params?: { rest?: string } }) {
   let $locked = true
   let $partTone = "success"
   let $partSmall = true
+  let $mColor = "brand-blue"
+  let $mTheme = "night"
+  let $mRtl = false
+  let $mCan = "yes"
+  let $mRun = 0
   let $sample = "Girdiye yazılan yazı seçilebilir"
   let offPlain: (() => void) | null = null
   const setPlain = (on: boolean) => untrack(() => { offPlain?.(); offPlain = on ? codeView.provide({ id: "plain", order: 1, render: (input) => PlainProvider(input) }) : null })
@@ -133,6 +138,33 @@ withParts(new Map([[Badge, { tone: "warn" }]]), () => h(MemberCard, props))   //
       </Card>
     </div>
     <p class="m-muted">İki kartın içi aynı kodla yazıldı; soldakinin rozetleri ve düğmeleri dışarıdan, kartın m:parts'ı ile değişiyor.</p>
+  </Demo>
+  <Demo wide title="Ortak prop'lar: renk, tema, yön, ipucu, giriş, yetki, test" desc="Her bileşende aynı işi yapan özellikler tek bir yerde: m:color alt ağacın rengini, m:theme başka bir renk temasını, m:dir ve m:lang yazım yönünü ve dilini verir; m:tip sarmalayıcısız ipucu, m:reveal görünür alana girince giriş hareketi, m:can yetkisi olmayana gizler ya da devre dışı gösterir, m:test testler için sabit bir tutamak bırakır. Hepsi yerel öğede ve her bileşende çalışır; sabit değer yerel öğede derlemede özniteliğe döner."
+    code={`<Card m:color="brand-blue" m:theme="night" m:dir="rtl" m:lang="ar">   // renk, tema, yön, dil
+  <Button m:tip="Bağlantıyı kopyalar">Kopyala</Button>                  // sarmalayıcısız ipucu
+  <Button m:can={canDelete} m:test="delete">Sil</Button>               // yetki yoksa gizli; testte data-testid
+  <Button m:can={{ allow: canDelete, else: "disable" }}>Sil</Button>   // yetki yoksa devre dışı
+  <section m:reveal={120}>…</section>                                  // görünür alana girince belirir
+</Card>`}>
+    <div class="sc-options">
+      <Field label="Renk (m:color)" group><Segmented aria-label="Renk" bind:value={$mColor} options={[{ value: "brand-blue", label: "mavi" }, { value: "brand-orange", label: "turuncu" }, { value: "brand-green", label: "yeşil" }, { value: "brand-purple", label: "mor" }]} /></Field>
+      <Field label="Tema (m:theme)" group><Segmented aria-label="Tema" bind:value={$mTheme} options={[{ value: "night", label: "Gece mavisi" }, { value: "cream", label: "Krem" }, { value: "neon", label: "Neon" }, { value: "", label: "sayfanınki" }]} /></Field>
+      <Toggle bind:value={$mRtl} label="Sağdan sola (m:dir, m:lang)" />
+      <Field label="Yetki (m:can)" group><Segmented aria-label="Yetki" bind:value={$mCan} options={[{ value: "yes", label: "var" }, { value: "hide", label: "yok: gizle" }, { value: "disable", label: "yok: devre dışı" }]} /></Field>
+    </div>
+    <Card title={() => ($mRtl ? "بطاقة العضو" : "Üye kartı")} m:color={$mColor} m:theme={$mTheme || null} m:dir={$mRtl ? "rtl" : null} m:lang={$mRtl ? "ar" : null}>
+      <Stack gap={3}>
+        <span>{() => ($mRtl ? "النص يتدفق من اليمين إلى اليسار." : "Kartın rengi, teması ve yönü dışarıdan, ortak prop'larla geliyor.")}</span>
+        <div class="sc-row">
+          <Button variant="primary" m:tip="Bağlantıyı panoya kopyalar">Kopyala</Button>
+          <Button variant="secondary" m:can={$mCan === "yes" ? true : $mCan === "hide" ? false : { allow: false, else: "disable" }} m:test="delete">Sil</Button>
+          <Badge tone="info" m:tip="m:tip her öğede çalışır">Rozet</Badge>
+        </div>
+        <div class="sc-row">{() => { $mRun; return untrack(() => <section class="sc-sx" sx={{ p: 3, radius: 3 }} m:reveal={120}>Görünür alana girince bir kez belirir (m:reveal).</section>) }}
+          <Button size="sm" variant="ghost" on:click={() => { $mRun++ }}>Yeniden oynat</Button></div>
+      </Stack>
+    </Card>
+    <p class="m-muted">Kopyala düğmesinin ya da rozetin üstüne gel, ya da Sekme ile odaklan: ipucu çıkar. "Sil" düğmesinin test tutamağı: data-testid="delete".</p>
   </Demo></>,
     "code-widget": () => <Demo wide title="Kod sekmesi bir widget noktası" desc="Bütün Kod sekmeleri <Widget sources={[codeView]} /> ile çizilir. Varsayılan sağlayıcı CodeViewer (renkli, salt okunur); Kopyala ve Tam ekran ayrı widget'lardır. Anahtarı açınca ikinci bir sağlayıcı kaydedilir ve vitrindeki bütün Kod sekmeleri onu gösterir. Bir canlı kod editörü aynı noktaya sağlayıcı olarak eklenebilir."
     code={`import { codeView } from "hadi-march/ui"

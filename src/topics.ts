@@ -264,7 +264,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "todos", title: "Yapılacaklar", desc: "$, türetme, <For>, bind:, on:submit|prevent", group: "Dil" },
     { slug: "pipes", title: "Borular (pipes)", desc: "{değer | boru(arg)}: Intl tabanlı, dile duyarlı biçimleme.", group: "Dil" },
     { slug: "sx-class", title: "sx ve class", desc: "sx derlemede statik sınıflara döner (satır içi stil üretmez); class:ad={koşul} sınıfı açar/kapatır.", group: "Dil" },
-    { slug: "common-props", title: "Ortak prop'lar", desc: "m:no-select: her öğede ve her bileşende çalışan prop; alt ağaçta seçimi kapatır.", group: "Dil" },
+    { slug: "common-props", title: "Ortak prop'lar", desc: "m:color, m:theme, m:dir, m:tip, m:reveal, m:can, m:no-select, m:parts: her öğede ve her bileşende çalışan prop'lar.", group: "Dil" },
     { slug: "code-widget", title: "Kod sekmesi bir widget noktası", desc: "Bütün Kod sekmeleri <Widget sources={[codeView]} /> ile çizilir.", group: "Dil" },
   ],
   "/managers": [
