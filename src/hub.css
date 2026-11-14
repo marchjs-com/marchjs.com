@@ -1,23 +1,77 @@
-/* Section overview (grouped topic cards) and topic pages (prev / next). */
-/* the page body is a two-column demo grid: groups, the topic and its footer take the full width */
-.sc-demos > :is(.sc-hub-group, .sc-topic-body, .sc-topic-pager) { grid-column: 1 / -1; }
-.sc-hub-group { margin-block-start: var(--m-space-2); }
-.sc-hub-group-title { margin: 0 0 var(--m-space-3); font-size: var(--m-text-sm); font-weight: var(--m-weight-semibold); color: var(--m-muted); text-transform: uppercase; letter-spacing: .06em; }
-.sc-hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: var(--m-space-3); }
-.sc-hub-card { position: relative; display: flex; flex-direction: column; gap: var(--m-space-1); padding: calc(var(--m-space-4) + var(--m-radius-pad, 0px) / 2) calc(var(--m-space-5) + var(--m-radius-pad, 0px)) calc(var(--m-space-4) + var(--m-radius-pad, 0px) / 2) calc(var(--m-space-4) + var(--m-radius-pad, 0px));
-  border: 1px solid var(--m-border); border-radius: var(--m-radius-3); background: var(--m-surface); color: var(--m-text); text-decoration: none;
-  transition: border-color var(--m-dur-fast) var(--m-ease), box-shadow var(--m-dur-fast) var(--m-ease), translate var(--m-dur-fast) var(--m-ease); }
-.sc-hub-card:hover { border-color: var(--m-primary); box-shadow: var(--m-shadow-2); translate: 0 -2px; }
-.sc-hub-card:focus-visible { outline: 2px solid var(--m-focus, var(--m-primary)); outline-offset: 2px; }
-.sc-hub-card-title { font-size: var(--m-text-md); }
-.sc-hub-card-desc { color: var(--m-text-2); font-size: var(--m-text-sm); line-height: 1.45; }
-.sc-hub-card-go { position: absolute; inset-block-start: var(--m-space-4); inset-inline-end: var(--m-space-3); color: var(--m-faint); }
-.sc-hub-card:hover .sc-hub-card-go { color: var(--m-primary); }
-.sc-hub-card-go:dir(rtl) { scale: -1 1; }
+/* Section overview (head card, sticky filter, drawn cards by group) and topic pages (sibling strip, head, prev / next).
+   The section's colour comes in as data-m-color (--m-accent): the head card's tint, the count, the drawings. */
+.sc-hub, .sc-topic { gap: var(--m-space-4); }
 
-/* a topic page: the demo's own heading repeats the page title, so a lone demo shows only its description */
+/* ---- the head card: tinted with the section colour, the count large on the right */
+.sc-hub-head { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: var(--m-space-5);
+  padding: calc(var(--m-space-5) + var(--m-radius-pad, 0px)) calc(var(--m-space-6) + var(--m-radius-pad, 0px));
+  border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); overflow: hidden;
+  background: linear-gradient(120deg, color-mix(in srgb, var(--m-accent) 14%, var(--m-surface)), var(--m-surface) 62%); }
+.sc-hub-head-text { display: flex; flex-direction: column; gap: var(--m-space-2); min-inline-size: 0; }
+.sc-hub-head .sc-kicker { color: var(--m-accent-text); }
+.sc-hub-head .sc-h1 { font-size: clamp(2.25rem, 4.6vw, 3.6rem); }
+.sc-hub-head .sc-lead { max-inline-size: 40em; color: var(--m-text-2, var(--m-muted)); font-size: var(--m-text-md); }
+.sc-hub-count { font: 800 clamp(3rem, 6vw, 5.25rem) / .9 var(--m-font-display); letter-spacing: -.05em; color: var(--m-accent); text-align: end; font-variant-numeric: tabular-nums; }
+.sc-hub-count small { display: block; margin-block-start: var(--m-space-2); font: 600 var(--m-text-xs) / 1.3 var(--m-font); letter-spacing: 0; color: var(--m-muted); }
+
+/* ---- the sticky row: group chips, then the filter box at the end */
+.sc-hub-filter { position: sticky; inset-block-start: var(--m-topbar-h, 3.5rem); z-index: 6; display: flex; align-items: center; gap: var(--m-space-2);
+  margin-inline: calc(var(--m-space-2) * -1); padding: var(--m-space-2); overflow-x: auto; scrollbar-width: none;
+  background: color-mix(in srgb, var(--m-bg) 84%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.sc-hub-filter > .m-chip2 { flex: none; }
+.sc-hub-q { flex: none; inline-size: 13rem; margin-inline-start: auto; }
+
+/* ---- the cards, by group */
+.sc-hub-groups { display: flex; flex-direction: column; gap: var(--m-space-5); }
+.sc-hub-group { display: flex; flex-direction: column; gap: var(--m-space-3); }
+.sc-hub-group-title { display: flex; align-items: center; gap: var(--m-space-3); margin: 0; font-size: var(--m-text-xs); font-weight: 700; color: var(--m-muted); text-transform: uppercase; letter-spacing: .09em; }
+.sc-hub-group-title::after { content: ""; flex: 1; block-size: 1px; background: var(--m-border); }
+.sc-hub-card { display: flex; flex-direction: column; min-inline-size: 0; max-inline-size: 24rem; border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); overflow: hidden;
+  background: var(--m-surface); color: var(--m-text); text-decoration: none;
+  transition: translate var(--m-dur-slow) var(--m-ease-out), box-shadow var(--m-dur-slow) var(--m-ease), border-color var(--m-dur) var(--m-ease);
+  animation: m-rise-in .45s var(--m-ease-out) backwards; animation-delay: calc(var(--sc-i, 0) * 28ms); }
+.sc-hub-card:hover { translate: 0 -4px; box-shadow: var(--m-shadow-3, var(--m-shadow-2)); border-color: var(--m-accent); }
+.sc-hub-card:focus-visible { outline: 2px solid var(--m-focus, var(--m-primary)); outline-offset: 2px; }
+.sc-hub-art { display: grid; place-items: center; block-size: 7rem; color: var(--m-accent); border-block-end: var(--m-border-w, 1px) solid var(--m-border-subtle);
+  background: radial-gradient(color-mix(in srgb, var(--m-text) 13%, transparent) 1px, transparent 1.5px) 0 0 / .875rem .875rem, linear-gradient(180deg, color-mix(in srgb, var(--m-accent) 6%, var(--m-surface)), var(--m-surface)); }
+.sc-hub-card-body { display: flex; flex-direction: column; gap: 2px; padding: var(--m-space-3) calc(var(--m-space-4) + var(--m-radius-pad, 0px) / 2) calc(var(--m-space-4) + var(--m-radius-pad, 0px) / 2); }
+.sc-hub-card-title { font-size: var(--m-text-md); font-weight: 700; }
+.sc-hub-card-name { font: 500 var(--m-text-xs) / 1.4 var(--m-font-mono); color: var(--m-accent-text); }
+.sc-hub-card-desc { margin-block-start: var(--m-space-1); color: var(--m-muted); font-size: var(--m-text-sm); line-height: 1.45; }
+.sc-hub-none { margin: 0; color: var(--m-muted); }
+
+/* ---- a drawing (hub-art.tsx): 150 × 80; a moving part goes to its pose while its card is hovered or focused */
+.sc-art { inline-size: 150px; block-size: 80px; overflow: visible; }
+.sc-art-mv { transform-box: fill-box; transform-origin: center; transition: transform .45s var(--m-ease-out), opacity .3s var(--m-ease); }
+.sc-hub-card:is(:hover, :focus-visible) .sc-art-mv { transform: var(--sc-art-t, translate(0, 0)) var(--sc-art-s, scale(1)) var(--sc-art-r, rotate(0deg)); }
+.sc-hub-card:is(:hover, :focus-visible) .sc-art-mvo { opacity: var(--sc-art-o); }
+
+/* ---- a topic page: the sibling pages as a strip (the current one filled), then the head */
+.sc-topic-strip { display: flex; gap: var(--m-space-2); overflow-x: auto; scrollbar-width: none; padding-block: 2px var(--m-space-1);
+  mask-image: linear-gradient(90deg, #000 92%, transparent); -webkit-mask-image: linear-gradient(90deg, #000 92%, transparent); }
+.sc-topic-strip:dir(rtl) { mask-image: linear-gradient(270deg, #000 92%, transparent); -webkit-mask-image: linear-gradient(270deg, #000 92%, transparent); }
+.sc-topic-sib { flex: none; padding: var(--m-space-1) var(--m-space-3); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: 999px; background: var(--m-surface);
+  color: var(--m-text); font-size: var(--m-text-sm); font-weight: 600; text-decoration: none; white-space: nowrap; transition: border-color var(--m-dur) var(--m-ease), background-color var(--m-dur) var(--m-ease); }
+.sc-topic-sib:hover { border-color: var(--m-accent); }
+.sc-topic-sib[aria-current="page"] { border-color: var(--m-text); background: var(--m-text); color: var(--m-bg); }
+.sc-topic-head { display: flex; flex-wrap: wrap; align-items: end; gap: var(--m-space-3) var(--m-space-5); }
+.sc-topic-titles { display: flex; flex-direction: column; gap: var(--m-space-2); flex: 1 1 28rem; min-inline-size: 0; }
+.sc-topic-h1 { display: flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-2) var(--m-space-4); font-size: clamp(2.1rem, 4.2vw, 3.25rem); }
+.sc-topic-name { padding: 4px 10px; border-radius: 999px; background: color-mix(in srgb, var(--m-primary) 12%, transparent); color: var(--m-primary-text); font: 600 var(--m-text-sm) / 1.3 var(--m-font-mono); letter-spacing: 0; }
+.sc-topic-acts { display: flex; flex-wrap: wrap; gap: var(--m-space-2); margin-inline-start: auto; min-inline-size: 0; }
+.sc-topic-import { max-inline-size: 100%; font-family: var(--m-font-mono); font-size: var(--m-text-xs); }
+.sc-topic-import .m-btn-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sc-topic-api { display: inline-flex; align-items: center; gap: var(--m-space-1); padding: var(--m-space-1) var(--m-space-3); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: 999px;
+  color: var(--m-text); font-size: var(--m-text-sm); font-weight: 600; text-decoration: none; }
+.sc-topic-api:hover { border-color: var(--m-primary); color: var(--m-primary-text); }
+
+/* the page body is a two-column demo grid: the topic and its footer take the full width */
+.sc-demos > :is(.sc-topic-body, .sc-topic-pager) { grid-column: 1 / -1; }
 .sc-topic-body { display: flex; flex-direction: column; gap: var(--m-space-5); min-inline-size: 0; }
-.sc-topic-body > .sc-demo:only-child .sc-demo-title { display: none; }
+/* a lone component card: the page head has the API link */
+.sc-topic-body > .sc-demo:only-child .sc-part-api { display: none; }
+/* a lone demo: the page head already says what it is (title and sentence), the demo's own head would repeat it */
+.sc-topic-body > .sc-demo:only-child > .sc-demo-head { display: none; }
 /* a topic page fills the screen; the previous / next bar sits at the bottom of the screen at any content height, and
    the content scrolls above it */
 .sc-page:has(> .sc-demos > .sc-topic-pager) { min-block-size: calc(100dvh - var(--m-topbar-h, 3.5rem) - var(--sc-bottom-bar, 0px)); padding-block-end: 0; box-sizing: border-box;
@@ -43,4 +97,13 @@
 .sc-topic-all { color: var(--m-muted); font-size: var(--m-text-sm); text-underline-offset: 3px; }
 .sc-topic-all:hover { color: var(--m-text); }
 .sc-topic-step .m-svg:dir(rtl) { scale: -1 1; }
-@media (max-width: 640px) { .sc-topic-pager { grid-template-columns: 1fr 1fr; margin-inline: calc(var(--m-space-4) * -1); padding-inline: var(--m-space-2); } .sc-topic-all { display: none; } }
+@media (max-width: 640px) {
+  .sc-topic-pager { grid-template-columns: 1fr 1fr; margin-inline: calc(var(--m-space-4) * -1); padding-inline: var(--m-space-2); } .sc-topic-all { display: none; }
+  .sc-hub-head { grid-template-columns: 1fr; } .sc-hub-count { display: none; }
+  .sc-hub-grid.m-grid-flex { --m-cols-sm: 2; }
+  .sc-hub-art { block-size: 5.5rem; } .sc-art { inline-size: 120px; block-size: 64px; }
+  .sc-hub-card-desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .sc-hub-q { inline-size: 10rem; }
+}
+@media (prefers-reduced-motion: reduce) { .sc-hub-card { animation: none; transition: none; } .sc-art-mv { transition: none; } }
+::view-transition-group(sc-morph) { animation-duration: .45s; animation-timing-function: cubic-bezier(.16, 1, .3, 1); }
