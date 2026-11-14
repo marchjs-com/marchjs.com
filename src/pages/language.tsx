@@ -29,6 +29,8 @@ export default function Language(props: { params?: { rest?: string } }) {
   let $big = false
   let $plain = false
   let $locked = true
+  let $partTone = "success"
+  let $partSmall = true
   let $sample = "Girdiye yazılan yazı seçilebilir"
   let offPlain: (() => void) | null = null
   const setPlain = (on: boolean) => untrack(() => { offPlain?.(); offPlain = on ? codeView.provide({ id: "plain", order: 1, render: (input) => PlainProvider(input) }) : null })
@@ -89,7 +91,7 @@ const $left = $todos.filter((x) => !x.done).length   // derived (computed)
     </div>
     <div class="sc-row"><Badge tone="danger" dot class:sc-pulse={$big}>Canlı</Badge><span class="m-muted">{() => ($big ? "class:is-hot açık: vurgu kenarlığı, yumuşak zemin, hafif büyütme" : "class:is-hot kapalı")}</span></div>
   </Demo>,
-    "common-props": () => <Demo wide title="Ortak prop'lar: m:no-select" desc="m: ile başlayan prop'lar her yerel öğede ve her bileşende çalışır. m:no-select açıkken öğenin kendisi ve içindeki her şey seçilemez (girdiye yazılan yazı seçilebilir kalır); içerideki m:no-select={false} o parçada seçimi geri açar."
+    "common-props": () => <><Demo wide title="Ortak prop'lar: m:no-select" desc="m: ile başlayan prop'lar her yerel öğede ve her bileşende çalışır. m:no-select açıkken öğenin kendisi ve içindeki her şey seçilemez (girdiye yazılan yazı seçilebilir kalır); içerideki m:no-select={false} o parçada seçimi geri açar."
     code={`<section m:no-select>…</section>            // sabit değer: derlemede tek bir özniteliğe döner
 <Card m:no-select={$locked}>…</Card>         // bileşen: kök öğesine uygulanır; değer canlı olabilir
 <code m:no-select={false}>HADI2026</code>    // kapalı alanın içinde: bu parça yine seçilebilir`}>
@@ -109,7 +111,29 @@ const $left = $todos.filter((x) => !x.done).length   // derived (computed)
       </Card>
     </div>
     <p class="m-muted">{() => ($locked ? "Kapalı: iki kutuda da yazılar seçilemiyor; yalnız girdinin içindeki yazı ve kupon kodu seçilebilir." : "Açık: her şey her zamanki gibi seçilebilir.")}</p>
-  </Demo>,
+  </Demo>
+  <Demo wide title="Ortak prop'lar: m:parts" desc="m:parts, bir öğenin ya da bileşenin İÇİNDE çizilen bileşenlere türüne göre özellik verir: kartı yazan kişi bunun için ayrı bir prop açmak zorunda kalmaz. Anahtarlar bileşen adlarıdır; verdiğin değer içerideki bileşenin kendi aldığını ezer, en yakın kapsam kazanır, değer canlı kalır."
+    code={`<MemberCard m:parts={{ Badge: { tone: $tone }, Button: { size: "sm", variant: "secondary" } }} />
+<section m:parts={{ Button: { size: "sm" } }}>…bölümdeki bütün düğmeler…</section>
+withParts(new Map([[Badge, { tone: "warn" }]]), () => h(MemberCard, props))   // elle yazım (hadi-march/props)`}>
+    <div class="sc-options"><Field label="Rozet tonu (Badge)" group><Segmented aria-label="Rozet tonu" bind:value={$partTone} options={[{ value: "success", label: "başarı" }, { value: "warn", label: "uyarı" }, { value: "danger", label: "tehlike" }]} /></Field>
+      <Toggle bind:value={$partSmall} label="Düğmeler küçük ve ikincil (Button)" /></div>
+    <div sx={{ cols: 2, gap: 3 }}>
+      <Card title="m:parts ile" m:parts={{ Badge: { tone: $partTone }, Button: $partSmall ? { size: "sm", variant: "secondary" } : {} }}>
+        <Stack gap={2}>
+          <div class="sc-row"><Badge tone="info">Etkin</Badge><Badge tone="info">Yönetici</Badge></div>
+          <div class="sc-row"><Button>Mesaj gönder</Button><Button>Profil</Button></div>
+        </Stack>
+      </Card>
+      <Card title="m:parts olmadan">
+        <Stack gap={2}>
+          <div class="sc-row"><Badge tone="info">Etkin</Badge><Badge tone="info">Yönetici</Badge></div>
+          <div class="sc-row"><Button>Mesaj gönder</Button><Button>Profil</Button></div>
+        </Stack>
+      </Card>
+    </div>
+    <p class="m-muted">İki kartın içi aynı kodla yazıldı; soldakinin rozetleri ve düğmeleri dışarıdan, kartın m:parts'ı ile değişiyor.</p>
+  </Demo></>,
     "code-widget": () => <Demo wide title="Kod sekmesi bir widget noktası" desc="Bütün Kod sekmeleri <Widget sources={[codeView]} /> ile çizilir. Varsayılan sağlayıcı CodeViewer (renkli, salt okunur); Kopyala ve Tam ekran ayrı widget'lardır. Anahtarı açınca ikinci bir sağlayıcı kaydedilir ve vitrindeki bütün Kod sekmeleri onu gösterir. Bir canlı kod editörü aynı noktaya sağlayıcı olarak eklenebilir."
     code={`import { codeView } from "hadi-march/ui"
 const off = codeView.provide({

@@ -4,7 +4,7 @@
 //   - no drop-down for a few values: choices go through ChoicePicker (2–6 → Segmented, more → chips, `preview` →
 //     preview cards, kind "grid" → square tiles, 10+ → Combobox); booleans are switches, numbers sliders.
 import type { PickerKind } from "hadi-march/ui";
-import { ChoicePicker, Toggle, Slider, Field, Button } from "hadi-march/ui";
+import { ChoicePicker, Toggle, Slider, Field, Button, TextInput } from "hadi-march/ui";
 import { untrack, effect, If } from "hadi-march";
 import { refresh } from "hadi-march/icons";
 import { Demo } from "./demo.tsx";
@@ -21,6 +21,8 @@ export interface PlayOption {
   min?: number;
   max?: number;
   step?: number;
+  /** A text field (the value is a string). */
+  text?: boolean;
   /** Shown after the number in a slider's label ("px", "%"). */
   unit?: string;
   /** The option is drawn only while this is true (it has no effect otherwise). */
@@ -45,6 +47,7 @@ function look(o: PlayOption): PickerKind | "auto" {
 
 function control(o: PlayOption): unknown {
   const set = o.set as (v: unknown) => void;
+  if (o.text) return <Field label={o.label}><TextInput value={String(o.get() ?? "")} onChange={set} /></Field>
   if (o.options) return <Field label={o.label}><ChoicePicker value={o.get()} onChange={set} options={o.options} kind={look(o)} /></Field>
   if (o.min != null && o.max != null) return <Field label={`${o.label}: ${String(o.get())}${o.unit ?? ""}`}><Slider value={o.get() as number} onChange={set} min={o.min} max={o.max} step={o.step ?? 1} /></Field>
   return <Toggle value={!!o.get()} onChange={set} label={o.label} />
@@ -56,6 +59,9 @@ function control(o: PlayOption): unknown {
  */
 const shown = (visibleWhen: (() => boolean) | undefined, draw: () => unknown): unknown =>
   visibleWhen ? If({ when: visibleWhen, children: () => <div class="sc-play-opt">{draw()}</div> }) : untrack(() => <div class="sc-play-opt">{draw()}</div>)
+
+/** One option of a panel as its row (`.sc-play-opt`), shown while the option has an effect. */
+export const optionRow = (o: PlayOption): unknown => shown(o.visibleWhen, () => control(o))
 
 /** `stage="center"`: a small component, centred in a framed stage (default: the demo takes the stage's width). */
 export function Playground(props: { options: readonly PlayOption[]; label?: string; stage?: "fill" | "center" | undefined; children?: unknown }) {

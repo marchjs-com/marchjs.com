@@ -23,6 +23,12 @@ export const art: ArtSet = {
     ["ln", 20, 13.5, 30, { o: 0.7 }], ["ln", 20, 37.5, 60], ["fill", 84, 33, 2, 14, 1, { mv: { opacity: 0 } }],
     ["ln", 20, 61.5, 22], ["fill", 110, 60, 20, 8, 3],
   ],
+  // Code with a suggestion list under the caret.
+  code: [
+    ["box", 8, 8, 134, 64, 9], ["path", "M20 24l-5 5 5 5M34 24l5 5-5 5", { w: 2 }], ["ln", 46, 29, 30, { o: 0.7 }], ["fill", 80, 23, 2, 12, 1, { mv: { opacity: 0 } }],
+    ["box", 78, 40, 54, 26, 6], ["fill", 82, 44, 46, 8, 3, { o: 0.22, mv: { y: 10 } }], ["ln", 86, 48, 24], ["ln", 86, 58, 18, { o: 0.6 }],
+    ["ln", 20, 48, 40, { o: 0.5 }], ["ln", 20, 58, 28, { o: 0.5 }],
+  ],
   // The same JSON as text (braces) and as a tree.
   json: [
     ["box", 8, 8, 134, 64, 8], ["path", "M75 8v64", { o: 0.4 }],
