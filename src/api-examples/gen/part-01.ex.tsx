@@ -87,7 +87,6 @@ import e82 from "./charts/charts--area-chart.x.tsx";
 import e83 from "./charts/charts--bar-chart.x.tsx";
 import e84 from "./charts/charts--bar-list.x.tsx";
 import e85 from "./charts/charts--heatmap.x.tsx";
-import e86 from "./charts/charts--line-chart.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "hadi-march#Await": e0,
   "hadi-march#DEV": e1,
@@ -175,6 +174,5 @@ const examples: Record<string, ApiExample<any>> = {
   "hadi-march/charts#BarChart": e83,
   "hadi-march/charts#BarList": e84,
   "hadi-march/charts#Heatmap": e85,
-  "hadi-march/charts#LineChart": e86,
 };
 export default examples;

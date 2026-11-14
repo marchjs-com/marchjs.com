@@ -9,7 +9,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/": { desc: "March'a genel bakış", icon: dashboard },
   "/start": { desc: "Kurulum, ilk bileşen, march CLI, proje yapısı", group: "İlk Adımlar", icon: zap },
   "/api": { desc: "Her dışa aktarım: imza, parametreler, örnekler, canlı demo", group: "İlk Adımlar", icon: code },
-  "/themes": { desc: "7 tema, renkler, yazı, yarıçap, gölge", group: "Temel", icon: palette },
+  "/themes": { desc: "15 tema, renkler, yazı, yarıçap, gölge, stil", group: "Temel", icon: palette },
   "/icons": { desc: "SVG ikon seti ve açık kaynak ikon paketleri", group: "Temel", icon: grid },
   "/buttons": { desc: "Button, menü, çip, avatar, ipucu", group: "Eylemler", icon: zap },
   "/forms": { desc: "Alanlar, seçiciler, doğrulama, sihirbaz", group: "Formlar", icon: edit },

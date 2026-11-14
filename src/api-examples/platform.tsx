@@ -87,6 +87,7 @@ function ThemeBox(p: { def: () => ThemeDef; children?: unknown }) {
   effect(() => { for (const [k, v] of themeVars(p.def(), resolvedTheme() === "dark")) el.style.setProperty(k, v) })
   return el
 }
+import { aurora, noirGold, ember, voyage, graphite, paper, mint, candy, spaceTokens } from "hadi-march/theme";
 const preset = (def: ThemeDef, code: string) => ({
   code,
   run: () => <Stack><ThemeBox def={() => def} /><Row><Out label="id" value={def.id} /><Out label="köşe" value={`${def.radius}px`} /><Out label="hep koyu" value={String(!!def.alwaysDark)} /></Row></Stack>,
@@ -539,6 +540,26 @@ hadi.light.cat.slice(0, 4)   // the four brand colors`) },
 minimal.radius   // a quiet, monochrome preset`) },
     neon: { ...preset(neon, `import { neon } from "hadi-march/theme"
 neon.alwaysDark   // true: light mode shows the dark colors too`) },
+    aurora: { ...preset(aurora, `import { aurora } from "hadi-march/theme"
+aurora.style   // { surface: "glass", glow: 0.55, accent: "gradient", tracking: -0.02 }`) },
+    noirGold: { ...preset(noirGold, `import { noirGold } from "hadi-march/theme"
+noirGold.style.surface   // "outlined": thin frames, no shadows`) },
+    ember: { ...preset(ember, `import { ember } from "hadi-march/theme"
+ember.style.density   // "comfortable"`) },
+    voyage: { ...preset(voyage, `import { voyage } from "hadi-march/theme"
+voyage.style.shadow   // "none": flat surfaces`) },
+    graphite: { ...preset(graphite, `import { graphite } from "hadi-march/theme"
+graphite.style.density   // "compact"`) },
+    paper: { ...preset(paper, `import { paper } from "hadi-march/theme"
+paper.display   // a serif for headings`) },
+    mint: { ...preset(mint, `import { mint } from "hadi-march/theme"
+mint.radius   // 18: big, soft corners`) },
+    candy: { ...preset(candy, `import { candy } from "hadi-march/theme"
+candy.style.accent   // "gradient": filled buttons go from the accent to the special color`) },
+    spaceTokens: {
+      code: `spaceTokens(4, "compact")   // { "space-1": "0.2188rem", …, "control-h": "1.9688rem", … }`,
+      run: () => <Row>{(["compact", "normal", "comfortable"] as const).map((d) => <Out label={d} value={`space-4 ${spaceTokens(4, d)["space-4"]}`} />)}</Row>,
+    },
     night: { ...preset(night, `import { night } from "hadi-march/theme"
 night.dark.bg`) },
     onBrandFill: {
