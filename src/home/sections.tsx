@@ -48,9 +48,10 @@ function Stats() {
 
 // ── the map: six sections, every category ───────────────────────────────────────────────────────────────────────
 
-/** The order of the map: the widest section first (two columns of rows). */
+/** The order of the map: a long section (two columns of rows) starts each line of cards, the search card closes it. */
 const MAP_ORDER = ["components", "built", "motion", "start", "look", "infra"];
-const WIDE = "components";
+/** A section with more categories than this lays its rows out in two columns. */
+const LONG = 6;
 /** How deep a page can sit under a category. */
 const DEPTH = 8;
 
@@ -71,7 +72,7 @@ function WorldMap() {
     <Head id="sc-map-h" kicker="Harita" color="brand-orange" title="Her şey tek bakışta"
       lead={`${worlds.length} bölüm, ${total} kategori; hepsi bu ekranda. Soldaki şerit aynı bölümleri her sayfada taşır.`} />
     <Reveal class="sc-map" effect="up" stagger={70}>
-      {worlds.map(({ s, rows }) => <Card class={`sc-map-world sc-card${s.id === WIDE ? " is-wide" : ""}`} title={s.label} subtitle={s.desc}>
+      {worlds.map(({ s, rows }) => <Card class={`sc-map-world sc-card${rows.length > LONG ? " is-wide" : ""}`} title={s.label} subtitle={s.desc}>
         <Reveal class="sc-map-rows" effect="start" distance={14} stagger={45} delay={250} duration={500}>
           {rows.map((p) => { const n = under(p), color = BRAND_COLORS_ALL[k++ % BRAND_COLORS_ALL.length]!; return <ListRow class="sc-map-row" href={p.path} overflow="ellipsis" color={color}
             lead={<IconTile icon={p.icon} color={color} size="sm" />} title={p.title} sub={p.desc}
@@ -121,7 +122,7 @@ function Start() {
   return <section class="sc-sec" aria-labelledby="sc-start-h">
     <Head id="sc-start-h" kicker="Başla" color="brand-green" title="Üç satırda ilk ekran" />
     <div class="sc-start">
-      <Reveal class="sc-start-code" self effect="start" distance={46}><CodeView code={START} lang="tsx" wrap lineNumbers={false} label="Örnek kod" /></Reveal>
+      <Reveal class="sc-start-code" self effect="start" distance={46}><CodeView code={START} lang="tsx" wrap label="Örnek kod" /></Reveal>
       <Reveal class="sc-start-out sc-card" self effect="end" distance={46} delay={70}>
         <span class="sc-start-out-l">Sonuç</span>
         <Button variant="primary" icon={sparkles} on:click={(e: Event) => heartBurst(e.currentTarget as HTMLElement, { radius: 46 })}>Merhaba</Button>

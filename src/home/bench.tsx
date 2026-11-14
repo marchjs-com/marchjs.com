@@ -51,12 +51,12 @@ function Tile(props: { class: string; depth: number; title: string; order: numbe
       leave: () => { run?.cancel(); run = null } })
     return () => { off(); run?.cancel() }
   }
-  return <div class={`sc-tile ${props.class}`} class:is-held={$held} data-depth={props.depth} use:grab
+  return <div class={`sc-btile ${props.class}`} class:is-held={$held} data-depth={props.depth} use:grab
     style={{ translate: `${$x}px ${$y}px`, rotate: `${$lean}deg`, "z-index": $z ? String($z) : null }}>
-    <div class="sc-tile-in" use:bob use:reveal={{ delay: 250 + props.order * 150, duration: 1100, frames: [
+    <div class="sc-btile-in" use:bob use:reveal={{ delay: 250 + props.order * 150, duration: 1100, frames: [
       { opacity: 0, transform: "translateY(60px) translateZ(-500px) rotateX(28deg) rotateY(-18deg)", filter: "blur(12px)" },
       { opacity: 1, transform: "none", filter: "blur(0px)" }] }}>
-      <SectionLabel class="sc-tile-title">{props.title}</SectionLabel>
+      <SectionLabel class="sc-btile-title">{props.title}</SectionLabel>
       {props.children}
     </div>
   </div>
@@ -69,25 +69,25 @@ function ThemeTile() {
   // the slider shows the theme's own radius after a theme change (its stylesheet may still be loading)
   effect(() => { const id = colorTheme(); void loadTheme(id).then(() => { $radius = radiusNow() }) })
   const setRadius = (v: number): void => { $radius = v; root().style.setProperty(RADIUS, `${v}px`) }
-  return <Tile class="sc-tile-theme" depth={0.3} order={0} title="Tema · dokun, sayfa değişsin">
-    <div class="sc-tile-row" role="radiogroup" aria-label="Tema">
-      {colorThemes().map((th) => <Swatch class="sc-tile-themesw" size="sm" shape="circle" checker={false} role="radio" label={th.name} selected={() => colorTheme() === th.id}
+  return <Tile class="sc-btile-theme" depth={0.3} order={0} title="Tema · dokun, sayfa değişsin">
+    <div class="sc-btile-row" role="radiogroup" aria-label="Tema">
+      {colorThemes().map((th) => <Swatch class="sc-btile-themesw" size="sm" shape="circle" checker={false} role="radio" label={th.name} selected={() => colorTheme() === th.id}
         onClick={() => setColorTheme(th.id)}><ThemeSwatch id={th.id} /></Swatch>)}
     </div>
-    <div class="sc-tile-row" role="group" aria-label="Vurgu rengi">
+    <div class="sc-btile-row" role="group" aria-label="Vurgu rengi">
       {BRAND_COLORS.map((c: ColorToken) => <Swatch color={c} size="md" shape="circle" checker={false} label={ACCENT_NAMES[c] ?? c} selected={() => accent() === c}
         onClick={() => setAccent(accent() === c ? "primary" : c)} />)}
     </div>
-    <Toggle class="sc-tile-toggle" value={resolvedTheme() === "dark"} onChange={(on: boolean) => setTheme(on ? "dark" : "light")}>Koyu kip</Toggle>
-    <label class="sc-tile-range">
-      <span class="sc-tile-range-l">Köşe yarıçapı</span>
-      <Slider value={$radius} onChange={setRadius} min={0} max={26} format={(v: number) => `${v} px`} aria-label="Köşe yarıçapı" />
+    <Toggle class="sc-btile-toggle" value={resolvedTheme() === "dark"} onChange={(on: boolean) => setTheme(on ? "dark" : "light")}>Koyu kip</Toggle>
+    <label class="sc-btile-range">
+      <span class="sc-btile-range-l">Köşe yarıçapı</span>
+      <Slider value={$radius} onChange={setRadius} min={0} max={26} track format={(v: number) => `${v} px`} aria-label="Köşe yarıçapı" />
     </label>
   </Tile>
 }
 
 function ChatTile() {
-  return <Tile class="sc-tile-chat" depth={0.6} order={1} title="Sohbet">
+  return <Tile class="sc-btile-chat" depth={0.6} order={1} title="Sohbet">
     <ChatBubble text="Cumartesi konsere geliyor musun?" swipe={false} tools={false} />
     <ChatBubble mine color="primary" text="Biletimi aldım bile, kapıda buluşalım" swipe={false} tools={false} />
     <TypingIndicator names={["Deniz"]} />
@@ -101,7 +101,7 @@ const SERIES = BRAND_COLORS.map((c) => c.replace("brand-", ""));
 const weekRows = (values: readonly number[]) => values.map((v, i) => ({ day: DAYS[i]!, ...Object.fromEntries(SERIES.map((s, k) => [s, k === i % SERIES.length ? v : 0])) }));
 
 function ChartTile(props: { values: () => readonly number[] }) {
-  return <Tile class="sc-tile-chart" depth={0.45} order={2} title="Haftalık katılım">
+  return <Tile class="sc-btile-chart" depth={0.45} order={2} title="Haftalık katılım">
     <BarChart data={() => weekRows(props.values())} x="day" y={SERIES} stacked legend={false} grid={false} height={112} title="Haftalık katılım"
       colors={BRAND_COLORS.map(tokenColor)} />
   </Tile>
@@ -111,8 +111,8 @@ function ControlsTile(props: { onJoin: () => void }) {
   let $liked = false
   let $likes = WEEK.reduce((a, b) => a + b, 0)
   let $stars = 4
-  return <Tile class="sc-tile-ctl" depth={0.8} order={3} title="Gerçek bileşenler">
-    <div class="sc-tile-ctl-row">
+  return <Tile class="sc-btile-ctl" depth={0.8} order={3} title="Gerçek bileşenler">
+    <div class="sc-btile-ctl-row">
       <Button variant="primary" icon={sparkles} on:click={(e: Event) => { heartBurst(e.currentTarget as HTMLElement, { radius: 46 }); props.onJoin() }}>Katıl</Button>
       <LikeButton liked={$liked} count={$likes} countFormat="full" label="Beğen" onToggle={(on: boolean) => { $liked = on; $likes += on ? 1 : -1 }} />
       <Rating bind:value={$stars} color="brand-gold" label="Puan" />
@@ -125,7 +125,7 @@ export default function Bench() {
   // "Katıl" stirs the chart: the bars glide to new heights
   const stir = (): void => { $week = WEEK.map(() => Math.round(30 + Math.random() * 65)) }
   return <div class="sc-bench" role="group" aria-label="Canlı tezgâh: denetimler bu sayfayı değiştirir"
-    use:hoverParallax={{ depth: -26, layerTilt: 6, hold: true, glare: true, selector: ".sc-tile:not(.is-held)" }}>
+    use:hoverParallax={{ depth: -26, layerTilt: 6, hold: true, glare: true, selector: ".sc-btile:not(.is-held)" }}>
     <ThemeTile />
     <ChatTile />
     <ChartTile values={() => $week} />

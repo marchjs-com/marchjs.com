@@ -41,7 +41,8 @@
 /* speed and size: three figures */
 .sc-fast { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--m-space-3); }
 .sc-fast-card { padding: calc(1.25rem + var(--m-radius-pad)); border-radius: var(--m-radius-4); }
-.sc-fast-card .m-stat-tile-value { font-family: var(--m-font-display); font-weight: 800; letter-spacing: -.03em; }
+.sc-fast-card .m-stat-tile-value { font-family: var(--m-font-display); font-weight: 800; letter-spacing: -.03em; color: var(--m-accent); }
+.sc-fast-card .m-stat-tile-hint { font-size: var(--m-text-sm); line-height: 1.5; }
 .sc-fast-card .m-stat-tile-label { font-size: 1.0625rem; font-weight: var(--m-weight-bold); color: var(--m-text); }
 .sc-fast-more { display: block; margin-block-start: var(--m-space-2); color: var(--m-text-2); font-variant-numeric: tabular-nums; }
 .sc-fast-link { align-self: flex-start; color: var(--m-primary-text); font-weight: var(--m-weight-semibold); }
