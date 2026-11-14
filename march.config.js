@@ -45,12 +45,13 @@ export default {
   // commonRoom: page groups stay 6 KB under the route budget, room for the shared "common" chunk (small code many pages
   // use, outside start-up, prefetched when idle) on every route that loads it
   chunks: { minSize: 10 * 1024, commonRoom: 6 * 1024, allow: {
-    "src/web/product.tsx": "Web siteleri sample page: loaded only when ?view=product opens it, never with the blocks page",
+    "src/web/product.tsx": "Web siteleri sample page: loaded only when /sites/product opens it, never with the blocks page",
     "src/web/product-more.tsx": "lower half of the product sample: loaded when it comes near the viewport",
     "src/web/portfolio-more.tsx": "lower half of the portfolio sample: loaded when it comes near the viewport",
-    "src/web/portfolio.tsx": "Web siteleri sample page: loaded only when ?view=portfolio opens it",
+    "src/web/portfolio.tsx": "Web siteleri sample page: loaded only when /sites/portfolio opens it",
     "src/web/portfolio-detail.tsx": "a portfolio project's detail page: warmed up after the portfolio sample, shown on a click",
-    "src/web/slides.tsx": "Web siteleri sample deck: loaded only when ?view=slides opens it",
+    "src/web/slides.tsx": "Web siteleri sample deck: loaded only when /sites/slides opens it",
+    "src/web/redesign.tsx": "redesign sample page: loaded only when /sites/redesign opens it",
     "src/i18n/tr.ts": "locale dictionary: downloaded only for Turkish, never grouped",
     "src/router/outlets.ts": "named / modal outlets (1.8 KB, no dependencies): joining any page group would make it pull that page",
     "src/demo-code.tsx": "a demo card's Code tab (code widget + highlighter), loaded on the first click on Kod: inlined into the card it would load with every page",

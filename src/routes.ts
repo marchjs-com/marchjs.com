@@ -22,8 +22,6 @@ export const ROUTES = {
   "/api/*": { load: LOADERS["/api"], layouts: [SHELL], title: "API", keep: true },
   // sections with one page per topic (topics.ts): the section's page module draws the overview and each topic
   ...Object.fromEntries(Object.keys(HUBS).map((base) => [`${base}/*`, { load: LOADERS[base], layouts: [SHELL], title: PAGES.find((p) => p.path === base)?.title }])),
-  // sample websites (/web/product, /web/portfolio, /web/slides): the web page module shows one by its path
-  "/web/*": { load: LOADERS["/web"], layouts: [SHELL], title: "Web siteleri" },
   // motion library pages (/motion/svg, /motion/morph…): one route, each page its own lazy chunk
   "/motion/*": { load: () => import("./motion-hub.tsx"), layouts: [SHELL], title: "Hareket" },
   // router demo: a section layout under the shell (nested, kept while its tabs change) and a record page that opens

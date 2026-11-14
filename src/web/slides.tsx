@@ -11,7 +11,7 @@ export default function SlidesSample() {
     <h1 class="sc-slides-title">March tanıtım sunumu</h1>
     <Presentation label="March tanıtım sunumu" transition="slide" sync="showcase"
       index={() => Math.max(0, Number(slide()) - 1 || 0)} setIndex={(i) => void setQuery({ slide: String(i + 1) })}
-      presenter={presenter() === "1"} presenterUrl={hrefOf("/web?view=slides&presenter=1")}>
+      presenter={presenter() === "1"} presenterUrl={hrefOf("/sites/slides?presenter=1")}>
       <DemoSlides />
     </Presentation>
     <p class="sc-slides-help hm-muted">← → ya da boşluk: ilerle · F: tam ekran · P: konuşmacı penceresi · Yazdır: her slayt bir sayfa</p>

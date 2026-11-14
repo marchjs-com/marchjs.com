@@ -35,6 +35,7 @@ export default {
   "/overlay": () => import("./pages/overlay.tsx"),
   "/overlays": () => import("./pages/overlays.tsx"),
   "/seo": () => import("./pages/seo.tsx"),
+  "/sites": () => import("./pages/sites.tsx"),
   "/social": () => import("./pages/social.tsx"),
   "/speed": () => import("./pages/speed.tsx"),
   "/start": () => import("./pages/start.tsx"),

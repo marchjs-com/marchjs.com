@@ -280,9 +280,6 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "device", title: "Cihaz", desc: "Ağ, pil, bellek, yetenekler.", group: "Ortam" },
   ],
   "/web": [
-    { slug: "product", title: "Ürün tanıtım sayfası", desc: "Örnek site: yüzen menü, ürün karesi, bento, fiyatlar, SSS.", group: "Örnek siteler" },
-    { slug: "portfolio", title: "Kişisel portfolyo", desc: "Örnek site: süzgeçli projeler, ayrıntı geçişi, iletişim.", group: "Örnek siteler" },
-    { slug: "slides", title: "Sunum", desc: "Örnek site: klavyeyle sunum, konuşmacı penceresi, tam ekran.", group: "Örnek siteler" },
     { slug: "hero", title: "Hero", desc: "Yedi görünüm, tek yapı: üst etiket, gradyan vurgulu başlık, açıklama, eylemler.", group: "Bloklar" },
     { slug: "site-nav", title: "Site menüsü", desc: "Saydamdan cama geçen, kaydırınca küçülen ya da yüzen hap görünümlü üst çubuk.", group: "Bloklar" },
     { slug: "feature-grid", title: "Özellik ızgarası", desc: "Kartlar (imleç ışığıyla), sade, liste ya da bento.", group: "Bloklar" },
@@ -305,7 +302,14 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "cta-band", title: "Eylem bandı", desc: "Sayfa sonundaki çağrı paneli: gradyan, ağ, cam, sade ya da video arka plan; imleç ışığı.", group: "Bloklar" },
     { slug: "newsletter", title: "Bülten formu", desc: "Doğrulama, bekleme düğmesi, başarıda beliren onay, hatada sallanan alan ve okunan ileti.", group: "Bloklar" },
     { slug: "site-footer", title: "Altbilgi", desc: "Marka, bağlantı sütunları, sosyal bağlantılar, bülten, yasal satır, başa dön ve büyük yazı.", group: "Bloklar" },
+    { slug: "before-after", title: "Önce / sonra", desc: "Sürüklenen ayırıcıyla iki katmanı karşılaştırır; basınca oraya atlar, klavyeyle ve imleci izleyerek de çalışır; yatay ya da dikey.", group: "Bloklar" },
     { slug: "site-section", title: "Bölüm çerçevesi", desc: "Her bloğun çerçevesi: genişlik, dikey ritim, ton ve beliren başlık grubu.", group: "Bloklar" },
+  ],
+  "/sites": [
+    { slug: "product", title: "Ürün tanıtım sayfası", desc: "Yüzen menü, kaydırınca düzleşen ürün karesi, bento, hikâye, fiyatlar, yorum duvarı, SSS ve altbilgi.", group: "Siteler" },
+    { slug: "portfolio", title: "Kişisel portfolyo", desc: "Süzgeçli proje ızgarası, kapağın ayrıntı sayfasına büyüdüğü geçiş, yatay vaka şeridi, deneyim çizelgesi, iletişim formu.", group: "Siteler" },
+    { slug: "slides", title: "Sunum", desc: "Klavye, kaydırma ve dokunma; adım adım maddeler, konuşmacı penceresi, tam ekran, URL'de slayt numarası, yazdır.", group: "Siteler" },
+    { slug: "redesign", title: "Yeniden tasarım", desc: "Anlatmak yerine göster: eski ve yeni ekran sürüklenen ayırıcıyla; akış, profil ve okuma için ayrı karşılaştırmalar.", group: "Siteler" },
   ],
 };
 
