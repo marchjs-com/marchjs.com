@@ -2,7 +2,8 @@
 // One lazy part for every component page. The structural names the audits read stay: .sc-play > .sc-play-inner >
 // .sc-play-stage + .sc-play-panel > .sc-play-opt.
 import "./workbench.css";
-import { signal, computed, effect, untrack } from "hadi-march";
+import { signal, computed, effect, untrack, batch } from "hadi-march";
+import { withParts } from "hadi-march/props";
 import { Link, type Href } from "hadi-march/router";
 import { Button, OverflowToolbar, resolvedTheme, type ToolbarItem } from "hadi-march/ui";
 import type { PlaygroundOption, PlaygroundSpec } from "hadi-march/ui";
@@ -11,26 +12,30 @@ import { ExplodedView, type ExplodedPart } from "hadi-march/components/layout/ex
 import { viewport } from "hadi-march/managers/viewport";
 import { defineIcon, monitor, phone, sun, moon, pilcrow, refresh, rotateCw, layers } from "hadi-march/icons";
 import { scopedMode, type StageMode } from "./stage-mode.ts";
-import type { ExtraAttr } from "./gen-code.ts";
+import { partOptions, partsAttr, parseParts, choices, type ExtraAttr, type PartOption } from "./gen-code.ts";
 import { CodeBox } from "./wb-code.tsx";
 import { cards, type CardEntry } from "hadi-march/components/cards.gen.ts";
 import { optionRow, type PlayOption } from "./playground.tsx";
 import { demoId, type DemoView } from "./component-demo.tsx";
 
-/** A part of a component (meta.composedOf), linked to the page that draws its own demo (cards.gen.ts › w). */
-function Part(props: { name: string }) {
-  const part = cards.find((e) => e.n === props.name)
-  return part?.w ? <Link class="sc-part" href={`${part.w}#${demoId(part.f)}` as Href}>{props.name}</Link> : <code class="sc-part">{props.name}</code>
-}
+/** The page that draws a component's own demo (cards.gen.ts › w), as a link target. */
+const pageOf = (name: string): Href | null => { const part = cards.find((e) => e.n === name); return part?.w ? `${part.w}#${demoId(part.f)}` as Href : null }
 
-/** "Şunlardan oluşur": the parts of the component and the link to its API entry, above the workbench. */
-function PartsRow(props: { parts: readonly string[]; api?: string | undefined }) {
+/**
+ * "Şunlardan oluşur": the parts of the component (a press chooses the part: the options panel turns to it) and the
+ * link to its API entry, above the workbench.
+ */
+function PartsRow(props: { parts: readonly string[]; api?: string | undefined; chosen: () => string | null; choose: (name: string) => void }) {
   return <div class="sc-wb-parts">
     {props.parts.length ? <span class="sc-parts-label">Şunlardan oluşur</span> : null}
-    {props.parts.map((name) => <Part name={name} />)}
+    {props.parts.map((name) => <button type="button" class="sc-part" aria-pressed={() => (props.chosen() === name ? "true" : "false")} title={`${name}: seçeneklerini aç`} on:click={() => props.choose(name)}>{name}</button>)}
     {props.api ? <Link class="sc-part sc-part-api" href={`/api/${props.api}` as Href} title="API başvurusu"><span aria-hidden="true">{"{ }"}</span>{props.api.split("/").pop()}</Link> : null}
   </div>
 }
+
+/** What is known of a part once it is loaded: the component itself (the key of the m:parts map) and its options. */
+interface PartInfo { comp: unknown; options: PartOption[] }
+type PartVals = Record<string, Record<string, unknown>>
 
 const tablet = defineIcon("tablet", ["b:4,2,16,20,2.5", "M11 18h2"])
 /** The devices of the stage toolbar: a real screen size, body and status bar (DevicePreview). */
@@ -59,7 +64,50 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
   const changed = (): boolean => { const v = values(); return spec.options.some((o: PlaygroundOption) => v[o.key] !== o.default) }
   const parts = props.entry.p ?? []
   // ---- the code under the stage: written from the options (playground.ts › code); else the first code block of docs.md
-  const extras = signal<readonly ExtraAttr[]>([])
+  const userExtras = signal<readonly ExtraAttr[]>([])
+
+  // ---- the parts of a composite (m:parts): a chosen part's own playground options, written on it from outside.
+  // partVals: per part, the props set on it; they reach the stage through withParts and the code as m:parts
+  const partVals = signal<PartVals>({}), partInfo = signal<Record<string, PartInfo>>({}), chosen = signal<string | null>(null)
+  let loading: Promise<void> | null = null
+  /** Load every part once: its component (cards-parts.gen.ts) and its playground. */
+  const loadParts = (): Promise<void> => (loading ??= import("hadi-march/components/cards-parts.gen.ts").then(async ({ parts: loaders }) => {
+    const info: Record<string, PartInfo> = {}
+    await Promise.all(parts.map(async (name) => {
+      const card = cards.find((e) => e.n === name)
+      const [comp, spec] = await Promise.all([loaders[name]?.().catch(() => undefined), card ? card.playground().then((m) => m.default).catch(() => null) : null])
+      if (comp) info[name] = { comp, options: spec ? partOptions(spec) : [] }
+    }))
+    partInfo.set(info)
+  }))
+  const choose = (name: string | null): void => {
+    if (!name || !parts.includes(name)) { chosen.set(null); return }
+    void loadParts().then(() => chosen.set(chosen.peek() === name ? null : name))
+  }
+  const known = (): Record<string, readonly PartOption[]> => Object.fromEntries(Object.entries(partInfo()).map(([name, i]) => [name, i.options]))
+  const setPart = (name: string, prop: string, value: unknown): void => {
+    const all = { ...partVals.peek() }, own = { ...all[name] }
+    if (value === undefined) delete own[prop]; else own[prop] = value
+    if (Object.keys(own).length) all[name] = own; else delete all[name]
+    partVals.set(all)
+  }
+  // the attributes the code shows after the options: m:parts first, then what was typed by hand
+  const allExtras = computed((): readonly ExtraAttr[] => { const code = partsAttr(partVals()); return code ? [{ name: "m:parts", value: code }, ...userExtras()] : userExtras() })
+  const extras = Object.assign(() => allExtras(), {
+    peek: (): readonly ExtraAttr[] => untrack(allExtras),
+    set: (list: readonly ExtraAttr[]): void => {
+      const mp = list.find((x) => x.name === "m:parts")
+      const read = (): void => { partVals.set(mp ? parseParts(mp.value, untrack(known)).values : {}) }
+      batch(() => { userExtras.set(list.filter((x) => x.name !== "m:parts")); if (!mp || Object.keys(partInfo.peek()).length) read() })
+      // the parts are not loaded yet (m:parts typed before any part was chosen): read it when they are
+      if (mp && Object.keys(partInfo.peek()).length === 0) void loadParts().then(read)
+    },
+  })
+  const extraErrors = (list: readonly ExtraAttr[]): string[] => { const mp = list.find((x) => x.name === "m:parts"); return mp && Object.keys(partInfo.peek()).length ? parseParts(mp.value, untrack(known)).errors : [] }
+  const partsMap = (): Map<never, Record<string, unknown>> => { const info = partInfo(), out = new Map<never, Record<string, unknown>>(); for (const [name, own] of Object.entries(partVals())) if (info[name]) out.set(info[name]!.comp as never, own); return out }
+  // a prop that was not set on a part when it was drawn cannot follow later: the stage is drawn again when the SET of
+  // props changes (a change of a value is live)
+  const shape = computed(() => Object.entries(partVals()).map(([name, own]) => `${name}:${Object.keys(own).sort().join(",")}`).sort().join("|"))
 
   // ---- the stage: device, rotation, its own light / dark, direction, replay
   const device = signal<Device | null>(null), land = signal(false), rtl = signal(false), run = signal(0)
@@ -87,8 +135,9 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
   }
   // one view for every stage look: the same element moves between the plain stage and the device screen
   const frame = <div class="sc-wb-frame" dir={() => (rtl() ? "rtl" : null)}>
-    <ExplodedView open={apart()} parts={plates()} target={rootSel} fit={560} active={picked()} onPick={(id: string) => picked.set(picked.peek() === id ? null : id)} label="Parçalarına ayrılmış bileşen">
-      {() => { run(); return untrack(() => <View values={live as never} />) }}
+    <ExplodedView open={apart()} parts={plates()} target={rootSel} fit={560} active={chosen() ?? picked()} label="Parçalarına ayrılmış bileşen"
+      onPick={(id: string) => { if (parts.includes(id)) choose(id); else picked.set(picked.peek() === id ? null : id) }}>
+      {() => { run(); shape(); return untrack(() => withParts(partsMap, () => <View values={live as never} />)) }}
     </ExplodedView>
   </div>
   const tools = computed((): ToolbarItem[] => {
@@ -106,9 +155,35 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
       { id: "explode", label: () => (apart() ? "Birleştir" : "Parçalarına ayır"), icon: layers, priority: 7, showLabel, pressed: apart, onSelect: explode },
     ]
   })
+  const reset = (): void => {
+    const name = chosen.peek()
+    if (name) { const all = { ...partVals.peek() }; delete all[name]; partVals.set(all); return }
+    batch(() => { values.set(defaults()); userExtras.set([]); partVals.set({}) })
+  }
+  const canReset = (): boolean => { const name = chosen(); return name ? !!partVals()[name] : changed() || allExtras().length > 0 }
+  const hint = (): string => (chosen() ? "Bu parçada yaptığın değişiklik bileşenin koduna m:parts olarak yazılır." : "Bileşenin kendi seçenekleri. Bir parçanın seçenekleri için adına ya da ayrıkken plakasına tıkla.")
+  const moreProps = (): { name: string; hint: string; value: string }[] => (parts.length ? [{ name: "m:parts", hint: "parçaların özellikleri", value: `={{ ${parts[0]!}: {  } }}` }] : [])
+  /** The options panel of a chosen part: the options of its own playground that work from outside. */
+  const partRows = (name: string): unknown => {
+    const list = partInfo.peek()[name]?.options ?? [], page = pageOf(name)
+    const rows: PlayOption[] = list.map((po): PlayOption => {
+      const o = po.option, all = choices(o)
+      const now = (): unknown => partVals()[name]?.[po.prop]
+      return {
+        label: o.label, options: o.options, kind: o.kind === "text" ? undefined : o.kind, min: o.min, max: o.max, step: o.step, unit: o.unit,
+        // a choice shows as chosen when the part has exactly what it writes; nothing set: the choice that writes nothing
+        get: () => { const v = now(); return all ? all.find((c) => po.value(c) === v) : v ?? o.default },
+        set: ((c: unknown) => setPart(name, po.prop, all ? po.value(c) : c)) as (v: never) => void,
+      }
+    })
+    return <div class="sc-wb-rows sc-wb-part-rows">
+      {rows.length ? rows.map(optionRow) : <p class="sc-wb-none">Bu parçanın buradan ayarlanan seçeneği yok.</p>}
+      {page ? <p class="sc-wb-none"><Link href={page}>{`${name} sayfasını aç`}</Link></p> : null}
+    </div>
+  }
   const size = (): string => { const d = device(); if (!d) return ""; const [w, h] = SIZES[d]; return `${DEVICES[d].name} · ${land() ? h : w} × ${land() ? w : h}` }
   return <>
-    {parts.length || props.entry.a ? <PartsRow parts={parts} api={props.entry.a} /> : null}
+    {parts.length || props.entry.a ? <PartsRow parts={parts} api={props.entry.a} chosen={chosen} choose={choose} /> : null}
     <div class="sc-play sc-wb"><div class="sc-play-inner">
       <div class="sc-wb-box" ref={(x: Element) => { const c = viewport().container(x, { narrow: 0, wide: 600 }); effect(() => wide.set(c.up("wide"))) }}>
         <div class="sc-wb-bar" m:no-select>
@@ -119,14 +194,21 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
           {() => (device() ? <span class="sc-wb-devinfo">{size}</span> : null)}
           {() => { const d = device(); return d ? untrack(() => <DevicePreview device={DEVICES[d].id} landscape={land()} time="9:41" fitHeight={520} label={`${DEVICES[d].name} önizlemesi`}>{frame}</DevicePreview>) : frame }}
         </div>
-        <CodeBox spec={props.spec} name={props.entry.n} values={values} extras={extras} fallback={props.code.trim()} frame={frame as Element} />
+        <CodeBox spec={props.spec} name={props.entry.n} values={values} extras={extras} fallback={props.code.trim()} frame={frame as Element} extraErrors={extraErrors} suggestMore={moreProps} />
       </div>
       <div class="sc-play-panel" role="group" aria-label="Seçenekler">
         <div class="sc-wb-panel-head">
-          <span class="sc-wb-panel-title">Seçenekler</span>
-          <Button size="sm" variant="ghost" disabled={() => !changed()} on:click={() => { values.set(defaults()); extras.set([]) }}>Sıfırla</Button>
+          {parts.length
+            ? <span class="sc-wb-path"><button type="button" class="sc-wb-crumb" aria-current={() => (chosen() ? null : "true")} title="Bileşenin kendi seçenekleri" on:click={() => chosen.set(null)}>{props.entry.n}</button>
+              {() => (chosen() ? <><span aria-hidden="true">›</span><span class="sc-wb-crumb" aria-current="true">{chosen()}</span></> : null)}</span>
+            : <span class="sc-wb-panel-title">Seçenekler</span>}
+          <Button size="sm" variant="ghost" disabled={() => !canReset()} on:click={reset}>Sıfırla</Button>
         </div>
-        {opts.length ? opts.map(optionRow) : <p class="sc-wb-none">Bu bileşenin ayarlanacak seçeneği yok.</p>}
+        {parts.length ? <p class="sc-wb-hint">{hint}</p> : null}
+        <div class="sc-wb-rows" hidden={() => !!chosen()}>
+          {opts.length ? opts.map(optionRow) : <p class="sc-wb-none">Bu bileşenin ayarlanacak seçeneği yok.</p>}
+        </div>
+        {() => { const name = chosen(); return name ? untrack(() => partRows(name)) : null }}
       </div>
     </div></div>
   </>

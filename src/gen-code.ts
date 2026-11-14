@@ -223,3 +223,75 @@ export function parseCode(spec: PlaygroundSpec<never>, name: string, src: string
   else if (!lex.closed) errors.push(`etiket kapanmadı → </${lex.tag}>`)
   return done()
 }
+
+// ------------------------------------------------------------------ m:parts: the parts of a composite
+/** An option of a component that can be set from outside with `m:parts`: it writes one prop with plain values. */
+export interface PartOption {
+  option: Option;
+  /** The prop it writes. */
+  prop: string;
+  /** Option value → prop value (undefined: the prop is not written). */
+  value: (v: unknown) => unknown;
+}
+/** Per part (component name), the props set on it: `{ Avatar: { size: "lg" } }`. */
+export type PartValues = Readonly<Record<string, Readonly<Record<string, unknown>>>>
+
+/**
+ * The options of a component's own playground that also work on it as a part of another component: options of the
+ * component itself (playground.ts has `code`), one prop each, with plain values (a string, a number, a boolean).
+ * An option that writes code (`icon={plus}`), children or several props is left out.
+ */
+export function partOptions(spec: PlaygroundSpec<never>): PartOption[] {
+  if (!specCode(spec)) return []
+  const base: Values = Object.fromEntries(options(spec).map((o) => [o.key, o.default]))
+  const out: PartOption[] = []
+  for (const o of options(spec)) {
+    if (o.prop === false || o.prop === "children" || o.kind === "text") continue
+    const list = choices(o) ?? (typeof o.default === "number" ? [o.default] : null)
+    if (!list) continue
+    const recs = list.map((c) => optionAttrs(o, c, { ...base, [o.key]: c }))
+    const props = [...new Set(recs.flatMap((r) => Object.keys(r)))]
+    if (props.length !== 1 || recs.some((r) => { const c = r[props[0]!]; return c != null && plain(c) === undefined })) continue
+    const prop = props[0]!
+    out.push({ option: o, prop, value: (v) => { const c = optionAttrs(o, v, { ...base, [o.key]: v })[prop]; return c == null ? undefined : plain(c) } })
+  }
+  return out
+}
+
+const partLiteral = (v: unknown): string => (typeof v === "string" ? JSON.stringify(v) : String(v))
+/** The value of the `m:parts` attribute for these parts (null: nothing is set). */
+export function partsAttr(vals: PartValues): string | null {
+  const parts = Object.entries(vals).filter(([, props]) => Object.keys(props).length)
+  return parts.length ? `{{ ${parts.map(([name, props]) => `${name}: { ${Object.entries(props).map(([k, v]) => `${k}: ${partLiteral(v)}`).join(", ")} }`).join(", ")} }}` : null
+}
+
+/**
+ * Read an `m:parts` attribute value back. `known`: the options of each part of this composite (by component name).
+ * What is valid applies; an unknown part, prop or value is said in words.
+ */
+export function parseParts(code: string, known: Readonly<Record<string, readonly PartOption[]>>): { values: Record<string, Record<string, unknown>>; errors: string[] } {
+  const values: Record<string, Record<string, unknown>> = {}, errors: string[] = []
+  const m = /^\{\s*\{([\s\S]*)\}\s*\}$/.exec(code.trim())
+  if (!m) return { values, errors: ["m:parts: {{ Avatar: { size: \"lg\" } }} biçiminde yaz"] }
+  let rest = m[1]!
+  for (const [all, name, body] of m[1]!.matchAll(/([A-Za-z_$][\w$]*)\s*:\s*\{([^{}]*)\}\s*,?/g)) {
+    rest = rest.replace(all, "")
+    const opts = known[name!]
+    if (!opts) { errors.push(`m:parts.${name}: bu bileşende böyle bir parça yok → ${Object.keys(known).join(", ") || "parça yok"}`); continue }
+    let left = body!
+    for (const [field, key, raw] of body!.matchAll(/([A-Za-z_$][\w$]*)\s*:\s*("[^"]*"|'[^']*'|true|false|-?\d+(?:\.\d+)?)\s*,?/g)) {
+      left = left.replace(field, "")
+      const opt = opts.find((o) => o.prop === key)
+      if (!opt) { errors.push(`m:parts.${name}.${key}: buradan ayarlanmıyor → ${opts.map((o) => o.prop).join(", ") || "ayarlanan özellik yok"}`); continue }
+      const v: unknown = raw === "true" ? true : raw === "false" ? false : /^["']/.test(raw!) ? raw!.slice(1, -1) : Number(raw)
+      const list = choices(opt.option)
+      const can = list ? list.map((c) => opt.value(c)).filter((x) => x !== undefined) : null
+      if (can && !can.includes(v)) { errors.push(`m:parts.${name}.${key}: ${partLiteral(v)} burada yok → ${can.map(partLiteral).join(", ")}`); continue }
+      if (!can && typeof v !== "number") { errors.push(`m:parts.${name}.${key}: bir sayı ver`); continue }
+      (values[name!] ??= {})[key!] = v
+    }
+    if (left.trim()) errors.push(`m:parts.${name}: okunamadı → ${left.trim().slice(0, 24)}`)
+  }
+  if (rest.trim()) errors.push(`m:parts: okunamadı → ${rest.trim().slice(0, 24)}`)
+  return { values, errors }
+}

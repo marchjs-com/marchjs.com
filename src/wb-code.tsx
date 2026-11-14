@@ -24,6 +24,10 @@ export interface CodeBoxProps {
   frame: Element;
   /** The component's other props (the API reference), when loaded: the editor accepts and offers them. */
   known?: () => readonly { name: string; type?: string }[];
+  /** What else is wrong with the attributes the options do not own (m:parts: an unknown part, prop or value). */
+  extraErrors?: (extras: readonly ExtraAttr[]) => string[];
+  /** More props for the suggestion list (m:parts on a composite). */
+  suggestMore?: () => readonly JsxProp[];
   /** A prop was changed (from the options or the code): the props table lights its row. */
   onChanged?: (props: readonly string[]) => void;
 }
@@ -95,30 +99,34 @@ export function CodeBox(p: CodeBoxProps) {
   }))]
 
   // options → code (not while the change came from the code itself)
-  let seen: Values = untrack(() => p.values()), seenExtras = untrack(() => p.extras()), own: Values | null = null, ownExtras: readonly ExtraAttr[] | null = null
+  // (extras are compared by what they say: their owner may hand out a new list for the same attributes)
+  const say = (ex: readonly ExtraAttr[]): string => JSON.stringify(ex)
+  let seen: Values = untrack(() => p.values()), seenExtras = say(untrack(() => p.extras())), own: Values | null = null, ownExtras: string | null = null
   effect(() => {
-    const v = p.values(), ex = p.extras()
+    const v = p.values(), ex = say(p.extras())
     if ((v === own || v === seen) && (ex === ownExtras || ex === seenExtras)) { seen = v; seenExtras = ex; return }
-    const before = seen
+    const before = seen, extrasChanged = ex !== seenExtras
     seen = v; seenExtras = ex
     untrack(() => {
       const src = gen()!
       batch(() => { text.set(src); errors.set([]); edited.set(false) })
-      flash(src, propsOf(Object.keys(v).filter((k) => v[k] !== before[k]), before, v))
+      flash(src, [...propsOf(Object.keys(v).filter((k) => v[k] !== before[k]), before, v), ...(extrasChanged ? ["m:parts"] : [])])
     })
   })
 
   // code → options: what is valid applies, the rest is said under the editor
   const onChange = (src: string): void => {
     const now = p.values.peek(), r = parseCode(p.spec, p.name, src, now, names())
-    const sameExtras = JSON.stringify(r.extras) === JSON.stringify(p.extras.peek())
+    const sameExtras = say(r.extras) === say(p.extras.peek())
+    const all = [...r.errors, ...(p.extraErrors?.(r.extras) ?? [])]
     batch(() => {
-      text.set(src); errors.set(r.errors); edited.set(true)
+      text.set(src); errors.set(all); edited.set(true)
       if (r.changed.length) { own = r.values; p.values.set(r.values) }
-      if (!sameExtras) { ownExtras = r.extras; p.extras.set(r.extras) }
+      // what the owner keeps of them (it may drop what it cannot read) is the state the code now stands for
+      if (!sameExtras) { p.extras.set(r.extras); ownExtras = say(p.extras.peek()) }
     })
     clearTimeout(timer)
-    marks.set(ranges(src, r.errors.map((e) => e.slice(0, e.indexOf(":"))), "error"))
+    marks.set(ranges(src, all.map((e) => (e.startsWith("m:parts") ? "m:parts" : e.slice(0, e.indexOf(":")))), "error"))
     const changed = propsOf(r.changed, now, r.values)
     if (changed.length) p.onChanged?.(changed)
   }
@@ -151,7 +159,7 @@ export function CodeBox(p: CodeBoxProps) {
       return first && !e.codes.includes("") ? { name, hint: e.hint, value: `=${first}` } : { name, hint: e.hint }
     })
     const other = (p.known?.() ?? []).filter((k) => !found.has(k.name) && !fixed.includes(k.name)).map((k): JsxProp => ({ name: k.name, hint: k.type ? `${p.name} · ${k.type}` : p.name }))
-    return [...own2, ...COMMON_ATTRS.map(([name, hint, value]): JsxProp => ({ name, hint, ...(value ? { value: `=${value}` } : {}) })), ...other]
+    return [...own2, ...(p.suggestMore?.() ?? []), ...COMMON_ATTRS.map(([name, hint, value]): JsxProp => ({ name, hint, ...(value ? { value: `=${value}` } : {}) })), ...other]
   }
   const tag = (): string => lexCode(text.peek())?.tag || p.name
   // the code box is dark in every theme (a terminal strip under the stage)

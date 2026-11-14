@@ -45,3 +45,12 @@
 .sc-wb .sc-play-opt { padding-block: var(--m-space-3); padding-inline: calc(var(--m-space-4) + var(--m-radius-pad, 0px)); border-block-end: var(--m-border-w, 1px) solid var(--m-border-subtle); }
 .sc-wb .sc-play-opt:last-child { border-block-end: 0; }
 .sc-wb-none { margin: 0; padding: var(--m-space-4); color: var(--m-muted); font-size: var(--m-text-sm); }
+/* a composite: the head of the panel is the path (component › chosen part); a hint line says where a change goes */
+.sc-wb-path { display: inline-flex; align-items: center; gap: var(--m-space-1); min-inline-size: 0; color: var(--m-muted); font: 600 var(--m-text-sm) / 1.4 var(--m-font-mono); }
+.sc-wb-crumb { padding-block: 2px; padding-inline: var(--m-space-2); border: 0; border-radius: var(--m-radius-2); background: none; color: var(--m-muted); font: inherit; white-space: nowrap; }
+button.sc-wb-crumb { cursor: pointer; }
+button.sc-wb-crumb:hover { background: var(--m-bg-subtle); color: var(--m-text); }
+.sc-wb-crumb[aria-current] { background: color-mix(in srgb, var(--m-primary) 14%, transparent); color: var(--m-primary-text); }
+.sc-wb-hint { margin: 0; padding-block: var(--m-space-2); padding-inline: calc(var(--m-space-4) + var(--m-radius-pad, 0px)); border-block-end: var(--m-border-w, 1px) solid var(--m-border-subtle); color: var(--m-muted); font-size: var(--m-text-xs); line-height: 1.5; }
+.sc-wb-rows > .sc-play-opt:last-child { border-block-end: 0; }
+.sc-wb-parts > button.sc-part[aria-pressed="true"] { border-color: var(--m-primary); background: color-mix(in srgb, var(--m-primary) 12%, transparent); color: var(--m-primary-text); }
