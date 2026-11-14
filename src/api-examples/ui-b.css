@@ -11,9 +11,6 @@
 .sc-ex-ui-b-swatch { height: 3.5rem; border-radius: var(--hm-radius-2); border: 1px solid var(--hm-border-subtle); }
 .sc-ex-ui-b-ring { flex: none; width: 4.5rem; height: 4.5rem; border-radius: 50%; -webkit-mask: radial-gradient(circle, transparent 52%, var(--hm-surface) 54%); mask: radial-gradient(circle, transparent 52%, var(--hm-surface) 54%); }
 .sc-ex-ui-b-dot { flex: none; width: 1rem; height: 1rem; border-radius: 50%; }
-.sc-ex-ui-b-tile { padding: 2px; border: 2px solid transparent; border-radius: var(--hm-radius-2); background: none; cursor: pointer; }
-.sc-ex-ui-b-tile[aria-pressed="true"] { border-color: var(--hm-primary); }
-.sc-ex-ui-b-tile:focus-visible { outline: 2px solid var(--hm-focus); outline-offset: 2px; }
 .sc-ex-ui-b-crop { max-width: 34rem; min-width: 0; }
 .sc-ex-ui-b-ld { min-width: 0; }
 .sc-ex-ui-b-loader { position: relative; display: grid; min-height: 7rem; min-width: 0; padding: var(--hm-space-2); border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-1); }

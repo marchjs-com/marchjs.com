@@ -43,7 +43,9 @@ export default function Feedback(props: { params?: { rest?: string } }) {
     "skeleton": () => <ComponentDemo folder="feedback/skeleton" title="Skeleton: içerik gelmeden düzen" desc="Satırlar, blok ya da ikisi birden; veri gelince aynı yere oturur, hiçbir şey zıplamaz. Parıltı marka renklerini taşıyabilir." />,
     "spinner": () => <ComponentDemo folder="feedback/spinner" title="Spinner: dönen halka" desc="Üç boyut; dört marka rengi, iki renk ya da tek renk. Ekran okuyucu etiketi okur." />,
     "empty": () => <ComponentDemo folder="feedback/empty" title="Empty: boş ekran ne yapılacağını söyler" desc="İkon, başlık, açıklama ve sonraki adım. Eylem düğmesine basınca başlık değişir." />,
-    "error-box": () => <ComponentDemo folder="feedback/error-box" title="ErrorBox: hata ve yeniden dene" desc="Hatanın iletisi metin olarak; yeniden dene düğmesi denemeleri sayar, üçüncüsü başarılı olur." />,
+    "status-dot": () => <ComponentDemo folder="feedback/status-dot" title="StatusDot: durum noktası" desc="Ton ya da tema rengi; halka ya da yanıp sönme ile nabız. Etiket verilirse ekran okuyucu okur, verilmezse süstür." />,
+    "check-mark": () => <ComponentDemo folder="feedback/check-mark" title="CheckMark: evet, hayır, kısmen" desc="Karşılaştırma tablosu ve özellik listeleri için ✓ ✕ – işareti; anlamı her zaman metin olarak da okunur." />,
+    "error-box": () => <ComponentDemo folder="feedback/error-box"title="ErrorBox: hata ve yeniden dene" desc="Hatanın iletisi metin olarak; yeniden dene düğmesi denemeleri sayar, üçüncüsü başarılı olur." />,
     "loader": () => <ComponentDemo folder="feedback/loader" title="Loader: bir alanı dolduran yükleme" desc="Yerinde ya da içeriğin üstünde yarı saydam perdeyle; hızlı yüklemede çark hiç görünmez (gecikmeli belirir)." />,
   }
   return <Hub section="/feedback" kicker="Bileşenler" title="Durumlar" lead="Her ekranın yükleniyor, boş ve hata hâli birinci sınıf: iskeletler gerçek düzeni taklit eder, boş durumlar bir sonraki adımı gösterir." render={RENDER} params={props.params} />

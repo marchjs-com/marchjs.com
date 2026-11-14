@@ -40,6 +40,7 @@ function Blocks(props: { params?: { rest?: string } | undefined }) {
     "live-counter": () => <ComponentDemo folder="landing/live-counter" title="Canlı sayaç" desc="Değer sunucudan bir sinyalle gelir ya da başlangıç ve dakikadaki artışla hareket saatinde küçük adımlarla büyür; yalnız ekrandayken. Basamaklar odometre gibi döner, canlı noktası nabız gibi atar." />,
     "branching-story": () => <ComponentDemo folder="landing/branching-story" title="Dallanan hikâye" desc="Her bölüm seçimlerle biter; seçilen düğme parlar, diğerleri söner, sayfa okuma yönünden döner (geri giderken öbür yandan, RTL'de aynalı). Üstteki yolda herhangi bir adıma dokununca oraya döner; bulunan sonlar sayılır. Odak yeni bölüm başlığına geçer." />,
     "site-section": () => <ComponentDemo folder="landing/site-section" title="Bölüm çerçevesi" desc="Her bloğun çerçevesi: genişlik, dikey ritim, ton ve beliren başlık grubu." />,
+    "section-head": () => <ComponentDemo folder="landing/section-head" title="Bölüm başlığı" desc="Üst etiket, başlık, açıklama, eylemler ve not: her parça isteğe bağlı; hizalama, başlık düzeyi ve ölçek seçilir, kaydırınca belirebilir." />,
   }
   return <Hub section="/web" kicker="Web tasarım araçları" title="Bileşenler" lead="Tanıtım, ana sayfa, portfolyo ve sunum için bloklar. Bunlarla kurulmuş tam uygulamalar Örnek uygulamalar bölümünde. Her blok mevcut bileşenlerden kurulur, hareket motoruyla canlanır, temaya, RTL'ye ve dile uyar. Yalnız kullanılan blok derlenir." render={RENDER} params={props.params} />
 }

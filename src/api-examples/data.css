@@ -10,3 +10,6 @@
 .sc-ex-data-item > p { margin: 0; color: var(--hm-muted); }
 .sc-ex-data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); gap: var(--hm-space-2); margin: 0; padding: 0; list-style: none; font-size: var(--hm-text-sm); }
 .sc-ex-data-grid > li { padding: var(--hm-space-1) var(--hm-space-2); border-radius: var(--hm-radius-1); background: var(--hm-surface-2); overflow-wrap: anywhere; }
+.sc-ex-data-tile { padding: 2px; border: 2px solid transparent; border-radius: var(--hm-radius-2); background: none; cursor: pointer; }
+.sc-ex-data-tile[aria-pressed="true"] { border-color: var(--hm-primary); }
+.sc-ex-data-tile:focus-visible { outline: 2px solid var(--hm-focus); outline-offset: 2px; }

@@ -44,6 +44,7 @@ export default function Navigation(props: { params?: { rest?: string } }) {
   const featured = [{ id: "support", label: "Destek talepleri", icon: inbox, badge: () => $waiting,
     sub: () => ($waiting ? `${$waiting} talep yanıt bekliyor` : "Yanıt bekleyen talep yok"), onSelect: () => { $picked = "Destek talepleri" } }]
   const RENDER: Record<string, () => unknown> = {
+    "page-dots": () => <ComponentDemo folder="navigation/page-dots" title="PageDots: sayfa noktaları" desc="Sayfa başına bir nokta; etkin olan uzar ve renklenir. onChange verilirse noktalar düğmedir (ok tuşları, Home / End), verilmezse yalnız konumu gösterir." />,
     "routing": () => <Demo wide title="Yönlendirici: kalıcı yerleşim, adlı outlet, modal rota" desc="İç içe yerleşim (sekme değişince yerleşimdeki metin kalır), yanda açılan kayıt (adreste ?~aside=), pencerede açılan kayıt (geri tuşu kapatır, yenileyince tam sayfa) ve üst çubuğa sayfanın kendi düğmeleri (Portal)."
     code={`createRouter({
 routes: { "/team": { load: () => import("./list.tsx"), layouts: [shell, teamLayout] } },

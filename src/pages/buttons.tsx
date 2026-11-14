@@ -1,7 +1,7 @@
 // Buttons, menus, tooltips, badges, chips, avatars, cards, tabs.
 import "./buttons.css";
 import {
-  Button, IconButton, Chip, Avatar, AvatarGroup, Card, LinkCard, IconTile, Tabs,
+  Button, IconButton, Chip, Card, LinkCard, IconTile, Tabs,
   Stack, Divider,
 } from "hadi-march/ui";
 import {
@@ -16,6 +16,8 @@ export default function Buttons(props: { params?: { rest?: string } }) {
   let $filters = new Set(["Açık"])
   const toggleFilter = (f: string) => { const n = new Set($filters); if (n.has(f)) n.delete(f); else n.add(f); $filters = n }
   const RENDER: Record<string, () => unknown> = {
+    "clamp-text": () => <ComponentDemo folder="typography/clamp-text" title="ClampText: katlanan metin" desc="Metin N satıra katlanır; yalnız sığmadığında &quot;devamı&quot; düğmesi çıkar, açılınca &quot;daha az&quot;. Dışarıdan denetlenebilir; metinler ve renk değişir, düğme kapatılabilir." />,
+    "undo-redo": () => <ComponentDemo folder="actions/undo-redo" title="UndoRedo: geri al ve yinele" desc="Düzenleyici çubuğundaki düğme çifti. Geri alma geçmişini izler: yapılacak iş yoksa kapanır, ipucunda adımın adı ve kısayol yazar. +1 ve ×2 ile adım ekleyip deneyin." />,
     "button": () => <ComponentDemo folder="actions/button" title="Button: varyant, boyut, yükleniyor" desc="Beş varyant, üç boyut; yükleniyor düğmeyi kilitler ve ikonun yerinde çark döner. Alttaki ActionButton bir action()'ı onay ve bildirimle çalıştırır." />,
     "icon-button": () => <ComponentDemo folder="actions/icon-button" title="IconButton: yalnız ikon" desc="Erişilebilir ad zorunlu; aynı ad ipucu olarak da görünür. Kalp düğmesi aria-pressed ile açılıp kapanır." />,
     "button-group": () => <ComponentDemo folder="actions/button-group" title="ButtonGroup: ilişkili düğmeler" desc="Aralıklı ya da bitişik; bitişik şeritte yuvarlak uçlar RTL'de de dışta kalır." />,
@@ -25,11 +27,9 @@ export default function Buttons(props: { params?: { rest?: string } }) {
     "tooltip": () => <ComponentDemo folder="overlays/tooltip" title="Tooltip: kısa ipucu" desc="Üstüne gelince kısa bir gecikmeyle, klavye odağında hemen görünür; aria-describedby ile bağlanır, Esc gizler." />,
     "chip": () => <ComponentDemo folder="actions/chip" title="Chip: seçenekler" desc="Bileşen klasöründen (src/components/actions/chip) gelen demo: seçenekler playground.ts'den, kod docs.md'den. Renk yalnız süzgeç çipinde ya da primary tonda etkili olduğu için yalnız o zaman görünür." />,
     "made-with-march": () => <ComponentDemo folder="actions/made-with-march" title="MadeWithMarch: kredi satırı" desc="İsteğe bağlı: &quot;March ve 💗 ile geliştirildi&quot;. Lisans MIT olarak kalır; kullanmak rica, zorunluluk değil. Bağlantı adresi tek bir sabittedir (MARCH_URL)." />,
-    "avatars": () => <Demo title="Avatarlar" desc="Baş harfler tema paletiyle; grup ve +N.">
-    <div class="sc-row"><Avatar name="Elif Yılmaz" size="lg" /><Avatar name="Mert Demir" /><Avatar name="Zeynep Kaya" size="sm" />
-      <AvatarGroup names={["Ada", "Linus", "Grace", "Zeynep", "Can", "Ece", "Onur"]} max={5} /></div>
-  </Demo>,
-    "kbd": () => <ComponentDemo folder="typography/kbd" title="Kbd: klavye kısayolu" desc="mod macOS'ta ⌘, ötekilerde Ctrl yazılır; kısayol dizisi key() ve kısayol listesiyle aynı biçimde okunur." />,
+    "chevron": () => <ComponentDemo folder="actions/chevron" title="Chevron: açılınca dönen ok" desc="Dört yön, RTL'de aynalanır; open verilmezse içinde durduğu düğmenin aria-expanded değerini kendisi izler." />,
+    "kbd": () => <ComponentDemo folder="typography/kbd"title="Kbd: klavye kısayolu" desc="mod macOS'ta ⌘, ötekilerde Ctrl yazılır; kısayol dizisi key() ve kısayol listesiyle aynı biçimde okunur." />,
+    "section-label": () => <ComponentDemo folder="typography/section-label" title="SectionLabel: panel içi grup başlığı" desc="Menü, palet, kenar çubuğu ve özellik ızgarasındaki küçük grup başlığı: ikon, sayı ve sonda eylem yuvası." />,
     "cards-tabs": () => <Demo wide title="Kartlar ve sekmeler" desc="Card, LinkCard, IconTile; Tabs (alt çizgi kayar, panel yükselerek gelir).">
     <div class="sc-grid3">
       <Card title="Haftalık rapor" subtitle="Pazartesi 09:00'da gönderilir" actions={[<IconButton icon={more} label="Seçenekler" size="sm" />]} footer={<div class="sc-row sc-row-between"><span class="hm-muted">3 alıcı</span><Button size="sm">Düzenle</Button></div>}>

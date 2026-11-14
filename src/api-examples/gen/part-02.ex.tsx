@@ -22,40 +22,41 @@ import e17 from "./data/data--badge.x.tsx";
 import e18 from "./data/data---can.x.tsx";
 import e19 from "./data/data--card.x.tsx";
 import e20 from "./data/data--gate.x.tsx";
-import e21 from "./data/data--json-view.x.tsx";
-import e22 from "./data/data--kanban.x.tsx";
-import e23 from "./data/data--key-value.x.tsx";
-import e24 from "./data/data--timeline.x.tsx";
-import e25 from "./data/data--tree.x.tsx";
-import e26 from "./data/data--virtual-list.x.tsx";
-import e27 from "./data/data--access.x.tsx";
-import e28 from "./data/data--aggregate.x.tsx";
-import e29 from "./data/data--aggregates.x.tsx";
-import e30 from "./data/data--can.x.tsx";
-import e31 from "./data/data--clear-cache.x.tsx";
-import e32 from "./data/data--configure.x.tsx";
-import e33 from "./data/data--count-label.x.tsx";
-import e34 from "./data/data--denied.x.tsx";
-import e35 from "./data/data--fetch-json.x.tsx";
-import e36 from "./data/data--group-rows.x.tsx";
-import e37 from "./data/data--has-method.x.tsx";
-import e38 from "./data/data--has-role.x.tsx";
-import e39 from "./data/data--invalidate.x.tsx";
-import e40 from "./data/data--mutation.x.tsx";
-import e41 from "./data/data--query.x.tsx";
-import e42 from "./data/data--resource.x.tsx";
-import e43 from "./data/data--role.x.tsx";
-import e44 from "./data/data--set-access.x.tsx";
-import e45 from "./data/data--signed-in.x.tsx";
-import e46 from "./seo/dom.safe--rich_schema.x.tsx";
-import e47 from "./seo/dom.sanitize--blocks.x.tsx";
-import e48 from "./seo/dom.sanitize--decode-entities.x.tsx";
-import e49 from "./seo/dom.sanitize--normalize-blocks.x.tsx";
-import e50 from "./seo/dom.sanitize--parse-html.x.tsx";
-import e51 from "./seo/dom.sanitize--sanitize-node.x.tsx";
-import e52 from "./seo/dom.to-markdown--to-markdown.x.tsx";
-import e53 from "./mock/errors--error-inline.x.tsx";
-import e54 from "./mock/errors--error-page.x.tsx";
+import e21 from "./data/data--icon-tile.x.tsx";
+import e22 from "./data/data--json-view.x.tsx";
+import e23 from "./data/data--kanban.x.tsx";
+import e24 from "./data/data--key-value.x.tsx";
+import e25 from "./data/data--list-row.x.tsx";
+import e26 from "./data/data--stat-tile.x.tsx";
+import e27 from "./data/data--time-ruler.x.tsx";
+import e28 from "./data/data--timeline.x.tsx";
+import e29 from "./data/data--tree.x.tsx";
+import e30 from "./data/data--virtual-list.x.tsx";
+import e31 from "./data/data--access.x.tsx";
+import e32 from "./data/data--aggregate.x.tsx";
+import e33 from "./data/data--aggregates.x.tsx";
+import e34 from "./data/data--can.x.tsx";
+import e35 from "./data/data--clear-cache.x.tsx";
+import e36 from "./data/data--configure.x.tsx";
+import e37 from "./data/data--count-label.x.tsx";
+import e38 from "./data/data--denied.x.tsx";
+import e39 from "./data/data--fetch-json.x.tsx";
+import e40 from "./data/data--group-rows.x.tsx";
+import e41 from "./data/data--has-method.x.tsx";
+import e42 from "./data/data--has-role.x.tsx";
+import e43 from "./data/data--invalidate.x.tsx";
+import e44 from "./data/data--mutation.x.tsx";
+import e45 from "./data/data--query.x.tsx";
+import e46 from "./data/data--resource.x.tsx";
+import e47 from "./data/data--role.x.tsx";
+import e48 from "./data/data--set-access.x.tsx";
+import e49 from "./data/data--signed-in.x.tsx";
+import e50 from "./data/data--time-percent.x.tsx";
+import e51 from "./data/data--time-ticks.x.tsx";
+import e52 from "./seo/dom.safe--rich_schema.x.tsx";
+import e53 from "./seo/dom.sanitize--blocks.x.tsx";
+import e54 from "./seo/dom.sanitize--decode-entities.x.tsx";
+import e55 from "./seo/dom.sanitize--normalize-blocks.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "hadi-march/charts#PieChart": e0,
   "hadi-march/charts#ProgressRing": e1,
@@ -78,39 +79,40 @@ const examples: Record<string, ApiExample<any>> = {
   "hadi-march/data#Can": e18,
   "hadi-march/data#Card": e19,
   "hadi-march/data#Gate": e20,
-  "hadi-march/data#JsonView": e21,
-  "hadi-march/data#Kanban": e22,
-  "hadi-march/data#KeyValue": e23,
-  "hadi-march/data#Timeline": e24,
-  "hadi-march/data#Tree": e25,
-  "hadi-march/data#VirtualList": e26,
-  "hadi-march/data#access": e27,
-  "hadi-march/data#aggregate": e28,
-  "hadi-march/data#aggregates": e29,
-  "hadi-march/data#can": e30,
-  "hadi-march/data#clearCache": e31,
-  "hadi-march/data#configure": e32,
-  "hadi-march/data#countLabel": e33,
-  "hadi-march/data#denied": e34,
-  "hadi-march/data#fetchJson": e35,
-  "hadi-march/data#groupRows": e36,
-  "hadi-march/data#hasMethod": e37,
-  "hadi-march/data#hasRole": e38,
-  "hadi-march/data#invalidate": e39,
-  "hadi-march/data#mutation": e40,
-  "hadi-march/data#query": e41,
-  "hadi-march/data#resource": e42,
-  "hadi-march/data#role": e43,
-  "hadi-march/data#setAccess": e44,
-  "hadi-march/data#signedIn": e45,
-  "hadi-march/dom/safe#RICH_SCHEMA": e46,
-  "hadi-march/dom/sanitize#BLOCKS": e47,
-  "hadi-march/dom/sanitize#decodeEntities": e48,
-  "hadi-march/dom/sanitize#normalizeBlocks": e49,
-  "hadi-march/dom/sanitize#parseHtml": e50,
-  "hadi-march/dom/sanitize#sanitizeNode": e51,
-  "hadi-march/dom/to-markdown#toMarkdown": e52,
-  "hadi-march/errors#ErrorInline": e53,
-  "hadi-march/errors#ErrorPage": e54,
+  "hadi-march/data#IconTile": e21,
+  "hadi-march/data#JsonView": e22,
+  "hadi-march/data#Kanban": e23,
+  "hadi-march/data#KeyValue": e24,
+  "hadi-march/data#ListRow": e25,
+  "hadi-march/data#StatTile": e26,
+  "hadi-march/data#TimeRuler": e27,
+  "hadi-march/data#Timeline": e28,
+  "hadi-march/data#Tree": e29,
+  "hadi-march/data#VirtualList": e30,
+  "hadi-march/data#access": e31,
+  "hadi-march/data#aggregate": e32,
+  "hadi-march/data#aggregates": e33,
+  "hadi-march/data#can": e34,
+  "hadi-march/data#clearCache": e35,
+  "hadi-march/data#configure": e36,
+  "hadi-march/data#countLabel": e37,
+  "hadi-march/data#denied": e38,
+  "hadi-march/data#fetchJson": e39,
+  "hadi-march/data#groupRows": e40,
+  "hadi-march/data#hasMethod": e41,
+  "hadi-march/data#hasRole": e42,
+  "hadi-march/data#invalidate": e43,
+  "hadi-march/data#mutation": e44,
+  "hadi-march/data#query": e45,
+  "hadi-march/data#resource": e46,
+  "hadi-march/data#role": e47,
+  "hadi-march/data#setAccess": e48,
+  "hadi-march/data#signedIn": e49,
+  "hadi-march/data#timePercent": e50,
+  "hadi-march/data#timeTicks": e51,
+  "hadi-march/dom/safe#RICH_SCHEMA": e52,
+  "hadi-march/dom/sanitize#BLOCKS": e53,
+  "hadi-march/dom/sanitize#decodeEntities": e54,
+  "hadi-march/dom/sanitize#normalizeBlocks": e55,
 };
 export default examples;

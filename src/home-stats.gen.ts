@@ -2,55 +2,55 @@
 // Measured sizes come from march-report.json at run time.
 export const HOME_STATS = {
   "dependencies": 0,
-  "components": 235,
-  "registered": 152,
-  "exports": 1082,
+  "components": 256,
+  "registered": 177,
+  "exports": 1109,
   "subpaths": 98,
   "categories": [
     {
       "id": "layout",
       "label": "Yerleşim",
-      "components": 13
+      "components": 15
     },
     {
       "id": "typography",
       "label": "Tipografi",
-      "components": 3
+      "components": 5
     },
     {
       "id": "actions",
       "label": "Eylemler",
-      "components": 9
+      "components": 11
     },
     {
       "id": "forms",
       "label": "Formlar",
-      "components": 26
+      "components": 30
     },
     {
       "id": "data",
       "label": "Veri gösterimi",
-      "components": 12
+      "components": 16
     },
     {
       "id": "feedback",
       "label": "Geri bildirim",
-      "components": 8
+      "components": 10
     },
     {
       "id": "overlays",
       "label": "Katmanlar",
-      "components": 5
+      "components": 6
     },
     {
       "id": "navigation",
       "label": "Gezinme",
-      "components": 7
+      "components": 9
     },
     {
       "id": "media",
       "label": "Medya",
-      "components": 3
+      "components": 5
     },
     {
       "id": "motion",
@@ -60,7 +60,7 @@ export const HOME_STATS = {
     {
       "id": "social",
       "label": "Sosyal",
-      "components": 9
+      "components": 12
     },
     {
       "id": "composite",
@@ -70,7 +70,7 @@ export const HOME_STATS = {
     {
       "id": "landing",
       "label": "Web tasarım araçları",
-      "components": 29
+      "components": 30
     }
   ],
   "icons": {
@@ -84,8 +84,8 @@ export const HOME_STATS = {
     "pageFx": 10
   },
   "managers": 30,
-  "tests": 1016,
-  "testFiles": 258,
+  "tests": 1147,
+  "testFiles": 285,
   "budget": {
     "entry": 15360,
     "boot": 53248,

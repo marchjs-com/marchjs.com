@@ -4,8 +4,8 @@ import "../motion-pages.css";
 import { effect, onCleanup } from "hadi-march";
 import { scrollTimeline, parallaxLayers, stickyReveal, scrollIndicator } from "hadi-march/motion/scroll-fx.ts";
 import { Section } from "../../demo.tsx";
-// the demo kit comes from the /motion/* hub (already loaded): importing it here would split 1 KB into a file of its own
-import type * as Kit from "../../motion-kit.tsx";
+// the demo kit is part of the shared Playground module (as on the other /motion/* pages)
+import { MotionDemo, opt } from "../../playground.tsx";
 
 const FX: Record<string, { label: string; frames: Keyframe[] }> = {
   rise: { label: "yüksel", frames: [{ opacity: 0, transform: "translateY(60px) scale(.94)" }, { opacity: 1, transform: "none" }] },
@@ -22,8 +22,7 @@ const STEPS = [
   { t: "Yayın", d: "Dünyaya göster.", tone: "p" },
 ]
 
-export default function MotionScroll(props: { kit: typeof Kit }) {
-  const { MotionDemo, opt } = props.kit
+export default function MotionScroll() {
   document.title = "Kaydırma animasyonları · March"
 
   // 1 · scroll timeline

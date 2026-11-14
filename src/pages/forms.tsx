@@ -59,6 +59,7 @@ export default function Forms(props: { params?: { rest?: string } }) {
   let $color = "#f2801f"
   let $stars = 4
   const RENDER: Record<string, () => unknown> = {
+    "row-tools": () => <ComponentDemo folder="forms/row-tools" title="RowTools: satır araçları" desc="Düzenlenebilir bir listenin satır sonundaki araçlar: yukarı taşı, aşağı taşı, sil. İlk satırda yukarı, son satırda aşağı kapanır; araçların alt kümesi, adları ve ikonları değişir." />,
     "choice-variants": () => <>
   <Demo wide title="Seçim kontrolleri: varyantları karşılaştır" desc="Aynı gün seçici beş görünümde. Kutu özel çizilir (gerçek input görünmez ama klavye, form ve ekran okuyucu için durur); tik çizilerek gelir, dolgu ortadan büyür, basınca hafifçe küçülür, odakta temalı halka. Hareketi azalt tercihinde animasyonsuz.">
     <div class="sc-choice-compare">
@@ -118,6 +119,7 @@ seats: { type: "int", min: 2, when: (v) => v.plan === "team" },
     <p class="hm-muted">{() => `${$stars} yıldız · bildirim ${$notify ? "açık" : "kapalı"} · ${$agree ? "onaylandı" : "onay bekliyor"}`}</p>
   </Demo>,
     "text-input": () => <ComponentDemo folder="forms/text-input" />,
+    "search-box": () => <ComponentDemo folder="forms/search-box" />,
     "textarea": () => <ComponentDemo folder="forms/textarea" />,
     "password": () => <ComponentDemo folder="forms/password-input" />,
     "phone": () => <ComponentDemo folder="forms/phone-input" />,
@@ -133,6 +135,7 @@ seats: { type: "int", min: 2, when: (v) => v.plan === "team" },
     "toggle": () => <ComponentDemo folder="forms/toggle" />,
     "slider": () => <ComponentDemo folder="forms/slider" />,
     "color-input": () => <ComponentDemo folder="forms/color-input" />,
+    "swatch": () => <ComponentDemo folder="forms/swatch" title="Swatch: renk örneği" desc="Düz renk, gradyan, saydam renk ya da tema belirteci. Bir örneğe basınca seçilir; saydam renkler dama zemini üstünde görünür." />,
     "code": () => <ComponentDemo folder="forms/code-input" />,
     "calendar": () => <ComponentDemo folder="forms/calendar" />,
     "date": () => <ComponentDemo folder="forms/date-picker" />,

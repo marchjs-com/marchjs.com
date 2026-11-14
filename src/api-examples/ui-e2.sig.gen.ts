@@ -8,7 +8,7 @@ const sig: Record<string, Record<string, string>> = {
   "firstDayOf": "function firstDayOf(loc: string): number",
   "fold": "function fold(s: unknown): string",
   "format": "function format(c: Rgba, f: ColorFormat = \"hex\", hue?: number): string",
-  "formatCount": "function formatCount(n: number, format: \"compact\" | \"full\" = \"compact\"): string",
+  "formatCount": "function formatCount(n: number, format: \"compact\" | \"full\" | CountFormat = \"compact\", loc?: string): string",
   "formatDate": "const formatDate = (iso: unknown, loc?: string): string =>",
   "formatKey": "function formatKey(combo: string): string",
   "formatNumber": "function formatNumber(n: number | null | undefined, loc?: string, { decimals, minDecimals = 0, grouping = false }: FormatNumberOptions = {}): string",

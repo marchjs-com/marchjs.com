@@ -6,9 +6,13 @@ const sig: Record<string, Record<string, string>> = {
   "Can": "function Can(props: CanProps): () => unknown",
   "Card": "function Card(props: CardProps): Element",
   "Gate": "function Gate(props: GateProps): () => unknown",
+  "IconTile": "function IconTile(props: IconTileProps): Element",
   "JsonView": "function JsonView(props: JsonViewProps): Element",
   "Kanban": "function Kanban<T>(props: KanbanProps<T>): Element",
   "KeyValue": "function KeyValue(props: KeyValueProps): Element",
+  "ListRow": "function ListRow(props: ListRowProps): Element",
+  "StatTile": "function StatTile(props: StatTileProps): Element",
+  "TimeRuler": "function TimeRuler(props: TimeRulerProps): Element",
   "Timeline": "function Timeline(props: TimelineProps): Element",
   "Tree": "function Tree(props: TreeProps): Element",
   "VirtualList": "function VirtualList<T>(props: VirtualListProps<T>): Element",
@@ -30,7 +34,9 @@ const sig: Record<string, Record<string, string>> = {
   "resource": "const resource = <T>(fn: QueryFn<T>, opts?: Omit<QueryOptions<T>, \"key\">): Query<T> =>",
   "role": "const role = (): string | null =>",
   "setAccess": "function setAccess(v: AccessInput | null | undefined): void",
-  "signedIn": "const signedIn = (): boolean =>"
+  "signedIn": "const signedIn = (): boolean =>",
+  "timePercent": "const timePercent = (ms: number, duration: number): string =>",
+  "timeTicks": "function timeTicks(duration: number, o: { step?: number | undefined; major?: number | undefined; minor?: boolean | undefined } = {}): TimeTick[]"
  },
  "hadi-march/schema": {
   "TYPES": "const TYPES: Record<string, FieldTypeDef>",

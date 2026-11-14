@@ -74,6 +74,8 @@ locator().position()?.lat   locator().status()   locator().watch()   locator().d
 }
 
 // ------------------------------------------------------------------ Notification
+const KIND_TONE: Record<string, string> = { info: "info", success: "success", warn: "warn", danger: "danger" }
+const KIND_TEXT: Record<string, string> = { info: "bilgi", success: "başarılı", warn: "uyarı", danger: "hata" }
 export function NotificationDemo() {
   let $title = "Yükleme bitti"
   let $body = "rapor.pdf hazır"
@@ -93,7 +95,7 @@ configureNotifications({ native: "always", toast: (n) => mySnackbar(n) })`}>
       <Field label="Metin"><TextInput bind:value={$body} /></Field>
     </div>
     <div class="sc-row">
-      <Button variant="primary" on:click={send}>Gönder</Button>
+      <Button variant="primary" data-audit-try on:click={send}>Gönder</Button>
       <Button variant="secondary" on:click={later}>5 sn sonra gönder</Button>
       {() => (notifications().permission() === "prompt" ? <Button variant="ghost" on:click={() => notifications().request()}>Bildirim izni iste</Button> : <Badge tone={STATE_TONE[notifications().permission()] ?? "neutral"} dot>{`bildirim izni: ${STATE_TEXT[notifications().permission()]}`}</Badge>)}
     </div>
@@ -102,7 +104,7 @@ configureNotifications({ native: "always", toast: (n) => mySnackbar(n) })`}>
       <Button size="sm" variant="ghost" on:click={() => notifications().clear()}>Temizle</Button></div>
     <ul class="sc-mgr-queue">{() => notifications().inbox().length ? notifications().inbox().slice(0, 6).map((r) => <li class="sc-mgr-qrow">
       <span class={r.read ? "hm-muted" : ""}><strong>{r.title}</strong> {r.body}</span>
-      <span class="sc-row"><Badge tone="neutral">{r.via === "native" ? "sistem" : r.via === "toast" ? "toast" : "gitmedi"}</Badge><span class="hm-muted">{time(r.at)}</span></span>
+      <span class="sc-row"><Badge tone={KIND_TONE[r.kind] ?? "neutral"}>{KIND_TEXT[r.kind] ?? r.kind}</Badge><Badge tone="neutral">{r.via === "native" ? "sistem" : r.via === "toast" ? "toast" : "gitmedi"}</Badge><span class="hm-muted">{time(r.at)}</span></span>
     </li>) : <li class="hm-muted">Boş.</li>}</ul>
     <Card title="Seçenekler" subtitle="Notification">
       <Field label="Tür"><Segmented bind:value={$kind} options={[{ value: "info", label: "Bilgi" }, { value: "success", label: "Başarılı" }, { value: "warn", label: "Uyarı" }, { value: "danger", label: "Hata" }]} /></Field>

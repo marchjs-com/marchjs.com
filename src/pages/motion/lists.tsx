@@ -7,8 +7,8 @@ import { animate } from "hadi-march/motion/engine/playback.ts";
 import { Button } from "hadi-march/ui";
 import { Icon, plus, refresh, x as xIcon } from "hadi-march/icons";
 import { Section } from "../../demo.tsx";
-// the demo kit comes from the /motion/* hub (already loaded): importing it here would split 1 KB into a file of its own
-import type * as Kit from "../../motion-kit.tsx";
+// the demo kit is part of the shared Playground module (as on the other /motion/* pages)
+import { MotionDemo, opt } from "../../playground.tsx";
 
 const NAMES = ["Elma", "Armut", "Kiraz", "Erik", "Ayva", "İncir", "Nar", "Üzüm", "Dut", "Vişne", "Kayısı", "Şeftali"]
 const PRESETS: { value: ListPreset; label: string }[] = [
@@ -17,8 +17,7 @@ const PRESETS: { value: ListPreset; label: string }[] = [
 ]
 interface Item { id: number; name: string; tone: number }
 
-export default function MotionLists(props: { kit: typeof Kit }) {
-  const { MotionDemo, opt } = props.kit
+export default function MotionLists() {
   document.title = "Liste animasyonları · March"
 
   // 1 · FLIP list

@@ -68,6 +68,7 @@ import e63 from "./ui-e2/ui--format-count.x.tsx";
 import e64 from "./ui-e2/ui--format-date.x.tsx";
 import e65 from "./ui-e2/ui--format-key.x.tsx";
 import e66 from "./ui-e2/ui--format-number.x.tsx";
+import e67 from "./ui-e2/ui--frame-size.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "hadi-march/ui#Select": e0,
   "hadi-march/ui#Skeleton": e1,
@@ -136,5 +137,6 @@ const examples: Record<string, ApiExample<any>> = {
   "hadi-march/ui#formatDate": e64,
   "hadi-march/ui#formatKey": e65,
   "hadi-march/ui#formatNumber": e66,
+  "hadi-march/ui#frameSize": e67,
 };
 export default examples;

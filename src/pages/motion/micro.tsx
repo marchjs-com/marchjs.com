@@ -5,12 +5,11 @@ import { onCleanup } from "hadi-march";
 import { ripple, hoverParallax, stateMorph, type ButtonState } from "hadi-march/motion/micro.ts";
 import { magnet, press } from "hadi-march/motion/gestures.ts";
 import { Section } from "../../demo.tsx";
-// the demo kit comes from the /motion/* hub (already loaded): importing it here would split 1 KB into a file of its own
-import type * as Kit from "../../motion-kit.tsx";
+// the demo kit is part of the shared Playground module (as on the other /motion/* pages)
+import { MotionDemo, opt } from "../../playground.tsx";
 import { Icon, heart, star, sparkles, send } from "hadi-march/icons";
 
-export default function MotionMicro(props: { kit: typeof Kit }) {
-  const { MotionDemo, opt } = props.kit
+export default function MotionMicro() {
   document.title = "Mikro etkileşimler · March"
 
   // 1 · ripple

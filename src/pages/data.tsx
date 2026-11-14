@@ -31,6 +31,9 @@ export default function Data(props: { params?: { rest?: string } }) {
   const invite = action("Davet gönder", async () => { await new Promise((r) => setTimeout(r, 300)) }, { icon: mail, success: "Davet gönderildi" })
   const suspend = action("Askıya al", async () => { await new Promise((r) => setTimeout(r, 300)) }, { icon: trash, danger: true, confirm: "Seçilenler askıya alınsın mı?", success: "Askıya alındı" })
   const RENDER: Record<string, () => unknown> = {
+    "icon-tile": () => <ComponentDemo folder="data/icon-tile" title="IconTile: ikon karosu" desc="Kartların, liste satırlarının ve boş durumların başındaki ikon karosu. Dokuz hazır ton ya da herhangi bir tema rengi; yumuşak, çerçeveli ya da dolu; kare ya da yuvarlak." />,
+    "link-card": () => <ComponentDemo folder="navigation/link-card" title="LinkCard: bağlantı kartı" desc="Tamamı tek bağlantı olan kart. Başta ikon karosu ya da kendi düğümünüz; açıklama, sondaki metin ve ok ayrı ayrı kapatılır ya da değiştirilir." />,
+    "time-ruler": () => <ComponentDemo folder="data/time-ruler" title="TimeRuler: zaman cetveli" desc="Zaman çizelgesinin üstündeki cetvel: tikler, etiketler ve oynatma başı. Cetveli ya da başı sürükleyin, ok tuşlarıyla kaydırın; alttaki çubuklar aynı ölçeği kullanır." />,
     "table": () => <Demo wide title="Tablo · 10.000 satır" desc="Başlığa tıkla: sırala (Shift ile çoklu). Sütunlar menüsü, satır seçimi ve alttaki toplu işlem çubuğu."
     code={`<Table rows={members} virtual height={480} rowHeight={48} selectable
 columns={[{ key: "name", label: "Üye", render: (r) => <Avatar …/> },
@@ -54,7 +57,9 @@ bulkActions={[invite, suspend]} />`}>
     "json-view": () => <ComponentDemo folder="data/json-view" title="JsonView: açılır JSON ağacı" desc="Türüne göre renkler; kapalı nesne ve dizi kaç anahtar ya da öğe tuttuğunu yazar. Açık derinlik Playground'da." />,
     "code-view": () => <ComponentDemo folder="typography/code-view" title="CodeView: salt okunur kod" desc="Satır numarası, sözdizimi renkleri (js/ts/tsx, css, html, json, sh), kaydırma ve kopyalama. Metin her zaman metin düğümü olarak eklenir." />,
     "card": () => <ComponentDemo folder="data/card" title="Card: başlık, eylemler, alt bilgi" desc="Başlıktaki action() nesneleri düğme olur. Kenar boşluksuz gövde tablolar ve listeler için." />,
-    "badge": () => <ComponentDemo folder="data/badge" title="Badge: durum ve sayı" desc="Altı ton, noktalı etiket; sayı rozeti 0'da gizlenir, 99'dan sonra 99+ yazar ve ekran okuyucuya ne saydığını söyler." />,
+    "list-row": () => <ComponentDemo folder="data/list-row" title="ListRow: listelerin ortak satırı" desc="Baş yuva (ikon, avatar, nokta), başlık, alt metin, son yuva. Bağlantı, düğme, liste seçeneği ya da düz satır olur; sığmayan başlık üstüne gelince kayar." />,
+    "stat-tile": () => <ComponentDemo folder="data/stat-tile" title="StatTile: değer ve etiket" desc="Profil sayıları, özet rakamlar. Değer bir sayaç olabilir; karoya basınca sayı artar ve basamaklar döner." />,
+    "badge": () => <ComponentDemo folder="data/badge"title="Badge: durum ve sayı" desc="Altı ton, noktalı etiket; sayı rozeti 0'da gizlenir, 99'dan sonra 99+ yazar ve ekran okuyucuya ne saydığını söyler." />,
     "panels": () => <Demo wide title="Bölünebilir panel ve galeri" desc="Splitter tutamacı sürüklenir (ya da ← →); Carousel kaydırarak yaslanır, okları ve noktaları var.">
     <Splitter initial={0.38} start={<div class="sc-pane"><strong>Gelen kutusu</strong><p class="hm-muted">Tutamacı sürükle.</p></div>} end={<div class="sc-pane"><strong>Ayrıntı</strong><p class="hm-muted">İki panel, CSS değişkeniyle boyutlanır.</p></div>} />
     <Carousel perView={3} label="Özellikler">

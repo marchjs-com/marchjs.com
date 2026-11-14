@@ -44,7 +44,7 @@ l.isTop()   l.index()   l.close()
 layer.stack()   layer.top()   layer.modal()   layer.scrollLocked()
 const unlock = layer.lockScroll()   // sayaçlı: son kilit açılınca sayfa yeniden kayar`}>
       <div class="sc-row">
-        <Button on:click={() => open("popover")}>Açılır kutu aç</Button>
+        <Button data-audit-try on:click={() => open("popover")}>Açılır kutu aç</Button>
         <Button on:click={() => open("menu")}>Menü aç</Button>
         <Button variant="primary" on:click={() => open("dialog")}>Diyalog aç (kip)</Button>
         <Button variant="secondary" on:click={() => open("toast")}>Bildirim aç</Button>
@@ -57,11 +57,12 @@ const unlock = layer.lockScroll()   // sayaçlı: son kilit açılınca sayfa ye
         {() => (layer.stack().some((l) => l.label !== null || l.kind !== "fx") ? null : <li class="hm-muted">Açık katman yok.</li>)}
       </ol>
       <div class="sc-row"><span>Kip katman açık:</span>{() => yes(layer.modal())}<span>Kaydırma kilidi:</span>{() => yes(layer.scrollLocked())}</div>
+      <p class="hm-muted">{() => `Bundan sonra açılan katman: ${$escape ? "Esc ile kapanır" : "Esc ile kapanmaz (yalnız Kapat düğmesi)"}; açılır kutu ve menü kaydırmayı ${$lock ? "kilitler" : "kilitlemez"}.`}</p>
+      <Card title="Seçenekler" subtitle="Layer">
+        <Toggle bind:value={$escape} label="Esc ile kapanabilsin (onEscape)" />
+        <Toggle bind:value={$lock} label="Açılır kutu ve menü de kaydırmayı kilitlesin (lockScroll)" />
+      </Card>
     </Demo>
-    <Card title="Seçenekler" subtitle="Layer">
-      <Toggle bind:value={$escape} label="Esc ile kapanabilsin (onEscape)" />
-      <Toggle bind:value={$lock} label="Açılır kutu ve menü de kaydırmayı kilitlesin (lockScroll)" />
-    </Card>
   </>
 }
 

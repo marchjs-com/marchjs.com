@@ -1,7 +1,7 @@
-// API examples of hadi-march/ui, names "GradientEditor" … "IconTile" (code-point order; the neighbouring ranges: ui-b*.tsx).
+// API examples of hadi-march/ui, names "GradientEditor" … "IconButton" (code-point order; the neighbouring ranges: ui-b*.tsx).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`; components have Playground options.
 import { signal } from "hadi-march";
-import { Button, GradientEditor, Grid, HADI_RING, IconButton, IconTile, Card } from "hadi-march/ui";
+import { Button, GradientEditor, Grid, HADI_RING, IconButton, Card } from "hadi-march/ui";
 import { star, bell, trash, settings, users, zap, globe, shieldCheck, search } from "hadi-march/icons";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
@@ -64,20 +64,6 @@ const ring = \`conic-gradient(\${HADI_RING.join(", ")}, \${HADI_RING[0]})\``,
             <IconButton icon={trash} label="Sil" variant={v} size={() => p.values.size} onClick={() => log.push("silindi")} />
           </Row> }}
           <Log lines={log.lines} />
-        </div>
-      },
-    },
-    IconTile: {
-      code: `<IconTile icon={users} tone="info" size="lg" />
-<IconTile icon={shieldCheck} tone="success" />`,
-      play: { options: [{ key: "size", label: "Boyut", default: "md", options: ["sm", "md", "lg"] }] },
-      run: (p: { values: { size: "sm" | "md" | "lg" } }) => {
-        const tones = ["primary", "info", "success", "warn", "danger", "violet", "pink", "teal", "neutral"] as const
-        const icons = [zap, users, shieldCheck, bell, trash, star, globe, search, settings]
-        const tone = signal<(typeof tones)[number]>("primary")
-        return <div class="sc-ex-stack">
-          {() => { const s = p.values.size; return <Row>{tones.map((t, i) => <button type="button" class="sc-ex-ui-b-tile" aria-label={t} aria-pressed={() => String(tone() === t)} onClick={() => tone.set(t)}><IconTile icon={icons[i]} tone={t} size={s} /></button>)}</Row> }}
-          <Out label="tone" value={tone} />
         </div>
       },
     },

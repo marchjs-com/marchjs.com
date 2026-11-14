@@ -49,6 +49,8 @@ export default function OverlayPage(props: { params?: { rest?: string } }) {
   let $effect = "glass"
   let $front = false
   const RENDER: Record<string, () => unknown> = {
+    "picture": () => <ComponentDemo folder="media/picture" title="Picture: resim ya da kendi düğümünüz" desc="Kapak, logo ve medya yuvalarının arkasındaki resim öğesi. Resim nesnesi tembel yüklenen bir img olur, hazır düğüm olduğu gibi çizilir; ilk ekran için hemen yükleme, sığdırma ve yedek içerik." />,
+    "corner-mark": () => <ComponentDemo folder="media/corner-mark" title="CornerMark: köşe işareti" desc="Resmin, kartın ya da avatarın köşesindeki küçük yuvarlak işaret. Köşe, ikon, renk, boyut ve görünüm seçilir; hep görünür ya da yalnız üstüne gelince (klavye odağında da)." />,
     "video-glass": () => <Demo wide title="Video arka plan + cam panel" desc="Kartın arkasında sessiz, döngülü video (görünmezken durur; veri tasarrufu ya da hareketi azalt tercihinde yalnız poster); üstünde cam efekti. Kartın içindeki alan ve düğme çalışır."
     code={`<div class="card">
 <Overlay src="media/waves.webm" poster="media/waves.jpg" />      // first = lowest

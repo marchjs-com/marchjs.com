@@ -9,8 +9,8 @@ import {
 } from "hadi-march/data";
 import { fieldType, options, schema, TYPES, type FieldSpec } from "hadi-march/schema";
 import { Button, Badge, Segmented, Slider, TextInput } from "hadi-march/ui";
-import { Card, countLabel, JsonView, Kanban, KeyValue, Timeline, Tree, type KanbanColumn, type TimelineItem, type TreeNode } from "hadi-march/data";
-import { bell, zap } from "hadi-march/icons";
+import { Card, countLabel, IconTile, JsonView, Kanban, KeyValue, ListRow, StatTile, timePercent, TimeRuler, timeTicks, Timeline, Tree, type KanbanColumn, type TimelineItem, type TreeNode } from "hadi-march/data";
+import { bell, zap, star, trash, settings, users, globe, shieldCheck, search } from "hadi-march/icons";
 import { useLog } from "./_ui-b.tsx";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
@@ -420,6 +420,80 @@ setAccess(null)   // signed out`,
             <Button size="sm" variant="ghost" onClick={() => n.set(0)}>Sıfırla</Button>
             <Out label="count" value={n} />
           </Row>
+        </div>
+      },
+    },
+    IconTile: {
+      code: `<IconTile icon={users} tone="info" size="lg" />
+<IconTile icon={shieldCheck} tone="success" />`,
+      play: { options: [{ key: "size", label: "Boyut", default: "md", options: ["sm", "md", "lg"] }] },
+      run: (p: { values: { size: "sm" | "md" | "lg" } }) => {
+        const tones = ["primary", "info", "success", "warn", "danger", "violet", "pink", "teal", "neutral"] as const
+        const icons = [zap, users, shieldCheck, bell, trash, star, globe, search, settings]
+        const tone = signal<(typeof tones)[number]>("primary")
+        return <div class="sc-ex-stack">
+          {() => { const s = p.values.size; return <Row>{tones.map((t, i) => <button type="button" class="sc-ex-data-tile" aria-label={t} aria-pressed={() => String(tone() === t)} onClick={() => tone.set(t)}><IconTile icon={icons[i]} tone={t} size={s} /></button>)}</Row> }}
+          <Out label="tone" value={tone} />
+        </div>
+      },
+    },
+    ListRow: {
+      code: `<ListRow lead={<Avatar name="Ada" />} title="Ada Yıldız" sub="Yeni üye" trail={<Badge tone="success">yeni</Badge>} />
+<ListRow href="/ayarlar" lead={zap} title="Ayarlar" />   // bağlantı satırı`,
+      play: { options: [{ key: "size", label: "Boyut", default: "md", options: ["sm", "md", "lg"] }, { key: "sub", label: "Alt metin", default: true }] },
+      run: (p: { values: { size: "sm" | "md" | "lg"; sub: boolean } }) => {
+        const picked = signal("Bildirimler")
+        const rows = [["Bildirimler", "Anlık ve e-posta", bell], ["Hız", "Önbellek ve parçalar", zap]] as const
+        return <div class="sc-ex-stack">
+          {() => { const v = { ...p.values }; return <div>{rows.map(([title, sub, icon]) => <ListRow size={v.size} lead={icon} title={title} sub={v.sub ? sub : undefined}
+            selected={() => picked() === title} onClick={() => picked.set(title)} />)}</div> }}
+          <Out label="seçili" value={picked} />
+        </div>
+      },
+    },
+    StatTile: {
+      code: `<StatTile value="1.284" label="Takipçi" />
+<StatTile variant="card" value={<Counter value={$n} />} label="Bugün" hint="son 24 saat" onClick={open} />`,
+      play: { options: [{ key: "variant", label: "Görünüm", default: "tile", options: ["plain", "tile", "card"] }] },
+      run: (p: { values: { variant: "plain" | "tile" | "card" } }) => {
+        const n = signal(128)
+        return <div class="sc-ex-stack">
+          {() => { const variant = p.values.variant; return <Row>
+            <StatTile variant={variant} value={() => String(n())} label="Gönderi" onClick={() => n.set(n() + 1)} />
+            <StatTile variant={variant} value="1.284" label="Takipçi" hint="temsili" />
+          </Row> }}
+          <Out label="gönderi" value={n} />
+        </div>
+      },
+    },
+    TimeRuler: {
+      code: `<TimeRuler duration={2000} value={$now} onSeek={(ms) => ($now = ms)} />`,
+      play: { options: [{ key: "duration", label: "Süre (ms)", default: 2000, options: [1000, 2000, 5000] }] },
+      run: (p: { values: { duration: number } }) => {
+        const now = signal(500)
+        return <div class="sc-ex-stack">
+          {() => { const duration = p.values.duration; return <TimeRuler duration={duration} value={now} onSeek={(ms: number) => now.set(ms)} /> }}
+          <Out label="şimdi (ms)" value={() => Math.round(now())} />
+        </div>
+      },
+    },
+    timePercent: {
+      code: `timePercent(500, 2000)   // "25%": aynı ölçekte satır konumu`,
+      run: () => {
+        const ms = signal(500)
+        return <div class="sc-ex-stack">
+          <Slider value={ms} onChange={(v: number) => ms.set(v)} min={0} max={2000} step={100} aria-label="ms" />
+          <Out label="timePercent(ms, 2000)" value={() => timePercent(ms(), 2000)} />
+        </div>
+      },
+    },
+    timeTicks: {
+      code: `timeTicks(2000)   // [{ at: 0, … }, { at: 50, … } …]: 250 ms'de bir etiketli çizgi`,
+      run: () => {
+        const duration = signal(2000)
+        return <div class="sc-ex-stack">
+          <Segmented value={duration} onChange={(v: number) => duration.set(v)} options={[1000, 2000, 5000]} />
+          <Out label="çizgi sayısı" value={() => timeTicks(duration()).length} />
         </div>
       },
     },

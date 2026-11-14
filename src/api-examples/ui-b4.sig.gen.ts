@@ -5,8 +5,7 @@ const sig: Record<string, Record<string, string>> = {
   "GradientEditor": "function GradientEditor(props: GradientEditorProps): unknown",
   "Grid": "function Grid(props: GridProps): Element",
   "HADI_RING": "const HADI_RING: readonly string[]",
-  "IconButton": "function IconButton(props: IconButtonProps): Element",
-  "IconTile": "function IconTile(props: IconTileProps): Element"
+  "IconButton": "function IconButton(props: IconButtonProps): Element"
  }
 };
 export default sig;
