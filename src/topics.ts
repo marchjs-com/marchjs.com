@@ -312,7 +312,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "portfolio", title: "Kişisel portfolyo", desc: "Süzgeçli proje ızgarası, kapağın ayrıntı sayfasına büyüdüğü geçiş, yatay vaka şeridi, deneyim çizelgesi, iletişim formu.", group: "Siteler" },
     { slug: "slides", title: "Sunum", desc: "Klavye, kaydırma ve dokunma; adım adım maddeler, konuşmacı penceresi, tam ekran, URL'de slayt numarası, yazdır.", group: "Siteler" },
     { slug: "redesign", title: "Yeniden tasarım", desc: "Anlatmak yerine göster: eski ve yeni ekran sürüklenen ayırıcıyla; akış, profil ve okuma için ayrı karşılaştırmalar.", group: "Siteler" },
-    { slug: "honest", title: "Herkes için değil", desc: "Anti-landing: önce kimin için olmadığı (işaretle, sonucu gör), geride kalınan satırlarıyla karşılaştırma, bilinen eksikler ve planı.", group: "Siteler" },
+    { slug: "honest", title: "Herkes için değil", desc: "Anti-landing: önce kimin için olmadığı (işaretle, sonucu gör), geride kalınan satırlarıyla karşılaştırma.", group: "Siteler" },
   ],
 };
 
