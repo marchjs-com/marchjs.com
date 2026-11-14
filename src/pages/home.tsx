@@ -17,7 +17,7 @@ import { HOME_STATS as S } from "../home-stats.gen.ts";
 // wait for the chart, the chat and the map. Each keeps its room while it loads, so nothing moves when it arrives.
 const Bench = lazy(() => import("../home/bench.tsx"), { placeholder: () => <div class="sc-bench" aria-hidden="true" /> });
 // (a part that loads when it comes near needs a reserved height: a slot without one has no box to watch)
-const Sections = lazy(() => import("../home/sections.tsx"), { when: "visible", placeholder: "none", height: "100dvh" });
+const Sections = lazy(() => import("../home/sections.tsx"), { when: "visible", placeholder: "none", height: "100vh" });
 
 // ── silk ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
