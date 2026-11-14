@@ -29,7 +29,7 @@ export default function Language(props: { params?: { rest?: string } }) {
   let $big = false
   let $plain = false
   let $locked = true
-  let $sample = "Girdideki yazı da seçilemez"
+  let $sample = "Girdiye yazılan yazı seçilebilir"
   let offPlain: (() => void) | null = null
   const setPlain = (on: boolean) => untrack(() => { offPlain?.(); offPlain = on ? codeView.provide({ id: "plain", order: 1, render: (input) => PlainProvider(input) }) : null })
   effect(() => setPlain($plain))
@@ -89,26 +89,26 @@ const $left = $todos.filter((x) => !x.done).length   // derived (computed)
     </div>
     <div class="sc-row"><Badge tone="danger" dot class:sc-pulse={$big}>Canlı</Badge><span class="m-muted">{() => ($big ? "class:is-hot açık: vurgu kenarlığı, yumuşak zemin, hafif büyütme" : "class:is-hot kapalı")}</span></div>
   </Demo>,
-    "common-props": () => <Demo wide title="Ortak prop'lar: m:user-select" desc="m: ile başlayan prop'lar her yerel öğede ve her bileşende çalışır. m:user-select açıkken öğenin kendisi ve içindeki her şey (girdiler dahil) seçilemez; içerideki m:user-select={false} o parçada seçimi geri açar."
-    code={`<section m:user-select>…</section>            // sabit değer: derlemede tek bir özniteliğe döner
-<Card m:user-select={$locked}>…</Card>         // bileşen: kök öğesine uygulanır; değer canlı olabilir
-<code m:user-select={false}>HADI2026</code>    // kapalı alanın içinde: bu parça yine seçilebilir`}>
-    <div class="sc-options"><Toggle bind:value={$locked} label="Seçimi kapat (m:user-select)" /></div>
+    "common-props": () => <Demo wide title="Ortak prop'lar: m:no-select" desc="m: ile başlayan prop'lar her yerel öğede ve her bileşende çalışır. m:no-select açıkken öğenin kendisi ve içindeki her şey seçilemez (girdiye yazılan yazı seçilebilir kalır); içerideki m:no-select={false} o parçada seçimi geri açar."
+    code={`<section m:no-select>…</section>            // sabit değer: derlemede tek bir özniteliğe döner
+<Card m:no-select={$locked}>…</Card>         // bileşen: kök öğesine uygulanır; değer canlı olabilir
+<code m:no-select={false}>HADI2026</code>    // kapalı alanın içinde: bu parça yine seçilebilir`}>
+    <div class="sc-options"><Toggle bind:value={$locked} label="Seçimi kapat (m:no-select)" /></div>
     <div sx={{ cols: 2, gap: 3 }}>
-      <section class="sc-sx" sx={{ p: 3, radius: 3 }} m:user-select={$locked || null}>
+      <section class="sc-sx" sx={{ p: 3, radius: 3 }} m:no-select={$locked || null}>
         <strong>Yerel öğe</strong>
         <span>Bu yazıyı fareyle sürükleyerek ya da çift tıklayarak seçmeyi dene.</span>
         <TextInput bind:value={$sample} aria-label="Örnek girdi" />
-        <span>Kupon kodu: <code m:user-select={false}>HADI2026</code> (her zaman seçilebilir)</span>
+        <span>Kupon kodu: <code m:no-select={false}>HADI2026</code> (her zaman seçilebilir)</span>
       </section>
-      <Card title="Bileşen (Card)" m:user-select={$locked || null}>
+      <Card title="Bileşen (Card)" m:no-select={$locked || null}>
         <Stack gap={2}>
           <span>Aynı prop bileşende de çalışır: kartın kökü ve içindeki her şey.</span>
           <div class="sc-row"><Badge tone="info">Rozet</Badge><Button variant="secondary">Düğme</Button></div>
         </Stack>
       </Card>
     </div>
-    <p class="m-muted">{() => ($locked ? "Kapalı: iki kutuda da hiçbir şey seçilemiyor; yalnız kupon kodu seçilebilir." : "Açık: her şey her zamanki gibi seçilebilir.")}</p>
+    <p class="m-muted">{() => ($locked ? "Kapalı: iki kutuda da yazılar seçilemiyor; yalnız girdinin içindeki yazı ve kupon kodu seçilebilir." : "Açık: her şey her zamanki gibi seçilebilir.")}</p>
   </Demo>,
     "code-widget": () => <Demo wide title="Kod sekmesi bir widget noktası" desc="Bütün Kod sekmeleri <Widget sources={[codeView]} /> ile çizilir. Varsayılan sağlayıcı CodeViewer (renkli, salt okunur); Kopyala ve Tam ekran ayrı widget'lardır. Anahtarı açınca ikinci bir sağlayıcı kaydedilir ve vitrindeki bütün Kod sekmeleri onu gösterir. Bir canlı kod editörü aynı noktaya sağlayıcı olarak eklenebilir."
     code={`import { codeView } from "hadi-march/ui"

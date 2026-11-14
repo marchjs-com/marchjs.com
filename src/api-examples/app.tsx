@@ -34,14 +34,14 @@ function Sales(props: { name: string }) {
 export default examples({
   "hadi-march/props": {
     mProps: {
-      code: `// what the compiler writes for <Card m:user-select={locked}>…</Card>
-mProps(h(Card, { title: "Kart" }, "…"), { "user-select": locked })`,
+      code: `// what the compiler writes for <Card m:no-select={locked}>…</Card>
+mProps(h(Card, { title: "Kart" }, "…"), { "no-select": locked })`,
       run: () => {
         const locked = signal(true)
         return <Row>
           <Button onClick={() => locked.set(!locked())}>{() => (locked() ? "Seçimi aç" : "Seçimi kapat")}</Button>
-          {mProps(<Card title="Kart">Bu yazıyı fareyle seçmeyi dene.</Card>, { "user-select": () => locked() || null })}
-          <Out label="m:user-select" value={() => String(locked())} />
+          {mProps(<Card title="Kart">Bu yazıyı fareyle seçmeyi dene.</Card>, { "no-select": () => locked() || null })}
+          <Out label="m:no-select" value={() => String(locked())} />
         </Row>
       },
     },
