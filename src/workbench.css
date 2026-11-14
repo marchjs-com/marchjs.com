@@ -30,6 +30,10 @@
 .sc-wb-code { border-block-start: var(--m-border-w, 1px) solid var(--m-border); min-inline-size: 0; }
 .sc-wb-code .m-code { border: 0; border-radius: 0; }
 .sc-wb-code .m-code-pre { max-block-size: 13rem; }
+/* the editable code: a dark strip in every theme (stage-mode.ts writes the dark tokens on it), flat inside the box */
+.sc-wb-edit { color-scheme: dark; background: var(--m-bg); color: var(--m-text); }
+.sc-wb-edit .m-ced { border: 0; border-radius: 0; background: none; box-shadow: none; }
+.sc-wb-edit .m-ced:focus-within { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--m-editor-accent) 55%, transparent); }
 
 /* the options panel: a card with its head ("Seçenekler" + Sıfırla) and one row per option, ruled */
 .sc-wb .sc-play-panel { gap: 0; padding: 0; border-radius: var(--m-radius-4); background: var(--m-surface); box-shadow: var(--m-shadow-2); overflow: clip; }

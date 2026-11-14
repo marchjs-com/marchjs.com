@@ -4,13 +4,14 @@
 import "./workbench.css";
 import { signal, computed, effect, untrack } from "hadi-march";
 import { Link, type Href } from "hadi-march/router";
-import { Button, Widget, codeView, OverflowToolbar, resolvedTheme, type ToolbarItem } from "hadi-march/ui";
+import { Button, OverflowToolbar, resolvedTheme, type ToolbarItem } from "hadi-march/ui";
 import type { PlaygroundOption, PlaygroundSpec } from "hadi-march/ui";
 import { DevicePreview } from "hadi-march/components/layout/device-preview/index.ts";
 import { viewport } from "hadi-march/managers/viewport";
 import { defineIcon, monitor, phone, sun, moon, pilcrow, refresh, rotateCw } from "hadi-march/icons";
 import { scopedMode, type StageMode } from "./stage-mode.ts";
-import { genCode, type ExtraAttr } from "./gen-code.ts";
+import type { ExtraAttr } from "./gen-code.ts";
+import { CodeBox } from "./wb-code.tsx";
 import { cards, type CardEntry } from "hadi-march/components/cards.gen.ts";
 import { optionRow, type PlayOption } from "./playground.tsx";
 import { demoId, type DemoView } from "./component-demo.tsx";
@@ -58,7 +59,6 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
   const parts = props.entry.p ?? []
   // ---- the code under the stage: written from the options (playground.ts › code); else the first code block of docs.md
   const extras = signal<readonly ExtraAttr[]>([])
-  const source = computed((): string => genCode(props.spec, props.entry.n, values(), extras()) ?? props.code.trim())
 
   // ---- the stage: device, rotation, its own light / dark, direction, replay
   const device = signal<Device | null>(null), land = signal(false), rtl = signal(false), run = signal(0)
@@ -95,7 +95,7 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
           {() => (device() ? <span class="sc-wb-devinfo">{size}</span> : null)}
           {() => { const d = device(); return d ? untrack(() => <DevicePreview device={DEVICES[d].id} landscape={land()} time="9:41" fitHeight={520} label={`${DEVICES[d].name} önizlemesi`}>{frame}</DevicePreview>) : frame }}
         </div>
-        {() => (source() ? <div class="sc-wb-code"><Widget sources={[codeView]} input={{ source: source(), lang: "tsx" }} /></div> : null)}
+        <CodeBox spec={props.spec} name={props.entry.n} values={values} extras={extras} fallback={props.code.trim()} frame={frame as Element} />
       </div>
       <div class="sc-play-panel" role="group" aria-label="Seçenekler">
         <div class="sc-wb-panel-head">

@@ -10,6 +10,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "markdown", title: "Markdown düzenleyici", name: "MarkdownEditor", desc: "Solda Markdown, sağda canlı önizleme; bölmeler birlikte kayar.", group: "Metin" },
     { slug: "format-toolbar", title: "Biçimlendirme çubuğu", name: "FormatToolbar", desc: "Kalın, italik, başlık, liste, bağlantı, geri al: araçlar, adlar, ikonlar ve kısayol ipuçları sizin.", group: "Metin" },
     { slug: "editor-frame", title: "Editör çerçevesi", name: "EditorFrame", desc: "Kenar ve odak halkası, üst çubuk, yazma alanı, alt çubuk: kendi editörünüz için aynı görünüm.", group: "Metin" },
+    { slug: "code", title: "Kod alanı", name: "CodeEditor", desc: "Yazdıkça renklenen kod, imleçte öneri listesi, parlayan ve altı çizilen aralıklar, durum satırı.", group: "Metin" },
     { slug: "json", title: "JSON düzenleyici", name: "JsonEditor", desc: "Aynı JSON metinde ve ağaçta; satır/sütunlu hata, biçimlendir.", group: "Veri" },
     { slug: "tree", title: "JSON ağacı", name: "TreeEditor", desc: "Satır satır düzenleme, tür rozetleri, şema doğrulaması, geri al.", group: "Veri" },
     { slug: "terminal", title: "Terminal", name: "Terminal", desc: "Komutlar, ANSI renkler, tablo ve JSON çıktısı; pencereli hâli.", group: "Veri" },
