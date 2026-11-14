@@ -48,19 +48,7 @@ bulkActions={[invite, suspend]} />`}>
       ]} />
   </Demo>,
     "tree": () => <ComponentDemo folder="data/tree" title="Tree: genişleyen ağaç" desc="role=tree; ↑ ↓ gez, → aç, ← kapat, Enter seç. Uzun adlar kayarak okunur, sağda dosya sayısı ya da boyut." />,
-    "steps-pagination": () => <Demo title="Adımlar ve sayfalama" desc="Steps tıklanabilir; Pagination üç noktalı kısaltma yapar.">
-    <Steps current={$step} onSelect={(i: number) => { $step = i }} steps={[{ title: "Sepet", description: "3 ürün" }, { title: "Teslimat", description: "Adres ve kargo" }, { title: "Ödeme", description: "Kart ya da Elmas" }, { title: "Onay" }]} />
-    <div class="sc-row"><Button size="sm" on:click={() => { $step = Math.max(0, $step - 1) }}>Geri</Button><Button size="sm" variant="primary" on:click={() => { $step = Math.min(4, $step + 1) }}>İleri</Button></div>
-    <Pagination bind:page={$page} pages={24} />
-  </Demo>,
     "kanban": () => <ComponentDemo folder="data/kanban" title="Kanban: sürükle bırak pano" desc="Kartları sürükleyip bırak; klavyede Alt + ← / → ile sütun değiştir. Sütun sayısı ve tonlu başlıklar Playground'da." />,
-    "accordion": () => <Demo title="Akordeon" desc="Yükseklik animasyonlu açılır; tek ya da çoklu.">
-    <Accordion multiple open={[0]} items={[
-      { title: "Kargo ne zaman gelir?", subtitle: "Teslimat", icon: truck, content: "Siparişler 1-3 iş günü içinde kargoya verilir; takip numarası e-postayla gelir." },
-      { title: "İade nasıl yapılır?", icon: packageBox, content: "14 gün içinde uygulamadan iade talebi oluştur; kurye kapına gelir." },
-      { title: "Ödeme güvenli mi?", icon: shieldCheck, content: "Kart bilgileri saklanmaz; 3D Secure ile ödeme sağlayıcısında işlenir." },
-    ]} />
-  </Demo>,
     "timeline": () => <ComponentDemo folder="data/timeline" title="Timeline: olaylar sırayla" desc="Tonlu noktalar, isteğe bağlı ikon; Date, epoch ya da ISO zaman yerel biçimde yazılır." />,
     "key-value": () => <ComponentDemo folder="data/key-value" title="KeyValue: ayrıntı özeti" desc="Bir ile dört sütun; dar ekranda sütun azalır. İpucu satırı, gizli satır ve boş değer yer tutucusu." />,
     "json-view": () => <ComponentDemo folder="data/json-view" title="JsonView: açılır JSON ağacı" desc="Türüne göre renkler; kapalı nesne ve dizi kaç anahtar ya da öğe tuttuğunu yazar. Açık derinlik Playground'da." />,

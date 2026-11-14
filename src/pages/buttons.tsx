@@ -23,13 +23,6 @@ export default function Buttons(props: { params?: { rest?: string } }) {
     "copy-button": () => <ComponentDemo folder="actions/copy-button" title="CopyButton: panoya kopyala" desc="Kopyalandı der ve bunu ekran okuyucuya duyurur; pano yoksa bildirimle söyler." />,
     "menu": () => <ComponentDemo folder="actions/menu" title="Menu ve Dropdown" desc="Ok tuşları, Home/End, Esc; kısayollar platforma göre yazılır, action() onaylı silme ve bildirimi getirir. Dropdown herhangi bir içeriği açar." />,
     "tooltip": () => <ComponentDemo folder="overlays/tooltip" title="Tooltip: kısa ipucu" desc="Üstüne gelince kısa bir gecikmeyle, klavye odağında hemen görünür; aria-describedby ile bağlanır, Esc gizler." />,
-    "chips": () => <Demo title="Çipler" desc="Seçilebilir süzgeç çipleri ve kaldırılabilir etiketler.">
-    <div class="sc-row">{["Açık", "Bekliyor", "Çözüldü", "Atanmamış"].map((f) => <Chip selected={() => $filters.has(f)} on:click={() => toggleFilter(f)}>{f}</Chip>)}</div>
-    <div class="sc-row">
-      <For each={$tags} key={(x: string) => x}>{(tag: () => string) => <Chip tone="primary" onRemove={() => { $tags = $tags.filter((x) => x !== tag()) }}>{tag()}</Chip>}</For>
-      <Button size="sm" variant="ghost" icon={plus} on:click={() => { $tags = [...$tags, `Etiket ${$tags.length + 1}`] }}>Ekle</Button>
-    </div>
-  </Demo>,
     "chip": () => <ComponentDemo folder="actions/chip" title="Chip: seçenekler" desc="Bileşen klasöründen (src/components/actions/chip) gelen demo: seçenekler playground.ts'den, kod docs.md'den. Renk yalnız süzgeç çipinde ya da primary tonda etkili olduğu için yalnız o zaman görünür." />,
     "made-with-march": () => <ComponentDemo folder="actions/made-with-march" title="MadeWithMarch: kredi satırı" desc="İsteğe bağlı: &quot;March ve 💗 ile geliştirildi&quot;. Lisans MIT olarak kalır; kullanmak rica, zorunluluk değil. Bağlantı adresi tek bir sabittedir (MARCH_URL)." />,
     "avatars": () => <Demo title="Avatarlar" desc="Baş harfler tema paletiyle; grup ve +N.">

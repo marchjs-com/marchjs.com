@@ -26,28 +26,6 @@ export default function Overlays(props: { params?: { rest?: string } }) {
   const rename = async () => { const v = await prompt({ title: "Yeniden adlandır", label: "Yeni ad", value: "Yol haritası 2027" }); if (v) $last = `Yeni ad: ${v}` }
   const reason = async () => { const r = await askReason({ title: "Hesabı askıya al", min: 10 }); if (r) $last = `Gerekçe: ${typeof r === "string" ? r : JSON.stringify(r)}` }
   const RENDER: Record<string, () => unknown> = {
-    "dialog-drawer": () => <Demo title="Dialog ve çekmece" desc="openDialog / openDrawer: içerik bir fonksiyon, sonuç close(değer)."
-    code={`const ad = await openDialog((close) => <Form … onSubmit={(v) => close(v.ad)} />, { title: "Profili düzenle" })
-const tamam = await confirm({ title: "Silinsin mi?", danger: true })`}>
-    <div class="sc-row"><Button variant="primary" icon={edit} on:click={edit1}>Profili düzenle</Button><Button icon={sliders} on:click={drawer}>Çekmeceyi aç</Button></div>
-    <div class="sc-row"><Button variant="danger" icon={trash} on:click={del}>Onaylı sil</Button><Button on:click={rename}>Metin iste</Button><Button on:click={reason}>Gerekçe iste</Button></div>
-    <p class="hm-muted">Son sonuç: {$last}</p>
-  </Demo>,
-    "toasts": () => <Demo title="Bildirimler (toast)" desc="Dört tür, eylem düğmesi (geri al), kendiliğinden kapanma; ekran okuyucuya duyurulur."
-    code={`toast("Kaydedildi", { kind: "success" })
-toast("Silindi", { kind: "danger", action: { label: "Geri al", run: geriAl } })`}>
-    <div class="sc-row">
-      <Button icon={check} on:click={() => toast("Değişiklikler kaydedildi", { kind: "success" })}>Başarı</Button>
-      <Button icon={info} on:click={() => toast("Yeni sürüm hazır: 2.4.0", { kind: "info" })}>Bilgi</Button>
-      <Button icon={alertTriangle} on:click={() => toast("Kotanın %90'ı kullanıldı", { kind: "warn" })}>Uyarı</Button>
-      <Button icon={xCircle} on:click={() => toast("Bağlantı koptu", { kind: "danger", action: { label: "Yeniden dene", run: () => toast("Bağlandı", { kind: "success" }) } })}>Hata</Button>
-    </div>
-  </Demo>,
-    "palette": () => <Demo title="Komut paleti" desc="Sayfalar ve eylemler kendiliğinden kayıtlı; bulanık arama, Türkçe karakter katlama (ı/i, ş/s).">
-    <div class="sc-row"><Button variant="primary" icon={command} on:click={openPalette}>Paleti aç</Button><span class="hm-muted">ya da</span><Kbd keys="mod+k" /></div>
-    <Divider />
-    <p class="hm-muted">Dene: "koyu", "neon", "tablo", "bildirim".</p>
-  </Demo>,
     "command-palette": () => <ComponentDemo folder="composite/command-palette" title="CommandPalette: komut ekleme" desc="Karmaşık bileşen: uygulamanın tek paleti; bu kart ekranda olduğu sürece kendi komutlarını ekler, kart kapanınca kaldırır. Düğmenin üstüne gelince pencere önden yüklenir. Parçaları aşağıdaki satırda." />,
     "dialog": () => <ComponentDemo folder="overlays/dialog" title="Dialog: boyut, alt çubuk, kapatma" desc="Odak pencerenin içinde döner, Escape en üsttekini kapatır, kapanınca odak açan düğmeye döner. Telefonda alttan yükselir." />,
     "toast": () => <ComponentDemo folder="overlays/toast" title="Toast: tür, geri al, süre" desc="Engellemeyen kısa ileti; en fazla beş üst üste. Geri al eylemi önce toast'ı kapatır, sonra çalışır." />,

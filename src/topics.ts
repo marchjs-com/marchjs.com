@@ -59,8 +59,6 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "code-view", title: "Kod görünümü", name: "CodeView", desc: "Salt okunur kod, satır numarası, renkler.", group: "Ayrıntı" },
     { slug: "card", title: "Kart", name: "Card", desc: "Başlık, eylemler, alt bilgi.", group: "Yapı taşları" },
     { slug: "badge", title: "Rozet", name: "Badge", desc: "Durum ve sayı.", group: "Yapı taşları" },
-    { slug: "accordion", title: "Akordeon", desc: "Tek ya da çoklu açılır bölümler.", group: "Yapı taşları" },
-    { slug: "steps-pagination", title: "Adımlar ve sayfalama", desc: "Tıklanabilir adımlar, kısaltmalı sayfalama.", group: "Yapı taşları" },
     { slug: "panels", title: "Panel ve galeri", desc: "Bölünebilir panel, kaydırmalı galeri.", group: "Yapı taşları" },
   ],
   "/big-data": [
@@ -135,7 +133,6 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "copy-button", title: "Kopyala düğmesi", name: "CopyButton", desc: "Kopyalandı der ve bunu ekran okuyucuya duyurur; pano yoksa bildirimle söyler.", group: "Eylemler" },
     { slug: "menu", title: "Menü ve açılır menü", name: "Menu · Dropdown", desc: "Ok tuşları, Home/End, Esc; kısayollar platforma göre yazılır, action() onaylı silme ve bildirimi getirir.", group: "Eylemler" },
     { slug: "tooltip", title: "İpucu", name: "Tooltip", desc: "Üstüne gelince kısa bir gecikmeyle, klavye odağında hemen görünür; aria-describedby ile bağlanır, Esc gizler.", group: "Katmanlar" },
-    { slug: "chips", title: "Çipler", desc: "Seçilebilir süzgeç çipleri ve kaldırılabilir etiketler.", group: "Örnekler" },
     { slug: "chip", title: "Çip", name: "Chip", desc: "Bileşen klasöründen (src/components/actions/chip) gelen demo: seçenekler playground.ts'den, kod docs.md'den.", group: "Eylemler" },
     { slug: "made-with-march", title: "March ile yapıldı", name: "MadeWithMarch", desc: "İsteğe bağlı küçük \"March ile yapıldı\" yazısı ya da rozeti.", group: "Eylemler" },
     { slug: "avatars", title: "Avatarlar", desc: "Baş harfler tema paletiyle; grup ve +N.", group: "Örnekler" },
@@ -143,9 +140,6 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "cards-tabs", title: "Kartlar ve sekmeler", desc: "Card, LinkCard, IconTile; Tabs (alt çizgi kayar, panel yükselerek gelir).", group: "Örnekler" },
   ],
   "/overlays": [
-    { slug: "dialog-drawer", title: "Dialog ve çekmece", desc: "openDialog / openDrawer: içerik bir fonksiyon, sonuç close(değer).", group: "Örnekler" },
-    { slug: "toasts", title: "Bildirimler (toast)", desc: "Dört tür, eylem düğmesi (geri al), kendiliğinden kapanma; ekran okuyucuya duyurulur.", group: "Örnekler" },
-    { slug: "palette", title: "Komut paleti", desc: "Sayfalar ve eylemler kendiliğinden kayıtlı; bulanık arama, Türkçe karakter katlama (ı/i, ş/s).", group: "Örnekler" },
     { slug: "command-palette", title: "Komut paleti bileşeni", name: "CommandPalette", desc: "Karmaşık bileşen: uygulamanın tek paleti; bu kart ekranda olduğu sürece kendi komutlarını ekler, kart…", group: "Karmaşık bileşenler" },
     { slug: "dialog", title: "Diyalog", name: "Dialog", desc: "Odak pencerenin içinde döner, Escape en üsttekini kapatır, kapanınca odak açan düğmeye döner.", group: "Katmanlar" },
     { slug: "toast", title: "Bildirim", name: "Toast", desc: "Engellemeyen kısa ileti; en fazla beş üst üste.", group: "Katmanlar" },
