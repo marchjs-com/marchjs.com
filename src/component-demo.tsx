@@ -47,8 +47,9 @@ export function ComposedOf(props: { parts: readonly string[] }) {
   if (!props.parts.length) return null
   return <p class="sc-parts"><span class="sc-parts-label">Şunlardan oluşur:</span>
     {props.parts.map((name) => {
-      const page = cards.find((e) => e.n === name)?.w
-      return page ? <Link class="sc-part" href={page as Href}>{name}</Link> : <code class="sc-part">{name}</code>
+      // w is the page that draws the part's own demo (cards.gen.ts, from the page sources); the anchor is that demo
+      const part = cards.find((e) => e.n === name)
+      return part?.w ? <Link class="sc-part" href={`${part.w}#${demoId(part.f)}` as Href}>{name}</Link> : <code class="sc-part">{name}</code>
     })}
   </p>
 }
