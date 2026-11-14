@@ -10,6 +10,7 @@ import { DevicePreview } from "hadi-march/components/layout/device-preview/index
 import { viewport } from "hadi-march/managers/viewport";
 import { defineIcon, monitor, phone, sun, moon, pilcrow, refresh, rotateCw } from "hadi-march/icons";
 import { scopedMode, type StageMode } from "./stage-mode.ts";
+import { genCode, type ExtraAttr } from "./gen-code.ts";
 import { cards, type CardEntry } from "hadi-march/components/cards.gen.ts";
 import { optionRow, type PlayOption } from "./playground.tsx";
 import { demoId, type DemoView } from "./component-demo.tsx";
@@ -41,7 +42,7 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
   const defaults = (): Record<string, unknown> => Object.fromEntries(spec.options.map((o: PlaygroundOption) => [o.key, o.default]))
   const values = signal<Record<string, unknown>>(defaults())
   const opts: PlayOption[] = spec.options.map((o: PlaygroundOption) => ({
-    label: o.label, options: o.options, kind: o.kind, min: o.min, max: o.max, step: o.step, unit: o.unit,
+    label: o.label, options: o.options, kind: o.kind === "text" ? undefined : o.kind, text: o.kind === "text", min: o.min, max: o.max, step: o.step, unit: o.unit,
     get: () => values()[o.key], set: ((v: unknown) => values.set({ ...values.peek(), [o.key]: v })) as (v: never) => void,
     visibleWhen: o.visibleWhen ? () => o.visibleWhen!(values() as never) : undefined,
   }))
@@ -55,6 +56,9 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
   })
   const changed = (): boolean => { const v = values(); return spec.options.some((o: PlaygroundOption) => v[o.key] !== o.default) }
   const parts = props.entry.p ?? []
+  // ---- the code under the stage: written from the options (playground.ts › code); else the first code block of docs.md
+  const extras = signal<readonly ExtraAttr[]>([])
+  const source = computed((): string => genCode(props.spec, props.entry.n, values(), extras()) ?? props.code.trim())
 
   // ---- the stage: device, rotation, its own light / dark, direction, replay
   const device = signal<Device | null>(null), land = signal(false), rtl = signal(false), run = signal(0)
@@ -91,12 +95,12 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
           {() => (device() ? <span class="sc-wb-devinfo">{size}</span> : null)}
           {() => { const d = device(); return d ? untrack(() => <DevicePreview device={DEVICES[d].id} landscape={land()} time="9:41" fitHeight={520} label={`${DEVICES[d].name} önizlemesi`}>{frame}</DevicePreview>) : frame }}
         </div>
-        {props.code ? <div class="sc-wb-code"><Widget sources={[codeView]} input={{ source: props.code.trim(), lang: "tsx" }} /></div> : null}
+        {() => (source() ? <div class="sc-wb-code"><Widget sources={[codeView]} input={{ source: source(), lang: "tsx" }} /></div> : null)}
       </div>
       <div class="sc-play-panel" role="group" aria-label="Seçenekler">
         <div class="sc-wb-panel-head">
           <span class="sc-wb-panel-title">Seçenekler</span>
-          <Button size="sm" variant="ghost" disabled={() => !changed()} on:click={() => values.set(defaults())}>Sıfırla</Button>
+          <Button size="sm" variant="ghost" disabled={() => !changed()} on:click={() => { values.set(defaults()); extras.set([]) }}>Sıfırla</Button>
         </div>
         {opts.length ? opts.map(optionRow) : <p class="sc-wb-none">Bu bileşenin ayarlanacak seçeneği yok.</p>}
       </div>
