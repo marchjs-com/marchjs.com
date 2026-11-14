@@ -7,7 +7,7 @@ import { Hub } from "../hub.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
 import { HUBS } from "../topics.ts";
 
-export const title = "Web sitesi bileşenleri"
+export const title = "Bileşenler"
 
 function Blocks(props: { params?: { rest?: string } | undefined }) {
   const RENDER: Record<string, () => unknown> = {
@@ -41,7 +41,7 @@ function Blocks(props: { params?: { rest?: string } | undefined }) {
     "branching-story": () => <ComponentDemo folder="landing/branching-story" title="Dallanan hikâye" desc="Her bölüm seçimlerle biter; seçilen düğme parlar, diğerleri söner, sayfa okuma yönünden döner (geri giderken öbür yandan, RTL'de aynalı). Üstteki yolda herhangi bir adıma dokununca oraya döner; bulunan sonlar sayılır. Odak yeni bölüm başlığına geçer." />,
     "site-section": () => <ComponentDemo folder="landing/site-section" title="Bölüm çerçevesi" desc="Her bloğun çerçevesi: genişlik, dikey ritim, ton ve beliren başlık grubu." />,
   }
-  return <Hub section="/web" kicker="Bileşenler" title="Web sitesi bileşenleri" lead="Tanıtım, ana sayfa, portfolyo ve sunum için bloklar. Bunlarla kurulmuş tam sayfalar Örnek web siteleri bölümünde. Her blok mevcut bileşenlerden kurulur, hareket motoruyla canlanır, temaya, RTL'ye ve dile uyar. Yalnız kullanılan blok derlenir." render={RENDER} params={props.params} />
+  return <Hub section="/web" kicker="Web tasarım araçları" title="Bileşenler" lead="Tanıtım, ana sayfa, portfolyo ve sunum için bloklar. Bunlarla kurulmuş tam uygulamalar Örnek uygulamalar bölümünde. Her blok mevcut bileşenlerden kurulur, hareket motoruyla canlanır, temaya, RTL'ye ve dile uyar. Yalnız kullanılan blok derlenir." render={RENDER} params={props.params} />
 }
 
 export default function WebPage(props: { params?: { rest?: string } }) {

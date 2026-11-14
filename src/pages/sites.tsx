@@ -11,9 +11,9 @@ import { DevicePreview, previewFrame } from "hadi-march/components/layout/index.
 import { appUrl } from "hadi-march/base";
 import { lazy } from "hadi-march/lazy";
 import { Hub } from "../hub.tsx";
-import { HUBS } from "../topics.ts";
+import { HUBS, SITE_KINDS } from "../topics.ts";
 
-export const title = "Örnek web siteleri"
+export const title = "Örnek uygulamalar"
 
 // each sample loads only when it is opened, as its own part
 const LOAD: Record<string, () => unknown> = {
@@ -70,7 +70,7 @@ function SampleView(props: { sample: Sample }) {
   return <div class={() => (full() ? "sc-sample-wrap is-full" : "sc-sample-wrap")}>
     <div class="sc-sample-head">
     <div class="sc-sample-bar" role="toolbar" aria-label="Önizleme">
-      <Link href="/sites" class="sc-sample-back"><Icon of={arrowLeft} /><span>Tüm siteler</span></Link>
+      <Link href="/sites/landing" class="sc-sample-back"><Icon of={arrowLeft} /><span>Açılış sayfaları</span></Link>
       <strong class="sc-sample-name">{s.title}</strong>
       <div class="sc-seg" role="radiogroup" aria-label="Cihaz">
         {DEVICES.map((d) => <button type="button" role="radio" class="sc-seg-btn" aria-checked={() => String(device() === d.id)} on:click={() => setQuery("device", d.id === "desktop" ? null : d.id)}>{d.label}</button>)}
@@ -118,7 +118,13 @@ export default function SitesPage(props: { params?: { rest?: string } }) {
   const view = computed(() => (props.params?.rest ?? "").split("/")[0] ?? "")
   return <>{() => {
     const sample = SAMPLES.find((x) => x.view === view())
-    if (!sample) return <Hub section="/sites" kicker="Landing" title="Örnek web siteleri" lead="Yalnız web sitesi bileşenleriyle kurulmuş tam sayfalar. Her biri kendi penceresinde açılır: cihaz, tema ve yazı yönü yalnız önizlemede değişir; hangi bloklardan oluştuğu ve kaynağı üst çubukta." render={{}} params={props.params} />
+    if (!sample) {
+      // a kind of sample app (/sites/landing): its apps; /sites: every kind
+      const kind = SITE_KINDS.find((k) => k.slug === view())
+      return kind
+        ? <Hub section="/sites" kicker="Örnek uygulamalar" title={kind.title} lead={`${kind.desc} Her biri kendi penceresinde açılır: cihaz, tema ve yazı yönü yalnız önizlemede değişir; hangi bileşenlerden oluştuğu ve kaynağı üst çubukta.`} render={{}} />
+        : <Hub section="/sites" kicker="Web tasarım araçları" title="Örnek uygulamalar" lead="Yalnız web sitesi bileşenleriyle kurulmuş tam uygulamalar, türlerine göre. Şimdilik açılış sayfaları; yönetim paneli, CRM ve e-ticaret sırada." render={{}} params={props.params} />
+    }
     const S = LOAD[sample.view] as () => unknown
     // inside the preview iframe (?bare=1): the site alone, with the theme and direction the preview bar picked
     if (query()["bare"] !== undefined) {

@@ -2,7 +2,7 @@
 // topics as grouped cards, the side menu lists them under the section, Ctrl+K finds them. Titles, one-line
 // descriptions and groups only (start-up needs the titles for the breadcrumb); each page module draws its topics.
 
-export interface Topic { slug: string; title: string; desc: string; group: string }
+export interface Topic { slug: string; title: string; desc: string; group: string; /** Menu parent when it is not the section (a kind of sample app). */ parent?: string }
 
 export const HUBS: Record<string, readonly Topic[]> = {
   "/editors": [
@@ -311,15 +311,23 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "site-section", title: "Bölüm çerçevesi", desc: "Her bloğun çerçevesi: genişlik, dikey ritim, ton ve beliren başlık grubu.", group: "Bloklar" },
   ],
   "/sites": [
-    { slug: "product", title: "Ürün tanıtım sayfası", desc: "Yüzen menü, kaydırınca düzleşen ürün karesi, bento, hikâye, fiyatlar, yorum duvarı, SSS ve altbilgi.", group: "Siteler" },
-    { slug: "portfolio", title: "Kişisel portfolyo", desc: "Süzgeçli proje ızgarası, kapağın ayrıntı sayfasına büyüdüğü geçiş, yatay vaka şeridi, deneyim çizelgesi, iletişim formu.", group: "Siteler" },
-    { slug: "slides", title: "Sunum", desc: "Klavye, kaydırma ve dokunma; adım adım maddeler, konuşmacı penceresi, tam ekran, URL'de slayt numarası, yazdır.", group: "Siteler" },
-    { slug: "redesign", title: "Yeniden tasarım", desc: "Anlatmak yerine göster: eski ve yeni ekran sürüklenen ayırıcıyla; akış, profil ve okuma için ayrı karşılaştırmalar.", group: "Siteler" },
-    { slug: "honest", title: "Herkes için değil", desc: "Anti-landing: önce kimin için olmadığı (işaretle, sonucu gör), geride kalınan satırlarıyla karşılaştırma.", group: "Siteler" },
-    { slug: "live", title: "Canlı duvar", desc: "Sen bakarken büyüyen sayaçlar ve durmadan gelen etkinlik duvarı: sayfa kalabalık olduğunu söylemez, gösterir.", group: "Siteler" },
-    { slug: "story", title: "Kendi hikâyeni seç", desc: "Özellik listesi yerine oynanan bir hafta sonu: her seçim ürünün başka bir yüzünü gösterir; geri sarılan yol, bulunan sonlar.", group: "Siteler" },
+    { slug: "product", title: "Ürün tanıtım sayfası", desc: "Yüzen menü, kaydırınca düzleşen ürün karesi, bento, hikâye, fiyatlar, yorum duvarı, SSS ve altbilgi.", group: "Açılış sayfaları", parent: "/sites/landing" },
+    { slug: "portfolio", title: "Kişisel portfolyo", desc: "Süzgeçli proje ızgarası, kapağın ayrıntı sayfasına büyüdüğü geçiş, yatay vaka şeridi, deneyim çizelgesi, iletişim formu.", group: "Açılış sayfaları", parent: "/sites/landing" },
+    { slug: "slides", title: "Sunum", desc: "Klavye, kaydırma ve dokunma; adım adım maddeler, konuşmacı penceresi, tam ekran, URL'de slayt numarası, yazdır.", group: "Açılış sayfaları", parent: "/sites/landing" },
+    { slug: "redesign", title: "Yeniden tasarım", desc: "Anlatmak yerine göster: eski ve yeni ekran sürüklenen ayırıcıyla; akış, profil ve okuma için ayrı karşılaştırmalar.", group: "Açılış sayfaları", parent: "/sites/landing" },
+    { slug: "honest", title: "Herkes için değil", desc: "Anti-landing: önce kimin için olmadığı (işaretle, sonucu gör), geride kalınan satırlarıyla karşılaştırma.", group: "Açılış sayfaları", parent: "/sites/landing" },
+    { slug: "live", title: "Canlı duvar", desc: "Sen bakarken büyüyen sayaçlar ve durmadan gelen etkinlik duvarı: sayfa kalabalık olduğunu söylemez, gösterir.", group: "Açılış sayfaları", parent: "/sites/landing" },
+    { slug: "story", title: "Kendi hikâyeni seç", desc: "Özellik listesi yerine oynanan bir hafta sonu: her seçim ürünün başka bir yüzünü gösterir; geri sarılan yol, bulunan sonlar.", group: "Açılış sayfaları", parent: "/sites/landing" },
   ],
 };
 
 /** Every topic as a sub page under its section (path, title, parent) for the routes, the breadcrumb and the menu. */
-export const TOPIC_PAGES = Object.entries(HUBS).flatMap(([base, list]) => list.map((t) => ({ path: `${base}/${t.slug}`, title: t.title, parent: base, desc: t.desc })));
+/** Kinds of sample apps (/sites/<kind>): each lists its apps; more kinds (dashboards, CRM, e-commerce) come later. */
+export const SITE_KINDS = [
+  { slug: "landing", title: "Açılış sayfaları", desc: "Tanıtım ve açılış sayfaları: ürün, portfolyo, sunum, yeniden tasarım, dürüst tanıtım, canlı duvar, hikâye." },
+] as const
+
+export const TOPIC_PAGES = [
+  ...SITE_KINDS.map((k) => ({ path: `/sites/${k.slug}`, title: k.title, parent: "/sites", desc: k.desc })),
+  ...Object.entries(HUBS).flatMap(([base, list]) => list.map((t) => ({ path: `${base}/${t.slug}`, title: t.title, parent: t.parent ?? base, desc: t.desc }))),
+];

@@ -69,7 +69,7 @@ export const HOME_STATS = {
     },
     {
       "id": "landing",
-      "label": "Landing",
+      "label": "Web tasarım araçları",
       "components": 29
     }
   ],
@@ -84,7 +84,7 @@ export const HOME_STATS = {
     "pageFx": 10
   },
   "managers": 30,
-  "tests": 873,
+  "tests": 876,
   "testFiles": 257,
   "budget": {
     "entry": 15360,
