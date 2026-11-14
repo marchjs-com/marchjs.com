@@ -34,12 +34,24 @@ function fitPreview(mini: HTMLElement) {
   queueMicrotask(() => { if (mini.parentElement) new ResizeObserver(fit).observe(mini.parentElement); fit() })
 }
 
+// How many columns the first row really has: the Grid uses fewer than `cols` when the box is too narrow for them
+// (the narrowest column is `minCol`, 9rem by default), and the note under the frame says so.
+function watchColumns(frame: HTMLElement, set: (n: number) => void) {
+  const count = () => {
+    const kids = [...(frame.firstElementChild?.children ?? [])] as HTMLElement[]
+    if (kids.length) set(kids.filter((k) => k.offsetTop === kids[0]!.offsetTop).length)
+  }
+  new MutationObserver(count).observe(frame, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] })
+  queueMicrotask(() => { new ResizeObserver(count).observe(frame); count() })
+}
+
 export default function Layout(props: { params?: { rest?: string } }) {
   // 7 cards in 5 columns: the only small setup where all five modes end differently (5+2, halves, one wide, 4+3, thirds)
   let $count = 7
   let $cols = "5"
   let $width = 100
   let $mode = "stretch"
+  let $shown = 0
   const grid = (mode: string) => {
     const cols = Number($cols), items = Array.from({ length: $count }, (_, i) => <Tile n={i + 1} />)
     if (mode === "default") return <Grid cols={cols} gap={3}>{items}</Grid>
@@ -61,7 +73,10 @@ export default function Layout(props: { params?: { rest?: string } }) {
       { label: "Kart sayısı", get: () => $count, set: (v: number) => { $count = v }, min: 1, max: 16 },
       { label: "Kapsayıcı genişliği", get: () => $width, set: (v: number) => { $width = v }, min: 30, max: 100, step: 10, unit: "%" },
     ]}>
-    <div class={() => `sc-grid-frame sc-w-${$width}`}>{() => grid($mode)}</div>
+    <div class={() => `sc-grid-frame sc-w-${$width}`} ref={(el: HTMLElement) => watchColumns(el, (n) => { $shown = n })}>{() => grid($mode)}</div>
+    <p class="sc-grid-note" role="status">{() => ($shown && $shown < Math.min(Number($cols), $count)
+      ? `İstenen ${$cols} sütun, görünen ${$shown}: kutu ${$cols} sütuna dar geliyor (en dar sütun 9rem, minCol ile değişir). Kapsayıcıyı genişlet ya da sütunu azalt.`
+      : `${$shown || $cols} sütun: kutu yeterince geniş. Kutuyu daralt, sütunlar taşmadan kendiliğinden azalır.`)}</p>
     </Playground>
   </Demo>,
     "grid-modes": () => <Demo wide title="Beş mod yan yana" desc="Aynı kart ve sütun sayısıyla; her kutu sabit bir sanal genişlikte (sütun başına 10rem) çizilip sığacak kadar küçültülür, böylece son satır farkı her ekranda görünür. Tek kart artınca stretch ile last aynı görünür; fark iki ve daha fazla artan kartta.">

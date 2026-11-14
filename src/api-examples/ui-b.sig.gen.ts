@@ -2,7 +2,7 @@
 /** Signatures of the exports this group has examples for: { subpath: { name: signature } }. */
 const sig: Record<string, Record<string, string>> = {
  "hadi-march/ui": {
-  "Dialog": "const Dialog: (props: DialogProps) => () => unknown",
+  "Dialog": "function Dialog(props: DialogProps): () => unknown",
   "Disclosure": "function Disclosure(props: DisclosureProps): Element",
   "Divider": "function Divider(props: DividerProps = {}): Element",
   "DockLayout": "function DockLayout(props: DockLayoutProps): Element",
