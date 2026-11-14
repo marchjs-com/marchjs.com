@@ -15,7 +15,7 @@
 .sc-h1 { margin: 0; font-family: var(--m-font-display); font-weight: var(--m-display-weight); font-size: clamp(2rem, 3.4vw, 2.75rem); letter-spacing: -.03em; line-height: 1.08; }
 .sc-lead { margin: 0; color: var(--m-muted); font-size: var(--m-text-lg); line-height: 1.6; }
 .sc-demos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--m-space-5); }
-.sc-demo { display: flex; flex-direction: column; gap: var(--m-space-3); min-width: 0; container-type: inline-size; padding: var(--m-space-5); border: 1px solid var(--m-border); border-radius: var(--m-radius-4);
+.sc-demo { display: flex; flex-direction: column; gap: var(--m-space-3); min-width: 0; container-type: inline-size; padding: calc(var(--m-space-5) + var(--m-radius-pad, 0px)); border: 1px solid var(--m-border); border-radius: var(--m-radius-4);
   background: var(--m-surface); box-shadow: var(--m-shadow-1); }
 .sc-demo-wide { grid-column: 1 / -1; }
 .sc-demo-head { display: flex; flex-direction: column; gap: .25rem; }
@@ -246,12 +246,61 @@
 .sc-page-skel > .m-lazy-skel-text { max-width: 46rem; min-height: 5.5rem; }
 .sc-page-skel > .m-lazy-skel-card { min-height: 14rem; padding: var(--m-space-5); border: 1px solid var(--m-border); border-radius: var(--m-radius-3, var(--m-radius)); background-origin: content-box; background-clip: content-box; }
 
-/* shell placeholders (lazy side menu and top bar tools): same size, no layout shift */
-.sc-nav-placeholder { width: var(--m-sb-w, 17.5rem); height: 100%; background: var(--m-surface); border-inline-end: 1px solid var(--m-border); }
-@media (max-width: 900px) { .sc-nav-placeholder { display: none; } }
-.sc-tools { display: flex; align-items: center; gap: var(--m-space-2); }
-.sc-tools-placeholder { width: 27rem; height: 2.25rem; }
-@media (max-width: 900px) { .sc-tools-placeholder { width: 8rem; } }
+/* ---------- shell: the section rail, the side menu beside it, the top bar (trail · search · look) */
+/* placeholders of the lazy rail + menu and of the top bar tools: same size, no layout shift */
+.sc-nav-placeholder { width: calc(4.75rem + var(--m-sb-w, 17.5rem)); height: 100%; background: var(--m-surface); border-inline-end: 1px solid var(--m-border); }
+/* the tools are two items of the top bar itself: the search in the middle, the look controls at the end */
+.sc-tools { display: contents; }
+.sc-tools-placeholder { display: block; flex: 1 1 0; block-size: 2.375rem; }
+/* the rail: the March mark, then the start page and the six sections (ActivityBar with names) */
+.sc-rail { display: flex; flex: none; flex-direction: column; align-items: center; inline-size: 4.75rem; block-size: 100%; background: var(--m-surface); border-inline-end: 1px solid var(--m-border); }
+.sc-rail-logo { display: grid; flex: none; place-items: center; inline-size: 2.5rem; block-size: 2.5rem; margin-block: var(--m-space-3) var(--m-space-2); border-radius: var(--m-radius-3);
+  background: var(--m-brand-gradient); color: var(--m-on-scrim); box-shadow: 0 6px 16px -6px var(--m-cat-1); transition: scale var(--m-dur) var(--m-ease-spring); }
+.sc-rail-logo:hover { scale: 1.06; }
+.sc-rail-logo .m-svg { width: 1.375rem; height: 1.375rem; stroke-width: 2.4; }
+.sc-rail-bar.m-ab { flex: 1 1 auto; inline-size: 100%; block-size: auto; min-block-size: 0; border: 0; background: none; }
+/* the menu's title is the section's name, in the display face */
+.sc-shell .m-sb-head { gap: 0; padding: var(--m-space-4) var(--m-space-4) var(--m-space-2); border-block-end: 0; }
+.sc-shell .m-sb-titlebar .m-panel-header-title { font-size: var(--m-text-xl); letter-spacing: -.02em; }
+.sc-shell .m-sb-titlebar .m-panel-header-sub { margin-block-start: .25rem; color: var(--m-muted); font-size: var(--m-text-sm); font-weight: 400; line-height: 1.35; }
+.sc-shell .m-sb-scroll { padding-inline: var(--m-space-3); }
+/* headings scroll away with their rows (a stuck heading over hidden rows read as an empty block) */
+.sc-shell .m-sb-section.m-section-label { position: static; }
+/* top bar: the trail keeps its own width, the search sits in the middle of what is left, the look controls at the end */
+.sc-shell { --m-topbar-h: 3.75rem; }
+.sc-shell .m-shell-header { gap: var(--m-space-4); padding-inline: var(--m-space-5); border-block-end-color: var(--m-border-subtle); }
+.sc-top-crumbs { flex: 1.6 1 0; min-inline-size: 0; }
+/* the section and category steps arrive with the menu's manifest: they fade in instead of popping */
+.sc-top-crumbs.is-full .m-bc-li:not(:first-child) { animation: m-fade-in .28s var(--m-ease-out) both; }
+.sc-top-crumbs .m-bc { font-size: var(--m-text-md); }
+.sc-top-crumbs .m-bc .m-bc-item { height: 1.875rem; padding-inline: .5rem; border-radius: var(--m-radius-2); }
+.sc-top-crumbs .m-bc .m-bc-item.is-current { font-weight: 650; }
+.sc-search.m-pal-trigger { flex: 0 1 22rem; inline-size: auto; min-inline-size: 2.375rem; block-size: 2.375rem; padding-inline: .875rem .5rem; border-radius: var(--m-radius-full);
+  background: var(--m-surface); box-shadow: var(--m-shadow-2); transition: border-color var(--m-dur) var(--m-ease), translate var(--m-dur) var(--m-ease); }
+.sc-search.m-pal-trigger:hover { border-color: var(--m-accent, var(--m-primary)); translate: 0 -1px; }
+.sc-tools-end { display: flex; flex: 1 1 0; align-items: center; justify-content: flex-end; gap: var(--m-space-2); }
+.sc-accents { display: flex; align-items: center; gap: .375rem; padding-inline: var(--m-space-1); }
+.sc-accents .m-swatch-btn { transition: scale var(--m-dur) var(--m-ease-spring); }
+.sc-accents .m-swatch-btn:hover { scale: 1.15; }
+@media (max-width: 1240px) { .sc-accents { display: none; } }
+@media (max-width: 900px) {
+  /* phones: the rail is the bottom bar (the menu opens from it as a bottom sheet); no menu button in the header */
+  .sc-nav-placeholder { display: none; }
+  .sc-shell.m-shell-has-header > .m-shell-nav { position: fixed; inset: auto 0 0; display: block; block-size: auto; padding: 0 0 env(safe-area-inset-bottom, 0px); border-block-start: 1px solid var(--m-border);
+    background: var(--m-surface); z-index: calc(var(--m-z-sticky) + 2); }
+  .sc-rail { flex-direction: row; inline-size: 100%; block-size: auto; border-inline-end: 0; }
+  .sc-rail-logo { display: none; }
+  .sc-rail-bar.m-ab { border: 0; }
+  .sc-shell.m-shell-has-header .m-shell-header { gap: var(--m-space-2); padding-inline: var(--m-space-3); }
+  .sc-shell { --sc-bottom-bar: calc(3.875rem + env(safe-area-inset-bottom, 0px)); }
+  .sc-shell .m-shell-main { padding-block-end: var(--sc-bottom-bar); }
+  .sc-top-crumbs { flex: 1 1 0; }
+  .sc-search.m-pal-trigger { flex: none; inline-size: 2.375rem; padding: 0; justify-content: center; }
+  .sc-tools-end { flex: none; }
+  .sc-search .m-pal-trigger-label, .sc-search .m-pal-trigger-kbd { display: none; }
+  .sc-tools-end .m-theme-menu-name { display: none; }
+  .sc-tools-end .m-btn.m-theme-menu-btn { padding-inline: .375rem; }
+}
 
 /* shell portal targets: take no room while empty */
 .sc-target-title:empty, .sc-target-toolbar:empty, .sc-target-aside:empty, .sc-target-bottom:empty { display: none; }
@@ -437,6 +486,4 @@ button.sc-part:hover, button.sc-part:focus-visible, a.sc-part:hover, a.sc-part:f
 .sc-a6-rz-stage-end { justify-content: flex-end; }
 .sc-a6-rz { position: relative; display: grid; align-content: start; gap: var(--m-space-2); max-inline-size: 100%; padding: var(--m-space-3) var(--m-space-4); border: 1px solid var(--m-border); border-radius: var(--m-radius-2); background: var(--m-surface); }
 .sc-a6-rz > p { margin: 0; overflow: hidden; }
-/* top bar: the breadcrumb takes the free width (it measures its box to decide what to fold away) */
-.sc-top-crumbs { flex: 1 1 auto; min-inline-size: 0; }
 .sc-top-crumbs > .m-lazy-slot { inline-size: 100%; }

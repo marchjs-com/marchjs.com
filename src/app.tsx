@@ -2,11 +2,16 @@
 // What the first paint needs (frame, breadcrumb). No page list here: routes, titles and loaders live in src/routes.ts,
 // a start-up chunk, so the entry does not grow with the number of pages. The side menu, the top bar tools and the rest
 // (palette, toasts, motion extras) are lazy chunks with placeholders of the same size, so the entry stays small.
+import { signal } from "hadi-march";
 import { Outlet, path } from "hadi-march/router";
-import { AppShell, Spacer, type BreadcrumbsProps } from "hadi-march/ui";
+import { AppShell, type BreadcrumbsProps, type Crumb } from "hadi-march/ui";
 import { lazy, skeleton } from "hadi-march/lazy";
 
 const ShellNav = lazy(() => import("./shell-nav.tsx"), { fallback: () => <div class="sc-nav-placeholder" aria-hidden="true" /> })
+// the full trail (section / category / page, each with the pages beside it) comes with the side menu's manifest
+// (shell-menu.tsx, on first idle); until then the trail is March / page title
+const trail = signal<((path: string) => readonly Crumb[]) | null>(null)
+export const setTrail = (of: (path: string) => readonly Crumb[]): void => { trail.set(of) }
 const ShellTools = lazy(() => import("./shell-tools.tsx"), { fallback: () => <div class="sc-tools sc-tools-placeholder" aria-hidden="true" /> })
 const ShellLate = lazy(() => import("./shell-late.tsx"), { fallback: () => null })
 // the trail is the Breadcrumbs component in its own chunk (as <Page> loads it); its height is reserved, so nothing jumps
@@ -26,8 +31,12 @@ function Topbar() {
   // instant on the click: the path changes at once, the title is looked up from it
   const title = () => { const p = path(); return p !== "/" ? titleOf(p) : undefined }
   return <>
-    <div class="sc-top-crumbs"><Crumbs label="Konum" separator="/" items={() => { const t = title(); return [{ id: "home", label: "March", href: "/" as const }, ...(t ? [{ id: "page", label: t }] : [])] }} /></div>
-    <Spacer />
+    <div class={() => (trail() ? "sc-top-crumbs is-full" : "sc-top-crumbs")}><Crumbs label="Konum" separator="/" labels={{ more: "Aradaki adımlar", goTo: (name: string) => `${name}: yanındakiler` }} items={() => {
+      const full = trail(), p = path()
+      if (full) return full(p)
+      const t = title()
+      return [{ id: "home", label: "March", href: "/" as const }, ...(t ? [{ id: "page", label: t }] : [])]
+    }} /></div>
     <ShellTools />
   </>
 }
@@ -36,7 +45,7 @@ export function App() {
   // ?bare=1: the page alone, without the showcase frame (a sample site shown in a preview iframe)
   if (new URLSearchParams(globalThis.location?.search ?? "").has("bare")) return <Outlet />
   // AppShell is a Layout: every page gets back-to-top, the reading bar and route focus from here; no page repeats them
-  return <AppShell header={<Topbar />} nav={<ShellNav />} titleTemplate="%s · March"
+  return <AppShell class="sc-shell" header={<Topbar />} nav={<ShellNav />} titleTemplate="%s · March"
     features={{ scrollToTop: true, readingProgress: true, routeFocus: true }}>
     <Outlet />
     <ShellLate />

@@ -1,7 +1,7 @@
 // The menu manifest: page descriptions, groups and icons for the side menu and the home page (kept out of start-up:
 // the side menu loads it on first idle, test/boot-pages.test.js checks that no start-up piece imports it). A group is one of
 // MENU_GROUPS (src/components/categories.ts): İlk Adımlar, Temel, the component categories, Yöneticiler, Altyapı.
-import { activity, film, alertCircle, barChart, code, cpu, dashboard, edit, gauge, grid, layers, menu, message, heart, palette, play, search, server, sparkles, zap } from "hadi-march/icons";
+import { activity, appWindow, film, alertCircle, barChart, code, compass, cpu, dashboard, edit, gauge, grid, layers, menu, message, heart, palette, play, search, server, sparkles, zap } from "hadi-march/icons";
 import { HOME_STATS } from "./home-stats.gen.ts";
 
 export interface PageMeta { desc: string; group?: string; icon: unknown }
@@ -52,6 +52,32 @@ export const PAGE_META: Record<string, PageMeta> = {
 };
 
 export { MENU_GROUPS } from "hadi-march/components/categories.ts";
+
+/** A section of the showcase: the thin rail lists the sections, the side menu shows the groups of one section at a time. */
+export interface NavSection {
+  id: string;
+  label: string;
+  /** A shorter name for the rail. */
+  short?: string;
+  desc: string;
+  icon: unknown;
+  /** The menu groups (MENU_GROUPS) the section collects, in order. */
+  groups: readonly string[];
+  /** Pages moved here from a group of another section: listed under this section's first group. */
+  pages?: readonly string[];
+}
+/** The one place that says which menu group belongs to which section (the groups themselves stay MENU_GROUPS). */
+export const SECTIONS: readonly NavSection[] = [
+  { id: "start", label: "Başla", desc: "Kur, öğren, başvur.", icon: compass, groups: ["İlk Adımlar"], pages: ["/language"] },
+  { id: "components", label: "Bileşenler", desc: "Arayüzün yapı taşları.", icon: grid, groups: ["Eylemler", "Formlar", "Veri gösterimi", "Geri bildirim", "Katmanlar", "Gezinme", "Medya", "Sosyal", "Tipografi"] },
+  { id: "look", label: "Görünüm", desc: "Tema, ikon, yerleşim.", icon: palette, groups: ["Temel", "Yerleşim"] },
+  { id: "motion", label: "Hareket", desc: "Tek motor: animasyon, geçiş, efekt.", icon: activity, groups: ["Hareket"] },
+  { id: "built", label: "Hazır yapılar", short: "Yapılar", desc: "Parçalardan kurulmuş bütünler.", icon: appWindow, groups: ["Karmaşık bileşenler", "Web tasarım araçları"] },
+  { id: "infra", label: "Altyapı", desc: "Ekranın arkasındaki her şey.", icon: server, groups: ["Yöneticiler", "Altyapı"] },
+];
+/** The section of a page: the one that names the page itself, else the one that has its menu group. */
+export const sectionOf = (page: { path: string; group?: string | undefined }): NavSection | undefined =>
+  SECTIONS.find((s) => s.pages?.includes(page.path)) ?? SECTIONS.find((s) => !!page.group && s.groups.includes(page.group));
 /** The pages with their menu metadata (the start-up list has paths and titles only). */
 // a page listed under another (parent) takes the parent's group (and its icon when it has none of its own)
 export const withMeta = <P extends { path: string; parent?: string | undefined }>(list: readonly P[]): (P & Partial<PageMeta>)[] => {
