@@ -78,8 +78,12 @@
 .sc-why { grid-column: 1 / -1; display: flex; flex-direction: column; gap: var(--m-space-3); min-inline-size: 0; }
 .sc-why .m-section-label { margin: 0; }
 .sc-why-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--m-space-4); }
-.sc-why-card { gap: var(--m-space-4); padding: calc(1.125rem + var(--m-radius-pad)) calc(1.25rem + var(--m-radius-pad)); border-radius: var(--m-radius-3); background: var(--sc-glass); backdrop-filter: blur(14px); box-shadow: none; overflow: hidden; }
-.sc-why-card:hover { background: var(--sc-glass-2); border-color: color-mix(in srgb, var(--m-accent, var(--m-primary)) 70%, transparent); transform: translateY(-.25rem); box-shadow: none; }
+/* a why card: glass, with a short line in its own color along the top edge that runs the whole width on hover */
+.sc-why-card { gap: var(--m-space-4); padding: calc(1.125rem + var(--m-radius-pad)) calc(1.25rem + var(--m-radius-pad)); border-radius: var(--m-radius-3); backdrop-filter: blur(14px); box-shadow: none; overflow: hidden;
+  background: linear-gradient(var(--m-accent, var(--m-primary)), var(--m-accent, var(--m-primary))) 0 0 / 18% .125rem no-repeat var(--sc-glass);
+  transition: background-size var(--m-dur-slow) var(--m-ease-out), background-color var(--m-dur) var(--m-ease), border-color var(--m-dur) var(--m-ease), transform var(--m-dur-slow) var(--m-ease-out); }
+:dir(rtl) .sc-why-card { background-position: 100% 0; }
+.sc-why-card:hover { background-color: var(--sc-glass-2); background-size: 100% .125rem; border-color: color-mix(in srgb, var(--m-accent, var(--m-primary)) 70%, transparent); transform: translateY(-.25rem); box-shadow: none; }
 .sc-why-card .m-icon-tile { transition: transform var(--m-dur-slow) var(--m-ease-out); }
 .sc-why-card:hover .m-icon-tile { transform: scale(1.15) rotate(-8deg); }
 .sc-why-card .m-link-card-text { gap: .25rem; }
@@ -107,4 +111,4 @@
   .sc-btile { position: relative; inset: auto; inline-size: auto; cursor: auto; touch-action: auto; translate: none !important; transform: none !important; rotate: none !important; }
   .sc-hero-npm { inline-size: 100%; box-sizing: border-box; justify-content: space-between; }
 }
-@media (prefers-reduced-motion: reduce) { .sc-btile, .sc-why-card .m-icon-tile { transition: none; } .sc-why-card:hover, .sc-why-card:hover .m-icon-tile { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .sc-btile, .sc-why-card, .sc-why-card .m-icon-tile { transition: none; } .sc-why-card:hover, .sc-why-card:hover .m-icon-tile { transform: none; } }

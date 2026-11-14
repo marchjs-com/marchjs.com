@@ -2,9 +2,10 @@
 // lean toward the pointer; the middle line of the title turns through phrases, each played by another of March's own
 // text effects; beside it glass cards (home/bench.tsx) hold real controls that restyle the whole showcase; under them
 // six answers to "why March". Below the fold the sections assemble as they scroll into view (home/sections.tsx).
-// The page is its own lazy route chunk. No number here is typed by hand: they come from home-stats.gen.ts
+// The page is its own lazy route chunk; the cards and the sections are lazy parts of it. No number here is typed by hand: they come from home-stats.gen.ts
 // (tools/gen-home-stats.js) and march-report.json.
 import "./home.css";
+import { lazy } from "hadi-march/lazy";
 import { onFrame, inView, reducedMotion } from "hadi-march/motion";
 import { cascade, elastic, blurIn, typewriter, flip, scramble, fade, type TextAnimation } from "hadi-march/motion/text";
 import { Button, Badge, CopyButton, LinkCard, SectionLabel, Overlay, resolvedTheme, type DrawContext } from "hadi-march/ui";
@@ -12,8 +13,11 @@ import { Link } from "hadi-march/router";
 import type { ColorToken } from "hadi-march/theme";
 import { arrowRight, zap, grid, globe, gauge, palette, shieldCheck } from "hadi-march/icons";
 import { HOME_STATS as S } from "../home-stats.gen.ts";
-import Bench from "../home/bench.tsx";
-import Sections from "../home/sections.tsx";
+// the glass cards and everything below the fold are parts of their own: the first screen (title, silk, why March) does not
+// wait for the chart, the chat and the map. Each keeps its room while it loads, so nothing moves when it arrives.
+const Bench = lazy(() => import("../home/bench.tsx"), { placeholder: () => <div class="sc-bench" aria-hidden="true" /> });
+// (a part that loads when it comes near needs a reserved height: a slot without one has no box to watch)
+const Sections = lazy(() => import("../home/sections.tsx"), { when: "visible", placeholder: "none", height: "100dvh" });
 
 // ── silk ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -171,7 +175,7 @@ export default function Home() {
         <div class="sc-why">
           <SectionLabel rule size="md" as="h2">Neden March</SectionLabel>
           <div class="sc-why-grid">
-            {WHY.map((w) => <LinkCard class="sc-why-card" href={w.href} icon={w.icon} color={w.color} title={w.title} description={w.text()} arrow={false} />)}
+            {WHY.map((w) => <LinkCard class="sc-why-card" data-m-color={w.color} href={w.href} icon={w.icon} color={w.color} title={w.title} description={w.text()} arrow={false} />)}
           </div>
         </div>
       </div>
