@@ -9,7 +9,7 @@ import { lazy } from "hadi-march/lazy";
 import { onFrame, inView, reducedMotion, spotlight } from "hadi-march/motion";
 import { onCleanup } from "hadi-march";
 import { cascade, elastic, blurIn, typewriter, flip, scramble, fade, type TextAnimation } from "hadi-march/motion/text";
-import { Button, Badge, CopyButton, LinkCard, SectionLabel, Overlay, resolvedTheme, type DrawContext } from "hadi-march/ui";
+import { Button, Badge, CopyButton, LinkCard, SectionLabel, Overlay, type DrawContext } from "hadi-march/ui";
 import { Link } from "hadi-march/router";
 import type { ColorToken } from "hadi-march/theme";
 import { arrowRight, zap, grid, globe, gauge, palette, shieldCheck } from "hadi-march/icons";
@@ -34,15 +34,26 @@ const SEGMENTS = 48;
  * with reduced motion).
  */
 function silk(): (ctx: CanvasRenderingContext2D, info: DrawContext) => void {
-  let colors: string[] = [], read = 0
+  // the colours and the light / dark of the canvas drawn on, read from where it sits: a theme wave draws the silk on
+  // the old look's copy too, in that look's colours (each canvas keeps its own)
+  const looks = new WeakMap<HTMLCanvasElement, { colors: string[]; dark: boolean; read: number }>()
   // where the fold is (eased) and how strongly it pulls; the target is the last place the pointer was seen
-  let tx = 0, ty = 0, fx = 0, fy = 0, pull = 0, seen = false
+  let tx = 0, ty = 0, fx = 0, fy = 0, pull = 0, seen = false, stepped = -1
   const tint = (c: string, a: number): string => `color-mix(in srgb, ${c} ${Math.round(a * 100)}%, transparent)`
   return (ctx, { width: W, height: H, time, pointer }) => {
-    if (!colors.length || time - read > 1500) { const cs = getComputedStyle(ctx.canvas); colors = SILK.map((v) => cs.getPropertyValue(v).trim() || "gray"); read = time }
-    if (pointer) { tx = pointer.x; ty = pointer.y; if (!seen) { seen = true; fx = tx; fy = ty } }
-    if (seen) { fx += (tx - fx) * 0.06; fy += (ty - fy) * 0.06; pull += (1 - pull) * 0.04 }
-    const dark = resolvedTheme() === "dark"
+    let look = looks.get(ctx.canvas)
+    if (!look || time - look.read > 1500) {
+      const cs = getComputedStyle(ctx.canvas)
+      look = { colors: SILK.map((v) => cs.getPropertyValue(v).trim() || "gray"), dark: isDark(ctx, cs.getPropertyValue("--m-bg")), read: time }
+      looks.set(ctx.canvas, look)
+    }
+    const { colors, dark } = look
+    // one step per moment: drawn twice at the same moment (the wave's copy), the fold is in the same place
+    if (time !== stepped) {
+      stepped = time
+      if (pointer) { tx = pointer.x; ty = pointer.y; if (!seen) { seen = true; fx = tx; fy = ty } }
+      if (seen) { fx += (tx - fx) * 0.06; fy += (ty - fy) * 0.06; pull += (1 - pull) * 0.04 }
+    }
     ctx.globalCompositeOperation = dark ? "lighter" : "source-over"
     const T = (time + 4000) * 0.00022
     colors.forEach((c, k) => {
@@ -73,6 +84,15 @@ function silk(): (ctx: CanvasRenderingContext2D, info: DrawContext) => void {
       ctx.stroke()
     })
   }
+}
+
+/** Whether a background colour is dark (the canvas normalises any CSS colour to #rrggbb or rgba()). */
+function isDark(ctx: CanvasRenderingContext2D, bg: string): boolean {
+  const keep = ctx.fillStyle
+  ctx.fillStyle = "#fff"; ctx.fillStyle = bg.trim() || "#fff"
+  const v = String(ctx.fillStyle); ctx.fillStyle = keep
+  const n = v.startsWith("#") ? [1, 3, 5].map((i) => parseInt(v.slice(i, i + 2), 16)) : (v.match(/[\d.]+/g) ?? ["255", "255", "255"]).slice(0, 3).map(Number)
+  return 0.2126 * n[0]! + 0.7152 * n[1]! + 0.0722 * n[2]! < 128
 }
 
 // ── the turning line of the title ───────────────────────────────────────────────────────────────────────────────
