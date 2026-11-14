@@ -23,7 +23,7 @@ function FeedOld() {
 /** The new feed: cards with an avatar, the time as a chip and a join button. */
 function FeedNew() {
   return <div class="sc-rd-feed is-new" aria-hidden="true">
-    {POSTS.map((p, i) => <div class="sc-rd-card"><i class={`sc-rd-av c${i + 1}`}>{p.who[0]}</i><div><b>{p.who}</b><span>{p.what}</span></div><small>{p.when}</small><em>Katıl</em></div>)}
+    {POSTS.map((p, i) => <div class="sc-rd-card"><i class={`sc-rd-av c${i + 1}`}>{p.who[0]}</i><div><b>{p.who}</b><span>{p.what}</span></div><small>{p.when}</small></div>)}
   </div>
 }
 function ProfileOld() {
@@ -53,12 +53,12 @@ export default function RedesignSample() {
     <SiteSection id="r-details" tone="muted" eyebrow="Ayrıntılar" title="Her ekran, tek tek" lead="Üç değişiklik, üç ayrı karşılaştırma.">
       <div class="sc-rd-grid">
         <figure class="sc-rd-fig">
-          <BeforeAfter ratio="4 / 3" beforeLabel="Önce" afterLabel="Sonra" label="Akış: önce ve sonra" before={<FeedOld />} after={<FeedNew />} />
-          <figcaption><b>Akış</b> Sık bir liste yerine kartlar: kim, ne, ne zaman ilk bakışta.</figcaption>
+          <BeforeAfter ratio="4 / 3" orientation="vertical" beforeLabel="Önce" afterLabel="Sonra" label="Akış: önce ve sonra" before={<FeedOld />} after={<FeedNew />} />
+          <figcaption><b>Akış</b> Sık bir liste yerine kartlar: kim, ne, ne zaman ilk bakışta. Bu karşılaştırma dikey: ayırıcıyı aşağı yukarı çek.</figcaption>
         </figure>
         <figure class="sc-rd-fig">
-          <BeforeAfter ratio="4 / 3" orientation="vertical" beforeLabel="Önce" afterLabel="Sonra" label="Profil: önce ve sonra" before={<ProfileOld />} after={<ProfileNew />} />
-          <figcaption><b>Profil</b> Tek satıra sıkışan bilgiler artık rakam olarak öne çıkıyor. Bu karşılaştırma dikey.</figcaption>
+          <BeforeAfter ratio="4 / 3" beforeLabel="Önce" afterLabel="Sonra" label="Profil: önce ve sonra" before={<ProfileOld />} after={<ProfileNew />} />
+          <figcaption><b>Profil</b> Tek satıra sıkışan bilgiler artık rakam olarak öne çıkıyor.</figcaption>
         </figure>
         <figure class="sc-rd-fig">
           <BeforeAfter ratio="4 / 3" follow hint={false} beforeLabel="Önce" afterLabel="Sonra" label="Okuma: önce ve sonra" before={<ReadOld />} after={<ReadNew />} />
