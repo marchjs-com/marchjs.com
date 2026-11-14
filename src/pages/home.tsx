@@ -1,178 +1,185 @@
-// Home: a hero on the four HADİ colors with a live preview (theme and accent recolor the whole page at once), then the
-// sections below the fold (live numbers, categories, highlights, performance, a first example). The page is its own
-// lazy route chunk; its parts are modules of that chunk (a separate lazy part fell under the 10 KB file floor), and
-// every moving preview runs only while it is on screen.
-// No number here is typed by hand: they come from home-stats.gen.ts (tools/gen-home-stats.js) and march-report.json.
+// Home: the first screen is a stage to play with. Behind it four wide bands of silk in the HADİ colors fold slowly and
+// lean toward the pointer; the middle line of the title turns through phrases, each played by another of March's own
+// text effects; beside it glass cards (home/bench.tsx) hold real controls that restyle the whole showcase; under them
+// six answers to "why March". Below the fold the sections assemble as they scroll into view (home/sections.tsx).
+// The page is its own lazy route chunk; the cards and the sections are lazy parts of it. No number here is typed by hand: they come from home-stats.gen.ts
+// (tools/gen-home-stats.js) and march-report.json.
 import "./home.css";
-import { reveal, animate, inView } from "hadi-march/motion";
-import { Button, Badge, Kbd, Grid, LinkCard, type IconTone, ThemeSwatch, colorThemes, colorTheme, setColorTheme, accent, setAccent, openPalette } from "hadi-march/ui";
-import { tokenColor, type ColorToken } from "hadi-march/theme/colors.ts";
-import { arrowRight, braces, code, command, sparkles } from "hadi-march/icons";
-import { Demo } from "../demo.tsx";
+import { lazy } from "hadi-march/lazy";
+import { onFrame, inView, reducedMotion } from "hadi-march/motion";
+import { cascade, elastic, blurIn, typewriter, flip, scramble, fade, type TextAnimation } from "hadi-march/motion/text";
+import { Button, Badge, CopyButton, LinkCard, SectionLabel, Overlay, resolvedTheme, type DrawContext } from "hadi-march/ui";
+import { Link } from "hadi-march/router";
+import type { ColorToken } from "hadi-march/theme";
+import { arrowRight, zap, grid, globe, gauge, palette, shieldCheck } from "hadi-march/icons";
 import { HOME_STATS as S } from "../home-stats.gen.ts";
-import { MENU_GROUPS } from "hadi-march/components/categories.ts";
-import { pages } from "../app.tsx";
-import { withMeta } from "../nav-meta.ts";
+// the glass cards and everything below the fold are parts of their own: the first screen (title, silk, why March) does not
+// wait for the chart, the chat and the map. Each keeps its room while it loads, so nothing moves when it arrives.
+const Bench = lazy(() => import("../home/bench.tsx"), { placeholder: () => <div class="sc-bench" aria-hidden="true" /> });
+// (a part that loads when it comes near needs a reserved height: a slot without one has no box to watch)
+const Sections = lazy(() => import("../home/sections.tsx"), { when: "visible", placeholder: "none", height: "100vh" });
 
-import Sections from "../home/sections.tsx";
+// ── silk ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-/** The aurora behind the hero: the four HADİ colors, as theme tokens. */
-const BRAND: ColorToken[] = ["brand-orange", "brand-blue", "brand-green", "brand-purple"];
-/** Accent choices of the live preview: the theme's own primary and the four HADİ colors. */
-const ACCENTS: ColorToken[] = ["primary", ...BRAND];
-const ACCENT_NAMES: Record<string, string> = { primary: "Temanın rengi", "brand-orange": "Heyecan", "brand-blue": "Aktivite", "brand-green": "Dostluk", "brand-purple": "İletişim" };
+/** The four colors of the silk: the brand colors as home.css resolves them for the theme in use (read from the page). */
+const SILK = ["--sc-c1", "--sc-c2", "--sc-c3", "--sc-c4"];
+/** Points along a band's edge. */
+const SEGMENTS = 48;
 
-/** Action: the aurora blobs drift on the motion engine while the hero is on screen (global speed, "stop all" and
- *  reduced motion apply; mirrored in RTL). */
-function drift(el: Element): () => void {
-  let runs: { cancel(): void }[] = []
-  const stop = () => { runs.forEach((r) => r.cancel()); runs = [] }
-  const off = inView(el, {
-    enter: () => {
-      stop()
-      const s = el.closest("[dir=rtl]") ? -1 : 1
-      runs = [...el.children].map((b, i) => animate(b, [
-        { transform: "translate(0, 0) scale(1)" },
-        { transform: `translate(${s * (i % 2 ? -8 : 10)}%, ${i < 2 ? 12 : -10}%) scale(${i % 2 ? 0.9 : 1.15})` },
-      ], { duration: 9000 + i * 2600, iterations: Infinity, direction: "alternate", easing: "easeInOutCubic" }))
-    },
-    leave: stop,
-  })
-  return () => { off(); stop() }
+/**
+ * Draws the silk: four soft bands that fold over each other; near the pointer they swell and lean toward it. Leaving
+ * the hero changes nothing (the fold stays where the pointer left it) and wherever the pointer comes back in, the fold
+ * travels there from where it is: no reset, no jump. Runs on the Overlay's canvas (the motion clock; one still frame
+ * with reduced motion).
+ */
+function silk(): (ctx: CanvasRenderingContext2D, info: DrawContext) => void {
+  let colors: string[] = [], read = 0
+  // where the fold is (eased) and how strongly it pulls; the target is the last place the pointer was seen
+  let tx = 0, ty = 0, fx = 0, fy = 0, pull = 0, seen = false
+  const tint = (c: string, a: number): string => `color-mix(in srgb, ${c} ${Math.round(a * 100)}%, transparent)`
+  return (ctx, { width: W, height: H, time, pointer }) => {
+    if (!colors.length || time - read > 1500) { const cs = getComputedStyle(ctx.canvas); colors = SILK.map((v) => cs.getPropertyValue(v).trim() || "gray"); read = time }
+    if (pointer) { tx = pointer.x; ty = pointer.y; if (!seen) { seen = true; fx = tx; fy = ty } }
+    if (seen) { fx += (tx - fx) * 0.06; fy += (ty - fy) * 0.06; pull += (1 - pull) * 0.04 }
+    const dark = resolvedTheme() === "dark"
+    ctx.globalCompositeOperation = dark ? "lighter" : "source-over"
+    const T = (time + 4000) * 0.00022
+    colors.forEach((c, k) => {
+      const base = H * (0.34 + k * 0.13), amp = H * 0.13, ph = k * 1.7
+      const mid = (x: number): number => {
+        const u = x / W
+        let y = base + Math.sin(u * 3.1 + T * (1 + k * 0.23) + ph) * amp + Math.sin(u * 6.3 - T * 1.7 + ph * 2) * amp * 0.35
+        if (seen) { const d = (x - fx) / (W * 0.16); y += (fy - y) * 0.55 * pull * Math.exp(-d * d) }
+        return y
+      }
+      const thick = (x: number): number => {
+        const u = x / W
+        let th = H * (0.07 + 0.045 * Math.sin(u * 4.4 + T * 2.1 + ph))
+        if (seen) { const d = (x - fx) / (W * 0.13); th *= 1 + 0.9 * pull * Math.exp(-d * d) }
+        return th
+      }
+      const g = ctx.createLinearGradient(0, 0, W, 0)
+      g.addColorStop(0, tint(c, 0)); g.addColorStop(0.18 + k * 0.04, tint(c, 0.5)); g.addColorStop(0.62 + k * 0.05, tint(c, 0.62)); g.addColorStop(1, tint(c, 0.08))
+      ctx.fillStyle = g
+      ctx.beginPath()
+      for (let i = 0; i <= SEGMENTS; i++) { const x = (i / SEGMENTS) * W, y = mid(x) - thick(x); if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y) }
+      for (let i = SEGMENTS; i >= 0; i--) { const x = (i / SEGMENTS) * W; ctx.lineTo(x, mid(x) + thick(x)) }
+      ctx.closePath(); ctx.fill()
+      // a bright thread along the upper edge gives the fold its shine
+      ctx.strokeStyle = tint("white", dark ? 0.22 : 0.7); ctx.lineWidth = 1
+      ctx.beginPath()
+      for (let i = 0; i <= SEGMENTS; i++) { const x = (i / SEGMENTS) * W, y = mid(x) - thick(x) * 0.55; if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y) }
+      ctx.stroke()
+    })
+  }
 }
 
-/** The live preview: picking a theme or an accent here recolors every component on the page. */
-function LivePreview() {
-  const themes = colorThemes()
-  const at = () => Math.max(0, themes.findIndex((th) => th.id === colorTheme()))
-  return <div class="sc-live" role="group" aria-label="Canlı önizleme">
-    <div class="sc-live-head">
-      <span class="sc-live-dot" aria-hidden="true" />
-      <span class="sc-live-title">Canlı önizleme</span>
-      <Badge tone="primary">{() => themes[at()]?.name ?? ""}</Badge>
-    </div>
-    <div class="sc-live-row" role="radiogroup" aria-label="Tema">
-      {themes.map((th) => <button type="button" role="radio" class="sc-live-theme" aria-checked={() => String(colorTheme() === th.id)} aria-label={th.name} title={th.name} on:click={() => setColorTheme(th.id)}>
-        <ThemeSwatch id={th.id} />
-      </button>)}
-    </div>
-    <div class="sc-live-row" role="radiogroup" aria-label="Vurgu rengi">
-      {ACCENTS.map((c) => <button type="button" role="radio" class="sc-live-accent" aria-checked={() => String(accent() === c)} aria-label={ACCENT_NAMES[c]} title={ACCENT_NAMES[c]} on:click={() => setAccent(c)}
-        style={c === "primary" ? undefined : { "--sc-dot": tokenColor(c) }}>
-        <span class={c === "primary" ? "sc-live-dot-theme" : "sc-live-dot-color"} aria-hidden="true" />
-      </button>)}
-    </div>
-    <div class="sc-live-sample">
-      <div class="sc-live-chips">
-        <Badge tone="primary" dot>Seçili</Badge>
-        <Badge tone="success">Yayında</Badge>
-        <Badge>Taslak</Badge>
-      </div>
-      <div class="sc-live-meter">
-        <span class="sc-live-meter-l">{() => `Tema ${at() + 1} / ${themes.length}`}</span>
-        <span class="sc-live-meter-bar" role="progressbar" aria-label="Tema" aria-valuemin="1" aria-valuemax={String(themes.length)} aria-valuenow={() => String(at() + 1)}>
-          <span style={() => ({ "inline-size": `${((at() + 1) / Math.max(1, themes.length)) * 100}%` })} />
-        </span>
-      </div>
-      <div class="sc-live-actions">
-        <Button variant="primary" icon={sparkles}>Kaydet</Button>
-        <Button>Vazgeç</Button>
-      </div>
-    </div>
-  </div>
+// ── the turning line of the title ───────────────────────────────────────────────────────────────────────────────
+
+type Play = (el: HTMLElement) => TextAnimation
+/** The phrases of the middle line; each enters with another text effect of hadi-march/motion/text (its export name is shown). */
+const PHRASES: readonly { text: string; fx: string; play: Play }[] = [
+  { text: "her parçası", fx: "cascade", play: (el) => cascade(el, { by: "char" }) },
+  { text: "her hareketi", fx: "elastic", play: (el) => elastic(el, { by: "char" }) },
+  { text: "her teması", fx: "blurIn", play: (el) => blurIn(el, { by: "char", stagger: 45 }) },
+  { text: "her formu", fx: "typewriter", play: (el) => typewriter(el, { caret: false }) },
+  { text: "her ekranı", fx: "flip", play: (el) => flip(el, { by: "char" }) },
+  { text: "her ayrıntısı", fx: "scramble", play: (el) => scramble(el, { chars: "abcçdefgğhıijklmnoöprsştuüvyz", duration: 1100 }) },
+]
+/** How long a phrase stays, ms. */
+const STAY = 3400
+
+function Title() {
+  let $at = 0
+  let held = false
+  /** Action on the turning line: every STAY ms (on the motion clock, only while on screen) the phrase leaves and the next one enters with its effect. */
+  const turn = (node: Element): (() => void) => {
+    const el = node as HTMLElement
+    let waited = 0, busy = false, live = true, run: TextAnimation | null = null, stopClock: (() => void) | null = null
+    const next = async (): Promise<void> => {
+      busy = true
+      run?.stop()
+      const out = fade(el, { out: true, duration: 180, stagger: 12 })
+      await out.finished
+      if (!live) return
+      out.stop()
+      $at = ($at + 1) % PHRASES.length
+      const p = PHRASES[$at]!
+      el.textContent = p.text
+      run = p.play(el)
+      busy = false
+    }
+    const off = inView(el, {
+      once: false, rootMargin: "0px",
+      enter: () => { if (!stopClock && !reducedMotion()) stopClock = onFrame((_t, dt) => { if (held || busy) return; waited += Math.min(dt, 100); if (waited >= STAY) { waited = 0; void next() } }) },
+      leave: () => { stopClock?.(); stopClock = null },
+    })
+    return () => { live = false; off(); stopClock?.(); run?.stop() }
+  }
+  // while the hero is pressed (a card is being dragged, a control held) the phrase waits
+  const hold = (on: boolean) => () => { held = on }
+  return { hold, view: <>
+    <h1 id="sc-hero-title" class="sc-hero-title">
+      <span class="sc-hero-word">Arayüzün</span>
+      <span class="sc-hero-turn" use:turn>{PHRASES[0]!.text}</span>
+      <span class="sc-hero-word">tek pakette.</span>
+    </h1>
+    <p class="sc-hero-fx">
+      <span class="sc-hero-fx-dot" aria-hidden="true" />
+      <span>metin efekti:</span>
+      <code class="sc-hero-fx-name">{() => PHRASES[$at]!.fx}</code>
+      <Link href="/text-motion" class="sc-hero-fx-all">{`${S.animations.text} efektin hepsi`}</Link>
+    </p>
+  </> }
 }
 
-// ── categories ──────────────────────────────────────────────────────────────────────────────────────────────────
-
-const TONES: IconTone[] = ["primary", "info", "success", "violet", "warn", "pink", "teal", "danger"]
-
-function Categories() {
-  const list = withMeta(pages())
-  const byCat = new Map(S.categories.map((c) => [c.label, c.components]))
-  const cards = MENU_GROUPS.filter((g) => g !== "İlk Adımlar").map((group) => {
-    const own = list.filter((p) => p.group === group)
-    const n = byCat.get(group) ?? 0
-    const meta = group === "Yöneticiler" ? `${S.managers} yönetici` : n ? `${n} bileşen` : `${own.length} sayfa`
-    return { group, own, meta }
-  }).filter((c) => c.own.length)
-  return <section class="sc-section sc-home-cats" aria-labelledby="sc-cat-h">
-    <header class="sc-section-head">
-      <p class="sc-eyebrow">Katalog</p>
-      <h2 id="sc-cat-h" class="sc-section-title">Her şey bir kategoride</h2>
-      <p class="sc-section-sub">Kategori başına kayıtlı bileşenler ve sayfalar; her kart ilgili vitrine götürür.</p>
-    </header>
-    <Grid cols={4} minCol="16rem" gap={3} fill="stretch" equal>
-      {cards.map((c, i) => <div class="sc-home-cat" use:reveal={{ delay: (i % 4) * 60 }}>
-        <LinkCard href={c.own[0]!.path} icon={c.own[0]!.icon} tone={TONES[i % TONES.length]} title={c.group} meta={c.meta}
-          description={[...new Set(c.own.map((p) => p.title.replace(/^[^:]+:\s*/, "").trim()).filter(Boolean))].join(" · ")} />
-      </div>)}
-    </Grid>
-  </section>
-}
-
-// ── first example ───────────────────────────────────────────────────────────────────────────────────────────────
+// ── why March ───────────────────────────────────────────────────────────────────────────────────────────────────
 
 // the package name is spliced in: the build rewrites `from "hadi-march…"` even inside strings
 const PKG = "hadi-march"
-const START = [
-  `import { render } from "${PKG}"`,
-  `import { Button } from "${PKG}/ui"`,
-  `render(() => <Button variant="primary">Merhaba</Button>, document.body)`,
-].join("\n")
-
-function FirstExample() {
-  const lines = START.split("\n").length
-  return <section class="sc-section sc-start" aria-labelledby="sc-start-h">
-    <div class="sc-start-copy">
-      <p class="sc-eyebrow">Başla</p>
-      <h2 id="sc-start-h" class="sc-section-title">{`${lines} satırda başla`}</h2>
-      <p class="sc-section-sub">Kur, içe aktar, çiz. Derleyici JSX'i gerçek DOM'a çevirir; sanal DOM, çalışma zamanı bağımlılığı ya da yapılandırma yok.</p>
-      <pre class="sc-start-pre" aria-label="Örnek kod"><code>{START}</code></pre>
-      <div class="sc-start-cta">
-        <Button variant="primary" href="/start" iconEnd={arrowRight}>İlk Adımlar</Button>
-        <Button href="/language" icon={code}>March dili</Button>
-      </div>
-    </div>
-    <div class="sc-start-code"><Demo title="Sonuç" desc="Aynı kod, canlı: tema ve vurgu rengi buna da uygulanır." code={START}>
-      <Button variant="primary" icon={sparkles}>Merhaba</Button>
-    </Demo></div>
-  </section>
-}
+const WHY: readonly { icon: unknown; color: ColorToken; title: string; text: () => unknown; href: string }[] = [
+  { icon: zap, color: "brand-orange", title: "Öğrenmesi kolay", text: () => <><code>{"$sayi++"}</code> yaz, ekran güncellenir. Kanca yok, ezberlenecek kural yok.</>, href: "/language" },
+  { icon: grid, color: "brand-blue", title: "Tek paket yeter", text: () => `${S.components} bileşen, form, veri, hareket. Başka paket kurmazsın: sıfır bağımlılık.`, href: "/buttons" },
+  { icon: globe, color: "brand-green", title: "Tarayıcının gücü hazır", text: () => `Pano, izin, konum, bildirim, çevrimdışı, sekme eşitleme: ${S.managers} yönetici.`, href: "/managers" },
+  { icon: gauge, color: "brand-gold", title: "Küçük ve hızlı", text: () => `Sanal DOM yok; yalnız değişen yer güncellenir. Açılış bütçesi ${S.budget.boot / 1024} KB.`, href: "/speed" },
+  { icon: palette, color: "brand-purple", title: "Her şey senin", text: () => `Her metin, parça ve hareket değişir ya da kapanır. ${S.themes} tema, kendi teman.`, href: "/themes" },
+  { icon: shieldCheck, color: "brand-pink", title: "Baştan doğru", text: () => "Erişilebilirlik, sağdan sola, çok dil ve sıkı CSP ilk günden içinde.", href: "/managers-a11y" },
+]
 
 export default function Home() {
+  const title = Title()
   return <div class="sc-home">
-    <section class="sc-hero" aria-labelledby="sc-hero-title">
-      <div class="sc-hero-aurora" aria-hidden="true" use:drift>
-        {BRAND.map((c) => <span class="sc-hero-blob" style={{ "--sc-blob": tokenColor(c) }} />)}
-      </div>
-      <div class="sc-hero-mesh" aria-hidden="true" />
-      <div class="sc-hero-inner">
+    <section class="sc-hero" aria-labelledby="sc-hero-title" m:no-select
+      on:pointerdown={title.hold(true)} on:pointerup={title.hold(false)} on:pointercancel={title.hold(false)} on:pointerleave={title.hold(false)}>
+      <Overlay class="sc-hero-silk" draw={silk()} animate />
+      <Overlay class="sc-hero-dots" effect="dots" />
+      <div class="sc-hero-in">
         <div class="sc-hero-copy">
-          <span class="sc-pill" use:reveal={{ duration: 600 }}>
-            <Badge tone="primary" dot>Açık kaynak</Badge>
-            {`${S.components} bileşen · ${S.icons.total} ikon · ${S.animations.total} animasyon`}
+          <span class="sc-hero-pill">
+            <Badge tone="primary">Açık kaynak</Badge>
+            {`MIT · ${S.dependencies} bağımlılık · TypeScript`}
           </span>
-          <h1 id="sc-hero-title" class="sc-hero-title" use:reveal={{ duration: 800, delay: 80 }}>
-            <span class="sc-hero-brand">March</span>
-          </h1>
-          <p class="sc-hero-lead" use:reveal={{ duration: 800, delay: 160 }}>
-            Sinyallerle çalışan, <span class="m-gradient-text">sıfır bağımlılıklı</span> TypeScript arayüz çatısı.
-          </p>
-          <p class="sc-hero-sub" use:reveal={{ duration: 800, delay: 220 }}>
-            Bileşenler, formlar, veri, grafikler, hareket motoru ve yöneticiler tek pakette. Gerçek DOM, ince taneli
-            güncelleme, sıkı CSP, tam sağdan sola ve erişilebilirlik hazır.
-          </p>
-          <div class="sc-hero-cta" use:reveal={{ duration: 800, delay: 300 }}>
-            <Button variant="primary" size="lg" href="/start" iconEnd={arrowRight}>İlk Adımlar</Button>
-            <Button size="lg" href="/start" icon={braces}>API başvurusu</Button>
-            <Button size="lg" variant="ghost" icon={command} onClick={openPalette}>Ara <Kbd keys="mod+k" /></Button>
+          {title.view}
+          <p class="sc-hero-lead">Sinyallerle çalışan, sıfır bağımlılıklı TypeScript arayüz çatısı. <span class="sc-hero-lead-wide">Sağdaki kartları tut, sürükle; bir renge dokun: hepsi gerçek.</span>
+            <span class="sc-hero-lead-mid">Aşağıdaki kartları tut, sürükle; bir renge dokun: hepsi gerçek.</span><span class="sc-hero-lead-narrow">Aşağıdaki kartlarda bir renge dokun: hepsi gerçek.</span></p>
+          <div class="sc-hero-cta">
+            <Button variant="primary" size="lg" href="/buttons" iconEnd={arrowRight}>Bileşenleri gez</Button>
+            <Button size="lg" href="/social/post-card">Bir bileşeni parçala</Button>
+            <span class="sc-hero-npm">
+              <code>{`npm i ${PKG}`}</code>
+              <CopyButton text={`npm i ${PKG}`} label="Kopyala" copiedLabel="Kopyalandı" />
+            </span>
           </div>
         </div>
-        <div class="sc-hero-demo" use:reveal={{ duration: 900, delay: 240 }}>
-          <LivePreview />
+        <Bench />
+        <div class="sc-why">
+          <SectionLabel rule size="md" as="h2">Neden March</SectionLabel>
+          <div class="sc-why-grid">
+            {WHY.map((w) => <LinkCard class="sc-why-card" data-m-color={w.color} href={w.href} icon={w.icon} color={w.color} title={w.title} description={w.text()} arrow={false} />)}
+          </div>
         </div>
       </div>
     </section>
-    <Sections categories={<Categories />} start={<FirstExample />} />
+    <Sections />
   </div>
 }

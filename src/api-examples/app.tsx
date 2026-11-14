@@ -2,7 +2,7 @@
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
 import { signal, effect, untrack, onCleanup, locale, setLocale, messages, t } from "hadi-march";
 import { store, derive, history, on, persist, readonly, snapshot, storeLog, subscribe, type StoreEvent } from "hadi-march/store";
-import { mProps, registerMProp } from "hadi-march/props";
+import { mProps, registerMProp, withParts } from "hadi-march/props";
 import { dir, format, loadLocale, tKey, typed, unused } from "hadi-march/i18n";
 import {
   lazy, skeleton, chunksOf, loadDelay, loaderKey, prefetchCommon, preloadChunks, preloadFiles, runLoad, saveData,
@@ -56,6 +56,18 @@ mProps(h(Card, { title: "Kart" }, "…"), { "no-select": locked })`,
           <strong m:faded={on()}>Yerel öğe</strong>
           <Badge m:faded={on()}>Bileşen</Badge>
           <Out label="m:faded" value={() => String(on())} />
+        </Row>
+      },
+    },
+    withParts: {
+      code: `// what the compiler writes for <Card m:parts={{ Badge: { tone: $tone } }}>…</Card>
+withParts(new Map([[Badge, { tone }]]), () => h(Card, { title: "Kart" }, …))`,
+      run: () => {
+        const tone = signal<"success" | "danger">("success")
+        return <Row>
+          <Button onClick={() => tone.set(tone() === "success" ? "danger" : "success")}>Rozet tonunu değiştir</Button>
+          {withParts(() => new Map([[Badge, { tone: tone() }]]), () => <Card title="Kart"><Badge>Yeni</Badge> <Badge>Öne çıkan</Badge></Card>)}
+          <Out label="Badge.tone" value={() => tone()} />
         </Row>
       },
     },

@@ -3,7 +3,8 @@
 const sig: Record<string, Record<string, string>> = {
  "hadi-march/props": {
   "mProps": "function mProps<T>(target: T, props: Record<string, unknown>): T",
-  "registerMProp": "function registerMProp(name: string, apply: MProp): void"
+  "registerMProp": "function registerMProp(name: string, apply: MProp): void",
+  "withParts": "function withParts<T>(parts: PartsMap | (() => PartsMap | null | undefined), render: () => T): T"
  },
  "hadi-march/store": {
   "derive": "function derive<T>(fn: () => T): () => T",

@@ -60,13 +60,14 @@ import e55 from "./mock/net.mock--rng.x.tsx";
 import e56 from "./mock/net.mock--sample.x.tsx";
 import e57 from "./app/props--m-props.x.tsx";
 import e58 from "./app/props--register-mprop.x.tsx";
-import e59 from "./app-router/router--link.x.tsx";
-import e60 from "./app-router/router--outlet.x.tsx";
-import e61 from "./app-router/router--router.x.tsx";
-import e62 from "./app-router/router--_reset-router.x.tsx";
-import e63 from "./app-router/router--_router.x.tsx";
-import e64 from "./app-router/router--back.x.tsx";
-import e65 from "./app-router/router--before-leave.x.tsx";
+import e59 from "./app/props--with-parts.x.tsx";
+import e60 from "./app-router/router--link.x.tsx";
+import e61 from "./app-router/router--outlet.x.tsx";
+import e62 from "./app-router/router--router.x.tsx";
+import e63 from "./app-router/router--_reset-router.x.tsx";
+import e64 from "./app-router/router--_router.x.tsx";
+import e65 from "./app-router/router--back.x.tsx";
+import e66 from "./app-router/router--before-leave.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "hadi-march/motion/text#tilt": e0,
   "hadi-march/motion/text#trackIn": e1,
@@ -127,12 +128,13 @@ const examples: Record<string, ApiExample<any>> = {
   "hadi-march/net/mock#sample": e56,
   "hadi-march/props#mProps": e57,
   "hadi-march/props#registerMProp": e58,
-  "hadi-march/router#Link": e59,
-  "hadi-march/router#Outlet": e60,
-  "hadi-march/router#Router": e61,
-  "hadi-march/router#_resetRouter": e62,
-  "hadi-march/router#_router": e63,
-  "hadi-march/router#back": e64,
-  "hadi-march/router#beforeLeave": e65,
+  "hadi-march/props#withParts": e59,
+  "hadi-march/router#Link": e60,
+  "hadi-march/router#Outlet": e61,
+  "hadi-march/router#Router": e62,
+  "hadi-march/router#_resetRouter": e63,
+  "hadi-march/router#_router": e64,
+  "hadi-march/router#back": e65,
+  "hadi-march/router#beforeLeave": e66,
 };
 export default examples;
