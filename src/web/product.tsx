@@ -24,12 +24,12 @@ export default function ProductSample() {
   return <div class="sc-sample-page">
     <ScrollProgress />
     <SiteNav mode="floating" brand={{ name: "HADİ", mark: sparkles }} links={LINKS}
-      actions={<><Button variant="ghost" size="sm">Giriş</Button><Button size="sm">Ücretsiz başla</Button></>} />
-    <Hero variant="product" size="lg" eyebrow="Yeni: HADİ 2.0 yayında" eyebrowHref="#p-features"
+      actions={<><Button variant="ghost" size="sm">Giriş</Button><Button size="sm">Katıl</Button></>} />
+    <Hero variant="product" size="lg" eyebrow="Yeni: tanışma yemekleri" eyebrowHref="#p-features"
       title="Yakınındaki insanlarla bugün buluş" highlight="bugün buluş"
       lead="Sosyal ağ, sohbet ve etkinlikler tek uygulamada. Ne yapmak istediğini seç; gerisini HADİ halleder."
       actions={[{ label: "HADİ'ye katıl", iconEnd: arrowRight }, { label: "Etkinliklere göz at", variant: "secondary" }]}
-      note="Kredi kartı gerekmez · 2 dakikada kurulum" media={<MockApp /> as Node} />
+      note="Ücretsiz · telefonda ve tarayıcıda" media={<MockApp /> as Node} />
     <SiteSection space="sm">
       <LogoCloud title="Bu topluluklar HADİ'de buluşuyor" variant="marquee" logos={LOGO_NAMES.filter((name) => name !== "HADİ").map((name) => ({ name, node: <Wordmark name={name} /> }))} />
     </SiteSection>
