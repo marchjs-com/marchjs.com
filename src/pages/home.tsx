@@ -78,14 +78,16 @@ function silk(): (ctx: CanvasRenderingContext2D, info: DrawContext) => void {
 // ── the turning line of the title ───────────────────────────────────────────────────────────────────────────────
 
 type Play = (el: HTMLElement) => TextAnimation
-/** The phrases of the middle line; each enters with another text effect of hadi-march/motion/text (its export name is shown). */
+/** The phrases of the middle line; each enters with another text effect of hadi-march/motion/text (its export name is shown).
+ *  Every effect keeps its letters split when it ends (keep): the last frame is the phrase as it stays, so nothing
+ *  moves or recolours when the effect is over (plain text would kern and take the ribbon differently). */
 const PHRASES: readonly { text: string; fx: string; play: Play }[] = [
-  { text: "her parçası", fx: "cascade", play: (el) => cascade(el, { by: "char" }) },
-  { text: "her hareketi", fx: "elastic", play: (el) => elastic(el, { by: "char" }) },
-  { text: "her teması", fx: "blurIn", play: (el) => blurIn(el, { by: "char", stagger: 45 }) },
-  { text: "her formu", fx: "typewriter", play: (el) => typewriter(el, { caret: false }) },
-  { text: "her ekranı", fx: "flip", play: (el) => flip(el, { by: "char" }) },
-  { text: "her ayrıntısı", fx: "scramble", play: (el) => scramble(el, { chars: "abcçdefgğhıijklmnoöprsştuüvyz", duration: 1100 }) },
+  { text: "her parçası", fx: "cascade", play: (el) => cascade(el, { by: "char", keep: true }) },
+  { text: "her hareketi", fx: "elastic", play: (el) => elastic(el, { by: "char", keep: true }) },
+  { text: "her teması", fx: "blurIn", play: (el) => blurIn(el, { by: "char", stagger: 45, keep: true }) },
+  { text: "her formu", fx: "typewriter", play: (el) => typewriter(el, { caret: false, keep: true }) },
+  { text: "her ekranı", fx: "flip", play: (el) => flip(el, { by: "char", keep: true }) },
+  { text: "her ayrıntısı", fx: "scramble", play: (el) => scramble(el, { chars: "abcçdefgğhıijklmnoöprsştuüvyz", duration: 1100, keep: true }) },
 ]
 /** How long a phrase stays, ms. */
 const STAY = 3400
