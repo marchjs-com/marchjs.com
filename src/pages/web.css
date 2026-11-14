@@ -192,3 +192,13 @@
 @container hm-site (max-width: 760px) { .sc-live-split { grid-template-columns: minmax(0, 1fr); } }
 .sc-live-aside { display: grid; gap: var(--hm-space-4); }
 .sc-live-aside p { margin: 0; font-size: var(--hm-text-sm); }
+/* BranchingStory scenes: decorative panels in the passage colour (markup only, no images) */
+.sc-bs-scene { position: relative; display: grid; place-items: center; min-block-size: 12rem; block-size: 100%; overflow: hidden; border-radius: var(--hm-radius-3); background: radial-gradient(120% 90% at 20% 10%, color-mix(in srgb, var(--hm-accent, var(--hm-primary)) 55%, transparent), transparent 60%), linear-gradient(160deg, color-mix(in srgb, var(--hm-accent, var(--hm-primary)) 28%, var(--hm-surface-2)), var(--hm-surface-2)); }
+.sc-bs-scene i { position: absolute; border-radius: 50%; background: color-mix(in srgb, var(--hm-accent, var(--hm-primary)) 35%, transparent); }
+.sc-bs-scene i:nth-child(1) { inline-size: 9rem; block-size: 9rem; inset-block-start: -2rem; inset-inline-end: -1rem; }
+.sc-bs-scene i:nth-child(2) { inline-size: 5rem; block-size: 5rem; inset-block-end: 1rem; inset-inline-start: 1.5rem; opacity: .7; }
+.sc-bs-scene i:nth-child(3) { inline-size: 2.5rem; block-size: 2.5rem; inset-block-start: 40%; inset-inline-start: 45%; opacity: .5; }
+.sc-bs-scene span { position: relative; font-size: var(--hm-text-4xl); font-weight: var(--hm-weight-bold, 700); color: var(--hm-accent-text, var(--hm-text)); letter-spacing: -.02em; }
+.sc-bs-wave i:nth-child(2), .sc-bs-table i:nth-child(1) { border-radius: var(--hm-radius-4); }
+.sc-bs-dice i { border-radius: var(--hm-radius-3); transform: rotate(18deg); }
+.sc-story-wrap { max-inline-size: 64rem; margin-inline: auto; }

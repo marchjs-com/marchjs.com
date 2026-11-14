@@ -23,6 +23,7 @@ const LOAD: Record<string, () => unknown> = {
   redesign: lazy(() => import("../web/redesign.tsx"), { placeholder: "block", height: "100vh" }),
   honest: lazy(() => import("../web/honest.tsx"), { placeholder: "block", height: "100vh" }),
   live: lazy(() => import("../web/live.tsx"), { placeholder: "block", height: "100vh" }),
+  story: lazy(() => import("../web/story.tsx"), { placeholder: "block", height: "100vh" }),
 }
 // the source file and the blocks of each sample (title and description: topics.ts)
 const PARTS: Record<string, { file: string; blocks: string[] }> = {
@@ -32,6 +33,7 @@ const PARTS: Record<string, { file: string; blocks: string[] }> = {
   redesign: { file: "redesign.tsx", blocks: ["before-after", "site-nav", "hero", "stats-band", "cta-band", "site-footer", "site-section"] },
   honest: { file: "honest.tsx", blocks: ["not-for-you", "honest-compare", "site-nav", "hero", "cta-band", "site-footer", "site-section"] },
   live: { file: "live.tsx", blocks: ["live-feed", "live-counter", "counter", "site-nav", "hero", "cta-band", "site-footer", "site-section"] },
+  story: { file: "story.tsx", blocks: ["branching-story", "site-nav", "hero", "cta-band", "site-footer", "site-section"] },
 }
 const SAMPLES = (HUBS["/sites"] ?? []).filter((t) => LOAD[t.slug]).map((t) => ({ view: t.slug, title: t.title, ...PARTS[t.slug]! }))
 type Sample = typeof SAMPLES[number]

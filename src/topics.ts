@@ -307,6 +307,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "honest-compare", title: "Dürüst karşılaştırma", desc: "Rakiplerle tablo; geride kalınan satırlar işaretli ve gerekçeli, özet ve yalnız eksikleri gösteren süzgeç.", group: "Bloklar" },
     { slug: "live-feed", title: "Canlı akış", desc: "Yeni etkinlik üstten kayarak gelir, en eskisi gider; üstüne gelince ya da düğmeyle durur.", group: "Bloklar" },
     { slug: "live-counter", title: "Canlı sayaç", desc: "Sen bakarken büyüyen sayı: bir sinyalden ya da dakikadaki artışla; odometre basamakları ve canlı noktası.", group: "Bloklar" },
+    { slug: "branching-story", title: "Dallanan hikâye", desc: "Seçimlerle ilerleyen hikâye: geri sarılan yol, bulunan sonlar, 3B sayfa çevirme, 1–9 tuşları.", group: "Bloklar" },
     { slug: "site-section", title: "Bölüm çerçevesi", desc: "Her bloğun çerçevesi: genişlik, dikey ritim, ton ve beliren başlık grubu.", group: "Bloklar" },
   ],
   "/sites": [
@@ -316,6 +317,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "redesign", title: "Yeniden tasarım", desc: "Anlatmak yerine göster: eski ve yeni ekran sürüklenen ayırıcıyla; akış, profil ve okuma için ayrı karşılaştırmalar.", group: "Siteler" },
     { slug: "honest", title: "Herkes için değil", desc: "Anti-landing: önce kimin için olmadığı (işaretle, sonucu gör), geride kalınan satırlarıyla karşılaştırma.", group: "Siteler" },
     { slug: "live", title: "Canlı duvar", desc: "Sen bakarken büyüyen sayaçlar ve durmadan gelen etkinlik duvarı: sayfa kalabalık olduğunu söylemez, gösterir.", group: "Siteler" },
+    { slug: "story", title: "Kendi hikâyeni seç", desc: "Özellik listesi yerine oynanan bir hafta sonu: her seçim ürünün başka bir yüzünü gösterir; geri sarılan yol, bulunan sonlar.", group: "Siteler" },
   ],
 };
 
