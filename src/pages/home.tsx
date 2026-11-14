@@ -6,7 +6,8 @@
 // (tools/gen-home-stats.js) and march-report.json.
 import "./home.css";
 import { lazy } from "hadi-march/lazy";
-import { onFrame, inView, reducedMotion } from "hadi-march/motion";
+import { onFrame, inView, reducedMotion, spotlight } from "hadi-march/motion";
+import { onCleanup } from "hadi-march";
 import { cascade, elastic, blurIn, typewriter, flip, scramble, fade, type TextAnimation } from "hadi-march/motion/text";
 import { Button, Badge, CopyButton, LinkCard, SectionLabel, Overlay, resolvedTheme, type DrawContext } from "hadi-march/ui";
 import { Link } from "hadi-march/router";
@@ -148,7 +149,8 @@ const WHY: readonly { icon: unknown; color: ColorToken; title: string; text: () 
 
 export default function Home() {
   const title = Title()
-  return <div class="sc-home">
+  // one light follows the pointer over the cards of the home page (only here: other pages stay calm)
+  return <div class="sc-home" ref={(el: Element) => onCleanup(spotlight(el, { selector: ".sc-why-card, .sc-card, .sc-home-cat, .m-link-card" }))}>
     <section class="sc-hero" aria-labelledby="sc-hero-title" m:no-select
       on:pointerdown={title.hold(true)} on:pointerup={title.hold(false)} on:pointercancel={title.hold(false)} on:pointerleave={title.hold(false)}>
       <Overlay class="sc-hero-silk" draw={silk()} animate />

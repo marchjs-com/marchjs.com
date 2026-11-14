@@ -14,6 +14,7 @@ import { defineIcon, monitor, phone, sun, moon, pilcrow, refresh, rotateCw, laye
 import { scopedMode, type StageMode } from "./stage-mode.ts";
 import { partOptions, partsAttr, parseParts, choices, type ExtraAttr, type PartOption } from "./gen-code.ts";
 import { CodeBox } from "./wb-code.tsx";
+import { WorkbenchTabs } from "./wb-tabs.tsx";
 import { cards, type CardEntry } from "hadi-march/components/cards.gen.ts";
 import { optionRow, type PlayOption } from "./playground.tsx";
 import { demoId, type DemoView } from "./component-demo.tsx";
@@ -133,8 +134,40 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
       apart.set(true)
     })
   }
+  // ---- a composite on the stage: a press on one of its parts chooses it (its options open), hovering outlines it.
+  // The parts are found by their root classes (cards-roots.gen.ts); the innermost one under the pointer wins
+  let rootsOf: Record<string, string> | null = null
+  if (parts.length) void import("hadi-march/components/cards-roots.gen.ts").then((m) => { rootsOf = m.roots })
+  const partAt = (target: EventTarget | null): [string, Element] | null => {
+    if (!rootsOf || !(target instanceof Element)) return null
+    let best: [string, Element] | null = null
+    for (const name of parts) {
+      const cls = rootsOf[name], el = cls ? target.closest(`.${cls}`) : null
+      if (el && (frame as Element).contains(el) && (!best || best[1].contains(el))) best = [name, el]
+    }
+    return best
+  }
+  let hovered: Element | null = null
+  const hover = (el: Element | null): void => { if (hovered === el) return; hovered?.classList.remove("sc-wb-hover"); hovered = el; el?.classList.add("sc-wb-hover") }
+  const marked = new Set<Element>()
+  effect(() => {
+    const name = chosen(), cls = name && rootsOf?.[name]; run(); shape()
+    for (const el of marked) el.classList.remove("sc-wb-chosen")
+    marked.clear()
+    if (cls && !apart()) queueMicrotask(() => (frame as Element).querySelectorAll(`.${cls}`).forEach((el) => { el.classList.add("sc-wb-chosen"); marked.add(el) }))
+  })
+  const stageEvents = parts.length ? {
+    "on:click": (e: MouseEvent) => {
+      if (apart.peek()) return
+      const hit = partAt(e.target)
+      if (!hit) { chosen.set(null); return }
+      void loadParts().then(() => chosen.set(hit[0]))
+    },
+    "on:pointerover": (e: PointerEvent) => { if (!apart.peek()) hover(partAt(e.target)?.[1] ?? null) },
+    "on:pointerleave": () => hover(null),
+  } : {}
   // one view for every stage look: the same element moves between the plain stage and the device screen
-  const frame = <div class="sc-wb-frame" dir={() => (rtl() ? "rtl" : null)}>
+  const frame = <div class={`sc-wb-frame${parts.length ? " sc-wb-pickable" : ""}`} dir={() => (rtl() ? "rtl" : null)} {...stageEvents}>
     <ExplodedView open={apart()} parts={plates()} target={rootSel} fit={560} active={chosen() ?? picked()} label="Parçalarına ayrılmış bileşen"
       onPick={(id: string) => { if (parts.includes(id)) choose(id); else picked.set(picked.peek() === id ? null : id) }}>
       {() => { run(); shape(); return untrack(() => withParts(partsMap, () => <View values={live as never} />)) }}
@@ -161,7 +194,7 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
     batch(() => { values.set(defaults()); userExtras.set([]); partVals.set({}) })
   }
   const canReset = (): boolean => { const name = chosen(); return name ? !!partVals()[name] : changed() || allExtras().length > 0 }
-  const hint = (): string => (chosen() ? "Bu parçada yaptığın değişiklik bileşenin koduna m:parts olarak yazılır." : "Bileşenin kendi seçenekleri. Bir parçanın seçenekleri için adına ya da ayrıkken plakasına tıkla.")
+  const hint = (): string => (chosen() ? "Bu parçada yaptığın değişiklik bileşenin koduna m:parts olarak yazılır." : "Bileşenin kendi seçenekleri. Bir parçanın seçenekleri için sahnede ona ya da yukarıda adına tıkla.")
   const moreProps = (): { name: string; hint: string; value: string }[] => (parts.length ? [{ name: "m:parts", hint: "parçaların özellikleri", value: `={{ ${parts[0]!}: {  } }}` }] : [])
   /** The options panel of a chosen part: the options of its own playground that work from outside. */
   const partRows = (name: string): unknown => {
@@ -211,5 +244,6 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
         {() => { const name = chosen(); return name ? untrack(() => partRows(name)) : null }}
       </div>
     </div></div>
+    <WorkbenchTabs entry={props.entry} spec={spec} values={values} />
   </>
 }
