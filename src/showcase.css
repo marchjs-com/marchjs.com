@@ -417,3 +417,6 @@ a.sc-part:hover, a.sc-part:focus-visible { border-color: var(--hm-primary); colo
 .sc-a6-rz-stage-end { justify-content: flex-end; }
 .sc-a6-rz { position: relative; display: grid; align-content: start; gap: var(--hm-space-2); max-inline-size: 100%; padding: var(--hm-space-3) var(--hm-space-4); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); background: var(--hm-surface); }
 .sc-a6-rz > p { margin: 0; overflow: hidden; }
+/* top bar: the breadcrumb takes the free width (it measures its box to decide what to fold away) */
+.sc-top-crumbs { flex: 1 1 auto; min-inline-size: 0; }
+.sc-top-crumbs > .hm-lazy-slot { inline-size: 100%; }

@@ -26,7 +26,7 @@ function Topbar() {
   // instant on the click: the path changes at once, the title is looked up from it
   const title = () => { const p = path(); return p !== "/" ? titleOf(p) : undefined }
   return <>
-    <Crumbs label="Konum" separator="/" items={() => { const t = title(); return [{ id: "home", label: "March", href: "/" as const }, ...(t ? [{ id: "page", label: t }] : [])] }} />
+    <div class="sc-top-crumbs"><Crumbs label="Konum" separator="/" items={() => { const t = title(); return [{ id: "home", label: "March", href: "/" as const }, ...(t ? [{ id: "page", label: t }] : [])] }} /></div>
     <Spacer />
     <ShellTools />
   </>
