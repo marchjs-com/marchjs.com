@@ -7,8 +7,9 @@ import { Link, type Href } from "hadi-march/router";
 import { Button, OverflowToolbar, resolvedTheme, type ToolbarItem } from "hadi-march/ui";
 import type { PlaygroundOption, PlaygroundSpec } from "hadi-march/ui";
 import { DevicePreview } from "hadi-march/components/layout/device-preview/index.ts";
+import { ExplodedView, type ExplodedPart } from "hadi-march/components/layout/exploded-view/index.ts";
 import { viewport } from "hadi-march/managers/viewport";
-import { defineIcon, monitor, phone, sun, moon, pilcrow, refresh, rotateCw } from "hadi-march/icons";
+import { defineIcon, monitor, phone, sun, moon, pilcrow, refresh, rotateCw, layers } from "hadi-march/icons";
 import { scopedMode, type StageMode } from "./stage-mode.ts";
 import type { ExtraAttr } from "./gen-code.ts";
 import { CodeBox } from "./wb-code.tsx";
@@ -66,8 +67,30 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
   const dark = (): boolean => (mode() ?? resolvedTheme()) === "dark"
   const vars = scopedMode(mode)
   const wide = signal(true)
+  // ---- "Parçalarına ayır": the same component on the stage comes apart (ExplodedView). A composite (meta.composedOf):
+  // the components it is built from, found by their root classes; a plain component: its layers
+  const apart = signal(false), picked = signal<string | null>(null)
+  const plates = signal<readonly ExplodedPart[] | undefined>(undefined)
+  const rootSel = (spec.code && typeof spec.code === "object" ? spec.code.root : undefined) ?? '[class^="m-"], [class*=" m-"]'
+  const explode = (): void => {
+    const next = !apart.peek()
+    if (!next || !parts.length) { apart.set(next); return }
+    void import("hadi-march/components/cards-roots.gen.ts").then(({ roots }) => {
+      const stage = frame as Element, own = roots[props.entry.n]
+      // the parts that are on the stage now; the composite's own surface (a Card that is its root) stays the base plate
+      const found = parts.filter((name) => roots[name] && stage.querySelector(`.${roots[name]!}`))
+        .map((name): ExplodedPart => ({ selector: `.${roots[name]!}`, label: name, ...(own && stage.querySelector(`.${roots[name]!}`)!.classList.contains(own) ? { level: 0 } : {}) }))
+      // nothing of it on the stage (a Button's Spinner shows only while loading): the layers of the component itself
+      plates.set(found.length ? found : undefined)
+      apart.set(true)
+    })
+  }
   // one view for every stage look: the same element moves between the plain stage and the device screen
-  const frame = <div class="sc-wb-frame" dir={() => (rtl() ? "rtl" : null)}>{() => { run(); return untrack(() => <View values={live as never} />) }}</div>
+  const frame = <div class="sc-wb-frame" dir={() => (rtl() ? "rtl" : null)}>
+    <ExplodedView open={apart()} parts={plates()} target={rootSel} fit={560} active={picked()} onPick={(id: string) => picked.set(picked.peek() === id ? null : id)} label="Parçalarına ayrılmış bileşen">
+      {() => { run(); return untrack(() => <View values={live as never} />) }}
+    </ExplodedView>
+  </div>
   const tools = computed((): ToolbarItem[] => {
     const showLabel = wide()
     return [
@@ -80,6 +103,7 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
       { id: "dark", label: "Koyu", icon: moon, priority: 4, showLabel, pressed: dark, onSelect: () => mode.set("dark") },
       { id: "s2", separator: true },
       { id: "rtl", label: "Sağdan sola", icon: pilcrow, priority: 3, showLabel, pressed: rtl, onSelect: () => rtl.set(!rtl.peek()) },
+      { id: "explode", label: () => (apart() ? "Birleştir" : "Parçalarına ayır"), icon: layers, priority: 7, showLabel, pressed: apart, onSelect: explode },
     ]
   })
   const size = (): string => { const d = device(); if (!d) return ""; const [w, h] = SIZES[d]; return `${DEVICES[d].name} · ${land() ? h : w} × ${land() ? w : h}` }
@@ -91,7 +115,7 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
           <OverflowToolbar label="Sahne araçları" items={tools} moreLabel="Diğer sahne araçları"
             end={<Button size="sm" variant="ghost" icon={refresh} title="Yeniden oynat" aria-label="Yeniden oynat" on:click={() => run.set(run.peek() + 1)}>{() => (wide() ? "Yeniden oynat" : null)}</Button>} />
         </div>
-        <div class={() => `sc-play-stage sc-wb-stage${spec.stage === "center" || device() ? " sc-wb-center" : ""}${device() ? " sc-wb-device" : ""}${mode() ? ` sc-wb-${mode()}` : ""}`} style={vars}>
+        <div class={() => `sc-play-stage sc-wb-stage${spec.stage === "center" || device() ? " sc-wb-center" : ""}${device() ? " sc-wb-device" : ""}${apart() ? " sc-wb-apart" : ""}${mode() ? ` sc-wb-${mode()}` : ""}`} style={vars}>
           {() => (device() ? <span class="sc-wb-devinfo">{size}</span> : null)}
           {() => { const d = device(); return d ? untrack(() => <DevicePreview device={DEVICES[d].id} landscape={land()} time="9:41" fitHeight={520} label={`${DEVICES[d].name} önizlemesi`}>{frame}</DevicePreview>) : frame }}
         </div>

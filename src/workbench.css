@@ -26,6 +26,9 @@
 .sc-wb-device > .m-device-stage { align-self: stretch; }
 .sc-wb-devinfo { position: absolute; inset-block-start: var(--m-space-2); inset-inline-start: var(--m-space-3); z-index: 1; font: 600 var(--m-text-xs) / 1.4 var(--m-font-mono); color: var(--m-muted); }
 .sc-wb-device .m-device-viewport > .sc-wb-frame { padding: var(--m-space-4); box-sizing: border-box; min-block-size: 100%; }
+/* "Parçalarına ayır": the stage gives the tilted stack room and cuts what leaves it */
+.sc-wb-apart { overflow: hidden; min-block-size: 30rem; align-items: center; justify-content: center; }
+.sc-wb-apart > .sc-wb-frame { flex: none; max-inline-size: 100%; }
 /* the code under the stage: always there, never taller than a few lines (it scrolls) */
 .sc-wb-code { border-block-start: var(--m-border-w, 1px) solid var(--m-border); min-inline-size: 0; }
 .sc-wb-code .m-code { border: 0; border-radius: 0; }

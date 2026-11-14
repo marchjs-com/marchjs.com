@@ -143,6 +143,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "bottom-right-controls", title: "Sayfa köşeleri", name: "BottomRightControls", desc: "Sayfa çapı denetimler dört köşeden birine sırayla yerleşir, üst üste binmez; sağdan sola yazımda aynalanır.", group: "Yerleşim" },
     { slug: "overlay-scope", title: "Katman kapsamı", name: "OverlayScope", desc: "İçinde açılan çekmece, pencere, menü ve bildirim bu kutuda kalır; kipli pencere yalnız kutuyu kilitler.", group: "Yerleşim" },
     { slug: "window", title: "Pencere", name: "Window", desc: "Başlıktan sürükle; kenara bırakınca yarısına, üste bırakınca tamamına yerleşir; başlığa çift tıkla: alanı…", group: "Yerleşim" },
+    { slug: "exploded-view", title: "Parçalarına ayır", name: "ExplodedView", desc: "Aynı öğeler eğilir, plaka plaka yükselir ve geri birleşir: bir kartın parçaları ya da bir öğenin katmanları.", group: "Yerleşim" },
     { slug: "device-preview", title: "Cihaz önizlemesi", name: "DevicePreview", desc: "Telefon ve tablet kasası, çentik, durum çubuğu, gerçek ekran boyu, döndürme; fare parmak gibi:…", group: "Yerleşim" },
     { slug: "app-shell", title: "Uygulama kabuğu", name: "AppShell", desc: "Kenar çubuğu sütunu, üst duyuru ve kayan ana alan; önce gelen 'İçeriğe geç' bağlantısı.", group: "Yerleşim" },
     { slug: "panel-header", title: "Panel başlığı", name: "PanelHeader", desc: "Panelin üst (ya da alt) çubuğu: ikon, başlık, alt başlık, sayı, eylemler ve kapat düğmesi; sürükleme tutamacı da olur.", group: "Yerleşim" },
