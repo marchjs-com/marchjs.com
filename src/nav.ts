@@ -32,7 +32,7 @@ export const PAGES: PageInfo[] = [
   { path: "/overlay", title: "Overlay" },
   { path: "/language", title: "March dili" },
   { path: "/managers", title: "Yöneticiler" },
-  { path: "/web", title: "Web siteleri" },
+  { path: "/web", title: "Web sitesi bileşenleri" },
   { path: "/sites", title: "Örnek web siteleri" },
   { path: "/managers-data", title: "Yöneticiler: veri ve durum" },
   { path: "/managers-ops", title: "Yöneticiler: bayrak, günlük, performans" },

@@ -7,7 +7,7 @@ import { Hub } from "../hub.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
 import { HUBS } from "../topics.ts";
 
-export const title = "Web siteleri"
+export const title = "Web sitesi bileşenleri"
 
 function Blocks(props: { params?: { rest?: string } | undefined }) {
   const RENDER: Record<string, () => unknown> = {
@@ -38,7 +38,7 @@ function Blocks(props: { params?: { rest?: string } | undefined }) {
     "honest-compare": () => <ComponentDemo folder="landing/honest-compare" title="Dürüst karşılaştırma" desc="Var / kısmen / yok ya da metin. Her satırda ürün en iyi rakiple kıyaslanır: önde, eşit ya da geride. Geride olunan satırın notu hep görünür; süzgeç yalnız onları bırakır. İlk sütun yatay kaydırmada sabit." />,
     "site-section": () => <ComponentDemo folder="landing/site-section" title="Bölüm çerçevesi" desc="Her bloğun çerçevesi: genişlik, dikey ritim, ton ve beliren başlık grubu." />,
   }
-  return <Hub section="/web" kicker="Bileşenler" title="Web siteleri" lead="Tanıtım, ana sayfa, portfolyo ve sunum için bloklar. Bunlarla kurulmuş tam sayfalar Örnek web siteleri bölümünde. Her blok mevcut bileşenlerden kurulur, hareket motoruyla canlanır, temaya, RTL'ye ve dile uyar. Yalnız kullanılan blok derlenir." render={RENDER} params={props.params} />
+  return <Hub section="/web" kicker="Bileşenler" title="Web sitesi bileşenleri" lead="Tanıtım, ana sayfa, portfolyo ve sunum için bloklar. Bunlarla kurulmuş tam sayfalar Örnek web siteleri bölümünde. Her blok mevcut bileşenlerden kurulur, hareket motoruyla canlanır, temaya, RTL'ye ve dile uyar. Yalnız kullanılan blok derlenir." render={RENDER} params={props.params} />
 }
 
 export default function WebPage(props: { params?: { rest?: string } }) {

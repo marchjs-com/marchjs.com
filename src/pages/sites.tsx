@@ -114,7 +114,7 @@ export default function SitesPage(props: { params?: { rest?: string } }) {
   const view = computed(() => (props.params?.rest ?? "").split("/")[0] ?? "")
   return <>{() => {
     const sample = SAMPLES.find((x) => x.view === view())
-    if (!sample) return <Hub section="/sites" kicker="Landing" title="Örnek web siteleri" lead="Yalnız Web siteleri bloklarıyla kurulmuş tam sayfalar. Her biri kendi penceresinde açılır: cihaz, tema ve yazı yönü yalnız önizlemede değişir; hangi bloklardan oluştuğu ve kaynağı üst çubukta." render={{}} params={props.params} />
+    if (!sample) return <Hub section="/sites" kicker="Landing" title="Örnek web siteleri" lead="Yalnız web sitesi bileşenleriyle kurulmuş tam sayfalar. Her biri kendi penceresinde açılır: cihaz, tema ve yazı yönü yalnız önizlemede değişir; hangi bloklardan oluştuğu ve kaynağı üst çubukta." render={{}} params={props.params} />
     const S = LOAD[sample.view] as () => unknown
     // inside the preview iframe (?bare=1): the site alone, with the theme and direction the preview bar picked
     if (query()["bare"] !== undefined) {
