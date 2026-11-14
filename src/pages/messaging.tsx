@@ -95,7 +95,7 @@ function TabNotes() {
     </div>
     <p class="sc-msg-muted">Bu sekme: {TAB}</p>
     {$notes.length
-      ? <ul class="sc-msg-list">{$notes.map((n) => <li><Chip size="sm" color={n.tab === TAB ? "neutral" : "brand-blue"}>{n.tab === TAB ? "bu sekme" : `sekme ${n.tab}`}</Chip> {n.text}</li>)}</ul>
+      ? <ul class="sc-msg-list">{$notes.map((n) => <li><Chip size="sm" m:color={n.tab === TAB ? "neutral" : "brand-blue"}>{n.tab === TAB ? "bu sekme" : `sekme ${n.tab}`}</Chip> {n.text}</li>)}</ul>
       : <p class="sc-msg-muted">Henüz not yok. Sayfayı ikinci bir sekmede açıp oradan yaz.</p>}
   </div>
 }
@@ -130,8 +130,8 @@ function TrafficLog() {
       ? <ol class="sc-msg-log" aria-live="polite">{$entries.map((e) => <li>
           <span class="sc-msg-muted">{time(e.time)}</span>
           <code>{e.name}</code>
-          {e.from === "tab" ? <Chip size="sm" color="brand-blue">diğer sekme</Chip> : null}
-          {e.scope !== "app" ? <Chip size="sm" color="brand-purple">{e.scope}</Chip> : null}
+          {e.from === "tab" ? <Chip size="sm" m:color="brand-blue">diğer sekme</Chip> : null}
+          {e.scope !== "app" ? <Chip size="sm" m:color="brand-purple">{e.scope}</Chip> : null}
           <span class="sc-msg-payload">{show(e.payload)}</span>
           <span class="sc-msg-muted">{e.listeners} dinleyici</span>
         </li>)}</ol>

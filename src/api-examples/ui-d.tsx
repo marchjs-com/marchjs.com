@@ -175,13 +175,13 @@ export default examples({
     },
     Steps: {
       code: `<Steps steps={[{ title: "Hesap" }, { title: "Ekip" }, { title: "Bitti" }]}
-  current={step} onSelect={(i) => step.set(i)} color="brand-green" />`,
+  current={step} onSelect={(i) => step.set(i)} m:color="brand-green" />`,
       play: { options: [{ key: "color", label: "Renk", default: "primary", options: COLORS }, { key: "vertical", label: "Dikey", default: false }] },
       run: (p: { values: { color: string; vertical: boolean } }) => {
         const step = signal(1)
         const steps = [{ title: "Hesap", description: "E-posta" }, { title: "Ekip", description: "Üyeler" }, { title: "Bitti" }]
         return <div class="sc-ex-stack">
-          {() => { const { color, vertical } = p.values; return <Steps steps={steps} current={step} onSelect={(i: number) => step.set(i)} color={color as ColorToken} vertical={vertical} /> }}
+          {() => { const { color, vertical } = p.values; return <Steps steps={steps} current={step} onSelect={(i: number) => step.set(i)} m:color={color as ColorToken} vertical={vertical} /> }}
           <Row><Button size="sm" variant="ghost" disabled={() => step() === 0} onClick={() => step.update((x) => x - 1)}>Geri</Button><Button size="sm" disabled={() => step() === 2} onClick={() => step.update((x) => x + 1)}>İleri</Button></Row>
         </div>
       },

@@ -94,7 +94,7 @@ function ThemeTile() {
 function ChatTile() {
   return <Tile class="sc-btile-chat" depth={0.6} order={1} title="Sohbet">
     <ChatBubble text="Cumartesi konsere geliyor musun?" swipe={false} tools={false} />
-    <ChatBubble mine color="primary" text="Biletimi aldım bile, kapıda buluşalım" swipe={false} tools={false} />
+    <ChatBubble mine m:color="primary" text="Biletimi aldım bile, kapıda buluşalım" swipe={false} tools={false} />
     <TypingIndicator names={["Deniz"]} />
   </Tile>
 }
@@ -120,7 +120,7 @@ function ControlsTile(props: { onJoin: () => void }) {
     <div class="sc-btile-ctl-row">
       <Button variant="primary" icon={sparkles} on:click={(e: Event) => { heartBurst(e.currentTarget as HTMLElement, { radius: 46 }); props.onJoin() }}>Katıl</Button>
       <LikeButton liked={$liked} count={$likes} countFormat="full" label="Beğen" onToggle={(on: boolean) => { $liked = on; $likes += on ? 1 : -1 }} />
-      <Rating bind:value={$stars} color="brand-gold" label="Puan" />
+      <Rating bind:value={$stars} m:color="brand-gold" label="Puan" />
     </div>
   </Tile>
 }

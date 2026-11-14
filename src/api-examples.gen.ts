@@ -55,7 +55,7 @@ const bySubpath: Record<string, [part: number, first: string][]> = {
   "hadi-march/managers/shortcut-hint/ui": [[5,"ShortcutHelp"]],
   "hadi-march/managers/undo": [[5,"undoHistory"]],
   "hadi-march/managers/undo/history": [[5,"create"]],
-  "hadi-march/motion": [[5,"COMPOSITOR"],[6,"defineEasing"],[7,"stack"]],
+  "hadi-march/motion": [[5,"COMPOSITOR"],[6,"defineMotion"],[7,"stack"]],
   "hadi-march/motion/text": [[7,"blurIn"],[8,"tilt"]],
   "hadi-march/motion/text/meta": [[8,"TEXT_ANIMATIONS"]],
   "hadi-march/net": [[8,"Api"]],

@@ -59,6 +59,7 @@ import e54 from "./motion-a/motion--css-vars.x.tsx";
 import e55 from "./motion-a/motion--cube.x.tsx";
 import e56 from "./motion-a/motion--curtain.x.tsx";
 import e57 from "./motion-a/motion--define-driver.x.tsx";
+import e58 from "./motion-a/motion--define-easing.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "hadi-march/managers#scrollManager": e0,
   "hadi-march/managers#session": e1,
@@ -118,5 +119,6 @@ const examples: Record<string, ApiExample<any>> = {
   "hadi-march/motion#cube": e55,
   "hadi-march/motion#curtain": e56,
   "hadi-march/motion#defineDriver": e57,
+  "hadi-march/motion#defineEasing": e58,
 };
 export default examples;

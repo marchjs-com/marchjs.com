@@ -29,7 +29,7 @@ function words(el: Element): () => void {
 
 /** The head of a section: a small colored kicker, the title built word by word, an optional lead. */
 function Head(props: { kicker: string; title: string; lead?: string; color: ColorToken; id: string }) {
-  return <SectionHead class="sc-sec-head" align="start" width="full" size="lg" color={props.color} eyebrow={props.kicker} titleId={props.id}
+  return <SectionHead class="sc-sec-head" align="start" width="full" size="lg" m:color={props.color} eyebrow={props.kicker} titleId={props.id}
     title={<span use:words>{props.title}</span>} lead={props.lead} reveal={{ effect: "up", stagger: 90 }} />
 }
 
@@ -75,7 +75,7 @@ function WorldMap() {
       {worlds.map(({ s, rows }) => <Card class={`sc-map-world sc-card${rows.length > LONG ? " is-wide" : ""}`} title={s.label} subtitle={s.desc}>
         <Reveal class="sc-map-rows" effect="start" distance={14} stagger={45} delay={250} duration={500}>
           {rows.map((p) => { const n = under(p), color = BRAND_COLORS_ALL[k++ % BRAND_COLORS_ALL.length]!; return <ListRow class="sc-map-row" href={p.path} overflow="ellipsis" color={color}
-            lead={<IconTile icon={p.icon} color={color} size="sm" />} title={p.title} sub={p.desc}
+            lead={<IconTile icon={p.icon} m:color={color} size="sm" />} title={p.title} sub={p.desc}
             trail={n ? <span class="sc-map-n" data-m-color={color}>{n}</span> : undefined} /> })}
         </Reveal>
       </Card>)}
@@ -101,7 +101,7 @@ function Fast(props: { report: () => Report | null }) {
   return <section class="sc-sec" aria-labelledby="sc-fast-h">
     <Head id="sc-fast-h" kicker="Hız ve boyut" color="brand-blue" title="Küçük açılır, büyüdükçe yavaşlamaz" />
     <Reveal class="sc-fast" effect="up" stagger={90}>
-      {cards.map((c) => <StatTile class="sc-fast-card sc-card" variant="card" size="xl" align="start" color={c.color} value={c.value} label={c.label}
+      {cards.map((c) => <StatTile class="sc-fast-card sc-card" variant="card" size="xl" align="start" m:color={c.color} value={c.value} label={c.label}
         hint={<>{c.text}{() => { const m = c.more?.(); return m ? <span class="sc-fast-more">{m}</span> : null }}</>} />)}
     </Reveal>
     <Link href="/speed" class="sc-fast-link">Canlı ağ paneli</Link>

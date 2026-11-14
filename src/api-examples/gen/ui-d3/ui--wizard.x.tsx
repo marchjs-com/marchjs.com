@@ -22,7 +22,7 @@ const example: ApiExample<any> = {
           { title: "Konular", schema: schema({ weekly: { type: "bool", label: "Haftalık özet", control: "switch" }, product: { type: "bool", label: "Ürün haberleri", control: "switch" } }) },
         ]
         return <div class="sc-ex-stack">
-          {() => { const color = p.values.color; return <Wizard color={color as ColorToken} steps={steps()} initial={{ email: "ada@hadisosyal.com" }} submitLabel="Abone ol"
+          {() => { const color = p.values.color; return <Wizard m:color={color as ColorToken} steps={steps()} initial={{ email: "ada@hadisosyal.com" }} submitLabel="Abone ol"
             onStep={(i: number) => step.set(i)} onSubmit={(v: Record<string, unknown>) => result.set(JSON.stringify(v))} /> }}
           <Row><Out label="adım" value={() => step() + 1} /><Out label="gönderilen" value={result} /></Row>
         </div>
