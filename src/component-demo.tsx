@@ -61,6 +61,7 @@ export function ComponentDemo(props: { folder: string; title?: string; desc?: st
   const entry = cards.find((e) => e.f === props.folder)!
   return <Demo wide id={demoId(props.folder)} title={props.title ?? entry.n} desc={props.desc ?? entry.s} code={props.code ?? (() => cardCode(props.folder))}>
     <ComposedOf parts={entry.p ?? []} />
+    {entry.a ? <p class="sc-parts"><span class="sc-parts-label">API başvurusu:</span><Link class="sc-part" href={`/api/${entry.a}` as Href}>{entry.a.split("/").pop()}</Link></p> : null}
     {props.view && props.spec ? <PlayStage view={props.view} spec={props.spec} /> : <Stage folder={props.folder} />}
   </Demo>
 }

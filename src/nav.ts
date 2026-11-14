@@ -3,7 +3,7 @@
 // idle) and the home page load.
 import { TOPIC_PAGES } from "./topics.ts";
 
-export interface PageInfo { path: string; title: string; /** The page this one is listed under in the menu. */ parent?: string; desc?: string }
+export interface PageInfo { path: string; title: string; /** The page this one is listed under in the menu. */ parent?: string; desc?: string; /** March name of the component(s) on the page (topics.ts). */ name?: string }
 export const PAGES: PageInfo[] = [
   { path: "/", title: "Merhaba" },
   { path: "/start", title: "İlk Adımlar" },

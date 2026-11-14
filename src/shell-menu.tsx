@@ -9,7 +9,8 @@ import { withMeta, MENU_GROUPS } from "./nav-meta.ts";
 export const marchMark = defineIcon("march", ["M5 19V6.5l7 7 7-7V19"]);
 
 export default function ShellMenu() {
-  const items = withMeta(pages()).filter((p) => p.path !== "/").map((p) => ({ id: p.path, label: p.title, sub: p.desc, href: p.path as Href, icon: p.icon, group: p.group, parent: p.parent, keywords: p.desc }))
+  // a component page shows its Turkish title with the March name under it ("Bülten formu" / Newsletter)
+  const items = withMeta(pages()).filter((p) => p.path !== "/").map((p) => ({ id: p.path, label: p.title, sub: p.name ?? p.desc, href: p.path as Href, icon: p.icon, group: p.group, parent: p.parent, keywords: p.name ? `${p.name} ${p.desc ?? ""}` : p.desc }))
   const featured = [
     { id: "/", label: "Merhaba", sub: "Genel bakış ve canlı sayaç", href: "/" as Href, icon: dashboard },
     { id: "palette", label: "Komut paleti", sub: "Sayfa, tema ya da eylem ara", icon: command, onSelect: openPalette },
