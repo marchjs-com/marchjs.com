@@ -18,7 +18,7 @@ const sig: Record<string, Record<string, string>> = {
   "colorAt": "function colorAt(g: Gradient, at: number): string",
   "colorTheme": "const colorTheme = (): string =>",
   "colorThemes": "const colorThemes = (): readonly ThemeInfo[] =>",
-  "confirm": "function confirm({ title, message, danger = false, ok, cancel }: ConfirmOptions = {}): Promise<boolean>",
+  "confirm": "function confirm({ title, message, danger = false, ok, cancel, dialog }: ConfirmOptions = {}): Promise<boolean>",
   "contrastOf": "const contrastOf = (a: Rgba, b: Rgba): number =>",
   "convert": "function convert(v: unknown, to: Exclude<JsonType, \"integer\">): unknown",
   "coverScale": "function coverScale(iw: number, ih: number, fw: number, fh: number, deg: number): number",

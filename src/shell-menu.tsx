@@ -16,7 +16,7 @@ export default function ShellMenu() {
     { id: "palette", label: "Komut paleti", sub: "Sayfa, tema ya da eylem ara", icon: command, onSelect: openPalette },
   ]
   return <NavSidebar items={items} featured={featured} title={<Brand href="/" mark={marchMark} name="March" />}
-    groupOrder={MENU_GROUPS} itemOrder="none" defaultOpen="all" hotkey="palette" placeholder="Ara ya da sor…"
+    groupOrder={MENU_GROUPS} nestedSubs itemOrder="none" defaultOpen="all" hotkey="palette" placeholder="Ara ya da sor…"
     storageKey="sc.sidebar" label="Vitrin menüsü" collapsible resizable minWidth={220} maxWidth={420} collapseBelow={150}
     footer={<div class="sc-nav-foot hm-rail-hide"><p class="sc-nav-foot-line">MIT · sıfır bağımlılık · CSP uyumlu</p><MadeWithMarch variant="small" /></div>} />
 }

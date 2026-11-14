@@ -19,7 +19,7 @@ const sig: Record<string, Record<string, string>> = {
   "place": "function place(anchor: Element, panel: Element | null | undefined, placement: Placement = \"bottom-start\", gap = 6): PlacedStyle",
   "pointer": "const pointer = (p: JsonPath): string =>",
   "preloadPalette": "function preloadPalette(): Promise<View>",
-  "prompt": "function prompt({ title, message, label, value = \"\", placeholder, validate, ok, multiline = false }: PromptOptions = {}): Promise<string | null>",
+  "prompt": "function prompt({ title, message, label, value = \"\", placeholder, validate, ok, cancel, multiline = false, dialog }: PromptOptions = {}): Promise<string | null>",
   "quietMedia": "const quietMedia = (): boolean =>",
   "rangePresets": "function rangePresets(today: IsoDate = todayIso()): RangePreset[]",
   "rank": "function rank<T extends RankFields>(query: string, items: readonly T[]): Ranked<T>[]",
