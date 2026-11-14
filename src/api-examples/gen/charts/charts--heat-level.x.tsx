@@ -10,14 +10,14 @@ const example: ApiExample<any> = {
       code: `heatLevel(0, 40)        // 0 (empty)
 heatLevel(12, 40)       // 2 of 0…4
 heatLevel(40, 40, 3)    // 2 (three levels)
-<rect class={\`hm-heat-cell hm-heat-\${heatLevel(v, max)}\`} />`,
+<rect class={\`m-heat-cell m-heat-\${heatLevel(v, max)}\`} />`,
       run: () => {
         const levels = signal(5)
         const values = [0, 3, 9, 14, 21, 28, 35, 40]
         return <div class="sc-ex-charts-stack">
           <Segmented value={levels} onChange={(v: number) => levels.set(v)} options={[{ value: 3, label: "3 düzey" }, { value: 4, label: "4 düzey" }, { value: 5, label: "5 düzey" }]} aria-label="Düzey" />
           <ul class="sc-ex-charts-swatches">{values.map((v) => <li>
-            <svg viewBox="0 0 28 28" aria-hidden="true"><rect class={() => `hm-heat-cell hm-heat-${heatLevel(v, 40, levels())}`} width="28" height="28" rx="4" /></svg>
+            <svg viewBox="0 0 28 28" aria-hidden="true"><rect class={() => `m-heat-cell m-heat-${heatLevel(v, 40, levels())}`} width="28" height="28" rx="4" /></svg>
             <span>{v} → {() => heatLevel(v, 40, levels())}</span>
           </li>)}</ul>
         </div>

@@ -8,7 +8,7 @@ import "../../app.css";
 const example: ApiExample<any> = {
       code: `afterEach(() => _resetRouter())   // tests: drop the router, its guards and its page cache`,
       run: () => <div class="sc-ex-app-stack">
-        <p class="hm-muted">Testlerde her senaryodan önce çağrılır. Burada çağrılmaz: bu sayfayı yöneten yönlendiriciyi kapatırdı. Sıfırlayacağı durum:</p>
+        <p class="m-muted">Testlerde her senaryodan önce çağrılır. Burada çağrılmaz: bu sayfayı yöneten yönlendiriciyi kapatırdı. Sıfırlayacağı durum:</p>
         <Row><Out label="path()" value={path} /><Out label="route()" value={() => route()?.route.pattern ?? "null"} /><Out label="sonrası" value='"/" · null' /></Row>
       </div>,
     };

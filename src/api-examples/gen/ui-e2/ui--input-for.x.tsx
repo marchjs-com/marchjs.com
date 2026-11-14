@@ -14,7 +14,7 @@ Input && <Input value={price} />`,
         const type = signal("text")
         return <div class="sc-ex-stack"><Pick value={type} options={["text", "money", "phone", "bool", "date", "hidden"]} label="Alan türü" />
           <Out label="bileşen" value={() => inputFor({ type: type() })?.name || (type() === "hidden" ? "null" : "tembel yüklenen giriş")} />
-          {() => { const C = inputFor({ type: type() }); return untrack(() => (C ? C({ "aria-label": "Örnek alan" }) : <em class="hm-muted">Gizli alanın girişi yok.</em>)) }}</div>
+          {() => { const C = inputFor({ type: type() }); return untrack(() => (C ? C({ "aria-label": "Örnek alan" }) : <em class="m-muted">Gizli alanın girişi yok.</em>)) }}</div>
       },
     };
 export default example;

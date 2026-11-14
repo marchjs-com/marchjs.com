@@ -11,10 +11,10 @@ const example: ApiExample<any> = {
 parseColor("oklch(0.7 0.15 55)", out)     // true; out = [L·α, a·α, b·α, α]
 parseColor("not-a-colour", out)           // false`,
       run: () => {
-        const name = signal("--hm-brand-orange")
+        const name = signal("--m-brand-orange")
         const parsed = () => { const out = [0, 0, 0, 0], v = tok(name()); const ok = parseColor(v, out); return { v, ok, out: out.map((n) => Math.round(n * 1000) / 1000) } }
         return <div class="sc-ex-motion-b-stack">
-          <Pick sig={name} label="Renk" options={[["--hm-brand-orange", "turuncu"], ["--hm-brand-blue", "mavi"], ["--hm-brand-green", "yeşil"], ["--hm-brand-purple", "mor"]]} />
+          <Pick sig={name} label="Renk" options={[["--m-brand-orange", "turuncu"], ["--m-brand-blue", "mavi"], ["--m-brand-green", "yeşil"], ["--m-brand-purple", "mor"]]} />
           <div class="sc-ex-motion-b-swatch" style={() => "background:var(" + name() + ")"} role="img" aria-label="Seçilen renk" />
           <Out label="değer" value={() => parsed().v} />
           <Out label="çözüldü" value={() => (parsed().ok ? "evet" : "hayır")} />

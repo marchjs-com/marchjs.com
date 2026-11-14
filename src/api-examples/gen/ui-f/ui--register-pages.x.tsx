@@ -13,7 +13,7 @@ const example: ApiExample<any> = {
           { id: "ex-team", title: "Ekip üyeleri", href: "#ekip", group: "Örnek sayfalar", keywords: "kişiler davet" },
         ])
         onCleanup(off)
-        return <Row><Button variant="primary" onClick={() => openPalette()}>Paleti aç</Button><span class="hm-muted">“ekip” ya da “ödeme” ara: sayfalar listelenir</span></Row>
+        return <Row><Button variant="primary" onClick={() => openPalette()}>Paleti aç</Button><span class="m-muted">“ekip” ya da “ödeme” ara: sayfalar listelenir</span></Row>
       },
     };
 export default example;

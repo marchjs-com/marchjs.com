@@ -131,7 +131,7 @@ export default function SitesPage(props: { params?: { rest?: string } }) {
       const q = query(), root = document.documentElement
       if (q["dir"] === "rtl") root.setAttribute("dir", "rtl")
       const th = String(q["theme"] ?? "")
-      if (th) void loadTheme(th).then(() => root.setAttribute("data-hm-theme", th))
+      if (th) void loadTheme(th).then(() => root.setAttribute("data-m-theme", th))
       return <div class="sc-sample-page sc-sample-bare"><S /></div>
     }
     return <SampleView sample={sample} />

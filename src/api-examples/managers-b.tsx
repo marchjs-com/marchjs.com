@@ -35,7 +35,7 @@ type Api = Record<string, any>
 function Lazy(p: { children: (api: Api) => unknown }) {
   const api = signal<Api | null>(null)
   import("hadi-march/managers").then((m) => api.set(m))
-  return <div class="sc-ex-stack">{() => { const m = api(); return m ? p.children(m) : <span class="hm-muted">Yükleniyor…</span> }}</div>
+  return <div class="sc-ex-stack">{() => { const m = api(); return m ? p.children(m) : <span class="m-muted">Yükleniyor…</span> }}</div>
 }
 const clock = () => new Date().toLocaleTimeString("tr-TR")
 const yes = (b: boolean) => (b ? "evet" : "hayır")
@@ -54,7 +54,7 @@ function lend(...items: Dep[]) {
 }
 const clearTimeline = () => {
   for (const e of [...performance.getEntriesByType("mark"), ...performance.getEntriesByType("measure")]) {
-    if (e.name.startsWith("hm:")) { performance.clearMarks(e.name); performance.clearMeasures(e.name) }
+    if (e.name.startsWith("m:")) { performance.clearMarks(e.name); performance.clearMeasures(e.name) }
   }
 }
 
@@ -117,7 +117,7 @@ function LayerDemo() {
   const add = () => {
     const label = `Katman ${++n}`
     const idx = open().length
-    const node = <div class="sc-ex-layer" style={`inset-block-end: ${1 + idx * 4}rem; background: var(--hm-surface-2); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-1);`}>
+    const node = <div class="sc-ex-layer" style={`inset-block-end: ${1 + idx * 4}rem; background: var(--m-surface-2); border: 1px solid var(--m-border); border-radius: var(--m-radius-1);`}>
       <span>{label}</span> <Button size="sm" variant="ghost" onClick={() => h.close()}>Kapat</Button>
     </div>
     const h: LayerHandle = layer.open("popover", node, { label, lockScroll: false, onEscape: () => { h.close() } })
@@ -257,7 +257,7 @@ function ViewportDemo() {
 }
 
 function WindowDemo() {
-  lend([windowManager, { channel: "hm-ex:window" }])
+  lend([windowManager, { channel: "m-ex:window" }])
   return <div class="sc-ex-stack"><Row><Out label="Açık sekme" value={() => windowManager.get().count()} /><Out label="Lider" value={() => yes(windowManager.get().leader())} /><Out label="Görünür" value={() => yes(windowManager.get().visible())} /></Row></div>
 }
 
@@ -466,7 +466,7 @@ function SyncDemo() {
     n.mock({ "POST /demo/notes": () => ({ saved: true }) }, { delay: 400 })
     net.set(n)
   })
-  return <div class="sc-ex-stack">{() => (net() ? <SyncBody n={net()} /> : <span class="hm-muted">Yükleniyor…</span>)}</div>
+  return <div class="sc-ex-stack">{() => (net() ? <SyncBody n={net()} /> : <span class="m-muted">Yükleniyor…</span>)}</div>
 }
 function SyncBody(p: { n: any }) {
   const n = p.n
@@ -542,7 +542,7 @@ disposeUndo()                // geçmiş unutulur`, run: disposeEx(undoManager, 
     disposeViewport: { code: `viewport().dark()
 disposeViewport()            // medya dinleyicileri kalkar`, run: disposeEx(viewportManager, "viewport()", "disposeViewport()", () => viewport(), disposeViewport) },
     disposeWindow: { code: `appWindow().count()
-disposeWindow()              // sekme kanalı kapanır`, run: disposeEx(windowManager, "windowManager.get()", "disposeWindow()", () => windowManager.get(), disposeWindow, [[windowManager, { channel: "hm-ex:window" }]]) },
+disposeWindow()              // sekme kanalı kapanır`, run: disposeEx(windowManager, "windowManager.get()", "disposeWindow()", () => windowManager.get(), disposeWindow, [[windowManager, { channel: "m-ex:window" }]]) },
     distance: { code: `distance({ lat: 41.0082, lng: 28.9784 }, { lat: 39.9334, lng: 32.8597 })
 // ≈ 350 000 (metre)`, run: () => <DistanceDemo /> },
     emit: { code: `emit("sepet", "ekle", { item: "çay" })      // topic: sepet:ekle

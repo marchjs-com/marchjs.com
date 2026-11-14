@@ -26,7 +26,7 @@ export default function RouterDemoLayout() {
     </nav>
     <div class="sc-router-cols">
       <div class="sc-router-pane"><Outlet /></div>
-      <div class="sc-router-pane"><Outlet name="aside" empty={<p class="hm-muted">Yan panel boş. Listede "Yanda aç"a bas.</p>} /></div>
+      <div class="sc-router-pane"><Outlet name="aside" empty={<p class="m-muted">Yan panel boş. Listede "Yanda aç"a bas.</p>} /></div>
     </div>
     <Grid cols={3} gap={3} minCol="14rem">
       <Card title="Yan panel"><p>"Yanda aç" kaydı sağdaki panelde açar; adres de değişir, paylaşınca aynı görünüm gelir.</p></Card>

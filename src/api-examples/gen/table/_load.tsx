@@ -3,6 +3,6 @@ import { Await } from "hadi-march";
 
 /** Renders `children(module)` once `load()` resolves (a lazy part). */
 function Load<M>(props: { load: () => Promise<M>; children: (m: M) => unknown }) {
-  return <Await for={props.load} loading={<p class="hm-muted">Yükleniyor…</p>}>{props.children}</Await>
+  return <Await for={props.load} loading={<p class="m-muted">Yükleniyor…</p>}>{props.children}</Await>
 }
 export { Load };

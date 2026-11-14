@@ -8,7 +8,7 @@ import { Cfg } from "./_cfg.tsx";
 function CfgHints() {
   return <Cfg m={shortcutHintManager} fn={configureShortcutHints} patch={{ holdKey: "Shift", holdMs: 200, helpKey: null }}
     view={(on) => <>
-      <p class="hm-muted">Shift tuşunu 0,2 saniye basılı tutun ya da düğmeleri kullanın.</p>
+      <p class="m-muted">Shift tuşunu 0,2 saniye basılı tutun ya da düğmeleri kullanın.</p>
       <Row><Button disabled={() => !on()} onClick={() => shortcutHints.show()}>show()</Button><Button variant="ghost" disabled={() => !on()} onClick={() => shortcutHints.hide()}>hide()</Button></Row>
       <Out label="visible()" value={() => { on(); return yes(shortcutHints.visible()) }} />
     </>} />

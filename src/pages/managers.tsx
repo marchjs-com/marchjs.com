@@ -45,7 +45,7 @@ function SignalPanel() {
 
 /** A box the user can resize: its own breakpoint comes from container(), not from the window. */
 function ContainerBox() {
-  const el = <div class="sc-mgr-box"><p class="hm-muted">Köşeden sürükleyip boyutlandır.</p></div> as HTMLElement
+  const el = <div class="sc-mgr-box"><p class="m-muted">Köşeden sürükleyip boyutlandır.</p></div> as HTMLElement
   const size = viewport().container(el, { xs: 0, sm: 280, md: 420, lg: 560 })
   el.appendChild(<p>Kutu: <strong>{size.name()}</strong> · {size.width()} px</p> as Node)
   return el
@@ -70,14 +70,14 @@ vp.breakpoint()  vp.mobile()  vp.dark()  vp.reducedMotion()  vp.online()  vp.vis
         <span when:dark><Badge tone="neutral">when:dark — karanlık tercih</Badge></span>
       </div>
     </Demo>
-    <Demo title="Kapsayıcı kırılma noktaları" desc="container(el): boyut sınıfı pencereye değil kutunun kendisine göre; data-hm-bp özniteliğine de yazılır."
+    <Demo title="Kapsayıcı kırılma noktaları" desc="container(el): boyut sınıfı pencereye değil kutunun kendisine göre; data-m-bp özniteliğine de yazılır."
       code={`const size = viewport().container(el, { sm: 280, md: 420, lg: 560 })
-size.name()   size.up("md")   // [data-hm-bp="md"] ile CSS de kullanabilir`}>
+size.name()   size.up("md")   // [data-m-bp="md"] ile CSS de kullanabilir`}>
       <ContainerBox />
     </Demo>
     <Card title="Seçenekler" subtitle="Viewport">
       <Field label="Kırılma noktaları"><Segmented bind:value={$tight} onChange={pick} options={[{ value: "default", label: "Varsayılan (640/768/1024)" }, { value: "tight", label: "Sıkı (480/600/900)" }]} /></Field>
-      <p class="hm-muted">configureViewport(): bağlı her gösterim yeni örneğe geçer; sayfadan çıkınca varsayılana döner.</p>
+      <p class="m-muted">configureViewport(): bağlı her gösterim yeni örneğe geçer; sayfadan çıkınca varsayılana döner.</p>
     </Card>
   </>
 }
@@ -90,7 +90,7 @@ function ConsentDemo() {
   const send = consent.gate("analytics", (name: string) => { $log = [`gönderildi: ${name}`, ...$log].slice(0, 5); return true })
   const track = (name: string) => { if (!send(name)) $log = [`engellendi (rıza yok): ${name}`, ...$log].slice(0, 5) }
   const setVersion = (v: string) => { $version = v; configureConsent({ version: v }) }
-  onCleanup(() => configureConsent({ storageKey: "hm.consent", version: "1" }))
+  onCleanup(() => configureConsent({ storageKey: "m.consent", version: "1" }))
   return <>
     <Demo wide title="Rıza: banner ve tercihler" desc="Zorunlu, tercih, analitik, pazarlama ve üçüncü taraf kategorileri. Reddet ile Kabul et aynı ağırlıkta; ikisi de banner'ı kapatır. Banner en üst katmanda (toast). Kayıt sürümlü ve tarihli; politika sürümü değişince yeniden sorulur."
       code={`configureConsent({ version: "2026-11", policyHref: "/gizlilik" })
@@ -102,17 +102,17 @@ openConsentPreferences()   showConsentBanner()   consent.withdraw()   consent.re
         <Button icon={settings} on:click={() => openConsentPreferences()}>Tercihler</Button>
         <Button variant="ghost" on:click={() => consent.withdraw()}>Rızayı geri çek</Button>
       </div>
-      <p class="hm-muted">Politika sürümü {() => $version} · kayıt: {() => { const r = consent.record(); return r ? `${r.method} · sürüm ${r.version} · ${new Date(r.date).toLocaleString()}` : "karar yok" }}</p>
+      <p class="m-muted">Politika sürümü {() => $version} · kayıt: {() => { const r = consent.record(); return r ? `${r.method} · sürüm ${r.version} · ${new Date(r.date).toLocaleString()}` : "karar yok" }}</p>
       <div class="sc-row">{() => consent.categories().map((c) => <Badge tone={consent.has(c.id) ? "success" : "neutral"} dot>{c.id}</Badge>)}</div>
     </Demo>
     <Demo title="Rıza yokken analitik kapalı" desc="consent.gate('analytics', gönder): rıza yoksa gönder hiç çalışmaz. Log gönderimi ve üçüncü taraf kancaları da aynı kapıdan geçer."
       code={`const send = consent.gate("analytics", (name) => api.track(name))
 send("tıklama")   // rıza yoksa undefined, ağ isteği yok`}>
-      <div class="sc-row"><Button on:click={() => track("düğme tıklaması")}>Olay gönder</Button>{() => yes(consent.has("analytics"))}<span class="hm-muted">analitik izni</span></div>
+      <div class="sc-row"><Button on:click={() => track("düğme tıklaması")}>Olay gönder</Button>{() => yes(consent.has("analytics"))}<span class="m-muted">analitik izni</span></div>
       <ul class="sc-mgr-log">{() => $log.map((l) => <li>{l}</li>)}</ul>
     </Demo>
     <Demo title="Üçüncü taraf içerik" desc="ConsentGate: izin verilene kadar yer tutucu; yerinde izin verilebilir. whenGranted() yükler, geri çekilince kaldırır.">
-      <ConsentGate category="thirdParty"><div class="sc-mgr-map"><strong>Harita yüklendi</strong><span class="hm-muted">(örnek gömülü içerik)</span></div></ConsentGate>
+      <ConsentGate category="thirdParty"><div class="sc-mgr-map"><strong>Harita yüklendi</strong><span class="m-muted">(örnek gömülü içerik)</span></div></ConsentGate>
     </Demo>
     <ComponentDemo folder="composite/consent-banner" title="ConsentBanner: seçenekler" desc="Karmaşık bileşen: şeridin metni ve üçüncü taraf yer tutucusu. Şerit sayfanın içinde ve her zaman görünür; bir seçim yine kapatır. Parçaları aşağıdaki satırda." />
     <Card title="Seçenekler" subtitle="Consent">
@@ -148,16 +148,16 @@ function CommandDemo() {
         <Button variant="primary" icon={commandIcon} on:click={openPalette}>Palette aç</Button>
       </div>
       <div class="sc-row">
-        <button type="button" class="hm-btn" command:demo.save>Düz düğme: command:demo.save</button>
+        <button type="button" class="m-btn" command:demo.save>Düz düğme: command:demo.save</button>
         <CommandButton command="demo.save" variant="primary" />
         <Button variant="ghost" disabled={() => !save.busy()} on:click={() => save.cancel()}>İptal et</Button>
         <Kbd keys="mod+shift+s" />
       </div>
-      <p class="hm-muted">Değişiklik var: {() => ($dirty ? "evet" : "hayır")} · Kaydediliyor: {() => (save.busy() ? "evet" : "hayır")}</p>
+      <p class="m-muted">Değişiklik var: {() => ($dirty ? "evet" : "hayır")} · Kaydediliyor: {() => (save.busy() ? "evet" : "hayır")}</p>
     </Demo>
     <Demo title="Kısayol çakışması ve geçmiş" desc="Aynı kısayol iki komuta verilince kayıt anında yakalanır. onCommandRun: geri alma ve denetim kaydı için geçmiş kancası.">
       {() => commands.conflicts().map((c) => <Alert tone="warning" title={`Çakışma: ${c.shortcut}`}>{c.ids.join(" ve ")}</Alert>)}
-      <ul class="sc-mgr-log">{() => ($history.length ? $history.map((l) => <li>{l}</li>) : <li class="hm-muted">Henüz çalışan komut yok.</li>)}</ul>
+      <ul class="sc-mgr-log">{() => ($history.length ? $history.map((l) => <li>{l}</li>) : <li class="m-muted">Henüz çalışan komut yok.</li>)}</ul>
     </Demo>
     <Card title="Seçenekler" subtitle="Command">
       <Toggle bind:value={$dirty} label="Kaydedilmemiş değişiklik var (when)" />

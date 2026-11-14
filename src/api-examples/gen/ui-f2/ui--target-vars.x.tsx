@@ -8,7 +8,7 @@ import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
       code: `targetVars(sample(model, 500).logo)
-// { "--hm-kt-x": "60", "--hm-kt-r": "90", "--hm-kt-s": "1.25", … } → hedef öğenin CSS değişkenleri`,
+// { "--m-kt-x": "60", "--m-kt-r": "90", "--m-kt-s": "1.25", … } → hedef öğenin CSS değişkenleri`,
       run: () => {
         const t = signal(500)
         const vars = computed(() => targetVars(sample(KT, t())["logo"] ?? {}))

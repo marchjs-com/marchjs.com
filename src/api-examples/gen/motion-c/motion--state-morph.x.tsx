@@ -25,7 +25,7 @@ stateMorph(button, "idle")        // back`,
           }, 1200))
         }
         return <div class="sc-ex-motion-b-stack">
-          <div class="sc-ex-motion-b-stage"><button type="button" class="hm-btn hm-btn-primary" ref={(el: HTMLElement) => { btn = el }} on:click={save}>Kaydet</button></div>
+          <div class="sc-ex-motion-b-stage"><button type="button" class="m-btn m-btn-primary" ref={(el: HTMLElement) => { btn = el }} on:click={save}>Kaydet</button></div>
           <Pick sig={result} label="Sonuç" options={[["success", "başarılı"], ["error", "hata"]]} />
         </div>
       },

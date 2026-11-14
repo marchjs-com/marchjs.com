@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
 // A marker pen highlights each line.
 const a = highlight(title)
 await a.finished
-// also: highlight(el, { color: "var(--hm-info)", duration: 1200 })`,
+// also: highlight(el, { color: "var(--m-info)", duration: 1200 })`,
       play: { options: [COLOR, ms("duration", "Süre", 700, 200, 2000, 100), phrase("Önemli bir cümle", ["Hoş geldin Ada","Yeni sürüm yayında"])] },
       run: (p: V) => <Stage fn={highlight} values={p.values} text="Önemli bir cümle" hint="Fosforlu kalem gibi satırı işaretler; önemli cümleyi öne çıkarır." />,
     };

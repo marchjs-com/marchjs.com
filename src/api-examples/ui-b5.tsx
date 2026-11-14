@@ -20,10 +20,10 @@ function picture(): Promise<string> {
   cv.width = 640
   cv.height = 400
   const g = cv.getContext("2d")!
-  g.fillStyle = token("--hm-brand-blue"); g.fillRect(0, 0, 640, 400)
-  g.fillStyle = token("--hm-brand-orange"); g.beginPath(); g.arc(470, 130, 64, 0, Math.PI * 2); g.fill()
-  g.fillStyle = token("--hm-brand-green"); g.fillRect(0, 290, 640, 110)
-  g.fillStyle = token("--hm-brand-purple"); g.beginPath(); g.moveTo(60, 300); g.lineTo(200, 120); g.lineTo(340, 300); g.closePath(); g.fill()
+  g.fillStyle = token("--m-brand-blue"); g.fillRect(0, 0, 640, 400)
+  g.fillStyle = token("--m-brand-orange"); g.beginPath(); g.arc(470, 130, 64, 0, Math.PI * 2); g.fill()
+  g.fillStyle = token("--m-brand-green"); g.fillRect(0, 290, 640, 110)
+  g.fillStyle = token("--m-brand-purple"); g.beginPath(); g.moveTo(60, 300); g.lineTo(200, 120); g.lineTo(340, 300); g.closePath(); g.fill()
   return new Promise((res) => cv.toBlob((b) => res(b ? URL.createObjectURL(b) : ""), "image/png"))
 }
 

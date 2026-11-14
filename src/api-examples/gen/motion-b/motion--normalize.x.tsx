@@ -13,7 +13,7 @@ normalize({ opacity: [0, 1], x: [0, 100] })   // → one track per property`,
         const tracks = () => normalize(form() === "array" ? [{ opacity: 0, transform: "scale(.8)" }, { opacity: 1, offset: 0.6 }, { transform: "none" }] : { opacity: [0, 1], x: [0, 100] })
         return <div class="sc-ex-motion-b-stack">
           <Pick sig={form} label="Yazım" options={[["array", "kare dizisi"], ["object", "özellik listesi"]]} />
-          <ul class="sc-ex-log" style="list-style:none;margin:0;padding:var(--hm-space-2)">{() => tracks().map((t) => <li><strong>{t.prop}</strong>{": " + t.offsets.map((o, i) => o + " → " + (t.values[i] ?? "şu anki")).join(" · ")}</li>)}</ul>
+          <ul class="sc-ex-log" style="list-style:none;margin:0;padding:var(--m-space-2)">{() => tracks().map((t) => <li><strong>{t.prop}</strong>{": " + t.offsets.map((o, i) => o + " → " + (t.values[i] ?? "şu anki")).join(" · ")}</li>)}</ul>
         </div>
       },
     };

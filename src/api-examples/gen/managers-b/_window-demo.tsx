@@ -5,7 +5,7 @@ import { yes } from "./_yes.tsx";
 import { lend } from "./_lend.tsx";
 
 function WindowDemo() {
-  lend([windowManager, { channel: "hm-ex:window" }])
+  lend([windowManager, { channel: "m-ex:window" }])
   return <div class="sc-ex-stack"><Row><Out label="Açık sekme" value={() => windowManager.get().count()} /><Out label="Lider" value={() => yes(windowManager.get().leader())} /><Out label="Görünür" value={() => yes(windowManager.get().visible())} /></Row></div>
 }
 export { WindowDemo };

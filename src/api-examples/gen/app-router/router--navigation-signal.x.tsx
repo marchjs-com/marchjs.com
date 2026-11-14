@@ -24,7 +24,7 @@ const example: ApiExample<any> = {
         return <div class="sc-ex-app-stack"><Row>
           <Button onClick={start}>Uzun istek başlat</Button>
           <Out label="aborted" value={() => { path(); return String(navigationSignal()?.aborted ?? "—") }} /><Out label="süren" value={active} />
-        </Row><p class="hm-muted">Başlat, sonra başka sayfaya geçip geri dön.</p><Log lines={w.aborts} /></div>
+        </Row><p class="m-muted">Başlat, sonra başka sayfaya geçip geri dön.</p><Log lines={w.aborts} /></div>
       },
     };
 export default example;

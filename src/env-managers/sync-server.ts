@@ -26,7 +26,7 @@ export function startSyncDemo() {
     online: n.online,
     setOnline: (v: boolean) => n.setOnline(v),
     setDelay: (ms: number) => mock.set({ delay: ms }),
-    stop: () => configureSync({ net: null, storageKey: "hm.sync" }),
+    stop: () => configureSync({ net: null, storageKey: "m.sync" }),
   };
 }
 export type SyncDemoApi = ReturnType<typeof startSyncDemo>;

@@ -20,7 +20,7 @@ const example: ApiExample<any> = {
         {() => {
           const fr = p.values.frame, em = p.values.empty
           const wrap = (page: () => unknown, close: () => void, to: RouteTarget) => <Card title={`Kayıt ${to.params["id"] ?? ""}`} >{page()}</Card>
-          return untrack(() => <div class="sc-ex-app-frame">{h(Outlet, { name: "aside", empty: em ? <p class="hm-muted">Yan panel boş: bir kayıt seç.</p> : undefined, children: fr === "card" ? wrap : undefined })}</div>)
+          return untrack(() => <div class="sc-ex-app-frame">{h(Outlet, { name: "aside", empty: em ? <p class="m-muted">Yan panel boş: bir kayıt seç.</p> : undefined, children: fr === "card" ? wrap : undefined })}</div>)
         }}
       </div>,
     };

@@ -10,7 +10,7 @@ const example: ApiExample<any> = {
       run: () => {
         const d = signal("M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80")
         return <div class="sc-ex-motion-b-stack">
-          <input class="hm-input" value={d()} aria-label="Yol (d)" on:input={(e: Event) => d.set((e.target as HTMLInputElement).value)} />
+          <input class="m-input" value={d()} aria-label="Yol (d)" on:input={(e: Event) => d.set((e.target as HTMLInputElement).value)} />
           <ol class="sc-ex-log">{() => parsePath(d()).map((s) => <li>{s.c + " " + s.v.join(" ")}</li>)}</ol>
         </div>
       },

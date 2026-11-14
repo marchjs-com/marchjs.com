@@ -9,7 +9,7 @@ import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
       code: `headToHtml(resolveHead([{ title: "Ürünler", og: {} }]))   // for prerendering
-headToHtml(tags, { mark: true })   // data-hm-head: adopted by the client`,
+headToHtml(tags, { mark: true })   // data-m-head: adopted by the client`,
       run: () => {
         const title = signal("Ürünler"), mark = signal(false)
         return <div class="sc-ex-stack"><Row><Text label="Başlık" value={title} /><Button variant={() => (mark() ? "primary" : "secondary")} onClick={() => mark.set(!mark())}>mark</Button></Row>

@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
         return <div class="sc-ex-stack">
           {() => { const l = p.values.layout, rd = p.values.requireDirty; return <Form schema={Profile} layout={l} cols={2} requireDirty={rd} initial={{ name: "Ada" }} cancel submitLabel="Kaydet"
             onSubmit={async (v: Record<string, unknown>) => { await wait(400); if (String(v.email).startsWith("taken")) throw Object.assign(new Error("Reddedildi"), { fieldErrors: { email: "Bu adres kayıtlı" } }); log.push(`gönderildi: ${v.name} · ${v.email} · ${v.team}`) }} /> }}
-          <p class="hm-muted">İpucu: "taken@hadisosyal.com" sunucu hatası verir.</p>
+          <p class="m-muted">İpucu: "taken@hadisosyal.com" sunucu hatası verir.</p>
           <Log lines={log.lines} />
         </div>
       },

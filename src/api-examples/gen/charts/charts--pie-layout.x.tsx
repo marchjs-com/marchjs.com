@@ -23,7 +23,7 @@ pieLayout(values, { padAngle: 0.04 })   // a gap between slices`,
           </Row>
           <div class="sc-ex-charts-row">
             <svg class="sc-ex-charts-svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Dilimler">
-              {() => slices().map((s, i) => <path class={`hm-chart-series-${i} sc-ex-charts-fill`} d={arcPath(60, 60, 54, 26, s.start, s.end)} />)}
+              {() => slices().map((s, i) => <path class={`m-chart-series-${i} sc-ex-charts-fill`} d={arcPath(60, 60, 54, 26, s.start, s.end)} />)}
             </svg>
             <ul class="sc-ex-charts-list">{() => slices().map((s) => <li><span>{s.value}</span><span>{deg(s.start)}°–{deg(s.end)}° · %{Math.round(s.share * 100)}</span></li>)}</ul>
           </div>

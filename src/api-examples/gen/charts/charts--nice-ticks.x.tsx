@@ -18,7 +18,7 @@ niceTicks(0.2, 0.93, 4)`,
           <Slider value={lo} onChange={(v: number) => lo.set(v)} min={-200} max={200} step={1} format={(v: number) => `min ${v}`} aria-label="En küçük" />
           <Slider value={hi} onChange={(v: number) => hi.set(v)} min={-200} max={900} step={1} format={(v: number) => `max ${v}`} aria-label="En büyük" />
           <svg class="sc-ex-charts-svg" viewBox="0 0 320 44" role="img" aria-label={() => `Çentikler: ${t().ticks.join(", ")}`}>
-            <rect class="hm-chart-series-0 sc-ex-charts-soft" x={() => Math.min(x()(lo()), x()(hi()))} y="8" width={() => Math.abs(x()(hi()) - x()(lo()))} height="10" />
+            <rect class="m-chart-series-0 sc-ex-charts-soft" x={() => Math.min(x()(lo()), x()(hi()))} y="8" width={() => Math.abs(x()(hi()) - x()(lo()))} height="10" />
             <line class="sc-ex-charts-axis" x1="12" x2="308" y1="22" y2="22" />
             {() => t().ticks.map((v) => <g><line class="sc-ex-charts-tick" x1={x()(v)} x2={x()(v)} y1="18" y2="26" /><text x={x()(v)} y="38" text-anchor="middle">{v}</text></g>)}
           </svg>

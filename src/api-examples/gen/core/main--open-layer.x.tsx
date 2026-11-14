@@ -9,7 +9,7 @@ const example: ApiExample<any> = {
 close()`,
       run: () => {
         const open = () => {
-          const el = <div class="hm-card sc-ex-layer" role="status">openLayer("toast") ile açıldı</div> as HTMLElement
+          const el = <div class="m-card sc-ex-layer" role="status">openLayer("toast") ile açıldı</div> as HTMLElement
           const close = openLayer("toast", el)
           setTimeout(close, 1800)
         }

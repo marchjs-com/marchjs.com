@@ -8,7 +8,7 @@ import { Cfg } from "./_cfg.tsx";
 
 function CfgFocus() {
   const root = signal(false)
-  const sync = () => setTimeout(() => root.set(document.documentElement.hasAttribute("data-hm-focus-visible")), 0)
+  const sync = () => setTimeout(() => root.set(document.documentElement.hasAttribute("data-m-focus-visible")), 0)
   document.addEventListener("keydown", sync, true)
   document.addEventListener("pointerdown", sync, true)
   onCleanup(() => { document.removeEventListener("keydown", sync, true); document.removeEventListener("pointerdown", sync, true) })
@@ -16,7 +16,7 @@ function CfgFocus() {
     view={(on) => <>
       <Row><Button variant="secondary">Tab ile bana gel</Button><Button variant="secondary">Sonra ben</Button></Row>
       <Out label="focus.modality()" value={() => { on(); return focus.modality() }} />
-      <Out label="<html data-hm-focus-visible>" value={() => yes(root())} />
+      <Out label="<html data-m-focus-visible>" value={() => yes(root())} />
     </>} />
 }
 export { CfgFocus };

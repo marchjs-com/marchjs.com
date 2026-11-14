@@ -33,7 +33,7 @@ export default examples({
         return <div class="sc-ex-stack">
           {() => { const { length, variant, mask } = p.values; code.set(""); result.set("—"); return <CodeInput value={code} length={length} variant={variant} mask={mask} groups={length === 6 ? [3, 3] : length === 8 ? [4, 4] : undefined} aria-label="Doğrulama kodu"
             onComplete={(c) => result.set(c === "123456".slice(0, length) || c === "12345678".slice(0, length) ? "doğru ✓" : "yanlış kod")} /> }}
-          <Row><Out label="value" value={code} /><Out label="sonuç" value={result} /><span class="hm-muted">Doğru kod: 1234…</span></Row>
+          <Row><Out label="value" value={code} /><Out label="sonuç" value={result} /><span class="m-muted">Doğru kod: 1234…</span></Row>
         </div>
       },
     },
@@ -48,7 +48,7 @@ export default examples({
         const n = signal(2)
         const SRC = {
           ts: () => `const team = signal(${n()})\nexport const seats = computed(() => team() * 12) // HADİ koltuk hesabı, uzun bir satır yorumu`,
-          css: () => `.hadi-card {\n  padding: var(--hm-space-${n()});\n  border-radius: var(--hm-radius);\n}`,
+          css: () => `.hadi-card {\n  padding: var(--m-space-${n()});\n  border-radius: var(--m-radius);\n}`,
           json: () => JSON.stringify({ name: "hadi", seats: n() * 12, plan: "pro" }, null, 2),
         }
         return <div class="sc-ex-stack">
@@ -63,7 +63,7 @@ export default examples({
       play: { options: [{ key: "files", label: "Ek dosyalar", default: true }] },
       run: (p: { values: { files: boolean } }) => () => CodeViewer({
         source: `export function Hello() {\n  return <p class="hello">Merhaba, HADİ</p>\n}`, lang: "tsx",
-        files: p.values.files ? [{ name: "hello.css", source: `.hello { color: var(--hm-primary-text); }`, lang: "css" }, { name: "data.json", source: `{ "name": "HADİ" }`, lang: "json" }] : [],
+        files: p.values.files ? [{ name: "hello.css", source: `.hello { color: var(--m-primary-text); }`, lang: "css" }, { name: "data.json", source: `{ "name": "HADİ" }`, lang: "json" }] : [],
       }),
     },
     ColorInput: {
@@ -133,7 +133,7 @@ export default examples({
         }
         // the app mounts one <CommandPalette/>; this example adds its commands to it while it is on screen
         return () => { const set = SETS[p.values.set] ?? []; onCleanup(registerCommands(() => set)); return <div class="sc-ex-stack">
-          <Row><Button icon={search} onClick={openPalette}>Paleti aç</Button><span class="hm-muted">"{set[0]!.title.split(" ")[0]}" yazın</span><Out label="yakınlık" value={() => `%${zoom()}`} /></Row>
+          <Row><Button icon={search} onClick={openPalette}>Paleti aç</Button><span class="m-muted">"{set[0]!.title.split(" ")[0]}" yazın</span><Out label="yakınlık" value={() => `%${zoom()}`} /></Row>
           <Log lines={lines} />
         </div> }
       },

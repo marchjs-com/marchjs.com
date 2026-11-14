@@ -25,12 +25,12 @@ export function PermissionDemo() {
 permissions().state("camera")      // granted | denied | prompt | unsupported
 button.onclick = () => permissions().request("camera", { rationale: () => confirm({ … }) })`}>
     <ul class="sc-mgr-queue">{PERMS.map(([name, label]) => <li class="sc-mgr-qrow">
-      <span><strong>{label}</strong> <code class="hm-muted">{name}</code></span>
+      <span><strong>{label}</strong> <code class="m-muted">{name}</code></span>
       <span class="sc-row">
         {() => <Badge tone={STATE_TONE[permissions().state(name)] ?? "neutral"} dot>{STATE_TEXT[permissions().state(name)]}</Badge>}
         {() => (!permissions().consented(name) ? <Badge tone="warn">rıza yok</Badge> : null)}
         {() => (permissions().state(name) === "prompt" ? <Button size="sm" disabled={() => permissions().pending(name)} on:click={() => ask(name, label)}>İste</Button> : null)}
-        {() => (permissions().state(name) === "denied" ? <span class="hm-muted">site ayarlarından açılır</span> : null)}
+        {() => (permissions().state(name) === "denied" ? <span class="m-muted">site ayarlarından açılır</span> : null)}
       </span>
     </li>)}</ul>
     {() => ($last ? <p>Son sonuç: <strong>{$last}</strong></p> : null)}
@@ -103,15 +103,15 @@ configureNotifications({ native: "always", toast: (n) => mySnackbar(n) })`}>
       <Button size="sm" variant="ghost" on:click={() => notifications().markRead()}>Tümünü okundu say</Button>
       <Button size="sm" variant="ghost" on:click={() => notifications().clear()}>Temizle</Button></div>
     <ul class="sc-mgr-queue">{() => notifications().inbox().length ? notifications().inbox().slice(0, 6).map((r) => <li class="sc-mgr-qrow">
-      <span class={r.read ? "hm-muted" : ""}><strong>{r.title}</strong> {r.body}</span>
-      <span class="sc-row"><Badge tone={KIND_TONE[r.kind] ?? "neutral"}>{KIND_TEXT[r.kind] ?? r.kind}</Badge><Badge tone="neutral">{r.via === "native" ? "sistem" : r.via === "toast" ? "toast" : "gitmedi"}</Badge><span class="hm-muted">{time(r.at)}</span></span>
-    </li>) : <li class="hm-muted">Boş.</li>}</ul>
+      <span class={r.read ? "m-muted" : ""}><strong>{r.title}</strong> {r.body}</span>
+      <span class="sc-row"><Badge tone={KIND_TONE[r.kind] ?? "neutral"}>{KIND_TEXT[r.kind] ?? r.kind}</Badge><Badge tone="neutral">{r.via === "native" ? "sistem" : r.via === "toast" ? "toast" : "gitmedi"}</Badge><span class="m-muted">{time(r.at)}</span></span>
+    </li>) : <li class="m-muted">Boş.</li>}</ul>
     <Card title="Seçenekler" subtitle="Notification">
       <Field label="Tür"><Segmented bind:value={$kind} options={[{ value: "info", label: "Bilgi" }, { value: "success", label: "Başarılı" }, { value: "warn", label: "Uyarı" }, { value: "danger", label: "Hata" }]} /></Field>
       {() => (notifications().permission() === "granted" ? <>
         <Field label="Bu mesaj"><Segmented bind:value={$via} options={[{ value: "auto", label: "Otomatik" }, { value: "native", label: "Sistem" }, { value: "toast", label: "Toast" }]} /></Field>
         <Field label="Sistem bildirimi ne zaman"><Segmented value={$native} onChange={setNative} options={[{ value: "hidden", label: "Sekme gizliyken" }, { value: "always", label: "Her zaman" }, { value: "never", label: "Hiç" }]} /></Field>
-      </> : <p class="hm-muted">İzin verilince sistem bildirimi seçenekleri burada görünür.</p>)}
+      </> : <p class="m-muted">İzin verilince sistem bildirimi seçenekleri burada görünür.</p>)}
     </Card>
   </Demo>
 }

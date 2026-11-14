@@ -21,7 +21,7 @@ const example: ApiExample<any> = {
         onCleanup(() => off?.())
         return <Load from={commandLib}>{({ bindCommandKeys }) => <Stack><Row>
           <Button variant="primary" onClick={() => { if (off) { off(); off = null } else off = bindCommandKeys(); on.set(!!off) }}>{() => (on() ? "Kısayolları çöz" : "bindCommandKeys()")}</Button>
-          <span class="hm-muted">Sonra <Kbd keys="alt+shift+s" /> dene</span>
+          <span class="m-muted">Sonra <Kbd keys="alt+shift+s" /> dene</span>
         </Row><Log lines={lines} /></Stack>}</Load>
       },
     };

@@ -25,7 +25,7 @@ export default examples({
         const pick = signal<string>(ACCENT_CHOICES[1]!)
         return <div class="sc-ex-stack">
           <div class="sc-ex-ui-a-swatches" role="radiogroup" aria-label="Vurgu seçenekleri">
-            {ACCENT_CHOICES.map((c) => <button type="button" role="radio" class="sc-ex-ui-a-swatch" data-hm-color={c} aria-checked={() => String(pick() === c)} onClick={() => pick.set(c)}><span aria-hidden="true" />{c}</button>)}
+            {ACCENT_CHOICES.map((c) => <button type="button" role="radio" class="sc-ex-ui-a-swatch" data-m-color={c} aria-checked={() => String(pick() === c)} onClick={() => pick.set(c)}><span aria-hidden="true" />{c}</button>)}
           </div>
           <Row><Out label="seçenek sayısı" value={ACCENT_CHOICES.length} /><Out label="seçili" value={pick} /></Row>
           {() => <Row><Button variant="primary" color={pick() as never}>Kaydet</Button><Badge color={pick() as never} tone="primary">Yeni</Badge></Row>}
@@ -120,7 +120,7 @@ export default examples({
         return () => <div class={`sc-ex-ui-a-ab sc-ex-ui-a-ab-${p.values.orientation}`}>
           <ActivityBar items={items} value={view} onChange={view.set} orientation={p.values.orientation} collapsible={p.values.collapsible} controls="sc-ex-ui-a-ab-view" label="Görünümler" />
           <div id="sc-ex-ui-a-ab-view" class="sc-ex-ui-a-ab-view">
-            {() => (view() ? <><strong>{TITLE[view()!]}</strong>{view() === "inbox" ? <Button size="sm" variant="ghost" onClick={() => unread.set(0)}>Tümünü okundu say</Button> : null}</> : <span class="hm-muted">Yan görünüm kapalı</span>)}
+            {() => (view() ? <><strong>{TITLE[view()!]}</strong>{view() === "inbox" ? <Button size="sm" variant="ghost" onClick={() => unread.set(0)}>Tümünü okundu say</Button> : null}</> : <span class="m-muted">Yan görünüm kapalı</span>)}
           </div>
         </div>
       },
@@ -159,7 +159,7 @@ export default examples({
           {() => { const { header, nav } = p.values; return <AppShell mainId="sc-ex-ui-a-main"
             nav={nav ? <nav class="sc-ex-ui-a-nav" aria-label="HADİ">{PAGES.map((x) => <button type="button" aria-current={() => (page() === x ? "page" : null)} onClick={() => page.set(x)}>{x}</button>)}</nav> : null}
             header={header ? <div class="sc-ex-ui-a-head"><strong>{page}</strong><Avatar name="Ada Yılmaz" size="sm" /></div> : null}>
-            <div class="sc-ex-ui-a-page"><p>{() => `${page()} sayfası`}</p><p class="hm-muted">Ana alan kayar; üst çubuk yerinde kalır.</p></div>
+            <div class="sc-ex-ui-a-page"><p>{() => `${page()} sayfası`}</p><p class="m-muted">Ana alan kayar; üst çubuk yerinde kalır.</p></div>
           </AppShell> }}
         </div>
       },
@@ -178,9 +178,9 @@ export default examples({
         return <div class="sc-ex-ui-a-frame sc-ex-ui-a-auth">
           {() => { const { aside, footer } = p.values; return <AuthLayout brand={<Brand name="HADİ" mark={sparkles} />} title="Giriş yap" subtitle="Bağlantıyı e-postanıza gönderelim"
             aside={aside ? { headline: "Ekibiniz tek yerde", text: "Projeler, belgeler ve sohbet.", points: [{ icon: shieldCheck, title: "Güvenli", text: "Parolasız giriş" }, { icon: zap, title: "Hızlı", text: "Saniyeler içinde" }] } : undefined}
-            footer={footer ? <span class="hm-muted">Hesabınız yok mu? Kaydolun.</span> : undefined}>
+            footer={footer ? <span class="m-muted">Hesabınız yok mu? Kaydolun.</span> : undefined}>
             {() => (sent() ? <Alert tone="success">Bağlantı {email() || "adresinize"} gönderildi.</Alert> : <form class="sc-ex-stack" onSubmit={(e: Event) => { e.preventDefault(); sent.set(true) }}>
-              <input class="hm-input" type="email" placeholder="ada@hadisosyal.com" aria-label="E-posta" value={email} onInput={(e: Event) => email.set((e.target as HTMLInputElement).value)} />
+              <input class="m-input" type="email" placeholder="ada@hadisosyal.com" aria-label="E-posta" value={email} onInput={(e: Event) => email.set((e.target as HTMLInputElement).value)} />
               <Button type="submit" variant="primary" block>Bağlantı gönder</Button>
             </form>)}
           </AuthLayout> }}
@@ -201,7 +201,7 @@ export default examples({
             <Avatar name={name} size={() => p.values.size} src={() => (p.values.photo ? "/yok/hadi-avatar.png" : null)} />
             {["Grace Hopper", "Linus", "HADİ Destek"].map((n) => <Avatar name={n} size={() => p.values.size} />)}
           </Row>
-          <input class="hm-input" aria-label="Ad" value={name} onInput={(e: Event) => name.set((e.target as HTMLInputElement).value)} />
+          <input class="m-input" aria-label="Ad" value={name} onInput={(e: Event) => name.set((e.target as HTMLInputElement).value)} />
         </div>
       },
     },

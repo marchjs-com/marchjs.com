@@ -14,6 +14,6 @@ export default function SlidesSample() {
       presenter={presenter() === "1"} presenterUrl={hrefOf("/sites/slides?presenter=1")}>
       <DemoSlides />
     </Presentation>
-    <p class="sc-slides-help hm-muted">← → ya da boşluk: ilerle · F: tam ekran · P: konuşmacı penceresi · Yazdır: her slayt bir sayfa</p>
+    <p class="sc-slides-help m-muted">← → ya da boşluk: ilerle · F: tam ekran · P: konuşmacı penceresi · Yazdır: her slayt bir sayfa</p>
   </div>
 }

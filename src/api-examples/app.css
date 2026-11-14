@@ -1,6 +1,6 @@
 /* API examples of the app group (router, store, i18n, lazy). */
-.sc-ex-app-stack { display: grid; gap: var(--hm-space-3); min-width: 0; }
-.sc-ex-app-frame { display: grid; gap: var(--hm-space-2); min-width: 0; min-height: 5rem; padding: var(--hm-space-3); border: 1px dashed var(--hm-border-strong); border-radius: var(--hm-radius-2); }
-.sc-ex-app-frame > .hm-lazy-skel { min-height: 4rem; }
-.sc-ex-app-tag { justify-self: start; padding: 0 var(--hm-space-2); border-radius: var(--hm-radius-1); background: var(--hm-surface-2); color: var(--hm-muted); font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); }
+.sc-ex-app-stack { display: grid; gap: var(--m-space-3); min-width: 0; }
+.sc-ex-app-frame { display: grid; gap: var(--m-space-2); min-width: 0; min-height: 5rem; padding: var(--m-space-3); border: 1px dashed var(--m-border-strong); border-radius: var(--m-radius-2); }
+.sc-ex-app-frame > .m-lazy-skel { min-height: 4rem; }
+.sc-ex-app-tag { justify-self: start; padding: 0 var(--m-space-2); border-radius: var(--m-radius-1); background: var(--m-surface-2); color: var(--m-muted); font-family: var(--m-font-mono); font-size: var(--m-text-xs); }
 .sc-ex-app-skel { display: grid; min-width: 0; min-height: 6rem; }

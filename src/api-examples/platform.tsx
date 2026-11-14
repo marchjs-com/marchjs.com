@@ -42,7 +42,7 @@ const a11yLib = () => import("hadi-march/managers/accessibility/ui")
 const hintLib = () => import("hadi-march/managers/shortcut-hint/ui")
 /** Renders `children(module)` once the module has loaded. */
 function Load<M>(p: { from: () => Promise<M>; children: (m: M) => unknown }) {
-  return <Await for={p.from} loading={<p class="hm-muted">Yükleniyor…</p>}>{p.children}</Await>
+  return <Await for={p.from} loading={<p class="m-muted">Yükleniyor…</p>}>{p.children}</Await>
 }
 
 /** A short log: [lines, add]. */
@@ -80,7 +80,7 @@ function ThemeBox(p: { def: () => ThemeDef; children?: unknown }) {
   const el = asEl(<div class="sc-ex-platform-theme">
     <p class="sc-ex-platform-theme-title">{() => p.def().name}</p>
     <p class="sc-ex-platform-theme-text">{() => p.def().description ?? "HADİ panosu"}</p>
-    <div class="sc-ex-platform-swatches">{[1, 2, 3, 4, 5, 6, 7, 8].map((i) => <span class="sc-ex-platform-sw" style={{ background: `var(--hm-cat-${i})` }} />)}</div>
+    <div class="sc-ex-platform-swatches">{[1, 2, 3, 4, 5, 6, 7, 8].map((i) => <span class="sc-ex-platform-sw" style={{ background: `var(--m-cat-${i})` }} />)}</div>
     <Row><Button variant="primary" size="sm">Kaydet</Button><Button size="sm">Vazgeç</Button></Row>
     {p.children}
   </div>)
@@ -262,7 +262,7 @@ resetChannelTabs()   // tests: drop the BroadcastChannel; the next emit opens a 
               <Button size="sm" onClick={() => picked.emit(`${p.name}: doğrudan`)}>Doğrudan</Button></Row>
             <Out label="bu kapsam" value={() => last() ?? "—"} /></div>
         }
-        return <Stack><Row><Card name="A" /><Card name="B" /></Row><p class="hm-muted">“Doğrudan” uygulama geneline gider; kapsamdakiler duymaz.</p></Stack>
+        return <Stack><Row><Card name="A" /><Card name="B" /></Row><p class="m-muted">“Doğrudan” uygulama geneline gider; kapsamdakiler duymaz.</p></Stack>
       },
     },
   },
@@ -322,7 +322,7 @@ resetChannelTabs()   // tests: drop the BroadcastChannel; the next emit opens a 
           {["Kalın", "Eğik", "Altı çizili", "Üstü çizili"].map((l) => <Button size="sm" data-label={l}>{l}</Button>)}
         </div>)
         onCleanup(rovingFocus(bar, { orientation: "horizontal", onMove: (el) => active.set(el.dataset["label"] ?? "") }))
-        return <Stack>{bar}<Row><Out label="etkin" value={active} /><span class="hm-muted">Tab bir kez, sonra <Kbd keys="←" /> <Kbd keys="→" /> <Kbd keys="Home" /> <Kbd keys="End" /></span></Row></Stack>
+        return <Stack>{bar}<Row><Out label="etkin" value={active} /><span class="m-muted">Tab bir kez, sonra <Kbd keys="←" /> <Kbd keys="→" /> <Kbd keys="Home" /> <Kbd keys="End" /></span></Row></Stack>
       },
     },
   },
@@ -335,7 +335,7 @@ resetChannelTabs()   // tests: drop the BroadcastChannel; the next emit opens a 
         resizeHandle(grip, { value: () => w.peek(), set: (v, done) => { w.set(v); if (done) saved.set(Math.round(v)) }, min: 80, max: 220, step: 10, reset: () => { w.set(140); saved.set(140) } })
         return <Stack>
           <div class="sc-ex-platform-split"><div class="sc-ex-platform-side" style={() => ({ "inline-size": `${w()}px` })}>Kenar</div>{grip}<div class="sc-ex-platform-main">İçerik</div></div>
-          <Row><Out label="genişlik" value={() => `${Math.round(w())}px`} /><Out label="kaydedilen" value={() => `${saved()}px`} /><span class="hm-muted">Çift tık ya da Enter: sıfırla</span></Row>
+          <Row><Out label="genişlik" value={() => `${Math.round(w())}px`} /><Out label="kaydedilen" value={() => `${saved()}px`} /><span class="m-muted">Çift tık ya da Enter: sıfırla</span></Row>
         </Stack>
       },
     },
@@ -452,7 +452,7 @@ const to = nearest([-120, 0, 120], rest)  // then snap`,
       run: () => {
         const open = signal(false), why = signal("—")
         const panel = asEl(<div class="sc-ex-platform-panel" role="dialog" aria-label="Filtreler" hidden={() => !open()}>
-          <strong>Filtreler</strong><span class="hm-muted">Dışarı bas ya da Esc.</span>
+          <strong>Filtreler</strong><span class="m-muted">Dışarı bas ya da Esc.</span>
           <Button size="sm" onClick={() => open.set(false)}>Kapat</Button>
         </div>)
         effect(() => {
@@ -534,7 +534,7 @@ ensureContrast(HADI.orange, "#FFFFFF", 3)`,
     hadi: { ...preset(hadi, `import { hadi } from "hadi-march/theme"
 hadi.light.cat.slice(0, 4)   // the four brand colors`) },
     indigo: { ...preset(indigo, `import { indigo } from "hadi-march/theme"
-<div data-hm-theme="indigo">…</div>   // after loadTheme("indigo")`) },
+<div data-m-theme="indigo">…</div>   // after loadTheme("indigo")`) },
     minimal: { ...preset(minimal, `import { minimal } from "hadi-march/theme"
 minimal.radius   // a quiet, monochrome preset`) },
     neon: { ...preset(neon, `import { neon } from "hadi-march/theme"
@@ -548,7 +548,7 @@ night.dark.bg`) },
     },
     themeCss: {
       code: `writeFileSync("dist/themes/hadi-marka.css", themeCss(hadiMarka))
-themeCss(hadi, true)   // the default also styles <html> without data-hm-theme`,
+themeCss(hadi, true)   // the default also styles <html> without data-m-theme`,
       run: () => {
         const id = signal("cream")
         const css = computed(() => themeCss(THEMES.find((t) => t.id === id()) ?? cream))
@@ -566,7 +566,7 @@ themeCss(hadi, true)   // the default also styles <html> without data-hm-theme`,
         return <Stack>
           <Segmented value={id} options={THEMES.map((t) => ({ value: t.id, label: t.name }))} aria-label="Önizlenen tema" />
           <ThemeBox def={() => THEMES.find((t) => t.id === id()) ?? hadi} />
-          <p class="hm-muted">Önizleme yalnız bu kutuda; sayfanın teması değişmez.</p>
+          <p class="m-muted">Önizleme yalnız bu kutuda; sayfanın teması değişmez.</p>
         </Stack>
       },
     },
@@ -601,11 +601,11 @@ themeCss(hadi, true)   // the default also styles <html> without data-hm-theme`,
         <Out label={`isIconDef(${k})`} value={String(isIconDef(v))} />)}</Stack>,
     },
     svgIcon: {
-      code: `const svg = svgIcon(star, "hm-svg hm-svg-xl", "Favori")   // a plain <svg> element, no JSX`,
+      code: `const svg = svgIcon(star, "m-svg m-svg-xl", "Favori")   // a plain <svg> element, no JSX`,
       run: () => {
         const labelled = signal(true)
         const box = asEl(<span />)
-        effect(() => box.replaceChildren(svgIcon(star, "hm-svg hm-svg-xl", labelled() ? "Favori" : undefined)))
+        effect(() => box.replaceChildren(svgIcon(star, "m-svg m-svg-xl", labelled() ? "Favori" : undefined)))
         const attr = (n: string) => () => (labelled(), (box.firstElementChild?.getAttribute(n) ?? "—"))
         return <Row>{box}<Button size="sm" onClick={() => labelled.update((x) => !x)}>{() => (labelled() ? "Etiketi kaldır" : "Etiket ver")}</Button>
           <Out label="role" value={attr("role")} /><Out label="aria-hidden" value={attr("aria-hidden")} /></Row>
@@ -647,7 +647,7 @@ Object.keys(ICONS).filter((n) => n.includes(q)).map((n) => <Icon of={ICONS[n]} /
         return <Load from={menuLib}>{({ ContextMenu }) => <Stack>
           <ContextMenu items={items} when={(t) => !p.values.only || !!t.closest("[data-file]")} label="Dosya işlemleri">
             <div class="sc-ex-platform-sample">
-              <span class="hm-muted">Sağ tıkla ya da odaklayıp Shift+F10</span>
+              <span class="m-muted">Sağ tıkla ya da odaklayıp Shift+F10</span>
               <Row>{["rapor.pdf", "logo.svg", "notlar.txt"].map((f) => <Button size="sm" variant="ghost" data-file={f}>{f}</Button>)}</Row>
             </div>
           </ContextMenu>
@@ -731,7 +731,7 @@ Object.keys(ICONS).filter((n) => n.includes(q)).map((n) => <Icon of={ICONS[n]} /
         onCleanup(() => off?.())
         return <Load from={commandLib}>{({ bindCommandKeys }) => <Stack><Row>
           <Button variant="primary" onClick={() => { if (off) { off(); off = null } else off = bindCommandKeys(); on.set(!!off) }}>{() => (on() ? "Kısayolları çöz" : "bindCommandKeys()")}</Button>
-          <span class="hm-muted">Sonra <Kbd keys="alt+shift+s" /> dene</span>
+          <span class="m-muted">Sonra <Kbd keys="alt+shift+s" /> dene</span>
         </Row><Log lines={lines} /></Stack>}</Load>
       },
     },
@@ -877,14 +877,14 @@ const stack = create({ limit: 3, mergeMs: 0, commands: false }, (type, d) => log
     comboOf: {
       code: `comboOf(button)   // "shift+s" from data-hotkey, else the first aria-keyshortcuts`,
       run: () => {
-        const els = [<button type="button" class="hm-btn" data-hotkey="shift+s">Paylaş</button>, <button type="button" class="hm-btn" aria-keyshortcuts="Control+K Meta+K">Ara</button>, <button type="button" class="hm-btn">Kısayolsuz</button>] as HTMLElement[]
+        const els = [<button type="button" class="m-btn" data-hotkey="shift+s">Paylaş</button>, <button type="button" class="m-btn" aria-keyshortcuts="Control+K Meta+K">Ara</button>, <button type="button" class="m-btn">Kısayolsuz</button>] as HTMLElement[]
         return <Stack>{els.map((el) => <Row>{el}<Out label="comboOf" value={String(comboOf(el))} /></Row>)}</Stack>
       },
     },
   },
   "hadi-march/managers/shortcut-hint/ui": {
     holdHint: {
-      code: `<p class="hm-muted">{holdHint()}</p>   // "Hold Alt to see shortcuts on the page." in the UI language`,
+      code: `<p class="m-muted">{holdHint()}</p>   // "Hold Alt to see shortcuts on the page." in the UI language`,
       run: () => {
         const key = signal("Alt")
         return <Load from={hintLib}>{({ holdHint }) => <Stack><Segmented value={key} options={["Alt", "Control", "Shift"].map((k) => ({ value: k, label: k }))} aria-label="Tuş" /><p>{() => holdHint(key())}</p></Stack>}</Load>

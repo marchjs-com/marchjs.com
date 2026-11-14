@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
         return <div class="sc-ex-stack">
           <Row><Field sig={base} label="Tema klasörü" /><Button onClick={() => setThemeBase(base())}>Uygula</Button></Row>
           <Out label="yüklenecek" value={() => `${base().endsWith("/") ? base() : `${base()}/`}night.css`} />
-          <span class="hm-muted">Bu örnek değeri varsayılana (“themes/”) uygular; başka bir değer yazarsan Uygula’dan sonra Sıfırla ile dön.</span>
+          <span class="m-muted">Bu örnek değeri varsayılana (“themes/”) uygular; başka bir değer yazarsan Uygula’dan sonra Sıfırla ile dön.</span>
           <Button variant="ghost" onClick={() => apply("themes/")}>Sıfırla</Button>
         </div>
       },

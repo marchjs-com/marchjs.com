@@ -11,7 +11,7 @@ const example: ApiExample<any> = {
       code: `if (loadDelay()) console.info(\`slow mode: +\${loadDelay()} ms per chunk\`)`,
       run: () => {
         const v = signal(loadDelay())
-        return <Row><Button size="sm" variant="ghost" onClick={() => v.set(loadDelay())}>Oku</Button><Out label="loadDelay()" value={() => `${v()} ms`} /><span class="hm-muted">0 = kapalı; setLoadDelay ile değişir.</span></Row>
+        return <Row><Button size="sm" variant="ghost" onClick={() => v.set(loadDelay())}>Oku</Button><Out label="loadDelay()" value={() => `${v()} ms`} /><span class="m-muted">0 = kapalı; setLoadDelay ile değişir.</span></Row>
       },
     };
 export default example;

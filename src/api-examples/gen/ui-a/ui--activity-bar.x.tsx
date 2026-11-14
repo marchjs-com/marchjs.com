@@ -27,7 +27,7 @@ const example: ApiExample<any> = {
         return () => <div class={`sc-ex-ui-a-ab sc-ex-ui-a-ab-${p.values.orientation}`}>
           <ActivityBar items={items} value={view} onChange={view.set} orientation={p.values.orientation} collapsible={p.values.collapsible} controls="sc-ex-ui-a-ab-view" label="Görünümler" />
           <div id="sc-ex-ui-a-ab-view" class="sc-ex-ui-a-ab-view">
-            {() => (view() ? <><strong>{TITLE[view()!]}</strong>{view() === "inbox" ? <Button size="sm" variant="ghost" onClick={() => unread.set(0)}>Tümünü okundu say</Button> : null}</> : <span class="hm-muted">Yan görünüm kapalı</span>)}
+            {() => (view() ? <><strong>{TITLE[view()!]}</strong>{view() === "inbox" ? <Button size="sm" variant="ghost" onClick={() => unread.set(0)}>Tümünü okundu say</Button> : null}</> : <span class="m-muted">Yan görünüm kapalı</span>)}
           </div>
         </div>
       },

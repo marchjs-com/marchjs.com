@@ -16,12 +16,12 @@ const example: ApiExample<any> = {
 />, app)`,
       play: { options: [{ key: "state", label: "Seviye", default: "page", options: [{ value: "page", label: "Sayfa" }, { value: "skeleton", label: "skeleton" }, { value: "notFound", label: "notFound" }] }] },
       run: (p: { values: { state: string } }) => <div class="sc-ex-app-stack">
-        <p class="hm-muted">Bu sayfanın kendi Router'ı bir outlet seviyesinde şunları gösterir (ikinci bir Router açılmaz):</p>
-        <div class="sc-ex-app-frame hm-outlet">
-          <span class="sc-ex-app-tag">{() => `.hm-outlet · ${p.values.state}`}</span>
+        <p class="m-muted">Bu sayfanın kendi Router'ı bir outlet seviyesinde şunları gösterir (ikinci bir Router açılmaz):</p>
+        <div class="sc-ex-app-frame m-outlet">
+          <span class="sc-ex-app-tag">{() => `.m-outlet · ${p.values.state}`}</span>
           {() => p.values.state === "skeleton" ? skeleton("card") : p.values.state === "notFound" ? h(_router.notFoundComp, {}) : <Card title="Siparişler"><p>HADİ · 3 açık sipariş</p></Card>}
         </div>
-        <Row><Out label="bu sayfadaki outlet" value={() => { path(); return String(document.querySelectorAll(".hm-outlet[data-depth]").length) }} /><Out label="route()" value={() => route()?.route.pattern ?? "—"} /></Row>
+        <Row><Out label="bu sayfadaki outlet" value={() => { path(); return String(document.querySelectorAll(".m-outlet[data-depth]").length) }} /><Out label="route()" value={() => route()?.route.pattern ?? "—"} /></Row>
       </div>,
     };
 export default example;

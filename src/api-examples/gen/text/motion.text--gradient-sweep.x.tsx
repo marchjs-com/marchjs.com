@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
 // A band of color sweeps once across the text (gradient text), leaving it as it was.
 const a = gradientSweep(title)
 await a.finished
-// also: gradientSweep(el, { color: "var(--hm-info)", duration: 1200 })`,
+// also: gradientSweep(el, { color: "var(--m-info)", duration: 1200 })`,
       play: { options: [COLOR, ms("duration", "Süre", 1400, 400, 3000, 200), phrase("Parlayan başlık", ["Hoş geldin Ada","Yeni sürüm yayında"])] },
       run: (p: V) => <Stage fn={gradientSweep} values={p.values} text="Parlayan başlık" hint="Renkli bir bant bir kez geçer ve metin eski haline döner." />,
     };

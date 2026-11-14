@@ -49,8 +49,8 @@ export default function MotionMicro() {
         opt("Ortadan", () => $rCenter, (v: boolean) => { $rCenter = v }),
       ]}>
       {() => { const o = { duration: $rDur, center: $rCenter, opacity: $rInk / 100 }; return <div class="sc-mo-micro">
-        <button type="button" class="hm-btn hm-btn-primary" use:ripple={o}>Kaydet</button>
-        <button type="button" class="hm-btn hm-btn-secondary" use:ripple={o}>Paylaş</button>
+        <button type="button" class="m-btn m-btn-primary" use:ripple={o}>Kaydet</button>
+        <button type="button" class="m-btn m-btn-secondary" use:ripple={o}>Paylaş</button>
         <div class="sc-mo-ripple-card" tabindex="0" role="button" use:ripple={o}><strong>HADİ</strong><span>Karta bas</span></div>
       </div> }}
     </MotionDemo>
@@ -117,7 +117,7 @@ setTimeout(() => stateMorph(btn, "idle"), 1600)`}
         opt("Bekleme", () => $wait, (v: number) => { $wait = v }, { min: 300, max: 3000, step: 100, unit: " ms" }),
       ]}>
       <div class="sc-mo-micro">
-        <button type="button" class="hm-btn hm-btn-primary sc-mo-save" ref={(el: HTMLElement) => { saveBtn = el }} on:click={save}>Değişiklikleri kaydet</button>
+        <button type="button" class="m-btn m-btn-primary sc-mo-save" ref={(el: HTMLElement) => { saveBtn = el }} on:click={save}>Değişiklikleri kaydet</button>
       </div>
     </MotionDemo>
   </Section>

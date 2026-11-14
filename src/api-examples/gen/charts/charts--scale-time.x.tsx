@@ -23,7 +23,7 @@ x.ticks(6)           // epoch ms on calendar boundaries`,
           <svg class="sc-ex-charts-svg" viewBox="0 0 320 44" role="img" aria-label="Zaman ekseni">
             <line class="sc-ex-charts-axis" x1="16" x2="304" y1="14" y2="14" />
             {() => x().ticks(5).map((t) => <g><line class="sc-ex-charts-tick" x1={x()(t)} x2={x()(t)} y1="10" y2="18" /><text x={x()(t)} y="32" text-anchor="middle">{span() <= 1 ? new Date(t).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }) : fmtDay(t)}</text></g>)}
-            <circle class="hm-chart-series-0 sc-ex-charts-dot" cx={pos} cy="14" r="5" />
+            <circle class="m-chart-series-0 sc-ex-charts-dot" cx={pos} cy="14" r="5" />
           </svg>
           <Slider value={pos} onChange={(v: number) => pos.set(v)} min={16} max={304} step={1} format={(v: number) => `${v} px`} aria-label="Konum" />
           <Out label="x.invert(px)" value={() => x().invert(pos()).toLocaleString("tr-TR", { dateStyle: "medium", timeStyle: "short" })} />

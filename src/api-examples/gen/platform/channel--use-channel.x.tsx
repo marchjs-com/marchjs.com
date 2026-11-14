@@ -21,7 +21,7 @@ const example: ApiExample<any> = {
               <Button size="sm" onClick={() => picked.emit(`${p.name}: doğrudan`)}>Doğrudan</Button></Row>
             <Out label="bu kapsam" value={() => last() ?? "—"} /></div>
         }
-        return <Stack><Row><Card name="A" /><Card name="B" /></Row><p class="hm-muted">“Doğrudan” uygulama geneline gider; kapsamdakiler duymaz.</p></Stack>
+        return <Stack><Row><Card name="A" /><Card name="B" /></Row><p class="m-muted">“Doğrudan” uygulama geneline gider; kapsamdakiler duymaz.</p></Stack>
       },
     };
 export default example;

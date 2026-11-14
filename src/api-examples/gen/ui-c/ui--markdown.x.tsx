@@ -12,7 +12,7 @@ const example: ApiExample<any> = {
       run: (p: { values: { offset: number } }) => {
         const src = signal("# HADİ bülteni\n\nBu hafta **3 yeni** özellik var:\n\n- Hızlı arama\n- `Ctrl+K` ile komutlar\n- [Belgeler](https://example.com)\n\n> <b>HTML</b> etiketleri metin olarak kalır.")
         return <div class="sc-ex-ui-c-stack">
-          <textarea class="hm-input sc-ex-ui-c-input" aria-label="Markdown kaynağı" value={src()} onInput={(e: Event) => src.set((e.target as HTMLTextAreaElement).value)} />
+          <textarea class="m-input sc-ex-ui-c-input" aria-label="Markdown kaynağı" value={src()} onInput={(e: Event) => src.set((e.target as HTMLTextAreaElement).value)} />
           <div class="sc-ex-ui-c-box"><Markdown source={src()} headingOffset={p.values.offset} /></div>
         </div>
       },

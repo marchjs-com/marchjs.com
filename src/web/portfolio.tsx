@@ -17,7 +17,7 @@ export default function PortfolioSample() {
   let $sent = false
   // the cover morphs both ways: grid cover and detail cover share the name project-<id>
   const open = (p: Project, cover: Element) => { void sharedTransition(`project-${p.id}`, cover, () => { $open = p; globalThis.scrollTo?.({ top: 0 }) }) }
-  const back = (p: Project) => { void sharedTransition(`project-${p.id}`, document.querySelector(".hm-pd-cover"), () => { $open = null }).then(() => document.getElementById("w-work")?.scrollIntoView({ block: "start" })) }
+  const back = (p: Project) => { void sharedTransition(`project-${p.id}`, document.querySelector(".m-pd-cover"), () => { $open = null }).then(() => document.getElementById("w-work")?.scrollIntoView({ block: "start" })) }
   return <div class="sc-sample-page">
     <SiteNav mode="transparent" brand={{ name: "Deniz Arı", sub: "Tasarım · Kod" }}
       links={[{ label: "İşler", href: "#w-work" }, { label: "Hakkımda", href: "#w-about" }, { label: "Deneyim", href: "#w-career" }, { label: "İletişim", href: "#w-contact" }]}

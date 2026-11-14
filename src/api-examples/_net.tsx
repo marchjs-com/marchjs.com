@@ -13,8 +13,8 @@ export function lines() {
   return Object.assign(s, { push: (l: string) => s.update((x) => [...x, l].slice(-8)) });
 }
 export const Text = (p: { value: Str; label: string }) =>
-  <input class="hm-input sc-ex-net-in" aria-label={p.label} value={p.value} onInput={(e: Event) => p.value.set((e.target as HTMLInputElement).value)} />;
+  <input class="m-input sc-ex-net-in" aria-label={p.label} value={p.value} onInput={(e: Event) => p.value.set((e.target as HTMLInputElement).value)} />;
 export const Area = (p: { value: Str; label: string }) =>
-  <textarea class="hm-textarea sc-ex-net-area" aria-label={p.label} value={p.value} onInput={(e: Event) => p.value.set((e.target as HTMLTextAreaElement).value)} />;
+  <textarea class="m-textarea sc-ex-net-area" aria-label={p.label} value={p.value} onInput={(e: Event) => p.value.set((e.target as HTMLTextAreaElement).value)} />;
 export const Pre = (p: { text: () => string }) => <pre class="sc-ex-net-pre">{p.text}</pre>;
 export const Tags = (p: { items: () => string[]; label: string }) => <ul class="sc-ex-net-tags" aria-label={p.label}>{() => p.items().map((x) => <li>{x}</li>)}</ul>;

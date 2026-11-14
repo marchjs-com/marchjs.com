@@ -26,7 +26,7 @@ const example: ApiExample<any> = {
         return <Load from={menuLib}>{({ ContextMenu }) => <Stack>
           <ContextMenu items={items} when={(t) => !p.values.only || !!t.closest("[data-file]")} label="Dosya işlemleri">
             <div class="sc-ex-platform-sample">
-              <span class="hm-muted">Sağ tıkla ya da odaklayıp Shift+F10</span>
+              <span class="m-muted">Sağ tıkla ya da odaklayıp Shift+F10</span>
               <Row>{["rapor.pdf", "logo.svg", "notlar.txt"].map((f) => <Button size="sm" variant="ghost" data-file={f}>{f}</Button>)}</Row>
             </div>
           </ContextMenu>

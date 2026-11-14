@@ -5,6 +5,6 @@ import type { ApiExample } from "../../types.ts";
 const example: ApiExample<any> = {
       code: `import { installFlip } from "hadi-march/motion"
 installFlip()   // calls setFlipHook(flip): <For animate> moves rows smoothly`,
-      run: () => <p class="hm-muted"><code>{"<For animate>"}</code> yeniden sıralamayı bu kancayla canlandırır; hadi-march/motion içindeki installFlip() onu kurar.</p>,
+      run: () => <p class="m-muted"><code>{"<For animate>"}</code> yeniden sıralamayı bu kancayla canlandırır; hadi-march/motion içindeki installFlip() onu kurar.</p>,
     };
 export default example;

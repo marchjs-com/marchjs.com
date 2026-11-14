@@ -10,7 +10,7 @@ import { box } from "./_box.tsx";
 import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
-      code: `// index.html carries the prerendered page: <div id="app" data-hm-prerender="/">…</div>
+      code: `// index.html carries the prerendered page: <div id="app" data-m-prerender="/">…</div>
 hydrate(() => <App />, document.getElementById("app")!)   // swaps in one step when ready`,
       run: () => {
         const host = box(""), status = signal("—")
@@ -18,7 +18,7 @@ hydrate(() => <App />, document.getElementById("app")!)   // swaps in one step w
         const go = () => {
           stop?.()
           host.replaceChildren(...Array.from(parseHtml("<p><strong>Önceden yazılmış HTML</strong> (derlemede üretildi)</p>").childNodes))
-          host.setAttribute("data-hm-prerender", location.pathname)
+          host.setAttribute("data-m-prerender", location.pathname)
           status.set("eski içerik görünüyor, uygulama arka planda çiziliyor…")
           const t0 = Date.now()
           stop = hydrate(() => <p>Canlı uygulama: {now()} · <Badge tone="success">etkileşimli</Badge></p>, host, { ready: () => { const ok = Date.now() - t0 > 1200; if (ok) status.set("tek adımda değiştirildi"); return ok } })

@@ -6,7 +6,7 @@ import { onCleanup, effect, untrack } from "hadi-march";
 
 /** A stand-in for a live editor: plain text, no colours. Registered only while the switch is on. */
 function PlainProvider(input: CodeViewInput) {
-  return <div class="sc-plain-code"><p class="hm-muted">Sahte sağlayıcı ({input.lang}): renksiz düz metin</p><pre>{input.source}</pre></div>
+  return <div class="sc-plain-code"><p class="m-muted">Sahte sağlayıcı ({input.lang}): renksiz düz metin</p><pre>{input.source}</pre></div>
 }
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
@@ -58,7 +58,7 @@ const $left = $todos.filter((x) => !x.done).length   // derived (computed)
             </li>}
           </For>
         </ul>
-        <p class="hm-muted"><If when={$left > 0}>{$left} iş kaldı<Else>Hepsi bitti 🎉</Else></If></p>
+        <p class="m-muted"><If when={$left > 0}>{$left} iş kaldı<Else>Hepsi bitti 🎉</Else></If></p>
       </Stack>
     </Card>
   </Demo>,
@@ -77,15 +77,15 @@ const $left = $todos.filter((x) => !x.done).length   // derived (computed)
     </Stack>
   </Demo>,
     "sx-class": () => <Demo title="sx ve class:" desc="sx derlemede statik sınıflara döner (satır içi stil üretmez); class:ad={koşul} sınıfı açar/kapatır."
-    code={`<div sx={{ p: 3, radius: 3, shadow: 2 }}>…</div>   // → class="hm-p-3 hm-radius-3 hm-shadow-2"
+    code={`<div sx={{ p: 3, radius: 3, shadow: 2 }}>…</div>   // → class="m-p-3 m-radius-3 m-shadow-2"
 <div class="box" class:is-hot={$big}>…</div>         // $big true → class="box is-hot"`}>
     <div class="sc-options"><Toggle bind:value={$big} label="Vurgula (class:is-hot)" /></div>
     <div sx={{ cols: 3, gap: 2 }}>
-      <div class="sc-sx" class:is-hot={$big} sx={{ p: 3, radius: 2 }}><code>{"sx={{ p: 3, radius: 2 }}"}</code><span>→ .hm-p-3 .hm-radius-2</span></div>
-      <div class="sc-sx" class:is-hot={$big} sx={{ p: 3, radius: 3, shadow: 2 }}><code>{"sx={{ p: 3, shadow: 2 }}"}</code><span>→ .hm-p-3 .hm-shadow-2</span></div>
-      <div class="sc-sx" class:is-hot={$big} sx={{ p: 3, radius: 4, shadow: 3 }}><code>{"sx={{ p: 3, shadow: 3 }}"}</code><span>→ .hm-p-3 .hm-shadow-3</span></div>
+      <div class="sc-sx" class:is-hot={$big} sx={{ p: 3, radius: 2 }}><code>{"sx={{ p: 3, radius: 2 }}"}</code><span>→ .m-p-3 .m-radius-2</span></div>
+      <div class="sc-sx" class:is-hot={$big} sx={{ p: 3, radius: 3, shadow: 2 }}><code>{"sx={{ p: 3, shadow: 2 }}"}</code><span>→ .m-p-3 .m-shadow-2</span></div>
+      <div class="sc-sx" class:is-hot={$big} sx={{ p: 3, radius: 4, shadow: 3 }}><code>{"sx={{ p: 3, shadow: 3 }}"}</code><span>→ .m-p-3 .m-shadow-3</span></div>
     </div>
-    <div class="sc-row"><Badge tone="danger" dot class:sc-pulse={$big}>Canlı</Badge><span class="hm-muted">{() => ($big ? "class:is-hot açık: vurgu kenarlığı, yumuşak zemin, hafif büyütme" : "class:is-hot kapalı")}</span></div>
+    <div class="sc-row"><Badge tone="danger" dot class:sc-pulse={$big}>Canlı</Badge><span class="m-muted">{() => ($big ? "class:is-hot açık: vurgu kenarlığı, yumuşak zemin, hafif büyütme" : "class:is-hot kapalı")}</span></div>
   </Demo>,
     "code-widget": () => <Demo wide title="Kod sekmesi bir widget noktası" desc="Bütün Kod sekmeleri <Widget sources={[codeView]} /> ile çizilir. Varsayılan sağlayıcı CodeViewer (renkli, salt okunur); Kopyala ve Tam ekran ayrı widget'lardır. Anahtarı açınca ikinci bir sağlayıcı kaydedilir ve vitrindeki bütün Kod sekmeleri onu gösterir. Bir canlı kod editörü aynı noktaya sağlayıcı olarak eklenebilir."
     code={`import { codeView } from "hadi-march/ui"
@@ -96,7 +96,7 @@ render: (input, ctx) => <pre>{input.source}</pre>,
 })
 off()                                        // back to CodeViewer`}>
     <Toggle bind:value={$plain} label="Sahte sağlayıcıyı kaydet" />
-    <Widget sources={[codeView]} input={{ lang: "tsx", source: 'export const Hello = () => <p class="hi">Merhaba</p>', files: [{ name: "hello.css", lang: "css", source: ".hi { color: var(--hm-primary-text); }" }, { name: "data.json", lang: "json", source: '{ "name": "March", "fast": true, "size": 15 }' }] }} />
+    <Widget sources={[codeView]} input={{ lang: "tsx", source: 'export const Hello = () => <p class="hi">Merhaba</p>', files: [{ name: "hello.css", lang: "css", source: ".hi { color: var(--m-primary-text); }" }, { name: "data.json", lang: "json", source: '{ "name": "March", "fast": true, "size": 15 }' }] }} />
   </Demo>,
   }
   return <Hub section="/language" kicker="Hareket" title="March dili" lead="JSX ve birkaç küçük derleyici kolaylığı: $ önekli değişkenler sinyaldir, onlara bağlı const'lar türetilir. Çıktı düz JavaScript; eval yok, innerHTML yok." render={RENDER} params={props.params} />

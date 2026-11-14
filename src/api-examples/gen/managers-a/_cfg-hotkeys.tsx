@@ -11,7 +11,7 @@ function CfgHotkeys() {
   return <Cfg m={hotkeyManager} fn={configureHotkeys} patch={{ sequenceTimeout: 4000 }}
     after={() => { off = hotkeys.bind("g h", () => log.update((l) => [...l.slice(-3), `${now()} · g h çalıştı`]), { description: "Ana sayfaya git" }); return () => off?.() }}
     view={(on) => <>
-      <p class="hm-muted">Sayfada <kbd>g</kbd> tuşuna, en geç 4 saniye içinde <kbd>h</kbd> tuşuna basın.</p>
+      <p class="m-muted">Sayfada <kbd>g</kbd> tuşuna, en geç 4 saniye içinde <kbd>h</kbd> tuşuna basın.</p>
       <Out label="pending()" value={() => { on(); return hotkeys.pending() || "—" }} />
       <Log lines={log} label="Çalışanlar" />
     </>} />

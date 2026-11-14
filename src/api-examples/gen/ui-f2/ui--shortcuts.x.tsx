@@ -17,8 +17,8 @@ shortcuts()   // [{ combo: "alt+j", label: "Alt+J", description: "Not aç", grou
         ]
         onCleanup(() => offs.forEach((o) => o()))
         return <div class="sc-ex-stack">
-          <ul class="sc-ex-ui-f-list">{() => shortcuts().map((s) => <li><Kbd>{s.label}</Kbd><span>{s.description}</span><span class="hm-muted">{s.group}</span></li>)}</ul>
-          <span class="hm-muted">Alt+J ya da Alt+Shift+K’ye bas.</span>
+          <ul class="sc-ex-ui-f-list">{() => shortcuts().map((s) => <li><Kbd>{s.label}</Kbd><span>{s.description}</span><span class="m-muted">{s.group}</span></li>)}</ul>
+          <span class="m-muted">Alt+J ya da Alt+Shift+K’ye bas.</span>
           <Log lines={lines} />
         </div>
       },

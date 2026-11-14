@@ -1,46 +1,46 @@
 /* API examples of the platform group (channels, behaviors, theme, icons, context menu, manager UIs). */
-.sc-ex-platform-stack { display: grid; gap: var(--hm-space-3); min-width: 0; }
-.sc-ex-platform-pad { position: relative; block-size: 9rem; min-width: 0; overflow: hidden; border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-2); background: var(--hm-surface-2); }
-.sc-ex-platform-puck { position: absolute; inset-block-start: var(--hm-space-3); inset-inline-start: var(--hm-space-3); display: inline-flex; align-items: center; gap: var(--hm-space-1);
-  padding: var(--hm-space-1) var(--hm-space-3); border-radius: var(--hm-radius-2); background: var(--hm-primary-solid); color: var(--hm-on-primary); box-shadow: var(--hm-shadow-2);
+.sc-ex-platform-stack { display: grid; gap: var(--m-space-3); min-width: 0; }
+.sc-ex-platform-pad { position: relative; block-size: 9rem; min-width: 0; overflow: hidden; border: 1px dashed var(--m-border); border-radius: var(--m-radius-2); background: var(--m-surface-2); }
+.sc-ex-platform-puck { position: absolute; inset-block-start: var(--m-space-3); inset-inline-start: var(--m-space-3); display: inline-flex; align-items: center; gap: var(--m-space-1);
+  padding: var(--m-space-1) var(--m-space-3); border-radius: var(--m-radius-2); background: var(--m-primary-solid); color: var(--m-on-primary); box-shadow: var(--m-shadow-2);
   cursor: grab; touch-action: none; user-select: none; }
 .sc-ex-platform-puck:active { cursor: grabbing; }
-.sc-ex-platform-track { position: relative; block-size: 2.5rem; min-width: 0; border-radius: var(--hm-radius-2); background: var(--hm-surface-2); cursor: pointer; touch-action: none; }
-.sc-ex-platform-fill { position: absolute; inset-block: 0; inset-inline-start: 0; border-radius: var(--hm-radius-2); background: var(--hm-primary-soft); }
+.sc-ex-platform-track { position: relative; block-size: 2.5rem; min-width: 0; border-radius: var(--m-radius-2); background: var(--m-surface-2); cursor: pointer; touch-action: none; }
+.sc-ex-platform-fill { position: absolute; inset-block: 0; inset-inline-start: 0; border-radius: var(--m-radius-2); background: var(--m-primary-soft); }
 .sc-ex-platform-thumb { position: absolute; inset-block-start: 50%; inline-size: 1.25rem; block-size: 1.25rem; margin-inline-start: -.625rem; margin-block-start: -.625rem;
-  border-radius: 50%; background: var(--hm-primary-solid); box-shadow: var(--hm-shadow-2); }
-.sc-ex-platform-split { display: flex; block-size: 7rem; min-width: 0; overflow: hidden; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); }
-.sc-ex-platform-side { flex: none; display: grid; place-items: center; min-width: 0; background: var(--hm-primary-soft); font-size: var(--hm-text-sm); }
-.sc-ex-platform-main { flex: 1 1 0; display: grid; place-items: center; min-width: 0; font-size: var(--hm-text-sm); color: var(--hm-muted); }
-.sc-ex-platform-grip { flex: none; inline-size: .5rem; background: var(--hm-border); cursor: col-resize; touch-action: none; transition: background-color var(--hm-dur-fast); }
-.sc-ex-platform-grip:hover, .sc-ex-platform-grip.is-dragging, .sc-ex-platform-grip:focus-visible { background: var(--hm-primary); outline: none; }
-.sc-ex-platform-drop { display: grid; place-items: center; min-block-size: 6rem; padding: var(--hm-space-3); border: 2px dashed var(--hm-border); border-radius: var(--hm-radius-2); text-align: center; color: var(--hm-muted);
-  transition: border-color var(--hm-dur-fast), background-color var(--hm-dur-fast); }
-.sc-ex-platform-drop.is-drop-over { border-color: var(--hm-primary); background: var(--hm-primary-soft); color: var(--hm-text); }
-.sc-ex-platform-lane { position: relative; display: grid; place-items: center; block-size: 5rem; min-width: 0; overflow: hidden; border-radius: var(--hm-radius-2); background: var(--hm-surface-2); }
-.sc-ex-platform-card { display: grid; place-items: center; inline-size: 9rem; block-size: 3.5rem; border-radius: var(--hm-radius-2); background: var(--hm-surface); border: 1px solid var(--hm-border); box-shadow: var(--hm-shadow-2);
+  border-radius: 50%; background: var(--m-primary-solid); box-shadow: var(--m-shadow-2); }
+.sc-ex-platform-split { display: flex; block-size: 7rem; min-width: 0; overflow: hidden; border: 1px solid var(--m-border); border-radius: var(--m-radius-2); }
+.sc-ex-platform-side { flex: none; display: grid; place-items: center; min-width: 0; background: var(--m-primary-soft); font-size: var(--m-text-sm); }
+.sc-ex-platform-main { flex: 1 1 0; display: grid; place-items: center; min-width: 0; font-size: var(--m-text-sm); color: var(--m-muted); }
+.sc-ex-platform-grip { flex: none; inline-size: .5rem; background: var(--m-border); cursor: col-resize; touch-action: none; transition: background-color var(--m-dur-fast); }
+.sc-ex-platform-grip:hover, .sc-ex-platform-grip.is-dragging, .sc-ex-platform-grip:focus-visible { background: var(--m-primary); outline: none; }
+.sc-ex-platform-drop { display: grid; place-items: center; min-block-size: 6rem; padding: var(--m-space-3); border: 2px dashed var(--m-border); border-radius: var(--m-radius-2); text-align: center; color: var(--m-muted);
+  transition: border-color var(--m-dur-fast), background-color var(--m-dur-fast); }
+.sc-ex-platform-drop.is-drop-over { border-color: var(--m-primary); background: var(--m-primary-soft); color: var(--m-text); }
+.sc-ex-platform-lane { position: relative; display: grid; place-items: center; block-size: 5rem; min-width: 0; overflow: hidden; border-radius: var(--m-radius-2); background: var(--m-surface-2); }
+.sc-ex-platform-card { display: grid; place-items: center; inline-size: 9rem; block-size: 3.5rem; border-radius: var(--m-radius-2); background: var(--m-surface); border: 1px solid var(--m-border); box-shadow: var(--m-shadow-2);
   touch-action: pan-y; user-select: none; cursor: grab; }
-.sc-ex-platform-card.is-settling { transition: transform var(--hm-dur) var(--hm-ease); }
+.sc-ex-platform-card.is-settling { transition: transform var(--m-dur) var(--m-ease); }
 .sc-ex-platform-pop { position: relative; display: inline-grid; }
-.sc-ex-platform-panel { position: absolute; inset-block-start: calc(100% + var(--hm-space-1)); inset-inline-start: 0; z-index: 2; display: grid; gap: var(--hm-space-1); inline-size: 12rem;
-  padding: var(--hm-space-3); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); background: var(--hm-surface-raised); box-shadow: var(--hm-shadow-3); }
-.sc-ex-platform-opts { display: grid; gap: 2px; margin: 0; padding: var(--hm-space-1); list-style: none; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-1); }
-.sc-ex-platform-opt { padding: var(--hm-space-1) var(--hm-space-2); border-radius: var(--hm-radius-1); }
-.sc-ex-platform-opt.is-active { background: var(--hm-primary-soft); color: var(--hm-primary-text, var(--hm-primary)); }
-.sc-ex-platform-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--hm-space-1); max-inline-size: 16rem; outline: none; }
-.sc-ex-platform-grid:focus-visible { outline: 2px solid var(--hm-focus); outline-offset: 4px; border-radius: var(--hm-radius-1); }
-.sc-ex-platform-cell { display: grid; place-items: center; block-size: 2rem; border-radius: var(--hm-radius-1); background: var(--hm-surface-2); font-size: var(--hm-text-sm); }
-.sc-ex-platform-cell.is-active { background: var(--hm-primary-solid); color: var(--hm-on-primary); }
-.sc-ex-platform-icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr)); gap: var(--hm-space-1); max-block-size: 14rem; overflow: auto; }
-.sc-ex-platform-glyph { display: grid; justify-items: center; gap: 2px; padding: var(--hm-space-2) 2px; border-radius: var(--hm-radius-1); background: var(--hm-surface-2); font-size: var(--hm-text-xs); color: var(--hm-muted); overflow-wrap: anywhere; text-align: center; }
-.sc-ex-platform-glyph .hm-svg { color: var(--hm-text); }
-.sc-ex-platform-theme { display: grid; gap: var(--hm-space-2); min-width: 0; padding: var(--hm-space-3); border: 1px solid var(--hm-border); border-radius: calc(var(--hm-r, 8px) * 1.4);
-  background: var(--hm-bg); color: var(--hm-text); font-family: var(--hm-font); }
-.sc-ex-platform-theme-title { margin: 0; font-family: var(--hm-font-display); font-weight: var(--hm-display-weight, 700); font-size: var(--hm-text-lg); }
-.sc-ex-platform-theme-text { margin: 0; color: var(--hm-muted); font-size: var(--hm-text-sm); }
-.sc-ex-platform-swatches { display: flex; flex-wrap: wrap; gap: var(--hm-space-1); }
-.sc-ex-platform-sw { display: inline-grid; place-items: center; min-inline-size: 1.5rem; block-size: 1.5rem; padding-inline: var(--hm-space-1); border-radius: var(--hm-radius-1); border: 1px solid var(--hm-border-subtle);
-  font-size: var(--hm-text-xs); font-weight: 600; }
-.sc-ex-platform-css { max-block-size: 12rem; margin: 0; padding: var(--hm-space-2); overflow: auto; border-radius: var(--hm-radius-1); background: var(--hm-surface-2); font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); white-space: pre; }
-.sc-ex-platform-sample { display: grid; gap: var(--hm-space-2); padding: var(--hm-space-3); border: 1px solid var(--hm-border-subtle); border-radius: var(--hm-radius-2); }
+.sc-ex-platform-panel { position: absolute; inset-block-start: calc(100% + var(--m-space-1)); inset-inline-start: 0; z-index: 2; display: grid; gap: var(--m-space-1); inline-size: 12rem;
+  padding: var(--m-space-3); border: 1px solid var(--m-border); border-radius: var(--m-radius-2); background: var(--m-surface-raised); box-shadow: var(--m-shadow-3); }
+.sc-ex-platform-opts { display: grid; gap: 2px; margin: 0; padding: var(--m-space-1); list-style: none; border: 1px solid var(--m-border); border-radius: var(--m-radius-1); }
+.sc-ex-platform-opt { padding: var(--m-space-1) var(--m-space-2); border-radius: var(--m-radius-1); }
+.sc-ex-platform-opt.is-active { background: var(--m-primary-soft); color: var(--m-primary-text, var(--m-primary)); }
+.sc-ex-platform-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--m-space-1); max-inline-size: 16rem; outline: none; }
+.sc-ex-platform-grid:focus-visible { outline: 2px solid var(--m-focus); outline-offset: 4px; border-radius: var(--m-radius-1); }
+.sc-ex-platform-cell { display: grid; place-items: center; block-size: 2rem; border-radius: var(--m-radius-1); background: var(--m-surface-2); font-size: var(--m-text-sm); }
+.sc-ex-platform-cell.is-active { background: var(--m-primary-solid); color: var(--m-on-primary); }
+.sc-ex-platform-icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr)); gap: var(--m-space-1); max-block-size: 14rem; overflow: auto; }
+.sc-ex-platform-glyph { display: grid; justify-items: center; gap: 2px; padding: var(--m-space-2) 2px; border-radius: var(--m-radius-1); background: var(--m-surface-2); font-size: var(--m-text-xs); color: var(--m-muted); overflow-wrap: anywhere; text-align: center; }
+.sc-ex-platform-glyph .m-svg { color: var(--m-text); }
+.sc-ex-platform-theme { display: grid; gap: var(--m-space-2); min-width: 0; padding: var(--m-space-3); border: 1px solid var(--m-border); border-radius: calc(var(--m-r, 8px) * 1.4);
+  background: var(--m-bg); color: var(--m-text); font-family: var(--m-font); }
+.sc-ex-platform-theme-title { margin: 0; font-family: var(--m-font-display); font-weight: var(--m-display-weight, 700); font-size: var(--m-text-lg); }
+.sc-ex-platform-theme-text { margin: 0; color: var(--m-muted); font-size: var(--m-text-sm); }
+.sc-ex-platform-swatches { display: flex; flex-wrap: wrap; gap: var(--m-space-1); }
+.sc-ex-platform-sw { display: inline-grid; place-items: center; min-inline-size: 1.5rem; block-size: 1.5rem; padding-inline: var(--m-space-1); border-radius: var(--m-radius-1); border: 1px solid var(--m-border-subtle);
+  font-size: var(--m-text-xs); font-weight: 600; }
+.sc-ex-platform-css { max-block-size: 12rem; margin: 0; padding: var(--m-space-2); overflow: auto; border-radius: var(--m-radius-1); background: var(--m-surface-2); font-family: var(--m-font-mono); font-size: var(--m-text-xs); white-space: pre; }
+.sc-ex-platform-sample { display: grid; gap: var(--m-space-2); padding: var(--m-space-3); border: 1px solid var(--m-border-subtle); border-radius: var(--m-radius-2); }
 .sc-ex-platform-sample p { margin: 0; }

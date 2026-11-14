@@ -7,12 +7,12 @@ import "../../text.css";
 
 const example: ApiExample<any> = {
       code: `<div class="hero">
-  <Particles count={70} links={110} speed={0.35} interactive class="hm-fx-fill" />
+  <Particles count={70} links={110} speed={0.35} interactive class="m-fx-fill" />
   <h2>Ağ</h2>
 </div>`,
       play: { options: [{ key: "count", label: "Parçacık", default: 70, options: [20, 70, 140] }, { key: "links", label: "Bağlantı", default: 110, options: [{ value: 0, label: "Yok" }, { value: 70, label: "Kısa" }, { value: 110, label: "Uzun" }] }, { key: "interactive", label: "İşaretçiyi çek", default: true }] },
       run: (p: V) => <div class="sc-ex-text-fx">
-        {() => <Particles count={p.values["count"] as number} links={p.values["links"] as number} speed={0.35} interactive={!!p.values["interactive"]} color="var(--hm-primary)" class="hm-fx-fill" />}
+        {() => <Particles count={p.values["count"] as number} links={p.values["links"] as number} speed={0.35} interactive={!!p.values["interactive"]} color="var(--m-primary)" class="m-fx-fill" />}
         <strong class="sc-ex-text-fx-title">Ağ</strong>
       </div>,
     };

@@ -12,7 +12,7 @@ const example: ApiExample<any> = {
         const w = watch()
         return <div class="sc-ex-app-stack">
           <Out label="şimdi" value={() => route()?.path ?? "—"} />
-          <p class="hm-muted">Bu kart açıldığından beri gezilen sayfalar (başka sayfaya geçip geri dön):</p>
+          <p class="m-muted">Bu kart açıldığından beri gezilen sayfalar (başka sayfaya geçip geri dön):</p>
           <Log lines={w.routes} />
         </div>
       },

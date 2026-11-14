@@ -12,7 +12,7 @@ export function SessionDemo() {
   let $activity = true
   const apply = () => configureSession({ duration: $duration * 1000, warnBefore: $warn * 1000, extendOnActivity: $activity, extendEvery: 5000, storageKey: "sc.session.demo", onExpire: () => toast("Süre doldu: kullanıcı çıkışa yönlendirilir", { kind: "warn" }) })
   apply()
-  onCleanup(() => { session().end(); configureSession({ duration: 30 * 60_000, warnBefore: 2 * 60_000, extendOnActivity: true, extendEvery: 30_000, storageKey: "hm.session", onExpire: null }) })
+  onCleanup(() => { session().end(); configureSession({ duration: 30 * 60_000, warnBefore: 2 * 60_000, extendOnActivity: true, extendEvery: 30_000, storageKey: "m.session", onExpire: null }) })
   const restart = (f: () => void) => { const was = session().active(); f(); apply(); if (was) session().start() }
   return <Demo title="Session: süre ve uyarı" desc="Oturum süresi, bitmeden önce uyarı, etkinlikle uzama ve sekmeler arası tek son tarih: bir sekmede uzatmak hepsini uzatır, çıkış hepsinden çıkarır. Uyarı penceresinde etkinlik uzatmaz; açık onay gerekir."
     code={`configureSession({ duration: 30 * 60_000, warnBefore: 2 * 60_000, onExpire: signOut })

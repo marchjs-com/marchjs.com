@@ -105,7 +105,7 @@ export default function MiniIde() {
   })
   const explorer = () => <div class="sc-ide-side">
     {() => (view() === "search"
-      ? <label class="sc-ide-search"><span class="hm-sr-only">Dosyalarda ara</span><input class="hm-input" type="search" placeholder="Dosyalarda ara…" value={query()} on:input={(e: Event) => query.set((e.target as HTMLInputElement).value)} /></label>
+      ? <label class="sc-ide-search"><span class="m-sr-only">Dosyalarda ara</span><input class="m-input" type="search" placeholder="Dosyalarda ara…" value={query()} on:input={(e: Event) => query.set((e.target as HTMLInputElement).value)} /></label>
       : null)}
     {() => <Tree nodes={treeNodes()} expanded={["hadi", "src"]} selected={active} label="Dosyalar" onSelect={(n: { id: string; children?: unknown }) => { if (!n.children) openFile(n.id) }} />}
   </div>

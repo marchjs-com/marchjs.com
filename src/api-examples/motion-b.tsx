@@ -37,12 +37,12 @@ nextFrame(() => log("güncelleme"))
     },
     mixColor: {
       code: `const css = getComputedStyle(document.documentElement)
-const a = css.getPropertyValue("--hm-brand-orange")
-const b = css.getPropertyValue("--hm-brand-blue")
+const a = css.getPropertyValue("--m-brand-orange")
+const b = css.getPropertyValue("--m-brand-blue")
 mixColor(a, b, 0.5)    // "oklab(…)": mixed in OKLab, no muddy middle`,
       run: () => {
         const t = signal(50)
-        const a = tok("--hm-brand-orange"), b = tok("--hm-brand-blue")
+        const a = tok("--m-brand-orange"), b = tok("--m-brand-blue")
         const mixed = () => mixColor(a, b, t() / 100)
         return <div class="sc-ex-motion-b-stack">
           <div class="sc-ex-motion-b-swatch" ref={(el: HTMLElement) => { effect(() => { el.style.background = mixed() }) }} role="img" aria-label="Karışmış renk" />
@@ -63,8 +63,8 @@ morph(thumb, big, { mode: "scale" })         // same picture in two places: FLIP
         const reset = () => { keep(animate(panel, { opacity: [1, 1] }, { duration: 1 })).cancel(); panel.hidden = true; src.style.visibility = "" }
         return <div class="sc-ex-motion-b-stack">
           <div class="sc-ex-motion-b-stage">
-            <button type="button" class="hm-btn hm-btn-primary sc-ex-motion-b-src" ref={(el: HTMLElement) => { src = el }} on:click={open}>Aç</button>
-            <div class="sc-ex-motion-b-panel" hidden ref={(el: HTMLElement) => { panel = el }}><strong>HADİ Atölye</strong><span class="hm-muted">Kutu, düğmenin yerinden büyür.</span></div>
+            <button type="button" class="m-btn m-btn-primary sc-ex-motion-b-src" ref={(el: HTMLElement) => { src = el }} on:click={open}>Aç</button>
+            <div class="sc-ex-motion-b-panel" hidden ref={(el: HTMLElement) => { panel = el }}><strong>HADİ Atölye</strong><span class="m-muted">Kutu, düğmenin yerinden büyür.</span></div>
           </div>
           <Row><Button variant="ghost" onClick={reset}>Sıfırla</Button></Row>
         </div>
@@ -81,8 +81,8 @@ dialog.hidden = true`,
         nextFrame(open)
         return <div class="sc-ex-motion-b-stack">
           <div class="sc-ex-motion-b-stage">
-            <button type="button" class="hm-btn hm-btn-primary sc-ex-motion-b-src" ref={(el: HTMLElement) => { src = el }} on:click={open}>Aç</button>
-            <div class="sc-ex-motion-b-panel" ref={(el: HTMLElement) => { panel = el }}><strong>HADİ Atölye</strong><span class="hm-muted">Kapatınca düğmeye geri çekilir.</span></div>
+            <button type="button" class="m-btn m-btn-primary sc-ex-motion-b-src" ref={(el: HTMLElement) => { src = el }} on:click={open}>Aç</button>
+            <div class="sc-ex-motion-b-panel" ref={(el: HTMLElement) => { panel = el }}><strong>HADİ Atölye</strong><span class="m-muted">Kapatınca düğmeye geri çekilir.</span></div>
           </div>
           <Row><Button variant="primary" onClick={close}>Kapat</Button><Button variant="ghost" onClick={open}>Yeniden aç</Button></Row>
         </div>
@@ -202,7 +202,7 @@ normalize({ opacity: [0, 1], x: [0, 100] })   // → one track per property`,
         const tracks = () => normalize(form() === "array" ? [{ opacity: 0, transform: "scale(.8)" }, { opacity: 1, offset: 0.6 }, { transform: "none" }] : { opacity: [0, 1], x: [0, 100] })
         return <div class="sc-ex-motion-b-stack">
           <Pick sig={form} label="Yazım" options={[["array", "kare dizisi"], ["object", "özellik listesi"]]} />
-          <ul class="sc-ex-log" style="list-style:none;margin:0;padding:var(--hm-space-2)">{() => tracks().map((t) => <li><strong>{t.prop}</strong>{": " + t.offsets.map((o, i) => o + " → " + (t.values[i] ?? "şu anki")).join(" · ")}</li>)}</ul>
+          <ul class="sc-ex-log" style="list-style:none;margin:0;padding:var(--m-space-2)">{() => tracks().map((t) => <li><strong>{t.prop}</strong>{": " + t.offsets.map((o, i) => o + " → " + (t.values[i] ?? "şu anki")).join(" · ")}</li>)}</ul>
         </div>
       },
     },
@@ -256,10 +256,10 @@ off()                                                            // turn them of
 parseColor("oklch(0.7 0.15 55)", out)     // true; out = [L·α, a·α, b·α, α]
 parseColor("not-a-colour", out)           // false`,
       run: () => {
-        const name = signal("--hm-brand-orange")
+        const name = signal("--m-brand-orange")
         const parsed = () => { const out = [0, 0, 0, 0], v = tok(name()); const ok = parseColor(v, out); return { v, ok, out: out.map((n) => Math.round(n * 1000) / 1000) } }
         return <div class="sc-ex-motion-b-stack">
-          <Pick sig={name} label="Renk" options={[["--hm-brand-orange", "turuncu"], ["--hm-brand-blue", "mavi"], ["--hm-brand-green", "yeşil"], ["--hm-brand-purple", "mor"]]} />
+          <Pick sig={name} label="Renk" options={[["--m-brand-orange", "turuncu"], ["--m-brand-blue", "mavi"], ["--m-brand-green", "yeşil"], ["--m-brand-purple", "mor"]]} />
           <div class="sc-ex-motion-b-swatch" style={() => "background:var(" + name() + ")"} role="img" aria-label="Seçilen renk" />
           <Out label="değer" value={() => parsed().v} />
           <Out label="çözüldü" value={() => (parsed().ok ? "evet" : "hayır")} />
@@ -273,7 +273,7 @@ parseColor("not-a-colour", out)           // false`,
       run: () => {
         const d = signal("M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80")
         return <div class="sc-ex-motion-b-stack">
-          <input class="hm-input" value={d()} aria-label="Yol (d)" on:input={(e: Event) => d.set((e.target as HTMLInputElement).value)} />
+          <input class="m-input" value={d()} aria-label="Yol (d)" on:input={(e: Event) => d.set((e.target as HTMLInputElement).value)} />
           <ol class="sc-ex-log">{() => parsePath(d()).map((s) => <li>{s.c + " " + s.v.join(" ")}</li>)}</ol>
         </div>
       },
@@ -363,7 +363,7 @@ animate(card, "hadi-pop")                              // by name, anywhere`,
         const ez = signal("spring-wobbly")
         return <div class="sc-ex-motion-b-stack">
           <Pick sig={ez} label="Bırakış" options={["spring-wobbly", "spring-snappy", "easeOutBack"]} />
-          {() => <div class="sc-ex-motion-b-stage"><button type="button" class="hm-btn hm-btn-primary" use:press={{ scale: 0.88, easing: ez() }}>Bas ve bırak</button></div>}
+          {() => <div class="sc-ex-motion-b-stage"><button type="button" class="m-btn m-btn-primary" use:press={{ scale: 0.88, easing: ez() }}>Bas ve bırak</button></div>}
         </div>
       },
     },

@@ -276,7 +276,7 @@ n.get("/search", { query: { q }, category: "search", policy: "latest" })   // th
         const q = signal(""), result = signal("—"), aborted = signal(0)
         const n = mockNet({ "GET /search": (r) => ({ q: r.query["q"], hits: r.fake.int(1, 40) }) }, [300, 700])
         const go = (v: string) => { q.set(v); n.get<{ q: string; hits: number }>("/search", { query: { q: v }, category: "search", policy: "latest", report: false }).then((r) => result.set(`"${r.q}": ${r.hits} sonuç`), (e) => isAbort(e) && aborted.update((x) => x + 1)) }
-        return <div class="sc-ex-stack"><input class="hm-input sc-ex-net-in" aria-label="Ara" placeholder="Hızlı yaz…" value={q} onInput={(e: Event) => go((e.target as HTMLInputElement).value)} />
+        return <div class="sc-ex-stack"><input class="m-input sc-ex-net-in" aria-label="Ara" placeholder="Hızlı yaz…" value={q} onInput={(e: Event) => go((e.target as HTMLInputElement).value)} />
           <Row><Out label="Uçuşta" value={() => String(n.pending("search"))} /><Out label="İptal edilen" value={aborted} /><Out label="Son" value={result} /></Row></div>
       },
     },

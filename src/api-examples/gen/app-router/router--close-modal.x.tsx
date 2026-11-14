@@ -9,11 +9,11 @@ import "../../app.css";
 const example: ApiExample<any> = {
       code: `<Button onClick={closeModal}>Kapat</Button>   // inside a page opened with navigate(to, { modal: true })`,
       run: () => {
-        const isModal = () => { path(); return !!(globalThis.history.state as { hmModal?: boolean } | null)?.hmModal }
+        const isModal = () => { path(); return !!(globalThis.history.state as { mModal?: boolean } | null)?.mModal }
         return <Row>
           <Out label="modal açık" value={() => String(isModal())} />
           <Button variant="secondary" disabled={() => !isModal()} onClick={closeModal}>closeModal()</Button>
-          <p class="hm-muted">Bu sayfa modal olarak açılmadı; düğme yalnız modal bir rotada çalışır.</p>
+          <p class="m-muted">Bu sayfa modal olarak açılmadı; düğme yalnız modal bir rotada çalışır.</p>
         </Row>
       },
     };

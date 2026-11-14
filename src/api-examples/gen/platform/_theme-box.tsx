@@ -11,7 +11,7 @@ function ThemeBox(p: { def: () => ThemeDef; children?: unknown }) {
   const el = asEl(<div class="sc-ex-platform-theme">
     <p class="sc-ex-platform-theme-title">{() => p.def().name}</p>
     <p class="sc-ex-platform-theme-text">{() => p.def().description ?? "HADİ panosu"}</p>
-    <div class="sc-ex-platform-swatches">{[1, 2, 3, 4, 5, 6, 7, 8].map((i) => <span class="sc-ex-platform-sw" style={{ background: `var(--hm-cat-${i})` }} />)}</div>
+    <div class="sc-ex-platform-swatches">{[1, 2, 3, 4, 5, 6, 7, 8].map((i) => <span class="sc-ex-platform-sw" style={{ background: `var(--m-cat-${i})` }} />)}</div>
     <Row><Button variant="primary" size="sm">Kaydet</Button><Button size="sm">Vazgeç</Button></Row>
     {p.children}
   </div>)

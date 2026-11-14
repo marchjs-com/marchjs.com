@@ -130,7 +130,7 @@ export default examples({
       ] },
       run: (p: { values: { label: string; shortcut: string } }) => <div class="sc-ex-ui-c-stack">
         {() => { const shortcut = p.values.shortcut; return <div class="sc-ex-ui-c-narrow"><PaletteButton label={() => p.values.label} shortcut={shortcut} /></div> }}
-        <p class="hm-muted">Tıklayınca komut paleti açılır (Esc kapatır).</p>
+        <p class="m-muted">Tıklayınca komut paleti açılır (Esc kapatır).</p>
       </div>,
     },
     PasswordInput: {

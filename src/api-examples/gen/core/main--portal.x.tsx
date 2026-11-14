@@ -10,7 +10,7 @@ const example: ApiExample<any> = {
       play: { options: [{ key: "show", label: "Portal açık", default: true }] },
       run: (p: { values: { show: boolean } }) => <div class="sc-ex-stack">
         <PortalTarget name="api-ex-bar" class="sc-row sc-ex-target" label="Hedef" />
-        <p class="hm-muted">Bu satırdaki kaynak, düğmeyi yukarıdaki hedefe çizer:</p>
+        <p class="m-muted">Bu satırdaki kaynak, düğmeyi yukarıdaki hedefe çizer:</p>
         {() => (p.values.show ? <Portal to="api-ex-bar"><Button variant="primary">Kaydet (portal)</Button></Portal> : null)}
       </div>,
     };

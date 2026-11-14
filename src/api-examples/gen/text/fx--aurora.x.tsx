@@ -7,12 +7,12 @@ import "../../text.css";
 
 const example: ApiExample<any> = {
       code: `<div class="hero">
-  <Aurora colors={["var(--hm-primary)", "var(--hm-info)", "var(--hm-success)"]} />
+  <Aurora colors={["var(--m-primary)", "var(--m-info)", "var(--m-success)"]} />
   <h2>Hoş geldin</h2>
 </div>`,
       play: { options: [{ key: "blobs", label: "Renk sayısı", default: 3, options: [1, 2, 3, 4] }] },
       run: (p: V) => <div class="sc-ex-text-fx">
-        {() => <Aurora colors={["var(--hm-primary)", "var(--hm-info)", "var(--hm-success)", "var(--hm-warning)"].slice(0, p.values["blobs"] as number)} />}
+        {() => <Aurora colors={["var(--m-primary)", "var(--m-info)", "var(--m-success)", "var(--m-warning)"].slice(0, p.values["blobs"] as number)} />}
         <strong class="sc-ex-text-fx-title">Hoş geldin</strong>
       </div>,
     };

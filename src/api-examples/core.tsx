@@ -42,7 +42,7 @@ async function Profile() {
 <a class={$cls} onClick={go}>…</a>   // → _prop(a, "a", "class", …); _prop(a, "a", "onClick", go)`,
       run: () => {
         const on = signal(false)
-        const a = _tpl(["button", [["type", "button"], ["class", "hm-btn"]], "Değiştir"])()
+        const a = _tpl(["button", [["type", "button"], ["class", "m-btn"]], "Değiştir"])()
         _prop(a, "button", "aria-pressed", reactive(() => String(on())))
         _prop(a, "button", "onClick", () => on.update((x) => !x))
         return <Row>{a}<Out label="aria-pressed" value={() => String(on())} /></Row>
@@ -88,7 +88,7 @@ applyPipe("relative", Date.now() - 90_000)`,
         const tick = signal(0)
         const load = () => { tick(); const fail = p.values.result === "fail", ms = p.values.ms; return new Promise<string>((ok, no) => setTimeout(() => (fail ? no(new Error("Sunucu yanıt vermedi")) : ok("HADİ")), ms)) }
         return <div class="sc-ex-stack">
-          <Await for={load} loading={<p class="hm-muted">Yükleniyor…</p>} catch={(e: Error) => <p role="alert">{e.message}</p>}>
+          <Await for={load} loading={<p class="m-muted">Yükleniyor…</p>} catch={(e: Error) => <p role="alert">{e.message}</p>}>
             {(name: string) => <p>Merhaba, <strong>{name}</strong></p>}
           </Await>
           <Button variant="ghost" onClick={() => tick.update((x) => x + 1)}>Yeniden yükle</Button>
@@ -232,9 +232,9 @@ runWithOwner(owner, () => effect(() => …))   // cleaned up with the component`
       run: () => <Out label="getOwner()" value={getOwner() ? "bu bileşenin sahibi" : "null"} />,
     },
     h: {
-      code: `h("button", { class: "hm-btn", onClick: save }, "Kaydet")
+      code: `h("button", { class: "m-btn", onClick: save }, "Kaydet")
 h(Badge, { tone: "primary" }, "Yeni")`,
-      run: () => <Row>{h("button", { type: "button", class: "hm-btn", onClick: () => alert("h() ile oluşturuldu") }, "h() düğmesi")}{h(Badge, { tone: "primary" }, "h(Badge)")}</Row>,
+      run: () => <Row>{h("button", { type: "button", class: "m-btn", onClick: () => alert("h() ile oluşturuldu") }, "h() düğmesi")}{h(Badge, { tone: "primary" }, "h(Badge)")}</Row>,
     },
     If: {
       code: `<If when={$count > 3} else={<p>Az</p>}>
@@ -319,7 +319,7 @@ onCleanup(() => clearInterval(id))`,
 close()`,
       run: () => {
         const open = () => {
-          const el = <div class="hm-card sc-ex-layer" role="status">openLayer("toast") ile açıldı</div> as HTMLElement
+          const el = <div class="m-card sc-ex-layer" role="status">openLayer("toast") ile açıldı</div> as HTMLElement
           const close = openLayer("toast", el)
           setTimeout(close, 1800)
         }
@@ -349,7 +349,7 @@ patch(user, { address: { city: "Ankara" } })   // one batch, deep merge`,
       play: { options: [{ key: "show", label: "Portal açık", default: true }] },
       run: (p: { values: { show: boolean } }) => <div class="sc-ex-stack">
         <PortalTarget name="api-ex-bar" class="sc-row sc-ex-target" label="Hedef" />
-        <p class="hm-muted">Bu satırdaki kaynak, düğmeyi yukarıdaki hedefe çizer:</p>
+        <p class="m-muted">Bu satırdaki kaynak, düğmeyi yukarıdaki hedefe çizer:</p>
         {() => (p.values.show ? <Portal to="api-ex-bar"><Button variant="primary">Kaydet (portal)</Button></Portal> : null)}
       </div>,
     },
@@ -396,7 +396,7 @@ read(() => count())   // the current value`,
     registerTransition: {
       code: `registerTransition("fade", (el, dir, done) => fade(el, dir).then(done))
 <div transition="fade">…</div>`,
-      run: () => <p class="hm-muted">hadi-march/motion bu kancayla geçişlerini kaydeder; <code>transition="fade"</code> gibi her öğe onu kullanır.</p>,
+      run: () => <p class="m-muted">hadi-march/motion bu kancayla geçişlerini kaydeder; <code>transition="fade"</code> gibi her öğe onu kullanır.</p>,
     },
     render: {
       code: `const dispose = render(() => <App />, document.getElementById("app"))
@@ -431,7 +431,7 @@ safeUrl("javascript:alert(1)")      // "about:blank"`,
     setFlipHook: {
       code: `import { installFlip } from "hadi-march/motion"
 installFlip()   // calls setFlipHook(flip): <For animate> moves rows smoothly`,
-      run: () => <p class="hm-muted"><code>{"<For animate>"}</code> yeniden sıralamayı bu kancayla canlandırır; hadi-march/motion içindeki installFlip() onu kurar.</p>,
+      run: () => <p class="m-muted"><code>{"<For animate>"}</code> yeniden sıralamayı bu kancayla canlandırır; hadi-march/motion içindeki installFlip() onu kurar.</p>,
     },
     setLocale: {
       code: `await setLocale("en")   // loads a lazy pack first, updates <html lang dir>`,
@@ -479,13 +479,13 @@ cart.items.push({ name: "Kalem" })   // only what read items updates`,
   <Match when={$error}>{(e) => <ErrorBox error={e} />}</Match>
 </Switch>`,
       play: { options: [{ key: "state", label: "Durum", default: "loading", options: [{ value: "loading", label: "Yükleniyor" }, { value: "error", label: "Hata" }, { value: "empty", label: "Boş" }] }] },
-      run: (p: { values: { state: string } }) => <Switch fallback={<p class="hm-muted">Kayıt yok</p>}>
+      run: (p: { values: { state: string } }) => <Switch fallback={<p class="m-muted">Kayıt yok</p>}>
         <Match when={() => p.values.state === "loading"}><p aria-live="polite">Yükleniyor…</p></Match>
         <Match when={() => (p.values.state === "error" ? "Bağlantı koptu" : null)}>{(e: string) => <p role="alert">Hata: {e}</p>}</Match>
       </Switch>,
     },
     sx: {
-      code: `sx({ p: 3, radius: 2, shadow: 1 })   // "hm-p-3 hm-radius-2 hm-shadow-1"`,
+      code: `sx({ p: 3, radius: 2, shadow: 1 })   // "m-p-3 m-radius-2 m-shadow-1"`,
       run: () => <div class="sc-ex-stack"><Out label="sx({ p: 3, radius: 2 })" value={sx({ p: 3, radius: 2 })} /><div class={sx({ p: 3, radius: 2 })}>sx ile kenar boşluğu ve köşe</div></div>,
     },
     sxValue: {

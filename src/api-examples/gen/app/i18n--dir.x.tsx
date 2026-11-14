@@ -17,7 +17,7 @@ const example: ApiExample<any> = {
         return <div class="sc-ex-app-stack"><Row>
           <Segmented value={cur} onChange={(v: string) => void setLocale(v)} options={[{ value: prev, label: prev }, { value: "ar", label: "ar (tüm sayfa)" }]} aria-label="Dil" />
           <Out label="dir()" value={dir} /><Out label="<html dir>" value={() => { dir(); locale(); return document.documentElement.getAttribute("dir") ?? "—" }} />
-        </Row><p class="hm-muted">"ar" tüm sayfayı sağdan sola çevirir; geri dönmek için ilk seçeneğe bas (kart kapanınca da geri döner).</p></div>
+        </Row><p class="m-muted">"ar" tüm sayfayı sağdan sola çevirir; geri dönmek için ilk seçeneğe bas (kart kapanınca da geri döner).</p></div>
       },
     };
 export default example;

@@ -9,7 +9,7 @@ function CfgWindow() {
     view={(on) => <>
       <Out label="id" value={() => { on(); return appWindow().id.slice(0, 8) }} />
       <Out label="count() / leader()" value={() => { on(); return `${appWindow().count()} / ${yes(appWindow().leader())}` }} />
-      <p class="hm-muted">Ayrı bir kanal adı, uygulamanın kendi sekme sayımından ayrı bir grup kurar.</p>
+      <p class="m-muted">Ayrı bir kanal adı, uygulamanın kendi sekme sayımından ayrı bir grup kurar.</p>
     </>} />
 }
 export { CfgWindow };

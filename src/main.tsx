@@ -1,5 +1,5 @@
 // March showcase: every component, theme and animation of the library. Written entirely in March (no inline styles,
-// no innerHTML); themes switch with data-hm-theme, light/dark with data-theme. Normal addresses (/motion) under any base
+// no innerHTML); themes switch with data-m-theme, light/dark with data-theme. Normal addresses (/motion) under any base
 // path; where the address cannot change (file://, a sandboxed iframe) the router uses #/motion by itself.
 import "hadi-march/css/font.css";
 import "hadi-march/css/tokens.css";
@@ -35,5 +35,5 @@ void runLoad(ROUTES, { kind: "part", key: "" }).then(async ({ ROUTES: routes, OU
   if (!el) return;
   const app = () => <Router loading={PAGE_LOADING} skeleton={PAGE_SKELETON} />;
   if (hydrateChunk) (await hydrateChunk).hydrate(app, el); else render(app, el);
-  document.getElementById("hm-boot")?.remove();
+  document.getElementById("m-boot")?.remove();
 });

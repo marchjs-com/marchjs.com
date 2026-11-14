@@ -120,7 +120,7 @@ export default function BenchScenarios() {
       {() => (!barRows().length ? <p class="bt-empty">{t("Henüz sonuç yok. Senaryoları başlatınca kitaplıklar burada canlı olarak sıralanır.")}</p> : null)}
       <Preview stage={(el) => { stage = el }} running={runningSig} caption={() => { const p = progressSig(); return p ? `${scenLabel(p.scenario)} · ${libName(p.lib)}` : t("bekliyor") }} />
       {() => rows().length ? <div class="bt-table-wrap">
-        <table class="hm-table bt-table">
+        <table class="m-table bt-table">
           <caption class="bt-caption">{t("{0}: ayrıntı", { 0: scenLabel(viewSig()) })}</caption>
           <thead><tr><th scope="col">{t("Kitaplık")}</th><th scope="col">{t("Kare (medyan)")}</th><th scope="col">%95</th><th scope="col">{t("Düşen kare")}</th><th scope="col">{t("Katsayı")}</th><th scope="col">{t("Kurulum")}</th><th scope="col">{t("Bellek")}</th></tr></thead>
           <tbody>{rows().map((x) => <tr>

@@ -32,7 +32,7 @@ const stg = (d: number, max = 200, step = 5): Opt => ms("stagger", "Aralık", d,
 const OUT: Opt = { key: "out", label: "Çıkış olarak", default: false }
 const ASSEMBLE: Opt = { key: "out", label: "Toplanarak gel", default: false }
 const CARET: Opt = { key: "caret", label: "İmleç", default: true }
-const COLOR: Opt = { key: "color", label: "Renk", default: "", options: [{ value: "", label: "Varsayılan" }, { value: "var(--hm-primary)", label: "Turuncu" }, { value: "var(--hm-info)", label: "Mavi" }, { value: "var(--hm-success)", label: "Yeşil" }] }
+const COLOR: Opt = { key: "color", label: "Renk", default: "", options: [{ value: "", label: "Varsayılan" }, { value: "var(--m-primary)", label: "Turuncu" }, { value: "var(--m-info)", label: "Mavi" }, { value: "var(--m-success)", label: "Yeşil" }] }
 const LOCALE: Opt = { key: "locale", label: "Biçim", default: "tr", options: [{ value: "tr", label: "tr" }, { value: "en", label: "en" }, { value: "de", label: "de" }] }
 const END: Opt = { key: "end", label: "Hedef", default: 12500, options: [{ value: 12500, label: "12.500" }, { value: 48000, label: "48.000" }, { value: 99999, label: "99.999" }] }
 const phrase = (d: string, more: string[]): Opt => ({ key: "phrase", label: "Metin", default: d, kind: "chips", options: [d, ...more].map((v) => ({ value: v, label: v })) });
@@ -477,7 +477,7 @@ a.stop()   // ends the loop, the text is back
 // A marker pen highlights each line.
 const a = highlight(title)
 await a.finished
-// also: highlight(el, { color: "var(--hm-info)", duration: 1200 })`,
+// also: highlight(el, { color: "var(--m-info)", duration: 1200 })`,
       play: { options: [COLOR, ms("duration", "Süre", 700, 200, 2000, 100), phrase("Önemli bir cümle", ["Hoş geldin Ada","Yeni sürüm yayında"])] },
       run: (p: V) => <Stage fn={highlight} values={p.values} text="Önemli bir cümle" hint="Fosforlu kalem gibi satırı işaretler; önemli cümleyi öne çıkarır." />,
     },
@@ -487,7 +487,7 @@ await a.finished
 // An underline draws itself under each line.
 const a = underline(title)
 await a.finished
-// also: underline(el, { color: "var(--hm-info)", duration: 1200 })`,
+// also: underline(el, { color: "var(--m-info)", duration: 1200 })`,
       play: { options: [COLOR, ms("duration", "Süre", 700, 200, 2000, 100), phrase("Altı çizili başlık", ["Hoş geldin Ada","Yeni sürüm yayında"])] },
       run: (p: V) => <Stage fn={underline} values={p.values} text="Altı çizili başlık" hint="Çizgi satırın altına çekilir; bağlantı ve ara başlıklara uygun." />,
     },
@@ -497,7 +497,7 @@ await a.finished
 // A line strikes through the text.
 const a = strike(title)
 await a.finished
-// also: strike(el, { color: "var(--hm-info)", duration: 1200 })`,
+// also: strike(el, { color: "var(--m-info)", duration: 1200 })`,
       play: { options: [COLOR, ms("duration", "Süre", 700, 200, 2000, 100), phrase("Eski fiyat 99 TL", ["Hoş geldin Ada","Yeni sürüm yayında"])] },
       run: (p: V) => <Stage fn={strike} values={p.values} text="Eski fiyat 99 TL" hint="Çizgi satırın ortasından geçer; eski fiyat ve tamamlanan işlerde kullanılır." />,
     },
@@ -507,7 +507,7 @@ await a.finished
 // A band of color sweeps once across the text (gradient text), leaving it as it was.
 const a = gradientSweep(title)
 await a.finished
-// also: gradientSweep(el, { color: "var(--hm-info)", duration: 1200 })`,
+// also: gradientSweep(el, { color: "var(--m-info)", duration: 1200 })`,
       play: { options: [COLOR, ms("duration", "Süre", 1400, 400, 3000, 200), phrase("Parlayan başlık", ["Hoş geldin Ada","Yeni sürüm yayında"])] },
       run: (p: V) => <Stage fn={gradientSweep} values={p.values} text="Parlayan başlık" hint="Renkli bir bant bir kez geçer ve metin eski haline döner." />,
     },
@@ -517,7 +517,7 @@ await a.finished
 // The letter outlines are drawn with a pen (SVG stroke), then filled.
 const a = strokeDraw(title)
 await a.finished
-// also: strokeDraw(el, { color: "var(--hm-info)", duration: 1200 })`,
+// also: strokeDraw(el, { color: "var(--m-info)", duration: 1200 })`,
       play: { options: [COLOR, ms("duration", "Süre", 2200, 800, 4000, 200), phrase("Elle çizilmiş", ["Hoş geldin Ada","Yeni sürüm yayında"])] },
       run: (p: V) => <Stage fn={strokeDraw} values={p.values} text="Elle çizilmiş" hint="Harf çizgileri kalemle çizilir, sonra dolar; imza ve logo yazılarında etkili." />,
     },
@@ -745,12 +745,12 @@ TEXT_ANIMATIONS.filter((a) => a.family === "loop").map((a) => a.name)`,
   "hadi-march/fx": {
     Aurora: {
       code: `<div class="hero">
-  <Aurora colors={["var(--hm-primary)", "var(--hm-info)", "var(--hm-success)"]} />
+  <Aurora colors={["var(--m-primary)", "var(--m-info)", "var(--m-success)"]} />
   <h2>Hoş geldin</h2>
 </div>`,
       play: { options: [{ key: "blobs", label: "Renk sayısı", default: 3, options: [1, 2, 3, 4] }] },
       run: (p: V) => <div class="sc-ex-text-fx">
-        {() => <Aurora colors={["var(--hm-primary)", "var(--hm-info)", "var(--hm-success)", "var(--hm-warning)"].slice(0, p.values["blobs"] as number)} />}
+        {() => <Aurora colors={["var(--m-primary)", "var(--m-info)", "var(--m-success)", "var(--m-warning)"].slice(0, p.values["blobs"] as number)} />}
         <strong class="sc-ex-text-fx-title">Hoş geldin</strong>
       </div>,
     },
@@ -782,12 +782,12 @@ await confetti({ x: 200, y: 160, count: 120, spread: 70 })   // removes its canv
     },
     Particles: {
       code: `<div class="hero">
-  <Particles count={70} links={110} speed={0.35} interactive class="hm-fx-fill" />
+  <Particles count={70} links={110} speed={0.35} interactive class="m-fx-fill" />
   <h2>Ağ</h2>
 </div>`,
       play: { options: [{ key: "count", label: "Parçacık", default: 70, options: [20, 70, 140] }, { key: "links", label: "Bağlantı", default: 110, options: [{ value: 0, label: "Yok" }, { value: 70, label: "Kısa" }, { value: 110, label: "Uzun" }] }, { key: "interactive", label: "İşaretçiyi çek", default: true }] },
       run: (p: V) => <div class="sc-ex-text-fx">
-        {() => <Particles count={p.values["count"] as number} links={p.values["links"] as number} speed={0.35} interactive={!!p.values["interactive"]} color="var(--hm-primary)" class="hm-fx-fill" />}
+        {() => <Particles count={p.values["count"] as number} links={p.values["links"] as number} speed={0.35} interactive={!!p.values["interactive"]} color="var(--m-primary)" class="m-fx-fill" />}
         <strong class="sc-ex-text-fx-title">Ağ</strong>
       </div>,
     },

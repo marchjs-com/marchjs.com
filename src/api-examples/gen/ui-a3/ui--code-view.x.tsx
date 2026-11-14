@@ -17,7 +17,7 @@ const example: ApiExample<any> = {
         const n = signal(2)
         const SRC = {
           ts: () => `const team = signal(${n()})\nexport const seats = computed(() => team() * 12) // HADİ koltuk hesabı, uzun bir satır yorumu`,
-          css: () => `.hadi-card {\n  padding: var(--hm-space-${n()});\n  border-radius: var(--hm-radius);\n}`,
+          css: () => `.hadi-card {\n  padding: var(--m-space-${n()});\n  border-radius: var(--m-radius);\n}`,
           json: () => JSON.stringify({ name: "hadi", seats: n() * 12, plan: "pro" }, null, 2),
         }
         return <div class="sc-ex-stack">

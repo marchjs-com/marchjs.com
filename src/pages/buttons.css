@@ -1,5 +1,5 @@
 
 /* ScrollToTop demo: its own scrolling box with the inline button in a corner of it */
 .sc-totop { position: relative; inline-size: 100%; }
-.sc-totop-box { block-size: 14rem; overflow: auto; padding: var(--hm-space-3) var(--hm-space-4); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-lg); }
-.sc-totop-slot { position: absolute; inset-block-end: var(--hm-space-3); inset-inline-end: var(--hm-space-4); }
+.sc-totop-box { block-size: 14rem; overflow: auto; padding: var(--m-space-3) var(--m-space-4); border: 1px solid var(--m-border); border-radius: var(--m-radius-lg); }
+.sc-totop-slot { position: absolute; inset-block-end: var(--m-space-3); inset-inline-end: var(--m-space-4); }

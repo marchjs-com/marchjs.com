@@ -15,7 +15,7 @@ animate(scene, { uPhase: [0, 1], uColor: [orange, blue] }, { duration: 2400, ite
         const keep = hold()
         const canvas = <canvas class="sc-ex-motion-b-canvas" width="320" height="140" role="img" aria-label="WebGL ile çizilen, renk değiştiren degrade" /> as HTMLCanvasElement
         const gl = canvas.getContext("webgl")
-        if (!gl) return <p class="hm-muted">Bu tarayıcıda WebGL yok.</p>
+        if (!gl) return <p class="m-muted">Bu tarayıcıda WebGL yok.</p>
         const shader = (type: number, src: string) => { const s = gl.createShader(type)!; gl.shaderSource(s, src); gl.compileShader(s); return s }
         const prog = gl.createProgram()!
         gl.attachShader(prog, shader(gl.VERTEX_SHADER, "attribute vec2 p; varying vec2 v; void main(){ v = p * .5 + .5; gl_Position = vec4(p, 0., 1.); }"))
@@ -26,7 +26,7 @@ animate(scene, { uPhase: [0, 1], uColor: [orange, blue] }, { duration: 2400, ite
         const loc = gl.getAttribLocation(prog, "p")
         gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0)
         onCleanup(() => gl.getExtension("WEBGL_lose_context")?.loseContext())
-        const a = tok("--hm-brand-orange"), b = tok("--hm-brand-blue")
+        const a = tok("--m-brand-orange"), b = tok("--m-brand-blue")
         const scene = webgl(gl, prog, { state: { uPhase: 0, uColor: a }, draw: (g) => g.drawArrays(g.TRIANGLES, 0, 3) })
         scene.draw()
         const pb = keep(animate(scene as never, { uPhase: [0, 1], uColor: [a, b] }, { duration: 2400, iterations: Infinity, direction: "alternate", easing: "in-out" }))

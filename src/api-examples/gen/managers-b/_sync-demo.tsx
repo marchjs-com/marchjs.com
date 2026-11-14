@@ -9,6 +9,6 @@ function SyncDemo() {
     n.mock({ "POST /demo/notes": () => ({ saved: true }) }, { delay: 400 })
     net.set(n)
   })
-  return <div class="sc-ex-stack">{() => (net() ? <SyncBody n={net()} /> : <span class="hm-muted">Yükleniyor…</span>)}</div>
+  return <div class="sc-ex-stack">{() => (net() ? <SyncBody n={net()} /> : <span class="m-muted">Yükleniyor…</span>)}</div>
 }
 export { SyncDemo };

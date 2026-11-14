@@ -54,7 +54,7 @@ const sig: Record<string, Record<string, string>> = {
   "interpolatePath": "function interpolatePath(from: string, to: string, o: { points?: number } = {}): (t: number) => string",
   "keyframeNames": "const keyframeNames = (): string[] =>",
   "keyframes": "function keyframes(name: string, frames: Frames, defaults: Timing = {}): KeyframesDef",
-  "keyframesCss": "function keyframesCss({ names, prefix = \"hm-\" }: { names?: string[]; prefix?: string } = {}): string",
+  "keyframesCss": "function keyframesCss({ names, prefix = \"m-\" }: { names?: string[]; prefix?: string } = {}): string",
   "magnet": "function magnet(el: Element, raw?: unknown): () => void"
  }
 };

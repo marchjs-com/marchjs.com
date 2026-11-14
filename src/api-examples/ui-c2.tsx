@@ -88,7 +88,7 @@ export default examples({
           <div class="sc-ex-ui-c-frame">
             {() => { const filter = p.values.filter, collapsible = p.values.collapsible
               return <NavMenu items={items as never} brand={<strong>HADİ</strong>} label="Örnek menü" palette={false} storageKey="sc.ex.navmenu" filter={filter} collapsible={collapsible} /> }}
-            <div class="sc-ex-ui-c-main hm-muted">Sayfa içeriği</div>
+            <div class="sc-ex-ui-c-main m-muted">Sayfa içeriği</div>
           </div>
         </div>
       },
@@ -155,7 +155,7 @@ export default examples({
       },
     },
     OverflowText: {
-      code: `<button class="hm-btn"><OverflowText text={file.name} trigger="hover" /></button>   // scrolls only when clipped`,
+      code: `<button class="m-btn"><OverflowText text={file.name} trigger="hover" /></button>   // scrolls only when clipped`,
       play: { options: [
         { key: "trigger", label: "Tetik", default: "hover", options: opts(["hover", "üstüne gelince"], ["focus", "odakta"], ["always", "her zaman"]) },
         { key: "mode", label: "Mod", default: "bounce", options: ["bounce", "loop", "once"] },
@@ -166,7 +166,7 @@ export default examples({
             <Button><OverflowText text="HADİ_2026_yillik_faaliyet_raporu_son_hali.pdf" trigger={trigger} mode={mode} /></Button>
             <Button variant="ghost"><OverflowText text="Kısa ad.pdf" trigger={trigger} mode={mode} /></Button>
           </div> }}
-        <p class="hm-muted">Uzun ad kırpılır ve kayar; kısa ad sabit kalır.</p>
+        <p class="m-muted">Uzun ad kırpılır ve kayar; kısa ad sabit kalır.</p>
       </div>,
     },
   },

@@ -25,7 +25,7 @@ function WindowDemo() {
       <Out label="leader()" value={() => yes(w.leader())} />
     </Row>
     <Log lines={log} label="Başka sekmelerden gelenler" />
-    <p class="hm-muted">Bu sayfayı bir sekme daha açın: sayı artar, mesaj öbür sekmede görünür.</p>
+    <p class="m-muted">Bu sayfayı bir sekme daha açın: sayı artar, mesaj öbür sekmede görünür.</p>
   </div>
 }
 export { WindowDemo };

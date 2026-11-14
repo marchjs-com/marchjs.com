@@ -510,7 +510,7 @@ setAccess(null)   // signed out`,
         const total = signal(48200)
         const refresh = action("Yenile", () => total.update((x) => x + Math.round(Math.random() * 900)), { icon: zap, success: false })
         return () => { const { actions, footer, flush } = p.values; return <Card title="Aylık gelir" subtitle="Kasım · HADİ" flush={flush}
-          actions={actions ? [refresh] : undefined} footer={footer ? <span class="hm-muted">Son güncelleme: {now()}</span> : undefined}>
+          actions={actions ? [refresh] : undefined} footer={footer ? <span class="m-muted">Son güncelleme: {now()}</span> : undefined}>
           <strong class="sc-ex-ui-a-big">{() => `₺${total().toLocaleString("tr-TR")}`}</strong>
         </Card> }
       },
@@ -692,7 +692,7 @@ TYPES.list.coerce("a, b\\nc", field)        // ["a", "b", "c"]`,
       code: `import { registry } from "hadi-march/components/registry.gen.ts"
 const forms = registry.filter((e) => e.meta.category === "forms")
 const demo = await forms[0].demo()   // lazy demo module`,
-      run: () => <Await for={() => import("hadi-march/components/registry.gen.ts")} loading={<p class="hm-muted">Yükleniyor…</p>}>{({ registry }: { registry: readonly { meta: { name: string; category: string; summary: string; status: string } }[] }) => {
+      run: () => <Await for={() => import("hadi-march/components/registry.gen.ts")} loading={<p class="m-muted">Yükleniyor…</p>}>{({ registry }: { registry: readonly { meta: { name: string; category: string; summary: string; status: string } }[] }) => {
         const cats = [...new Set(registry.map((e) => e.meta.category))].sort()
         const cat = signal(cats.includes("data") ? "data" : cats[0]!)
         const shown = () => registry.filter((e) => e.meta.category === cat())

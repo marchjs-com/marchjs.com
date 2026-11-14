@@ -48,7 +48,7 @@ export default function RedesignSample() {
     <SiteSection id="r-compare" space="sm">
       <BeforeAfter class="sc-rd-hero" ratio="16 / 10" beforeLabel="HADİ 1.0" afterLabel="HADİ 2.0" label="HADİ 1.0 ve 2.0 ana ekranı"
         before={<MockApp class="sc-ba-old" />} after={<MockApp />} />
-      <p class="sc-rd-tip hm-muted">İpucu: herhangi bir yere bas, ayırıcı oraya atlar. Klavyede ← → ile de kayar.</p>
+      <p class="sc-rd-tip m-muted">İpucu: herhangi bir yere bas, ayırıcı oraya atlar. Klavyede ← → ile de kayar.</p>
     </SiteSection>
     <SiteSection id="r-details" tone="muted" eyebrow="Ayrıntılar" title="Her ekran, tek tek" lead="Üç değişiklik, üç ayrı karşılaştırma.">
       <div class="sc-rd-grid">

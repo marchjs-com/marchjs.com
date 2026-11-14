@@ -13,7 +13,7 @@ const example: ApiExample<any> = {
       run: () => {
         const open = signal(false), why = signal("—")
         const panel = asEl(<div class="sc-ex-platform-panel" role="dialog" aria-label="Filtreler" hidden={() => !open()}>
-          <strong>Filtreler</strong><span class="hm-muted">Dışarı bas ya da Esc.</span>
+          <strong>Filtreler</strong><span class="m-muted">Dışarı bas ya da Esc.</span>
           <Button size="sm" onClick={() => open.set(false)}>Kapat</Button>
         </div>)
         effect(() => {

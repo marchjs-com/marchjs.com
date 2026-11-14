@@ -7,9 +7,9 @@ import type { ApiExample } from "../../types.ts";
 import "../../ui-e.css";
 
 const example: ApiExample<any> = {
-      code: `// index.html: <div id="hm-boot">…</div>
+      code: `// index.html: <div id="m-boot">…</div>
 mount(App, document.body)
-bootLoader.done()   // fades #hm-boot out and removes it`,
+bootLoader.done()   // fades #m-boot out and removes it`,
       run: () => {
         let box!: HTMLElement
         const make = () => { const el = document.createElement("div"); el.id = "sc-ex-ui-e-boot"; el.className = "sc-ex-ui-e-boot"; el.textContent = "Uygulama yükleniyor…"; return el }

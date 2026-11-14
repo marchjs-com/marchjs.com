@@ -18,8 +18,8 @@ morph(thumb, big, { mode: "scale" })         // same picture in two places: FLIP
         const reset = () => { keep(animate(panel, { opacity: [1, 1] }, { duration: 1 })).cancel(); panel.hidden = true; src.style.visibility = "" }
         return <div class="sc-ex-motion-b-stack">
           <div class="sc-ex-motion-b-stage">
-            <button type="button" class="hm-btn hm-btn-primary sc-ex-motion-b-src" ref={(el: HTMLElement) => { src = el }} on:click={open}>Aç</button>
-            <div class="sc-ex-motion-b-panel" hidden ref={(el: HTMLElement) => { panel = el }}><strong>HADİ Atölye</strong><span class="hm-muted">Kutu, düğmenin yerinden büyür.</span></div>
+            <button type="button" class="m-btn m-btn-primary sc-ex-motion-b-src" ref={(el: HTMLElement) => { src = el }} on:click={open}>Aç</button>
+            <div class="sc-ex-motion-b-panel" hidden ref={(el: HTMLElement) => { panel = el }}><strong>HADİ Atölye</strong><span class="m-muted">Kutu, düğmenin yerinden büyür.</span></div>
           </div>
           <Row><Button variant="ghost" onClick={reset}>Sıfırla</Button></Row>
         </div>

@@ -20,9 +20,9 @@ const example: ApiExample<any> = {
         return <div class="sc-ex-ui-a-frame sc-ex-ui-a-auth">
           {() => { const { aside, footer } = p.values; return <AuthLayout brand={<Brand name="HADİ" mark={sparkles} />} title="Giriş yap" subtitle="Bağlantıyı e-postanıza gönderelim"
             aside={aside ? { headline: "Ekibiniz tek yerde", text: "Projeler, belgeler ve sohbet.", points: [{ icon: shieldCheck, title: "Güvenli", text: "Parolasız giriş" }, { icon: zap, title: "Hızlı", text: "Saniyeler içinde" }] } : undefined}
-            footer={footer ? <span class="hm-muted">Hesabınız yok mu? Kaydolun.</span> : undefined}>
+            footer={footer ? <span class="m-muted">Hesabınız yok mu? Kaydolun.</span> : undefined}>
             {() => (sent() ? <Alert tone="success">Bağlantı {email() || "adresinize"} gönderildi.</Alert> : <form class="sc-ex-stack" onSubmit={(e: Event) => { e.preventDefault(); sent.set(true) }}>
-              <input class="hm-input" type="email" placeholder="ada@hadisosyal.com" aria-label="E-posta" value={email} onInput={(e: Event) => email.set((e.target as HTMLInputElement).value)} />
+              <input class="m-input" type="email" placeholder="ada@hadisosyal.com" aria-label="E-posta" value={email} onInput={(e: Event) => email.set((e.target as HTMLInputElement).value)} />
               <Button type="submit" variant="primary" block>Bağlantı gönder</Button>
             </form>)}
           </AuthLayout> }}

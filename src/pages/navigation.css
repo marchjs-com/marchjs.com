@@ -1,7 +1,7 @@
 /* Showcase › Gezinme: stages of the navigation component cards (src/components/navigation/<name>/demo.tsx). */
-.sc-tabs-demo, .sc-page-demo, .sc-steps-demo { display: grid; gap: var(--hm-space-3); min-width: 0; }
+.sc-tabs-demo, .sc-page-demo, .sc-steps-demo { display: grid; gap: var(--m-space-3); min-width: 0; }
 .sc-tabs-demo > *, .sc-page-demo > *, .sc-steps-demo > * { min-width: 0; }
-.sc-steps-nav { display: flex; gap: var(--hm-space-2); justify-content: flex-end; }
-.sc-navmenu-frame { display: flex; height: 22rem; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); overflow: hidden; }
-.sc-navmenu-frame .hm-nav { height: 100%; }
-.sc-navmenu-main { flex: 1 1 auto; min-width: 0; padding: var(--hm-space-4); }
+.sc-steps-nav { display: flex; gap: var(--m-space-2); justify-content: flex-end; }
+.sc-navmenu-frame { display: flex; height: 22rem; border: 1px solid var(--m-border); border-radius: var(--m-radius-2); overflow: hidden; }
+.sc-navmenu-frame .m-nav { height: 100%; }
+.sc-navmenu-main { flex: 1 1 auto; min-width: 0; padding: var(--m-space-4); }

@@ -29,7 +29,7 @@ export default function LiveSample() {
         <LiveFeed max={4} every={2200} enter="drop" leave="fall" next={activitySource()} label="Yakınındaki etkinlikler" />
         <div class="sc-live-aside">
           <LiveCounter from={214} rate={6} label="kişi şu an yakınında bir şeyler planlıyor" />
-          <p class="hm-muted">Rakamlar ve akış bu örnekte temsilidir; gerçek sitede sunucudan gelir.</p>
+          <p class="m-muted">Rakamlar ve akış bu örnekte temsilidir; gerçek sitede sunucudan gelir.</p>
         </div>
       </div>
     </SiteSection>

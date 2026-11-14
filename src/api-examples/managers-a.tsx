@@ -188,7 +188,7 @@ function A11yDemo(p: { values: { fontScale: number; strongFocus: boolean } }) {
       <Button variant="ghost" onClick={() => a11y.reset()}>Sıfırla</Button>
     </Row>
     <Out label="a11y.prefs()" value={() => fmt(a11y.prefs())} />
-    <p class="hm-muted">Tercihler yalnız bellekte tutulur; kart kapanınca sayfa eski haline döner.</p>
+    <p class="m-muted">Tercihler yalnız bellekte tutulur; kart kapanınca sayfa eski haline döner.</p>
   </div>
 }
 
@@ -290,7 +290,7 @@ function ConsoleTransportDemo() {
   return <div class="sc-ex-stack">
     <Segmented aria-label="Düzey" value={level()} onChange={(v: "debug" | "info" | "warn" | "error") => level.set(v)} options={LEVELS.map((l) => ({ value: l, label: l }))} />
     <Row><Button onClick={write}>Konsola yaz</Button><Out label="transport.name" value={t.name} /><Out label="yazılan" value={last} /></Row>
-    <p class="hm-muted">Tarayıcı konsolunu açın: satır seçilen düzeyin yöntemiyle (console.info, console.warn…) yazılır.</p>
+    <p class="m-muted">Tarayıcı konsolunu açın: satır seçilen düzeyin yöntemiyle (console.info, console.warn…) yazılır.</p>
   </div>
 }
 
@@ -346,7 +346,7 @@ function WindowDemo() {
       <Out label="leader()" value={() => yes(w.leader())} />
     </Row>
     <Log lines={log} label="Başka sekmelerden gelenler" />
-    <p class="hm-muted">Bu sayfayı bir sekme daha açın: sayı artar, mesaj öbür sekmede görünür.</p>
+    <p class="m-muted">Bu sayfayı bir sekme daha açın: sayı artar, mesaj öbür sekmede görünür.</p>
   </div>
 }
 
@@ -577,7 +577,7 @@ function CfgFlags() {
 }
 function CfgFocus() {
   const root = signal(false)
-  const sync = () => setTimeout(() => root.set(document.documentElement.hasAttribute("data-hm-focus-visible")), 0)
+  const sync = () => setTimeout(() => root.set(document.documentElement.hasAttribute("data-m-focus-visible")), 0)
   document.addEventListener("keydown", sync, true)
   document.addEventListener("pointerdown", sync, true)
   onCleanup(() => { document.removeEventListener("keydown", sync, true); document.removeEventListener("pointerdown", sync, true) })
@@ -585,7 +585,7 @@ function CfgFocus() {
     view={(on) => <>
       <Row><Button variant="secondary">Tab ile bana gel</Button><Button variant="secondary">Sonra ben</Button></Row>
       <Out label="focus.modality()" value={() => { on(); return focus.modality() }} />
-      <Out label="<html data-hm-focus-visible>" value={() => yes(root())} />
+      <Out label="<html data-m-focus-visible>" value={() => yes(root())} />
     </>} />
 }
 function CfgHotkeys() {
@@ -594,7 +594,7 @@ function CfgHotkeys() {
   return <Cfg m={hotkeyManager} fn={configureHotkeys} patch={{ sequenceTimeout: 4000 }}
     after={() => { off = hotkeys.bind("g h", () => log.update((l) => [...l.slice(-3), `${now()} · g h çalıştı`]), { description: "Ana sayfaya git" }); return () => off?.() }}
     view={(on) => <>
-      <p class="hm-muted">Sayfada <kbd>g</kbd> tuşuna, en geç 4 saniye içinde <kbd>h</kbd> tuşuna basın.</p>
+      <p class="m-muted">Sayfada <kbd>g</kbd> tuşuna, en geç 4 saniye içinde <kbd>h</kbd> tuşuna basın.</p>
       <Out label="pending()" value={() => { on(); return hotkeys.pending() || "—" }} />
       <Log lines={log} label="Çalışanlar" />
     </>} />
@@ -605,7 +605,7 @@ function CfgIdle() {
   onCleanup(() => clearInterval(id))
   return <Cfg m={idleManager} fn={configureIdle} patch={{ timeout: 5000, throttle: 50 }}
     view={(on) => <>
-      <p class="hm-muted">Sayfada 5 saniye hiçbir şey yapmayın (fare, tuş, kaydırma).</p>
+      <p class="m-muted">Sayfada 5 saniye hiçbir şey yapmayın (fare, tuş, kaydırma).</p>
       <Out label="idle()" value={() => { on(); return yes(idle().idle()) }} />
       <Out label="remaining()" value={() => { on(); t(); return `${Math.ceil(idle().remaining() / 1000)} sn` }} />
     </>} />
@@ -613,7 +613,7 @@ function CfgIdle() {
 function CfgLayers() {
   const opened = signal(0)
   const open = () => {
-    const card = (<div class="sc-ex-managers-a-layer" role="group" aria-label="Deneme katmanı"><strong>Katman</strong><span class="hm-muted">Esc ile kapanmaya çalışın.</span><Button size="sm" onClick={() => h.close()}>Kapat</Button></div>) as HTMLElement
+    const card = (<div class="sc-ex-managers-a-layer" role="group" aria-label="Deneme katmanı"><strong>Katman</strong><span class="m-muted">Esc ile kapanmaya çalışın.</span><Button size="sm" onClick={() => h.close()}>Kapat</Button></div>) as HTMLElement
     const h = layer.open("popover", card, { label: "api-demo", onEscape: () => h.close() })
     opened.update((n) => n + 1)
     return h
@@ -731,7 +731,7 @@ function CfgSession() {
 function CfgHints() {
   return <Cfg m={shortcutHintManager} fn={configureShortcutHints} patch={{ holdKey: "Shift", holdMs: 200, helpKey: null }}
     view={(on) => <>
-      <p class="hm-muted">Shift tuşunu 0,2 saniye basılı tutun ya da düğmeleri kullanın.</p>
+      <p class="m-muted">Shift tuşunu 0,2 saniye basılı tutun ya da düğmeleri kullanın.</p>
       <Row><Button disabled={() => !on()} onClick={() => shortcutHints.show()}>show()</Button><Button variant="ghost" disabled={() => !on()} onClick={() => shortcutHints.hide()}>hide()</Button></Row>
       <Out label="visible()" value={() => { on(); return yes(shortcutHints.visible()) }} />
     </>} />
@@ -781,7 +781,7 @@ function CfgUndo() {
 function CfgViewport() {
   return <Cfg m={viewportManager} fn={configureViewport} patch={{ breakpoints: { xs: 0, sm: 400, md: 600, lg: 900, xl: 1400 }, mobile: "md", desktop: "xl" }}
     view={(on) => <>
-      <p class="hm-muted">Tarayıcı penceresini yeniden boyutlandırın.</p>
+      <p class="m-muted">Tarayıcı penceresini yeniden boyutlandırın.</p>
       <Out label="width()" value={() => { on(); return `${viewport().width()} px` }} />
       <Out label="breakpoint()" value={() => { on(); return viewport().breakpoint() }} />
       <Out label="mobile() / tablet() / desktop()" value={() => { on(); return `${yes(viewport().mobile())} / ${yes(viewport().tablet())} / ${yes(viewport().desktop())}` }} />
@@ -792,7 +792,7 @@ function CfgWindow() {
     view={(on) => <>
       <Out label="id" value={() => { on(); return appWindow().id.slice(0, 8) }} />
       <Out label="count() / leader()" value={() => { on(); return `${appWindow().count()} / ${yes(appWindow().leader())}` }} />
-      <p class="hm-muted">Ayrı bir kanal adı, uygulamanın kendi sekme sayımından ayrı bir grup kurar.</p>
+      <p class="m-muted">Ayrı bir kanal adı, uygulamanın kendi sekme sayımından ayrı bir grup kurar.</p>
     </>} />
 }
 
@@ -1042,7 +1042,7 @@ flags().on("beta")   flags().variant("pricing")`,
       run: () => <CfgFlags />,
     },
     configureFocus: {
-      code: `configureFocus({ markRoot: false })   // no data-hm-focus-visible on <html>; focus.visible() still works`,
+      code: `configureFocus({ markRoot: false })   // no data-m-focus-visible on <html>; focus.visible() still works`,
       run: () => <CfgFocus />,
     },
     configureHotkeys: {

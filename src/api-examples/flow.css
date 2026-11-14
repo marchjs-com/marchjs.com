@@ -1,11 +1,11 @@
 /* API examples of hadi-march/flow: canvas stages, the palette beside a canvas, an edge drawing. */
-.sc-ex-flow-stack { display: grid; gap: var(--hm-space-3); min-width: 0; }
+.sc-ex-flow-stack { display: grid; gap: var(--m-space-3); min-width: 0; }
 .sc-ex-flow-stage { block-size: 18rem; min-width: 0; }
-.sc-ex-flow-stage > .hm-ctxmenu, .sc-ex-flow-stage .hm-flow { block-size: 100%; min-block-size: 0; }
-.sc-ex-flow-split { display: grid; grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); gap: var(--hm-space-3); min-width: 0; }
+.sc-ex-flow-stage > .m-ctxmenu, .sc-ex-flow-stage .m-flow { block-size: 100%; min-block-size: 0; }
+.sc-ex-flow-split { display: grid; grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); gap: var(--m-space-3); min-width: 0; }
 @media (max-width: 40rem) { .sc-ex-flow-split { grid-template-columns: minmax(0, 1fr); } }
-.sc-ex-flow-svg { display: block; inline-size: 100%; max-inline-size: 26rem; block-size: 8rem; border-radius: var(--hm-radius-2); background: var(--hm-surface-2); }
-.sc-ex-flow-svg path { fill: none; stroke: var(--hm-primary); stroke-width: 3; stroke-linecap: round; }
-.sc-ex-flow-svg circle { fill: var(--hm-surface); stroke: var(--hm-primary); stroke-width: 3; }
-.sc-ex-flow-pre { max-block-size: 10rem; margin: 0; padding: var(--hm-space-2); overflow: auto; border-radius: var(--hm-radius-1); background: var(--hm-surface-2); font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); white-space: pre; }
-.sc-ex-flow-list { display: grid; gap: var(--hm-space-1); margin: 0; padding: 0; list-style: none; font-size: var(--hm-text-sm); }
+.sc-ex-flow-svg { display: block; inline-size: 100%; max-inline-size: 26rem; block-size: 8rem; border-radius: var(--m-radius-2); background: var(--m-surface-2); }
+.sc-ex-flow-svg path { fill: none; stroke: var(--m-primary); stroke-width: 3; stroke-linecap: round; }
+.sc-ex-flow-svg circle { fill: var(--m-surface); stroke: var(--m-primary); stroke-width: 3; }
+.sc-ex-flow-pre { max-block-size: 10rem; margin: 0; padding: var(--m-space-2); overflow: auto; border-radius: var(--m-radius-1); background: var(--m-surface-2); font-family: var(--m-font-mono); font-size: var(--m-text-xs); white-space: pre; }
+.sc-ex-flow-list { display: grid; gap: var(--m-space-1); margin: 0; padding: 0; list-style: none; font-size: var(--m-text-sm); }

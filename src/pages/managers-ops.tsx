@@ -30,7 +30,7 @@ flags().on("newCheckout")   flags().variant("pricing")   flags().override("newCh
       <div class="sc-md-flag" feature:pricing="annual"><Badge tone="info">Fiyat: yıllık varyant</Badge><p>2 ay bedava.</p></div>
       <div class="sc-md-flag" feature:pricing="monthly"><Badge tone="info">Fiyat: aylık varyant</Badge><p>İstediğin zaman bırak.</p></div>
     </div>
-    <p class="hm-muted">{() => `Kullanıcı ${$user} → newCheckout kovası ${bucket($user, "newCheckout")} (eşik ${$percent})`}</p>
+    <p class="m-muted">{() => `Kullanıcı ${$user} → newCheckout kovası ${bucket($user, "newCheckout")} (eşik ${$percent})`}</p>
     <table class="sc-md-table">
       <thead><tr><th>Bayrak</th><th>Kural</th><th>Değer</th><th>Kaynak</th><th>Bu cihazda zorla</th></tr></thead>
       <tbody>{() => flags().list().map((f) => <tr>
@@ -69,7 +69,7 @@ log.warn("kart reddedildi", { card: "4242…" })   // card → [redacted]`}>
       <Button size="sm" variant="secondary" on:click={() => log.warn("kart reddedildi", { card: "4242 4242 4242 4242", password: "gizli" })}>warn</Button>
       <Button size="sm" variant="danger" on:click={() => log.error(new Error("ödeme servisi yanıt vermedi"))}>error</Button>
     </div>
-    <ol class="sc-md-feed">{() => mem.entries().slice(0, 6).map((e) => <li><Badge tone={e.level === "error" ? "danger" : e.level === "warn" ? "warning" : e.level === "info" ? "info" : "neutral"}>{e.level}</Badge><code>{e.scope}</code><span>{e.msg} <span class="hm-muted">{e.data ? JSON.stringify(e.data).slice(0, 80) : ""}</span></span></li>)}</ol>
+    <ol class="sc-md-feed">{() => mem.entries().slice(0, 6).map((e) => <li><Badge tone={e.level === "error" ? "danger" : e.level === "warn" ? "warning" : e.level === "info" ? "info" : "neutral"}>{e.level}</Badge><code>{e.scope}</code><span>{e.msg} <span class="m-muted">{e.data ? JSON.stringify(e.data).slice(0, 80) : ""}</span></span></li>)}</ol>
     <Toggle bind:value={$allow} label="Sunucuya gönderime izin var (warn ve üstü, 3'lü paket)" />
     <ul class="sc-mgr-log">{() => ($batches.length ? $batches.map((b) => <li>gönderildi: {b}</li>) : <li>{$allow ? "3 uyarı/hata biriktiğinde gönderilir." : "İzin kapalı: paketler atılır."}</li>)}</ul>
   </Demo>
@@ -86,8 +86,8 @@ perf().mark("search:start"); …; perf().measure("search", "search:start")
 await perf().time("users", () => net.get("/api/users"))
 perf().onReport((m) => log.info(m.name, m))`}>
     <div class="sc-md-vitals">{names.map(([k, label]) => <div class="sc-md-vital">
-      <span class="hm-muted">{label}</span>
-      {() => { const v = p.vital(k); return v ? <><strong>{k === "cls" ? v.value : `${v.value} ms`}</strong><Badge tone={tone(v.rating)}>{v.rating}</Badge></> : <span class="hm-muted">{p.supported().length ? "ölçülüyor…" : "desteklenmiyor"}</span> }}
+      <span class="m-muted">{label}</span>
+      {() => { const v = p.vital(k); return v ? <><strong>{k === "cls" ? v.value : `${v.value} ms`}</strong><Badge tone={tone(v.rating)}>{v.rating}</Badge></> : <span class="m-muted">{p.supported().length ? "ölçülüyor…" : "desteklenmiyor"}</span> }}
     </div>)}</div>
     <div class="sc-row">
       <Button variant="danger" on:click={() => block(260)}>Ağır iş (260 ms, INP)</Button>
@@ -120,7 +120,7 @@ const onMove = rateLimit().throttle(draw, 100)
 const quota = rateLimit().quota("export", { limit: 3, per: "10s" })
 if (!quota.take()) toast(\`\${Math.ceil(quota.resetIn() / 1000)} sn sonra\`)`}>
     <Field label="Ara (her tuş bir çağrı)"><TextInput on:input={(e: Event) => { $keys++; search((e.target as HTMLInputElement).value) }} placeholder="Yazmaya başla…" /></Field>
-    <p class="hm-muted">{() => `${$keys} tuş → ${$searches.length ? "son aramalar: " + $searches.join(", ") : "henüz arama yok"}${search.pending() ? " · bekliyor…" : ""}`}</p>
+    <p class="m-muted">{() => `${$keys} tuş → ${$searches.length ? "son aramalar: " + $searches.join(", ") : "henüz arama yok"}${search.pending() ? " · bekliyor…" : ""}`}</p>
     <div class="sc-md-pad" on:pointermove={() => { $raw++; move() }}>Fareyi burada gezdir: {() => `${$raw} olay → ${$throttled} çizim`}</div>
     <div class="sc-row">
       <Button variant="primary" on:click={() => { if (q.take()) toast("Dışa aktarıldı"); else toast(`Kota doldu: ${Math.ceil(q.resetIn() / 1000)} sn sonra tekrar dene`, { kind: "warning" }) }}>Dışa aktar</Button>

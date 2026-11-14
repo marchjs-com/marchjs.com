@@ -9,7 +9,7 @@ import "../../platform.css";
 const example: ApiExample<any> = {
       code: `comboOf(button)   // "shift+s" from data-hotkey, else the first aria-keyshortcuts`,
       run: () => {
-        const els = [<button type="button" class="hm-btn" data-hotkey="shift+s">Paylaş</button>, <button type="button" class="hm-btn" aria-keyshortcuts="Control+K Meta+K">Ara</button>, <button type="button" class="hm-btn">Kısayolsuz</button>] as HTMLElement[]
+        const els = [<button type="button" class="m-btn" data-hotkey="shift+s">Paylaş</button>, <button type="button" class="m-btn" aria-keyshortcuts="Control+K Meta+K">Ara</button>, <button type="button" class="m-btn">Kısayolsuz</button>] as HTMLElement[]
         return <Stack>{els.map((el) => <Row>{el}<Out label="comboOf" value={String(comboOf(el))} /></Row>)}</Stack>
       },
     };

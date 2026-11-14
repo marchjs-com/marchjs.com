@@ -11,7 +11,7 @@ const example: ApiExample<any> = {
       code: `const prefs = store({ size: 14 })
 persist(prefs, "hadi.prefs")   // loads now; saves 200 ms after a change`,
       run: () => {
-        const KEY = "hm-ex-app.prefs"
+        const KEY = "m-ex-app.prefs"
         const prefs = store({ size: 14 })
         const saved = signal(globalThis.sessionStorage?.getItem(KEY) ?? "—")
         let t: ReturnType<typeof setTimeout> | undefined
@@ -21,7 +21,7 @@ persist(prefs, "hadi.prefs")   // loads now; saves 200 ms after a change`,
         return <div class="sc-ex-app-stack"><Row>
           <Button onClick={() => { prefs.size-- }}>A−</Button><Button onClick={() => { prefs.size++ }}>A+</Button>
           <Out label="prefs.size" value={() => String(prefs.size)} /><Out label="sessionStorage" value={saved} />
-        </Row><p class="hm-muted">Kartı kapatıp yeniden aç: değer kayıttan geri gelir.</p></div>
+        </Row><p class="m-muted">Kartı kapatıp yeniden aç: değer kayıttan geri gelir.</p></div>
       },
     };
 export default example;

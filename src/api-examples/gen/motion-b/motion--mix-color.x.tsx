@@ -8,12 +8,12 @@ import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
       code: `const css = getComputedStyle(document.documentElement)
-const a = css.getPropertyValue("--hm-brand-orange")
-const b = css.getPropertyValue("--hm-brand-blue")
+const a = css.getPropertyValue("--m-brand-orange")
+const b = css.getPropertyValue("--m-brand-blue")
 mixColor(a, b, 0.5)    // "oklab(…)": mixed in OKLab, no muddy middle`,
       run: () => {
         const t = signal(50)
-        const a = tok("--hm-brand-orange"), b = tok("--hm-brand-blue")
+        const a = tok("--m-brand-orange"), b = tok("--m-brand-blue")
         const mixed = () => mixColor(a, b, t() / 100)
         return <div class="sc-ex-motion-b-stack">
           <div class="sc-ex-motion-b-swatch" ref={(el: HTMLElement) => { effect(() => { el.style.background = mixed() }) }} role="img" aria-label="Karışmış renk" />

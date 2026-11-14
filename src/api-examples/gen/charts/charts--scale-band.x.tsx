@@ -23,7 +23,7 @@ x.center("Çar")   x.invert(250)   // "Çar"`,
           <svg class="sc-ex-charts-svg" viewBox="0 0 320 110" role="img" aria-label="Bantlar"
             onPointerMove={(e: PointerEvent) => { const svg = e.currentTarget as SVGSVGElement, r = svg.getBoundingClientRect(); hover.set(String(x().invert(((e.clientX - r.left) / r.width) * 320) ?? "—")) }}>
             {() => days.map((d, i) => <g>
-              <rect class="hm-chart-series-0 sc-ex-charts-fill" x={x()(d)} y={90 - vals[i]!} width={x().bandwidth} height={vals[i]} rx="2" />
+              <rect class="m-chart-series-0 sc-ex-charts-fill" x={x()(d)} y={90 - vals[i]!} width={x().bandwidth} height={vals[i]} rx="2" />
               <text x={x().center(d)} y="104" text-anchor="middle">{d}</text>
             </g>)}
           </svg>

@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
         resizeHandle(grip, { value: () => w.peek(), set: (v, done) => { w.set(v); if (done) saved.set(Math.round(v)) }, min: 80, max: 220, step: 10, reset: () => { w.set(140); saved.set(140) } })
         return <Stack>
           <div class="sc-ex-platform-split"><div class="sc-ex-platform-side" style={() => ({ "inline-size": `${w()}px` })}>Kenar</div>{grip}<div class="sc-ex-platform-main">İçerik</div></div>
-          <Row><Out label="genişlik" value={() => `${Math.round(w())}px`} /><Out label="kaydedilen" value={() => `${saved()}px`} /><span class="hm-muted">Çift tık ya da Enter: sıfırla</span></Row>
+          <Row><Out label="genişlik" value={() => `${Math.round(w())}px`} /><Out label="kaydedilen" value={() => `${saved()}px`} /><span class="m-muted">Çift tık ya da Enter: sıfırla</span></Row>
         </Stack>
       },
     };

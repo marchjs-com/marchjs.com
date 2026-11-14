@@ -33,7 +33,7 @@ managerChannelOf("undo").on((e) => …)       // tek yöneticinin kanalı: { typ
 onChannels("managers.*", (m) => …)           // hadi-march/channel joker karakteriyle`}>
     <div class="sc-row">{NAMES.map((n) => <Chip selected={() => $only.has(n)} on:click={() => toggle(n)}>{n}</Chip>)}</div>
     <div class="sc-row"><Toggle bind:value={$paused} label="Akışı duraklat" /><Button variant="ghost" on:click={() => { $log = [] }}>Temizle</Button></div>
-    <ol class="sc-mgr-feed" aria-live="polite">{() => shown().length ? shown().map((m) => <li><code>{m.topic}</code><span class="hm-muted">{time(m.at)}</span>{m.detail !== undefined ? <span class="sc-mgr-detail">{JSON.stringify(m.detail)}</span> : null}</li>) : <li class="hm-muted">Henüz olay yok.</li>}</ol>
+    <ol class="sc-mgr-feed" aria-live="polite">{() => shown().length ? shown().map((m) => <li><code>{m.topic}</code><span class="m-muted">{time(m.at)}</span>{m.detail !== undefined ? <span class="sc-mgr-detail">{JSON.stringify(m.detail)}</span> : null}</li>) : <li class="m-muted">Henüz olay yok.</li>}</ol>
   </Demo>
 }
 
@@ -49,7 +49,7 @@ function IdleDemo() {
     code={`configureIdle({ timeout: 5 * 60_000 })
 idle().idle()   idle().onIdle(pauseVideo)   idle().onActive(refresh)
 idle().pause()  // uzun yükleme sürerken boşta sayılmaz`}>
-    <div class="sc-row">{() => idle().idle() ? <Badge tone="warn" dot>Boşta</Badge> : <Badge tone="success" dot>Etkin</Badge>}<span class="hm-muted">son etkinlik {() => time(idle().lastActive())}</span></div>
+    <div class="sc-row">{() => idle().idle() ? <Badge tone="warn" dot>Boşta</Badge> : <Badge tone="success" dot>Etkin</Badge>}<span class="m-muted">son etkinlik {() => time(idle().lastActive())}</span></div>
     <Progress value={() => (left() / ($timeout * 1000)) * 100} label={() => `Boşta sayılmaya ${secs(left())}`} showValue={false} />
     <Field label={() => `Süre: ${$timeout} sn`}><Slider value={$timeout} onChange={set} min={3} max={60} step={1} /></Field>
     <Toggle value={idle().paused()} onChange={(v: boolean) => (v ? idle().pause() : idle().resume())} label="Duraklat (ör. video oynarken)" />
@@ -93,7 +93,7 @@ d().supports("share")   await d().storage()   d().vibrate(40)`}>
     {hasMem || hasCores ? <Card title="Seçenekler" subtitle="lowEnd() eşikleri">
       {hasMem ? <Field label={() => `Bellek ≤ ${$lowMem} GB`}><Slider value={$lowMem} onChange={(v: number) => { $lowMem = v; configureDevice({ lowMemory: v }) }} min={0.5} max={16} step={0.5} /></Field> : null}
       {hasCores ? <Field label={() => `Çekirdek ≤ ${$lowCores}`}><Slider value={$lowCores} onChange={(v: number) => { $lowCores = v; configureDevice({ lowCores: v }) }} min={1} max={32} step={1} /></Field> : null}
-      <p class="hm-muted">lowEnd() şimdi: {() => (device().lowEnd() ? "düşük donanım — efektleri azalt" : "yeterli")}</p>
+      <p class="m-muted">lowEnd() şimdi: {() => (device().lowEnd() ? "düşük donanım — efektleri azalt" : "yeterli")}</p>
     </Card> : null}
   </Demo>
 }
@@ -130,7 +130,7 @@ function ScrollDemo() {
   let $saved = ""
   let $offset = 8
   onCleanup(() => { for (const r of $locks) r(); configureScroll({ offset: 64 }) })
-  const box = <div class="sc-mgr-spybox" tabindex="0" aria-label="Kaydırılabilir belge">{SPY.map(([id, title]) => <section id={`spy-${id}`}><h3>{title}</h3><p class="hm-muted">Bu bölümü kaydır; soldaki içindekiler okunan bölümü işaretler. scrollspy kutunun kendisini dinler.</p><p class="hm-muted">Uzun metin yerine boşluk: bölüm yüksekliği gerçek bir belgeyi taklit eder.</p></section>)}</div> as HTMLElement
+  const box = <div class="sc-mgr-spybox" tabindex="0" aria-label="Kaydırılabilir belge">{SPY.map(([id, title]) => <section id={`spy-${id}`}><h3>{title}</h3><p class="m-muted">Bu bölümü kaydır; soldaki içindekiler okunan bölümü işaretler. scrollspy kutunun kendisini dinler.</p><p class="m-muted">Uzun metin yerine boşluk: bölüm yüksekliği gerçek bir belgeyi taklit eder.</p></section>)}</div> as HTMLElement
   let $spyVersion = 0
   let spy = s.spy(SPY.map(([id]) => `spy-${id}`), { root: box, offset: $offset })
   onCleanup(() => spy.stop())
@@ -154,7 +154,7 @@ const spy = scroll().spy(["giris", "kurulum"]);  spy.active()`}>
       <Button variant="secondary" disabled={() => !$locks.length} on:click={() => { const l = $locks[$locks.length - 1]; l?.(); $locks = $locks.slice(0, -1) }}>Bir kilidi aç</Button>
       <Button variant="ghost" on:click={() => { s.save("demo"); $saved = `${Math.round(s.y())} px kaydedildi` }}>Konumu kaydet</Button>
       <Button variant="ghost" disabled={() => !$saved} on:click={() => s.restore("demo")}>Kaydedilen konuma dön</Button>
-      {() => ($saved ? <span class="hm-muted">{$saved}</span> : null)}
+      {() => ($saved ? <span class="m-muted">{$saved}</span> : null)}
     </div>
     <div class="sc-mgr-spy">
       <nav aria-label="İçindekiler"><ol class="sc-mgr-toc">{SPY.map(([id, title]) => <li><a href={`#spy-${id}`} aria-current={() => (active() === `spy-${id}` ? "true" : null)} on:click={(e: Event) => { e.preventDefault(); jump(id!) }}>{title}</a></li>)}</ol></nav>

@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
 // A line strikes through the text.
 const a = strike(title)
 await a.finished
-// also: strike(el, { color: "var(--hm-info)", duration: 1200 })`,
+// also: strike(el, { color: "var(--m-info)", duration: 1200 })`,
       play: { options: [COLOR, ms("duration", "Süre", 700, 200, 2000, 100), phrase("Eski fiyat 99 TL", ["Hoş geldin Ada","Yeni sürüm yayında"])] },
       run: (p: V) => <Stage fn={strike} values={p.values} text="Eski fiyat 99 TL" hint="Çizgi satırın ortasından geçer; eski fiyat ve tamamlanan işlerde kullanılır." />,
     };

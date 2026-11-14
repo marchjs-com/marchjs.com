@@ -12,7 +12,7 @@ const example: ApiExample<any> = {
         const w = watch()
         return <div class="sc-ex-app-stack">
           <Out label="navigating()" value={() => String(navigating())} />
-          <p class="hm-muted">Menüden başka bir sayfaya geçip geri dön: süreler aşağıda birikir.</p>
+          <p class="m-muted">Menüden başka bir sayfaya geçip geri dön: süreler aşağıda birikir.</p>
           <Log lines={w.busy} />
         </div>
       },

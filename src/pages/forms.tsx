@@ -78,7 +78,7 @@ export default function Forms(props: { params?: { rest?: string } }) {
       { label: "Köşe", get: () => $chShape, set: (v: string) => { $chShape = v }, options: () => shapesFor($chVariant as "chip", "checkbox"), visibleWhen: () => shapesFor($chVariant as "chip", "checkbox").length > 1 },
       { label: "HADİ renkleri (colors=brand)", get: () => $chBrand, set: (v: boolean) => { $chBrand = v } },
     ]}>
-    <p class="hm-muted sc-choice-note">{() => $chVariant === "card" ? "Kart köşesi yalnız square ya da rounded olabilir (kart yuvarlak olmaz)." : $chVariant === "chip" ? "chip: circle hap şeklidir; rounded ve square köşeleri keskinleştirir." : "Radio kutusu her zaman yuvarlaktır; köşe seçimi checkbox'ları ve chip / toggle / card biçimlerini etkiler."}</p>
+    <p class="m-muted sc-choice-note">{() => $chVariant === "card" ? "Kart köşesi yalnız square ya da rounded olabilir (kart yuvarlak olmaz)." : $chVariant === "chip" ? "chip: circle hap şeklidir; rounded ve square köşeleri keskinleştirir." : "Radio kutusu her zaman yuvarlaktır; köşe seçimi checkbox'ları ve chip / toggle / card biçimlerini etkiler."}</p>
     {() => <DayPicker variant={$chVariant as "chip"} size={$chSize as "md"} shape={$chShape as "rounded"} colors={$chBrand ? "brand" : undefined} />}
     <div class="sc-choice-compare">
       <div class="sc-choice-case"><code class="sc-choice-name">radio · {() => $chVariant === "toggle" ? "segmented" : $chVariant}</code>
@@ -116,7 +116,7 @@ seats: { type: "int", min: 2, when: (v) => v.plan === "team" },
     <Field label={() => `Ses: ${$vol}`}><Slider bind:value={$vol} min={0} max={100} /></Field>
     <Field label="Marka rengi"><ColorInput bind:value={$color} /></Field>
     <Field label="Puan" group><Rating bind:value={$stars} size="lg" /></Field>
-    <p class="hm-muted">{() => `${$stars} yıldız · bildirim ${$notify ? "açık" : "kapalı"} · ${$agree ? "onaylandı" : "onay bekliyor"}`}</p>
+    <p class="m-muted">{() => `${$stars} yıldız · bildirim ${$notify ? "açık" : "kapalı"} · ${$agree ? "onaylandı" : "onay bekliyor"}`}</p>
   </Demo>,
     "text-input": () => <ComponentDemo folder="forms/text-input" />,
     "search-box": () => <ComponentDemo folder="forms/search-box" />,

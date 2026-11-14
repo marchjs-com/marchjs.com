@@ -20,7 +20,7 @@ const example: ApiExample<any> = {
         return <div class="sc-ex-stack">
           <Row>{() => tags().map((t) => <Chip tone={p.values.tone} size={p.values.size} onRemove={() => tags.update((l) => l.filter((x) => x !== t))}>{t}</Chip>)}</Row>
           <form class="sc-row" onSubmit={add}>
-            <input class="hm-input sc-ex-ui-a-narrow" placeholder="Etiket ekle" aria-label="Etiket" value={draft} onInput={(e: Event) => draft.set((e.target as HTMLInputElement).value)} />
+            <input class="m-input sc-ex-ui-a-narrow" placeholder="Etiket ekle" aria-label="Etiket" value={draft} onInput={(e: Event) => draft.set((e.target as HTMLInputElement).value)} />
             <Button type="submit" size="sm" icon={plus}>Ekle</Button>
           </form>
         </div>

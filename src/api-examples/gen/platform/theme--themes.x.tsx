@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
         return <Stack>
           <Segmented value={id} options={THEMES.map((t) => ({ value: t.id, label: t.name }))} aria-label="Önizlenen tema" />
           <ThemeBox def={() => THEMES.find((t) => t.id === id()) ?? hadi} />
-          <p class="hm-muted">Önizleme yalnız bu kutuda; sayfanın teması değişmez.</p>
+          <p class="m-muted">Önizleme yalnız bu kutuda; sayfanın teması değişmez.</p>
         </Stack>
       },
     };

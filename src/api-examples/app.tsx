@@ -81,7 +81,7 @@ on(app, "cart.**", …)   // anything below cart`,
       code: `const prefs = store({ size: 14 })
 persist(prefs, "hadi.prefs")   // loads now; saves 200 ms after a change`,
       run: () => {
-        const KEY = "hm-ex-app.prefs"
+        const KEY = "m-ex-app.prefs"
         const prefs = store({ size: 14 })
         const saved = signal(globalThis.sessionStorage?.getItem(KEY) ?? "—")
         let t: ReturnType<typeof setTimeout> | undefined
@@ -91,7 +91,7 @@ persist(prefs, "hadi.prefs")   // loads now; saves 200 ms after a change`,
         return <div class="sc-ex-app-stack"><Row>
           <Button onClick={() => { prefs.size-- }}>A−</Button><Button onClick={() => { prefs.size++ }}>A+</Button>
           <Out label="prefs.size" value={() => String(prefs.size)} /><Out label="sessionStorage" value={saved} />
-        </Row><p class="hm-muted">Kartı kapatıp yeniden aç: değer kayıttan geri gelir.</p></div>
+        </Row><p class="m-muted">Kartı kapatıp yeniden aç: değer kayıttan geri gelir.</p></div>
       },
     },
     readonly: {
@@ -161,7 +161,7 @@ off()`,
         return <div class="sc-ex-app-stack"><Row>
           <Segmented value={cur} onChange={(v: string) => void setLocale(v)} options={[{ value: prev, label: prev }, { value: "ar", label: "ar (tüm sayfa)" }]} aria-label="Dil" />
           <Out label="dir()" value={dir} /><Out label="<html dir>" value={() => { dir(); locale(); return document.documentElement.getAttribute("dir") ?? "—" }} />
-        </Row><p class="hm-muted">"ar" tüm sayfayı sağdan sola çevirir; geri dönmek için ilk seçeneğe bas (kart kapanınca da geri döner).</p></div>
+        </Row><p class="m-muted">"ar" tüm sayfayı sağdan sola çevirir; geri dönmek için ilk seçeneğe bas (kart kapanınca da geri döner).</p></div>
       },
     },
     format: {
@@ -241,7 +241,7 @@ tt("cart.items", { n: 2 })   // tt("cart.items") or tt("cart.item", …) do not 
       run: () => {
         const keys = manifestKeys().slice(0, 4), key = signal(keys[0] ?? "")
         return <div class="sc-ex-app-stack">
-          {keys.length ? <Segmented value={key} options={keys.map((k) => ({ value: k, label: shortKey(k) }))} aria-label="Parça" /> : <p class="hm-muted">Bu derlemede manifesto yok.</p>}
+          {keys.length ? <Segmented value={key} options={keys.map((k) => ({ value: k, label: shortKey(k) }))} aria-label="Parça" /> : <p class="m-muted">Bu derlemede manifesto yok.</p>}
           <Out label="chunksOf(key)" value={() => json(chunksOf(key()))} />
         </div>
       },
@@ -254,7 +254,7 @@ Sales.preload()   // e.g. on hover`,
       run: (p: { values: { placeholder: LazyPlaceholder; when: LazyWhen } }) => {
         const n = signal(0)
         return <div class="sc-ex-app-stack">
-          <Row><Button onClick={() => n.update((x) => x + 1)}>Yeniden yükle (900 ms)</Button>{() => (p.values.when === "interaction" ? <span class="hm-muted">Yüklemek için alanın üzerine gel.</span> : null)}</Row>
+          <Row><Button onClick={() => n.update((x) => x + 1)}>Yeniden yükle (900 ms)</Button>{() => (p.values.when === "interaction" ? <span class="m-muted">Yüklemek için alanın üzerine gel.</span> : null)}</Row>
           {() => { n(); const ph = p.values.placeholder, when = p.values.when; return untrack(() => { const C = lazy<{ name: string }>(() => wait(900, { default: Sales }), { placeholder: ph, when, height: "7.5rem" }); return <C name="HADİ" /> }) }}
         </div>
       },
@@ -263,7 +263,7 @@ Sales.preload()   // e.g. on hover`,
       code: `if (loadDelay()) console.info(\`slow mode: +\${loadDelay()} ms per chunk\`)`,
       run: () => {
         const v = signal(loadDelay())
-        return <Row><Button size="sm" variant="ghost" onClick={() => v.set(loadDelay())}>Oku</Button><Out label="loadDelay()" value={() => `${v()} ms`} /><span class="hm-muted">0 = kapalı; setLoadDelay ile değişir.</span></Row>
+        return <Row><Button size="sm" variant="ghost" onClick={() => v.set(loadDelay())}>Oku</Button><Out label="loadDelay()" value={() => `${v()} ms`} /><span class="m-muted">0 = kapalı; setLoadDelay ile değişir.</span></Row>
       },
     },
     loaderKey: {
@@ -335,7 +335,7 @@ setLoadDelay(0)`,
         const probe = async () => { took.set("…"); const t0 = performance.now(); await runLoad(() => Promise.resolve(1), { kind: "part", key: "api-ex-delay" }); took.set(`${Math.round(performance.now() - t0)} ms`) }
         return <div class="sc-ex-app-stack">
           <Segmented value={v} onChange={(ms: number) => set(ms)} options={[{ value: 0, label: "0" }, { value: 400, label: "400 ms" }, { value: 1200, label: "1200 ms" }]} aria-label="Gecikme" />
-          <Row><Button onClick={probe}>Bir parça yükle</Button><Out label="süre" value={took} /><span class="hm-muted">Kart kapanınca eski değere döner.</span></Row>
+          <Row><Button onClick={probe}>Bir parça yükle</Button><Out label="süre" value={took} /><span class="m-muted">Kart kapanınca eski değere döner.</span></Row>
         </div>
       },
     },

@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
           { id: "ex-report", title: "Rapor indir", group: "Örnek", shortcut: "mod+shift+r", run: () => toast("Rapor indiriliyor…") },
         ])
         onCleanup(off)
-        return <Row><Button variant="primary" onClick={() => openPalette()}>Paleti aç</Button><span class="hm-muted">“fatura” ya da “rapor” ara</span></Row>
+        return <Row><Button variant="primary" onClick={() => openPalette()}>Paleti aç</Button><span class="m-muted">“fatura” ya da “rapor” ara</span></Row>
       },
     };
 export default example;

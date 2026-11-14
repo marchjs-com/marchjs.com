@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
 // The letter outlines are drawn with a pen (SVG stroke), then filled.
 const a = strokeDraw(title)
 await a.finished
-// also: strokeDraw(el, { color: "var(--hm-info)", duration: 1200 })`,
+// also: strokeDraw(el, { color: "var(--m-info)", duration: 1200 })`,
       play: { options: [COLOR, ms("duration", "Süre", 2200, 800, 4000, 200), phrase("Elle çizilmiş", ["Hoş geldin Ada","Yeni sürüm yayında"])] },
       run: (p: V) => <Stage fn={strokeDraw} values={p.values} text="Elle çizilmiş" hint="Harf çizgileri kalemle çizilir, sonra dolar; imza ve logo yazılarında etkili." />,
     };

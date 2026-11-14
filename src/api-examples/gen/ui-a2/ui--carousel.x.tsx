@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
         const pick = signal("—")
         return <div class="sc-ex-stack">
           {() => <Carousel label="Planlar" perView={p.values.perView}>
-            {SLIDES.map(([n, price], i) => <div class="sc-ex-ui-a-slide" data-hm-color={(["brand-orange", "brand-blue", "brand-green", "brand-purple", "brand-pink"] as const)[i]}>
+            {SLIDES.map(([n, price], i) => <div class="sc-ex-ui-a-slide" data-m-color={(["brand-orange", "brand-blue", "brand-green", "brand-purple", "brand-pink"] as const)[i]}>
               <strong>{n}</strong><span>{price}</span><Button size="sm" onClick={() => pick.set(n!)}>Seç</Button>
             </div>)}
           </Carousel>}

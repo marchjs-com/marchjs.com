@@ -13,7 +13,7 @@ openOutlet("aside", null)         // close`,
       run: () => <div class="sc-ex-app-stack">
         <Row>{PEOPLE.map((id) => <Button size="sm" variant="secondary" onClick={() => openOutlet("aside", `/item/${id}`)}>{`openOutlet("aside", "/item/${id}")`}</Button>)}
           <Button size="sm" variant="ghost" onClick={() => openOutlet("aside", null)}>null</Button></Row>
-        <div class="sc-ex-app-frame"><Outlet name="aside" empty={<p class="hm-muted">Yan panel boş.</p>} /></div>
+        <div class="sc-ex-app-frame"><Outlet name="aside" empty={<p class="m-muted">Yan panel boş.</p>} /></div>
       </div>,
     };
 export default example;

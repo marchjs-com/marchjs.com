@@ -16,7 +16,7 @@ const example: ApiExample<any> = {
         beforeLeave(() => { if (!dirty()) return true; push(log, "ayrılma engellendi: kaydedilmemiş değişiklik var"); return false })
         return <div class="sc-ex-app-stack">
           <Checkbox value={dirty} label="Kaydedilmemiş değişiklik var" />
-          <p class="hm-muted">İşaretliyken menüden başka bir sayfa seçmeyi dene: sayfa yerinde kalır. Kart kapanınca denetim de kalkar.</p>
+          <p class="m-muted">İşaretliyken menüden başka bir sayfa seçmeyi dene: sayfa yerinde kalır. Kart kapanınca denetim de kalkar.</p>
           <Log lines={log} />
         </div>
       },

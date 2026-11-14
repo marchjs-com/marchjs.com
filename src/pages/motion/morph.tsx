@@ -108,8 +108,8 @@ await morphBack(dialog, button).finished; open = false          // and shrinks b
         <Button variant="primary" ref={(el: HTMLElement) => { trigger = el }} on:click={openDlg} aria-haspopup="dialog" aria-expanded={() => String($dlg)}>Yeni etkinlik</Button>
         <div class="sc-mo-dialog" role="dialog" aria-modal="false" aria-labelledby="sc-mo-dlg-t" hidden={!$dlg} ref={(el: HTMLElement) => { dialog = el }} on:keydown={(e: KeyboardEvent) => { if (e.key === "Escape") closeDlg() }}>
           <h3 id="sc-mo-dlg-t">Yeni etkinlik</h3>
-          <label class="sc-mo-field"><span>Ad</span><input class="hm-input" value="HADİ buluşması" /></label>
-          <label class="sc-mo-field"><span>Tarih</span><input class="hm-input" type="date" /></label>
+          <label class="sc-mo-field"><span>Ad</span><input class="m-input" value="HADİ buluşması" /></label>
+          <label class="sc-mo-field"><span>Tarih</span><input class="m-input" type="date" /></label>
           <div class="sc-mo-actions"><Button variant="ghost" on:click={closeDlg}>Vazgeç</Button><Button variant="primary" on:click={closeDlg}>Kaydet</Button></div>
         </div>
       </div>

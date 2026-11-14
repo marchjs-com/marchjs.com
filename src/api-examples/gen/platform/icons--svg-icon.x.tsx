@@ -9,11 +9,11 @@ import type { ApiExample } from "../../types.ts";
 import "../../platform.css";
 
 const example: ApiExample<any> = {
-      code: `const svg = svgIcon(star, "hm-svg hm-svg-xl", "Favori")   // a plain <svg> element, no JSX`,
+      code: `const svg = svgIcon(star, "m-svg m-svg-xl", "Favori")   // a plain <svg> element, no JSX`,
       run: () => {
         const labelled = signal(true)
         const box = asEl(<span />)
-        effect(() => box.replaceChildren(svgIcon(star, "hm-svg hm-svg-xl", labelled() ? "Favori" : undefined)))
+        effect(() => box.replaceChildren(svgIcon(star, "m-svg m-svg-xl", labelled() ? "Favori" : undefined)))
         const attr = (n: string) => () => (labelled(), (box.firstElementChild?.getAttribute(n) ?? "—"))
         return <Row>{box}<Button size="sm" onClick={() => labelled.update((x) => !x)}>{() => (labelled() ? "Etiketi kaldır" : "Etiket ver")}</Button>
           <Out label="role" value={attr("role")} /><Out label="aria-hidden" value={attr("aria-hidden")} /></Row>

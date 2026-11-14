@@ -18,7 +18,7 @@ export function ChannelPanel() {
 onChannels("managers.*", (m) => devtools.push(m.name, m.payload.type, m.payload.detail))
 channel("managers.undo").on(({ type }) => …)   // tek yönetici`}>
     <ol class="sc-md-feed" aria-live="polite">
-      {() => ($log.length ? $log.map((e) => <li><Badge tone="info">{e.name}</Badge><code>{e.type}</code><span class="hm-muted">{e.detail}</span></li>) : <li class="hm-muted">Henüz olay yok: bir demoyu kullan.</li>)}
+      {() => ($log.length ? $log.map((e) => <li><Badge tone="info">{e.name}</Badge><code>{e.type}</code><span class="m-muted">{e.detail}</span></li>) : <li class="m-muted">Henüz olay yok: bir demoyu kullan.</li>)}
     </ol>
   </Demo>
 }

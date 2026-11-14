@@ -81,7 +81,7 @@ openPalette()          // Esc ile kapanır`,
       run: () => {
         const off = registerCommands([{ id: "ex-open-palette", title: "Örnek komut: merhaba", group: "Örnek", run: () => toast("Merhaba, HADİ!", { kind: "success" }) }])
         onCleanup(off)
-        return <Row><Button variant="primary" onClick={() => openPalette()}>Paleti aç</Button><span class="hm-muted">“merhaba” yazıp Enter’a bas</span></Row>
+        return <Row><Button variant="primary" onClick={() => openPalette()}>Paleti aç</Button><span class="m-muted">“merhaba” yazıp Enter’a bas</span></Row>
       },
     },
     paletteOpen: {
@@ -305,7 +305,7 @@ else playVideo()`,
         const items = [{ title: "Kullanıcılar", keywords: "üye hesap" }, { title: "Kural motoru", keywords: "otomasyon" }, { title: "Rapor", keywords: "kullanım" }, { title: "Faturalar" }, { title: "Ayarlar", keywords: "tercih" }]
         return <div class="sc-ex-stack">
           <Field sig={q} label="Arama" />
-          <ul class="sc-ex-ui-f-list">{() => { const r = rank(q(), items); return r.length ? r.map((x) => <li><strong>{x.item.title}</strong><code class="sc-ex-val">{x.score.toFixed(1)}</code></li>) : <li class="hm-muted">Eşleşme yok</li> }}</ul>
+          <ul class="sc-ex-ui-f-list">{() => { const r = rank(q(), items); return r.length ? r.map((x) => <li><strong>{x.item.title}</strong><code class="sc-ex-val">{x.score.toFixed(1)}</code></li>) : <li class="m-muted">Eşleşme yok</li> }}</ul>
         </div>
       },
     },
@@ -319,7 +319,7 @@ else playVideo()`,
           { id: "ex-report", title: "Rapor indir", group: "Örnek", shortcut: "mod+shift+r", run: () => toast("Rapor indiriliyor…") },
         ])
         onCleanup(off)
-        return <Row><Button variant="primary" onClick={() => openPalette()}>Paleti aç</Button><span class="hm-muted">“fatura” ya da “rapor” ara</span></Row>
+        return <Row><Button variant="primary" onClick={() => openPalette()}>Paleti aç</Button><span class="m-muted">“fatura” ya da “rapor” ara</span></Row>
       },
     },
     registerInput: {
@@ -340,7 +340,7 @@ renderFields(form)`,
           { id: "ex-team", title: "Ekip üyeleri", href: "#ekip", group: "Örnek sayfalar", keywords: "kişiler davet" },
         ])
         onCleanup(off)
-        return <Row><Button variant="primary" onClick={() => openPalette()}>Paleti aç</Button><span class="hm-muted">“ekip” ya da “ödeme” ara: sayfalar listelenir</span></Row>
+        return <Row><Button variant="primary" onClick={() => openPalette()}>Paleti aç</Button><span class="m-muted">“ekip” ya da “ödeme” ara: sayfalar listelenir</span></Row>
       },
     },
     registerThemes: {

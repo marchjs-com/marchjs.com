@@ -173,7 +173,7 @@ function LatestDemo() {
       <Badge tone="success">{() => `tamamlanan ${$done}`}</Badge>
     </div>
     {() => $error ? <p class="sc-net-error" role="alert">{$error}</p> : null}
-    <ul class="sc-net-results">{() => $results.map((u) => <li><strong>{u.name}</strong> <span class="hm-muted">{u.email}</span></li>)}</ul>
+    <ul class="sc-net-results">{() => $results.map((u) => <li><strong>{u.name}</strong> <span class="m-muted">{u.email}</span></li>)}</ul>
   </div>
 }
 
@@ -196,7 +196,7 @@ function MockDemo() {
         <Slider aria-label="Gecikme" min={0} max={3000} step={50} value={delay()} onChange={(v: number) => delay.set(v)} /></label>
       <label class="sc-net-slider"><span>Hata oranı: <strong class="sc-num">{() => `%${errorRate()}`}</strong></span>
         <Slider aria-label="Hata oranı" min={0} max={100} step={5} value={errorRate()} onChange={(v: number) => errorRate.set(v)} /></label>
-    </div> : <p class="hm-muted">Gerçek modda istekler sunucudaki demo-api/users.json dosyasına gider; gecikme ve hata oranı yalnız mock'ta vardır.</p>}
+    </div> : <p class="m-muted">Gerçek modda istekler sunucudaki demo-api/users.json dosyasına gider; gecikme ve hata oranı yalnız mock'ta vardır.</p>}
     <Toggle bind:value={$offline} label="Çevrimdışı (istekler kuyrukta bekler, bağlanınca gider)" />
     <div class="sc-row">
       <Button loading={() => $busy} onClick={() => run(() => users.list(), "Liste")}>Kullanıcıları getir</Button>
@@ -232,7 +232,7 @@ function SocketDemo() {
       <Button variant="secondary" onClick={() => { $reply = "soruluyor…"; sock.request<{ answer: string }>({ type: "ask" }, { timeout: 5000 }).then((r) => { $reply = r.answer }, (e: unknown) => { $reply = errors.message(e as never) }) }}>Sunucuya sor (istek-yanıt)</Button>
     </div>
     {() => $reply ? <p class="sc-net-result">{$reply}</p> : null}
-    <ul class="sc-net-notes">{() => $items.length ? $items.map((n) => <li><span class="sc-num hm-muted">{n.at}</span> {n.text}</li>) : <li class="hm-muted">Bildirimler 2,5 sn'de bir gelir…</li>}</ul>
+    <ul class="sc-net-notes">{() => $items.length ? $items.map((n) => <li><span class="sc-num m-muted">{n.at}</span> {n.text}</li>) : <li class="m-muted">Bildirimler 2,5 sn'de bir gelir…</li>}</ul>
   </div>
 }
 
@@ -248,7 +248,7 @@ function ErrorsDemo() {
   const swallow = (): void => undefined
   const SHOWN: Record<string, string> = { toast: "bildirim", inline: "satır içi", page: "tam sayfa", silent: "sessiz", custom: "özel" }
   return <div class="sc-stage">
-    <ErrorPage><p class="hm-muted">Kural: auth → tam sayfa · doğrulama (hedefli) → satır içi · sunucu → bildirim · iptal → sessiz.</p></ErrorPage>
+    <ErrorPage><p class="m-muted">Kural: auth → tam sayfa · doğrulama (hedefli) → satır içi · sunucu → bildirim · iptal → sessiz.</p></ErrorPage>
     <div class="sc-net-buttons">
       <Button variant="secondary" onClick={() => users.me().catch(swallow)}>Oturum düştü (401)</Button>
       <Button variant="secondary" onClick={() => users.crash().catch(swallow)}>Sunucu hatası (500)</Button>
@@ -265,7 +265,7 @@ function ErrorsDemo() {
     <Toggle bind:value={$dev} label="Geliştirici katmanı (sol altta)" />
     <div class="sc-speed-scroll"><table class="sc-speed-table sc-net-errors">
       <thead><tr><th>tür / kod</th><th>kaynak</th><th class="sc-num">sayı</th><th>gösterim</th></tr></thead>
-      <tbody>{() => errors.list().length ? errors.list().slice(0, 8).map((c: Captured) => <tr><td><code>{c.error.type}/{c.error.code}</code></td><td>{c.error.source}</td><td class="sc-num">{`×${c.count}`}</td><td>{SHOWN[c.shown] ?? c.shown}</td></tr>) : <tr><td colspan="4" class="hm-muted">Henüz hata yok.</td></tr>}</tbody>
+      <tbody>{() => errors.list().length ? errors.list().slice(0, 8).map((c: Captured) => <tr><td><code>{c.error.type}/{c.error.code}</code></td><td>{c.error.source}</td><td class="sc-num">{`×${c.count}`}</td><td>{SHOWN[c.shown] ?? c.shown}</td></tr>) : <tr><td colspan="4" class="m-muted">Henüz hata yok.</td></tr>}</tbody>
     </table></div>
   </div>
 }

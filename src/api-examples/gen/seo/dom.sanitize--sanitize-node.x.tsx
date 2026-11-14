@@ -17,7 +17,7 @@ const example: ApiExample<any> = {
         ed.querySelector("p")?.append(dirty)
         const clean = () => out.replaceChildren(sanitizeNode(ed))
         clean()
-        return <div class="sc-ex-stack"><p class="hm-muted">Düzenle ya da bir şey yapıştır:</p>{ed}<Button onClick={clean}>sanitizeNode()</Button>{out}</div>
+        return <div class="sc-ex-stack"><p class="m-muted">Düzenle ya da bir şey yapıştır:</p>{ed}<Button onClick={clean}>sanitizeNode()</Button>{out}</div>
       },
     };
 export default example;

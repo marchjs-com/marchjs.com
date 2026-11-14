@@ -20,7 +20,7 @@ const example: ApiExample<any> = {
             <Avatar name={name} size={() => p.values.size} src={() => (p.values.photo ? "/yok/hadi-avatar.png" : null)} />
             {["Grace Hopper", "Linus", "HADİ Destek"].map((n) => <Avatar name={n} size={() => p.values.size} />)}
           </Row>
-          <input class="hm-input" aria-label="Ad" value={name} onInput={(e: Event) => name.set((e.target as HTMLInputElement).value)} />
+          <input class="m-input" aria-label="Ad" value={name} onInput={(e: Event) => name.set((e.target as HTMLInputElement).value)} />
         </div>
       },
     };

@@ -5,7 +5,7 @@ import type { ApiExample } from "../../types.ts";
 import "../../managers-a.css";
 
 const example: ApiExample<any> = {
-      code: `configureFocus({ markRoot: false })   // no data-hm-focus-visible on <html>; focus.visible() still works`,
+      code: `configureFocus({ markRoot: false })   // no data-m-focus-visible on <html>; focus.visible() still works`,
       run: () => <CfgFocus />,
     };
 export default example;

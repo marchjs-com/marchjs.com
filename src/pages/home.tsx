@@ -156,7 +156,7 @@ export default function Home() {
             <span class="sc-hero-brand">March</span>
           </h1>
           <p class="sc-hero-lead" use:reveal={{ duration: 800, delay: 160 }}>
-            Sinyallerle çalışan, <span class="hm-gradient-text">sıfır bağımlılıklı</span> TypeScript arayüz çatısı.
+            Sinyallerle çalışan, <span class="m-gradient-text">sıfır bağımlılıklı</span> TypeScript arayüz çatısı.
           </p>
           <p class="sc-hero-sub" use:reveal={{ duration: 800, delay: 220 }}>
             Bileşenler, formlar, veri, grafikler, hareket motoru ve yöneticiler tek pakette. Gerçek DOM, ince taneli

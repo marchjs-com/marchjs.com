@@ -17,7 +17,7 @@ Sales.preload()   // e.g. on hover`,
       run: (p: { values: { placeholder: LazyPlaceholder; when: LazyWhen } }) => {
         const n = signal(0)
         return <div class="sc-ex-app-stack">
-          <Row><Button onClick={() => n.update((x) => x + 1)}>Yeniden yükle (900 ms)</Button>{() => (p.values.when === "interaction" ? <span class="hm-muted">Yüklemek için alanın üzerine gel.</span> : null)}</Row>
+          <Row><Button onClick={() => n.update((x) => x + 1)}>Yeniden yükle (900 ms)</Button>{() => (p.values.when === "interaction" ? <span class="m-muted">Yüklemek için alanın üzerine gel.</span> : null)}</Row>
           {() => { n(); const ph = p.values.placeholder, when = p.values.when; return untrack(() => { const C = lazy<{ name: string }>(() => wait(900, { default: Sales }), { placeholder: ph, when, height: "7.5rem" }); return <C name="HADİ" /> }) }}
         </div>
       },

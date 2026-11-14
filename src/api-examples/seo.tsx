@@ -24,7 +24,7 @@ const box = (html: string, editable = false): HTMLElement => {
 /** Head examples that write tags use a draft document, and only while the page's own head is not managed by seo. */
 const headBusy = (): boolean => headTags().length > 0;
 const draftDoc = (): Document => document.implementation.createHTMLDocument("Taslak");
-const headOf = (d: Document): string[] => [`<title>${d.title}</title>`, ...Array.from(d.head.children).filter((e) => e.localName !== "title").map((e) => `<${e.localName} ${e.getAttributeNames().filter((n) => n !== "data-hm-head").map((n) => `${n}="${e.getAttribute(n)}"`).join(" ")}>`)];
+const headOf = (d: Document): string[] => [`<title>${d.title}</title>`, ...Array.from(d.head.children).filter((e) => e.localName !== "title").map((e) => `<${e.localName} ${e.getAttributeNames().filter((n) => n !== "data-m-head").map((n) => `${n}="${e.getAttribute(n)}"`).join(" ")}>`)];
 
 const PAGE = `<!doctype html>
 <html lang="tr">
@@ -119,7 +119,7 @@ headTags().find((t) => t.key === "title")`,
     },
     headToHtml: {
       code: `headToHtml(resolveHead([{ title: "Ürünler", og: {} }]))   // for prerendering
-headToHtml(tags, { mark: true })   // data-hm-head: adopted by the client`,
+headToHtml(tags, { mark: true })   // data-m-head: adopted by the client`,
       run: () => {
         const title = signal("Ürünler"), mark = signal(false)
         return <div class="sc-ex-stack"><Row><Text label="Başlık" value={title} /><Button variant={() => (mark() ? "primary" : "secondary")} onClick={() => mark.set(!mark())}>mark</Button></Row>
@@ -228,7 +228,7 @@ tagKey("link", { rel: "canonical", href: "/x" }) // "link:canonical"`,
   },
   "hadi-march/seo/hydrate": {
     hydrate: {
-      code: `// index.html carries the prerendered page: <div id="app" data-hm-prerender="/">…</div>
+      code: `// index.html carries the prerendered page: <div id="app" data-m-prerender="/">…</div>
 hydrate(() => <App />, document.getElementById("app")!)   // swaps in one step when ready`,
       run: () => {
         const host = box(""), status = signal("—")
@@ -236,7 +236,7 @@ hydrate(() => <App />, document.getElementById("app")!)   // swaps in one step w
         const go = () => {
           stop?.()
           host.replaceChildren(...Array.from(parseHtml("<p><strong>Önceden yazılmış HTML</strong> (derlemede üretildi)</p>").childNodes))
-          host.setAttribute("data-hm-prerender", location.pathname)
+          host.setAttribute("data-m-prerender", location.pathname)
           status.set("eski içerik görünüyor, uygulama arka planda çiziliyor…")
           const t0 = Date.now()
           stop = hydrate(() => <p>Canlı uygulama: {now()} · <Badge tone="success">etkileşimli</Badge></p>, host, { ready: () => { const ok = Date.now() - t0 > 1200; if (ok) status.set("tek adımda değiştirildi"); return ok } })
@@ -250,8 +250,8 @@ hydrate(() => <App />, document.getElementById("app")!)   // swaps in one step w
       code: `prerenderedFor(document.getElementById("app")!)   // true: the URL shows the prerendered route`,
       run: () => {
         const pre = signal(location.pathname)
-        const el = () => { const e = document.createElement("div"); e.setAttribute("data-hm-prerender", pre()); return e }
-        return <div class="sc-ex-stack"><Row><Text label="data-hm-prerender" value={pre} />{[location.pathname, "/baska-sayfa", "/motion"].map((p) => <Button variant="ghost" onClick={() => pre.set(p)}>{p}</Button>)}</Row>
+        const el = () => { const e = document.createElement("div"); e.setAttribute("data-m-prerender", pre()); return e }
+        return <div class="sc-ex-stack"><Row><Text label="data-m-prerender" value={pre} />{[location.pathname, "/baska-sayfa", "/motion"].map((p) => <Button variant="ghost" onClick={() => pre.set(p)}>{p}</Button>)}</Row>
           <Row><Out label="Adres" value={location.pathname} /><Out label="prerenderedFor" value={() => String(prerenderedFor(el()))} /></Row></div>
       },
     },
@@ -318,7 +318,7 @@ editor.append(frag)`,
         ed.querySelector("p")?.append(dirty)
         const clean = () => out.replaceChildren(sanitizeNode(ed))
         clean()
-        return <div class="sc-ex-stack"><p class="hm-muted">Düzenle ya da bir şey yapıştır:</p>{ed}<Button onClick={clean}>sanitizeNode()</Button>{out}</div>
+        return <div class="sc-ex-stack"><p class="m-muted">Düzenle ya da bir şey yapıştır:</p>{ed}<Button onClick={clean}>sanitizeNode()</Button>{out}</div>
       },
     },
   },

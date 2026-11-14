@@ -27,7 +27,7 @@ const example: ApiExample<any> = {
           <ChatThread label="HADİ destek" messages={messages} group={() => p.values.group} typing={() => (p.values.typing ? ["HADİ Destek"] : [])} onRetry={retry} runMinutes={5} />
           <Row>
             <Button size="sm" onClick={() => messages.update((l) => [...l, { id: String(id++), text: "Başka bir sorum var.", mine: true, time: Date.now(), status: "sent" }])}>Mesaj ekle</Button>
-            <span class="hm-muted">Gitmeyen mesajda "yeniden dene"ye basın.</span>
+            <span class="m-muted">Gitmeyen mesajda "yeniden dene"ye basın.</span>
           </Row>
         </div>
       },

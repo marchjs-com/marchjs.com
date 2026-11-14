@@ -33,7 +33,7 @@ function makeSource() {
 
 const CODE_SRC: Record<string, string> = {
   ts: "const total = items.reduce((s, i) => s + i.price, 0)\nconsole.log(total)",
-  css: ".card {\n  padding: var(--hm-space-3);\n  border-radius: var(--hm-radius-2);\n}",
+  css: ".card {\n  padding: var(--m-space-3);\n  border-radius: var(--m-radius-2);\n}",
 }
 
 export default examples({
@@ -119,9 +119,9 @@ const r = await askReason({ purposes: [{ value: "dup", label: "Yinelenen" }] }) 
       },
     },
     bootLoader: {
-      code: `// index.html: <div id="hm-boot">…</div>
+      code: `// index.html: <div id="m-boot">…</div>
 mount(App, document.body)
-bootLoader.done()   // fades #hm-boot out and removes it`,
+bootLoader.done()   // fades #m-boot out and removes it`,
       run: () => {
         let box!: HTMLElement
         const make = () => { const el = document.createElement("div"); el.id = "sc-ex-ui-e-boot"; el.className = "sc-ex-ui-e-boot"; el.textContent = "Uygulama yükleniyor…"; return el }

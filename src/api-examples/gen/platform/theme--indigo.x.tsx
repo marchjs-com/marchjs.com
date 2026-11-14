@@ -6,5 +6,5 @@ import type { ApiExample } from "../../types.ts";
 import "../../platform.css";
 
 const example: ApiExample<any> = { ...preset(indigo, `import { indigo } from "hadi-march/theme"
-<div data-hm-theme="indigo">…</div>   // after loadTheme("indigo")`) };
+<div data-m-theme="indigo">…</div>   // after loadTheme("indigo")`) };
 export default example;

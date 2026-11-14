@@ -16,8 +16,8 @@ arcPath(60, 60, 50, 0, 0, Math.PI)                 // half a pie (r0 = 0)`,
         const d = () => arcPath(60, 60, 52, inner(), 0, (sweep() / 180) * Math.PI)
         return <div class="sc-ex-charts-stack">
           <svg class="sc-ex-charts-svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label={() => `${sweep()}° dilim`}>
-            <path class="hm-chart-series-1 sc-ex-charts-soft" d={() => arcPath(60, 60, 52, inner(), 0, Math.PI * 2)} />
-            <path class="hm-chart-series-0 sc-ex-charts-fill" d={d} />
+            <path class="m-chart-series-1 sc-ex-charts-soft" d={() => arcPath(60, 60, 52, inner(), 0, Math.PI * 2)} />
+            <path class="m-chart-series-0 sc-ex-charts-fill" d={d} />
           </svg>
           <Slider value={sweep} onChange={(v: number) => sweep.set(v)} min={0} max={360} step={5} format={(v: number) => `${v}°`} aria-label="Açı" />
           <Segmented value={inner} onChange={(v: number) => inner.set(v)} options={[{ value: 0, label: "Pasta" }, { value: 28, label: "Halka" }, { value: 44, label: "İnce halka" }]} aria-label="İç yarıçap" />

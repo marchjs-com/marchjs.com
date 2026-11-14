@@ -12,7 +12,7 @@ export const busy = signal<string | null>(null)
 
 // one theme color per library (category tokens; March gets the brand orange, vanilla JS the neutral baseline)
 const COLOR: Record<string, string> = { march: "cat-1", react: "cat-2", vue: "cat-3", svelte: "cat-4", solid: "cat-5", preact: "cat-6", lit: "cat-7" }
-export const libColor = (id: string): string => (COLOR[id] ? `var(--hm-${COLOR[id]})` : "var(--hm-faint)")
+export const libColor = (id: string): string => (COLOR[id] ? `var(--m-${COLOR[id]})` : "var(--m-faint)")
 
 export const ms = (x: number): string => (Number.isFinite(x) ? (x >= 100 ? x.toFixed(0) : x.toFixed(1)) : "—")
 export const kb = (n: number): string => `${(n / 1024).toFixed(1)} KB`

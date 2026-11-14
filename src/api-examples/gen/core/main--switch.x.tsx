@@ -9,7 +9,7 @@ const example: ApiExample<any> = {
   <Match when={$error}>{(e) => <ErrorBox error={e} />}</Match>
 </Switch>`,
       play: { options: [{ key: "state", label: "Durum", default: "loading", options: [{ value: "loading", label: "Yükleniyor" }, { value: "error", label: "Hata" }, { value: "empty", label: "Boş" }] }] },
-      run: (p: { values: { state: string } }) => <Switch fallback={<p class="hm-muted">Kayıt yok</p>}>
+      run: (p: { values: { state: string } }) => <Switch fallback={<p class="m-muted">Kayıt yok</p>}>
         <Match when={() => p.values.state === "loading"}><p aria-live="polite">Yükleniyor…</p></Match>
         <Match when={() => (p.values.state === "error" ? "Bağlantı koptu" : null)}>{(e: string) => <p role="alert">Hata: {e}</p>}</Match>
       </Switch>,

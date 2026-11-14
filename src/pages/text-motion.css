@@ -1,28 +1,28 @@
 /* Showcase › Text animations page (sc-tx-*). Theme tokens only; logical properties (RTL). Cards: equal height, no
    overflow at any width (min(100%, …) columns, min-width: 0 everywhere, stages clip their own motion). */
-.sc-tx-control { display: flex; flex-wrap: wrap; align-items: end; gap: var(--hm-space-3); min-width: 0; }
-.sc-tx-control > .hm-field { flex: 1 1 14rem; min-width: 0; }
+.sc-tx-control { display: flex; flex-wrap: wrap; align-items: end; gap: var(--m-space-3); min-width: 0; }
+.sc-tx-control > .m-field { flex: 1 1 14rem; min-width: 0; }
 
-.sc-tx-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); grid-auto-rows: 1fr; gap: var(--hm-space-3); min-width: 0; }
-.sc-tx-card { display: flex; flex-direction: column; gap: var(--hm-space-2); min-width: 0; padding: var(--hm-space-3); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); background: var(--hm-surface); }
-.sc-tx-card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--hm-space-2); min-width: 0; }
+.sc-tx-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); grid-auto-rows: 1fr; gap: var(--m-space-3); min-width: 0; }
+.sc-tx-card { display: flex; flex-direction: column; gap: var(--m-space-2); min-width: 0; padding: var(--m-space-3); border: 1px solid var(--m-border); border-radius: var(--m-radius-3); background: var(--m-surface); }
+.sc-tx-card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--m-space-2); min-width: 0; }
 .sc-tx-name { font-weight: 600; overflow-wrap: anywhere; min-width: 0; }
-.sc-tx-desc { flex: 1 1 auto; margin: 0; min-block-size: 2.6em; font-size: .85rem; color: var(--hm-text-muted, inherit); }
-.sc-tx-stage { display: grid; place-items: center; block-size: 5.5rem; padding-inline: var(--hm-space-2); border-radius: var(--hm-radius-2); background: var(--hm-surface-2); overflow: hidden; }
+.sc-tx-desc { flex: 1 1 auto; margin: 0; min-block-size: 2.6em; font-size: .85rem; color: var(--m-text-muted, inherit); }
+.sc-tx-stage { display: grid; place-items: center; block-size: 5.5rem; padding-inline: var(--m-space-2); border-radius: var(--m-radius-2); background: var(--m-surface-2); overflow: hidden; }
 .sc-tx-text { max-inline-size: 100%; font-size: 1.4rem; font-weight: 700; line-height: 1.2; text-align: center; overflow-wrap: anywhere; }
-.sc-tx-card-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--hm-space-2); min-width: 0; min-block-size: 2rem; }
-.sc-tx-snippet { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .75rem; color: var(--hm-text-muted, inherit); }
-.sc-tx-hint { font-size: .75rem; color: var(--hm-text-muted, inherit); }
+.sc-tx-card-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--m-space-2); min-width: 0; min-block-size: 2rem; }
+.sc-tx-snippet { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .75rem; color: var(--m-text-muted, inherit); }
+.sc-tx-hint { font-size: .75rem; color: var(--m-text-muted, inherit); }
 
-.sc-tx-lab { display: grid; gap: var(--hm-space-3); min-width: 0; }
-.sc-tx-lab-stage { display: grid; place-items: center; min-block-size: 10rem; padding: var(--hm-space-4); border-radius: var(--hm-radius-3); background: var(--hm-surface-2); overflow: hidden; }
+.sc-tx-lab { display: grid; gap: var(--m-space-3); min-width: 0; }
+.sc-tx-lab-stage { display: grid; place-items: center; min-block-size: 10rem; padding: var(--m-space-4); border-radius: var(--m-radius-3); background: var(--m-surface-2); overflow: hidden; }
 .sc-tx-lab-text { max-inline-size: 100%; font-size: clamp(1.5rem, 4vw, 2.6rem); font-weight: 800; line-height: 1.25; text-align: center; overflow-wrap: anywhere; }
-.sc-tx-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-2); min-width: 0; }
-.sc-tx-meta { margin-inline-start: auto; font-size: .85rem; color: var(--hm-text-muted, inherit); }
+.sc-tx-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-2); min-width: 0; }
+.sc-tx-meta { margin-inline-start: auto; font-size: .85rem; color: var(--m-text-muted, inherit); }
 
 /* picker previews: split units and easing curves */
 .sc-tx-pv { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 2px; font-size: .7rem; font-weight: 600; }
-.sc-tx-pv i { font-style: normal; padding: 1px 3px; border-radius: 3px; background: color-mix(in oklab, var(--hm-accent, var(--hm-primary)) 25%, transparent); }
+.sc-tx-pv i { font-style: normal; padding: 1px 3px; border-radius: 3px; background: color-mix(in oklab, var(--m-accent, var(--m-primary)) 25%, transparent); }
 .sc-tx-pv-line { flex-direction: column; align-items: center; }
 .sc-tx-curve { inline-size: 3rem; block-size: 2.8rem; overflow: visible; }
 .sc-tx-curve polyline { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }

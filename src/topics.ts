@@ -172,7 +172,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "option-list", title: "Seçenek listesi", name: "OptionList", desc: "Panel içinde seçenek satırları: tek ya da çoklu seçim, komut menüsü; ok tuşları ya da bir alanın tuşlarıyla.", group: "Katmanlar" },
   ],
   "/themes": [
-    { slug: "presets", title: "Hazır temalar", desc: "Her kart kendi temasıyla çizildi (data-hm-theme kapsamı).", group: "Temalar" },
+    { slug: "presets", title: "Hazır temalar", desc: "Her kart kendi temasıyla çizildi (data-m-theme kapsamı).", group: "Temalar" },
     { slug: "theme-menu", title: "Tema menüsü", name: "ThemeMenu", desc: "Karmaşık bileşen: açık / koyu / sistem, renk teması ve vurgu rengi tek açılır menüde; bölümler ThemePicker…", group: "Temalar" },
     { slug: "theme-editor", title: "Kendi temanı yaz", name: "ThemeEditor", desc: "Renkleri, yazı tiplerini ve yarıçapı seç; temanı dışa aktar.", group: "Temalar" },
     { slug: "brand-colors", title: "Marka renkleri", desc: "HADİ Sosyal'ın dört resmi rengi (hadi_colors.dart ile birebir).", group: "Tokenlar" },
@@ -215,7 +215,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "timeline-editor", title: "Zaman çizelgesi düzenleyici", desc: "Çubukları sürükle (ya da oklarla kaydır), oynat, ters çevir; seek kaydırıcısı zamanı doğrudan ayarlar.", group: "Motor" },
     { slug: "curve-editor", title: "Eğri editörü", desc: "Tutamaçları sürükle: cubic-bezier.", group: "Motor" },
     { slug: "stagger-200", title: "200 öğe stagger", desc: "200 nokta, ızgara stagger'ı ortadan.", group: "Motor" },
-    { slug: "keyframes-css", title: "Keyframe'ler → tek CSS dosyası", desc: "keyframesCss() (ya da tools/gen-motion-css.js) kayıtlardan @keyframes ve .hm-anim-* sınıfları üretir;…", group: "Motor" },
+    { slug: "keyframes-css", title: "Keyframe'ler → tek CSS dosyası", desc: "keyframesCss() (ya da tools/gen-motion-css.js) kayıtlardan @keyframes ve .m-anim-* sınıfları üretir;…", group: "Motor" },
   ],
   "/charts": [
     { slug: "stats", title: "Göstergeler", desc: "Stat: değer, önceki döneme göre değişim, eğilim çizgisi.", group: "Grafikler" },

@@ -140,7 +140,7 @@ export default function ApiPage() {
           {() => [null, ...KINDS].map((k, n) => <button type="button" role="radio" class="sc-apip-kchip" aria-checked={() => String(kind() === k)} aria-keyshortcuts={String(n + 1)}
             on:click={() => setFilter("kind", k)}>{k ? T().kinds[k] : T().allKinds}<span class="sc-apip-n">{() => counts()[k ?? "all"] ?? 0}</span></button>)}
         </div>
-        <select class="hm-input sc-apip-sub" aria-label={() => T().subFilter} value={() => sub() ?? ""} on:change={(e: Event) => setFilter("sub", (e.target as HTMLSelectElement).value || null)}>
+        <select class="m-input sc-apip-sub" aria-label={() => T().subFilter} value={() => sub() ?? ""} on:change={(e: Event) => setFilter("sub", (e.target as HTMLSelectElement).value || null)}>
           <option value="">{() => T().allSubs}</option>
           {() => (index()?.subpaths ?? []).map((s) => <option value={s.slug}>{s.subpath}</option>)}
         </select>

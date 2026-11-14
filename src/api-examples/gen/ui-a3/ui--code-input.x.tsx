@@ -19,7 +19,7 @@ const example: ApiExample<any> = {
         return <div class="sc-ex-stack">
           {() => { const { length, variant, mask } = p.values; code.set(""); result.set("—"); return <CodeInput value={code} length={length} variant={variant} mask={mask} groups={length === 6 ? [3, 3] : length === 8 ? [4, 4] : undefined} aria-label="Doğrulama kodu"
             onComplete={(c) => result.set(c === "123456".slice(0, length) || c === "12345678".slice(0, length) ? "doğru ✓" : "yanlış kod")} /> }}
-          <Row><Out label="value" value={code} /><Out label="sonuç" value={result} /><span class="hm-muted">Doğru kod: 1234…</span></Row>
+          <Row><Out label="value" value={code} /><Out label="sonuç" value={result} /><span class="m-muted">Doğru kod: 1234…</span></Row>
         </div>
       },
     };

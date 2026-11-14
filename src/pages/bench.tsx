@@ -167,7 +167,7 @@ export default function Bench() {
       {() => (!barRows().length ? <p class="bt-empty">{t("Henüz sonuç yok. Testi başlatınca kitaplıklar burada canlı olarak sıralanır.")}</p> : null)}
       <Preview stage={(el) => { stage = el }} running={() => $running} caption={() => ($progress ? `${libName($progress.lib)} · ${opLabel($progress.op)}` : t("bekliyor"))} />
       {() => ranked().length ? <div class="bt-table-wrap">
-        <table class="hm-table bt-table">
+        <table class="m-table bt-table">
           <caption class="bt-caption">{t("{0}: ayrıntı", { 0: opLabel($view) })}</caption>
           <thead><tr><th scope="col">{t("Kitaplık")}</th><th scope="col">{t("Medyan")}</th><th scope="col">{t("Ortalama ± sapma")}</th><th scope="col">{t("%95 güven aralığı")}</th><th scope="col">n</th><th scope="col">{t("Katsayı")}</th></tr></thead>
           <tbody>{ranked().map((x) => <tr>
@@ -182,7 +182,7 @@ export default function Bench() {
       </div> : null}
       {() => libsIn().length ? <Disclosure class="bt-more" title={t("Tüm işlemler, ilk çizim, bellek ve indirme boyutu")}>
         <div class="bt-table-wrap">
-          <table class="hm-table bt-table">
+          <table class="m-table bt-table">
             <thead><tr><th scope="col">{t("Kitaplık")}</th>{opsIn().map((o) => <th scope="col">{t(o.label)}</th>)}<th scope="col">{t("İlk çizim")}</th><th scope="col">{t("Bellek (1.000 satır)")}</th><th scope="col">{t("İndirilen (gzip)")}</th></tr></thead>
             <tbody>{libsIn().map((id) => <tr>
               <th scope="row">{libName(id)}</th>

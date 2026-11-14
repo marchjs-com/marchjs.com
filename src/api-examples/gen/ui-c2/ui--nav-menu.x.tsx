@@ -29,7 +29,7 @@ const example: ApiExample<any> = {
           <div class="sc-ex-ui-c-frame">
             {() => { const filter = p.values.filter, collapsible = p.values.collapsible
               return <NavMenu items={items as never} brand={<strong>HADİ</strong>} label="Örnek menü" palette={false} storageKey="sc.ex.navmenu" filter={filter} collapsible={collapsible} /> }}
-            <div class="sc-ex-ui-c-main hm-muted">Sayfa içeriği</div>
+            <div class="sc-ex-ui-c-main m-muted">Sayfa içeriği</div>
           </div>
         </div>
       },

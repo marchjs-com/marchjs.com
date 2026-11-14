@@ -8,7 +8,7 @@ import { Cfg } from "./_cfg.tsx";
 function CfgLayers() {
   const opened = signal(0)
   const open = () => {
-    const card = (<div class="sc-ex-managers-a-layer" role="group" aria-label="Deneme katmanı"><strong>Katman</strong><span class="hm-muted">Esc ile kapanmaya çalışın.</span><Button size="sm" onClick={() => h.close()}>Kapat</Button></div>) as HTMLElement
+    const card = (<div class="sc-ex-managers-a-layer" role="group" aria-label="Deneme katmanı"><strong>Katman</strong><span class="m-muted">Esc ile kapanmaya çalışın.</span><Button size="sm" onClick={() => h.close()}>Kapat</Button></div>) as HTMLElement
     const h = layer.open("popover", card, { label: "api-demo", onEscape: () => h.close() })
     opened.update((n) => n + 1)
     return h

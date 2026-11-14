@@ -86,9 +86,9 @@ const Pie = lazy(() => import("hadi-march/charts/pie.ts"), { pick: "PieChart", p
     <div class="sc-row">
       <Toggle value={slow} label="Yavaş 3G" />
       <Button size="sm" on:click={() => { $showPie = !$showPie }}>{() => ($showPie ? "Grafiği kaldır" : "Grafiği göster")}</Button>
-      <span class="hm-muted">{() => (PieChart.loaded ? "Parça önbellekte: iskeletsiz gelir" : "Parça henüz inmedi")}</span>
+      <span class="m-muted">{() => (PieChart.loaded ? "Parça önbellekte: iskeletsiz gelir" : "Parça henüz inmedi")}</span>
     </div>
-    <div class="sc-speed-lazy">{() => ($showPie ? <PieChart data={SHARE} donut title="Kanal payı" legend="right" width={320} height={200} /> : <p class="hm-muted">Grafik burada, tembel bir parçadan gelir.</p>)}</div>
+    <div class="sc-speed-lazy">{() => ($showPie ? <PieChart data={SHARE} donut title="Kanal payı" legend="right" width={320} height={200} /> : <p class="m-muted">Grafik burada, tembel bir parçadan gelir.</p>)}</div>
   </Demo>,
     "instant": () => <Demo wide title="Anında geçiş" desc="Menüde bir sayfaya tıklayınca adres, etkin bağlantı ve konum çubuğu hemen değişir. Sayfa 100 ms içinde gelmezse yerini iskeleti alır (kabuk yerinde kalır); 150 ms'den uzun sürerse üstte ince bir çizgi ve tıklanan bağlantıda küçük bir dönen simge görünür. Yeni bir tıklama öncekini iptal eder: yalnız son sayfa açılır. Yavaş 3G'yi açıp iki sayfaya art arda tıkla."
     code={`<Router loading={<Spinner />} skeleton={() => <PageSkeleton />} />   // every page
@@ -101,7 +101,7 @@ fetch(url, { signal: navigationSignal() })   // aborted when the user clicks els
     </div>
   </Demo>,
     "parts": () => <Demo wide title="Canlı parça listesi" desc="Derlemedeki her tembel birim (sayfalar, lazy bileşenler, kabuk parçaları, dil paketi) ve bu sekmede inip inmediği. Sayfalar arasında gez ya da Yavaş 3G'yi aç: satırlar indikçe güncellenir.">
-    <p class="hm-muted">{() => { const l = parts(); return `${l.filter((p) => p.hit).length} / ${l.length} parça indi` }}</p>
+    <p class="m-muted">{() => { const l = parts(); return `${l.filter((p) => p.hit).length} / ${l.length} parça indi` }}</p>
     <div class="sc-speed-scroll" role="region" aria-label="Tembel parçalar" tabindex="0">
       <table class="sc-speed-table">
         <thead><tr><th scope="col">Parça</th><th scope="col" class="sc-num">Dosya</th><th scope="col">Durum</th><th scope="col" class="sc-num">ms</th><th scope="col">Sayfa</th></tr></thead>
@@ -124,11 +124,11 @@ createRouter({ routes: { "/report": () => import("./pages/rapor.tsx") } })
 const Map = lazy(() => import("./Map.tsx"))
 <Link href="/report" prefetch="hover">Rapor</Link>   // default: on hover`}>
     <Grid cols={5} gap={3} minCol="8rem">
-      <Card><div class="sc-speed-n">{() => totals().files}</div><div class="hm-muted">dosya</div></Card>
-      <Card><div class="sc-speed-n">{() => totals().net}</div><div class="hm-muted">ağdan</div></Card>
-      <Card><div class="sc-speed-n">{() => totals().cached}</div><div class="hm-muted">önbellekten</div></Card>
-      <Card><div class="sc-speed-n">{() => totals().preload}</div><div class="hm-muted">ön yükleme</div></Card>
-      <Card><div class="sc-speed-n">{() => kb(totals().bytes)}</div><div class="hm-muted">{() => (totals().estimated ? "aktarılan (rapordan)" : "aktarılan")}</div></Card>
+      <Card><div class="sc-speed-n">{() => totals().files}</div><div class="m-muted">dosya</div></Card>
+      <Card><div class="sc-speed-n">{() => totals().net}</div><div class="m-muted">ağdan</div></Card>
+      <Card><div class="sc-speed-n">{() => totals().cached}</div><div class="m-muted">önbellekten</div></Card>
+      <Card><div class="sc-speed-n">{() => totals().preload}</div><div class="m-muted">ön yükleme</div></Card>
+      <Card><div class="sc-speed-n">{() => kb(totals().bytes)}</div><div class="m-muted">{() => (totals().estimated ? "aktarılan (rapordan)" : "aktarılan")}</div></Card>
     </Grid>
     <div class="sc-row"><Button size="sm" on:click={clearNetLog}>Listeyi temizle</Button></div>
     <div class="sc-speed-scroll" role="region" aria-label="Yüklenen dosyalar" tabindex="0">
@@ -154,7 +154,7 @@ const Map = lazy(() => import("./Map.tsx"))
 export default { budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, routes: { "/data": 80 * 1024 }, fail: true } }
 // ✖ over budget: /data JS 82.3 KB > 80.0 KB`}>
     {() => {
-      if (!$report) return <p class="hm-muted">{$reportError || "Yükleniyor…"}</p>
+      if (!$report) return <p class="m-muted">{$reportError || "Yükleniyor…"}</p>
       const rows = reportRows($report)
       const over = rows.filter((r) => r.state === "over").length, near = rows.filter((r) => r.state === "near").length
       const shown = $onlyOver ? rows.filter((r) => r.state !== "ok") : rows
@@ -169,7 +169,7 @@ export default { budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, 
           <Badge tone="neutral">{`En küçük parça: ${$report.chunks.smallest ? `${shortName($report.chunks.smallest.file)} ${kb($report.chunks.smallest.bytes)}` : "—"}`}</Badge>
           <Badge tone="neutral">{`Toplam: ${$report.chunks.files} dosya, ${kb($report.chunks.bytes)} (gzip öncesi)`}</Badge>
         </div> : null}
-        <p class="hm-muted">Bütçe yalnız JavaScript'in gzip boyutuna uygulanır (her satır kendi sınırıyla, ayrı ayrı); CSS bilgi için gösterilir. İstek: o satır için inen dosya sayısı (JS + CSS).</p>
+        <p class="m-muted">Bütçe yalnız JavaScript'in gzip boyutuna uygulanır (her satır kendi sınırıyla, ayrı ayrı); CSS bilgi için gösterilir. İstek: o satır için inen dosya sayısı (JS + CSS).</p>
         <div class="sc-speed-scroll" tabindex="0" role="region" aria-label="Boyut raporu">
           <table class="sc-speed-table">
             <thead><tr>
@@ -181,14 +181,14 @@ export default { budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, 
             </tr></thead>
             <tbody>
               {shown.length ? shown.map((r) => <tr class={`sc-budget-${r.state}`}>
-                <td>{r.state === "over" ? <Badge tone="danger">{`aştı +${kb(r.js - (r.limit ?? 0))}`}</Badge> : r.state === "near" ? <Badge tone="warn">{`sınırda %${Math.round((r.js / (r.limit ?? 1)) * 100)}`}</Badge> : <span class="hm-muted">—</span>}</td>
+                <td>{r.state === "over" ? <Badge tone="danger">{`aştı +${kb(r.js - (r.limit ?? 0))}`}</Badge> : r.state === "near" ? <Badge tone="warn">{`sınırda %${Math.round((r.js / (r.limit ?? 1)) * 100)}`}</Badge> : <span class="m-muted">—</span>}</td>
                 <td class="sc-speed-file">{shortName(r.name)}</td>
                 <td>{KIND[r.kind] ?? r.kind}</td>
                 <td class="sc-num sc-budget-value">{kb(r.js)}</td>
                 <td class="sc-num">{kb(r.css)}</td>
                 <td class="sc-num">{r.limit ? kb(r.limit) : "—"}</td>
                 <td class="sc-num">{r.files?.length ?? ""}</td>
-              </tr>) : <tr><td colspan="7" class="hm-muted">Aşan ya da sınırda satır yok.</td></tr>}
+              </tr>) : <tr><td colspan="7" class="m-muted">Aşan ya da sınırda satır yok.</td></tr>}
             </tbody>
           </table>
         </div>

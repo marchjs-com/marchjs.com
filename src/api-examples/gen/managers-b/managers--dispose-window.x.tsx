@@ -5,5 +5,5 @@ import { disposeEx } from "./_dispose-ex.tsx";
 import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = { code: `appWindow().count()
-disposeWindow()              // sekme kanalı kapanır`, run: disposeEx(windowManager, "windowManager.get()", "disposeWindow()", () => windowManager.get(), disposeWindow, [[windowManager, { channel: "hm-ex:window" }]]) };
+disposeWindow()              // sekme kanalı kapanır`, run: disposeEx(windowManager, "windowManager.get()", "disposeWindow()", () => windowManager.get(), disposeWindow, [[windowManager, { channel: "m-ex:window" }]]) };
 export default example;

@@ -6,12 +6,12 @@ import type { ApiExample } from "../../types.ts";
 import "../../ui-b.css";
 
 const example: ApiExample<any> = {
-      code: `const bg = signal("linear-gradient(90deg, var(--hm-brand-orange), var(--hm-brand-purple))")
+      code: `const bg = signal("linear-gradient(90deg, var(--m-brand-orange), var(--m-brand-purple))")
 <GradientEditor value={bg} types={["linear", "radial"]} />
 <div style={{ background: bg() }} />`,
       play: { options: [{ key: "presets", label: "Hazır geçişler", default: true }, { key: "output", label: "CSS çıktısı", default: false }] },
       run: (p: { values: { presets: boolean; output: boolean } }) => {
-        const bg = signal("linear-gradient(90deg, var(--hm-brand-orange), var(--hm-brand-purple))")
+        const bg = signal("linear-gradient(90deg, var(--m-brand-orange), var(--m-brand-purple))")
         return <div class="sc-ex-stack">
           {() => { const pr = p.values.presets, o = p.values.output; return <GradientEditor value={bg} presets={pr ? undefined : false} output={o} aria-label="Kart arka planı" /> }}
           <div class="sc-ex-ui-b-swatch" style={() => ({ background: bg() })} role="img" aria-label="Sonuç" />

@@ -1,36 +1,36 @@
 /* Social page (showcase): stage sizes for the social component demos. */
-.sc-social-post, .sc-social-mgrid { display: flex; flex-direction: column; gap: var(--hm-space-2); width: 100%; max-width: 30rem; margin-inline: auto; min-width: 0; }
-.sc-social-roll { align-items: center; gap: var(--hm-space-3); }
-.sc-social-roll-num { font-size: var(--hm-text-4xl); font-weight: 800; letter-spacing: var(--hm-tracking-tighter); min-width: 5ch; color: var(--hm-text); }
-.sc-social-like { align-items: center; gap: var(--hm-space-5); }
-.sc-social-burst-tile { position: relative; display: grid; place-items: center; gap: var(--hm-space-1); width: 9rem; aspect-ratio: 1; border: 1px dashed var(--hm-border-strong);
-  border-radius: var(--hm-radius-4); background: var(--hm-surface-2); color: var(--hm-text-2); font: inherit; cursor: pointer; }
-.sc-social-burst-tile:focus-visible { outline: 2px solid var(--hm-primary); outline-offset: 2px; }
-.sc-social-burst-mark { display: inline-block; font-size: 2.5rem; line-height: 1; color: var(--hm-accent, var(--hm-brand-pink, var(--hm-danger))); }
-.sc-social-vlist-wrap, .sc-social-feed-wrap { display: flex; flex-direction: column; gap: var(--hm-space-2); width: 100%; min-width: 0; }
-.sc-social-vlist { height: 22rem; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); overflow: hidden; background: var(--hm-surface); }
-.sc-social-vlist .hm-vlist { padding: var(--hm-space-2); box-sizing: border-box; }
-.sc-social-vrow { display: flex; flex-direction: column; gap: .25rem; padding: .75rem .875rem; border-radius: var(--hm-radius-2); border-inline-start: 4px solid var(--sc-c);
-  background: color-mix(in srgb, var(--sc-c) 7%, var(--hm-surface)); font-size: var(--hm-text-sm); }
-.sc-social-vrow span { color: var(--hm-text-2); }
-.sc-social-vrow-c1 { --sc-c: var(--hm-brand-orange, var(--hm-cat-1)); } .sc-social-vrow-c2 { --sc-c: var(--hm-brand-blue, var(--hm-cat-2)); }
-.sc-social-vrow-c3 { --sc-c: var(--hm-brand-green, var(--hm-cat-3)); } .sc-social-vrow-c4 { --sc-c: var(--hm-brand-purple, var(--hm-cat-4)); }
+.sc-social-post, .sc-social-mgrid { display: flex; flex-direction: column; gap: var(--m-space-2); width: 100%; max-width: 30rem; margin-inline: auto; min-width: 0; }
+.sc-social-roll { align-items: center; gap: var(--m-space-3); }
+.sc-social-roll-num { font-size: var(--m-text-4xl); font-weight: 800; letter-spacing: var(--m-tracking-tighter); min-width: 5ch; color: var(--m-text); }
+.sc-social-like { align-items: center; gap: var(--m-space-5); }
+.sc-social-burst-tile { position: relative; display: grid; place-items: center; gap: var(--m-space-1); width: 9rem; aspect-ratio: 1; border: 1px dashed var(--m-border-strong);
+  border-radius: var(--m-radius-4); background: var(--m-surface-2); color: var(--m-text-2); font: inherit; cursor: pointer; }
+.sc-social-burst-tile:focus-visible { outline: 2px solid var(--m-primary); outline-offset: 2px; }
+.sc-social-burst-mark { display: inline-block; font-size: 2.5rem; line-height: 1; color: var(--m-accent, var(--m-brand-pink, var(--m-danger))); }
+.sc-social-vlist-wrap, .sc-social-feed-wrap { display: flex; flex-direction: column; gap: var(--m-space-2); width: 100%; min-width: 0; }
+.sc-social-vlist { height: 22rem; border: 1px solid var(--m-border); border-radius: var(--m-radius-3); overflow: hidden; background: var(--m-surface); }
+.sc-social-vlist .m-vlist { padding: var(--m-space-2); box-sizing: border-box; }
+.sc-social-vrow { display: flex; flex-direction: column; gap: .25rem; padding: .75rem .875rem; border-radius: var(--m-radius-2); border-inline-start: 4px solid var(--sc-c);
+  background: color-mix(in srgb, var(--sc-c) 7%, var(--m-surface)); font-size: var(--m-text-sm); }
+.sc-social-vrow span { color: var(--m-text-2); }
+.sc-social-vrow-c1 { --sc-c: var(--m-brand-orange, var(--m-cat-1)); } .sc-social-vrow-c2 { --sc-c: var(--m-brand-blue, var(--m-cat-2)); }
+.sc-social-vrow-c3 { --sc-c: var(--m-brand-green, var(--m-cat-3)); } .sc-social-vrow-c4 { --sc-c: var(--m-brand-purple, var(--m-cat-4)); }
 /* a phone frame for the app-like demos */
-.sc-social-phone { position: relative; width: 100%; max-width: 24rem; height: 40rem; max-height: 80vh; margin-inline: auto; border: 1px solid var(--hm-border); border-radius: 1.75rem;
-  overflow: hidden; background: var(--hm-bg); box-shadow: var(--hm-shadow-3); display: flex; flex-direction: column; }
-.sc-social-sprog { width: 100%; max-width: 22rem; margin-inline: auto; padding: var(--hm-space-4); border-radius: var(--hm-radius-4); color: var(--hm-on-scrim);
-  background: linear-gradient(160deg, var(--hm-brand-blue, var(--hm-cat-2)), var(--hm-brand-purple, var(--hm-cat-4))); }
-.sc-social-sprog p { margin: var(--hm-space-3) 0 0; font-weight: 700; font-size: var(--hm-text-sm); }
-.sc-social-tray { display: flex; gap: var(--hm-space-3); width: 100%; overflow-x: auto; padding: var(--hm-space-1) var(--hm-space-1) var(--hm-space-2); scrollbar-width: thin; }
+.sc-social-phone { position: relative; width: 100%; max-width: 24rem; height: 40rem; max-height: 80vh; margin-inline: auto; border: 1px solid var(--m-border); border-radius: 1.75rem;
+  overflow: hidden; background: var(--m-bg); box-shadow: var(--m-shadow-3); display: flex; flex-direction: column; }
+.sc-social-sprog { width: 100%; max-width: 22rem; margin-inline: auto; padding: var(--m-space-4); border-radius: var(--m-radius-4); color: var(--m-on-scrim);
+  background: linear-gradient(160deg, var(--m-brand-blue, var(--m-cat-2)), var(--m-brand-purple, var(--m-cat-4))); }
+.sc-social-sprog p { margin: var(--m-space-3) 0 0; font-weight: 700; font-size: var(--m-text-sm); }
+.sc-social-tray { display: flex; gap: var(--m-space-3); width: 100%; overflow-x: auto; padding: var(--m-space-1) var(--m-space-1) var(--m-space-2); scrollbar-width: thin; }
 .sc-social-tray > * { flex: none; }
-.sc-social-stories { display: flex; flex-direction: column; gap: var(--hm-space-2); width: 100%; min-width: 0; }
-.sc-social-link { align-self: flex-start; padding: 0; border: 0; background: none; color: var(--hm-primary-text); font: inherit; font-weight: 700; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.sc-social-stories { display: flex; flex-direction: column; gap: var(--m-space-2); width: 100%; min-width: 0; }
+.sc-social-link { align-self: flex-start; padding: 0; border: 0; background: none; color: var(--m-primary-text); font: inherit; font-weight: 700; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 .sc-social-typing { align-items: center; min-height: 3rem; }
-.sc-social-react { display: flex; flex-direction: column; align-items: center; gap: var(--hm-space-3); width: 100%; max-width: 26rem; margin-inline: auto; }
-.sc-social-bubbles { display: flex; flex-direction: column; gap: 2px; width: 100%; max-width: 26rem; margin-inline: auto; padding: var(--hm-space-3); border-radius: var(--hm-radius-4); background: var(--hm-bg); }
-.sc-social-bubbles > .hm-msg-first { margin-block-start: 0; } .sc-social-bubbles > .hm-msg-single { margin-block-start: .5rem; }
-.sc-social-chat .hm-chat { flex: 1; }
-.sc-social-composer { display: flex; flex-direction: column; gap: var(--hm-space-2); width: 100%; max-width: 26rem; margin-inline: auto; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-4); overflow: hidden; }
-.sc-social-sent { display: flex; flex-direction: column; gap: .25rem; min-height: 6rem; margin: 0; padding: var(--hm-space-3); list-style: none; font-size: var(--hm-text-sm); }
-.sc-social-follow { display: flex; flex-direction: column; align-items: center; gap: var(--hm-space-2); width: 100%; max-width: 20rem; margin-inline: auto; }
-.sc-social-profile { display: flex; flex-direction: column; gap: var(--hm-space-2); width: 100%; max-width: 30rem; margin-inline: auto; min-width: 0; }
+.sc-social-react { display: flex; flex-direction: column; align-items: center; gap: var(--m-space-3); width: 100%; max-width: 26rem; margin-inline: auto; }
+.sc-social-bubbles { display: flex; flex-direction: column; gap: 2px; width: 100%; max-width: 26rem; margin-inline: auto; padding: var(--m-space-3); border-radius: var(--m-radius-4); background: var(--m-bg); }
+.sc-social-bubbles > .m-msg-first { margin-block-start: 0; } .sc-social-bubbles > .m-msg-single { margin-block-start: .5rem; }
+.sc-social-chat .m-chat { flex: 1; }
+.sc-social-composer { display: flex; flex-direction: column; gap: var(--m-space-2); width: 100%; max-width: 26rem; margin-inline: auto; border: 1px solid var(--m-border); border-radius: var(--m-radius-4); overflow: hidden; }
+.sc-social-sent { display: flex; flex-direction: column; gap: .25rem; min-height: 6rem; margin: 0; padding: var(--m-space-3); list-style: none; font-size: var(--m-text-sm); }
+.sc-social-follow { display: flex; flex-direction: column; align-items: center; gap: var(--m-space-2); width: 100%; max-width: 20rem; margin-inline: auto; }
+.sc-social-profile { display: flex; flex-direction: column; gap: var(--m-space-2); width: 100%; max-width: 30rem; margin-inline: auto; min-width: 0; }

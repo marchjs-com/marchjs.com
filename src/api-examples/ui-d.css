@@ -1,14 +1,14 @@
 /* API examples of hadi-march/ui, Section … Wizard (ui-d.tsx). */
-.sc-ex-ui-d-bar { display: flex; align-items: center; gap: var(--hm-space-2); min-width: 0; padding: var(--hm-space-2) var(--hm-space-3); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); background: var(--hm-surface-2); }
+.sc-ex-ui-d-bar { display: flex; align-items: center; gap: var(--m-space-2); min-width: 0; padding: var(--m-space-2) var(--m-space-3); border: 1px solid var(--m-border); border-radius: var(--m-radius-2); background: var(--m-surface-2); }
 .sc-ex-ui-d-bar > strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sc-ex-ui-d-box { min-width: 0; padding: var(--hm-space-3); border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-2); }
-.sc-ex-ui-d-split { block-size: 11rem; min-width: 0; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); overflow: hidden; }
-.sc-ex-ui-d-pane { display: grid; place-content: center; gap: var(--hm-space-1); block-size: 100%; padding: var(--hm-space-3); text-align: center; font-size: var(--hm-text-sm); color: var(--hm-text-2); }
-.sc-ex-ui-d-pane-alt { background: var(--hm-surface-2); }
-.sc-ex-ui-d-toasts .hm-toasts { position: static; width: 100%; max-width: 24rem; }
-.sc-ex-ui-d-price { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-2); padding: var(--hm-space-3); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-2); background: var(--hm-surface-2); }
-.sc-ex-ui-d-price > strong { font-size: var(--hm-text-md); color: var(--hm-primary-text); }
-.sc-ex-ui-d-swatches { display: flex; flex-wrap: wrap; gap: var(--hm-space-2); }
-.sc-ex-ui-d-swatches .hm-swatch { inline-size: 3rem; block-size: 2rem; }
-.sc-ex-ui-d-swatch-big .hm-swatch { inline-size: 7rem; block-size: 4.5rem; }
-.sc-ex-ui-d-tray { display: flex; flex-wrap: wrap; gap: var(--hm-space-3); }
+.sc-ex-ui-d-box { min-width: 0; padding: var(--m-space-3); border: 1px dashed var(--m-border); border-radius: var(--m-radius-2); }
+.sc-ex-ui-d-split { block-size: 11rem; min-width: 0; border: 1px solid var(--m-border); border-radius: var(--m-radius-2); overflow: hidden; }
+.sc-ex-ui-d-pane { display: grid; place-content: center; gap: var(--m-space-1); block-size: 100%; padding: var(--m-space-3); text-align: center; font-size: var(--m-text-sm); color: var(--m-text-2); }
+.sc-ex-ui-d-pane-alt { background: var(--m-surface-2); }
+.sc-ex-ui-d-toasts .m-toasts { position: static; width: 100%; max-width: 24rem; }
+.sc-ex-ui-d-price { display: flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-2); padding: var(--m-space-3); border: 1px solid var(--m-border); border-radius: var(--m-radius-2); background: var(--m-surface-2); }
+.sc-ex-ui-d-price > strong { font-size: var(--m-text-md); color: var(--m-primary-text); }
+.sc-ex-ui-d-swatches { display: flex; flex-wrap: wrap; gap: var(--m-space-2); }
+.sc-ex-ui-d-swatches .m-swatch { inline-size: 3rem; block-size: 2rem; }
+.sc-ex-ui-d-swatch-big .m-swatch { inline-size: 7rem; block-size: 4.5rem; }
+.sc-ex-ui-d-tray { display: flex; flex-wrap: wrap; gap: var(--m-space-3); }

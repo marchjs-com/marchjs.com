@@ -10,7 +10,7 @@ const example: ApiExample<any> = {
       play: { options: [{ key: "files", label: "Ek dosyalar", default: true }] },
       run: (p: { values: { files: boolean } }) => () => CodeViewer({
         source: `export function Hello() {\n  return <p class="hello">Merhaba, HADİ</p>\n}`, lang: "tsx",
-        files: p.values.files ? [{ name: "hello.css", source: `.hello { color: var(--hm-primary-text); }`, lang: "css" }, { name: "data.json", source: `{ "name": "HADİ" }`, lang: "json" }] : [],
+        files: p.values.files ? [{ name: "hello.css", source: `.hello { color: var(--m-primary-text); }`, lang: "css" }, { name: "data.json", source: `{ "name": "HADİ" }`, lang: "json" }] : [],
       }),
     };
 export default example;

@@ -5,7 +5,7 @@ import { sx } from "hadi-march";
 import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
-      code: `sx({ p: 3, radius: 2, shadow: 1 })   // "hm-p-3 hm-radius-2 hm-shadow-1"`,
+      code: `sx({ p: 3, radius: 2, shadow: 1 })   // "m-p-3 m-radius-2 m-shadow-1"`,
       run: () => <div class="sc-ex-stack"><Out label="sx({ p: 3, radius: 2 })" value={sx({ p: 3, radius: 2 })} /><div class={sx({ p: 3, radius: 2 })}>sx ile kenar boşluğu ve köşe</div></div>,
     };
 export default example;

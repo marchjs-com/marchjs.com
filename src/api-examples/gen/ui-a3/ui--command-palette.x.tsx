@@ -29,7 +29,7 @@ const example: ApiExample<any> = {
         }
         // the app mounts one <CommandPalette/>; this example adds its commands to it while it is on screen
         return () => { const set = SETS[p.values.set] ?? []; onCleanup(registerCommands(() => set)); return <div class="sc-ex-stack">
-          <Row><Button icon={search} onClick={openPalette}>Paleti aç</Button><span class="hm-muted">"{set[0]!.title.split(" ")[0]}" yazın</span><Out label="yakınlık" value={() => `%${zoom()}`} /></Row>
+          <Row><Button icon={search} onClick={openPalette}>Paleti aç</Button><span class="m-muted">"{set[0]!.title.split(" ")[0]}" yazın</span><Out label="yakınlık" value={() => `%${zoom()}`} /></Row>
           <Log lines={lines} />
         </div> }
       },

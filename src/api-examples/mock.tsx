@@ -225,7 +225,7 @@ toast("Çevrimdışı veriler silindi")`,
         effect(() => { p.values.type; p.values.retry; if (errors.page.peek()) show() })
         onCleanup(() => errors.clear("page"))
         return <div class="sc-ex-stack"><Row><Button onClick={show}>Hata sayfasını göster</Button><Out label="Yeniden deneme" value={tries} /></Row>
-          <ErrorPage><p class="hm-muted">Sayfa içeriği: hata yokken burada görünür.</p></ErrorPage></div>
+          <ErrorPage><p class="m-muted">Sayfa içeriği: hata yokken burada görünür.</p></ErrorPage></div>
       },
     },
     errors: {

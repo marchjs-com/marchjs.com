@@ -32,8 +32,8 @@ export default function Buttons(props: { params?: { rest?: string } }) {
     "section-label": () => <ComponentDemo folder="typography/section-label" title="SectionLabel: panel içi grup başlığı" desc="Menü, palet, kenar çubuğu ve özellik ızgarasındaki küçük grup başlığı: ikon, sayı ve sonda eylem yuvası." />,
     "cards-tabs": () => <Demo wide title="Kartlar ve sekmeler" desc="Card, LinkCard, IconTile; Tabs (alt çizgi kayar, panel yükselerek gelir).">
     <div class="sc-grid3">
-      <Card title="Haftalık rapor" subtitle="Pazartesi 09:00'da gönderilir" actions={[<IconButton icon={more} label="Seçenekler" size="sm" />]} footer={<div class="sc-row sc-row-between"><span class="hm-muted">3 alıcı</span><Button size="sm">Düzenle</Button></div>}>
-        <p class="hm-muted">Büyüme, etkin kullanıcılar ve gelir özetini ekibe e-postayla gönderir.</p>
+      <Card title="Haftalık rapor" subtitle="Pazartesi 09:00'da gönderilir" actions={[<IconButton icon={more} label="Seçenekler" size="sm" />]} footer={<div class="sc-row sc-row-between"><span class="m-muted">3 alıcı</span><Button size="sm">Düzenle</Button></div>}>
+        <p class="m-muted">Büyüme, etkin kullanıcılar ve gelir özetini ekibe e-postayla gönderir.</p>
       </Card>
       <Stack gap={2}>
         <LinkCard href="/data" icon={users} tone="primary" title="Üyeler" description="Ara, süz, toplu işlem" meta="48,2 B" />
@@ -42,7 +42,7 @@ export default function Buttons(props: { params?: { rest?: string } }) {
       </Stack>
       <Card title="Sekmeler">
         <Tabs label="Örnek sekmeler" tabs={[
-          { id: "a", label: "Genel", content: <p class="hm-muted">Genel ayarlar burada.</p> },
+          { id: "a", label: "Genel", content: <p class="m-muted">Genel ayarlar burada.</p> },
           { id: "b", label: "Bildirimler", badge: 3, content: <div class="sc-row"><IconTile icon={bell} tone="info" /><span>3 yeni bildirim</span></div> },
           { id: "c", label: "Güvenlik", content: <div class="sc-row"><IconTile icon={shieldCheck} tone="success" /><span>İki adımlı doğrulama açık</span></div> },
         ]} />

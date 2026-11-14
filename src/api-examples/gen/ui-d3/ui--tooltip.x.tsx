@@ -17,7 +17,7 @@ const example: ApiExample<any> = {
           {() => { const placement = p.values.placement; return <Tooltip text={() => (copied() ? `Kopyalandı (${copied()})` : "Bağlantıyı kopyala")} placement={placement as "top"}>
             <Button onClick={() => copied.update((x) => x + 1)}>Paylaş</Button>
           </Tooltip> }}
-          <span class="hm-muted">Üzerine gelin ya da Tab ile odaklayın</span>
+          <span class="m-muted">Üzerine gelin ya da Tab ile odaklayın</span>
         </Row>
       },
     };

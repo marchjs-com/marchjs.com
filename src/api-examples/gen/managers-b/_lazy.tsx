@@ -6,6 +6,6 @@ import type { Api } from "./_api.tsx";
 function Lazy(p: { children: (api: Api) => unknown }) {
   const api = signal<Api | null>(null)
   import("hadi-march/managers").then((m) => api.set(m))
-  return <div class="sc-ex-stack">{() => { const m = api(); return m ? p.children(m) : <span class="hm-muted">Yükleniyor…</span> }}</div>
+  return <div class="sc-ex-stack">{() => { const m = api(); return m ? p.children(m) : <span class="m-muted">Yükleniyor…</span> }}</div>
 }
 export { Lazy };

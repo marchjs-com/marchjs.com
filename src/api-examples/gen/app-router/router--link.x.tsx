@@ -19,11 +19,11 @@ const example: ApiExample<any> = {
         const COLORS = [["mavi", "Mavi"], ["yesil", "Yeşil"], ["turuncu", "Turuncu"]] as const
         return <div class="sc-ex-app-stack">
           {() => { const tg = p.values.target, rep = p.values.replace; return untrack(() => tg === "aside"
-            ? <Row>{PEOPLE.map((id) => <Link href={`/item/${id}`} outlet="aside" replace={rep} class="hm-btn hm-btn-secondary hm-btn-sm">{`Kayıt ${id}`}</Link>)}</Row>
-            : <Row>{COLORS.map(([v, l]) => <Link href={() => `${path()}?color=${v}`} replace={rep} class="hm-btn hm-btn-secondary hm-btn-sm">{l}</Link>)}</Row>) }}
+            ? <Row>{PEOPLE.map((id) => <Link href={`/item/${id}`} outlet="aside" replace={rep} class="m-btn m-btn-secondary m-btn-sm">{`Kayıt ${id}`}</Link>)}</Row>
+            : <Row>{COLORS.map(([v, l]) => <Link href={() => `${path()}?color=${v}`} replace={rep} class="m-btn m-btn-secondary m-btn-sm">{l}</Link>)}</Row>) }}
           <Row><Out label="?color" value={() => String(query()["color"] ?? "—")} /><Out label="history.length" value={() => String(len())} />
             <Button variant="ghost" size="sm" onClick={() => setQuery({ color: null, "~aside": null })}>Temizle</Button></Row>
-          {() => (p.values.target === "aside" ? <div class="sc-ex-app-frame"><Outlet name="aside" empty={<p class="hm-muted">Yan panel boş.</p>} /></div> : null)}
+          {() => (p.values.target === "aside" ? <div class="sc-ex-app-frame"><Outlet name="aside" empty={<p class="m-muted">Yan panel boş.</p>} /></div> : null)}
         </div>
       },
     };

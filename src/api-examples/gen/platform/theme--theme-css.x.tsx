@@ -10,7 +10,7 @@ import "../../platform.css";
 
 const example: ApiExample<any> = {
       code: `writeFileSync("dist/themes/hadi-marka.css", themeCss(hadiMarka))
-themeCss(hadi, true)   // the default also styles <html> without data-hm-theme`,
+themeCss(hadi, true)   // the default also styles <html> without data-m-theme`,
       run: () => {
         const id = signal("cream")
         const css = computed(() => themeCss(THEMES.find((t) => t.id === id()) ?? cream))

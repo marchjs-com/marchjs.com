@@ -8,7 +8,7 @@ import "../../app.css";
 const example: ApiExample<any> = {
       code: `setHeadHandler((to, head, title) => applyHead(head, title))   // hadi-march/seo installs this`,
       run: () => <div class="sc-ex-app-stack">
-        <p class="hm-muted">Bu sayfada kurulu işleyici değiştirilmez. Bir sonraki gezinmede şunları alır:</p>
+        <p class="m-muted">Bu sayfada kurulu işleyici değiştirilmez. Bir sonraki gezinmede şunları alır:</p>
         <Row><Out label="to.path" value={() => route()?.path ?? "null"} /><Out label="title" value={() => { path(); return document.title }} /></Row>
       </div>,
     };

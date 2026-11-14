@@ -17,7 +17,7 @@ setLoadDelay(0)`,
         const probe = async () => { took.set("…"); const t0 = performance.now(); await runLoad(() => Promise.resolve(1), { kind: "part", key: "api-ex-delay" }); took.set(`${Math.round(performance.now() - t0)} ms`) }
         return <div class="sc-ex-app-stack">
           <Segmented value={v} onChange={(ms: number) => set(ms)} options={[{ value: 0, label: "0" }, { value: 400, label: "400 ms" }, { value: 1200, label: "1200 ms" }]} aria-label="Gecikme" />
-          <Row><Button onClick={probe}>Bir parça yükle</Button><Out label="süre" value={took} /><span class="hm-muted">Kart kapanınca eski değere döner.</span></Row>
+          <Row><Button onClick={probe}>Bir parça yükle</Button><Out label="süre" value={took} /><span class="m-muted">Kart kapanınca eski değere döner.</span></Row>
         </div>
       },
     };

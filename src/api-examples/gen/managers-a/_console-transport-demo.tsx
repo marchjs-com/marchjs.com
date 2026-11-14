@@ -12,7 +12,7 @@ function ConsoleTransportDemo() {
   return <div class="sc-ex-stack">
     <Segmented aria-label="Düzey" value={level()} onChange={(v: "debug" | "info" | "warn" | "error") => level.set(v)} options={LEVELS.map((l) => ({ value: l, label: l }))} />
     <Row><Button onClick={write}>Konsola yaz</Button><Out label="transport.name" value={t.name} /><Out label="yazılan" value={last} /></Row>
-    <p class="hm-muted">Tarayıcı konsolunu açın: satır seçilen düzeyin yöntemiyle (console.info, console.warn…) yazılır.</p>
+    <p class="m-muted">Tarayıcı konsolunu açın: satır seçilen düzeyin yöntemiyle (console.info, console.warn…) yazılır.</p>
   </div>
 }
 export { ConsoleTransportDemo };

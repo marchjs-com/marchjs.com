@@ -2,6 +2,6 @@
 
 const CODE_SRC: Record<string, string> = {
   ts: "const total = items.reduce((s, i) => s + i.price, 0)\nconsole.log(total)",
-  css: ".card {\n  padding: var(--hm-space-3);\n  border-radius: var(--hm-radius-2);\n}",
+  css: ".card {\n  padding: var(--m-space-3);\n  border-radius: var(--m-radius-2);\n}",
 }
 export { CODE_SRC };

@@ -62,7 +62,7 @@ const sig: Record<string, Record<string, string>> = {
   "Icon": "function Icon(props: IconProps): SVGSVGElement",
   "defineIcon": "const defineIcon",
   "isIconDef": "const isIconDef = (x: unknown): x is IconDef =>",
-  "svgIcon": "function svgIcon(def: IconDef, cls = \"hm-svg\", label?: string): SVGSVGElement"
+  "svgIcon": "function svgIcon(def: IconDef, cls = \"m-svg\", label?: string): SVGSVGElement"
  },
  "hadi-march/icons/catalog": {
   "ICONS": "const ICONS: Readonly<Record<string, IconDef>>"

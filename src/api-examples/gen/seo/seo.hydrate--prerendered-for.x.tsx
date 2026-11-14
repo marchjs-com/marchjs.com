@@ -11,8 +11,8 @@ const example: ApiExample<any> = {
       code: `prerenderedFor(document.getElementById("app")!)   // true: the URL shows the prerendered route`,
       run: () => {
         const pre = signal(location.pathname)
-        const el = () => { const e = document.createElement("div"); e.setAttribute("data-hm-prerender", pre()); return e }
-        return <div class="sc-ex-stack"><Row><Text label="data-hm-prerender" value={pre} />{[location.pathname, "/baska-sayfa", "/motion"].map((p) => <Button variant="ghost" onClick={() => pre.set(p)}>{p}</Button>)}</Row>
+        const el = () => { const e = document.createElement("div"); e.setAttribute("data-m-prerender", pre()); return e }
+        return <div class="sc-ex-stack"><Row><Text label="data-m-prerender" value={pre} />{[location.pathname, "/baska-sayfa", "/motion"].map((p) => <Button variant="ghost" onClick={() => pre.set(p)}>{p}</Button>)}</Row>
           <Row><Out label="Adres" value={location.pathname} /><Out label="prerenderedFor" value={() => String(prerenderedFor(el()))} /></Row></div>
       },
     };

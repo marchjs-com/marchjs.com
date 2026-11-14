@@ -69,18 +69,18 @@ const x = spring(() => $hedef, { stiffness: 210, damping: 16 })
     </div>
   </Demo>,
     "spotlight": () => <Demo wide title="Spot ışığı, parçacıklar, parallax" desc="İmleci kartın üstünde gezdir; parçacıklar imlece tepki verir; görsel katmanlar farklı hızda kayar.">
-    <div class="sc-fx-stage hm-spotlight" use:spotlight>
-      <Particles count={60} links={100} interactive class="hm-fx-fill" />
+    <div class="sc-fx-stage m-spotlight" use:spotlight>
+      <Particles count={60} links={100} interactive class="m-fx-fill" />
       <div class="sc-fx-layer sc-fx-back" use:parallax={0.15} />
       <div class="sc-fx-content">
         <Badge tone="primary">fx</Badge>
-        <h3 class="sc-fx-title hm-gradient-text">Işık seni izler.</h3>
-        <p class="hm-muted">Spot ışığı CSS değişkeniyle (--hm-spot-x/y) çizilir; satır içi stil yok.</p>
+        <h3 class="sc-fx-title m-gradient-text">Işık seni izler.</h3>
+        <p class="m-muted">Spot ışığı CSS değişkeniyle (--m-spot-x/y) çizilir; satır içi stil yok.</p>
       </div>
     </div>
   </Demo>,
     "reveal": () => <Demo wide title="Kayınca belir" desc="reveal ve inView: görünür alana girince bir kez oynar.">
-    <div class="sc-reveal-grid">{Array.from({ length: 6 }, (_, i) => <Card use:reveal={{ delay: i * 70, y: 24 }}><strong>Kart {i + 1}</strong><p class="hm-muted">Sırayla belirir.</p></Card>)}</div>
+    <div class="sc-reveal-grid">{Array.from({ length: 6 }, (_, i) => <Card use:reveal={{ delay: i * 70, y: 24 }}><strong>Kart {i + 1}</strong><p class="m-muted">Sırayla belirir.</p></Card>)}</div>
   </Demo>,
   }
   return <Hub section="/motion" kicker="Hareket" title="Hareket ve efektler" lead="hadi-march/motion: yay fiziği, tween, FLIP, zaman çizelgesi, jestler ve kaydırma tetikleyicileri. hadi-march/fx: parçacıklar, konfeti, spot ışığı. Satır içi stil yerine CSS değişkenleri; 'hareketi azalt' açıkken sakinleşir." render={RENDER} params={props.params} />

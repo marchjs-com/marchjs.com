@@ -30,7 +30,7 @@ function LayerDemo() {
     const ref = signal<LayerHandle | null>(null)
     const card = (<div class={`sc-ly-card sc-ly-${kind}`} data-n={id % 5} role={kind === "dialog" ? "dialog" : "group"} aria-label={`${KIND_TR[kind]} ${id}`}>
       <strong>{KIND_TR[kind] + " #" + id}</strong>
-      <span class="hm-muted">{() => where(ref())}</span>
+      <span class="m-muted">{() => where(ref())}</span>
       <Button size="sm" variant="ghost" on:click={() => ref.peek()?.close()}>Kapat</Button>
     </div>) as HTMLElement
     const handle: LayerHandle = layer.open(kind, card, { label: `${kind} #${id}`, ...($escape && kind !== "toast" ? { onEscape: () => handle.close() } : {}), ...($lock ? { lockScroll: true } : {}) })
@@ -54,10 +54,10 @@ const unlock = layer.lockScroll()   // sayaçlı: son kilit açılınca sayfa ye
         {() => layer.stack().filter((l) => l.label !== null || l.kind !== "fx").map((l) => <li data-top={layer.top()?.el === l.el ? "" : null}>
           <code>{l.kind}</code> {l.label ?? "(başka bir bileşen)"} {l.modal ? <Badge tone="warning">kip</Badge> : null} {l.escapable ? <Kbd keys="escape" /> : null}
         </li>)}
-        {() => (layer.stack().some((l) => l.label !== null || l.kind !== "fx") ? null : <li class="hm-muted">Açık katman yok.</li>)}
+        {() => (layer.stack().some((l) => l.label !== null || l.kind !== "fx") ? null : <li class="m-muted">Açık katman yok.</li>)}
       </ol>
       <div class="sc-row"><span>Kip katman açık:</span>{() => yes(layer.modal())}<span>Kaydırma kilidi:</span>{() => yes(layer.scrollLocked())}</div>
-      <p class="hm-muted">{() => `Bundan sonra açılan katman: ${$escape ? "Esc ile kapanır" : "Esc ile kapanmaz (yalnız Kapat düğmesi)"}; açılır kutu ve menü kaydırmayı ${$lock ? "kilitler" : "kilitlemez"}.`}</p>
+      <p class="m-muted">{() => `Bundan sonra açılan katman: ${$escape ? "Esc ile kapanır" : "Esc ile kapanmaz (yalnız Kapat düğmesi)"}; açılır kutu ve menü kaydırmayı ${$lock ? "kilitler" : "kilitlemez"}.`}</p>
       <Card title="Seçenekler" subtitle="Layer">
         <Toggle bind:value={$escape} label="Esc ile kapanabilsin (onEscape)" />
         <Toggle bind:value={$lock} label="Açılır kutu ve menü de kaydırmayı kilitlesin (lockScroll)" />
@@ -90,19 +90,19 @@ function FocusDemo() {
       code={`const release = focus.trap(panel)   // ilk odaklanabilir öğeye geçer
 release()                            // odak açan düğmeye döner
 <div focus:trap>…</div>`}>
-      <div class="sc-row"><Button variant="primary" disabled={() => $trapped} on:click={start}>Tuzağı başlat</Button><span class="hm-muted">Odakta: {() => label(focus.active())}</span></div>
+      <div class="sc-row"><Button variant="primary" disabled={() => $trapped} on:click={start}>Tuzağı başlat</Button><span class="m-muted">Odakta: {() => label(focus.active())}</span></div>
       {box}
     </Demo>
-    <Demo title="Klavye mi fare mi: focus-visible" desc="Son giriş klavyeyse focus.visible() doğru olur ve <html data-hm-focus-visible> yazılır; odak halkasını yalnız klavye kullanıcısına göstermek için. Tab'a bas, sonra fareyle tıkla."
+    <Demo title="Klavye mi fare mi: focus-visible" desc="Son giriş klavyeyse focus.visible() doğru olur ve <html data-m-focus-visible> yazılır; odak halkasını yalnız klavye kullanıcısına göstermek için. Tab'a bas, sonra fareyle tıkla."
       code={`focus.visible()    focus.modality()   // "keyboard" | "pointer"
-html[data-hm-focus-visible] :focus { outline: 2px solid var(--hm-focus) }`}>
+html[data-m-focus-visible] :focus { outline: 2px solid var(--m-focus) }`}>
       <div class="sc-row"><span>Giriş:</span><Badge tone={() => (focus.visible() ? "info" : "neutral")}>{() => (focus.visible() ? "klavye" : "işaretçi")}</Badge></div>
     </Demo>
     <Demo title="Gezici odak (roving tabindex)" desc="Araç çubuğu tek bir Tab durağıdır; içinde ok tuşları, Home ve End gezer. Sağdan sola düzende sol ok 'sonraki' olur."
       code={`<div role="toolbar" focus:roving="horizontal">…</div>
 focus.roving(list, { orientation: "vertical", wrap: true, onMove })`}>
       {toolbar}
-      <p class="hm-muted">Önce araç çubuğuna Tab ile gel, sonra ← → kullan; bir Tab daha araç çubuğundan çıkar.</p>
+      <p class="m-muted">Önce araç çubuğuna Tab ile gel, sonra ← → kullan; bir Tab daha araç çubuğundan çıkar.</p>
     </Demo>
   </>
 }
@@ -141,7 +141,7 @@ hotkeys.pending()   hotkeys.list()   hotkeys.pause()`}>
         <tbody>{() => hotkeys.list().map((k) => <tr data-off={k.active ? null : ""}><td>{k.combo.split(" ").map((c) => <Kbd keys={c} />)}</td><td>{k.description}</td><td>{k.group ?? "—"}</td><td>{yes(k.active)}</td></tr>)}</tbody>
       </table>
       <TextInput placeholder="Buraya yazarken kısayollar çalışmaz" aria-label="Deneme alanı" />
-      <ul class="sc-mgr-log">{() => ($log.length ? $log.map((l) => <li>{l}</li>) : <li class="hm-muted">Shift+N, g h ya da g d dene.</li>)}</ul>
+      <ul class="sc-mgr-log">{() => ($log.length ? $log.map((l) => <li>{l}</li>) : <li class="m-muted">Shift+N, g h ya da g d dene.</li>)}</ul>
     </Demo>
     <Card title="Seçenekler" subtitle="Hotkey">
       <Toggle bind:value={$editor} onChange={(v: boolean) => { $editor = v; setScope() }} label="Düzenleyici kapsamına gir" />
@@ -168,8 +168,8 @@ announcer.history()   // son duyurular`}>
       <Button variant="danger" on:click={() => announce($text, { politeness: "assertive" })}>Acil duyur</Button>
     </div>
     <Field label="Ara (sonuç sayısı duyurulur)"><TextInput bind:value={$q} placeholder="ör. er" /></Field>
-    <p class="hm-muted">{() => hits().join(", ") || "sonuç yok"}</p>
-    <ul class="sc-mgr-log" aria-label="Son duyurular">{() => (announcer.history().length ? announcer.history().map((a) => <li><Badge tone={a.politeness === "assertive" ? "danger" : "info"}>{a.politeness === "assertive" ? "acil" : "nazik"}</Badge> {a.text}</li>) : <li class="hm-muted">Henüz duyuru yok.</li>)}</ul>
+    <p class="m-muted">{() => hits().join(", ") || "sonuç yok"}</p>
+    <ul class="sc-mgr-log" aria-label="Son duyurular">{() => (announcer.history().length ? announcer.history().map((a) => <li><Badge tone={a.politeness === "assertive" ? "danger" : "info"}>{a.politeness === "assertive" ? "acil" : "nazik"}</Badge> {a.text}</li>) : <li class="m-muted">Henüz duyuru yok.</li>)}</ul>
   </Demo>
 }
 
@@ -183,7 +183,7 @@ function AccessibilityDemo() {
     <h6>Atlanan başlık düzeyi</h6>
     <img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="40" height="40" />
     <Button size="sm"></Button>
-    <input class="hm-input" placeholder="etiketsiz alan" />
+    <input class="m-input" placeholder="etiketsiz alan" />
     <a href="#sc-a11y-sample" tabindex="2">tabindex 2</a>
     <span id="sc-a11y-dup">a</span><span id="sc-a11y-dup">b</span>
   </div>) as HTMLElement
@@ -235,9 +235,9 @@ shortcutHints.show()   shortcutHints.openHelp()`}>
     <div class="sc-row">
       <Button variant="secondary" on:click={() => (shortcutHints.visible() ? shortcutHints.hide() : shortcutHints.show())}>{() => (shortcutHints.visible() ? "Rozetleri gizle" : "Rozetleri göster")}</Button>
       <Button variant="primary" on:click={() => shortcutHints.openHelp()}>Kısayol listesi <Kbd keys="?" /></Button>
-      <span class="hm-muted"><Kbd keys="alt" /> basılı tut</span>
+      <span class="m-muted"><Kbd keys="alt" /> basılı tut</span>
     </div>
-    <ul class="sc-mgr-log">{() => ($log.length ? $log.map((l) => <li>{l}</li>) : <li class="hm-muted">Shift+S ya da Shift+E dene.</li>)}</ul>
+    <ul class="sc-mgr-log">{() => ($log.length ? $log.map((l) => <li>{l}</li>) : <li class="m-muted">Shift+S ya da Shift+E dene.</li>)}</ul>
   </Demo>
 }
 

@@ -20,7 +20,7 @@ y.ticks(5)       y.nice()`,
           <svg class="sc-ex-charts-svg" viewBox="0 0 320 214" role="img" aria-label={() => `y(${v()}) = ${y(v())}`}>
             <line class="sc-ex-charts-axis" x1="40" x2="40" y1="4" y2="204" />
             {y.ticks(5).map((t) => <g><line class="sc-ex-charts-tick" x1="34" x2="300" y1={y(t) + 4} y2={y(t) + 4} /><text x="28" y={y(t) + 7} text-anchor="end">{t}</text></g>)}
-            <circle class="hm-chart-series-0 sc-ex-charts-dot" cx="170" cy={() => y(v()) + 4} r="7" />
+            <circle class="m-chart-series-0 sc-ex-charts-dot" cx="170" cy={() => y(v()) + 4} r="7" />
           </svg>
           <Row><Out label="y(v)" value={() => String(y(v()))} /><Out label="y.invert(y(v))" value={() => String(y.invert(y(v())))} /></Row>
         </div>

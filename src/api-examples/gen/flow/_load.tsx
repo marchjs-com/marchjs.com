@@ -3,6 +3,6 @@ import { Await } from "hadi-march";
 
 /** Renders `children(module)` once hadi-march/flow has loaded. */
 function Load<M>(p: { from: () => Promise<M>; children: (m: M) => unknown }) {
-  return <Await for={p.from} loading={<p class="hm-muted">Yükleniyor…</p>}>{p.children}</Await>
+  return <Await for={p.from} loading={<p class="m-muted">Yükleniyor…</p>}>{p.children}</Await>
 }
 export { Load };

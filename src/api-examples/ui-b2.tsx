@@ -130,7 +130,7 @@ animate(card, frames, { easing: curve() })   // hadi-march/motion: a name or "cu
         const v = signal("")
         const Own = () => {
           const f = useContext(FieldContext)
-          return <div class="sc-ex-stack"><input class="hm-input" id={f?.id ?? ""} aria-describedby={() => f?.describedby?.() ?? null} aria-invalid={() => String(!!f?.invalid?.())} value={v()} onInput={(e: Event) => v.set((e.target as HTMLInputElement).value)} />
+          return <div class="sc-ex-stack"><input class="m-input" id={f?.id ?? ""} aria-describedby={() => f?.describedby?.() ?? null} aria-invalid={() => String(!!f?.invalid?.())} value={v()} onInput={(e: Event) => v.set((e.target as HTMLInputElement).value)} />
             <Out label="id" value={f?.id ?? "—"} /><Out label="describedby" value={() => f?.describedby?.() || "—"} /></div>
         }
         return <Field label="Kendi denetimim" help="Etiket bu girdiyi bulur"><Own /></Field>

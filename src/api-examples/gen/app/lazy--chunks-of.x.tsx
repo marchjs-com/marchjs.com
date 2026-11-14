@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
       run: () => {
         const keys = manifestKeys().slice(0, 4), key = signal(keys[0] ?? "")
         return <div class="sc-ex-app-stack">
-          {keys.length ? <Segmented value={key} options={keys.map((k) => ({ value: k, label: shortKey(k) }))} aria-label="Parça" /> : <p class="hm-muted">Bu derlemede manifesto yok.</p>}
+          {keys.length ? <Segmented value={key} options={keys.map((k) => ({ value: k, label: shortKey(k) }))} aria-label="Parça" /> : <p class="m-muted">Bu derlemede manifesto yok.</p>}
           <Out label="chunksOf(key)" value={() => json(chunksOf(key()))} />
         </div>
       },

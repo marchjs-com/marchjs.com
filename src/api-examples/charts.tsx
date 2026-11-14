@@ -36,8 +36,8 @@ arcPath(60, 60, 50, 0, 0, Math.PI)                 // half a pie (r0 = 0)`,
         const d = () => arcPath(60, 60, 52, inner(), 0, (sweep() / 180) * Math.PI)
         return <div class="sc-ex-charts-stack">
           <svg class="sc-ex-charts-svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label={() => `${sweep()}° dilim`}>
-            <path class="hm-chart-series-1 sc-ex-charts-soft" d={() => arcPath(60, 60, 52, inner(), 0, Math.PI * 2)} />
-            <path class="hm-chart-series-0 sc-ex-charts-fill" d={d} />
+            <path class="m-chart-series-1 sc-ex-charts-soft" d={() => arcPath(60, 60, 52, inner(), 0, Math.PI * 2)} />
+            <path class="m-chart-series-0 sc-ex-charts-fill" d={d} />
           </svg>
           <Slider value={sweep} onChange={(v: number) => sweep.set(v)} min={0} max={360} step={5} format={(v: number) => `${v}°`} aria-label="Açı" />
           <Segmented value={inner} onChange={(v: number) => inner.set(v)} options={[{ value: 0, label: "Pasta" }, { value: 28, label: "Halka" }, { value: 44, label: "İnce halka" }]} aria-label="İç yarıçap" />
@@ -89,14 +89,14 @@ arcPath(60, 60, 50, 0, 0, Math.PI)                 // half a pie (r0 = 0)`,
       code: `heatLevel(0, 40)        // 0 (empty)
 heatLevel(12, 40)       // 2 of 0…4
 heatLevel(40, 40, 3)    // 2 (three levels)
-<rect class={\`hm-heat-cell hm-heat-\${heatLevel(v, max)}\`} />`,
+<rect class={\`m-heat-cell m-heat-\${heatLevel(v, max)}\`} />`,
       run: () => {
         const levels = signal(5)
         const values = [0, 3, 9, 14, 21, 28, 35, 40]
         return <div class="sc-ex-charts-stack">
           <Segmented value={levels} onChange={(v: number) => levels.set(v)} options={[{ value: 3, label: "3 düzey" }, { value: 4, label: "4 düzey" }, { value: 5, label: "5 düzey" }]} aria-label="Düzey" />
           <ul class="sc-ex-charts-swatches">{values.map((v) => <li>
-            <svg viewBox="0 0 28 28" aria-hidden="true"><rect class={() => `hm-heat-cell hm-heat-${heatLevel(v, 40, levels())}`} width="28" height="28" rx="4" /></svg>
+            <svg viewBox="0 0 28 28" aria-hidden="true"><rect class={() => `m-heat-cell m-heat-${heatLevel(v, 40, levels())}`} width="28" height="28" rx="4" /></svg>
             <span>{v} → {() => heatLevel(v, 40, levels())}</span>
           </li>)}</ul>
         </div>
@@ -169,7 +169,7 @@ niceTicks(0.2, 0.93, 4)`,
           <Slider value={lo} onChange={(v: number) => lo.set(v)} min={-200} max={200} step={1} format={(v: number) => `min ${v}`} aria-label="En küçük" />
           <Slider value={hi} onChange={(v: number) => hi.set(v)} min={-200} max={900} step={1} format={(v: number) => `max ${v}`} aria-label="En büyük" />
           <svg class="sc-ex-charts-svg" viewBox="0 0 320 44" role="img" aria-label={() => `Çentikler: ${t().ticks.join(", ")}`}>
-            <rect class="hm-chart-series-0 sc-ex-charts-soft" x={() => Math.min(x()(lo()), x()(hi()))} y="8" width={() => Math.abs(x()(hi()) - x()(lo()))} height="10" />
+            <rect class="m-chart-series-0 sc-ex-charts-soft" x={() => Math.min(x()(lo()), x()(hi()))} y="8" width={() => Math.abs(x()(hi()) - x()(lo()))} height="10" />
             <line class="sc-ex-charts-axis" x1="12" x2="308" y1="22" y2="22" />
             {() => t().ticks.map((v) => <g><line class="sc-ex-charts-tick" x1={x()(v)} x2={x()(v)} y1="18" y2="26" /><text x={x()(v)} y="38" text-anchor="middle">{v}</text></g>)}
           </svg>
@@ -206,7 +206,7 @@ pieLayout(values, { padAngle: 0.04 })   // a gap between slices`,
           </Row>
           <div class="sc-ex-charts-row">
             <svg class="sc-ex-charts-svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Dilimler">
-              {() => slices().map((s, i) => <path class={`hm-chart-series-${i} sc-ex-charts-fill`} d={arcPath(60, 60, 54, 26, s.start, s.end)} />)}
+              {() => slices().map((s, i) => <path class={`m-chart-series-${i} sc-ex-charts-fill`} d={arcPath(60, 60, 54, 26, s.start, s.end)} />)}
             </svg>
             <ul class="sc-ex-charts-list">{() => slices().map((s) => <li><span>{s.value}</span><span>{deg(s.start)}°–{deg(s.end)}° · %{Math.round(s.share * 100)}</span></li>)}</ul>
           </div>
@@ -241,7 +241,7 @@ x.center("Çar")   x.invert(250)   // "Çar"`,
           <svg class="sc-ex-charts-svg" viewBox="0 0 320 110" role="img" aria-label="Bantlar"
             onPointerMove={(e: PointerEvent) => { const svg = e.currentTarget as SVGSVGElement, r = svg.getBoundingClientRect(); hover.set(String(x().invert(((e.clientX - r.left) / r.width) * 320) ?? "—")) }}>
             {() => days.map((d, i) => <g>
-              <rect class="hm-chart-series-0 sc-ex-charts-fill" x={x()(d)} y={90 - vals[i]!} width={x().bandwidth} height={vals[i]} rx="2" />
+              <rect class="m-chart-series-0 sc-ex-charts-fill" x={x()(d)} y={90 - vals[i]!} width={x().bandwidth} height={vals[i]} rx="2" />
               <text x={x().center(d)} y="104" text-anchor="middle">{d}</text>
             </g>)}
           </svg>
@@ -262,7 +262,7 @@ y.ticks(5)       y.nice()`,
           <svg class="sc-ex-charts-svg" viewBox="0 0 320 214" role="img" aria-label={() => `y(${v()}) = ${y(v())}`}>
             <line class="sc-ex-charts-axis" x1="40" x2="40" y1="4" y2="204" />
             {y.ticks(5).map((t) => <g><line class="sc-ex-charts-tick" x1="34" x2="300" y1={y(t) + 4} y2={y(t) + 4} /><text x="28" y={y(t) + 7} text-anchor="end">{t}</text></g>)}
-            <circle class="hm-chart-series-0 sc-ex-charts-dot" cx="170" cy={() => y(v()) + 4} r="7" />
+            <circle class="m-chart-series-0 sc-ex-charts-dot" cx="170" cy={() => y(v()) + 4} r="7" />
           </svg>
           <Row><Out label="y(v)" value={() => String(y(v()))} /><Out label="y.invert(y(v))" value={() => String(y.invert(y(v())))} /></Row>
         </div>
@@ -282,7 +282,7 @@ x.ticks(6)           // epoch ms on calendar boundaries`,
           <svg class="sc-ex-charts-svg" viewBox="0 0 320 44" role="img" aria-label="Zaman ekseni">
             <line class="sc-ex-charts-axis" x1="16" x2="304" y1="14" y2="14" />
             {() => x().ticks(5).map((t) => <g><line class="sc-ex-charts-tick" x1={x()(t)} x2={x()(t)} y1="10" y2="18" /><text x={x()(t)} y="32" text-anchor="middle">{span() <= 1 ? new Date(t).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }) : fmtDay(t)}</text></g>)}
-            <circle class="hm-chart-series-0 sc-ex-charts-dot" cx={pos} cy="14" r="5" />
+            <circle class="m-chart-series-0 sc-ex-charts-dot" cx={pos} cy="14" r="5" />
           </svg>
           <Slider value={pos} onChange={(v: number) => pos.set(v)} min={16} max={304} step={1} format={(v: number) => `${v} px`} aria-label="Konum" />
           <Out label="x.invert(px)" value={() => x().invert(pos()).toLocaleString("tr-TR", { dateStyle: "medium", timeStyle: "short" })} />

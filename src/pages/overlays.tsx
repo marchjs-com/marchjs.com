@@ -20,7 +20,7 @@ export default function Overlays(props: { params?: { rest?: string } }) {
   }, { title: "Profili düzenle", size: "sm" }).then((v) => { if (v) { $last = `Kaydedildi: ${v}`; toast("Profil güncellendi", { kind: "success" }) } })
   const drawer = () => openDrawer(() => <Stack gap={3}>
     <Alert tone="info" title="Çekmece">Sağdan kayar; mobilde tam ekran. Esc ya da dışarı tıklama kapatır, odak içeride kalır.</Alert>
-    {["Elif Yılmaz", "Mert Demir", "Zeynep Kaya", "Can Arslan"].map((n, i) => <div class="sc-row"><Avatar name={n} /><div class="sc-grow"><strong>{n}</strong><div class="hm-muted">{i % 2 ? "Davetli" : "Etkin"}</div></div><Badge tone={i % 2 ? "info" : "success"} dot>{i % 2 ? "Davetli" : "Etkin"}</Badge></div>)}
+    {["Elif Yılmaz", "Mert Demir", "Zeynep Kaya", "Can Arslan"].map((n, i) => <div class="sc-row"><Avatar name={n} /><div class="sc-grow"><strong>{n}</strong><div class="m-muted">{i % 2 ? "Davetli" : "Etkin"}</div></div><Badge tone={i % 2 ? "info" : "success"} dot>{i % 2 ? "Davetli" : "Etkin"}</Badge></div>)}
   </Stack>, { title: "Ekip üyeleri" })
   const del = async () => { const ok = await confirm({ title: "Proje silinsin mi?", message: "Bütün görevler ve dosyalar kalıcı olarak silinir.", danger: true, ok: "Sil" }); $last = ok ? "Silindi" : "Vazgeçildi"; if (ok) toast("Proje silindi", { kind: "danger", action: { label: "Geri al", run: () => toast("Geri alındı", { kind: "success" }) } }) }
   const rename = async () => { const v = await prompt({ title: "Yeniden adlandır", label: "Yeni ad", value: "Yol haritası 2027" }); if (v) $last = `Yeni ad: ${v}` }

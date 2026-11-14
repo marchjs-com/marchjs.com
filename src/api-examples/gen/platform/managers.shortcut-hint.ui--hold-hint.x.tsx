@@ -9,7 +9,7 @@ import type { ApiExample } from "../../types.ts";
 import "../../platform.css";
 
 const example: ApiExample<any> = {
-      code: `<p class="hm-muted">{holdHint()}</p>   // "Hold Alt to see shortcuts on the page." in the UI language`,
+      code: `<p class="m-muted">{holdHint()}</p>   // "Hold Alt to see shortcuts on the page." in the UI language`,
       run: () => {
         const key = signal("Alt")
         return <Load from={hintLib}>{({ holdHint }) => <Stack><Segmented value={key} options={["Alt", "Control", "Shift"].map((k) => ({ value: k, label: k }))} aria-label="Tuş" /><p>{() => holdHint(key())}</p></Stack>}</Load>

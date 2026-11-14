@@ -65,7 +65,7 @@ export default examples({
         const pick = signal("—")
         return <div class="sc-ex-stack">
           {() => <Carousel label="Planlar" perView={p.values.perView}>
-            {SLIDES.map(([n, price], i) => <div class="sc-ex-ui-a-slide" data-hm-color={(["brand-orange", "brand-blue", "brand-green", "brand-purple", "brand-pink"] as const)[i]}>
+            {SLIDES.map(([n, price], i) => <div class="sc-ex-ui-a-slide" data-m-color={(["brand-orange", "brand-blue", "brand-green", "brand-purple", "brand-pink"] as const)[i]}>
               <strong>{n}</strong><span>{price}</span><Button size="sm" onClick={() => pick.set(n!)}>Seç</Button>
             </div>)}
           </Carousel>}
@@ -138,7 +138,7 @@ export default examples({
           <ChatThread label="HADİ destek" messages={messages} group={() => p.values.group} typing={() => (p.values.typing ? ["HADİ Destek"] : [])} onRetry={retry} runMinutes={5} />
           <Row>
             <Button size="sm" onClick={() => messages.update((l) => [...l, { id: String(id++), text: "Başka bir sorum var.", mine: true, time: Date.now(), status: "sent" }])}>Mesaj ekle</Button>
-            <span class="hm-muted">Gitmeyen mesajda "yeniden dene"ye basın.</span>
+            <span class="m-muted">Gitmeyen mesajda "yeniden dene"ye basın.</span>
           </Row>
         </div>
       },
@@ -191,7 +191,7 @@ export default examples({
         return <div class="sc-ex-stack">
           <Row>{() => tags().map((t) => <Chip tone={p.values.tone} size={p.values.size} onRemove={() => tags.update((l) => l.filter((x) => x !== t))}>{t}</Chip>)}</Row>
           <form class="sc-row" onSubmit={add}>
-            <input class="hm-input sc-ex-ui-a-narrow" placeholder="Etiket ekle" aria-label="Etiket" value={draft} onInput={(e: Event) => draft.set((e.target as HTMLInputElement).value)} />
+            <input class="m-input sc-ex-ui-a-narrow" placeholder="Etiket ekle" aria-label="Etiket" value={draft} onInput={(e: Event) => draft.set((e.target as HTMLInputElement).value)} />
             <Button type="submit" size="sm" icon={plus}>Ekle</Button>
           </form>
         </div>

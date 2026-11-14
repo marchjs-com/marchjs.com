@@ -69,9 +69,9 @@ recent={5} groupIcons={CATEGORY_ICONS} collapsible />`}>
       </div>
       <Card title="Durum">
         <Stack gap={3}>
-          <p class="hm-muted">Seçilen: <strong>{$picked}</strong></p>
+          <p class="m-muted">Seçilen: <strong>{$picked}</strong></p>
           <div class="sc-row"><Button size="sm" icon={plus} on:click={() => { $waiting++ }}>Talep ekle</Button><Button size="sm" variant="ghost" icon={minus} on:click={() => { $waiting = Math.max(0, $waiting - 1) }}>Yanıtla</Button></div>
-          <p class="hm-muted">Bu vitrinin sol menüsünde <Kbd keys="mod+k" /> komut paletini açar; ray düğmesi menüyü ikonlara daraltır.</p>
+          <p class="m-muted">Bu vitrinin sol menüsünde <Kbd keys="mod+k" /> komut paletini açar; ray düğmesi menüyü ikonlara daraltır.</p>
         </Stack>
       </Card>
     </div>
@@ -79,7 +79,7 @@ recent={5} groupIcons={CATEGORY_ICONS} collapsible />`}>
     "resizable-sidebar": () => <Demo wide title="Genişletilebilir kenar çubuğu" desc="İç kenardaki ince tutamağı sürükle (dokunmatikte de), çift tıkla: başlangıç genişliği. Tutamağa Tab ile gel: ← → 16 px (Shift: 64), Home/End en dar/en geniş. collapseBelow altına çekince yalnız ikon moduna geçer. Bu vitrinin sol menüsü de böyle."
     code={`<NavSidebar items={items} resizable width="18rem" minWidth={220} maxWidth={420}
 collapseBelow={150} persist onResize={(w) => console.log(w)} />`}>
-    <p class="hm-muted">Genişlik: <strong>{() => `${$liveWidth} px`}</strong></p>
+    <p class="m-muted">Genişlik: <strong>{() => `${$liveWidth} px`}</strong></p>
     <Playground options={[
       { label: "resizable", get: () => $resizable, set: (v: boolean) => { $resizable = v } },
       // without resizing, the limits and collapseBelow have no effect
@@ -94,7 +94,7 @@ collapseBelow={150} persist onResize={(w) => console.log(w)} />`}>
         return <NavSidebar items={items} featured={featured} title="Panel" groupIcons={CATEGORY_ICONS} storageKey={`sc.sb.resize.${opts.width}.${opts.minWidth}.${opts.maxWidth}`} persist={false}
           hotkey={false} palette={false} label="Genişletilebilir örnek" collapsible={$collapse} {...opts} onResize={(w: number) => { $liveWidth = w }} />
       }}
-      <div class="sc-resize-content"><p class="hm-muted">Sayfa içeriği: kenar çubuğu genişledikçe bu alan daralır.</p></div>
+      <div class="sc-resize-content"><p class="m-muted">Sayfa içeriği: kenar çubuğu genişledikçe bu alan daralır.</p></div>
     </div>
     </Playground>
   </Demo>,

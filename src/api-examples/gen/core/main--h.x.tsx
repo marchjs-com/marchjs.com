@@ -6,8 +6,8 @@ import { Badge } from "hadi-march/ui";
 import type { ApiExample } from "../../types.ts";
 
 const example: ApiExample<any> = {
-      code: `h("button", { class: "hm-btn", onClick: save }, "Kaydet")
+      code: `h("button", { class: "m-btn", onClick: save }, "Kaydet")
 h(Badge, { tone: "primary" }, "Yeni")`,
-      run: () => <Row>{h("button", { type: "button", class: "hm-btn", onClick: () => alert("h() ile oluşturuldu") }, "h() düğmesi")}{h(Badge, { tone: "primary" }, "h(Badge)")}</Row>,
+      run: () => <Row>{h("button", { type: "button", class: "m-btn", onClick: () => alert("h() ile oluşturuldu") }, "h() düğmesi")}{h(Badge, { tone: "primary" }, "h(Badge)")}</Row>,
     };
 export default example;

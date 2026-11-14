@@ -44,6 +44,6 @@ export function App() {
 }
 /** The shell as a layout loader (it is in the entry: resolves at once, so the frame paints before the page arrives). */
 export const SHELL = async () => ({ default: App })
-export const PAGE_LOADING = <div class="hm-loader" role="status" aria-label="Yükleniyor"><span class="hm-loading hm-spin-lg" /></div>
+export const PAGE_LOADING = <div class="m-loader" role="status" aria-label="Yükleniyor"><span class="m-loading m-spin-lg" /></div>
 /** A page that is not here 100 ms after a click: its heading, lead and two cards as skeletons (no layout jump). */
 export const PAGE_SKELETON = () => <div class="sc-page-skel" role="status" aria-label="Yükleniyor">{skeleton("text")}{skeleton("card")}{skeleton("card")}</div>

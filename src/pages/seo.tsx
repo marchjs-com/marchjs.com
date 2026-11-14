@@ -65,7 +65,7 @@ jsonLd: ld.product({ name: $title, price: $price, currency: "TRY" }),
         <Field label="Fiyat"><TextInput bind:value={$price} /></Field>
       </div>
       <Card>
-        <p class="hm-muted">document.head içinde şu an (useHead + rota):</p>
+        <p class="m-muted">document.head içinde şu an (useHead + rota):</p>
         <pre class="sc-seo-code">{headToHtml(headTags())}</pre>
       </Card>
     </Stack>
@@ -106,7 +106,7 @@ seo: {
 hydrate(() => <Router />, document.getElementById("app"))
 // bir rotanın head'i
 createRouter({ routes: { "/product/:id": { load, head: (to) => ({ title: \`Ürün \${to.params.id}\` }) } } })`}>
-    <p class="hm-muted">Her rotanın kendi index.html dosyası var; adres başka bir rotayı gösterirse (404 yedeği, eski bir hash bağlantısı) ön işlenmiş içerik hemen kaldırılır, yanlış içerik görünmez.</p>
+    <p class="m-muted">Her rotanın kendi index.html dosyası var; adres başka bir rotayı gösterirse (404 yedeği, eski bir hash bağlantısı) ön işlenmiş içerik hemen kaldırılır, yanlış içerik görünmez.</p>
   </Demo>,
   }
   return <Hub section="/seo" kicker="Temel" title="SEO" lead="Rota başına başlık ve meta, Open Graph ve Twitter kartları, JSON-LD, derlemede ön işleme (prerender), sitemap.xml ve robots.txt. Hepsi yönlendiriciyle bütünleşik." render={RENDER} params={props.params} />

@@ -5,6 +5,6 @@ import type { ApiExample } from "../../types.ts";
 const example: ApiExample<any> = {
       code: `registerTransition("fade", (el, dir, done) => fade(el, dir).then(done))
 <div transition="fade">…</div>`,
-      run: () => <p class="hm-muted">hadi-march/motion bu kancayla geçişlerini kaydeder; <code>transition="fade"</code> gibi her öğe onu kullanır.</p>,
+      run: () => <p class="m-muted">hadi-march/motion bu kancayla geçişlerini kaydeder; <code>transition="fade"</code> gibi her öğe onu kullanır.</p>,
     };
 export default example;

@@ -14,7 +14,7 @@ function LayerDemo() {
   const add = () => {
     const label = `Katman ${++n}`
     const idx = open().length
-    const node = <div class="sc-ex-layer" style={`inset-block-end: ${1 + idx * 4}rem; background: var(--hm-surface-2); border: 1px solid var(--hm-border); border-radius: var(--hm-radius-1);`}>
+    const node = <div class="sc-ex-layer" style={`inset-block-end: ${1 + idx * 4}rem; background: var(--m-surface-2); border: 1px solid var(--m-border); border-radius: var(--m-radius-1);`}>
       <span>{label}</span> <Button size="sm" variant="ghost" onClick={() => h.close()}>Kapat</Button>
     </div>
     const h: LayerHandle = layer.open("popover", node, { label, lockScroll: false, onEscape: () => { h.close() } })

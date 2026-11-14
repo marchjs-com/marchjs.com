@@ -13,7 +13,7 @@ const example: ApiExample<any> = {
         const items = [{ title: "Kullanıcılar", keywords: "üye hesap" }, { title: "Kural motoru", keywords: "otomasyon" }, { title: "Rapor", keywords: "kullanım" }, { title: "Faturalar" }, { title: "Ayarlar", keywords: "tercih" }]
         return <div class="sc-ex-stack">
           <Field sig={q} label="Arama" />
-          <ul class="sc-ex-ui-f-list">{() => { const r = rank(q(), items); return r.length ? r.map((x) => <li><strong>{x.item.title}</strong><code class="sc-ex-val">{x.score.toFixed(1)}</code></li>) : <li class="hm-muted">Eşleşme yok</li> }}</ul>
+          <ul class="sc-ex-ui-f-list">{() => { const r = rank(q(), items); return r.length ? r.map((x) => <li><strong>{x.item.title}</strong><code class="sc-ex-val">{x.score.toFixed(1)}</code></li>) : <li class="m-muted">Eşleşme yok</li> }}</ul>
         </div>
       },
     };

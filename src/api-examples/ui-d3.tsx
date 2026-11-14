@@ -67,7 +67,7 @@ toast("Kaydedildi", { kind: "success" })`,
           {() => { const placement = p.values.placement; return <Tooltip text={() => (copied() ? `Kopyalandı (${copied()})` : "Bağlantıyı kopyala")} placement={placement as "top"}>
             <Button onClick={() => copied.update((x) => x + 1)}>Paylaş</Button>
           </Tooltip> }}
-          <span class="hm-muted">Üzerine gelin ya da Tab ile odaklayın</span>
+          <span class="m-muted">Üzerine gelin ya da Tab ile odaklayın</span>
         </Row>
       },
     },
@@ -110,7 +110,7 @@ toast("Kaydedildi", { kind: "success" })`,
         onCleanup(() => { if (globalThis.fetch === fake) globalThis.fetch = real })
         return <div class="sc-ex-stack">
           <Row><Button variant="primary" onClick={() => build.update((x) => x + 1)}>Yeni sürüm yayınla</Button><Out label="sunucudaki sürüm" value={() => `hadi-${build()}`} /><Out label="yenileme" value={reloads} /></Row>
-          <p class="hm-muted">Sekme sürümü 6 sn'de bir denetler.</p>
+          <p class="m-muted">Sekme sürümü 6 sn'de bir denetler.</p>
           <UpdateBanner url={URL_} every={0.1} text={() => (p.values.custom ? "HADİ 2.1 hazır: yeni panolar geldi" : undefined)}
             reloadText={() => (p.values.custom ? "Şimdi geç" : undefined)} onReload={() => reloads.update((x) => x + 1)} />
         </div>

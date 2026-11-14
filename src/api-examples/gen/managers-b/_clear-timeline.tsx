@@ -2,7 +2,7 @@
 
 const clearTimeline = () => {
   for (const e of [...performance.getEntriesByType("mark"), ...performance.getEntriesByType("measure")]) {
-    if (e.name.startsWith("hm:")) { performance.clearMarks(e.name); performance.clearMeasures(e.name) }
+    if (e.name.startsWith("m:")) { performance.clearMarks(e.name); performance.clearMeasures(e.name) }
   }
 }
 export { clearTimeline };

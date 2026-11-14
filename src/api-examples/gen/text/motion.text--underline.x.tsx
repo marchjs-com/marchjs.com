@@ -15,7 +15,7 @@ const example: ApiExample<any> = {
 // An underline draws itself under each line.
 const a = underline(title)
 await a.finished
-// also: underline(el, { color: "var(--hm-info)", duration: 1200 })`,
+// also: underline(el, { color: "var(--m-info)", duration: 1200 })`,
       play: { options: [COLOR, ms("duration", "Süre", 700, 200, 2000, 100), phrase("Altı çizili başlık", ["Hoş geldin Ada","Yeni sürüm yayında"])] },
       run: (p: V) => <Stage fn={underline} values={p.values} text="Altı çizili başlık" hint="Çizgi satırın altına çekilir; bağlantı ve ara başlıklara uygun." />,
     };

@@ -33,7 +33,7 @@ async function goToSection(path: string, id: string): Promise<void> {
   head.focus({ preventScroll: true })
   // a short flash on the motion engine (global speed and reduced motion apply)
   const target = el
-  void import("hadi-march/motion").then((m) => m.animate(target, [{ boxShadow: "0 0 0 0 transparent" }, { boxShadow: "0 0 0 6px color-mix(in srgb, var(--hm-primary) 35%, transparent)" }, { boxShadow: "0 0 0 0 transparent" }], { duration: 1400, easing: "easeInOutCubic" }))
+  void import("hadi-march/motion").then((m) => m.animate(target, [{ boxShadow: "0 0 0 0 transparent" }, { boxShadow: "0 0 0 6px color-mix(in srgb, var(--m-primary) 35%, transparent)" }, { boxShadow: "0 0 0 0 transparent" }], { duration: 1400, easing: "easeInOutCubic" }))
 }
 
 export default function ShellLate() {

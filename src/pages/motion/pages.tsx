@@ -67,8 +67,8 @@ createRouter({ routes: {
         opt("Süre", () => $dur, (x: number) => { $dur = x }, { min: 300, max: 1600, step: 20, unit: " ms" }),
         opt("Sağdan sola (RTL)", () => $rtl, (x: boolean) => { $rtl = x }),
       ]}>
-      {/* the page transition animates this stage only (data-hm-transition): the layers stay inside the card */}
-      <div class={`sc-mo-scene sc-mo-t-${info.tone}`} data-hm-transition>
+      {/* the page transition animates this stage only (data-m-transition): the layers stay inside the card */}
+      <div class={`sc-mo-scene sc-mo-t-${info.tone}`} data-m-transition>
         <span class="sc-mo-scene-ring" aria-hidden="true" /><span class="sc-mo-scene-ball" aria-hidden="true" />
         <span class="sc-mo-scene-kicker">{NAMES.includes(v) ? `${NAMES.indexOf(v) + 1} / ${NAMES.length}` : "definePageTransition"}</span>
         <strong class="sc-mo-scene-title">{info.label}</strong>

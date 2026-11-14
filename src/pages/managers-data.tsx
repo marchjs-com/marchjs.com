@@ -30,7 +30,7 @@ await clipboard().copy({ text, html })
 clipboard().onPaste(el, (p) => p.text, p.files)`}>
     <Field label="Metin"><TextInput bind:value={$text} /></Field>
     <div class="sc-row">
-      <button type="button" class="hm-btn hm-btn-primary" copy:text={() => $text}>{() => (c.copied() ? "Kopyalandı ✓" : "Kopyala (copy:text)")}</button>
+      <button type="button" class="m-btn m-btn-primary" copy:text={() => $text}>{() => (c.copied() ? "Kopyalandı ✓" : "Kopyala (copy:text)")}</button>
       <Button variant="secondary" on:click={() => c.copy({ text: $text, html: `<a href="${$text}">${$text}</a>` })}>Bağlantı olarak kopyala</Button>
       <Badge tone={c.supported() ? "success" : "warning"} dot>{c.supported() ? "Clipboard API" : "yedek yol"}</Badge>
     </div>
@@ -80,7 +80,7 @@ undoStack().run("Başlık", set(v), set(old), "title")  // aynı anahtar: birle�
         <div><strong>Geri alınabilir</strong><ol class="sc-mgr-log">{() => u.past().map((l) => <li>{l}</li>)}</ol></div>
         <div><strong>Yinelenebilir</strong><ol class="sc-mgr-log">{() => u.future().map((l) => <li>{l}</li>)}</ol></div>
       </div>
-      <p class="hm-muted">{() => `${$items.length} öğe · ${add.busy() ? "çalışıyor" : "hazır"}`}</p>
+      <p class="m-muted">{() => `${$items.length} öğe · ${add.busy() ? "çalışıyor" : "hazır"}`}</p>
     </Demo>
     <Demo title="Kaydedilmemiş değişiklik" desc="Liste, geri alma geçmişinin kayıt noktasından ayrılınca kirli olur; ayar formu ayrı bir kaynak. Kirliyken sekmeyi kapatmak ya da menüden başka sayfaya geçmek onay ister."
       code={`dirtyState().track("doc", () => !undoStack().atSaved(), "Liste", save)
@@ -91,7 +91,7 @@ dirtyState().any()   dirtyState().list()   await dirtyState().confirmLeave()   d
         <Button variant="primary" disabled={() => !d.any()} on:click={async () => { const n = await d.saveAll(); toast(`${n} kaynak kaydedildi`) }}>Hepsini kaydet</Button>
         <Button variant="secondary" on:click={async () => { $leave = (await d.confirmLeave()) ? "Ayrılmaya izin verildi" : "Sayfada kalındı" }}>Ayrılmayı dene</Button>
       </div>
-      <p class="hm-muted">{() => $leave || "Kirliyken sayfayı yenilemeyi ya da menüden başka sayfaya gitmeyi dene."}</p>
+      <p class="m-muted">{() => $leave || "Kirliyken sayfayı yenilemeyi ya da menüden başka sayfaya gitmeyi dene."}</p>
     </Demo>
   </>
 }
@@ -115,7 +115,7 @@ function StorageDemo() {
     configureStorage({ prefix: "sc.data.", version: 1, migrations: {} })
   }
   void refresh()
-  onCleanup(() => configureStorage({ prefix: "hm.", version: 1, migrations: {} }))
+  onCleanup(() => configureStorage({ prefix: "m.", version: 1, migrations: {} }))
   return <Demo title="Depolama" desc="local, session, memory ve IndexedDB aynı async API ile; ön ek, süre (ttl) ve sürüm zarfı. Engelli ya da dolu depoda hata atmaz, bellekte tutar. persisted() sekmeler arası eşitlenen bir sinyal."
     code={`await storage().area("idb").set("draft", data, { ttl: "1d" })
 configureStorage({ version: 3, migrations: { 2: (v) => …, 3: (v) => … } })
@@ -166,7 +166,7 @@ appCache().invalidate("rates")   appCache().stats()   appCache().entries()`}>
       <Button variant="ghost" on:click={() => appCache().invalidate("rates")}>Geçersiz kıl</Button>
     </div>
     <p class="sc-md-mono">{() => $result || "Bir kayıt getir: ilki 700 ms sürer, sonrakiler önbellekten gelir."}</p>
-    <p class="hm-muted">{() => { const s = appCache().stats(); return `isabet ${s.hits} · ıska ${s.misses} · yazma ${s.sets} · atılan ${s.evictions} · boyut ${s.size}/${$max}` }}</p>
+    <p class="m-muted">{() => { const s = appCache().stats(); return `isabet ${s.hits} · ıska ${s.misses} · yazma ${s.sets} · atılan ${s.evictions} · boyut ${s.size}/${$max}` }}</p>
     <ul class="sc-md-entries">{() => { now(); return appCache().entries().filter((e) => e.key.startsWith("rates:")).map((e) => <li class={e.stale ? "is-stale" : ""}>
       <code>{e.key}</code><span class="sc-md-bar"><span style={{ "inline-size": `${Math.max(0, 100 - (e.age / Math.max(1, e.ttl)) * 100)}%` }} /></span><span>{e.stale ? "bayat" : `${Math.max(0, Math.ceil((e.ttl - e.age) / 1000))} sn`}</span>
     </li>) }}</ul>
@@ -189,12 +189,12 @@ function ConfigDemo() {
   const load = async () => { $loading = true; try { await c.load(() => new Promise((r) => setTimeout(() => r({ ui: { accentBar: true }, upload: { maxMb: 25 } }), 500))) } finally { $loading = false } }
   const src = { default: "neutral", env: "info", remote: "success", override: "warning" } as const
   onCleanup(() => configureAppConfig({ defaults: {}, env: null, validate: null }))
-  return <Demo title="Yapılandırma" desc="Katmanlar: varsayılan < ortam (<meta name=hm-config>) < uzak < çalışma anı. Her değerin hangi katmandan geldiği görünür; değişiklik bağlı her yeri günceller."
+  return <Demo title="Yapılandırma" desc="Katmanlar: varsayılan < ortam (<meta name=m-config>) < uzak < çalışma anı. Her değerin hangi katmandan geldiği görünür; değişiklik bağlı her yeri günceller."
     code={`configureAppConfig({ defaults: { ui: { density: "comfortable" } } })
 appConfig().get("ui.density")   appConfig().set("ui.density", "compact")
 await appConfig().load(() => net.get("/config.json"))   appConfig().source("api.baseUrl")`}>
     <div class={() => `sc-md-sample is-${c.get("ui.density")}${c.get("ui.accentBar") ? " has-bar" : ""}`}>
-      <strong>Örnek kart</strong><span class="hm-muted">yoğunluk: {() => c.get("ui.density")} · yükleme sınırı {() => c.get("upload.maxMb")} MB</span>
+      <strong>Örnek kart</strong><span class="m-muted">yoğunluk: {() => c.get("ui.density")} · yükleme sınırı {() => c.get("upload.maxMb")} MB</span>
     </div>
     <div class="sc-row">
       <Segmented value={() => c.get("ui.density")} onChange={(v: string) => c.set("ui.density", v)} options={[{ value: "compact", label: "Sıkı" }, { value: "comfortable", label: "Rahat" }, { value: "spacious", label: "Geniş" }]} />

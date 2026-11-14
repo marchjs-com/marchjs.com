@@ -53,14 +53,14 @@ pageTransitions({ type: "fade" })   // default for routes without their own`}>
         <Badge tone="info">{`Geçiş: ${tab().type}`}</Badge>
       </Card>
     </Demo>
-    <Demo wide title="Paylaşılan öğe" desc="Bir kareye bas: kare ızgaradaki yerinden kendi sayfasındaki yerine taşınır. Aynı data-hm-shared adı iki sayfada da olunca öğe aradaki yolu gider. Pencerede açınca ileri ve geri düğmeleri pencerenin içini geçişle değiştirir."
-      code={`<Link href={\`/transitions/tile/\${id}\`}><div data-hm-shared={\`tile-\${id}\`} /></Link>
+    <Demo wide title="Paylaşılan öğe" desc="Bir kareye bas: kare ızgaradaki yerinden kendi sayfasındaki yerine taşınır. Aynı data-m-shared adı iki sayfada da olunca öğe aradaki yolu gider. Pencerede açınca ileri ve geri düğmeleri pencerenin içini geçişle değiştirir."
+      code={`<Link href={\`/transitions/tile/\${id}\`}><div data-m-shared={\`tile-\${id}\`} /></Link>
 // the tile's page
-<div data-hm-shared={\`tile-\${id}\`} class="big" />`}>
+<div data-m-shared={\`tile-\${id}\`} class="big" />`}>
       <ul class="sc-tr-grid">
         {TILES.map((t) => <li>
           <Link href={`/transitions/tile/${t.id}`} class="sc-tr-link" aria-label={t.name}>
-            <span class={`sc-tr-tile sc-tr-c${t.tone}`} data-hm-shared={`tile-${t.id}`}>{t.name}</span>
+            <span class={`sc-tr-tile sc-tr-c${t.tone}`} data-m-shared={`tile-${t.id}`}>{t.name}</span>
           </Link>
           <Button href={`/transitions/tile/${t.id}`} modal variant="ghost" size="sm">Pencerede aç</Button>
         </li>)}

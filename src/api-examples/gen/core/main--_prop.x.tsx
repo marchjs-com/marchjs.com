@@ -9,7 +9,7 @@ const example: ApiExample<any> = {
 <a class={$cls} onClick={go}>…</a>   // → _prop(a, "a", "class", …); _prop(a, "a", "onClick", go)`,
       run: () => {
         const on = signal(false)
-        const a = _tpl(["button", [["type", "button"], ["class", "hm-btn"]], "Değiştir"])()
+        const a = _tpl(["button", [["type", "button"], ["class", "m-btn"]], "Değiştir"])()
         _prop(a, "button", "aria-pressed", reactive(() => String(on())))
         _prop(a, "button", "onClick", () => on.update((x) => !x))
         return <Row>{a}<Out label="aria-pressed" value={() => String(on())} /></Row>

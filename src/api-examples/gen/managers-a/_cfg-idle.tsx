@@ -11,7 +11,7 @@ function CfgIdle() {
   onCleanup(() => clearInterval(id))
   return <Cfg m={idleManager} fn={configureIdle} patch={{ timeout: 5000, throttle: 50 }}
     view={(on) => <>
-      <p class="hm-muted">Sayfada 5 saniye hiçbir şey yapmayın (fare, tuş, kaydırma).</p>
+      <p class="m-muted">Sayfada 5 saniye hiçbir şey yapmayın (fare, tuş, kaydırma).</p>
       <Out label="idle()" value={() => { on(); return yes(idle().idle()) }} />
       <Out label="remaining()" value={() => { on(); t(); return `${Math.ceil(idle().remaining() / 1000)} sn` }} />
     </>} />

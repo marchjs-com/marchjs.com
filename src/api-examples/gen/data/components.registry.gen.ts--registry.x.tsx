@@ -14,7 +14,7 @@ const example: ApiExample<any> = {
       code: `import { registry } from "hadi-march/components/registry.gen.ts"
 const forms = registry.filter((e) => e.meta.category === "forms")
 const demo = await forms[0].demo()   // lazy demo module`,
-      run: () => <Await for={() => import("hadi-march/components/registry.gen.ts")} loading={<p class="hm-muted">Yükleniyor…</p>}>{({ registry }: { registry: readonly { meta: { name: string; category: string; summary: string; status: string } }[] }) => {
+      run: () => <Await for={() => import("hadi-march/components/registry.gen.ts")} loading={<p class="m-muted">Yükleniyor…</p>}>{({ registry }: { registry: readonly { meta: { name: string; category: string; summary: string; status: string } }[] }) => {
         const cats = [...new Set(registry.map((e) => e.meta.category))].sort()
         const cat = signal(cats.includes("data") ? "data" : cats[0]!)
         const shown = () => registry.filter((e) => e.meta.category === cat())

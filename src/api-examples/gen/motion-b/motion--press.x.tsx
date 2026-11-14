@@ -11,7 +11,7 @@ const example: ApiExample<any> = {
         const ez = signal("spring-wobbly")
         return <div class="sc-ex-motion-b-stack">
           <Pick sig={ez} label="Bırakış" options={["spring-wobbly", "spring-snappy", "easeOutBack"]} />
-          {() => <div class="sc-ex-motion-b-stage"><button type="button" class="hm-btn hm-btn-primary" use:press={{ scale: 0.88, easing: ez() }}>Bas ve bırak</button></div>}
+          {() => <div class="sc-ex-motion-b-stage"><button type="button" class="m-btn m-btn-primary" use:press={{ scale: 0.88, easing: ez() }}>Bas ve bırak</button></div>}
         </div>
       },
     };

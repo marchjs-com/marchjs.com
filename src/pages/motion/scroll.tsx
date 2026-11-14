@@ -106,14 +106,14 @@ parallaxLayers(hero, { strength: 160 })`}
 <section style="height: 400vh"><div class="stage" style="position: sticky; top: 0">
   <article data-step>…</article> <article data-step>…</article> …
 </div></section>
-stickyReveal(section, { onStep: (i) => (active = i) })   // sets --hm-scroll (0..1) on the section too`}
+stickyReveal(section, { onStep: (i) => (active = i) })   // sets --m-scroll (0..1) on the section too`}
       options={[opt("Adım", () => $steps, (v: number) => { $steps = v }, { options: [{ value: 2, label: "2" }, { value: 3, label: "3" }, { value: 4, label: "4" }] })]}>
       <div class="sc-mo-scroll sc-mo-scroll-tall" tabindex="0" role="region" aria-label="Yapışkan sahne" ref={(el: HTMLElement) => { box3 = el }}>
         {() => { const n = $steps; return <section class="sc-mo-sticky" style={{ "--n": String(n) }} ref={(el: HTMLElement) => { sticky = el }}>
           <div class="sc-mo-sticky-stage">
             <div class="sc-mo-sticky-bar" aria-hidden="true" />
             {STEPS.slice(0, n).map((s, i) => <article data-step class={`sc-mo-step sc-mo-t-${s.tone}`} aria-hidden={() => String($active !== i)}><span>{`${i + 1} / ${n}`}</span><strong>{s.t}</strong><p>{s.d}</p></article>)}
-            <p class="hm-sr-only" aria-live="polite">{() => `${$active + 1}. adım: ${STEPS[$active]?.t ?? ""}`}</p>
+            <p class="m-sr-only" aria-live="polite">{() => `${$active + 1}. adım: ${STEPS[$active]?.t ?? ""}`}</p>
           </div>
         </section> }}
       </div>

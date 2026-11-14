@@ -305,7 +305,7 @@ tl.seek(450); tl.play(); tl.reverse(); await tl.finished`}>
     <TimelineEditor />
   </Demo>,
     "curve-editor": () => <Demo title="Eğri editörü" desc="Tutamaçları sürükle: cubic-bezier. Yay ve sekme fizikten hesaplanır ve CSS linear() olarak WAAPI'ye gider."
-    code={`ease("out")  ease("--hm-ease-expo")  ease("steps(5, end)")
+    code={`ease("out")  ease("--m-ease-expo")  ease("steps(5, end)")
 springEase({ stiffness: 170, damping: 14 }).css   // "linear(0, 0.07 4%, …, 1)"
 defineEasing("brand", "cubic-bezier(.2,.9,.1,1)")`}>
     <CurveEditor />
@@ -316,7 +316,7 @@ await timeline().add(dots, frames, { stagger: stagger(4, { grid: [20, 10], from:
 m.drops(); m.longTasks()`}>
     <Stagger200 />
   </Demo>,
-    "keyframes-css": () => <Demo wide title="Keyframe'ler → tek CSS dosyası" desc="keyframesCss() (ya da tools/gen-motion-css.js) kayıtlardan @keyframes ve .hm-anim-* sınıfları üretir; azaltılmış harekette hemen biter.">
+    "keyframes-css": () => <Demo wide title="Keyframe'ler → tek CSS dosyası" desc="keyframesCss() (ya da tools/gen-motion-css.js) kayıtlardan @keyframes ve .m-anim-* sınıfları üretir; azaltılmış harekette hemen biter.">
     <CodeView code={keyframesCss({ names: ["fadeUp", "pop", "spin"] }).trim()} lang="css" copy />
   </Demo>,
   }

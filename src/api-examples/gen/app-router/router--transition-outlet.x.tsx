@@ -12,7 +12,7 @@ const example: ApiExample<any> = {
 transitionOutlet()?.style.setProperty("view-transition-name", "page")`,
       run: () => {
         const out = signal("—")
-        const read = () => { const el = transitionOutlet() as HTMLElement | null; out.set(el ? `.hm-outlet[data-depth="${el.dataset["depth"]}"] · ${el.childElementCount} çocuk` : "null") }
+        const read = () => { const el = transitionOutlet() as HTMLElement | null; out.set(el ? `.m-outlet[data-depth="${el.dataset["depth"]}"] · ${el.childElementCount} çocuk` : "null") }
         read()
         return <Row><Button onClick={read}>transitionOutlet()</Button><Out label="sonuç" value={out} /></Row>
       },

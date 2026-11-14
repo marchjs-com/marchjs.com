@@ -10,7 +10,7 @@ const example: ApiExample<any> = {
         const src = signal("// toplam\nconst a = 1\nconst b = a + 2")
         return <div class="sc-ex-stack">
           <Textarea value={src} rows={3} aria-label="Kaynak kod" />
-          <pre class="sc-ex-ui-f-code">{() => tokenLines(src(), "ts").map((line, i) => <div><span class="hm-muted">{`${i + 1}  `}</span>{line.length ? line.map(([k, t]) => <span class={k ? `hm-tok-${k}` : ""}>{t}</span>) : " "}</div>)}</pre>
+          <pre class="sc-ex-ui-f-code">{() => tokenLines(src(), "ts").map((line, i) => <div><span class="m-muted">{`${i + 1}  `}</span>{line.length ? line.map(([k, t]) => <span class={k ? `m-tok-${k}` : ""}>{t}</span>) : " "}</div>)}</pre>
         </div>
       },
     };

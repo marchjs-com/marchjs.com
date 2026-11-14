@@ -17,7 +17,7 @@ const example: ApiExample<any> = {
           {["Kalın", "Eğik", "Altı çizili", "Üstü çizili"].map((l) => <Button size="sm" data-label={l}>{l}</Button>)}
         </div>)
         onCleanup(rovingFocus(bar, { orientation: "horizontal", onMove: (el) => active.set(el.dataset["label"] ?? "") }))
-        return <Stack>{bar}<Row><Out label="etkin" value={active} /><span class="hm-muted">Tab bir kez, sonra <Kbd keys="←" /> <Kbd keys="→" /> <Kbd keys="Home" /> <Kbd keys="End" /></span></Row></Stack>
+        return <Stack>{bar}<Row><Out label="etkin" value={active} /><span class="m-muted">Tab bir kez, sonra <Kbd keys="←" /> <Kbd keys="→" /> <Kbd keys="Home" /> <Kbd keys="End" /></span></Row></Stack>
       },
     };
 export default example;

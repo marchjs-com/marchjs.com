@@ -7,7 +7,7 @@ import { Cfg } from "./_cfg.tsx";
 function CfgViewport() {
   return <Cfg m={viewportManager} fn={configureViewport} patch={{ breakpoints: { xs: 0, sm: 400, md: 600, lg: 900, xl: 1400 }, mobile: "md", desktop: "xl" }}
     view={(on) => <>
-      <p class="hm-muted">Tarayıcı penceresini yeniden boyutlandırın.</p>
+      <p class="m-muted">Tarayıcı penceresini yeniden boyutlandırın.</p>
       <Out label="width()" value={() => { on(); return `${viewport().width()} px` }} />
       <Out label="breakpoint()" value={() => { on(); return viewport().breakpoint() }} />
       <Out label="mobile() / tablet() / desktop()" value={() => { on(); return `${yes(viewport().mobile())} / ${yes(viewport().tablet())} / ${yes(viewport().desktop())}` }} />

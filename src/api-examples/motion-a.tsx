@@ -650,9 +650,9 @@ animate(card, "hadi-drop")`,
       },
     },
     keyframesCss: {
-      code: `keyframesCss({ names: ["hadi-rise"] })    // @keyframes hm-hadi-rise { … } .hm-anim-hadi-rise { … }
+      code: `keyframesCss({ names: ["hadi-rise"] })    // @keyframes m-hadi-rise { … } .m-anim-hadi-rise { … }
 // node tools/gen-motion-css.js <module> out.css --presets`,
-      play: { options: [{ key: "name", label: "Ad", default: "hadi-rise", options: ["hadi-rise", "hadi-drop"] }, { key: "prefix", label: "Önek", default: "hm-", options: ["hm-", "hadi-"] }] },
+      play: { options: [{ key: "name", label: "Ad", default: "hadi-rise", options: ["hadi-rise", "hadi-drop"] }, { key: "prefix", label: "Önek", default: "m-", options: ["m-", "hadi-"] }] },
       run: (p: { values: { name: string; prefix: string } }) => {
         ensureHadi()
         return <pre class="sc-ex-motion-a-pre">{() => keyframesCss({ names: [p.values.name], prefix: p.values.prefix })}</pre>

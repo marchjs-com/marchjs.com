@@ -141,7 +141,7 @@ export default examples({
             return <PullToRefresh class="sc-ex-ui-c-scroll" threshold={threshold} disabled={() => p.values.disabled} onPhase={(x) => phase.set(x)} onRefresh={refresh}>
               <ul class="sc-ex-ui-c-list">{() => items().map((x) => <li>{x}</li>)}</ul>
             </PullToRefresh> }}
-          <p class="hm-muted">Listeyi en üstte aşağı çekip bırakın.</p>
+          <p class="m-muted">Listeyi en üstte aşağı çekip bırakın.</p>
         </div>
       },
     },

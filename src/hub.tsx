@@ -35,7 +35,7 @@ export function Hub(props: HubProps) {
     const t = topics[at]!, prev = topics[(at - 1 + topics.length) % topics.length]!, next = topics[(at + 1) % topics.length]!
     const draw = props.render[t.slug]
     return <Section kicker={props.title} title={t.title} lead={t.desc}>
-      <div class="sc-topic-body">{draw ? draw() : <p class="hm-muted">Bu sayfa hazırlanıyor.</p>}</div>
+      <div class="sc-topic-body">{draw ? draw() : <p class="m-muted">Bu sayfa hazırlanıyor.</p>}</div>
       <nav class="sc-topic-pager" aria-label={`${props.title}: sayfalar`}>
         <Link href={`${base}/${prev.slug}` as Href} class="sc-topic-step"><Icon of={arrowLeft} /><span><small>Önceki</small>{prev.title}</span></Link>
         <Link href={base as Href} class="sc-topic-all">{`Tüm ${props.title.toLocaleLowerCase("tr")}`}</Link>

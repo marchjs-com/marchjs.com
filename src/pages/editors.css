@@ -1,21 +1,21 @@
 /* Editors page: demo layouts (the components bring their own styles). */
-.sc-ed-split { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--hm-space-4); align-items: stretch; }
+.sc-ed-split { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--m-space-4); align-items: stretch; }
 .sc-ed-one { display: grid; grid-template-columns: minmax(0, 1fr); }
-.sc-ed-out { margin: 0; min-width: 0; max-height: 28rem; overflow: auto; padding: var(--hm-space-3); border: 1px dashed var(--hm-border); border-radius: var(--hm-radius-3);
-  background: var(--hm-bg-subtle); color: var(--hm-text-2); font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.sc-ed-out { margin: 0; min-width: 0; max-height: 28rem; overflow: auto; padding: var(--m-space-3); border: 1px dashed var(--m-border); border-radius: var(--m-radius-3);
+  background: var(--m-bg-subtle); color: var(--m-text-2); font-family: var(--m-font-mono); font-size: var(--m-text-xs); line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
 @media (max-width: 52rem) { .sc-ed-split { grid-template-columns: minmax(0, 1fr); } }
-.sc-cp-demo { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--hm-space-4); }
-.sc-cp-card, .sc-ge-banner { display: flex; flex-direction: column; justify-content: flex-end; gap: .25rem; flex: 1 1 12rem; min-height: 10rem; padding: var(--hm-space-4);
-  border-radius: var(--hm-radius-4); color: var(--hm-inverse-text); box-shadow: var(--hm-shadow-2); transition: background var(--hm-dur) var(--hm-ease); }
+.sc-cp-demo { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--m-space-4); }
+.sc-cp-card, .sc-ge-banner { display: flex; flex-direction: column; justify-content: flex-end; gap: .25rem; flex: 1 1 12rem; min-height: 10rem; padding: var(--m-space-4);
+  border-radius: var(--m-radius-4); color: var(--m-inverse-text); box-shadow: var(--m-shadow-2); transition: background var(--m-dur) var(--m-ease); }
 .sc-cp-card { background: var(--sc-cp); }
 .sc-ge-banner { background: var(--sc-ge); min-height: 14rem; }
-.sc-cp-card b, .sc-ge-banner b { font-family: var(--hm-font-display); font-size: var(--hm-text-2xl); }
-.sc-cp-card span, .sc-ge-banner span { font-family: var(--hm-font-mono); font-size: var(--hm-text-xs); opacity: .85; overflow-wrap: anywhere; }
-.sc-ec-demo { display: flex; flex-direction: column; gap: var(--hm-space-3); }
-.sc-ec-try { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hm-space-4); padding-block-start: var(--hm-space-3); }
-.sc-ec-card { display: grid; place-items: center; inline-size: 5.5rem; block-size: 3.5rem; border-radius: var(--hm-radius-3); background: var(--hm-brand-gradient); color: var(--hm-inverse-text);
-  font-family: var(--hm-font-display); font-weight: var(--hm-weight-bold); box-shadow: var(--hm-shadow-2); }
+.sc-cp-card b, .sc-ge-banner b { font-family: var(--m-font-display); font-size: var(--m-text-2xl); }
+.sc-cp-card span, .sc-ge-banner span { font-family: var(--m-font-mono); font-size: var(--m-text-xs); opacity: .85; overflow-wrap: anywhere; }
+.sc-ec-demo { display: flex; flex-direction: column; gap: var(--m-space-3); }
+.sc-ec-try { display: flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-4); padding-block-start: var(--m-space-3); }
+.sc-ec-card { display: grid; place-items: center; inline-size: 5.5rem; block-size: 3.5rem; border-radius: var(--m-radius-3); background: var(--m-brand-gradient); color: var(--m-inverse-text);
+  font-family: var(--m-font-display); font-weight: var(--m-weight-bold); box-shadow: var(--m-shadow-2); }
 
 /* TerminalWindow demo: the box the window moves and docks in */
-.sc-term-desk { position: relative; block-size: 24rem; overflow: hidden; border: 1px solid var(--hm-border); border-radius: var(--hm-radius-3); background: radial-gradient(circle at 80% 10%, color-mix(in srgb, var(--hm-primary) 10%, transparent), transparent 55%), var(--hm-bg-subtle); }
-.sc-term-reopen { position: absolute; inset-block-start: var(--hm-space-3); inset-inline-end: var(--hm-space-3); }
+.sc-term-desk { position: relative; block-size: 24rem; overflow: hidden; border: 1px solid var(--m-border); border-radius: var(--m-radius-3); background: radial-gradient(circle at 80% 10%, color-mix(in srgb, var(--m-primary) 10%, transparent), transparent 55%), var(--m-bg-subtle); }
+.sc-term-reopen { position: absolute; inset-block-start: var(--m-space-3); inset-inline-end: var(--m-space-3); }

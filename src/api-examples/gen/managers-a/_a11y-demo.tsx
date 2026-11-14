@@ -17,7 +17,7 @@ function A11yDemo(p: { values: { fontScale: number; strongFocus: boolean } }) {
       <Button variant="ghost" onClick={() => a11y.reset()}>Sıfırla</Button>
     </Row>
     <Out label="a11y.prefs()" value={() => fmt(a11y.prefs())} />
-    <p class="hm-muted">Tercihler yalnız bellekte tutulur; kart kapanınca sayfa eski haline döner.</p>
+    <p class="m-muted">Tercihler yalnız bellekte tutulur; kart kapanınca sayfa eski haline döner.</p>
   </div>
 }
 export { A11yDemo };

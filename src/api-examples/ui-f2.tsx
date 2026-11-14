@@ -154,7 +154,7 @@ colorTheme()             // "night"`,
         return <div class="sc-ex-stack">
           <Row><Field sig={base} label="Tema klasörü" /><Button onClick={() => setThemeBase(base())}>Uygula</Button></Row>
           <Out label="yüklenecek" value={() => `${base().endsWith("/") ? base() : `${base()}/`}night.css`} />
-          <span class="hm-muted">Bu örnek değeri varsayılana (“themes/”) uygular; başka bir değer yazarsan Uygula’dan sonra Sıfırla ile dön.</span>
+          <span class="m-muted">Bu örnek değeri varsayılana (“themes/”) uygular; başka bir değer yazarsan Uygula’dan sonra Sıfırla ile dön.</span>
           <Button variant="ghost" onClick={() => apply("themes/")}>Sıfırla</Button>
         </div>
       },
@@ -183,8 +183,8 @@ shortcuts()   // [{ combo: "alt+j", label: "Alt+J", description: "Not aç", grou
         ]
         onCleanup(() => offs.forEach((o) => o()))
         return <div class="sc-ex-stack">
-          <ul class="sc-ex-ui-f-list">{() => shortcuts().map((s) => <li><Kbd>{s.label}</Kbd><span>{s.description}</span><span class="hm-muted">{s.group}</span></li>)}</ul>
-          <span class="hm-muted">Alt+J ya da Alt+Shift+K’ye bas.</span>
+          <ul class="sc-ex-ui-f-list">{() => shortcuts().map((s) => <li><Kbd>{s.label}</Kbd><span>{s.description}</span><span class="m-muted">{s.group}</span></li>)}</ul>
+          <span class="m-muted">Alt+J ya da Alt+Shift+K’ye bas.</span>
           <Log lines={lines} />
         </div>
       },
@@ -203,7 +203,7 @@ sorter("none")                                                        // null �
     },
     targetVars: {
       code: `targetVars(sample(model, 500).logo)
-// { "--hm-kt-x": "60", "--hm-kt-r": "90", "--hm-kt-s": "1.25", … } → hedef öğenin CSS değişkenleri`,
+// { "--m-kt-x": "60", "--m-kt-r": "90", "--m-kt-s": "1.25", … } → hedef öğenin CSS değişkenleri`,
       run: () => {
         const t = signal(500)
         const vars = computed(() => targetVars(sample(KT, t())["logo"] ?? {}))
@@ -275,10 +275,10 @@ addDays(todayIso(), 7)     // bir hafta sonrası`,
 // [["kw", "const"], ["", " "], ["", "n"], …, ["com", "// adet"]]`,
       run: () => {
         const lang = signal("ts")
-        const SRC: Record<string, string> = { ts: 'const total = items.length * 3 // adet', css: ".card { color: var(--hm-primary); }", json: '{ "ad": "HADİ", "adet": 3 }', sh: "npm run build # derle" }
+        const SRC: Record<string, string> = { ts: 'const total = items.length * 3 // adet', css: ".card { color: var(--m-primary); }", json: '{ "ad": "HADİ", "adet": 3 }', sh: "npm run build # derle" }
         return <div class="sc-ex-stack">
           <Pick sig={lang} label="Dil" options={[["ts", "ts"], ["css", "css"], ["json", "json"], ["sh", "sh"]]} />
-          <pre class="sc-ex-ui-f-code">{() => tokenize(SRC[lang()]!, lang()).map(([k, t]) => <span class={k ? `hm-tok-${k}` : ""}>{t}</span>)}</pre>
+          <pre class="sc-ex-ui-f-code">{() => tokenize(SRC[lang()]!, lang()).map(([k, t]) => <span class={k ? `m-tok-${k}` : ""}>{t}</span>)}</pre>
           <Out label="parça" value={() => tokenize(SRC[lang()]!, lang()).filter(([k]) => k).map(([k]) => k).join(" ")} />
         </div>
       },
@@ -289,7 +289,7 @@ addDays(todayIso(), 7)     // bir hafta sonrası`,
         const src = signal("// toplam\nconst a = 1\nconst b = a + 2")
         return <div class="sc-ex-stack">
           <Textarea value={src} rows={3} aria-label="Kaynak kod" />
-          <pre class="sc-ex-ui-f-code">{() => tokenLines(src(), "ts").map((line, i) => <div><span class="hm-muted">{`${i + 1}  `}</span>{line.length ? line.map(([k, t]) => <span class={k ? `hm-tok-${k}` : ""}>{t}</span>) : " "}</div>)}</pre>
+          <pre class="sc-ex-ui-f-code">{() => tokenLines(src(), "ts").map((line, i) => <div><span class="m-muted">{`${i + 1}  `}</span>{line.length ? line.map(([k, t]) => <span class={k ? `m-tok-${k}` : ""}>{t}</span>) : " "}</div>)}</pre>
         </div>
       },
     },

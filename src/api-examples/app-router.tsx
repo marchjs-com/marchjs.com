@@ -44,7 +44,7 @@ export default examples({
     _resetRouter: {
       code: `afterEach(() => _resetRouter())   // tests: drop the router, its guards and its page cache`,
       run: () => <div class="sc-ex-app-stack">
-        <p class="hm-muted">Testlerde her senaryodan önce çağrılır. Burada çağrılmaz: bu sayfayı yöneten yönlendiriciyi kapatırdı. Sıfırlayacağı durum:</p>
+        <p class="m-muted">Testlerde her senaryodan önce çağrılır. Burada çağrılmaz: bu sayfayı yöneten yönlendiriciyi kapatırdı. Sıfırlayacağı durum:</p>
         <Row><Out label="path()" value={path} /><Out label="route()" value={() => route()?.route.pattern ?? "null"} /><Out label="sonrası" value='"/" · null' /></Row>
       </div>,
     },
@@ -79,7 +79,7 @@ back()                                            // and back to the previous on
         beforeLeave(() => { if (!dirty()) return true; push(log, "ayrılma engellendi: kaydedilmemiş değişiklik var"); return false })
         return <div class="sc-ex-app-stack">
           <Checkbox value={dirty} label="Kaydedilmemiş değişiklik var" />
-          <p class="hm-muted">İşaretliyken menüden başka bir sayfa seçmeyi dene: sayfa yerinde kalır. Kart kapanınca denetim de kalkar.</p>
+          <p class="m-muted">İşaretliyken menüden başka bir sayfa seçmeyi dene: sayfa yerinde kalır. Kart kapanınca denetim de kalkar.</p>
           <Log lines={log} />
         </div>
       },
@@ -87,11 +87,11 @@ back()                                            // and back to the previous on
     closeModal: {
       code: `<Button onClick={closeModal}>Kapat</Button>   // inside a page opened with navigate(to, { modal: true })`,
       run: () => {
-        const isModal = () => { path(); return !!(globalThis.history.state as { hmModal?: boolean } | null)?.hmModal }
+        const isModal = () => { path(); return !!(globalThis.history.state as { mModal?: boolean } | null)?.mModal }
         return <Row>
           <Out label="modal açık" value={() => String(isModal())} />
           <Button variant="secondary" disabled={() => !isModal()} onClick={closeModal}>closeModal()</Button>
-          <p class="hm-muted">Bu sayfa modal olarak açılmadı; düğme yalnız modal bir rotada çalışır.</p>
+          <p class="m-muted">Bu sayfa modal olarak açılmadı; düğme yalnız modal bir rotada çalışır.</p>
         </Row>
       },
     },
@@ -148,11 +148,11 @@ render(() => <Router />, app)`,
         const COLORS = [["mavi", "Mavi"], ["yesil", "Yeşil"], ["turuncu", "Turuncu"]] as const
         return <div class="sc-ex-app-stack">
           {() => { const tg = p.values.target, rep = p.values.replace; return untrack(() => tg === "aside"
-            ? <Row>{PEOPLE.map((id) => <Link href={`/item/${id}`} outlet="aside" replace={rep} class="hm-btn hm-btn-secondary hm-btn-sm">{`Kayıt ${id}`}</Link>)}</Row>
-            : <Row>{COLORS.map(([v, l]) => <Link href={() => `${path()}?color=${v}`} replace={rep} class="hm-btn hm-btn-secondary hm-btn-sm">{l}</Link>)}</Row>) }}
+            ? <Row>{PEOPLE.map((id) => <Link href={`/item/${id}`} outlet="aside" replace={rep} class="m-btn m-btn-secondary m-btn-sm">{`Kayıt ${id}`}</Link>)}</Row>
+            : <Row>{COLORS.map(([v, l]) => <Link href={() => `${path()}?color=${v}`} replace={rep} class="m-btn m-btn-secondary m-btn-sm">{l}</Link>)}</Row>) }}
           <Row><Out label="?color" value={() => String(query()["color"] ?? "—")} /><Out label="history.length" value={() => String(len())} />
             <Button variant="ghost" size="sm" onClick={() => setQuery({ color: null, "~aside": null })}>Temizle</Button></Row>
-          {() => (p.values.target === "aside" ? <div class="sc-ex-app-frame"><Outlet name="aside" empty={<p class="hm-muted">Yan panel boş.</p>} /></div> : null)}
+          {() => (p.values.target === "aside" ? <div class="sc-ex-app-frame"><Outlet name="aside" empty={<p class="m-muted">Yan panel boş.</p>} /></div> : null)}
         </div>
       },
     },
@@ -189,7 +189,7 @@ navigate("/photos/3", { modal: true })   // over the current page`,
         const w = watch()
         return <div class="sc-ex-app-stack">
           <Out label="navigating()" value={() => String(navigating())} />
-          <p class="hm-muted">Menüden başka bir sayfaya geçip geri dön: süreler aşağıda birikir.</p>
+          <p class="m-muted">Menüden başka bir sayfaya geçip geri dön: süreler aşağıda birikir.</p>
           <Log lines={w.busy} />
         </div>
       },
@@ -209,7 +209,7 @@ navigate("/photos/3", { modal: true })   // over the current page`,
         return <div class="sc-ex-app-stack"><Row>
           <Button onClick={start}>Uzun istek başlat</Button>
           <Out label="aborted" value={() => { path(); return String(navigationSignal()?.aborted ?? "—") }} /><Out label="süren" value={active} />
-        </Row><p class="hm-muted">Başlat, sonra başka sayfaya geçip geri dön.</p><Log lines={w.aborts} /></div>
+        </Row><p class="m-muted">Başlat, sonra başka sayfaya geçip geri dön.</p><Log lines={w.aborts} /></div>
       },
     },
     onRouteChange: {
@@ -218,7 +218,7 @@ navigate("/photos/3", { modal: true })   // over the current page`,
         const w = watch()
         return <div class="sc-ex-app-stack">
           <Out label="şimdi" value={() => route()?.path ?? "—"} />
-          <p class="hm-muted">Bu kart açıldığından beri gezilen sayfalar (başka sayfaya geçip geri dön):</p>
+          <p class="m-muted">Bu kart açıldığından beri gezilen sayfalar (başka sayfaya geçip geri dön):</p>
           <Log lines={w.routes} />
         </div>
       },
@@ -229,7 +229,7 @@ openOutlet("aside", null)         // close`,
       run: () => <div class="sc-ex-app-stack">
         <Row>{PEOPLE.map((id) => <Button size="sm" variant="secondary" onClick={() => openOutlet("aside", `/item/${id}`)}>{`openOutlet("aside", "/item/${id}")`}</Button>)}
           <Button size="sm" variant="ghost" onClick={() => openOutlet("aside", null)}>null</Button></Row>
-        <div class="sc-ex-app-frame"><Outlet name="aside" empty={<p class="hm-muted">Yan panel boş.</p>} /></div>
+        <div class="sc-ex-app-frame"><Outlet name="aside" empty={<p class="m-muted">Yan panel boş.</p>} /></div>
       </div>,
     },
     Outlet: {
@@ -244,7 +244,7 @@ openOutlet("aside", null)         // close`,
         {() => {
           const fr = p.values.frame, em = p.values.empty
           const wrap = (page: () => unknown, close: () => void, to: RouteTarget) => <Card title={`Kayıt ${to.params["id"] ?? ""}`} >{page()}</Card>
-          return untrack(() => <div class="sc-ex-app-frame">{h(Outlet, { name: "aside", empty: em ? <p class="hm-muted">Yan panel boş: bir kayıt seç.</p> : undefined, children: fr === "card" ? wrap : undefined })}</div>)
+          return untrack(() => <div class="sc-ex-app-frame">{h(Outlet, { name: "aside", empty: em ? <p class="m-muted">Yan panel boş: bir kayıt seç.</p> : undefined, children: fr === "card" ? wrap : undefined })}</div>)
         }}
       </div>,
     },
@@ -350,18 +350,18 @@ route()?.meta.title`,
 />, app)`,
       play: { options: [{ key: "state", label: "Seviye", default: "page", options: [{ value: "page", label: "Sayfa" }, { value: "skeleton", label: "skeleton" }, { value: "notFound", label: "notFound" }] }] },
       run: (p: { values: { state: string } }) => <div class="sc-ex-app-stack">
-        <p class="hm-muted">Bu sayfanın kendi Router'ı bir outlet seviyesinde şunları gösterir (ikinci bir Router açılmaz):</p>
-        <div class="sc-ex-app-frame hm-outlet">
-          <span class="sc-ex-app-tag">{() => `.hm-outlet · ${p.values.state}`}</span>
+        <p class="m-muted">Bu sayfanın kendi Router'ı bir outlet seviyesinde şunları gösterir (ikinci bir Router açılmaz):</p>
+        <div class="sc-ex-app-frame m-outlet">
+          <span class="sc-ex-app-tag">{() => `.m-outlet · ${p.values.state}`}</span>
           {() => p.values.state === "skeleton" ? skeleton("card") : p.values.state === "notFound" ? h(_router.notFoundComp, {}) : <Card title="Siparişler"><p>HADİ · 3 açık sipariş</p></Card>}
         </div>
-        <Row><Out label="bu sayfadaki outlet" value={() => { path(); return String(document.querySelectorAll(".hm-outlet[data-depth]").length) }} /><Out label="route()" value={() => route()?.route.pattern ?? "—"} /></Row>
+        <Row><Out label="bu sayfadaki outlet" value={() => { path(); return String(document.querySelectorAll(".m-outlet[data-depth]").length) }} /><Out label="route()" value={() => route()?.route.pattern ?? "—"} /></Row>
       </div>,
     },
     setHeadHandler: {
       code: `setHeadHandler((to, head, title) => applyHead(head, title))   // hadi-march/seo installs this`,
       run: () => <div class="sc-ex-app-stack">
-        <p class="hm-muted">Bu sayfada kurulu işleyici değiştirilmez. Bir sonraki gezinmede şunları alır:</p>
+        <p class="m-muted">Bu sayfada kurulu işleyici değiştirilmez. Bir sonraki gezinmede şunları alır:</p>
         <Row><Out label="to.path" value={() => route()?.path ?? "null"} /><Out label="title" value={() => { path(); return document.title }} /></Row>
       </div>,
     },
@@ -406,7 +406,7 @@ setQuery({ sort: null })              // removes a key`,
 transitionOutlet()?.style.setProperty("view-transition-name", "page")`,
       run: () => {
         const out = signal("—")
-        const read = () => { const el = transitionOutlet() as HTMLElement | null; out.set(el ? `.hm-outlet[data-depth="${el.dataset["depth"]}"] · ${el.childElementCount} çocuk` : "null") }
+        const read = () => { const el = transitionOutlet() as HTMLElement | null; out.set(el ? `.m-outlet[data-depth="${el.dataset["depth"]}"] · ${el.childElementCount} çocuk` : "null") }
         read()
         return <Row><Button onClick={read}>transitionOutlet()</Button><Out label="sonuç" value={out} /></Row>
       },
