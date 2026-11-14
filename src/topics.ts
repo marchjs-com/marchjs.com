@@ -303,6 +303,8 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "newsletter", title: "Bülten formu", desc: "Doğrulama, bekleme düğmesi, başarıda beliren onay, hatada sallanan alan ve okunan ileti.", group: "Bloklar" },
     { slug: "site-footer", title: "Altbilgi", desc: "Marka, bağlantı sütunları, sosyal bağlantılar, bülten, yasal satır, başa dön ve büyük yazı.", group: "Bloklar" },
     { slug: "before-after", title: "Önce / sonra", desc: "Sürüklenen ayırıcıyla iki katmanı karşılaştırır; basınca oraya atlar, klavyeyle ve imleci izleyerek de çalışır; yatay ya da dikey.", group: "Bloklar" },
+    { slug: "not-for-you", title: "Kimin için değil", desc: "Ürünün kimin için olmadığı (ve kimin için olduğu); ziyaretçi uyanları işaretler, dürüst bir sonuç görür.", group: "Bloklar" },
+    { slug: "honest-compare", title: "Dürüst karşılaştırma", desc: "Rakiplerle tablo; geride kalınan satırlar işaretli ve gerekçeli, özet ve yalnız eksikleri gösteren süzgeç.", group: "Bloklar" },
     { slug: "site-section", title: "Bölüm çerçevesi", desc: "Her bloğun çerçevesi: genişlik, dikey ritim, ton ve beliren başlık grubu.", group: "Bloklar" },
   ],
   "/sites": [
@@ -310,6 +312,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "portfolio", title: "Kişisel portfolyo", desc: "Süzgeçli proje ızgarası, kapağın ayrıntı sayfasına büyüdüğü geçiş, yatay vaka şeridi, deneyim çizelgesi, iletişim formu.", group: "Siteler" },
     { slug: "slides", title: "Sunum", desc: "Klavye, kaydırma ve dokunma; adım adım maddeler, konuşmacı penceresi, tam ekran, URL'de slayt numarası, yazdır.", group: "Siteler" },
     { slug: "redesign", title: "Yeniden tasarım", desc: "Anlatmak yerine göster: eski ve yeni ekran sürüklenen ayırıcıyla; akış, profil ve okuma için ayrı karşılaştırmalar.", group: "Siteler" },
+    { slug: "honest", title: "Herkes için değil", desc: "Anti-landing: önce kimin için olmadığı (işaretle, sonucu gör), geride kalınan satırlarıyla karşılaştırma, bilinen eksikler ve planı.", group: "Siteler" },
   ],
 };
 
