@@ -2,12 +2,14 @@
 // page transitions and the "everything is paused" notice, all on the motion engine.
 import "hadi-march/motion/install";
 import { h, render } from "hadi-march";
-import { pageTransitions, motion, installThemeWave } from "hadi-march/motion";
+import { pageTransitions, motion } from "hadi-march/motion";
+import { installWave } from "./wave.ts";
 import { Button } from "hadi-march/ui";
 
 pageTransitions({ type: "fade", duration: 180 });
-// a new theme, accent or light / dark spreads from the pressed point (at once without View Transitions or with reduced motion)
-installThemeWave({ shape: "drip" });
+// a new theme, accent or light / dark comes in with the chosen transition (wave.ts: paint poured from the top unless
+// another was picked on Motion › Page transitions)
+installWave();
 // the pointer light over the cards (spotlight) is the home page's own (pages/home.tsx): other pages stay calm
 
 // "Stop all" stops the whole showcase (every page, CSS loops, canvas layers, page transitions): this notice stays on

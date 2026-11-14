@@ -60,6 +60,8 @@ if (!serve || !existsSync(dist) || watching) {
     // icon packs for the Icons page: plain JSON fetched when a pack is opened (no JavaScript bundle grows)
     const packs = writeGallery(join(here, "..", "..", "src", "icons", "packs"), join(dist, "icon-packs"));
     console.log(`✔ icon packs: ${packs.length} (dist/icon-packs)`);
+    // the spray theme wave's paint worklet: a plain script the page loads from its own origin (CSP script-src 'self')
+    writeFileSync(join(dist, "spray-worklet.js"), readFileSync(join(here, "..", "..", "src", "motion", "spray-worklet.js")));
     // the whole published folder (pages, chunks, public files, icon packs) against budget.maxFiles
     const maxFiles = (await import(pathToFileURL(join(here, "march.config.js")).href)).default.budget?.maxFiles;
     const tooMany = release ? filesOver(dist, maxFiles) : null;

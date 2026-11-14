@@ -1,4 +1,4 @@
-// Motion › Page transition effects: ten variants (circle, wipe, stack, cube, flip, zoom-through, curtain, blinds,
+// Motion › Page transition effects (and the theme transitions: Tema geçişleri): ten variants (circle, wipe, stack, cube, flip, zoom-through, curtain, blinds,
 // pixel dissolve, morph). Each variant is its own route (/motion/pages/<variant>) whose meta.transition names it, so a
 // visit plays that variant; Back plays it in reverse; RTL mirrors the directional ones. All frames are engine animations.
 import "../motion-pages.css";
@@ -7,7 +7,8 @@ import { Link, path, back } from "hadi-march/router";
 import { motion } from "hadi-march/motion/engine/motion.ts";
 import { usePageTransitions, PAGE_VARIANTS } from "hadi-march/motion/page-fx.ts";
 import { definePageTransition } from "hadi-march/motion/page.ts";
-import { Button } from "hadi-march/ui";
+import { Button, setTheme, resolvedTheme, setColorTheme, colorTheme, colorThemes } from "hadi-march/ui";
+import { WAVE_SHAPES, waveShape, waveDuration, setWave } from "../../wave.ts";
 import { Section } from "../../demo.tsx";
 import { MotionDemo, opt } from "../../playground.tsx";
 import { pageFx } from "../../motion-route-meta.ts";
@@ -78,6 +79,24 @@ createRouter({ routes: {
       <nav class="sc-mo-variants" aria-label="Geçişler">
         {NAMES.map((n) => <Link href={`/motion/pages/${n}`} class={`sc-mo-variant sc-mo-t-${INFO[n]!.tone}`} aria-current={n === v ? "page" : undefined}>{INFO[n]!.label}</Link>)}
       </nav>
+    </MotionDemo>
+
+    <MotionDemo wide title="Tema geçişleri" desc="Tema, renk teması, vurgu ya da koyu / açık değişince yeni görünüm bir geçişle gelir. Geçiş boyunca sayfa canlı ve tıklanabilir kalır; eski görünüm üstte canlı bir kopya olarak durur ve boyanarak kaybolur. Seçtiğin geçiş bütün vitrinde kullanılır."
+      call={() => `installThemeWave({ shape: "${waveShape()}"${waveShape() === "spray" ? `, worklet: "/spray-worklet.js"` : ""}${waveDuration() ? `, duration: ${waveDuration()}` : ""} })`}
+      code={`import { installThemeWave } from "hadi-march/motion"
+
+installThemeWave({ shape: "drip" })            // paint poured from the top
+installThemeWave({ shape: "spray", worklet: "/spray-worklet.js" })
+// spray-worklet.js: copy hadi-march/src/motion/spray-worklet.js next to your page (CSP script-src 'self')
+// shapes: "circle" | "drip" | "spray" | "sweep" | "splat"; every setTheme / setColorTheme / setAccent uses it`}
+      options={[
+        opt("Geçiş", () => waveShape(), (x: string) => setWave(x as never, waveDuration.peek()), { options: WAVE_SHAPES }),
+        opt("Süre", () => waveDuration() ?? 0, (x: number) => setWave(waveShape.peek(), x || undefined), { min: 0, max: 4000, step: 100, unit: " ms (0: kendi süresi)" }),
+      ]}>
+      <div class="sc-row">
+        <Button variant="primary" on:click={() => setTheme(resolvedTheme() === "dark" ? "light" : "dark")}>{() => (resolvedTheme() === "dark" ? "Açık temaya geç" : "Koyu temaya geç")}</Button>
+        <Button variant="secondary" on:click={() => { const list = colorThemes(), at = list.findIndex((t) => t.id === colorTheme()); setColorTheme(list[(at + 1) % list.length]!.id) }}>Sonraki renk teması</Button>
+      </div>
     </MotionDemo>
 
     <MotionDemo title="Kendi geçişin" desc="definePageTransition ile yeni bir ad eklenir: her taraf (giden, gelen) ve yön (ileri, geri) için keyframe döndür. Bu sayfanın Sarmal geçişi böyle tanımlı; açıyı ve derinliği değiştirip dene."

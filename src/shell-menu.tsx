@@ -97,7 +97,7 @@ export default function ShellMenu() {
     </div>
     <NavSidebar items={items} title={() => section().label} subtitle={() => section().desc}
       groupOrder={MENU_GROUPS} visibleGroups={() => section().groups} groupHeads={false} nestedSubs itemOrder="none" defaultOpen="all" search={false}
-      itemSize="lg" subOverflow="marquee" storageKey="sc.sidebar" label="Vitrin menüsü" resizable minWidth={220} maxWidth={460}
+      itemSize="lg" subOverflow="marquee" recent={0} storageKey="sc.sidebar" label="Vitrin menüsü" resizable minWidth={220} maxWidth={460}
       sheetSide="bottom" menuButton={false} open={() => sheet()} onOpenChange={(o: boolean) => sheet.set(o)}
       footer={<div class="sc-nav-foot"><p class="sc-nav-foot-line">MIT · sıfır bağımlılık · CSP uyumlu</p><MadeWithMarch variant="small" /></div>} />
   </>
