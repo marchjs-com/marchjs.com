@@ -76,6 +76,7 @@ import e71 from "./managers-b/managers--storage.x.tsx";
 import e72 from "./managers-b/managers--storage-manager.x.tsx";
 import e73 from "./managers-b/managers--sync.x.tsx";
 import e74 from "./managers-b/managers--sync-manager.x.tsx";
+import e75 from "./managers-b/managers--undo-commands.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "hadi-march/managers#disposeAnnouncer": e0,
   "hadi-march/managers#disposeAppConfig": e1,
@@ -152,5 +153,6 @@ const examples: Record<string, ApiExample<any>> = {
   "hadi-march/managers#storageManager": e72,
   "hadi-march/managers#sync": e73,
   "hadi-march/managers#syncManager": e74,
+  "hadi-march/managers#undoCommands": e75,
 };
 export default examples;

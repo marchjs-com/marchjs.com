@@ -1,7 +1,8 @@
-// API examples of the app toolkit: hadi-march/store, hadi-march/i18n and hadi-march/lazy (router: app-router.tsx).
+// API examples of the app toolkit: hadi-march/props, hadi-march/store, hadi-march/i18n and hadi-march/lazy (router: app-router.tsx).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
 import { signal, effect, untrack, onCleanup, locale, setLocale, messages, t } from "hadi-march";
 import { store, derive, history, on, persist, readonly, snapshot, storeLog, subscribe, type StoreEvent } from "hadi-march/store";
+import { mProps, registerMProp } from "hadi-march/props";
 import { dir, format, loadLocale, tKey, typed, unused } from "hadi-march/i18n";
 import {
   lazy, skeleton, chunksOf, loadDelay, loaderKey, prefetchCommon, preloadChunks, preloadFiles, runLoad, saveData,
@@ -31,6 +32,34 @@ function Sales(props: { name: string }) {
 }
 
 export default examples({
+  "hadi-march/props": {
+    mProps: {
+      code: `// what the compiler writes for <Card m:user-select={locked}>…</Card>
+mProps(h(Card, { title: "Kart" }, "…"), { "user-select": locked })`,
+      run: () => {
+        const locked = signal(true)
+        return <Row>
+          <Button onClick={() => locked.set(!locked())}>{() => (locked() ? "Seçimi aç" : "Seçimi kapat")}</Button>
+          {mProps(<Card title="Kart">Bu yazıyı fareyle seçmeyi dene.</Card>, { "user-select": () => locked() || null })}
+          <Out label="m:user-select" value={() => String(locked())} />
+        </Row>
+      },
+    },
+    registerMProp: {
+      code: `registerMProp("faded", (el, on) => el.classList.toggle("m-muted", !!on))
+<p m:faded={$on}>…</p>      // works on every element and component`,
+      run: () => {
+        registerMProp("faded", (el, on) => { el.classList.toggle("m-muted", !!on) })
+        const on = signal(true)
+        return <Row>
+          <Button onClick={() => on.set(!on())}>m:faded değiştir</Button>
+          <strong m:faded={on()}>Yerel öğe</strong>
+          <Badge m:faded={on()}>Bileşen</Badge>
+          <Out label="m:faded" value={() => String(on())} />
+        </Row>
+      },
+    },
+  },
   "hadi-march/store": {
     derive: {
       code: `const total = derive(() => cart.items.reduce((s, i) => s + i.price * i.qty, 0))

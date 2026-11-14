@@ -58,7 +58,6 @@ import e53 from "./ui-c5/ui--record-list-editor.x.tsx";
 import e54 from "./ui-c6/ui--rich-text-editor.x.tsx";
 import e55 from "./ui-c6/ui--search-box.x.tsx";
 import e56 from "./ui-d/ui--section.x.tsx";
-import e57 from "./ui-d/ui--segmented.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "hadi-march/ui#FormContext": e0,
   "hadi-march/ui#GradientEditor": e1,
@@ -117,6 +116,5 @@ const examples: Record<string, ApiExample<any>> = {
   "hadi-march/ui#RichTextEditor": e54,
   "hadi-march/ui#SearchBox": e55,
   "hadi-march/ui#Section": e56,
-  "hadi-march/ui#Segmented": e57,
 };
 export default examples;

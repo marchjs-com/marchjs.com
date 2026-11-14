@@ -69,6 +69,7 @@ import e64 from "./motion-c/motion--to-linear.x.tsx";
 import e65 from "./motion-c/motion--track.x.tsx";
 import e66 from "./motion-c/motion--transition-frames.x.tsx";
 import e67 from "./motion-c/motion--tween.x.tsx";
+import e68 from "./motion-c/motion--use-page-transitions.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "hadi-march/motion#filterBlur": e0,
   "hadi-march/motion#flatten": e1,
@@ -138,5 +139,6 @@ const examples: Record<string, ApiExample<any>> = {
   "hadi-march/motion#track": e65,
   "hadi-march/motion#transitionFrames": e66,
   "hadi-march/motion#tween": e67,
+  "hadi-march/motion#usePageTransitions": e68,
 };
 export default examples;
