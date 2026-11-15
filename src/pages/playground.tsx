@@ -818,8 +818,17 @@ const readTag = (): void => {
 }
 /** The code of the last build the preview drew (the Terminal's size reads it). */
 let lastCode = ""
+// a build that came before the preview's box (coming back to the page: the kept result is there at once, the panels
+// later): drawn when the box is there
+let pendingCode = ""
+const previewReady = (el: HTMLElement): void => {
+  previewEl = el
+  const code = pendingCode
+  pendingCode = ""
+  if (code) queueMicrotask(() => void render(code))
+}
 async function render(code: string): Promise<void> {
-  if (!previewEl) return
+  if (!previewEl) { pendingCode = code; return }
   lastCode = code
   const t0 = performance.now()
   try {
@@ -832,7 +841,7 @@ async function render(code: string): Promise<void> {
 }
 const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: true, language: true }} theme={previewTheme} mode={previewMode} language={previewLang} languages={languageList}
   footer={() => (usage() ? <CodeView code={usage} lang="tsx" copy wrap label="Bileşenin kodu" /> : null)}>
-  <div class="sc-pv-root" m:no-select ref={(el: HTMLElement) => { previewEl = el }}>
+  <div class="sc-pv-root" m:no-select ref={previewReady}>
     <div class="sc-playground-empty"><b>Önizleme</b><span>Derleniyor…</span></div>
   </div>
 </AppPreview>
