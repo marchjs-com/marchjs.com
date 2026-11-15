@@ -973,7 +973,7 @@ export default function PlaygroundPage(props: { name?: string }) {
   })
   onCleanup(() => { clearTimeout(timer); consoleApi = null; previewEl = null; void runtime?.then((r) => r.stop()) })
   return <div class="sc-playground">
-    <AppUI title={props.name ?? "Test Bileşen"} tools={<PaletteButton label="Komut ara…" class="sc-playground-pal" />}
+    <AppUI title={props.name ?? "Test Bileşen"} description="bileşeni yaz, özelliklerini ayarla, önizlemede canlı dene" tools={<PaletteButton label="Komut ara…" class="sc-playground-pal" />}
       panels={PANELS} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.playground.v5" label="Playground" api={followTabs}
       kit={(k: AppKit) => { debugSvc.set(k.service<DebuggerService>("debugger") ?? null); tsSvc = k.service<TypeScriptService>("typescript") ?? null }} />
   </div>
