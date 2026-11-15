@@ -92,6 +92,15 @@ async function writePlaygroundTools(out) {
     const msgs = join(tsLib, d, "diagnosticMessages.generated.json");
     if (/^[a-z]{2}(-[a-z]{2})?$/.test(d) && existsSync(msgs)) { mkdirSync(join(out, "ts", d), { recursive: true }); copyFileSync(msgs, join(out, "ts", d, "diagnosticMessages.generated.json")); }
   }
+  // the JS / DOM API's documentation in other languages (march-app-ui lib-docs/<locale>/*.json, data, not code): one
+  // file per language beside the messages, read by the worker on the first description asked in that language
+  const libDocs = join(root, "src", "components", "composite", "app-ui", "lib-docs");
+  for (const loc of existsSync(libDocs) ? readdirSync(libDocs) : []) {
+    const merged = {};
+    for (const f of readdirSync(join(libDocs, loc)).filter((f) => f.endsWith(".json")).sort()) Object.assign(merged, JSON.parse(readFileSync(join(libDocs, loc, f), "utf8")));
+    mkdirSync(join(out, "ts", loc), { recursive: true });
+    writeFileSync(join(out, "ts", loc, "lib-docs.json"), JSON.stringify(merged));
+  }
   const sx = join(root, "src", "core", "sx.ts").split("\\").join("/");
   await esbuild.build({
     entryPoints: [join(root, "compiler", "index.js")], bundle: true, format: "esm", platform: "browser", target: "es2022", minify: true,
