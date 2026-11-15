@@ -42,6 +42,7 @@ export const PAGES: PageInfo[] = [
   { path: "/flow", title: "Akış editörü" },
   { path: "/app-ui", title: "march-app-ui" },
   { path: "/playground", title: "Playground" },
+  { path: "/test-bilesen", title: "Test Bileşen" },
   { path: "/ide", title: "IDE kabuğu" },
   { path: "/ide-live", title: "IDE kabuğu: canlı demo" },
 ];

@@ -41,6 +41,7 @@ export default {
   "/social": () => import("./pages/social.tsx"),
   "/speed": () => import("./pages/speed.tsx"),
   "/start": () => import("./pages/start.tsx"),
+  "/test-bilesen": () => import("./pages/test-bilesen.tsx"),
   "/text-motion": () => import("./pages/text-motion.tsx"),
   "/themes": () => import("./pages/themes.tsx"),
   "/transitions": () => import("./pages/transitions.tsx"),

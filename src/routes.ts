@@ -9,6 +9,8 @@ import GEN from "./routes.gen.js";
 export { restoreFrameRoute } from "./frame-reload.ts";
 
 const ROUTER_DEMO = () => import("./router-demo/_layout.tsx");
+// the component page template: a title, the page in its Outlet, Previous / Next (component-page/_layout.tsx)
+const COMPONENT_PAGE = () => import("./component-page/_layout.tsx");
 /** Lazy page loaders (path → module): generated from src/pages/ by `march gen routes` (a page file is the only line a
  * new page adds); the start page is pages/home.tsx. */
 export const LOADERS: Record<string, () => Promise<unknown>> = { ...GEN, "/": GEN["/home"] };
@@ -29,6 +31,8 @@ export const ROUTES = {
   "/navigation/router": { load: () => import("./router-demo/list.tsx"), layouts: [SHELL, ROUTER_DEMO], title: ROUTER_TITLE },
   "/navigation/router/about": { load: () => import("./router-demo/about.tsx"), layouts: [SHELL, ROUTER_DEMO], title: ROUTER_TITLE },
   "/navigation/router/item/:id": { load: () => import("./router-demo/item.tsx"), layouts: [SHELL], title: ROUTER_TITLE },
+  // the component page template, showing /playground in its middle
+  "/test-bilesen": { load: LOADERS["/test-bilesen"], layouts: [SHELL, COMPONENT_PAGE], title: "Test Bileşen" },
 };
 export const OUTLETS = { aside: { "/item/:id": () => import("./router-demo/item.tsx") } };
 
