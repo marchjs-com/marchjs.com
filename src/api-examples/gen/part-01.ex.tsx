@@ -5,174 +5,176 @@ import e0 from "./core/main--await.x.tsx";
 import e1 from "./core/main--dev.x.tsx";
 import e2 from "./core/main--dynamic.x.tsx";
 import e3 from "./core/main--else.x.tsx";
-import e4 from "./core/main--for.x.tsx";
-import e5 from "./core/main--fragment.x.tsx";
-import e6 from "./core/main--if.x.tsx";
-import e7 from "./core/main--match.x.tsx";
-import e8 from "./core/main--portal.x.tsx";
-import e9 from "./core/main---portal-target.x.tsx";
-import e10 from "./core/main--switch.x.tsx";
-import e11 from "./core/main--try.x.tsx";
-import e12 from "./core/main--_enter.x.tsx";
-import e13 from "./core/main--_leave.x.tsx";
-import e14 from "./core/main--_prop.x.tsx";
-import e15 from "./core/main--_tpl.x.tsx";
-import e16 from "./core/main--apply-pipe.x.tsx";
-import e17 from "./core/main--batch.x.tsx";
-import e18 from "./core/main--catch-error.x.tsx";
-import e19 from "./core/main--computed.x.tsx";
-import e20 from "./core/main--context.x.tsx";
-import e21 from "./core/main--create-root.x.tsx";
-import e22 from "./core/main--define.x.tsx";
-import e23 from "./core/main--effect.x.tsx";
-import e24 from "./core/main--get-owner.x.tsx";
-import e25 from "./core/main--h.x.tsx";
-import e26 from "./core/main--insert.x.tsx";
-import e27 from "./core/main--is-reactive.x.tsx";
-import e28 from "./core/main--layers.x.tsx";
-import e29 from "./core/main--lazy-children.x.tsx";
-import e30 from "./core/main--locale.x.tsx";
-import e31 from "./core/main--messages.x.tsx";
-import e32 from "./core/main--missing.x.tsx";
-import e33 from "./core/main--on-cleanup.x.tsx";
-import e34 from "./core/main--open-layer.x.tsx";
-import e35 from "./core/main--patch.x.tsx";
-import e36 from "./core/main--pipe.x.tsx";
-import e37 from "./core/main--portal-target.x.tsx";
-import e38 from "./core/main--provide.x.tsx";
-import e39 from "./core/main--reactive.x.tsx";
-import e40 from "./core/main--read.x.tsx";
-import e41 from "./core/main--register-transition.x.tsx";
-import e42 from "./core/main--render.x.tsx";
-import e43 from "./core/main--run-with-owner.x.tsx";
-import e44 from "./core/main--safe-url.x.tsx";
-import e45 from "./core/main--selector.x.tsx";
-import e46 from "./core/main--set-fallback-locale.x.tsx";
-import e47 from "./core/main--set-flip-hook.x.tsx";
-import e48 from "./core/main--set-locale.x.tsx";
-import e49 from "./core/main--signal.x.tsx";
-import e50 from "./core/main--store.x.tsx";
-import e51 from "./core/main--sx.x.tsx";
-import e52 from "./core/main--sx-value.x.tsx";
-import e53 from "./core/main--t.x.tsx";
-import e54 from "./core/main--to-date.x.tsx";
-import e55 from "./core/main--untrack.x.tsx";
-import e56 from "./core/main--unwrap.x.tsx";
-import e57 from "./core/main--use-context.x.tsx";
-import e58 from "./core/main--version.x.tsx";
-import e59 from "./platform/behaviors.dismiss--dismiss.x.tsx";
-import e60 from "./platform/behaviors.drag--arrow-step.x.tsx";
-import e61 from "./platform/behaviors.drag--draggable.x.tsx";
-import e62 from "./platform/behaviors.drag--track.x.tsx";
-import e63 from "./platform/behaviors.dropzone--dropzone.x.tsx";
-import e64 from "./platform/behaviors.list-nav--list-nav.x.tsx";
-import e65 from "./platform/behaviors.list-nav--move-cursor.x.tsx";
-import e66 from "./platform/behaviors.resize-handle--resize-handle.x.tsx";
-import e67 from "./platform/behaviors.roving-focus--roving-focus.x.tsx";
-import e68 from "./platform/behaviors.swipe--fling.x.tsx";
-import e69 from "./platform/behaviors.swipe--nearest.x.tsx";
-import e70 from "./platform/behaviors.swipe--rubber-band.x.tsx";
-import e71 from "./platform/behaviors.swipe--swipeable.x.tsx";
-import e72 from "./platform/channel---channel-scope.x.tsx";
-import e73 from "./platform/channel--channel.x.tsx";
-import e74 from "./platform/channel--channel-devtools.x.tsx";
-import e75 from "./platform/channel--channel-scope.x.tsx";
-import e76 from "./platform/channel--define-channels.x.tsx";
-import e77 from "./platform/channel--of.x.tsx";
-import e78 from "./platform/channel--on-channels.x.tsx";
-import e79 from "./platform/channel--reset-channel-tabs.x.tsx";
-import e80 from "./platform/channel--set-channel-error-handler.x.tsx";
-import e81 from "./platform/channel--use-channel.x.tsx";
-import e82 from "./charts/charts--area-chart.x.tsx";
-import e83 from "./charts/charts--bar-chart.x.tsx";
-import e84 from "./charts/charts--bar-list.x.tsx";
-import e85 from "./charts/charts--heatmap.x.tsx";
+import e4 from "./core/main---extensions.x.tsx";
+import e5 from "./core/main--for.x.tsx";
+import e6 from "./core/main--fragment.x.tsx";
+import e7 from "./core/main--if.x.tsx";
+import e8 from "./core/main--match.x.tsx";
+import e9 from "./core/main--portal.x.tsx";
+import e10 from "./core/main---portal-target.x.tsx";
+import e11 from "./core/main--switch.x.tsx";
+import e12 from "./core/main--try.x.tsx";
+import e13 from "./core/main--_enter.x.tsx";
+import e14 from "./core/main--_leave.x.tsx";
+import e15 from "./core/main--_prop.x.tsx";
+import e16 from "./core/main--_tpl.x.tsx";
+import e17 from "./core/main--apply-pipe.x.tsx";
+import e18 from "./core/main--batch.x.tsx";
+import e19 from "./core/main--catch-error.x.tsx";
+import e20 from "./core/main--computed.x.tsx";
+import e21 from "./core/main--context.x.tsx";
+import e22 from "./core/main--create-root.x.tsx";
+import e23 from "./core/main--define.x.tsx";
+import e24 from "./core/main--define-extension.x.tsx";
+import e25 from "./core/main--effect.x.tsx";
+import e26 from "./core/main--extend.x.tsx";
+import e27 from "./core/main--extensions.x.tsx";
+import e28 from "./core/main--get-owner.x.tsx";
+import e29 from "./core/main--h.x.tsx";
+import e30 from "./core/main--insert.x.tsx";
+import e31 from "./core/main--intercept.x.tsx";
+import e32 from "./core/main--is-reactive.x.tsx";
+import e33 from "./core/main--layers.x.tsx";
+import e34 from "./core/main--lazy-children.x.tsx";
+import e35 from "./core/main--locale.x.tsx";
+import e36 from "./core/main--messages.x.tsx";
+import e37 from "./core/main--missing.x.tsx";
+import e38 from "./core/main--on-cleanup.x.tsx";
+import e39 from "./core/main--open-layer.x.tsx";
+import e40 from "./core/main--patch.x.tsx";
+import e41 from "./core/main--pipe.x.tsx";
+import e42 from "./core/main--portal-target.x.tsx";
+import e43 from "./core/main--provide.x.tsx";
+import e44 from "./core/main--reactive.x.tsx";
+import e45 from "./core/main--read.x.tsx";
+import e46 from "./core/main--register-transition.x.tsx";
+import e47 from "./core/main--render.x.tsx";
+import e48 from "./core/main--run-with-owner.x.tsx";
+import e49 from "./core/main--safe-url.x.tsx";
+import e50 from "./core/main--selector.x.tsx";
+import e51 from "./core/main--set-fallback-locale.x.tsx";
+import e52 from "./core/main--set-flip-hook.x.tsx";
+import e53 from "./core/main--set-locale.x.tsx";
+import e54 from "./core/main--signal.x.tsx";
+import e55 from "./core/main--store.x.tsx";
+import e56 from "./core/main--sx.x.tsx";
+import e57 from "./core/main--sx-value.x.tsx";
+import e58 from "./core/main--t.x.tsx";
+import e59 from "./core/main--to-date.x.tsx";
+import e60 from "./core/main--untrack.x.tsx";
+import e61 from "./core/main--unwrap.x.tsx";
+import e62 from "./core/main--use-context.x.tsx";
+import e63 from "./core/main--version.x.tsx";
+import e64 from "./core/main--with-extensions.x.tsx";
+import e65 from "./platform/behaviors.dismiss--dismiss.x.tsx";
+import e66 from "./platform/behaviors.drag--arrow-step.x.tsx";
+import e67 from "./platform/behaviors.drag--draggable.x.tsx";
+import e68 from "./platform/behaviors.drag--track.x.tsx";
+import e69 from "./platform/behaviors.dropzone--dropzone.x.tsx";
+import e70 from "./platform/behaviors.list-nav--list-nav.x.tsx";
+import e71 from "./platform/behaviors.list-nav--move-cursor.x.tsx";
+import e72 from "./platform/behaviors.resize-handle--resize-handle.x.tsx";
+import e73 from "./platform/behaviors.roving-focus--roving-focus.x.tsx";
+import e74 from "./platform/behaviors.swipe--fling.x.tsx";
+import e75 from "./platform/behaviors.swipe--nearest.x.tsx";
+import e76 from "./platform/behaviors.swipe--rubber-band.x.tsx";
+import e77 from "./platform/behaviors.swipe--swipeable.x.tsx";
+import e78 from "./platform/channel---channel-scope.x.tsx";
+import e79 from "./platform/channel--channel.x.tsx";
+import e80 from "./platform/channel--channel-devtools.x.tsx";
+import e81 from "./platform/channel--channel-scope.x.tsx";
+import e82 from "./platform/channel--define-channels.x.tsx";
+import e83 from "./platform/channel--of.x.tsx";
+import e84 from "./platform/channel--on-channels.x.tsx";
+import e85 from "./platform/channel--reset-channel-tabs.x.tsx";
+import e86 from "./platform/channel--set-channel-error-handler.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "hadi-march#Await": e0,
   "hadi-march#DEV": e1,
   "hadi-march#Dynamic": e2,
   "hadi-march#Else": e3,
-  "hadi-march#For": e4,
-  "hadi-march#Fragment": e5,
-  "hadi-march#If": e6,
-  "hadi-march#Match": e7,
-  "hadi-march#Portal": e8,
-  "hadi-march#PortalTarget": e9,
-  "hadi-march#Switch": e10,
-  "hadi-march#Try": e11,
-  "hadi-march#_enter": e12,
-  "hadi-march#_leave": e13,
-  "hadi-march#_prop": e14,
-  "hadi-march#_tpl": e15,
-  "hadi-march#applyPipe": e16,
-  "hadi-march#batch": e17,
-  "hadi-march#catchError": e18,
-  "hadi-march#computed": e19,
-  "hadi-march#context": e20,
-  "hadi-march#createRoot": e21,
-  "hadi-march#define": e22,
-  "hadi-march#effect": e23,
-  "hadi-march#getOwner": e24,
-  "hadi-march#h": e25,
-  "hadi-march#insert": e26,
-  "hadi-march#isReactive": e27,
-  "hadi-march#layers": e28,
-  "hadi-march#lazyChildren": e29,
-  "hadi-march#locale": e30,
-  "hadi-march#messages": e31,
-  "hadi-march#missing": e32,
-  "hadi-march#onCleanup": e33,
-  "hadi-march#openLayer": e34,
-  "hadi-march#patch": e35,
-  "hadi-march#pipe": e36,
-  "hadi-march#portalTarget": e37,
-  "hadi-march#provide": e38,
-  "hadi-march#reactive": e39,
-  "hadi-march#read": e40,
-  "hadi-march#registerTransition": e41,
-  "hadi-march#render": e42,
-  "hadi-march#runWithOwner": e43,
-  "hadi-march#safeUrl": e44,
-  "hadi-march#selector": e45,
-  "hadi-march#setFallbackLocale": e46,
-  "hadi-march#setFlipHook": e47,
-  "hadi-march#setLocale": e48,
-  "hadi-march#signal": e49,
-  "hadi-march#store": e50,
-  "hadi-march#sx": e51,
-  "hadi-march#sxValue": e52,
-  "hadi-march#t": e53,
-  "hadi-march#toDate": e54,
-  "hadi-march#untrack": e55,
-  "hadi-march#unwrap": e56,
-  "hadi-march#useContext": e57,
-  "hadi-march#version": e58,
-  "hadi-march/behaviors/dismiss#dismiss": e59,
-  "hadi-march/behaviors/drag#arrowStep": e60,
-  "hadi-march/behaviors/drag#draggable": e61,
-  "hadi-march/behaviors/drag#track": e62,
-  "hadi-march/behaviors/dropzone#dropzone": e63,
-  "hadi-march/behaviors/list-nav#listNav": e64,
-  "hadi-march/behaviors/list-nav#moveCursor": e65,
-  "hadi-march/behaviors/resize-handle#resizeHandle": e66,
-  "hadi-march/behaviors/roving-focus#rovingFocus": e67,
-  "hadi-march/behaviors/swipe#fling": e68,
-  "hadi-march/behaviors/swipe#nearest": e69,
-  "hadi-march/behaviors/swipe#rubberBand": e70,
-  "hadi-march/behaviors/swipe#swipeable": e71,
-  "hadi-march/channel#ChannelScope": e72,
-  "hadi-march/channel#channel": e73,
-  "hadi-march/channel#channelDevtools": e74,
-  "hadi-march/channel#channelScope": e75,
-  "hadi-march/channel#defineChannels": e76,
-  "hadi-march/channel#of": e77,
-  "hadi-march/channel#onChannels": e78,
-  "hadi-march/channel#resetChannelTabs": e79,
-  "hadi-march/channel#setChannelErrorHandler": e80,
-  "hadi-march/channel#useChannel": e81,
-  "hadi-march/charts#AreaChart": e82,
-  "hadi-march/charts#BarChart": e83,
-  "hadi-march/charts#BarList": e84,
-  "hadi-march/charts#Heatmap": e85,
+  "hadi-march#Extensions": e4,
+  "hadi-march#For": e5,
+  "hadi-march#Fragment": e6,
+  "hadi-march#If": e7,
+  "hadi-march#Match": e8,
+  "hadi-march#Portal": e9,
+  "hadi-march#PortalTarget": e10,
+  "hadi-march#Switch": e11,
+  "hadi-march#Try": e12,
+  "hadi-march#_enter": e13,
+  "hadi-march#_leave": e14,
+  "hadi-march#_prop": e15,
+  "hadi-march#_tpl": e16,
+  "hadi-march#applyPipe": e17,
+  "hadi-march#batch": e18,
+  "hadi-march#catchError": e19,
+  "hadi-march#computed": e20,
+  "hadi-march#context": e21,
+  "hadi-march#createRoot": e22,
+  "hadi-march#define": e23,
+  "hadi-march#defineExtension": e24,
+  "hadi-march#effect": e25,
+  "hadi-march#extend": e26,
+  "hadi-march#extensions": e27,
+  "hadi-march#getOwner": e28,
+  "hadi-march#h": e29,
+  "hadi-march#insert": e30,
+  "hadi-march#intercept": e31,
+  "hadi-march#isReactive": e32,
+  "hadi-march#layers": e33,
+  "hadi-march#lazyChildren": e34,
+  "hadi-march#locale": e35,
+  "hadi-march#messages": e36,
+  "hadi-march#missing": e37,
+  "hadi-march#onCleanup": e38,
+  "hadi-march#openLayer": e39,
+  "hadi-march#patch": e40,
+  "hadi-march#pipe": e41,
+  "hadi-march#portalTarget": e42,
+  "hadi-march#provide": e43,
+  "hadi-march#reactive": e44,
+  "hadi-march#read": e45,
+  "hadi-march#registerTransition": e46,
+  "hadi-march#render": e47,
+  "hadi-march#runWithOwner": e48,
+  "hadi-march#safeUrl": e49,
+  "hadi-march#selector": e50,
+  "hadi-march#setFallbackLocale": e51,
+  "hadi-march#setFlipHook": e52,
+  "hadi-march#setLocale": e53,
+  "hadi-march#signal": e54,
+  "hadi-march#store": e55,
+  "hadi-march#sx": e56,
+  "hadi-march#sxValue": e57,
+  "hadi-march#t": e58,
+  "hadi-march#toDate": e59,
+  "hadi-march#untrack": e60,
+  "hadi-march#unwrap": e61,
+  "hadi-march#useContext": e62,
+  "hadi-march#version": e63,
+  "hadi-march#withExtensions": e64,
+  "hadi-march/behaviors/dismiss#dismiss": e65,
+  "hadi-march/behaviors/drag#arrowStep": e66,
+  "hadi-march/behaviors/drag#draggable": e67,
+  "hadi-march/behaviors/drag#track": e68,
+  "hadi-march/behaviors/dropzone#dropzone": e69,
+  "hadi-march/behaviors/list-nav#listNav": e70,
+  "hadi-march/behaviors/list-nav#moveCursor": e71,
+  "hadi-march/behaviors/resize-handle#resizeHandle": e72,
+  "hadi-march/behaviors/roving-focus#rovingFocus": e73,
+  "hadi-march/behaviors/swipe#fling": e74,
+  "hadi-march/behaviors/swipe#nearest": e75,
+  "hadi-march/behaviors/swipe#rubberBand": e76,
+  "hadi-march/behaviors/swipe#swipeable": e77,
+  "hadi-march/channel#ChannelScope": e78,
+  "hadi-march/channel#channel": e79,
+  "hadi-march/channel#channelDevtools": e80,
+  "hadi-march/channel#channelScope": e81,
+  "hadi-march/channel#defineChannels": e82,
+  "hadi-march/channel#of": e83,
+  "hadi-march/channel#onChannels": e84,
+  "hadi-march/channel#resetChannelTabs": e85,
+  "hadi-march/channel#setChannelErrorHandler": e86,
 };
 export default examples;

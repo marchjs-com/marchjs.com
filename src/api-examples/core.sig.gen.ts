@@ -6,6 +6,7 @@ const sig: Record<string, Record<string, string>> = {
   "DEV": "const DEV: { enabled: boolean; warn: (...a: unknown[]) => void }",
   "Dynamic": "function Dynamic(props: DynamicProps): () => unknown",
   "Else": "function Else(props: { children?: unknown }): unknown",
+  "Extensions": "function Extensions(props: { use: UseList | (() => UseList); children?: unknown }): unknown",
   "For": "function For<T>(props: ForProps<T>): DocumentFragment",
   "Fragment": "const Fragment = (props: { children?: unknown }): unknown =>",
   "If": "function If<T>(props: IfProps<T>): () => unknown",
@@ -25,10 +26,14 @@ const sig: Record<string, Record<string, string>> = {
   "context": "function context<T>(defaultValue?: T): Context<T>",
   "createRoot": "function createRoot<T>(fn: (dispose: Cleanup) => T, parent: Owner | null = Owner): T",
   "define": "function define<K extends string = never>(tag: string, Comp: Component<DefineProps<K>>, { props = [], shadow = false }: DefineOptions<K> = {}): CustomElementConstructor",
+  "defineExtension": "function defineExtension<P extends Props = Props>(def: ExtensionDef<P>): Extension<P>",
   "effect": "function effect(fn: () => void): Cleanup",
+  "extend": "function extend<P extends Props>(target: ExtensionTarget, ext: Extension<P> | ExtensionDef<P>): () => void",
+  "extensions": "const extensions",
   "getOwner": "const getOwner = (): Owner | null =>",
   "h": "function h<P extends object>(type: Component<P>, props: P | null, ...children: unknown[]): unknown",
   "insert": "function insert(parent: Node, value: unknown, before: Node | null = null, owned?: unknown): void",
+  "intercept": "function intercept<P extends Props>(target: AnyComp | readonly AnyComp[] | { test: (component: AnyComp, info: ComponentInfo) => boolean }, def: ExtensionDef<P> | Extension<P>): () => void",
   "isReactive": "const isReactive = (v: unknown): v is (() => unknown) =>",
   "layers": "const layers = (): readonly { kind: LayerKind; el: HTMLElement }[] =>",
   "lazyChildren": "function lazyChildren<F extends () => unknown>(fn: F): F",
@@ -60,7 +65,8 @@ const sig: Record<string, Record<string, string>> = {
   "untrack": "function untrack<T>(fn: () => T): T",
   "unwrap": "function unwrap<T>(s: T): T",
   "useContext": "function useContext<T>(ctx: { id: symbol; defaultValue: T }): T",
-  "version": "const version"
+  "version": "const version",
+  "withExtensions": "function withExtensions<T>(use: UseList | (() => UseList | null | undefined), render: () => T): T"
  }
 };
 export default sig;

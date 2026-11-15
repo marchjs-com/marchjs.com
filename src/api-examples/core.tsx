@@ -5,7 +5,7 @@ import {
   useContext, reactive, isReactive, read, DEV, _enter, _leave, _tpl, _prop, store, patch, unwrap, h, Fragment, insert, lazyChildren,
   safeUrl, registerTransition, If, Else, For, Switch, Match, Try, Await, Dynamic, setFlipHook, Portal, PortalTarget,
   portalTarget, openLayer, layers, render, define, pipe, applyPipe, toDate, t, locale, messages, missing,
-  setFallbackLocale, sx, sxValue, version,
+  setFallbackLocale, sx, sxValue, version, extend, intercept, defineExtension, withExtensions, Extensions, extensions,
 } from "hadi-march";
 import { Button, Badge, Segmented } from "hadi-march/ui";
 import { examples } from "./types.ts";
@@ -18,6 +18,13 @@ function Counter(props: { label?: string }) {
   const n = signal(0)
   return <Button onClick={() => n.update((x) => x + 1)}>{() => `${props.label ?? "Sayaç"}: ${n()}`}</Button>
 }
+
+/** A small local component the extension examples change (so nothing else on the page is touched). */
+function Chip(props: { label: string; tone?: "neutral" | "danger"; onClick?: () => void }) {
+  return <Button variant={props.tone === "danger" ? "danger" : "secondary"} onClick={() => props.onClick?.()}>{() => props.label}</Button>
+}
+type Lines = (() => string[]) & { update(fn: (l: string[]) => string[]): unknown }
+const logLine = (s: Lines, line: string) => s.update((l) => [...l.slice(-4), `${now()} ${line}`])
 
 export default examples({
   "hadi-march": {
@@ -65,6 +72,124 @@ _$t1((r) => { insert(r.firstChild, () => row().id, null) })`,
         const out = signal("—")
         const go = async () => { out.set("bekleniyor…"); out.set(await _leave(new Promise<string>((r) => setTimeout(() => r("geldi"), 400)))) }
         return <Row><Button onClick={go}>_leave ile bekle</Button><Out label="Sonuç" value={out} /></Row>
+      },
+    },
+    extend: {
+      code: `const track = defineExtension({
+  name: "track",
+  props: { track: { type: "string", doc: "Event sent on click" } },
+  setup: ({ props, roots, onCleanup }) => roots().forEach((el) => {
+    const send = () => analytics.send(props.track)
+    el.addEventListener("click", send); onCleanup(() => el.removeEventListener("click", send))
+  }),
+})
+const off = extend([Chip], track)    // every Chip takes track now, no wrapper
+<Chip label="Kaydet" track="save" />`,
+      run: () => {
+        const lines = signal<string[]>([])
+        const track = defineExtension<{ track: string }>({
+          name: "track",
+          props: { track: { type: "string", doc: "Tıklamada gönderilen olay" } },
+          setup({ props, roots, onCleanup }) {
+            const send = () => logLine(lines, `olay: ${props.track}`)
+            for (const el of roots()) { el.addEventListener("click", send); onCleanup(() => el.removeEventListener("click", send)) }
+          },
+        })
+        onCleanup(extend([Chip], track))
+        return <Row>{h(Chip, { label: "Kaydet", track: "save" })} {h(Chip, { label: "Paylaş", track: "share" })} {h(Chip, { label: "İzlenmeyen" })}<Log lines={lines} /></Row>
+      },
+    },
+    intercept: {
+      code: `// a confirm step before a dangerous click, without touching Chip
+intercept(Chip, {
+  name: "confirm-danger",
+  on: { onClick: (next, p) => (p.tone === "danger" ? ask().then((ok) => ok && next()) : next()) },
+})
+// every Chip small-caps its label unless it says otherwise
+intercept(Chip, { name: "upper", props: (p) => ({ label: p.label.toUpperCase() }) })`,
+      run: () => {
+        const lines = signal<string[]>([])
+        const armed = signal(false)
+        onCleanup(intercept(Chip, {
+          name: "confirm-danger",
+          on: { onClick: (next, p) => { const tone = (p as { tone?: string }).tone; if (tone !== "danger" || armed()) return next(); logLine(lines, "durduruldu: önce onayla"); return undefined } },
+        }))
+        onCleanup(intercept(Chip, { name: "upper", props: (p) => ({ label: String(p["label"]).toLocaleUpperCase("tr-TR") }) }))
+        return <Row>
+          {h(Chip, { label: "Sil", tone: "danger", onClick: () => logLine(lines, "silindi") })}
+          {h(Chip, { label: "Kopyala", onClick: () => logLine(lines, "kopyalandı") })}
+          <Button onClick={() => armed.set(!armed())}>{() => (armed() ? "Onay: verildi" : "Onay ver")}</Button>
+          <Log lines={lines} />
+        </Row>
+      },
+    },
+    defineExtension: {
+      code: `export const testIds = defineExtension({
+  name: "test-ids",
+  props: { testId: { type: "string", doc: "data-testid on the root" } },
+  setup({ props, roots }) { for (const el of roots()) el.setAttribute("data-testid", props.testId) },
+})
+// declare it once for the JSX types:
+declare module "hadi-march" { interface ExtensionProps extends ExtensionPropsOf<typeof testIds> {} }`,
+      run: () => {
+        const testIds = defineExtension<{ testId: string }>({
+          name: "test-ids",
+          props: { testId: { type: "string", doc: "Kökteki data-testid" } },
+          setup({ props, roots }) { for (const el of roots()) el.setAttribute("data-testid", props.testId) },
+        })
+        let host!: HTMLElement
+        const ids = signal("—")
+        return <Row>
+          <span ref={(el) => { host = el as HTMLElement }}>{withExtensions([testIds], () => [h(Chip, { label: "Gönder", testId: "send" }), " ", h(Chip, { label: "İptal", testId: "cancel" })])}</span>
+          <Button onClick={() => ids.set([...host.querySelectorAll("[data-testid]")].map((e) => e.getAttribute("data-testid")).join(", "))}>data-testid oku</Button>
+          <Out label="data-testid" value={ids} />
+        </Row>
+      },
+    },
+    withExtensions: {
+      code: `// only inside: every Button drawn here is small, the ones outside stay as they are
+withExtensions([defineExtension({ name: "small", target: Button, props: (p) => ({ size: p.size ?? "sm" }) })],
+  () => <Toolbar>…</Toolbar>)`,
+      run: () => {
+        const small = defineExtension({ name: "small", target: Button, props: (p) => ({ size: p["size"] ?? "sm" }) })
+        return <Row>
+          {withExtensions([small], () => [<Button>Kapsamda</Button>, " ", <Button>Bu da küçük</Button>])}
+          <Button>Kapsam dışında</Button>
+        </Row>
+      },
+    },
+    Extensions: {
+      code: `const badge = defineExtension({
+  name: "new-badge", target: Chip,
+  props: { isNew: { type: "boolean" } },
+  render: (next, p) => (p.isNew ? <span class="with-badge">{next()} <Badge>yeni</Badge></span> : next()),
+})
+<Extensions use={[badge]}><Chip label="Raporlar" isNew /> <Chip label="Ayarlar" /></Extensions>
+<Chip label="Raporlar" isNew m:extend={false} />   // this one takes no extension`,
+      run: () => {
+        const badge = defineExtension<{ isNew: boolean }>({
+          name: "new-badge", target: Chip,
+          props: { isNew: { type: "boolean", doc: "Yeni rozeti" } },
+          render: (next, p) => (p.isNew ? <span class="sc-row">{next()} <Badge tone="success">yeni</Badge></span> : next()),
+        })
+        return <Row>
+          <Extensions use={[badge]}>{h(Chip, { label: "Raporlar", isNew: true })} {h(Chip, { label: "Ayarlar" })} {h(Chip, { label: "Dışarıda kalan", isNew: true, "m:extend": false })}</Extensions>
+        </Row>
+      },
+    },
+    extensions: {
+      code: `extensions.list()          // [{ name, target, scope, does, props }] (reactive)
+extensions.of(element)     // { component, steps: [{ name, did: ["props"], before, after }] }`,
+      run: () => {
+        onCleanup(intercept(Chip, { name: "retitle", props: (p) => ({ label: `${String(p["label"])} ✓` }) }))
+        let host!: HTMLElement
+        const seen = signal("—")
+        return <Row>
+          <span ref={(el) => { host = el as HTMLElement }}>{h(Chip, { label: "Belge" })}</span>
+          <Button onClick={() => { const t = extensions.of(host.querySelector("button")); seen.set(t ? t.steps.map((s) => `${s.name}: ${s.did.join("+")} (${String(s.before?.["label"])} → ${String(s.after?.["label"])})`).join("; ") : "yok") }}>Bu bileşene ne oldu?</Button>
+          <Out label="kayıtlı" value={() => extensions.list().map((x) => x.name).join(", ") || "—"} />
+          <Out label="extensions.of" value={seen} />
+        </Row>
       },
     },
     applyPipe: {
