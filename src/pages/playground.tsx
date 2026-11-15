@@ -190,12 +190,12 @@ const SX_SPEC = SX as unknown as Record<string, readonly (string | number)[]>
 const sxValues = (k: string): string[] => { const s = SX_SPEC[k] ?? [], lo = s[0], hi = s[1]; return typeof lo === "number" ? Array.from({ length: (hi as number) - lo + 1 }, (_, i) => String(lo + i)) : s.map(String) }
 // keys whose words combine, and the words of each that exclude each other (one size, one colour, one alignment…)
 const SX_GROUPS: Record<string, readonly (readonly string[])[]> = {
-  text: [["xs", "sm", "md", "lg", "xl", "2xl"], ["muted", "danger", "success", "warn"], ["left", "center", "right"], ["mono"], ["bold"]],
+  text: [["xs", "sm", "md", "lg", "xl", "2xl"], ["left", "center", "right"], ["mono"], ["bold"]],
   flex: [["row", "col"], ["wrap"], ["center", "between", "end"], ["grow"]],
 }
 const sxOptions = (): PlaygroundOption[] => Object.keys(SX_SPEC).map((k) => ({ key: `sx:${k}`, label: k, prop: `sx.${k}`, default: "", kind: "text" as const }))
 // March's common props (hadi-march/props): every component takes them
-const COMMON_PROPS = ["m:color", "m:text-color", "m:dir", "m:lang", "m:no-select", "m:reveal", "m:test", "m:theme", "m:tip"]
+const COMMON_PROPS = ["m:color", "m:dir", "m:lang", "m:no-select", "m:reveal", "m:test", "m:theme", "m:tip"]
 const COMMON_BOOL = new Set(["m:no-select", "m:reveal"])
 // the values an attribute (or an exported prop) takes: one of a list (a select), one of a list or your own (`own`:
 // an editable select), several (`multi`: chips, written space-separated)
@@ -208,7 +208,6 @@ const ATTR_VALUES: Record<string, ValueSet> = {
   spellcheck: { list: ["true", "false"] },
   "aria-hidden": { list: ["true", "false"] },
   "m:color": { list: COLOR_TOKENS },
-  "m:text-color": { list: [...COLOR_TOKENS, "muted"] },
   "m:dir": { list: ["ltr", "rtl"] },
   "m:lang": { list: ["tr", "en", "de", "fr", "es", "ar", "ru", "ja"], own: true },
   role: { list: ROLES, own: true },
@@ -394,6 +393,8 @@ const asPropertyBase = (o: PlaygroundOption): PropertySpec => {
       const k = String(o.label), opts = [{ value: "", label: "—", title: "yok" }, ...sxValues(k).map((x) => ({ value: x, label: x }))]
       // keys whose words combine (text: muted + center + bold; flex: row + wrap): one per group
       if (SX_GROUPS[k]) return { key: o.key, label: o.label, group: SX_GROUP, control: chipsControl(opts, k, true, SX_GROUPS[k]) } as PropertySpec
+      // color: each token's chip in its colour
+      if (k === "color") return { key: o.key, label: o.label, group: SX_GROUP, control: chipsControl(opts.map((x) => (x.value && x.value !== "muted" ? { ...x, color: x.value } : x)), k) } as PropertySpec
       return (opts.length <= SEGMENTS ? { key: o.key, label: o.label, group: SX_GROUP, type: "segmented", options: opts } : { key: o.key, label: o.label, group: SX_GROUP, control: chipsControl(opts, k) }) as PropertySpec
     }
     const group = isA11y(o) ? A11Y_GROUP : o.key.startsWith("mp:") ? COMMON_GROUP : o.key.startsWith("api:") ? MARCH_GROUP : HTML_GROUP, label = o.label
@@ -408,7 +409,7 @@ const asPropertyBase = (o: PlaygroundOption): PropertySpec => {
     if (set) {
       const opts = [{ value: "", label: "—", title: "boş (bileşenin varsayılanı)" }, ...set.list.map((x) => ({ value: x, label: x }))]
       if (opts.length <= SEGMENTS) return { key: o.key, label, group, type: "segmented", options: opts } as PropertySpec
-      return { key: o.key, label, group, control: chipsControl(opts.map((x) => ((name === "m:color" || name === "m:text-color") && x.value && x.value !== "muted" ? { ...x, color: x.value } : x)), name) } as PropertySpec
+      return { key: o.key, label, group, control: chipsControl(opts.map((x) => (name === "m:color" && x.value ? { ...x, color: x.value } : x)), name) } as PropertySpec
     }
     return { key: o.key, label, group, type: typeof o.default === "boolean" ? "switch" : "text" } as PropertySpec
   }
