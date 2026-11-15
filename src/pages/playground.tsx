@@ -748,7 +748,11 @@ const evalLine = async (line: string, io: TerminalIO): Promise<void> => {
   if (at) io.print(`🐞 ${dbg!.session.shown()?.fn ?? ""} kapsamında`, { tone: "muted" })
   show(await r.evaluate(line, { $el: chosenEl(), $preview: previewEl, $props: propsFor(selected.peek()), toast, ...at }), io)
 }
-const terminalPanel = () => <Terminal scheme="dark" height="100%" prompt="› " persist="sc.playground" label="Playground terminali" class="sc-console"
+// switched to (its tab pressed, or opened from the palette): the input takes the focus, so typing starts at once; not
+// when the page opens with it in front (the focus stays where it is)
+let termApi: TerminalApi | null = null
+const focusTerminal = (): void => { const at = document.activeElement; if (at && at !== document.body) termApi?.focus() }
+const terminalPanel = () => <Terminal ref={(api: TerminalApi) => { termApi = api }} scheme="dark" height="100%" prompt="› " persist="sc.playground" label="Playground terminali" class="sc-console"
   commands={COMMANDS} fallback={evalLine} labels={{ command: "Komut ya da JavaScript" }}
   welcome={["[info] help: komutlar · Tab: tamamla · ↑ ↓: geçmiş", "[info] Komut olmayan satır JavaScript olarak önizlemede çalışır: count.set(3), $el, $props"]} />
 // lang.json: the texts the last build found (JSX text, titles, labels…), as a locale file lists them
@@ -870,7 +874,7 @@ const PANELS: AppPanel[] = [
   fileTab("c2", "Component2.tsx"),
   fileTab("c3", "Component3.tsx"),
   { id: "console", title: "Konsol", icon: code, content: consolePanel },
-  { id: "terminal", title: "Terminal", icon: terminal, content: terminalPanel },
+  { id: "terminal", title: "Terminal", icon: terminal, content: terminalPanel, onShow: focusTerminal },
   { id: "i18n", title: "lang.json", icon: globe, content: langPanel },
 ]
 const PRESETS: Record<string, Preset> = {
