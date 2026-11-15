@@ -4,12 +4,12 @@
 // with reduced motion). Every number comes from home-stats.gen.ts (tools/gen-home-stats.js) or from march-report.json
 // (this build's measured sizes); none is typed here.
 import "./sections.css";
-import { inView, reducedMotion } from "march/motion";
-import { tilt } from "march/motion/text";
+import { onCleanup } from "march";
+import { reducedMotion, scrollTimeline } from "march/motion";
 import { Link } from "march/router";
 import { appUrl } from "march/base";
 import { Button, Card, CodeView, IconTile, Kbd, ListRow, MadeWithMarch, StatTile, heartBurst, openPalette } from "march/ui";
-import { Reveal, SectionHead, StatsBand } from "march/components/landing/index.ts";
+import { Reveal, SectionHead, StatsBand, revealOnScroll } from "march/components/landing/index.ts";
 import { search, sparkles } from "march/icons";
 import { BRAND_COLORS_ALL, type ColorToken } from "march/theme/colors.ts";
 import { HOME_STATS as S } from "../home-stats.gen.ts";
@@ -19,18 +19,33 @@ import { withMeta, SECTIONS, sectionOf, type NavSection } from "../nav-meta.ts";
 interface Report { entry?: { js: number }; boot?: { js: number } | null }
 const kb = (bytes: number): number => Math.round((bytes / 1024) * 10) / 10;
 
-/** Action on a heading: its words tilt in one after another when it scrolls into view (the text is there at once with reduced motion). */
+/** Action on a heading: its words tilt in one after another as it scrolls into view, tied to the scroll position
+ * (scrolling back up winds them back); the text is simply there with reduced motion. */
 function words(el: Element): () => void {
   if (reducedMotion() || el.ownerDocument?.documentElement.hasAttribute("data-m-hydrating")) return () => {}
   const h = el as HTMLElement
-  h.style.setProperty("opacity", "0")
-  return inView(el, { once: true, enter: () => { h.style.removeProperty("opacity"); tilt(h, { by: "word", stagger: 70, duration: 700 }) } })
+  let stop = (): void => {}, text = "", live = true
+  // the text goes in after the action runs: the words are split a moment later
+  queueMicrotask(() => {
+    text = h.textContent ?? ""
+    if (!live || !text.trim()) return
+    h.replaceChildren(...text.split(/(\s+)/).map((w) => {
+      if (!w.trim()) return document.createTextNode(w)
+      const s = document.createElement("span")
+      s.className = "sc-word"
+      s.textContent = w
+      return s
+    }))
+    stop = scrollTimeline([...h.querySelectorAll<HTMLElement>(".sc-word")], { opacity: [0, 1], transform: ["perspective(600px) translateY(.45em) rotateX(-55deg)", "perspective(600px) translateY(0) rotateX(0deg)"] },
+      { track: h, range: [0, 0.35], easing: "out", stagger: 70 })
+  })
+  return () => { live = false; stop() }
 }
 
 /** The head of a section: a small colored kicker, the title built word by word, an optional lead. */
 function Head(props: { kicker: string; title: string; lead?: string; color: ColorToken; id: string }) {
   return <SectionHead class="sc-sec-head" align="start" width="full" size="lg" m:color={props.color} eyebrow={props.kicker} titleId={props.id}
-    title={<span use:words>{props.title}</span>} lead={props.lead} reveal={{ effect: "up", stagger: 90 }} />
+    title={<span use:words>{props.title}</span>} lead={props.lead} reveal={{ effect: "up", scrub: true }} />
 }
 
 // ── counters ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -42,7 +57,7 @@ function Stats() {
     { value: S.dependencies, label: "bağımlılık" },
   ]
   return <section class="sc-stats sc-card" aria-label="Rakamlarla March">
-    <StatsBand items={items} variant="plain" reveal={{ effect: "scale", stagger: 60 }} />
+    <StatsBand items={items} variant="plain" reveal={{ effect: "scale", scrub: true }} />
   </section>
 }
 
@@ -71,20 +86,23 @@ function WorldMap() {
   return <section class="sc-sec" aria-labelledby="sc-map-h">
     <Head id="sc-map-h" kicker="Harita" color="brand-orange" title="Her şey tek bakışta"
       lead={`${worlds.length} bölüm, ${total} kategori; hepsi bu ekranda. Soldaki şerit aynı bölümleri her sayfada taşır.`} />
-    <Reveal class="sc-map" effect="up" stagger={70}>
-      {worlds.map(({ s, rows }) => <Card class={`sc-map-world sc-card${rows.length > LONG ? " is-wide" : ""}`} title={s.label} subtitle={s.desc}>
-        <Reveal class="sc-map-rows" effect="start" distance={14} stagger={45} delay={250} duration={500}>
+    {/* each card rises as it itself scrolls into view, tied to the scroll position (scrolling up winds it back); one
+        Reveal around them all played as soon as the map's top came in, so the lower cards had finished unseen */}
+    <div class="sc-map">
+      {worlds.map(({ s, rows }, i) => <Card class={`sc-map-world sc-card${rows.length > LONG ? " is-wide" : ""}`} title={s.label} subtitle={s.desc}
+        ref={(el: Element) => onCleanup(revealOnScroll(el, { effect: "up", self: true, scrub: true, distance: 36 + (i % 3) * 12 }))}>
+        <Reveal class="sc-map-rows" effect="start" distance={14} scrub>
           {rows.map((p) => { const n = under(p), color = BRAND_COLORS_ALL[k++ % BRAND_COLORS_ALL.length]!; return <ListRow class="sc-map-row" href={p.path} overflow="ellipsis" color={color}
             lead={<IconTile icon={p.icon} m:color={color} size="sm" />} title={p.title} sub={p.desc}
             trail={n ? <span class="sc-map-n" data-m-color={color}>{n}</span> : undefined} /> })}
         </Reveal>
       </Card>)}
-      <Card class="sc-map-find">
+      <Card class="sc-map-find" ref={(el: Element) => onCleanup(revealOnScroll(el, { effect: "up", self: true, scrub: true }))}>
         <p class="sc-map-find-t">Adını biliyorsan doğrudan git.</p>
         <p class="sc-map-find-x">Bileşen, sayfa ya da eylem: yazmaya başla, Enter ile aç.</p>
         <Button icon={search} onClick={openPalette}>Ara <Kbd keys="mod+k" /></Button>
       </Card>
-    </Reveal>
+    </div>
   </section>
 }
 
@@ -100,7 +118,7 @@ function Fast(props: { report: () => Report | null }) {
   ]
   return <section class="sc-sec" aria-labelledby="sc-fast-h">
     <Head id="sc-fast-h" kicker="Hız ve boyut" color="brand-blue" title="Küçük açılır, büyüdükçe yavaşlamaz" />
-    <Reveal class="sc-fast" effect="up" stagger={90}>
+    <Reveal class="sc-fast" effect="up" scrub>
       {cards.map((c) => <StatTile class="sc-fast-card sc-card" variant="card" size="xl" align="start" m:color={c.color} value={c.value} label={c.label}
         hint={<>{c.text}{() => { const m = c.more?.(); return m ? <span class="sc-fast-more">{m}</span> : null }}</>} />)}
     </Reveal>
@@ -122,8 +140,8 @@ function Start() {
   return <section class="sc-sec" aria-labelledby="sc-start-h">
     <Head id="sc-start-h" kicker="Başla" color="brand-green" title="Üç satırda ilk ekran" />
     <div class="sc-start">
-      <Reveal class="sc-start-code" self effect="start" distance={46}><CodeView code={START} lang="tsx" wrap label="Örnek kod" /></Reveal>
-      <Reveal class="sc-start-out sc-card" self effect="end" distance={46} delay={70}>
+      <Reveal class="sc-start-code" self effect="start" distance={46} scrub><CodeView code={START} lang="tsx" wrap label="Örnek kod" /></Reveal>
+      <Reveal class="sc-start-out sc-card" self effect="end" distance={46} scrub>
         <span class="sc-start-out-l">Sonuç</span>
         <Button variant="primary" icon={sparkles} on:click={(e: Event) => heartBurst(e.currentTarget as HTMLElement, { radius: 46 })}>Merhaba</Button>
       </Reveal>
