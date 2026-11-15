@@ -116,14 +116,15 @@
    Shaded like cloth (darker sides, a light fold line), a dashed stitch inside each edge, a swallowtail end; the drop
    shadow sits on the link, the shape on its body (a clip-path would cut the shadow). It follows the accent colour.
    Hover: it grows longer from its tail (the top stays on the edge) and a sheen crosses it; the colours stay, so it
-   stays readable. The text is the theme's own font. */
-.sc-oss { --sc-oss-c: var(--m-accent, var(--m-primary-fill, var(--m-primary-solid))); position: absolute; z-index: 3; inset-block-start: 0; inset-inline-end: calc(var(--sc-gutter) + var(--m-space-2));
+   stays readable. The text is the active theme's heading font (it changes with the theme), engraved into the cloth:
+   a dark edge above each letter, a light one below (it reads on a light or a dark accent). */
+.sc-oss { --sc-oss-c: var(--m-accent, var(--m-primary-solid, var(--m-primary))); position: absolute; z-index: 3; inset-block-start: 0; inset-inline-end: calc(var(--sc-gutter) + var(--m-space-2));
   display: block; color: var(--m-on-accent, var(--m-on-primary)); text-decoration: none;
   filter: drop-shadow(0 .5rem .75rem color-mix(in srgb, var(--m-scrim) 26%, transparent)) drop-shadow(0 1px 1px color-mix(in srgb, var(--m-scrim) 20%, transparent));
   animation: sc-oss-drop .9s var(--m-ease-spring) .35s both; }
 .sc-oss-body { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: .45rem;
   inline-size: 4.5rem; padding: 1.15rem .5rem 1.75rem; box-sizing: border-box; text-align: center;
-  font: 600 var(--m-text-xs) / 1.2 var(--m-font); letter-spacing: .01em;
+  font: var(--m-display-weight, 700) var(--m-text-sm) / 1.15 var(--m-font-display, var(--m-font)); letter-spacing: .01em;
   transition: padding-block-end var(--m-dur-slow) var(--m-ease-spring);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - .85rem), 0 100%);
   background:
@@ -135,7 +136,11 @@
 /* the sheen that crosses it on hover */
 .sc-oss-body::after { content: ""; position: absolute; inset: -20% -60%; background: linear-gradient(105deg, transparent 42%, color-mix(in srgb, var(--m-on-primary) 38%, transparent) 50%, transparent 58%);
   translate: -70% 0; transition: translate .7s var(--m-ease-out); pointer-events: none; }
-.sc-oss-text { display: grid; gap: .1rem; text-shadow: 0 1px 0 color-mix(in srgb, var(--m-scrim) 25%, transparent); }
+.sc-oss-text { display: grid; gap: .1rem; }
+/* engraved: the letters and the mark pressed into the ribbon */
+.sc-oss-text, .sc-oss-body > .m-svg { color: color-mix(in srgb, var(--m-on-accent, var(--m-on-primary)) 78%, var(--sc-oss-c));
+  text-shadow: 0 -1px 0 color-mix(in srgb, var(--m-scrim) 58%, transparent), 0 1px 0 color-mix(in srgb, var(--m-on-primary) 36%, transparent); }
+.sc-oss-body > .m-svg { filter: drop-shadow(0 -1px 0 color-mix(in srgb, var(--m-scrim) 58%, transparent)) drop-shadow(0 1px 0 color-mix(in srgb, var(--m-on-primary) 36%, transparent)); }
 .sc-oss:hover .sc-oss-body, .sc-oss:focus-visible .sc-oss-body { padding-block-end: 2.3rem; }
 .sc-oss:hover .sc-oss-body::after, .sc-oss:focus-visible .sc-oss-body::after { translate: 70% 0; }
 .sc-oss:focus-visible { outline: none; }
