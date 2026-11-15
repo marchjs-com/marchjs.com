@@ -2,3 +2,4 @@
 .sc-playground { block-size: calc(100dvh - var(--m-topbar-h, 3.5rem)); min-block-size: 24rem; }
 .sc-playground-empty { block-size: 100%; display: grid; place-content: center; justify-items: center; gap: var(--m-space-1); color: var(--m-muted); font-size: var(--m-text-sm); text-align: center; }
 .sc-playground-empty b { color: var(--m-text); font: 800 var(--m-text-md) var(--m-font-display); }
+.sc-playground-pal { min-inline-size: 0; max-inline-size: 15rem; }
