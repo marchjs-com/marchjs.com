@@ -3,6 +3,7 @@
 import type { IconDef } from "hadi-march/icons";
 import { packIcon } from "hadi-march/icons/packs";
 import { appUrl } from "hadi-march/base";
+import type { IconPickerPack } from "hadi-march/ui";
 
 /** [name, export name, shapes, flags?, evenOdd?] — flags: 1 mirrors in RTL, 2 filled; evenOdd: shapes filled even-odd. */
 export type PackRow = [name: string, exp: string, d: string[], flags?: number, eo?: number[]];
@@ -35,6 +36,17 @@ export const loadPack = (id: string): Promise<PackData> => json<PackData>(`${id}
 export const toDef = (p: Paint, name: string, d: string[], flags = 0, eo?: number[]): IconDef => packIcon(name, d, {
   vb: p.vb, ...(p.sw ? { sw: p.sw } : {}), ...(p.fill || flags & 2 ? { fill: true } : {}), ...(flags & 1 ? { rtl: true } : {}), ...(eo ? { eo } : {}),
 });
+
+// IconPicker's sets: the gallery's packs, each loaded (its JSON) when first chosen in a picker. A pack icon chosen
+// there is "id:name"; packRef turns it into the icon (once its pack is loaded) for whatever draws it.
+const PICKER_PACKS: [id: string, label: string][] = [["lucide", "Lucide"], ["tabler", "Tabler"], ["phosphor", "Phosphor"], ["heroicons", "Heroicons"], ["feather", "Feather"], ["bootstrap", "Bootstrap"], ["remix", "Remix"], ["material-symbols", "Material Symbols"], ["simple-icons", "Simple Icons"]]
+const refs = new Map<string, IconDef>()
+export const iconPickerPacks: IconPickerPack[] = PICKER_PACKS.map(([id, label]) => ({
+  id, label,
+  load: () => loadPack(id).then((p) => Object.fromEntries(p.icons.map(([n, , d, f, eo]) => { const def = toDef(p, n, d, f, eo); refs.set(`${id}:${n}`, def); return [n, def] }))),
+}))
+/** The icon of a picker value from a pack ("lucide:arrow-left"), once its pack is loaded. */
+export const packRef = (ref: string): IconDef | undefined => refs.get(ref)
 
 /** What a click copies: the imports and the icon at the chosen size. */
 export function importLine(pack: string, exp: string, size: string): string {

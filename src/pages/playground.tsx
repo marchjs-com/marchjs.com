@@ -16,6 +16,7 @@ import { x as xIcon, plus, database, zap, monitor, sliders, packageBox, users, c
 import { KeyValueEditor, TextInput, JsonEditor } from "hadi-march/forms"
 import { COLOR_TOKENS } from "hadi-march/theme"
 import { createBuilder } from "../playground/build.ts";
+import { iconPickerPacks, packRef } from "../icon-packs.ts";
 
 const empty = (name: string) => () => <div class="sc-playground-empty"><b>{name}</b><span>Boş panel</span></div>
 const panel = (id: string, title: string, icon: unknown): AppPanel => ({ id, title, icon, content: empty(title) })
@@ -304,7 +305,7 @@ const classControl = comboControl(classList, { list: [], own: true, multi: true 
 const dataControl = (cp: Record<string, unknown>): unknown => h(KeyValueEditor, { ...cp, keyPlaceholder: "anahtar", valuePlaceholder: "değer", labels: { key: "anahtar", value: "değer", add: "Ekle" } })
 const asProperty = (o: PlaygroundOption): PropertySpec => {
   if (isTri(o)) return { key: o.key, label: o.label, group: MARCH_GROUP, control: (cp: Record<string, unknown>) => h(Toggle, { ...cp, tristate: true }), ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}) } as PropertySpec
-  if (isIcon(o)) return { key: o.key, label: o.label, control: (cp: Record<string, unknown>) => IconPicker({ value: () => (cp["value"] as string | null) ?? null, onChange: (n: string | null) => (cp["setValue"] as (v: unknown) => void)(n), label: o.label }), group: MARCH_GROUP, ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}) } as PropertySpec
+  if (isIcon(o)) return { key: o.key, label: o.label, control: (cp: Record<string, unknown>) => IconPicker({ value: () => (cp["value"] as string | null) ?? null, onChange: (n: string | null) => (cp["setValue"] as (v: unknown) => void)(n), label: o.label, packs: iconPickerPacks }), group: MARCH_GROUP, ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}) } as PropertySpec
   if (isHtml(o)) {
     const name = String(o.prop)
     const group = isA11y(o) ? A11Y_GROUP : o.key.startsWith("mp:") ? COMMON_GROUP : o.key.startsWith("api:") ? MARCH_GROUP : HTML_GROUP, label = o.label
@@ -362,7 +363,8 @@ function propsOf(opts: readonly PlaygroundOption[], v: Record<string, unknown>, 
     // an option hidden at the defaults (Button's own spinner mark) is a change once it shows, even at its default
     if (changed && JSON.stringify(cur) === JSON.stringify(defaultOf(o)) && (!o.visibleWhen || o.visibleWhen(defs as never))) continue
     // an icon given to a prop that is not named so (spinner): "icon:name", which the runtime turns into the icon
-    const x = isIcon(o) ? (typeof cur === "string" && cur && !/icon/i.test(prop) ? `icon:${cur}` : cur) : o.toCode ? fromCode(o, cur, v) : cur
+    // an icon of a pack ("lucide:arrow-left"): the icon itself (its pack was loaded by the picker that chose it)
+    const x = isIcon(o) ? (typeof cur === "string" && cur.includes(":") ? packRef(cur) : typeof cur === "string" && cur && !/icon/i.test(prop) ? `icon:${cur}` : cur) : o.toCode ? fromCode(o, cur, v) : cur
     if (x === undefined) continue
     if (o.key === "html:data") { delete out[prop]; for (const [k, d] of Object.entries(x as Record<string, unknown>)) out[`data-${k}`] = d; continue }
     if (x === OMIT || x === "" || x === null || (x === false && !o.toCode && !isTri(o))) { if (changed && x === false) out[prop] = false; continue }
@@ -387,6 +389,7 @@ const partsFor = (root: string): Record<string, Record<string, unknown>> => {
 const partsNow = (): Record<string, Record<string, Record<string, unknown>>> => Object.fromEntries(exportedNames().map((r) => [r, partsFor(r)]))
 // the code of what the preview shows, with what was changed: <Button variant="danger" m:parts={{ Spinner: { … } }}>…
 const jsxValue = (o: PlaygroundOption | undefined, x: unknown, v: Record<string, unknown>): string => {
+  if (o && isIcon(o) && typeof v[o.key] === "string" && String(v[o.key]).includes(":")) return `{icon(${JSON.stringify(v[o.key])})}`
   if (o && isIcon(o) && typeof x === "string") return `{${x.replace(/^icon:/, "")}}`
   if (o?.toCode && !isIcon(o)) { const c = codeOf(o, v[o.key], v); if (typeof c === "string") return c }
   return typeof x === "string" ? JSON.stringify(x) : `{${JSON.stringify(x)}}`
