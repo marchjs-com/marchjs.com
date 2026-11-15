@@ -87,6 +87,11 @@ async function writePlaygroundTools(out) {
   mkdirSync(join(out, "ts"), { recursive: true });
   copyFileSync(join(tsLib, "typescript.js"), join(out, "ts", "typescript.js"));
   for (const f of readdirSync(tsLib)) if (/^lib\..*\.d\.ts$/.test(f)) copyFileSync(join(tsLib, f), join(out, "ts", f));
+  // its messages in other languages (the worker loads the page's one: tr/diagnosticMessages.generated.json…)
+  for (const d of readdirSync(tsLib)) {
+    const msgs = join(tsLib, d, "diagnosticMessages.generated.json");
+    if (/^[a-z]{2}(-[a-z]{2})?$/.test(d) && existsSync(msgs)) { mkdirSync(join(out, "ts", d), { recursive: true }); copyFileSync(msgs, join(out, "ts", d, "diagnosticMessages.generated.json")); }
+  }
   const sx = join(root, "src", "core", "sx.ts").split("\\").join("/");
   await esbuild.build({
     entryPoints: [join(root, "compiler", "index.js")], bundle: true, format: "esm", platform: "browser", target: "es2022", minify: true,
