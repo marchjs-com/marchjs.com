@@ -682,7 +682,9 @@ const lastBuild = signal<BuildResult | null>(null)
 const showOutput = async (): Promise<boolean> => {
   const b = untrack(lastBuild)
   if (!b) return false
-  await openBuildOutput({ build: b, name: untrack(active).replace(/\.[jt]sx?$/, ""), entry: ENTRY, js: builder.js })
+  await openBuildOutput({ build: b, name: untrack(active).replace(/\.[jt]sx?$/, ""), entry: ENTRY, js: builder.js,
+    // every language added in lang.json, as its file (the texts not translated yet keep the code's own)
+    languages: untrack(() => Object.fromEntries(Object.keys(langs()).map((c) => [c, langFile(c)]))) })
   return true
 }
 const consolePanel = () => <div class="sc-console-box">

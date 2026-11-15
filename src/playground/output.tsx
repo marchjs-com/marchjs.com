@@ -1,5 +1,6 @@
 // The last build's files in a dialog: a small read-only IDE made from AppUI. On the left the files of the output in
-// their folders (index.html, the bundle, each compiled module, lang.json), on the right a read-only code editor per
+// their folders (index.html, the bundle, each compiled module, lang.json and lang/<code>.json for every language added
+// in the playground: the page loads the one asked for), on the right a read-only code editor per
 // opened file as a tab. A file chosen in the tree opens its tab (or brings it to the front); a tab brought to the front
 // is chosen in the tree. The code is esbuild's print of it (laid out the same way every time). The toolbar has one
 // button: download every file as a zip.
@@ -18,13 +19,81 @@ export interface OutputSource {
   /** The entry the build started from (its module is the bundle, not listed again). */
   entry: string;
   js: (path: string, code: string) => Promise<string>;
+  /** The languages added in the playground: code → its file (every text, translated or not). */
+  languages?: Readonly<Record<string, Record<string, string>>>;
 }
 
 const base = (path: string): string => path.replace(/\.[jt]sx?$/, "");
 const kb = (n: number): string => `${(n / 1024).toFixed(1)} KB`;
-/** The files of the output, path → text: the page, its start, the bundle, each compiled module, the texts. */
+const json = (v: unknown): string => `${JSON.stringify(v, null, 2)}\n`;
+const DRAW = `
+const root = document.getElementById("app");
+for (const [name, C] of Object.entries(app)) {
+  if (!/^[A-Z]/.test(name) || typeof C !== "function") continue;
+  const box = document.createElement("section");
+  box.dataset.component = name;
+  root.append(box);
+  render(() => h(C, {}), box);
+}
+`;
+// with languages: the chosen one's file is loaded and its texts put in, as the playground's preview does (the JSX
+// texts and the read attributes, also what is drawn later); t`` keys go through messages / setLocale
+const LANGUAGE = `
+// a text or a read attribute that is a key of the file takes its translation
+const ATTRS = ["title", "placeholder", "aria-label", "alt", "label"];
+const translate = (node) => {
+  const walk = document.createTreeWalker(node, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
+  for (let n = node; n; n = walk.nextNode()) {
+    if (n.nodeType === 3) {
+      const key = n.nodeValue.trim(), to = dict[key];
+      if (key && to !== undefined && to !== key) n.nodeValue = n.nodeValue.replace(key, to);
+    } else if (n.nodeType === 1) {
+      for (const a of ATTRS) {
+        const v = n.getAttribute(a)?.trim(), to = v ? dict[v] : undefined;
+        if (v && to !== undefined && to !== v) n.setAttribute(a, to);
+      }
+    }
+  }
+};
+`;
+const FOLLOW = `
+if (dict) {
+  translate(root);
+  new MutationObserver((list) => {
+    for (const m of list) {
+      if (m.type === "characterData") translate(m.target);
+      else m.addedNodes.forEach(translate);
+    }
+  }).observe(root, { childList: true, subtree: true, characterData: true });
+}
+`;
+/** The page's start: every exported component in its own section; with languages, the one asked for (?lang=de, else
+ * the browser's when there is a file for it) from lang/<code>.json. */
+function startFile(codes: readonly string[]): string {
+  const head = `// the page's start: every component the bundle exports, each in its own section
+import { h, render${codes.length ? ", messages, setLocale" : ""} } from "march";
+import * as app from "./app.js";
+`;
+  if (!codes.length) return head + DRAW;
+  const pick = `
+// the languages there is a file for (lang/<code>.json); none of them asked for: the code's own texts
+const LANGS = ${JSON.stringify(codes)};
+const asked = new URLSearchParams(location.search).get("lang") ?? navigator.language.slice(0, 2);
+const lang = LANGS.includes(asked) ? asked : null;
+const dict = lang ? await (await fetch(new URL("../lang/" + lang + ".json", import.meta.url))).json() : null;
+if (lang) {
+  messages(lang, dict);
+  await setLocale(lang);
+  document.documentElement.lang = lang;
+}
+`;
+  return head + pick + LANGUAGE + DRAW + FOLLOW;
+}
+/** The files of the output, path → text: the page, its start, the bundle, each compiled module, the texts and every
+ * added language (lang/<code>.json). */
 export async function outputFiles(o: OutputSource): Promise<Record<string, string>> {
   const { build: b, name } = o;
+  const langs = o.languages ?? {}, codes = Object.keys(langs).sort();
   const modules = await Promise.all(Object.entries(b.modules).filter(([p]) => p !== o.entry).map(async ([p, code]): Promise<[string, string]> => {
     // the modules import each other as .js
     const js = (await o.js(p, code)).replace(/(from\s+["']\.\/[^"']+?)\.[jt]sx?(["'])/g, "$1.js$2");
@@ -48,23 +117,12 @@ export async function outputFiles(o: OutputSource): Promise<Record<string, strin
   </body>
 </html>
 `,
-    "assets/main.js": `// the page's start: every component the bundle exports, each in its own section
-import { h, render } from "march";
-import * as app from "./app.js";
-
-const root = document.getElementById("app");
-for (const [name, C] of Object.entries(app)) {
-  if (!/^[A-Z]/.test(name) || typeof C !== "function") continue;
-  const box = document.createElement("section");
-  box.dataset.component = name;
-  root.append(box);
-  render(() => h(C, {}), box);
-}
-`,
+    "assets/main.js": startFile(codes),
     "assets/app.js": b.code,
     ...Object.fromEntries(modules),
   };
-  if (b.texts.length) out["lang.json"] = `${JSON.stringify(Object.fromEntries(b.texts.map((k) => [k, k])), null, 2)}\n`;
+  if (b.texts.length) out["lang.json"] = json(Object.fromEntries(b.texts.map((k) => [k, k])));
+  for (const c of codes) out[`lang/${c}.json`] = json(langs[c]);
   return out;
 }
 
