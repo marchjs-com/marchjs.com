@@ -10,7 +10,31 @@ import * as theme from "../../../../src/theme/index.ts";
 import * as motion from "../../../../src/motion/index.ts";
 import { withParts, mProps } from "../../../../src/props/index.ts";
 
-const MODULES: Record<string, unknown> = { "hadi-march": core, "hadi-march/ui": ui, "hadi-march/icons": icons, "hadi-march/theme": theme, "hadi-march/motion": motion };
+// the playground's helpers for a quick try (import { instrument, run } from "hadi-march/playground"): debug a piece of
+// code in the preview with your own Debugger. `instrument` writes the debugger's calls in (the page's TypeScript worker,
+// given by setHost), `run` runs the files it gave, each as a module (blob: URL, no eval), in order:
+//   const r = await instrument({ "app.ts": $code }); session.begin(r.metas); await run(r.files)
+type Instrumented = { files: Record<string, string>; metas: unknown[] };
+let host: { instrument?: (files: Record<string, string>) => Promise<Instrumented> } = {};
+/** What the page lends the preview: the instrumenter (its TypeScript service's). */
+export function setHost(next: typeof host): void { host = next; }
+const playground = {
+  /** The files with the debugger's calls written in: `{ files, metas }` (metas go to `session.begin`). */
+  instrument(files: Record<string, string>): Promise<Instrumented> {
+    if (!host.instrument) return Promise.reject(new Error("instrument: the playground's TypeScript is not ready"));
+    return host.instrument(files);
+  },
+  /** Run the files (instrumented or not) as modules, one after the other; an error is written to the console and stops the rest. */
+  async run(files: Record<string, string>): Promise<void> {
+    for (const [path, code] of Object.entries(files)) {
+      const url = URL.createObjectURL(new Blob([link(code)], { type: "text/javascript" }));
+      try { await import(/* @vite-ignore */ url); }
+      catch (e) { console.error(`${path}: ${(e as Error)?.message ?? e}`); return; }
+      finally { URL.revokeObjectURL(url); }
+    }
+  },
+};
+const MODULES: Record<string, unknown> = { "hadi-march": core, "hadi-march/ui": ui, "hadi-march/icons": icons, "hadi-march/theme": theme, "hadi-march/motion": motion, "hadi-march/playground": playground };
 // any other subpath of the components (hadi-march/actions…) is in the ui barrel too
 (globalThis as Record<string, unknown>)["__marchPreview"] = new Proxy(MODULES, { get: (m, k: string) => m[k] ?? (k.startsWith("hadi-march/") ? ui : undefined) });
 

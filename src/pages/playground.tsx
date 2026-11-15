@@ -11,7 +11,7 @@ import { registry } from "hadi-march/components/registry.gen.ts";
 import type { PlaygroundOption } from "hadi-march/components/meta.ts";
 import { appUrl } from "hadi-march/base";
 import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "hadi-march/ui";
-import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
+import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
 import { x as xIcon, plus, database, zap, monitor, sliders, packageBox, users, code, terminal, fileText, globe } from "hadi-march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "hadi-march/forms"
 import { COLOR_TOKENS } from "hadi-march/theme"
@@ -834,7 +834,8 @@ const langPanel = () => <div class="sc-lang">
 // PreviewControl is rendered in the middle of its stage by the preview runtime (playground/preview.js, loaded once)
 let previewEl: HTMLElement | null = null
 type Parts = Record<string, Record<string, unknown>>
-type Runtime = { untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void }
+let tsSvc: TypeScriptService | null = null
+type Runtime = { setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void }
 let runtime: Promise<Runtime> | null = null, runtimeNow: Runtime | null = null
 const loadRuntime = () => (runtime ??= (async () => {
   // its components' stylesheet, once
@@ -843,6 +844,8 @@ const loadRuntime = () => (runtime ??= (async () => {
   document.head.append(link)
   const r = await import(/* @vite-ignore */ appUrl("playground/preview.js")) as Runtime
   r.onData((values) => liveData.set(values))
+  // import { instrument, run } from "hadi-march/playground": the code's own debugging, with the page's TypeScript worker
+  r.setHost({ instrument: (files) => (tsSvc ? tsSvc.instrument(files) : Promise.reject(new Error("TypeScript yok"))) })
   runtimeNow = r
   return r
 })())
@@ -972,6 +975,6 @@ export default function PlaygroundPage(props: { name?: string }) {
   return <div class="sc-playground">
     <AppUI title={props.name ?? "Test Bileşen"} tools={<PaletteButton label="Komut ara…" class="sc-playground-pal" />}
       panels={PANELS} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.playground.v5" label="Playground" api={followTabs}
-      kit={(k: AppKit) => debugSvc.set(k.service<DebuggerService>("debugger") ?? null)} />
+      kit={(k: AppKit) => { debugSvc.set(k.service<DebuggerService>("debugger") ?? null); tsSvc = k.service<TypeScriptService>("typescript") ?? null }} />
   </div>
 }
