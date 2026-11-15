@@ -3,7 +3,8 @@
 // preview entry (PreviewControl.tsx, written from the Properties panel) with the component's files from memory; each
 // file goes through the March compiler first (bundled for the browser at build time, playground/march-compiler.js),
 // which also lists the texts people read. hadi-march stays outside the bundle (the page has it). Each step is reported
-// with a timestamp; the texts of the last build make the locale file (lang.json).
+// with a timestamp; the texts of the last build make the locale file (lang.json). A successful build is kept: the same
+// files are not built twice (a tab shown again).
 import { signal } from "hadi-march";
 import { appUrl } from "hadi-march/base";
 
@@ -37,6 +38,18 @@ export function createBuilder(log: BuildLog) {
   /** The texts of the last build (lang.json). */
   const texts = signal<readonly string[]>([]);
   let run = 0;
+  // every build kept by what went in (the entry and the files' texts): a tab shown again with the same code is not
+  // built again, its last result comes back at once
+  const memo = new Map<string, BuildResult>();
+  const keyOf = (files: Record<string, string>, entry: string): string => JSON.stringify([entry, Object.entries(files).sort(([a], [b]) => a.localeCompare(b))]);
+  /** The kept result of these files, if they were built before (its texts become lang.json's). */
+  function cached(files: Record<string, string>, entry: string): BuildResult | null {
+    const r = memo.get(keyOf(files, entry));
+    if (!r) return null;
+    run++; // a build still on its way is no longer wanted
+    texts.set(r.texts);
+    return r;
+  }
 
   /** Bundle `entry` (a path in `files`) with the files it imports. */
   async function build(files: Record<string, string>, entry: string): Promise<BuildResult | null> {
@@ -72,12 +85,15 @@ export function createBuilder(log: BuildLog) {
     };
     try {
       const out = await t.esbuild.build({ entryPoints: [entry], bundle: true, write: false, format: "esm", target: "es2022", plugins: [memory], logLevel: "silent" });
+      const code = out.outputFiles?.[0]?.text ?? "";
+      const r = { ok: true, code, texts: [...found].sort((a, b) => a.localeCompare(b, "tr")) };
+      // kept even when another tab came to the front meanwhile: showing this one again needs no build
+      memo.set(keyOf(files, entry), r);
       if (n !== run) return null;
       for (const w of out.warnings) say(`⚠ ${where(w)}${w.text}`, "warn");
-      const code = out.outputFiles?.[0]?.text ?? "";
-      texts.set([...found].sort((a, b) => a.localeCompare(b, "tr")));
+      texts.set(r.texts);
       say(`Bitti: ${(code.length / 1024).toFixed(1)} KB paket · ${ms(t0)}`, "success");
-      return { ok: true, code, texts: [...texts()] };
+      return r;
     } catch (err) {
       if (n !== run) return null;
       const errors = (err as { errors?: Message[] }).errors ?? [{ text: String((err as Error)?.message ?? err) }];
@@ -86,5 +102,5 @@ export function createBuilder(log: BuildLog) {
       return { ok: false, code: "", texts: [...texts()] };
     }
   }
-  return { build, texts };
+  return { build, cached, texts };
 }

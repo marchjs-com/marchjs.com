@@ -60,7 +60,7 @@ const followTabs = (api: DockApi) => {
     // the files' group: the group that holds a file tab; its front tab is the file in work
     const g = groups(L.root).find((x) => x.panels.some((id) => id in FILE_OF))
     const file = g?.active ? FILE_OF[g.active] : undefined
-    if (file && file !== untrack(active)) active.set(file)
+    if (file && file !== untrack(active)) { active.set(file); print(`[${stamp()}] ${file} sekmesi etkin`, "info") }
   })
 }
 const exportedName = computed(() => {
@@ -118,7 +118,7 @@ type Tone = "success" | "warn" | "error" | "info" | "muted"
 const print = (text: string, tone?: Tone) => { if (consoleApi) consoleApi.print(text, { tone }); else waiting.push([text, { tone }]) }
 const builder = createBuilder(print)
 const stamp = () => new Date().toLocaleTimeString("tr-TR", { hour12: false })
-const consolePanel = () => <Terminal readonly scheme="dark" label="Derleme çıktısı" class="sc-console"
+const consolePanel = () => <Terminal readonly scheme="dark" height="100%" label="Derleme çıktısı" class="sc-console"
   ref={(api: TerminalApi) => { consoleApi = api; for (const [t, o] of waiting.splice(0)) api.print(t, o) }} />
 // lang.json: the texts the last build found (JSX text, titles, labels…), as a locale file lists them
 const langJson = () => Object.fromEntries(builder.texts().map((k) => [k, ""]))
@@ -187,6 +187,9 @@ export default function PlaygroundPage(props: { name?: string }) {
     const path = active()
     const now = { [path]: files.get(path)?.() ?? "", [ENTRY]: entrySource() }
     clearTimeout(timer)
+    // built before with this very code (a tab shown again): the kept result, at once
+    const kept = builder.cached(now, ENTRY)
+    if (kept) { print(`[${stamp()}] ↺ ${path}: bu kod daha önce derlendi, bellekteki sonuç kullanılıyor`, "muted"); void render(kept.code); return }
     timer = setTimeout(() => { void builder.build(now, ENTRY).then((r) => { if (r?.ok) void render(r.code) }) }, 350)
   })
   // a property changes: the rendered component takes it at once (no build)
