@@ -53,6 +53,21 @@ const draw = (C: Comp, el: HTMLElement, props: Props, parts: Parts): (() => void
 // every component the module exports has a cell of its own: the preview is split into as many cells
 interface Cell { C: Comp; el: HTMLElement; dispose: () => void }
 let last: { url: string; cells: Map<string, Cell> } | null = null;
+// the module's data (its signals and computed values, exported by the playground as __marchData): watched, and set
+let data: Record<string, unknown> = {}, dataStop: (() => void) | null = null, onDataCb: ((values: Record<string, unknown>) => void) | null = null;
+const isSignal = (v: unknown): v is ((() => unknown) & { set: (x: unknown) => void }) => typeof v === "function" && typeof (v as { set?: unknown }).set === "function";
+/** Called with the current values of the module's data whenever one of them changes. */
+export function onData(cb: (values: Record<string, unknown>) => void): void { onDataCb = cb; }
+/** Set a signal of the module (the preview follows at once). */
+export function setData(name: string, value: unknown): void { const s = data[name]; if (isSignal(s)) s.set(value); }
+const watchData = (): void => {
+  dataStop?.(); dataStop = null;
+  if (!Object.keys(data).length) { onDataCb?.({}); return; }
+  dataStop = core.createRoot((dispose) => {
+    core.effect(() => { const snap: Record<string, unknown> = {}; for (const [k, v] of Object.entries(data)) snap[k] = typeof v === "function" ? (v as () => unknown)() : v; onDataCb?.(snap); });
+    return dispose;
+  });
+};
 /** Send new props (and parts) to the rendered components, by name (the Properties panel calls it on every change). */
 export function setProps(props: Record<string, Props>, parts: Record<string, Parts> = {}): void {
   if (!last) return;
@@ -88,10 +103,13 @@ export async function run(code: string, el: HTMLElement, props: Record<string, P
     cells.set(name, { C, el: stage, dispose: draw(C, stage, props[name] ?? {}, parts[name] ?? {}) });
   }
   last = { url, cells };
+  data = (mod["__marchData"] as Record<string, unknown> | undefined) ?? {};
+  watchData();
   return [...cells.keys()];
 }
 /** Remove what the last run rendered. */
 export function stop(): void {
+  dataStop?.(); dataStop = null;
   if (!last) return;
   for (const cell of last.cells.values()) cell.dispose();
   URL.revokeObjectURL(last.url);

@@ -6,14 +6,14 @@
 // change is built in the page (playground/build.ts): the Console shows each step with its time and the errors,
 // lang.json the texts the build found. No tab has a close mark (groups still collapse to strips).
 import "./playground.css";
-import { h, signal, computed, effect, untrack, onCleanup } from "hadi-march";
+import { h, render as mount, createRoot, signal, computed, effect, untrack, onCleanup } from "hadi-march";
 import { registry } from "hadi-march/components/registry.gen.ts";
 import type { PlaygroundOption } from "hadi-march/components/meta.ts";
 import { appUrl } from "hadi-march/base";
-import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Combobox, Toggle, Select, Badge, toast, colorThemes, Tree, CodeView, type TerminalApi, type PropertySpec } from "hadi-march/ui";
+import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Combobox, Toggle, Select, Badge, Button, toast, colorThemes, Tree, CodeView, type TerminalApi, type PropertySpec } from "hadi-march/ui";
 import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, groups, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
-import { zap, monitor, sliders, packageBox, users, code, terminal, bug, fileText, globe } from "hadi-march/icons";
-import { KeyValueEditor } from "hadi-march/forms"
+import { database, zap, monitor, sliders, packageBox, users, code, terminal, bug, fileText, globe } from "hadi-march/icons";
+import { KeyValueEditor, TextInput } from "hadi-march/forms"
 import { COLOR_TOKENS } from "hadi-march/theme"
 import { createBuilder } from "../playground/build.ts";
 
@@ -78,12 +78,48 @@ const isRoot = (name: string): boolean => exportedNames().includes(name)
 // composedOf, recursively). Each has its options (its showcase card's playground.ts) and its values; the exported one
 // takes its values as props, the others as m:parts of it (only what was changed from their defaults)
 const metaOf = (name: string) => registry.find((e) => e.meta.name === name)
+// a component written in the file in front (not one of March's): its props read from its type (`props: { … }`, or
+// an interface / type of the file), its parts from its JSX (the March components and the file's own ones it draws)
+interface LocalComp { props: ApiProp[]; uses: string[] }
+const typeFields = (body: string): ApiProp[] => body.split(/[;\n]/).map((line) => /^\s*(?:readonly\s+)?([\w$]+)(\?)?\s*:\s*(.+?)\s*,?\s*$/.exec(line))
+  .filter((m): m is RegExpExecArray => !!m).map((m) => ({ name: m[1]!, type: `${m[3]!}${m[2] ? " | undefined" : ""}`, doc: "" }))
+const localComps = computed((): Record<string, LocalComp> => {
+  const src = files.get(active())?.() ?? "", out: Record<string, LocalComp> = {}
+  const starts = [...src.matchAll(/(?:function\s+([A-Z][\w$]*)\s*(?:<[^>]*>)?\s*\(|(?:const|let)\s+([A-Z][\w$]*)\s*=\s*(?:async\s*)?\()/g)]
+  starts.forEach((m, i) => {
+    const name = (m[1] ?? m[2])!, body = src.slice(m.index!, starts[i + 1]?.index ?? src.length)
+    // the first parameter's type: written in place, or a name the file declares
+    const t = /\(\s*(?:[\w$]+|\{[^}]*\})\s*:\s*(\{[^{}]*\}|[A-Z][\w$]*)/.exec(body)?.[1] ?? ""
+    const decl = t.startsWith("{") ? t.slice(1, -1) : t ? (new RegExp(`(?:interface\\s+${t}\\b[^{]*|type\\s+${t}\\s*=\\s*)\\{([^}]*)\\}`).exec(src)?.[1] ?? "") : ""
+    out[name] = { props: typeFields(decl), uses: [...new Set([...body.matchAll(/<([A-Za-z][\w$-]*)/g)].map((x) => (/^[a-z]/.test(x[1]!) ? `<${x[1]}>` : x[1]!)))].filter((n) => n !== name) }
+  })
+  for (const c of Object.values(out)) c.uses = c.uses.filter((n) => n.startsWith("<") || metaOf(n) || n in out)
+  return out
+})
+// Data: what the file declares at its top (signals, computed values, constants): the Data tab shows them; a signal is
+// set (or pushed to) in the running preview at once, a constant's value is written into the code (and built again)
+interface DataItem { name: string; kind: "signal" | "computed" | "const" | "let"; init: string; from: number; to: number }
+const dataItems = computed((): DataItem[] => {
+  const src = files.get(active())?.() ?? "", out: DataItem[] = []
+  for (const m of src.matchAll(/^(?:export\s+)?(const|let)\s+([a-z_$][\w$]*)\s*(?::[^=\n]+)?=\s*(.+)$/gm)) {
+    const [, decl, name, rest] = m as unknown as [string, "const" | "let", string, string]
+    const kind = /^signal\s*[<(]/.test(rest) ? "signal" : /^computed\s*[<(]/.test(rest) ? "computed" : decl
+    // a constant: only a literal written on its line (a number, text, yes / no, a list or an object) can be edited
+    if ((kind === "const" || kind === "let") && !/^(-?\d[\d_.]*|"[^"]*"|'[^']*'|true|false|null|\[.*\]|\{.*\})\s*;?\s*$/.test(rest)) continue
+    const at = m.index! + m[0].length - rest.length
+    out.push({ name, kind, init: rest.replace(/;?\s*$/, ""), from: at, to: at + rest.replace(/;?\s*$/, "").length })
+  }
+  return out
+}, { equals: (a, b) => !!a && !!b && JSON.stringify(a) === JSON.stringify(b) })
+/** The props a component exports: the file's own component's from its type, March's from the API reference. */
+const exportedProps = (name: string): ApiProp[] => localComps()[name]?.props ?? apiPropsBy()[name] ?? []
 interface DepNode { id: string; label: string; children?: DepNode[] }
 const depTree = computed((): DepNode[] => {
   const roots = exportedNames()
   if (!roots.length) return []
   const walk = (name: string, path: string, seen: Set<string>): DepNode => {
-    const kids = seen.has(name) ? [] : (metaOf(name)?.meta.composedOf ?? []).filter((k) => metaOf(k))
+    const local = localComps()[name]
+    const kids = seen.has(name) ? [] : (local ? local.uses : (metaOf(name)?.meta.composedOf ?? []).filter((k) => metaOf(k)))
     const next = new Set(seen).add(name)
     return { id: path, label: name, ...(kids.length ? { children: kids.map((k) => walk(k, `${path}/${k}`, next)) } : {}) }
   }
@@ -117,7 +153,8 @@ effect(() => {
   for (const name of inTree()) {
     if (untrack(optionsBy)[name]) continue
     const entry = metaOf(name)
-    if (!entry) continue
+    // the file's own component: no card; its props come from its type (exportedProps)
+    if (!entry || untrack(localComps)[name]) { optionsBy.set({ ...optionsBy.peek(), [name]: [] }); continue }
     void entry.playground().then((m) => {
       const list = (m.default as { options: readonly PlaygroundOption[] }).options.filter((o) => o.prop !== false)
       optionsBy.set({ ...optionsBy.peek(), [name]: list })
@@ -199,7 +236,7 @@ const SKIP_PROPS = new Set(["children", "class", "style", "ref"])
 const apiOptions = (name: string): PlaygroundOption[] => {
   const own = new Set((optionsBy()[name] ?? []).map((o) => String(o.prop || o.key)))
   const out: PlaygroundOption[] = []
-  for (const p of apiPropsBy()[name] ?? []) {
+  for (const p of exportedProps(name)) {
     if (own.has(p.name) || SKIP_PROPS.has(p.name) || /^on[A-Z]/.test(p.name) || /^aria|^label$|^role$/i.test(p.name) || p.name.includes("[")) continue
     const t = p.type.replace(/MaybeFn<(.*)>$/, "$1"), key = `api:${p.name}`, set = typeValues(t)
     if (set) { valuesOf.set(key, set); out.push({ key, label: p.name, prop: p.name, default: "", kind: "text" }) }
@@ -216,7 +253,7 @@ const commonOptions = (name: string): PlaygroundOption[] => {
 }
 const a11yOptions = (name: string): PlaygroundOption[] => {
   const own = new Set((optionsBy()[name] ?? []).map((o) => String(o.prop || o.key)))
-  const props = (apiPropsBy()[name] ?? []).filter((p) => !/^on[A-Z]/.test(p.name) && /string|"/.test(p.type)
+  const props = exportedProps(name).filter((p) => !/^on[A-Z]/.test(p.name) && /string|"/.test(p.type)
     && (/^(aria|label$|role$)/i.test(p.name) || /accessib|screen reader|aria-/i.test(p.doc)))
   for (const p of props) { const v = typeValues(p.type); if (v) valuesOf.set(`a11y:${p.name}`, v) }
   const exported = props.map((p) => p.name)
@@ -285,8 +322,11 @@ const asProperty = (o: PlaygroundOption): PropertySpec => {
 // the preview entry: the exported component, rendered by the preview runtime with the Properties' values. The values
 // are not written into the code: they go to the rendered component through a channel (setProps), so changing a
 // property needs no build; only a change of the files (or of the exported name) builds again.
+// the signals and computed values of the file: exported for the build only (the editor's text stays as it is)
+const live = (): string[] => dataItems().filter((d) => d.kind === "signal" || d.kind === "computed").map((d) => d.name)
+const withData = (src: string): string => (live().length ? `${src}\nexport const __marchData = { ${live().join(", ")} }\n` : src)
 const entrySource = computed(() => {
-  const names = exportedNames()
+  const names = [...exportedNames(), ...(live().length ? ["__marchData"] : [])]
   return names.length ? `export { ${names.join(", ")} } from "./${active()}"\n` : "export {}\n"
 })
 // an option whose card writes its value as code of its own (toCode: Button's spinner "off" → {false}, "own" →
@@ -369,17 +409,26 @@ const usageOf = (name: string): string => {
 /** The code of every exported component, one under the other. */
 const usage = computed((): string => exportedNames().map(usageOf).join("\n"))
 // Accessibility: the accessible name, description, role… of the component chosen (its exported props for them first)
-const a11yPanel = () => <div class="sc-props">
-  {() => { optionKeys(); return untrack(() => { const list = options().filter(isA11y); return list.length
-    ? <PropertyGrid properties={list.map(asProperty)} value={values()} onChange={setValues} label={`${selected()} erişilebilirliği`} saved={values()} footer={false} history={false} dirty={false} search={false} />
-    : <div class="sc-playground-empty"><b>Erişilebilirlik</b><span>Dışa aktarılan bileşen yok</span></div> }) }}
-</div>
-// made again for each component chosen in the Dependencies tree (its own values, not the last one's)
-const propsPanel = () => <div class="sc-props">
-  {() => { optionKeys(); return untrack(() => options().length
-    ? <PropertyGrid properties={options().filter((o) => !isA11y(o)).map(asProperty)} value={values()} onChange={setValues} label={`${selected()} özellikleri`} saved={values()} footer={false} history={false} dirty={false} search={false} />
-    : <div class="sc-playground-empty"><b>Özellik yok</b><span>{selected() ? `${selected()} prop almıyor` : "Dışa aktarılan bileşen yok"}</span></div>) }}
-</div>
+// a grid panel: made again (the old one disposed and removed) whenever the component chosen or its set of options
+// changes, so it always shows that component's own values; drawn by hand into its box, one grid at a time
+// (in a root of its own: only this panel disposes it, never a re-run of what is around it)
+const gridPanel = (make: () => unknown) => () => {
+  const inner = <div class="sc-props-in" /> as HTMLElement
+  let dispose: (() => void) | null = null, queued = false, gone = false
+  // after the change that asked for it has settled (a code edit runs through several updates): built outside them, once
+  const rebuild = (): void => { queued = false; if (gone) return; dispose?.(); inner.replaceChildren(); dispose = createRoot(() => mount(make, inner), null) }
+  onCleanup(() => { gone = true; dispose?.() })
+  return <div class="sc-props">
+    {() => { optionKeys(); if (!queued) { queued = true; queueMicrotask(rebuild) } return null }}
+    {inner}
+  </div>
+}
+const a11yPanel = gridPanel(() => { const list = options().filter(isA11y); return list.length
+  ? <PropertyGrid properties={list.map(asProperty)} value={values()} onChange={setValues} label={`${selected()} erişilebilirliği`} saved={values()} footer={false} history={false} dirty={false} search={false} />
+  : <div class="sc-playground-empty"><b>Erişilebilirlik</b><span>Dışa aktarılan bileşen yok</span></div> })
+const propsPanel = gridPanel(() => (options().length
+  ? <PropertyGrid properties={options().filter((o) => !isA11y(o)).map(asProperty)} value={values()} onChange={setValues} label={`${selected()} özellikleri`} saved={values()} footer={false} history={false} dirty={false} search={false} />
+  : <div class="sc-playground-empty"><b>Özellik yok</b><span>{selected() ? `${selected()} prop almıyor` : "Dışa aktarılan bileşen yok"}</span></div>))
 // Dependencies: the tree of the components the work is built from; the one chosen shows its Properties
 const allIds = (nodes: readonly DepNode[]): string[] => { const ids: string[] = []; const go = (n: DepNode): void => { ids.push(n.id); n.children?.forEach(go) }; nodes.forEach(go); return ids }
 // the row chosen (a component may sit at several places of the tree; the first one when chosen elsewhere)
@@ -442,7 +491,7 @@ const handlerCode = (name: string): [string, string][] => Object.entries(handler
   [ev, how === "log" ? `(...a) => console.log("${ev}", ...a)` : how === "toast" ? `() => toast("${ev} çalıştı")` : "() => count++"])
 const eventsPanel = () => <div class="sc-events">
   {() => {
-    const name = selected(), list = eventsBy()[name]
+    const name = selected(), local = localComps()[name], list = local ? local.props.filter((p) => /^on[A-Z]/.test(p.name)) : eventsBy()[name]
     rootTags()
     if (!name) return <div class="sc-playground-empty"><b>Olay yok</b><span>Dışa aktarılan bileşen yok</span></div>
     if (!list) return <div class="sc-playground-empty"><span>Olaylar okunuyor…</span></div>
@@ -464,6 +513,43 @@ const eventsPanel = () => <div class="sc-events">
   }}
 </div>
 
+/** The current values of the running preview's signals and computed values. */
+const liveData = signal<Record<string, unknown>>({})
+const json = (v: unknown): string => { try { return JSON.stringify(v) ?? String(v) } catch { return String(v) } }
+const parse = (text: string): { ok: true; value: unknown } | { ok: false } => { try { return { ok: true, value: JSON.parse(text) } } catch { return { ok: false } } }
+const KIND_TONE: Record<string, "info" | "success" | "neutral" | "warn"> = { signal: "info", computed: "success", const: "neutral", let: "warn" }
+/** A constant's new value, written into the code in place of the old one (the preview is built again). */
+const writeConst = (d: DataItem, text: string): void => { const f = files.get(active()); if (!f) return; const src = f.peek(); if (src.slice(d.from, d.to) === d.init) f.set(src.slice(0, d.from) + text + src.slice(d.to)) }
+const setLive = (name: string, value: unknown): void => { void runtime?.then((r) => r.setData(name, value)); print(`[${stamp()}] ⇢ ${name} = ${short(value)}`, "info") }
+const dataRow = (d: DataItem) => {
+  let draft = d.kind === "signal" ? json(untrack(liveData)[d.name]) : d.init, more = ""
+  const commit = (): void => {
+    if (d.kind === "signal") { const p = parse(draft); if (p.ok) setLive(d.name, p.value); else print(`[${stamp()}] ✖ ${d.name}: geçerli bir JSON değil`, "error") }
+    else if (draft !== d.init) writeConst(d, draft)
+  }
+  const push = (): void => { const cur = untrack(liveData)[d.name]; if (!Array.isArray(cur) || !more.trim()) return; const p = parse(more); setLive(d.name, [...cur, p.ok ? p.value : more]); more = "" }
+  return <li class="sc-data-row">
+    <span class="sc-data-name"><code>{d.name}</code><Badge tone={KIND_TONE[d.kind]} size="xs">{d.kind}</Badge></span>
+    {d.kind === "computed"
+      ? <code class="sc-data-value">{() => json(liveData()[d.name])}</code>
+      : <TextInput aria-label={`${d.name} değeri`} placeholder="Enter ile uygula" value={d.kind === "signal" ? json(liveData()[d.name]) : d.init}
+          onChange={(v: string) => { draft = v }} onKeyDown={(e: KeyboardEvent) => { if (e.key === "Enter") commit() }} />}
+    {d.kind === "signal" && Array.isArray(untrack(liveData)[d.name])
+      ? <span class="sc-data-push"><TextInput aria-label={`${d.name} listesine eklenecek`} placeholder="eklenecek" onChange={(v: string) => { more = v }} onKeyDown={(e: KeyboardEvent) => { if (e.key === "Enter") push() }} />
+          <Button size="sm" variant="secondary" on:click={push}>push</Button></span>
+      : null}
+  </li>
+}
+const dataPanel = () => <div class="sc-data">
+  {() => {
+    const list = dataItems()
+    liveData()
+    return untrack(() => list.length
+      ? <ul class="sc-data-list" aria-label="Veriler">{list.map(dataRow)}</ul>
+      : <div class="sc-playground-empty"><b>Veri yok</b><span>Kodda sinyal, hesaplanan değer ya da sabit yok</span></div>)
+  }}
+</div>
+
 // the build: its steps go to the Console (lines written before the Console is there wait for it)
 let consoleApi: TerminalApi | null = null
 const waiting: [string, Parameters<TerminalApi["print"]>[1]][] = []
@@ -480,14 +566,16 @@ const langJson = () => Object.fromEntries(builder.texts().map((k) => [k, ""]))
 // PreviewControl is rendered in the middle of its stage by the preview runtime (playground/preview.js, loaded once)
 let previewEl: HTMLElement | null = null
 type Parts = Record<string, Record<string, unknown>>
-type Runtime = { run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void }
+type Runtime = { run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void }
 let runtime: Promise<Runtime> | null = null
 const loadRuntime = () => (runtime ??= (async () => {
   // its components' stylesheet, once
   const link = document.createElement("link")
   link.rel = "stylesheet"; link.href = appUrl("playground/preview.css")
   document.head.append(link)
-  return await import(/* @vite-ignore */ appUrl("playground/preview.js")) as Runtime
+  const r = await import(/* @vite-ignore */ appUrl("playground/preview.js")) as Runtime
+  r.onData((values) => liveData.set(values))
+  return r
 })())
 /** Each cell's first element: the tag its component draws. */
 const readTag = (): void => {
@@ -508,7 +596,7 @@ async function render(code: string): Promise<void> {
 }
 const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: true }}
   footer={() => (usage() ? <CodeView code={usage} lang="tsx" copy wrap label="Bileşenin kodu" /> : null)}>
-  <div class="sc-pv-root" ref={(el: HTMLElement) => { previewEl = el }}>
+  <div class="sc-pv-root" m:no-select ref={(el: HTMLElement) => { previewEl = el }}>
     <div class="sc-playground-empty"><b>Önizleme</b><span>Derleniyor…</span></div>
   </div>
 </AppPreview>
@@ -517,6 +605,7 @@ const PANELS: AppPanel[] = [
   { id: "preview", title: "Önizleme", icon: monitor, content: preview },
   { id: "props", title: "Özellikler", icon: sliders, disabled: () => !options().length, content: propsPanel },
   { id: "events", title: "Olaylar", icon: zap, content: eventsPanel },
+  { id: "data", title: "Veriler", icon: database, disabled: () => !dataItems().length, content: dataPanel },
   { id: "deps", title: "Bağımlılıklar", icon: packageBox, disabled: () => !depTree().length, content: depsPanel },
   { id: "a11y", title: "Erişilebilirlik", icon: users, content: a11yPanel },
   fileTab("c1", "Button.tsx"),
@@ -531,7 +620,7 @@ const PRESETS: Record<string, Preset> = {
   main: {
     title: "Playground",
     tree: () => row(
-      [0.6, col([0.7, tabs("preview")], [0.3, row([0.5, tabs(["props", "events"])], [0.5, tabs(["deps", "a11y"])])])],
+      [0.6, col([0.7, tabs("preview")], [0.3, row([0.5, tabs(["props", "events", "data"])], [0.5, tabs(["deps", "a11y"])])])],
       [0.4, col([0.7, tabs(["c1", "c2", "c3"])], [0.3, tabs(["console", "debug", "terminal", "i18n"])])],
     ),
   },
@@ -548,7 +637,7 @@ export default function PlaygroundPage(props: { name?: string }) {
   effect(() => {
     // only the file in front (and the entry that renders it)
     const path = active()
-    const now = { [path]: files.get(path)?.() ?? "", [ENTRY]: entrySource() }
+    const now = { [path]: withData(files.get(path)?.() ?? ""), [ENTRY]: entrySource() }
     clearTimeout(timer)
     // built before with this very code (a tab shown again): the kept result, at once
     const kept = builder.cached(now, ENTRY)
@@ -575,6 +664,6 @@ export default function PlaygroundPage(props: { name?: string }) {
   onCleanup(() => { clearTimeout(timer); consoleApi = null; previewEl = null; void runtime?.then((r) => r.stop()) })
   return <div class="sc-playground">
     <AppUI title={props.name ?? "Test Bileşen"} tools={<PaletteButton label="Komut ara…" class="sc-playground-pal" />}
-      panels={PANELS} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.playground.v4" label="Playground" api={followTabs} />
+      panels={PANELS} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.playground.v5" label="Playground" api={followTabs} />
   </div>
 }
