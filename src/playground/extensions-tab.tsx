@@ -48,7 +48,7 @@ export function ExtensionsPanel(props: { info: () => ExtInfo; selected: () => st
   }
   return <div class="sc-ext-tab">
     <div class="sc-ext-tab-head">
-      <b>{() => `Kayıtlı eklentiler (${props.info().list.length})`}</b>
+      <b>{() => `Kayıtlı askılar (${props.info().list.length})`}</b>
       <Button size="sm" variant="ghost" onClick={() => props.refresh()}>Yenile</Button>
     </div>
     {() => (props.info().list.length
@@ -61,8 +61,8 @@ export function ExtensionsPanel(props: { info: () => ExtInfo; selected: () => st
           {Object.keys(x.props).map((p) => <span class="sc-ext-tab-prop" title={x.props[p]?.doc ?? ""}>{p}</span>)}
         </li>)}</ul>
       : <div class="sc-ext-tab-empty">
-          <span>Önizlemedeki kod henüz bir eklenti kaydetmedi. Bir dosyada <code>extend()</code> ya da <code>intercept()</code> çağır: kayıtlılar burada, seçili bileşene ne yaptıkları altta görünür.</span>
-          <CodeView code={EXAMPLE} lang="tsx" copy label="Örnek eklenti" />
+          <span>Önizlemedeki kod henüz bir askı kaydetmedi. Bir dosyada <code>extend()</code> ya da <code>intercept()</code> çağır: kayıtlılar burada, seçili bileşene ne yaptıkları altta görünür.</span>
+          <CodeView code={EXAMPLE} lang="tsx" copy label="Örnek askı" />
         </div>)}
     <div class="sc-ext-tab-head"><b>{() => `Seçili bileşen: ${props.selected() || "—"}`}</b></div>
     {() => {
@@ -70,9 +70,9 @@ export function ExtensionsPanel(props: { info: () => ExtInfo; selected: () => st
       const ran = info.traces.filter((t) => t.component === name || t.cell === name && t.component === name)
       const added = info.props[name] ?? []
       const warn = hiding(name)
-      if (!ran.length && !added.length) return <p class="m-muted">Bu bileşene bir eklenti dokunmadı.</p>
+      if (!ran.length && !added.length) return <p class="m-muted">Bu bileşene bir askı dokunmadı.</p>
       return <div class="sc-ext-tab-sel">
-        {warn.length ? <p class="sc-ext-tab-warn">{`⚠ Bileşenin kendi özelliğini gizleyen eklenti özelliği: ${warn.join(", ")}`}</p> : null}
+        {warn.length ? <p class="sc-ext-tab-warn">{`⚠ Bileşenin kendi özelliğini gizleyen askı özelliği: ${warn.join(", ")}`}</p> : null}
         {added.length ? <p>Eklenen özellikler: {added.flatMap((x) => Object.keys(x.props).map((p) => <span class="sc-ext-tab-prop" title={x.props[p]?.doc ?? ""}>{`${p} (${x.extension})`}</span>))}</p> : null}
         {ran.map((t, i) => <div class="sc-ext-tab-run">
           <span class="m-muted">{`${i + 1}. örnek (${t.cell})`}</span>
@@ -100,7 +100,7 @@ export function extensionSpec(info: ExtInfo, name: string, key: string): { group
   const [, ext, prop] = /^ext:([^:]+):(.+)$/.exec(key) ?? []
   const x = (info.props[name] ?? []).find((e) => e.extension === ext)
   const spec = prop ? x?.props[prop] : undefined
-  return spec ? { group: `Eklenti: ${ext}`, spec } : null
+  return spec ? { group: `Askı: ${ext}`, spec } : null
 }
 
 /**
@@ -120,8 +120,8 @@ export function withExtensionSuggestions(plugin: AppPlugin, info: () => ExtInfo)
       if (at) {
         const rows = (info().props[at.comp] ?? []).flatMap((x) => Object.entries(x.props).map(([p, spec]) => ({ p, spec, ext: x.extension })))
           .filter((r) => r.p.toLowerCase().startsWith(at.word.toLowerCase()))
-          .map((r) => ({ label: r.p, hint: `eklenti · ${r.ext}`, ...(r.spec.type === "boolean" ? {} : { insert: `${r.p}=""`, back: 1 }), doc: { kind: "property", signature: `${r.p}${r.spec.type ? `: ${r.spec.type}` : ""}`, ...(r.spec.doc ? { doc: r.spec.doc } : {}) } }))
-        if ("m:extend".startsWith(at.word) && at.word.length >= 2) rows.push({ label: "m:extend", hint: "eklentiler", insert: "m:extend={false}", back: 0, doc: { kind: "property", signature: "m:extend: false | string[]", doc: "Bu örnek eklenti almaz (false) ya da yalnız adı verilenleri alır." } } as never)
+          .map((r) => ({ label: r.p, hint: `askı · ${r.ext}`, ...(r.spec.type === "boolean" ? {} : { insert: `${r.p}=""`, back: 1 }), doc: { kind: "property", signature: `${r.p}${r.spec.type ? `: ${r.spec.type}` : ""}`, ...(r.spec.doc ? { doc: r.spec.doc } : {}) } }))
+        if ("m:extend".startsWith(at.word) && at.word.length >= 2) rows.push({ label: "m:extend", hint: "askılar", insert: "m:extend={false}", back: 0, doc: { kind: "property", signature: "m:extend: false | string[]", doc: "Bu örnek askı almaz (false) ya da yalnız adı verilenleri alır." } } as never)
         if (rows.length) return { from: ctx.caret - at.word.length, to: ctx.caret, items: rows }
       }
       return svc.complete ? svc.complete(path, ctx) : null

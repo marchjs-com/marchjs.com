@@ -75,13 +75,13 @@ export default function Language(props: { params?: { rest?: string } }) {
     on: { onClick: (next, e, p) => {
       const danger = (p as { variant?: string }).variant === "danger"
       if (!$askOn || (!danger && !$askAll)) return next(e)
-      return confirm({ title: "Emin misin?", message: "Bu adım bir eklentiden geliyor: düğmenin kendisi değişmedi.", danger }).then((ok) => { if (ok) next(e); else note("vazgeçildi") })
+      return confirm({ title: "Emin misin?", message: "Bu adım bir askıdan geliyor: düğmenin kendisi değişmedi.", danger }).then((ok) => { if (ok) next(e); else note("vazgeçildi") })
     } },
   })
   const cardOut = defineExtension<{ isNew: boolean }>({
     name: "card-output", target: Card,
     render: (next, p) => $cardMode === "replace" && !p.isNew
-      ? <div class="sc-ext-locked"><Badge tone="warn">kilitli</Badge><span>Bu kartın yerine eklentinin çıktısı çizildi (next çağrılmadı).</span></div>
+      ? <div class="sc-ext-locked"><Badge tone="warn">kilitli</Badge><span>Bu kartın yerine askının çıktısı çizildi (next çağrılmadı).</span></div>
       : $cardMode !== "off" && p.isNew ? <div class="sc-ext-new">{next()}<span class="sc-ext-badge"><Badge tone="success">yeni</Badge></span></div> : next(),
   })
   let offPlain: (() => void) | null = null
@@ -213,7 +213,7 @@ withParts(new Map([[Badge, { tone: "warn" }]]), () => h(MemberCard, props))   //
     </Card>
     <p class="m-muted">Kopyala düğmesinin ya da rozetin üstüne gel, ya da Sekme ile odaklan: ipucu çıkar. "Sil" düğmesinin test tutamağı: data-testid="delete".</p>
   </Demo></>,
-    "extensions": () => <><Demo wide title="Eklentiler: izleme (extend, setup)" desc="Bir bileşene sarmalayıcı yazmadan yeni bir özellik: track. Eklenti özelliği bildirir (bileşenin kendi özelliklerine girmez), setup ise bileşen çizildikten sonra kök öğelerle bir kez çalışır ve bileşenle birlikte temizlenir. m:extend={false} bir örneği dışarıda bırakır."
+    "extensions": () => <><Demo wide title="Askılar: izleme (extend, setup)" desc="Bir bileşene sarmalayıcı yazmadan yeni bir özellik: track. Askı özelliği bildirir (bileşenin kendi özelliklerine girmez), setup ise bileşen çizildikten sonra kök öğelerle bir kez çalışır ve bileşenle birlikte temizlenir. m:extend={false} bir örneği dışarıda bırakır."
     code={`const track = defineExtension({
   name: "track",
   props: { track: { type: "string", doc: "Event sent on click" } },
@@ -227,7 +227,7 @@ extend([Button, IconButton], track)                 // app-wide; or only inside:
 <Button track="share" m:extend={false}>Share</Button>   // this one takes no extension
 declare module "hadi-march" { interface ExtensionProps extends ExtensionPropsOf<typeof track> {} }`}>
     <div class="sc-options">
-      <Toggle bind:value={$trackOn} label="İzleme eklentisi açık" />
+      <Toggle bind:value={$trackOn} label="İzleme askısı açık" />
       <Toggle bind:value={$optOut} label="Paylaş dışarıda kalsın (m:extend={false})" />
     </div>
     {() => { const on = $trackOn, out = $optOut; return untrack(() => <Extensions use={on ? [[Button, track]] : []}>
@@ -239,7 +239,7 @@ declare module "hadi-march" { interface ExtensionProps extends ExtensionPropsOf<
     </Extensions>) }}
     <ol class="sc-ext-log" aria-label="Gönderilen olaylar" aria-live="polite">{() => (tracked().length ? tracked().map((l) => <li>{l}</li>) : <li class="m-muted">Düğmelere tıkla: olaylar burada görünür.</li>)}</ol>
   </Demo>
-  <Demo wide title="Eklentiler: küçük düğmeler (props araya gireni, kapsam)" desc="Bir bölümdeki bütün düğmelere varsayılan bir boyut, sarmalayıcı bileşen olmadan. Araya giren özellikleri değiştirir; değer canlıdır (okuduğu değişince yeniden çalışır) ve düğmenin kendi verdiği boyut kazanır. Kapsam yalnız içeride çizilenlere uygulanır."
+  <Demo wide title="Askılar: küçük düğmeler (props araya gireni, kapsam)" desc="Bir bölümdeki bütün düğmelere varsayılan bir boyut, sarmalayıcı bileşen olmadan. Araya giren özellikleri değiştirir; değer canlıdır (okuduğu değişince yeniden çalışır) ve düğmenin kendi verdiği boyut kazanır. Kapsam yalnız içeride çizilenlere uygulanır."
     code={`const small = defineExtension({ name: "small-buttons", target: Button, props: (p) => ({ size: p.size ?? $size }) })
 <Extensions use={[small]}>
   <Toolbar>…</Toolbar>          // every Button inside is small unless it says otherwise
@@ -256,7 +256,7 @@ intercept(Button, { name: "small-buttons", props: (p) => ({ size: p.size ?? "sm"
       <Card title="Kapsamın dışı"><div class="sc-row"><Button>Kes</Button><Button>Kopyala</Button><Button>Yapıştır</Button></div></Card>
     </div>
   </Demo>
-  <Demo wide title="Eklentiler: tıklamada onay (on araya gireni)" desc="Geri çağrıları sarar: next asıl onClick'i çağırır, çağırmamak olayı durdurur. Düğmenin koduna dokunmadan tehlikeli eylemlerden önce bir onay adımı."
+  <Demo wide title="Askılar: tıklamada onay (on araya gireni)" desc="Geri çağrıları sarar: next asıl onClick'i çağırır, çağırmamak olayı durdurur. Düğmenin koduna dokunmadan tehlikeli eylemlerden önce bir onay adımı."
     code={`intercept(Button, {
   name: "confirm-danger",
   on: { onClick: (next, e, p) => p.variant === "danger"
@@ -275,7 +275,7 @@ intercept(Button, { name: "small-buttons", props: (p) => ({ size: p.size ?? "sm"
     </Extensions>
     <ol class="sc-ext-log" aria-label="Sonuçlar" aria-live="polite">{() => ($asked.length ? $asked.map((l) => <li>{l}</li>) : <li class="m-muted">Bir düğmeye bas.</li>)}</ol>
   </Demo>
-  <Demo wide title="Eklentiler: çıktıyı sarmak ya da değiştirmek (render)" desc="render, bileşenin çağrısını sarar: next() bileşeni çizer; çıktısı olduğu gibi, sarılmış ya da tamamen başka bir şey dönebilir (next çağrılmazsa bileşen hiç çalışmaz). extensions.of(öğe), bir bileşene hangi eklentinin ne yaptığını söyler."
+  <Demo wide title="Askılar: çıktıyı sarmak ya da değiştirmek (render)" desc="render, bileşenin çağrısını sarar: next() bileşeni çizer; çıktısı olduğu gibi, sarılmış ya da tamamen başka bir şey dönebilir (next çağrılmazsa bileşen hiç çalışmaz). extensions.of(öğe), bir bileşene hangi askının ne yaptığını söyler."
     code={`intercept(Card, {
   name: "card-output",
   render: (next, p) => mode === "replace" && !p.isNew
@@ -284,7 +284,7 @@ intercept(Button, { name: "small-buttons", props: (p) => ({ size: p.size ?? "sm"
 })
 extensions.of(element)    // { component: "Card", steps: [{ name: "card-output", did: ["render"] }] }`}>
     <div class="sc-options">
-      <Field label="Eklenti" group><Segmented aria-label="Eklenti" bind:value={$cardMode} options={[{ value: "off", label: "yok" }, { value: "wrap", label: "yeni olanı sar" }, { value: "replace", label: "eskiyi değiştir" }]} /></Field>
+      <Field label="Askı" group><Segmented aria-label="Askı" bind:value={$cardMode} options={[{ value: "off", label: "yok" }, { value: "wrap", label: "yeni olanı sar" }, { value: "replace", label: "eskiyi değiştir" }]} /></Field>
     </div>
     {() => { $cardMode; return untrack(() => <Extensions use={[cardOut, [Card, isNew]]}>
       <div sx={{ cols: 2, gap: 3 }} ref={(el) => { traceHost = el as HTMLElement }}>
@@ -293,7 +293,7 @@ extensions.of(element)    // { component: "Card", steps: [{ name: "card-output",
       </div>
     </Extensions>) }}
     <div class="sc-row">
-      <Button size="sm" variant="ghost" onClick={() => { const t = extensions.of(traceHost?.querySelector(".m-card") ?? null); $traceText = t ? `${t.component}: ${t.steps.map((x) => `${x.name} (${x.did.join(", ")})`).join("; ")}` : "bu öğede eklenti yok" }}>İlk karta ne oldu? (extensions.of)</Button>
+      <Button size="sm" variant="ghost" onClick={() => { const t = extensions.of(traceHost?.querySelector(".m-card") ?? null); $traceText = t ? `${t.component}: ${t.steps.map((x) => `${x.name} (${x.did.join(", ")})`).join("; ")}` : "bu öğede askı yok" }}>İlk karta ne oldu? (extensions.of)</Button>
       <code class="sc-ext-trace">{() => $traceText}</code>
     </div>
   </Demo></>,

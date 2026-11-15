@@ -339,14 +339,14 @@ const describeProp = (name: string, o: PlaygroundOption): string => {
 }
 const asProperty = (o: PlaygroundOption): PropertySpec => {
   const spec = asPropertyBase(o), text = untrack(() => describeProp(selected(), o))
-  return text ? { ...spec, description: text } : spec
+  return text ? { ...spec, description: text, name: String(o.prop || o.key).replace(/^(html|a11y|api|mp):/, "") } : spec
 }
 const asPropertyBase = (o: PlaygroundOption): PropertySpec => {
   if (isTri(o)) return { key: o.key, label: o.label, group: MARCH_GROUP, control: (cp: Record<string, unknown>) => h(Toggle, { ...cp, tristate: true }), ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}) } as PropertySpec
   if (isIcon(o)) return { key: o.key, label: o.label, control: (cp: Record<string, unknown>) => IconPicker({ value: () => (cp["value"] as string | null) ?? null, onChange: (n: string | null) => (cp["setValue"] as (v: unknown) => void)(n), label: o.label, packs: iconPickerPacks }), group: MARCH_GROUP, ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}) } as PropertySpec
   if (o.key.startsWith("ext:")) {
     const x = untrack(() => extensionSpec(extInfo(), selected(), o.key)), t = x?.spec.type
-    const base = { key: o.key, label: o.label, group: x?.group ?? "Eklenti", ...(x?.spec.doc ? { description: x.spec.doc } : {}) }
+    const base = { key: o.key, label: o.label, group: x?.group ?? "Askı", ...(x?.spec.doc ? { description: x.spec.doc } : {}) }
     if (x?.spec.values?.length) return { ...base, type: "select", options: x.spec.values.map((v) => ({ value: v, label: String(v) })) } as PropertySpec
     return { ...base, type: t === "boolean" ? "switch" : t === "number" ? "number" : "text" } as PropertySpec
   }
@@ -932,7 +932,7 @@ const PANELS: AppPanel[] = [
   { id: "data", title: "Veriler", icon: database, disabled: () => !dataItems().length, content: dataPanel },
   { id: "deps", title: "Bağımlılıklar", icon: packageBox, disabled: () => !depTree().length, content: depsPanel },
   { id: "a11y", title: "Erişilebilirlik", icon: users, content: a11yPanel },
-  { id: "ext", title: "Eklentiler", icon: plug, content: () => <ExtensionsPanel info={extInfo} selected={selected} ownProps={(n) => exportedProps(n).map((p) => p.name)} refresh={readExtensions} /> },
+  { id: "ext", title: "Askılar", icon: plug, content: () => <ExtensionsPanel info={extInfo} selected={selected} ownProps={(n) => exportedProps(n).map((p) => p.name)} refresh={readExtensions} /> },
   fileTab("c1", "Button.tsx"),
   fileTab("c2", "Component2.tsx"),
   fileTab("c3", "Component3.tsx"),
@@ -944,8 +944,8 @@ const PRESETS: Record<string, Preset> = {
   main: {
     title: "Playground",
     tree: () => row(
-      [0.6, col([0.7, tabs("preview")], [0.3, row([0.5, tabs(["props", "events", "data"])], [0.5, tabs(["deps", "a11y", "ext"])])])],
-      [0.4, col([0.7, tabs(["c1", "c2", "c3"])], [0.3, tabs(["console", "debug", "terminal", "i18n"])])],
+      [0.6, col([0.7, tabs("preview")], [0.3, row([0.5, tabs(["props", "events", "data"])], [0.5, tabs(["deps", "a11y"])])])],
+      [0.4, col([0.7, tabs(["c1", "c2", "c3"])], [0.3, tabs(["console", "debug", "terminal", "i18n", "ext"])])],
     ),
   },
 }
@@ -1015,7 +1015,7 @@ export default function PlaygroundPage(props: { name?: string }) {
   onCleanup(() => { clearTimeout(timer); consoleApi = null; previewEl = null; void runtime?.then((r) => r.stop()) })
   return <div class="sc-playground">
     <AppUI title={props.name ?? "Test Bileşen"} description="bileşeni yaz, özelliklerini ayarla, önizlemede canlı dene" tools={<PaletteButton label="Komut ara…" class="sc-playground-pal" />}
-      panels={PANELS} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.playground.v5" label="Playground" api={followTabs}
+      panels={PANELS} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.playground.v6" label="Playground" api={followTabs}
       kit={(k: AppKit) => { debugSvc.set(k.service<DebuggerService>("debugger") ?? null); tsSvc = k.service<TypeScriptService>("typescript") ?? null }} />
   </div>
 }
