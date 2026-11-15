@@ -136,6 +136,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "grid-modes", title: "Beş mod yan yana", desc: "Aynı kart ve sütun sayısıyla; her kutu sabit bir sanal genişlikte (sütun başına 10rem) çizilip sığacak…", group: "Örnekler" },
     { slug: "grid", title: "Izgara", name: "Grid", desc: "Sütun sayısı, son satırın davranışı ve dengeleme.", group: "Yerleşim" },
     { slug: "stack", title: "Yığın, araç çubuğu ve ayraç", name: "Stack · Toolbar · Divider", desc: "Satır ya da sütun, boşluk belirteçleri (0–8), hizalama ve satır kaydırma; etiketli araç çubuğu ve ayraçlar.", group: "Yerleşim" },
+    { slug: "joined", title: "Bitişik bütün", name: "Joined", desc: "İçine ne konursa kendi çerçevesini, köşesini, gölgesini bırakır; bütünün tek çerçevesi ve köşesi, aralarda çizgi; dikey ya da yatay.", group: "Yerleşim" },
     { slug: "spacer", title: "Boşluk", name: "Spacer", desc: "Kendinden sonrakileri satırın mantıksal sonuna iter; RTL'de aynalanır.", group: "Yerleşim" },
     { slug: "splitter", title: "Bölücü", name: "Splitter", desc: "Tutamacı sürükleyin ya da odaklayıp ← → (RTL'de aynalı), Home / End; Enter başlangıç payına döndürür.", group: "Yerleşim" },
     { slug: "accordion", title: "Akordeon", name: "Accordion", desc: "Varsayılan tek açık bölüm; birden çok açık seçeneği, yükseklik animasyonu, başlıklar arasında ↑ ↓ Home End.", group: "Yerleşim" },

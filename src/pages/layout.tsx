@@ -88,6 +88,7 @@ export default function Layout(props: { params?: { rest?: string } }) {
   </Demo>,
     "grid": () => <ComponentDemo folder="layout/grid" title="Grid: seçenekler" desc="Sütun sayısı, son satırın davranışı ve dengeleme. Dar ekranda sütunlar kendiliğinden azalır." />,
     "stack": () => <ComponentDemo folder="layout/stack" title="Stack, Toolbar ve Divider" desc="Satır ya da sütun, boşluk belirteçleri (0–8), hizalama ve satır kaydırma; etiketli araç çubuğu ve ayraçlar." />,
+    "joined": () => <ComponentDemo folder="layout/joined" title="Joined: bir bütün gibi" desc="İçine ne konursa kendi çerçevesini, köşesini, gölgesini bırakır; bütünün tek çerçevesi ve köşesi, aralarda çizgi; dikey ya da yatay." />,
     "spacer": () => <ComponentDemo folder="layout/spacer" title="Spacer: esnek boşluk" desc="Kendinden sonrakileri satırın mantıksal sonuna iter; RTL'de aynalanır." />,
     "splitter": () => <ComponentDemo folder="layout/splitter" title="Splitter: boyutlandırılabilir bölmeler" desc="Tutamacı sürükleyin ya da odaklayıp ← → (RTL'de aynalı), Home / End; Enter başlangıç payına döndürür." />,
     "accordion": () => <ComponentDemo folder="layout/accordion" title="Accordion: açılır bölümler" desc="Varsayılan tek açık bölüm; birden çok açık seçeneği, yükseklik animasyonu, başlıklar arasında ↑ ↓ Home End." />,
