@@ -62,12 +62,34 @@ if (!serve || !existsSync(dist) || watching) {
     console.log(`✔ icon packs: ${packs.length} (dist/icon-packs)`);
     // the spray theme wave's paint worklet: a plain script the page loads from its own origin (CSP script-src 'self')
     writeFileSync(join(dist, "spray-worklet.js"), readFileSync(join(here, "..", "..", "src", "motion", "spray-worklet.js")));
+    // the playground's build tools, loaded only by /playground: esbuild-wasm (its ESM browser build and the wasm; CSP
+    // allows 'wasm-unsafe-eval') and the March compiler bundled for the browser (its node-only loader replaced by the
+    // runtime's own sx module)
+    await writePlaygroundTools(join(dist, "playground"));
     // the whole published folder (pages, chunks, public files, icon packs) against budget.maxFiles
     const maxFiles = (await import(pathToFileURL(join(here, "march.config.js")).href)).default.budget?.maxFiles;
     const tooMany = release ? filesOver(dist, maxFiles) : null;
     if (tooMany) { console.error(`✖ ${tooMany}`); process.exit(1); }
     console.log(`✔ showcase (${release ? "release" : "dev"}): ${dist} in ${((performance.now() - t0) / 1000).toFixed(1)} s (generators ${(tGen / 1000).toFixed(1)} s)`);
   }
+}
+async function writePlaygroundTools(out) {
+  const { mkdirSync, copyFileSync } = await import("node:fs");
+  const esbuild = await import("esbuild");
+  const root = join(here, "..", "..");
+  mkdirSync(out, { recursive: true });
+  copyFileSync(join(root, "node_modules", "esbuild-wasm", "esm", "browser.min.js"), join(out, "esbuild.js"));
+  copyFileSync(join(root, "node_modules", "esbuild-wasm", "esbuild.wasm"), join(out, "esbuild.wasm"));
+  const sx = join(root, "src", "core", "sx.ts").split("\\").join("/");
+  await esbuild.build({
+    entryPoints: [join(root, "compiler", "index.js")], bundle: true, format: "esm", platform: "browser", target: "es2022", minify: true,
+    outfile: join(out, "march-compiler.js"), logLevel: "error",
+    plugins: [{ name: "browser-load-ts", setup(b) {
+      b.onResolve({ filter: /\/load-ts\.js$/ }, () => ({ path: "load-ts", namespace: "march-browser" }));
+      b.onLoad({ filter: /.*/, namespace: "march-browser" }, () => ({ contents: `import * as sx from ${JSON.stringify(sx)}; export const importTs = async () => sx;`, loader: "js", resolveDir: root }));
+    } }],
+  });
+  console.log("✔ playground tools (esbuild-wasm, March compiler)");
 }
 if (serve) {
   const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".json": "application/json" };

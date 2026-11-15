@@ -3,3 +3,5 @@
 .sc-playground-empty { block-size: 100%; display: grid; place-content: center; justify-items: center; gap: var(--m-space-1); color: var(--m-muted); font-size: var(--m-text-sm); text-align: center; }
 .sc-playground-empty b { color: var(--m-text); font: 800 var(--m-text-md) var(--m-font-display); }
 .sc-playground-pal { min-inline-size: 0; max-inline-size: 15rem; }
+.sc-lang { block-size: 100%; overflow: auto; padding: var(--m-space-2) var(--m-space-3); }
+.sc-console { block-size: 100%; border-radius: 0; }

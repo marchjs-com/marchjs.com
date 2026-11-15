@@ -11,7 +11,7 @@ const sig: Record<string, Record<string, string>> = {
   "Textarea": "function Textarea(props: TextareaProps): unknown",
   "ThemeMenu": "function ThemeMenu(props: ThemeMenuProps = {}): unknown",
   "ThemePicker": "function ThemePicker(props: ThemePickerProps = {}): unknown",
-  "ThemeSwatch": "function ThemeSwatch(props: { id: string; class?: ClassProp }): Element",
+  "ThemeSwatch": "function ThemeSwatch(props: { id: string; class?: ClassProp; /** Light or dark of its own (default the page's). */ mode?: MaybeFn<\"light\" | \"dark\" | null | undefined> }): Element",
   "ThemeToggle": "function ThemeToggle(props: ThemeToggleProps = {}): Element",
   "TimeInput": "function TimeInput(props: TimeInputProps): unknown"
  }
