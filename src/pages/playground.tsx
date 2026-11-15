@@ -6,18 +6,19 @@
 // change is built in the page (playground/build.ts): the Console shows each step with its time and the errors,
 // lang.json the texts the build found. No tab has a close mark (groups still collapse to strips).
 import "./playground.css";
-import { h, render as mount, createRoot, signal, computed, effect, untrack, onCleanup } from "hadi-march";
+import { h, render as mount, createRoot, signal, computed, effect, untrack, onCleanup, locale } from "hadi-march";
 import { registry } from "hadi-march/components/registry.gen.ts";
 import type { PlaygroundOption } from "hadi-march/components/meta.ts";
 import { appUrl } from "hadi-march/base";
 import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "hadi-march/ui";
 import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
-import { x as xIcon, plus, database, zap, monitor, sliders, packageBox, users, code, terminal, fileText, globe } from "hadi-march/icons";
+import { x as xIcon, plus, database, zap, monitor, sliders, packageBox, users, code, terminal, fileText, globe, plug } from "hadi-march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "hadi-march/forms"
 import { COLOR_TOKENS } from "hadi-march/theme"
 import { createBuilder } from "../playground/build.ts";
 import { findRoots, exportRoots, viewRoots, type JsxRoot } from "../playground/roots.ts";
 import { iconPickerPacks, packRef } from "../icon-packs.ts";
+import { ExtensionsPanel, extensionOptions, extensionSpec, withExtensionSuggestions, NO_EXT, type ExtInfo } from "../playground/extensions-tab.tsx";
 
 
 // the component's files (kept for this visit)
@@ -140,7 +141,7 @@ const inTree = computed((): string[] => { const out = new Set<string>(); const g
 const selected = signal("")
 const optionsBy = signal<Record<string, readonly PlaygroundOption[]>>({})
 const valuesBy = signal<Record<string, Record<string, unknown>>>({})
-interface ApiProp { name: string; type: string; doc: string }
+interface ApiProp { name: string; type: string; doc: string; tr?: string }
 /** Every prop a component exports (the API reference): its events and its accessibility props are read from it. */
 const apiPropsBy = signal<Record<string, ApiProp[]>>({})
 // an option that takes an icon (icon, iconEnd…): chosen with an IconPicker, kept as the icon's name. A yes / no icon
@@ -274,13 +275,17 @@ const collator = new Intl.Collator("tr")
 /** Every option of a component: March's (by label), then its HTML attributes (by name). */
 const optsOf = (name: string): readonly PlaygroundOption[] => {
   const march = optionsBy()[name]
-  return march ? [...[...march, ...apiOptions(name)].sort((a, b) => collator.compare(a.label, b.label)), ...commonOptions(name), ...htmlOptions(name), ...a11yOptions(name)] : []
+  return march ? [...[...march, ...apiOptions(name)].sort((a, b) => collator.compare(a.label, b.label)), ...extOptions(name), ...commonOptions(name), ...htmlOptions(name), ...a11yOptions(name)] : []
 }
-const isHtml = (o: PlaygroundOption): boolean => /^(html|a11y|mp|api):/.test(o.key)
+const isHtml = (o: PlaygroundOption): boolean => /^(html|a11y|mp|api|ext):/.test(o.key)
+// the props the code's extensions add to a component (the preview runtime's March: read after every build): their own
+// group in Properties, named by the extension
+const extInfo = signal<ExtInfo>(NO_EXT, { equals: (a, b) => JSON.stringify(a) === JSON.stringify(b) })
+const extOptions = (name: string): PlaygroundOption[] => extensionOptions(extInfo(), name, new Set((optionsBy()[name] ?? []).map((o) => String(o.prop || o.key))))
 const isA11y = (o: PlaygroundOption): boolean => o.key.startsWith("a11y:")
 const options = (): readonly PlaygroundOption[] => optsOf(selected())
 // the set of options (the grid is made again when it changes: a component chosen, the root's tag read)
-const optionKeys = computed(() => `${selected()}:${options().map((o) => o.key).join(",")}:${selected() in tableBy() ? 1 : 0}:${selected() in apiPropsBy() ? 1 : 0}`)
+const optionKeys = computed(() => `${selected()}:${options().map((o) => o.key).join(",")}:${selected() in tableBy() ? 1 : 0}:${selected() in apiPropsBy() ? 1 : 0}:${locale()}`)
 const values = (): Record<string, unknown> => { const v = valuesBy()[selected()] ?? {}; return Object.fromEntries(options().map((o) => [o.key, v[o.key] ?? defaultOf(o)])) }
 const setValues = (v: Record<string, unknown>) => valuesBy.set({ ...valuesBy.peek(), [selected.peek()]: { ...v } })
 // March's classes: every .m-… class of the page's stylesheets (read once, when a class field first opens)
@@ -311,7 +316,7 @@ const classControl = comboControl(classList, { list: [], own: true, multi: true 
 // data-*: rows of key and value, written as data-key="value"
 const dataControl = (cp: Record<string, unknown>): unknown => h(KeyValueEditor, { ...cp, keyPlaceholder: "anahtar", valuePlaceholder: "değer", labels: { key: "anahtar", value: "değer", add: "Ekle" } })
 // each property's text under its name (muted, small): the API reference's (the prop's JSDoc), else the component's
-// docs table; in the showcase's language when the text has one (the props' texts are English for now)
+// docs table; in the showcase's language: Turkish (the prop's `@tr` JSDoc tag, `props[].tr`) when the page is Turkish
 const tableBy = signal<Record<string, Record<string, string>>>({})
 const tables = new Map<string, Promise<Record<string, { props?: [string, string, string, string][] }>>>()
 const plain = (md: string): string => md.replace(/`([^`]*)`/g, "$1").replace(/\*\*?([^*]+)\*\*?/g, "$1").trim()
@@ -328,8 +333,9 @@ effect(() => { for (const name of inTree()) if (!(name in untrack(tableBy))) voi
 /** The text under a property's name. */
 const describeProp = (name: string, o: PlaygroundOption): string => {
   const prop = String(o.prop || o.key).replace(/^(html|a11y|api|mp):/, "")
-  const api = (apiPropsBy()[name] ?? []).find((p) => p.name === prop)?.doc ?? ""
-  return plain(api || tableBy()[name]?.[prop] || "")
+  const api = (apiPropsBy()[name] ?? []).find((p) => p.name === prop)
+  const tr = locale().split("-")[0] === "tr" ? api?.tr : ""
+  return plain(tr || api?.doc || tableBy()[name]?.[prop] || "")
 }
 const asProperty = (o: PlaygroundOption): PropertySpec => {
   const spec = asPropertyBase(o), text = untrack(() => describeProp(selected(), o))
@@ -338,6 +344,12 @@ const asProperty = (o: PlaygroundOption): PropertySpec => {
 const asPropertyBase = (o: PlaygroundOption): PropertySpec => {
   if (isTri(o)) return { key: o.key, label: o.label, group: MARCH_GROUP, control: (cp: Record<string, unknown>) => h(Toggle, { ...cp, tristate: true }), ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}) } as PropertySpec
   if (isIcon(o)) return { key: o.key, label: o.label, control: (cp: Record<string, unknown>) => IconPicker({ value: () => (cp["value"] as string | null) ?? null, onChange: (n: string | null) => (cp["setValue"] as (v: unknown) => void)(n), label: o.label, packs: iconPickerPacks }), group: MARCH_GROUP, ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}) } as PropertySpec
+  if (o.key.startsWith("ext:")) {
+    const x = untrack(() => extensionSpec(extInfo(), selected(), o.key)), t = x?.spec.type
+    const base = { key: o.key, label: o.label, group: x?.group ?? "Eklenti", ...(x?.spec.doc ? { description: x.spec.doc } : {}) }
+    if (x?.spec.values?.length) return { ...base, type: "select", options: x.spec.values.map((v) => ({ value: v, label: String(v) })) } as PropertySpec
+    return { ...base, type: t === "boolean" ? "switch" : t === "number" ? "number" : "text" } as PropertySpec
+  }
   if (isHtml(o)) {
     const name = String(o.prop)
     const group = isA11y(o) ? A11Y_GROUP : o.key.startsWith("mp:") ? COMMON_GROUP : o.key.startsWith("api:") ? MARCH_GROUP : HTML_GROUP, label = o.label
@@ -860,7 +872,7 @@ const langPanel = () => <div class="sc-lang">
 let previewEl: HTMLElement | null = null
 type Parts = Record<string, Record<string, unknown>>
 let tsSvc: TypeScriptService | null = null
-type Runtime = { setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void }
+type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void }
 let runtime: Promise<Runtime> | null = null, runtimeNow: Runtime | null = null
 const loadRuntime = () => (runtime ??= (async () => {
   // its components' stylesheet, once
@@ -874,6 +886,8 @@ const loadRuntime = () => (runtime ??= (async () => {
   runtimeNow = r
   return r
 })())
+/** What the code's extensions are and did (the Extensions tab, Properties, suggestions): read from the preview's March. */
+const readExtensions = (): void => { if (runtimeNow) extInfo.set(runtimeNow.extensionInfo(untrack(inTree))) }
 /** Each cell's first element: the tag its component draws. */
 const readTag = (): void => {
   const out: Record<string, string> = {}
@@ -898,6 +912,7 @@ async function render(code: string): Promise<void> {
   try {
     await (await loadRuntime()).run(code, previewEl, untrack(rootProps), untrack(partsNow))
     readTag()
+    readExtensions()
     print(`[${stamp()}] Önizleme çizildi · ${Math.round(performance.now() - t0)} ms`, "success")
   } catch (e) {
     print(`[${stamp()}] ✖ Çalışma hatası: ${String((e as Error)?.message ?? e)}`, "error")
@@ -917,6 +932,7 @@ const PANELS: AppPanel[] = [
   { id: "data", title: "Veriler", icon: database, disabled: () => !dataItems().length, content: dataPanel },
   { id: "deps", title: "Bağımlılıklar", icon: packageBox, disabled: () => !depTree().length, content: depsPanel },
   { id: "a11y", title: "Erişilebilirlik", icon: users, content: a11yPanel },
+  { id: "ext", title: "Eklentiler", icon: plug, content: () => <ExtensionsPanel info={extInfo} selected={selected} ownProps={(n) => exportedProps(n).map((p) => p.name)} refresh={readExtensions} /> },
   fileTab("c1", "Button.tsx"),
   fileTab("c2", "Component2.tsx"),
   fileTab("c3", "Component3.tsx"),
@@ -928,7 +944,7 @@ const PRESETS: Record<string, Preset> = {
   main: {
     title: "Playground",
     tree: () => row(
-      [0.6, col([0.7, tabs("preview")], [0.3, row([0.5, tabs(["props", "events", "data"])], [0.5, tabs(["deps", "a11y"])])])],
+      [0.6, col([0.7, tabs("preview")], [0.3, row([0.5, tabs(["props", "events", "data"])], [0.5, tabs(["deps", "a11y", "ext"])])])],
       [0.4, col([0.7, tabs(["c1", "c2", "c3"])], [0.3, tabs(["console", "debug", "terminal", "i18n"])])],
     ),
   },
@@ -951,7 +967,7 @@ const debug = debuggerPlugin({
   evaluate: async (expr, scope) => (await loadRuntime()).evaluate(expr, scope),
   untrack: (fn) => (runtimeNow ? runtimeNow.untrack(fn) : fn()),
 })
-const PLUGINS = [typescript, debug, codeEditorPlugin({ save: (f) => { print(`[${stamp()}] 💾 ${f.path} kaydedildi, derleniyor`, "success"); scheduleBuild(0) } }), marchLanguagePlugin({ catalog })]
+const PLUGINS = [typescript, debug, codeEditorPlugin({ save: (f) => { print(`[${stamp()}] 💾 ${f.path} kaydedildi, derleniyor`, "success"); scheduleBuild(0) } }), withExtensionSuggestions(marchLanguagePlugin({ catalog }), extInfo)]
 
 // the next build (one at a time: a newer request replaces a waiting one)
 let timer: ReturnType<typeof setTimeout> | undefined
@@ -974,7 +990,7 @@ export default function PlaygroundPage(props: { name?: string }) {
   // the preview's language: its file, or the code's own texts
   effect(() => { const code = previewLang(), file = code ? langFile(code) : null; void runtime?.then((r) => r.setLanguage(file)) })
   // a property changes: the rendered component takes it at once (no build)
-  effect(() => { const p = rootProps(), parts = partsNow(); void runtime?.then((r) => { r.setProps(p, parts); readTag() }) })
+  effect(() => { const p = rootProps(), parts = partsNow(); void runtime?.then((r) => { r.setProps(p, parts); readTag(); readExtensions() }) })
   // HTML events chosen in Events: listened to on the preview, for the element each exported component draws
   effect(() => {
     // what is chosen is read first (so the effect follows it even before the preview is there)

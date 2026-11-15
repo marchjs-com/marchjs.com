@@ -135,6 +135,8 @@ export function setProps(props: Record<string, Props>, parts: Record<string, Par
  */
 export async function run(code: string, el: HTMLElement, props: Record<string, Props> = {}, parts: Record<string, Parts> = {}): Promise<string[]> {
   const url = URL.createObjectURL(new Blob([link(code)], { type: "text/javascript" }));
+  // the extensions the previous run registered (extend / intercept at the module's top) go with it
+  core.extensions.clear();
   let mod: Record<string, unknown>;
   try { mod = await import(/* @vite-ignore */ url) as Record<string, unknown>; }
   catch (e) { URL.revokeObjectURL(url); throw e; }
@@ -198,6 +200,26 @@ export async function evaluate(line: string, scope: Record<string, unknown> = {}
   // not an expression: statements; when they do not parse either, the expression's error is the one to read
   try { return await load(`export default await (async () => {\n${src}\n})();\n`); }
   catch (e) { throw e instanceof SyntaxError && !g["__marchEvalRan"] ? first : e; }
+}
+/** What the playground's Extensions tab shows: the extensions the code registered (this runtime's March), the props
+ * they add to each named component, and what they did to the components drawn in the preview. */
+export interface ExtensionInfo {
+  list: ReturnType<typeof core.extensions.list>;
+  props: Record<string, { extension: string; props: Record<string, { type?: string; default?: unknown; doc?: string; values?: readonly unknown[] }> }[]>;
+  traces: { cell: string; component: string; steps: { name: string; did: string[]; before?: Record<string, unknown>; after?: Record<string, unknown> }[] }[];
+}
+let named = false;
+export function extensionInfo(names: readonly string[]): ExtensionInfo {
+  const ext = core.extensions;
+  // names survive the build's minifying: March's components by their export names, the code's by its own
+  if (!named) { named = true; ext.name(ui as unknown as Record<string, unknown>); }
+  if (last) ext.name(Object.fromEntries([...last.cells].map(([n, c]) => [n, c.C])));
+  const comp = (n: string): unknown => last?.cells.get(n)?.C ?? (ui as Record<string, unknown>)[n];
+  const props: ExtensionInfo["props"] = {};
+  for (const n of names) { const c = comp(n); if (typeof c === "function") props[n] = ext.propsOf(c as never); }
+  const traces: ExtensionInfo["traces"] = [];
+  for (const [cell, c] of last?.cells ?? []) for (const t of ext.within(c.el)) traces.push({ cell, ...t });
+  return { list: core.untrack(() => ext.list()), props, traces };
 }
 /** The untrack of this runtime's March (the debugger reads the code's values without subscribing to them). */
 export const untrack = core.untrack;
