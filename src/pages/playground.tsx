@@ -532,10 +532,10 @@ const gridPanel = (make: () => unknown) => () => {
   </div>
 }
 const a11yPanel = gridPanel(() => { const list = options().filter(isA11y); return list.length
-  ? <PropertyGrid properties={list.map(asProperty)} value={values()} onChange={setValues} label={`${selected()} erişilebilirliği`} saved={values()} footer={false} history={false} dirty={false} search={false} />
+  ? <PropertyGrid persist="sc.playground.a11y" properties={list.map(asProperty)} value={values()} onChange={setValues} label={`${selected()} erişilebilirliği`} saved={values()} footer={false} history={false} dirty={false} search={false} />
   : <div class="sc-playground-empty"><b>Erişilebilirlik</b><span>Dışa aktarılan bileşen yok</span></div> })
 const propsPanel = gridPanel(() => (options().length
-  ? <PropertyGrid properties={options().filter((o) => !isA11y(o)).map(asProperty)} value={values()} onChange={setValues} label={`${selected()} özellikleri`} saved={values()} footer={false} history={false} dirty={false} search={false} />
+  ? <PropertyGrid persist="sc.playground.props" openGroups={[MARCH_GROUP]} properties={options().filter((o) => !isA11y(o)).map(asProperty)} value={values()} onChange={setValues} label={`${selected()} özellikleri`} saved={values()} footer={false} history={false} dirty={false} search={false} />
   : <div class="sc-playground-empty"><b>Özellik yok</b><span>{selected() ? `${selected()} prop almıyor` : "Dışa aktarılan bileşen yok"}</span></div>))
 // Dependencies: the tree of the components the work is built from; the one chosen shows its Properties
 const allIds = (nodes: readonly DepNode[]): string[] => { const ids: string[] = []; const go = (n: DepNode): void => { ids.push(n.id); n.children?.forEach(go) }; nodes.forEach(go); return ids }
@@ -993,7 +993,7 @@ const PANELS: AppPanel[] = [
   { id: "preview", title: "Önizleme", icon: monitor, content: preview },
   { id: "props", title: "Özellikler", icon: sliders, disabled: () => !options().length, content: propsPanel },
   { id: "events", title: "Olaylar", icon: zap, content: eventsPanel },
-  { id: "data", title: "Veriler", icon: database, disabled: () => !dataItems().length, content: dataPanel },
+  { id: "data", title: "Veriler", icon: database, content: dataPanel },
   { id: "deps", title: "Bağımlılıklar", icon: packageBox, disabled: () => !depTree().length, content: depsPanel },
   { id: "a11y", title: "Erişilebilirlik", icon: users, content: a11yPanel },
   { id: "ext", title: "Askılar", icon: plug, content: () => <ExtensionsPanel info={extInfo} selected={selected} ownProps={(n) => exportedProps(n).map((p) => p.name)} refresh={readExtensions} /> },
