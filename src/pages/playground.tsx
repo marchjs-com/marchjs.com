@@ -898,7 +898,7 @@ const debug = debuggerPlugin({
   evaluate: async (expr, scope) => (await loadRuntime()).evaluate(expr, scope),
   untrack: (fn) => (runtimeNow ? runtimeNow.untrack(fn) : fn()),
 })
-const PLUGINS = [typescript, debug, codeEditorPlugin(), marchLanguagePlugin({ catalog })]
+const PLUGINS = [typescript, debug, codeEditorPlugin({ save: (f) => { print(`[${stamp()}] 💾 ${f.path} kaydedildi, derleniyor`, "success"); scheduleBuild(0) } }), marchLanguagePlugin({ catalog })]
 
 // the next build (one at a time: a newer request replaces a waiting one)
 let timer: ReturnType<typeof setTimeout> | undefined
