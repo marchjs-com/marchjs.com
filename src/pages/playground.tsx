@@ -11,15 +11,13 @@ import { registry } from "hadi-march/components/registry.gen.ts";
 import type { PlaygroundOption } from "hadi-march/components/meta.ts";
 import { appUrl } from "hadi-march/base";
 import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "hadi-march/ui";
-import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, groups, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
-import { x as xIcon, plus, database, zap, monitor, sliders, packageBox, users, code, terminal, bug, fileText, globe } from "hadi-march/icons";
+import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
+import { x as xIcon, plus, database, zap, monitor, sliders, packageBox, users, code, terminal, fileText, globe } from "hadi-march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "hadi-march/forms"
 import { COLOR_TOKENS } from "hadi-march/theme"
 import { createBuilder } from "../playground/build.ts";
 import { iconPickerPacks, packRef } from "../icon-packs.ts";
 
-const empty = (name: string) => () => <div class="sc-playground-empty"><b>{name}</b><span>Boş panel</span></div>
-const panel = (id: string, title: string, icon: unknown): AppPanel => ({ id, title, icon, content: empty(title) })
 
 // the component's files (kept for this visit)
 const SOURCES: Record<string, string> = {
@@ -573,7 +571,15 @@ const consolePanel = () => <Terminal readonly scheme="dark" height="100%" label=
 // running preview with the file's signals in scope (count.set(3)), $el (the chosen component's element) and $props.
 /** Build the file in front now (its kept result is not used); the steps go to the Console. */
 const buildNow = async () => {
-  const path = untrack(active), now = untrack(() => ({ [path]: withData(files.get(path)?.() ?? ""), [ENTRY]: entrySource() }))
+  const path = untrack(active)
+  let src = untrack(() => files.get(path)?.() ?? "")
+  // debugging: the file with the debugger's calls written in (the session starts for it); its line numbers stay
+  const dbg = untrack(debugSvc)
+  if (dbg && untrack(dbg.active)) {
+    try { src = (await dbg.prepare({ [path]: src }))[path] ?? src; print(`[${stamp()}] 🐞 ${path} hata ayıklama için hazırlandı`, "info") }
+    catch (e) { print(`[${stamp()}] ✖ Hata ayıklama hazırlanamadı: ${String((e as Error)?.message ?? e)}`, "error") }
+  }
+  const now = untrack(() => ({ [path]: withData(src), [ENTRY]: entrySource() }))
   const r = await builder.build(now, ENTRY)
   if (r?.ok) await render(r.code)
   return r
@@ -737,7 +743,10 @@ const COMMANDS: Record<string, TerminalCommand> = {
 const evalLine = async (line: string, io: TerminalIO): Promise<void> => {
   if (!runtime || !previewEl) { io.error("Önizleme henüz çizilmedi"); return }
   const r = await runtime
-  show(await r.evaluate(line, { $el: chosenEl(), $preview: previewEl, $props: propsFor(selected.peek()), toast }), io)
+  // stopped in the debugger: the names in scope at that step come first (their values then)
+  const dbg = debugSvc.peek(), at = dbg && dbg.session.state() === "paused" ? dbg.session.scope() : null
+  if (at) io.print(`🐞 ${dbg!.session.shown()?.fn ?? ""} kapsamında`, { tone: "muted" })
+  show(await r.evaluate(line, { $el: chosenEl(), $preview: previewEl, $props: propsFor(selected.peek()), toast, ...at }), io)
 }
 const terminalPanel = () => <Terminal scheme="dark" height="100%" prompt="› " persist="sc.playground" label="Playground terminali" class="sc-console"
   commands={COMMANDS} fallback={evalLine} labels={{ command: "Komut ya da JavaScript" }}
@@ -802,8 +811,8 @@ const langPanel = () => <div class="sc-lang">
 // PreviewControl is rendered in the middle of its stage by the preview runtime (playground/preview.js, loaded once)
 let previewEl: HTMLElement | null = null
 type Parts = Record<string, Record<string, unknown>>
-type Runtime = { evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void }
-let runtime: Promise<Runtime> | null = null
+type Runtime = { untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void }
+let runtime: Promise<Runtime> | null = null, runtimeNow: Runtime | null = null
 const loadRuntime = () => (runtime ??= (async () => {
   // its components' stylesheet, once
   const link = document.createElement("link")
@@ -811,6 +820,7 @@ const loadRuntime = () => (runtime ??= (async () => {
   document.head.append(link)
   const r = await import(/* @vite-ignore */ appUrl("playground/preview.js")) as Runtime
   r.onData((values) => liveData.set(values))
+  runtimeNow = r
   return r
 })())
 /** Each cell's first element: the tag its component draws. */
@@ -860,7 +870,6 @@ const PANELS: AppPanel[] = [
   fileTab("c2", "Component2.tsx"),
   fileTab("c3", "Component3.tsx"),
   { id: "console", title: "Konsol", icon: code, content: consolePanel },
-  panel("debug", "Hata ayıklayıcı", bug),
   { id: "terminal", title: "Terminal", icon: terminal, content: terminalPanel },
   { id: "i18n", title: "lang.json", icon: globe, content: langPanel },
 ]
@@ -877,20 +886,37 @@ const PRESETS: Record<string, Preset> = {
 const catalog = (): Promise<MarchCatalog> => apiIndex()
 // the TypeScript language service in a worker (the build copies it, the compiler and the lib files to playground/)
 const typescript = typeScriptPlugin({ worker: appUrl("playground/ts-worker.js"), typescript: appUrl("playground/ts/typescript.js"), lib: appUrl("playground/ts/") })
-const PLUGINS = [typescript, codeEditorPlugin(), marchLanguagePlugin({ catalog })]
+// the debugger (march-app-ui): the panel, the editor's gutter (click a line number: a breakpoint) and F5 / F8 / F10 / F11;
+// while it is on, every build writes its calls into the file (buildNow); watches, conditions and the Terminal evaluate in
+// the preview runtime (its March, its untrack)
+const debugSvc = signal<DebuggerService | null>(null)
+const debugTab = (file: string): void => { const id = Object.entries(FILE_OF).find(([, f]) => f === file)?.[0]; if (id && dock) dock.open(id) }
+const debug = debuggerPlugin({
+  persist: "sc.playground.debug",
+  run: () => scheduleBuild(0),
+  reveal: (file) => debugTab(file),
+  evaluate: async (expr, scope) => (await loadRuntime()).evaluate(expr, scope),
+  untrack: (fn) => (runtimeNow ? runtimeNow.untrack(fn) : fn()),
+})
+const PLUGINS = [typescript, debug, codeEditorPlugin(), marchLanguagePlugin({ catalog })]
+
+// the next build (one at a time: a newer request replaces a waiting one)
+let timer: ReturnType<typeof setTimeout> | undefined
+const scheduleBuild = (ms: number): void => { clearTimeout(timer); timer = setTimeout(() => { void buildNow() }, ms) }
 
 export default function PlaygroundPage(props: { name?: string }) {
   // every change is built a moment after typing stops
-  let timer: ReturnType<typeof setTimeout> | undefined
   effect(() => {
     // only the file in front (and the entry that renders it)
     const path = active()
     const now = { [path]: withData(files.get(path)?.() ?? ""), [ENTRY]: entrySource() }
     clearTimeout(timer)
+    // debugging: every build writes the debugger's calls in (buildNow), nothing kept is used
+    if (debugSvc()?.active()) { scheduleBuild(350); return }
     // built before with this very code (a tab shown again): the kept result, at once
     const kept = builder.cached(now, ENTRY)
     if (kept) { print(`[${stamp()}] ↺ ${path}: bu kod daha önce derlendi, bellekteki sonuç kullanılıyor`, "muted"); void render(kept.code); return }
-    timer = setTimeout(() => { void buildNow() }, 350)
+    scheduleBuild(350)
   })
   // the preview's language: its file, or the code's own texts
   effect(() => { const code = previewLang(), file = code ? langFile(code) : null; void runtime?.then((r) => r.setLanguage(file)) })
@@ -920,6 +946,7 @@ export default function PlaygroundPage(props: { name?: string }) {
   onCleanup(() => { clearTimeout(timer); consoleApi = null; previewEl = null; void runtime?.then((r) => r.stop()) })
   return <div class="sc-playground">
     <AppUI title={props.name ?? "Test Bileşen"} tools={<PaletteButton label="Komut ara…" class="sc-playground-pal" />}
-      panels={PANELS} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.playground.v5" label="Playground" api={followTabs} />
+      panels={PANELS} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.playground.v5" label="Playground" api={followTabs}
+      kit={(k: AppKit) => debugSvc.set(k.service<DebuggerService>("debugger") ?? null)} />
   </div>
 }

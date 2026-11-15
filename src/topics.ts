@@ -14,6 +14,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "json", title: "JSON düzenleyici", name: "JsonEditor", desc: "Aynı JSON metinde ve ağaçta; satır/sütunlu hata, biçimlendir.", group: "Veri" },
     { slug: "tree", title: "JSON ağacı", name: "TreeEditor", desc: "Satır satır düzenleme, tür rozetleri, şema doğrulaması, geri al.", group: "Veri" },
     { slug: "terminal", title: "Terminal", name: "Terminal", desc: "Komutlar, ANSI renkler, tablo ve JSON çıktısı; pencereli hâli.", group: "Veri" },
+    { slug: "debugger", title: "Hata ayıklayıcı", name: "Debugger", desc: "Kesme noktası, adım adım, izlenenler, çağrı yığını; kayıtta zamanda geri.", group: "Veri" },
     { slug: "color", title: "Renk seçici", name: "ColorPicker", desc: "HSV alanı, saydamlık, göz damlası, paletler.", group: "Görsel" },
     { slug: "font", title: "Yazı tipi seçici", name: "FontPicker", desc: "Sistem ve Google yazı tipleri tek listede; arama, canlı önizleme, favoriler.", group: "Görsel" },
     { slug: "gradient", title: "Gradyan", name: "GradientEditor", desc: "Duraklar ve açı; CSS çıktısı.", group: "Görsel" },

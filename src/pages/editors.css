@@ -31,3 +31,8 @@
 .sc-fp-card p { margin: 0; font-size: var(--m-text-lg); line-height: 1.5; color: var(--m-text-2); }
 .sc-fp-kicker { font-size: var(--m-text-sm); color: var(--m-brand-orange-text, var(--m-brand-orange)); }
 .sc-fp-meta { margin-block-start: var(--m-space-2); font-family: var(--m-font-mono); font-size: var(--m-text-xs); color: var(--m-muted); overflow-wrap: anywhere; }
+/* Debugger: the code with its gutter beside the panel (one above the other on a phone) */
+.sc-dbg-demo { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--m-space-3); block-size: 30rem; min-inline-size: 0; }
+.sc-dbg-code, .sc-dbg-panel { min-block-size: 0; overflow: auto; border-radius: var(--m-radius-3); }
+.sc-dbg-panel { border: var(--m-border-w, 1px) solid var(--m-border); }
+@media (max-width: 720px) { .sc-dbg-demo { grid-template-columns: 1fr; block-size: auto; } .sc-dbg-panel { block-size: 26rem; } }

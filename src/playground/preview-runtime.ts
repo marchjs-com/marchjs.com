@@ -174,6 +174,8 @@ export async function evaluate(line: string, scope: Record<string, unknown> = {}
   try { return await load(`export default await (async () => {\n${src}\n})();\n`); }
   catch (e) { throw e instanceof SyntaxError && !g["__marchEvalRan"] ? first : e; }
 }
+/** The untrack of this runtime's March (the debugger reads the code's values without subscribing to them). */
+export const untrack = core.untrack;
 /** Remove what the last run rendered. */
 export function stop(): void {
   dataStop?.(); dataStop = null;
