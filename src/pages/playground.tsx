@@ -16,6 +16,7 @@ import { x as xIcon, plus, database, zap, monitor, sliders, packageBox, users, c
 import { KeyValueEditor, TextInput, JsonEditor } from "hadi-march/forms"
 import { COLOR_TOKENS } from "hadi-march/theme"
 import { createBuilder } from "../playground/build.ts";
+import { findRoots, exportRoots, viewRoots, type JsxRoot } from "../playground/roots.ts";
 import { iconPickerPacks, packRef } from "../icon-packs.ts";
 
 
@@ -68,17 +69,25 @@ const followTabs = (api: DockApi) => {
 }
 // the components the file in front exports (names with a capital letter): each has a cell of the preview and a root
 // in the Dependencies tree
+// the elements the file writes at its top level, assigned to nothing (<CodeEditor … />): components of their own,
+// named by their tag (CodeEditor_1); their props are the written ones, Properties go over them
+const jsxRoots = computed((): JsxRoot[] => findRoots(files.get(active())?.() ?? ""), { equals: (a, b) => !!a && !!b && a.map((r) => r.name + r.tag).join() === b.map((r) => r.name + r.tag).join() })
+/** The tag a top-level element's name stands for (CodeEditor_1 → CodeEditor); undefined for a name the file exports. */
+const rootTag = (name: string): string | undefined => jsxRoots().find((r) => r.name === name)?.tag
+/** The code built: the top-level elements written as exports. */
+const forBuild = (src: string): string => exportRoots(src)
 const exportedNames = computed((): string[] => {
   const src = files.get(active())?.() ?? "", out: string[] = []
   for (const m of src.matchAll(/export\s*\{([^}]*)\}/g)) for (const part of (m[1] ?? "").split(",")) { const n = part.trim().replace(/^type\s+/, "").split(/\s+as\s+/).pop()?.trim(); if (n) out.push(n) }
   for (const m of src.matchAll(/export\s+(?:async\s+)?(?:function\*?|const|let|class)\s+([A-Za-z_$][\w$]*)/g)) out.push(m[1]!)
+  for (const r of jsxRoots()) out.push(r.name)
   return [...new Set(out)].filter((n) => /^[A-Z]/.test(n))
 }, { equals: (a, b) => !!a && !!b && a.join() === b.join() })
 const isRoot = (name: string): boolean => exportedNames().includes(name)
 // the components of the work: the exported one and, in the Dependencies tree, the ones it is built from (their
 // composedOf, recursively). Each has its options (its showcase card's playground.ts) and its values; the exported one
 // takes its values as props, the others as m:parts of it (only what was changed from their defaults)
-const metaOf = (name: string) => registry.find((e) => e.meta.name === name)
+const metaOf = (name: string) => { const tag = rootTag(name) ?? name; return registry.find((e) => e.meta.name === tag) }
 // a component written in the file in front (not one of March's): its props read from its type (`props: { … }`, or
 // an interface / type of the file), its parts from its JSX (the March components and the file's own ones it draws)
 interface LocalComp { props: ApiProp[]; uses: string[] }
@@ -370,7 +379,8 @@ function propsOf(opts: readonly PlaygroundOption[], v: Record<string, unknown>, 
   }
   return out
 }
-const propsFor = (r: string): Record<string, unknown> => ({ ...propsOf(optsOf(r), valuesBy()[r] ?? {}), ...handlerFns(r) })
+// a top-level element takes only what was changed in Properties (its written props stay under them)
+const propsFor = (r: string): Record<string, unknown> => ({ ...propsOf(optsOf(r), valuesBy()[r] ?? {}, !!rootTag(r)), ...handlerFns(r) })
 /** The props of every exported component, by name. */
 const rootProps = (): Record<string, Record<string, unknown>> => Object.fromEntries(exportedNames().map((r) => [r, propsFor(r)]))
 /** The components under a root of the tree (itself left out). */
@@ -406,8 +416,9 @@ const usageOf = (name: string): string => {
   })
   if (parts.length) attrs.push(`m:parts={{ ${parts.join(", ")} }}`)
   const kids = propsFor(name)["children"]
-  const open = [name, ...attrs].join(" ")
-  return kids !== undefined && kids !== "" ? `<${open}>${String(kids)}</${name}>` : `<${open} />`
+  const tag = (rootTag(name) ?? name).replace(/^<(.*)>$/, "$1")
+  const open = [tag, ...attrs].join(" ")
+  return kids !== undefined && kids !== "" ? `<${open}>${String(kids)}</${tag}>` : `<${open} />`
 }
 /** The code of every exported component, one under the other. */
 const usage = computed((): string => exportedNames().map(usageOf).join("\n"))
@@ -451,9 +462,10 @@ const apiIndex = (): Promise<MarchCatalog> => (indexP ??= fetch(appUrl("api/inde
 const chunks = new Map<number, Promise<Record<string, { props?: ApiProp[] }>>>()
 const eventsBy = signal<Record<string, ApiProp[]>>({})
 async function loadEvents(name: string): Promise<void> {
+  const api = rootTag(name) ?? name
   const idx = await apiIndex() as unknown as { subpaths: { subpath: string; items: [string, string, string, string, number][] }[] }
   let found: { key: string; chunk: number } | null = null
-  for (const sp of idx.subpaths) for (const it of sp.items) if (it[0] === name && it[1] === "component" && (!found || sp.subpath === "hadi-march/ui")) found = { key: `${sp.subpath}#${name}`, chunk: it[4] }
+  for (const sp of idx.subpaths) for (const it of sp.items) if (it[0] === api && it[1] === "component" && (!found || sp.subpath === "hadi-march/ui")) found = { key: `${sp.subpath}#${api}`, chunk: it[4] }
   let all: ApiProp[] = []
   if (found) {
     const { key, chunk } = found
@@ -572,7 +584,7 @@ const consolePanel = () => <Terminal readonly scheme="dark" height="100%" label=
 /** Build the file in front now (its kept result is not used); the steps go to the Console. */
 const buildNow = async () => {
   const path = untrack(active)
-  let src = untrack(() => files.get(path)?.() ?? "")
+  let src = untrack(() => forBuild(files.get(path)?.() ?? ""))
   // debugging: the file with the debugger's calls written in (the session starts for it); its line numbers stay
   const dbg = untrack(debugSvc)
   if (dbg && untrack(dbg.active)) {
@@ -896,7 +908,9 @@ const PRESETS: Record<string, Preset> = {
 // March's exports for the suggestions: the API reference's index (one JSON file, fetched when the playground opens)
 const catalog = (): Promise<MarchCatalog> => apiIndex()
 // the TypeScript language service in a worker (the build copies it, the compiler and the lib files to playground/)
-const typescript = typeScriptPlugin({ worker: appUrl("playground/ts-worker.js"), typescript: appUrl("playground/ts/typescript.js"), lib: appUrl("playground/ts/") })
+// TypeScript reads the file as it is built (its top-level elements as exports): no "one parent element" error for them
+const typescript = typeScriptPlugin({ worker: appUrl("playground/ts-worker.js"), typescript: appUrl("playground/ts/typescript.js"), lib: appUrl("playground/ts/"),
+  view: (path, text) => viewRoots(text, /\.tsx?$/.test(path)) })
 // the debugger (march-app-ui): the panel, the editor's gutter (click a line number: a breakpoint) and F5 / F8 / F10 / F11;
 // while it is on, every build writes its calls into the file (buildNow); watches, conditions and the Terminal evaluate in
 // the preview runtime (its March, its untrack)
@@ -920,7 +934,7 @@ export default function PlaygroundPage(props: { name?: string }) {
   effect(() => {
     // only the file in front (and the entry that renders it)
     const path = active()
-    const now = { [path]: withData(files.get(path)?.() ?? ""), [ENTRY]: entrySource() }
+    const now = { [path]: withData(forBuild(files.get(path)?.() ?? "")), [ENTRY]: entrySource() }
     clearTimeout(timer)
     // debugging: every build writes the debugger's calls in (buildNow), nothing kept is used
     if (debugSvc()?.active()) { scheduleBuild(350); return }

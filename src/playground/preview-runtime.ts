@@ -128,7 +128,8 @@ export async function run(code: string, el: HTMLElement, props: Record<string, P
     box.setAttribute("aria-label", name);
     const tag = document.createElement("span");
     tag.className = "sc-pv-name";
-    tag.textContent = name;
+    // a top-level element of the file (CodeEditor_1): its tag and its number
+    tag.textContent = name.replace(/_(\d+)$/, " #$1");
     const stage = document.createElement("div");
     stage.className = "sc-pv-stage";
     box.append(tag, stage);
