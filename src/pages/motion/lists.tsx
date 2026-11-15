@@ -18,7 +18,7 @@ const PRESETS: { value: ListPreset; label: string }[] = [
 interface Item { id: number; name: string; tone: number }
 
 export default function MotionLists() {
-  document.title = "Liste animasyonları · March"
+  document.title = "Liste animasyonları · MarchJS"
 
   // 1 · FLIP list
   let $enter = "pop" as ListPreset, $exit = "scale" as ListPreset, $dur = 450

@@ -12,7 +12,7 @@ export default function Seo(props: { params?: { rest?: string } }) {
   // route heads and useHead() from now on (the showcase turns it on only here; an app does it once at start-up)
   // jsonLd: false — this page runs under a Trusted Types CSP, where script text written at run time is blocked;
   // JSON-LD reaches such pages at build time (prerender) and is shown below instead
-  installSeo({ titleTemplate: "%s · March", jsonLd: false, defaults: { og: { siteName: "March", locale: "tr_TR" }, twitter: {} } })
+  installSeo({ titleTemplate: "%s · MarchJS", jsonLd: false, defaults: { og: { siteName: "MarchJS", locale: "tr_TR" }, twitter: {} } })
 
   let $title = "Kırmızı koşu ayakkabısı"
   let $desc = "Hafif, nefes alan üst yüzey ve yumuşak taban: günlük koşu için kırmızı ayakkabı, 36–46 numara."

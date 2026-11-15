@@ -75,7 +75,7 @@ export default function ShellMenu() {
 
   // ---- the trail: March / section / category / page; every step lists what is beside it
   setTrail((p): readonly Crumb[] => {
-    const start: Crumb = { id: "home", label: "March", href: "/" as Href }
+    const start: Crumb = { id: "home", label: "MarchJS", href: "/" as Href }
     const pg = pageAt(p)
     if (!pg) return [start]
     const chain: Entry[] = []

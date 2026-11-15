@@ -40,4 +40,4 @@ const titleOf = (p: string): string | undefined => (p.startsWith("/navigation/ro
 // paths and titles only: descriptions, groups and icons (nav-meta.ts) load with the side menu, not at start-up
 setPages([...PAGES, ...SUB_PAGES.map((p) => ({ ...p, sub: true }))], titleOf);
 /** Document title of a route. */
-export const pageTitle = (to: RouteTarget): string => { const t = to.path !== "/" && titleOf(to.path); return t ? `${t} · March` : "March · Vitrin"; };
+export const pageTitle = (to: RouteTarget): string => { const t = to.path !== "/" && titleOf(to.path); return t ? `${t} · MarchJS` : "MarchJS · Vitrin"; };

@@ -198,7 +198,7 @@ export default function Home() {
         </div>
         <Bench />
         <div class="sc-why">
-          <SectionLabel rule size="md" as="h2">Neden March</SectionLabel>
+          <SectionLabel rule size="md" as="h2">Neden MarchJS</SectionLabel>
           <div class="sc-why-grid">
             {WHY.map((w) => <LinkCard class="sc-why-card" data-m-color={w.color} href={w.href} icon={w.icon} color={w.color} title={w.title} description={w.text()} arrow={false} />)}
           </div>

@@ -26,7 +26,7 @@ const TABS = [
 const rtl = signal(false);
 
 export default function Transitions(props: { params: { rest?: string }; close?: () => void }) {
-  document.title = "Sayfa geçişleri · March"
+  document.title = "Sayfa geçişleri · MarchJS"
   const rest = props.params.rest ?? ""
   if (rest.startsWith("tile/")) return <TilePage id={rest.slice(5)} close={props.close} />
   const tab = () => TABS.find((t) => t.href === path()) ?? TABS[0]

@@ -27,7 +27,7 @@ const SHAPES: Record<string, { label: string; d: string }> = {
 const ROAD = "M20 128C70 20 130 18 160 84S250 160 300 36"
 
 export default function MotionSvg() {
-  document.title = "SVG animasyonları · March"
+  document.title = "SVG animasyonları · MarchJS"
   const live = new Set<Playback>()
   const keep = (p: Playback): Playback => { live.add(p); p.finished.then(() => live.delete(p), () => live.delete(p)); return p }
   const stopAll = (): void => { for (const p of live) p.cancel(); live.clear() }

@@ -35,7 +35,7 @@ function Topbar() {
       const full = trail(), p = path()
       if (full) return full(p)
       const t = title()
-      return [{ id: "home", label: "March", href: "/" as const }, ...(t ? [{ id: "page", label: t }] : [])]
+      return [{ id: "home", label: "MarchJS", href: "/" as const }, ...(t ? [{ id: "page", label: t }] : [])]
     }} /></div>
     <ShellTools />
   </>
@@ -45,7 +45,7 @@ export function App() {
   // ?bare=1: the page alone, without the showcase frame (a sample site shown in a preview iframe)
   if (new URLSearchParams(globalThis.location?.search ?? "").has("bare")) return <Outlet />
   // AppShell is a Layout: every page gets back-to-top, the reading bar and route focus from here; no page repeats them
-  return <AppShell class="sc-shell" header={<Topbar />} nav={<ShellNav />} titleTemplate="%s · March"
+  return <AppShell class="sc-shell" header={<Topbar />} nav={<ShellNav />} titleTemplate="%s · MarchJS"
     features={{ scrollToTop: true, readingProgress: true, routeFocus: true }}>
     <Outlet />
     <ShellLate />

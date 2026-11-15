@@ -10,7 +10,7 @@ import { MotionDemo, opt } from "../../playground.tsx";
 import { Icon, heart, star, sparkles, send } from "march/icons";
 
 export default function MotionMicro() {
-  document.title = "Mikro etkileşimler · March"
+  document.title = "Mikro etkileşimler · MarchJS"
 
   // 1 · ripple
   let $rDur = 650, $rCenter = false, $rInk = 22

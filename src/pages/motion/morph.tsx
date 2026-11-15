@@ -29,7 +29,7 @@ const ICON_PAIRS: { a: MorphIconName; b: MorphIconName; la: string; lb: string }
 ]
 
 export default function MotionMorph() {
-  document.title = "Morph · March"
+  document.title = "Morph · MarchJS"
 
   // 1 · button → dialog
   let $bDur = 520, $bEase = "expo", $bFade = true

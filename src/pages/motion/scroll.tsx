@@ -23,7 +23,7 @@ const STEPS = [
 ]
 
 export default function MotionScroll() {
-  document.title = "Kaydırma animasyonları · March"
+  document.title = "Kaydırma animasyonları · MarchJS"
 
   // 1 · scroll timeline
   let $fx = "rise", $start = 0, $end = 45, $reverse = false
