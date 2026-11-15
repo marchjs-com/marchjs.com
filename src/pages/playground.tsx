@@ -185,7 +185,7 @@ const GLOBAL_ATTRS = ["dir", "id", "lang", "title", "translate"]
 const A11Y_ATTRS = ["accesskey", "aria-describedby", "aria-description", "aria-hidden", "aria-label", "aria-labelledby", "role", "tabindex"]
 const A11Y_GROUP = "Erişilebilirlik", COMMON_GROUP = "Ortak (m:)"
 // March's common props (hadi-march/props): every component takes them
-const COMMON_PROPS = ["m:color", "m:dir", "m:lang", "m:no-select", "m:reveal", "m:test", "m:theme", "m:tip"]
+const COMMON_PROPS = ["m:color", "m:text-color", "m:dir", "m:lang", "m:no-select", "m:reveal", "m:test", "m:theme", "m:tip"]
 const COMMON_BOOL = new Set(["m:no-select", "m:reveal"])
 // the values an attribute (or an exported prop) takes: one of a list (a select), one of a list or your own (`own`:
 // an editable select), several (`multi`: chips, written space-separated)
@@ -198,6 +198,7 @@ const ATTR_VALUES: Record<string, ValueSet> = {
   spellcheck: { list: ["true", "false"] },
   "aria-hidden": { list: ["true", "false"] },
   "m:color": { list: COLOR_TOKENS },
+  "m:text-color": { list: [...COLOR_TOKENS, "muted"] },
   "m:dir": { list: ["ltr", "rtl"] },
   "m:lang": { list: ["tr", "en", "de", "fr", "es", "ar", "ru", "ja"], own: true },
   role: { list: ROLES, own: true },
@@ -376,7 +377,7 @@ const asPropertyBase = (o: PlaygroundOption): PropertySpec => {
     if (set) {
       const opts = [{ value: "", label: "—", title: "boş (bileşenin varsayılanı)" }, ...set.list.map((x) => ({ value: x, label: x }))]
       if (opts.length <= SEGMENTS) return { key: o.key, label, group, type: "segmented", options: opts } as PropertySpec
-      return { key: o.key, label, group, control: chipsControl(opts.map((x) => (name === "m:color" && x.value ? { ...x, color: x.value } : x)), name) } as PropertySpec
+      return { key: o.key, label, group, control: chipsControl(opts.map((x) => ((name === "m:color" || name === "m:text-color") && x.value && x.value !== "muted" ? { ...x, color: x.value } : x)), name) } as PropertySpec
     }
     return { key: o.key, label, group, type: typeof o.default === "boolean" ? "switch" : "text" } as PropertySpec
   }
