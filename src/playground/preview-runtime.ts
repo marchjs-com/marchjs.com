@@ -22,19 +22,32 @@ export function link(code: string): string {
     .replace(/import\s*["']hadi-march[^"']*["'];?/g, "");
 }
 
-let last: { dispose: () => void; url: string } | null = null;
-/** Run `code` (an ES module) and render its default export into `el`; the previous run is removed. */
-export async function run(code: string, el: HTMLElement): Promise<void> {
+// the props of what is rendered: a channel. setProps draws the already loaded component again with the new props
+// (milliseconds: no build, no new module). A redraw rather than a live update, so every kind of prop takes effect,
+// also the ones a component reads only once (Button's block, an icon…).
+let last: { dispose: () => void; url: string; C: (p: object) => unknown; el: HTMLElement } | null = null;
+const draw = (C: (p: object) => unknown, el: HTMLElement, props: Record<string, unknown>): (() => void) => {
+  el.replaceChildren();
+  const { children, ...rest } = props;
+  const own = Object.fromEntries(Object.entries(rest).filter(([, v]) => v !== undefined));
+  return core.render(() => (children === undefined || children === "" ? core.h(C, own) : core.h(C, own, children)), el);
+};
+/** Send new props to the rendered component (the Properties panel calls it on every change). */
+export function setProps(props: Record<string, unknown>): void {
+  if (!last) return;
+  last.dispose();
+  last.dispose = draw(last.C, last.el, props);
+}
+/** Run `code` (an ES module) and render its default export into `el` with `props` (then setProps); the previous run is removed. */
+export async function run(code: string, el: HTMLElement, props: Record<string, unknown> = {}): Promise<void> {
   const url = URL.createObjectURL(new Blob([link(code)], { type: "text/javascript" }));
   let mod: { default?: unknown };
   try { mod = await import(/* @vite-ignore */ url) as { default?: unknown }; }
   catch (e) { URL.revokeObjectURL(url); throw e; }
-  stop();
-  el.replaceChildren();
   const C = mod.default;
   if (typeof C !== "function") { URL.revokeObjectURL(url); throw new Error("varsayılan dışa aktarım bir bileşen değil"); }
-  const dispose = core.render(() => core.h(C as (p: object) => unknown, {}), el);
-  last = { dispose, url };
+  stop();
+  last = { C: C as (p: object) => unknown, el, url, dispose: draw(C as (p: object) => unknown, el, props) };
 }
 /** Remove what the last run rendered. */
 export function stop(): void {

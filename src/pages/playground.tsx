@@ -11,7 +11,7 @@ import { registry } from "hadi-march/components/registry.gen.ts";
 import type { PlaygroundOption } from "hadi-march/components/meta.ts";
 import { appUrl } from "hadi-march/base";
 import { PaletteButton, JsonView, Terminal, PropertyGrid, type TerminalApi, type PropertySpec } from "hadi-march/ui";
-import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
+import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, groups, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
 import { monitor, sliders, packageBox, users, code, terminal, bug, fileText, globe } from "hadi-march/icons";
 import { createBuilder } from "../playground/build.ts";
 
@@ -47,9 +47,24 @@ const fileTab = (id: string, path: string): AppPanel => {
 
 // the component under work: the first name Button.tsx exports; its Properties are the options of its showcase card
 // (its playground.ts); the preview entry renders it with the values chosen there
-const MAIN = "Button.tsx", ENTRY = "PreviewControl.tsx"
+// a playground, not a project: the code tab in front (of the files' group) is the one built, previewed, translated
+// (lang.json) and whose Properties show; the others wait
+const ENTRY = "PreviewControl.tsx"
+const FILE_OF: Record<string, string> = { c1: "Button.tsx", c2: "Component2.tsx", c3: "Component3.tsx" }
+const active = signal("Button.tsx")
+const followTabs = (api: DockApi) => {
+
+  effect(() => {
+    const L = api.layout()
+    if (!L) return
+    // the files' group: the group that holds a file tab; its front tab is the file in work
+    const g = groups(L.root).find((x) => x.panels.some((id) => id in FILE_OF))
+    const file = g?.active ? FILE_OF[g.active] : undefined
+    if (file && file !== untrack(active)) active.set(file)
+  })
+}
 const exportedName = computed(() => {
-  const src = files.get(MAIN)?.() ?? ""
+  const src = files.get(active())?.() ?? ""
   return /export\s*\{\s*([A-Za-z_$][\w$]*)/.exec(src)?.[1] ?? /export\s+(?:default\s+)?(?:function|const|class)\s+([A-Za-z_$][\w$]*)/.exec(src)?.[1] ?? ""
 })
 const options = signal<readonly PlaygroundOption[]>([])
@@ -70,24 +85,26 @@ const asProperty = (o: PlaygroundOption): PropertySpec => {
   return { key: o.key, label: o.label, type, ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}), ...(opts ? { options: opts } : {}), ...(o.min !== undefined ? { min: o.min } : {}), ...(o.max !== undefined ? { max: o.max } : {}), ...(o.step !== undefined ? { step: o.step } : {}) } as PropertySpec
 }
 // one prop of the entry's JSX: a string as an attribute, the rest as an expression; children between the tags
-const attr = (name: string, v: unknown): string => (typeof v === "string" ? `${name}=${JSON.stringify(v)}` : v === true ? name : `${name}={${JSON.stringify(v)}}`)
+// the preview entry: the exported component, rendered by the preview runtime with the Properties' values. The values
+// are not written into the code: they go to the rendered component through a live channel (setProps), so changing a
+// property needs no build; only a change of the files (or of the exported name) builds again.
 const entrySource = computed(() => {
   const name = exportedName()
-  if (!name) return "export default function PreviewControl() { return null }\n"
-  const v = values()
-  const visible = options().filter((o) => !o.visibleWhen || o.visibleWhen(v as never))
-  let children = ""
-  const props: string[] = []
-  for (const o of visible) {
-    const prop = o.prop || o.key, x = v[o.key]
-    if (prop === "children") { children = String(x ?? ""); continue }
-    if (x === "" || x === false || x === undefined || x === null) continue
-    if (o.toCode) continue // a value written as code of its own (an icon, a custom part): not in the preview
-    props.push(attr(prop, x))
-  }
-  const open = [name, ...props].join(" ")
-  return `import { ${name} } from "./${MAIN}"\n\nexport default function PreviewControl() {\n  return ${children ? `<${open}>${children}</${name}>` : `<${open} />`}\n}\n`
+  return name ? `import { ${name} } from "./${active()}"\n\nexport default ${name}\n` : "export default function PreviewControl() { return null }\n"
 })
+// the Properties' values as the component's props: the shown options only, empty / off left out, code-only values
+// (an icon, a custom part) left out
+const propsOf = (v: Record<string, unknown>): Record<string, unknown> => {
+  const out: Record<string, unknown> = {}
+  for (const o of options()) {
+    const prop = o.prop || o.key, x = v[o.key]
+    out[prop] = undefined
+    if (o.toCode || (o.visibleWhen && !o.visibleWhen(v as never))) continue
+    if (x === "" || x === false || x === null) continue
+    out[prop] = x
+  }
+  return out
+}
 const propsPanel = () => <div class="sc-props">
   {() => (options().length
     ? <PropertyGrid properties={() => options().map(asProperty)} value={values} onChange={(v: Record<string, unknown>) => values.set({ ...v })} label={`${exportedName()} özellikleri`} saved={values} history={false} dirty={false} search={false} />
@@ -109,7 +126,7 @@ const langJson = () => Object.fromEntries(builder.texts().map((k) => [k, ""]))
 // the preview (AppPreview): its toolbar sets the preview's own theme, accent and light / dark; each successful build's
 // PreviewControl is rendered in the middle of its stage by the preview runtime (playground/preview.js, loaded once)
 let previewEl: HTMLElement | null = null
-type Runtime = { run(code: string, el: HTMLElement): Promise<void>; stop(): void }
+type Runtime = { run(code: string, el: HTMLElement, props?: Record<string, unknown>): Promise<void>; setProps(props: Record<string, unknown>): void; stop(): void }
 let runtime: Promise<Runtime> | null = null
 const loadRuntime = () => (runtime ??= (async () => {
   // its components' stylesheet, once
@@ -122,7 +139,7 @@ async function render(code: string): Promise<void> {
   if (!previewEl) return
   const t0 = performance.now()
   try {
-    await (await loadRuntime()).run(code, previewEl)
+    await (await loadRuntime()).run(code, previewEl, propsOf(untrack(values)))
     print(`[${stamp()}] Önizleme çizildi · ${Math.round(performance.now() - t0)} ms`, "success")
   } catch (e) {
     print(`[${stamp()}] ✖ Çalışma hatası: ${String((e as Error)?.message ?? e)}`, "error")
@@ -166,13 +183,17 @@ export default function PlaygroundPage(props: { name?: string }) {
   // every change is built a moment after typing stops
   let timer: ReturnType<typeof setTimeout> | undefined
   effect(() => {
-    const now = { ...Object.fromEntries([...files].map(([p, s]) => [p, s()])), [ENTRY]: entrySource() }
+    // only the file in front (and the entry that renders it)
+    const path = active()
+    const now = { [path]: files.get(path)?.() ?? "", [ENTRY]: entrySource() }
     clearTimeout(timer)
     timer = setTimeout(() => { void builder.build(now, ENTRY).then((r) => { if (r?.ok) void render(r.code) }) }, 350)
   })
+  // a property changes: the rendered component takes it at once (no build)
+  effect(() => { const p = propsOf(values()); void runtime?.then((r) => r.setProps(p)) })
   onCleanup(() => { clearTimeout(timer); consoleApi = null; previewEl = null; void runtime?.then((r) => r.stop()) })
   return <div class="sc-playground">
     <AppUI title={props.name ?? "Test Bileşen"} tools={<PaletteButton label="Komut ara…" class="sc-playground-pal" />}
-      panels={PANELS} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.playground.v3" label="Playground" />
+      panels={PANELS} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.playground.v3" label="Playground" api={followTabs} />
   </div>
 }
