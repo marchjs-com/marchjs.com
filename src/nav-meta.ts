@@ -47,6 +47,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/sites": { desc: "Bileşenlerle kurulmuş tam uygulamalar: açılış sayfaları (yakında yönetim paneli, CRM, e-ticaret)", group: "Web tasarım araçları", icon: sparkles },
   "/language": { desc: "$ değişkenler, <For>, bind:, borular, sx", group: "Temel", icon: code },
   "/flow": { desc: "Düğüm tabanlı akış: tuval, palet, çalıştır/duraklat/adım, zaman çizelgesi", group: "Karmaşık bileşenler", icon: activity },
+  "/playground": { desc: "IDE kabuğu tek başına, sayfanın tamamında", group: "Karmaşık bileşenler", icon: code },
   "/app-ui": { desc: "March IDE çekirdeği: yanaşan, daralan, sekmeli paneller ve hazır düzenler", group: "Karmaşık bileşenler", icon: code },
   "/ide": { desc: "Panel yerleşimi, özellik düzenleyici, araç ve durum çubukları, mini editör", group: "Karmaşık bileşenler", icon: code },
   "/ide-live": { desc: "Mini editör: dosya ağacı, sekmeli editör, ayarlar, konsol, komut paleti", group: "Karmaşık bileşenler", icon: code },

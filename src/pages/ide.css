@@ -23,6 +23,7 @@
 /* mini editor (ide/mini-ide.tsx) */
 .sc-ide { display: grid; height: 34rem; min-width: 0; border: 1px solid var(--m-border); border-radius: var(--m-radius-3); overflow: hidden; background: var(--m-surface); }
 .sc-ide-app { min-height: 0; }
+.sc-ide-app .m-app-fill { display: none; }
 .sc-ide-app > .m-app-bar { padding: .25rem .5rem; border-block-end: 1px solid var(--m-border); background: var(--m-surface-2); }
 .sc-ide-top { flex: 1 1 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, auto) auto; align-items: center; gap: var(--m-space-2); min-width: 0; }
 .sc-ide-top > .m-otb { min-width: 2.5rem; }

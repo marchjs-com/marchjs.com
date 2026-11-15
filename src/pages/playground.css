@@ -1,0 +1,3 @@
+/* Playground page: the IDE shell fills the room under the top bar, nothing else. */
+.sc-play-ide { block-size: calc(100dvh - var(--m-topbar-h, 3.5rem)); min-block-size: 24rem; display: grid; }
+.sc-play-ide > .sc-ide { height: auto; min-height: 0; border: 0; border-radius: 0; }
