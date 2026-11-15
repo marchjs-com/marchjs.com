@@ -22,8 +22,6 @@
 
 /* the map: one card per section, as many columns as fit; the components section takes two */
 .sc-map { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.625rem), 1fr)); gap: var(--m-space-3); }
-/* a heading word (the words action ties its entrance to the scroll) */
-.sc-word { display: inline-block; transform-origin: 50% 100%; }
 .sc-map-world { min-inline-size: 0; }
 .sc-map-cell { display: grid; min-inline-size: 0; }
 .sc-map-cell.is-wide { grid-column: span 2; }

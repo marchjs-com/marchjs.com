@@ -4,8 +4,9 @@
 // with reduced motion). Every number comes from home-stats.gen.ts (tools/gen-home-stats.js) or from march-report.json
 // (this build's measured sizes); none is typed here.
 import "./sections.css";
-import { onCleanup, signal } from "march";
-import { reducedMotion, scrollTimeline, onScrollProgress } from "march/motion";
+import { onCleanup } from "march";
+import { inView, reducedMotion } from "march/motion";
+import { tilt } from "march/motion/text";
 import { Link } from "march/router";
 import { appUrl } from "march/base";
 import { Button, Card, CodeView, IconTile, Kbd, ListRow, MadeWithMarch, StatTile, heartBurst, openPalette } from "march/ui";
@@ -15,38 +16,22 @@ import { BRAND_COLORS_ALL, type ColorToken } from "march/theme/colors.ts";
 import { HOME_STATS as S } from "../home-stats.gen.ts";
 import { pages } from "../app.tsx";
 import { withMeta, SECTIONS, sectionOf, type NavSection } from "../nav-meta.ts";
-import { fly, byColumn } from "./fly.ts";
 
 interface Report { entry?: { js: number }; boot?: { js: number } | null }
 const kb = (bytes: number): number => Math.round((bytes / 1024) * 10) / 10;
 
-/** Action on a heading: its words tilt in one after another as it scrolls into view, tied to the scroll position
- * (scrolling back up winds them back); the text is simply there with reduced motion. */
+/** Action on a heading: its words tilt in one after another when it scrolls into view (the text is there at once with reduced motion). */
 function words(el: Element): () => void {
   if (reducedMotion() || el.ownerDocument?.documentElement.hasAttribute("data-m-hydrating")) return () => {}
   const h = el as HTMLElement
-  let stop = (): void => {}, text = "", live = true
-  // the text goes in after the action runs: the words are split a moment later
-  queueMicrotask(() => {
-    text = h.textContent ?? ""
-    if (!live || !text.trim()) return
-    h.replaceChildren(...text.split(/(\s+)/).map((w) => {
-      if (!w.trim()) return document.createTextNode(w)
-      const s = document.createElement("span")
-      s.className = "sc-word"
-      s.textContent = w
-      return s
-    }))
-    stop = scrollTimeline([...h.querySelectorAll<HTMLElement>(".sc-word")], { opacity: [0, 1], transform: ["perspective(600px) translateY(.45em) rotateX(-55deg)", "perspective(600px) translateY(0) rotateX(0deg)"] },
-      { track: h, range: [0, 0.35], easing: "out", stagger: 70 })
-  })
-  return () => { live = false; stop() }
+  h.style.setProperty("opacity", "0")
+  return inView(el, { once: true, enter: () => { h.style.removeProperty("opacity"); tilt(h, { by: "word", stagger: 70, duration: 700 }) } })
 }
 
 /** The head of a section: a small colored kicker, the title built word by word, an optional lead. */
 function Head(props: { kicker: string; title: string; lead?: string; color: ColorToken; id: string }) {
   return <SectionHead class="sc-sec-head" align="start" width="full" size="lg" m:color={props.color} eyebrow={props.kicker} titleId={props.id}
-    title={<span use:words>{props.title}</span>} lead={props.lead} reveal={{ effect: fly("rise"), scrub: true }} />
+    title={<span use:words>{props.title}</span>} lead={props.lead} reveal={{ effect: "up", stagger: 90 }} />
 }
 
 // ── counters ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -57,16 +42,9 @@ function Stats() {
     { value: S.animations.total, label: "animasyon" }, { value: S.managers, label: "yönetici" }, { value: S.tests, label: "test" },
     { value: S.dependencies, label: "bağımlılık" },
   ]
-  // the figures count from 0 with the scroll: the band's passage (fully in at 45 %) is the count, each figure a little
-  // after the one before; scrolling back up counts them down (reduced motion: the figures as they are)
-  const progress = signal(reducedMotion() ? 1 : 0)
-  const counted = items.map((it, k) => ({ ...it, get value(): number {
-    const p = Math.min(1, Math.max(0, (progress() - k * 0.05) / 0.7))
-    return Math.round(it.value * (1 - (1 - p) ** 3))
-  } }))
-  const follow = (el: Element) => { if (!reducedMotion()) onCleanup(onScrollProgress({ track: el, range: [0, 0.45] }, (p) => progress.set(p))) }
-  return <section class="sc-stats sc-card" aria-label="Rakamlarla MarchJS" ref={follow}>
-    <StatsBand items={counted} variant="plain" mode="none" reveal={{ effect: fly("stack"), scrub: true }} />
+  // each figure counts up from 0 when the band comes into view (StatsBand's Counter)
+  return <section class="sc-stats sc-card" aria-label="Rakamlarla MarchJS">
+    <StatsBand items={items} variant="plain" reveal={{ effect: "scale", stagger: 60 }} />
   </section>
 }
 
@@ -79,10 +57,13 @@ const LONG = 6;
 /** How deep a page can sit under a category. */
 const DEPTH = 8;
 
-/** A cell's ref: its content flies in on the given path, tied to the scroll (set up once the content is in the cell). */
-const flyIn = (path: Parameters<typeof fly>[0]) => (el: Element): void => {
+/** A map cell's ref: its card slides in from its own side when the cell first comes into view (the start column from
+ * the start side, the middle one from below, the end column from the end side; the wide ones from below), once. */
+const SIDES = ["start", "up", "end"] as const
+const slideIn = (i: number, wide: boolean) => (el: Element): void => {
   let stop = (): void => {}, live = true
-  queueMicrotask(() => { if (live) stop = revealOnScroll(el, { effect: fly(path), scrub: true }) })
+  // set up once the card is in the cell
+  queueMicrotask(() => { if (live) stop = revealOnScroll(el, { effect: wide ? "up" : SIDES[i % SIDES.length], distance: 72, duration: 800 }) })
   onCleanup(() => { live = false; stop() })
 }
 
@@ -102,21 +83,20 @@ function WorldMap() {
   return <section class="sc-sec" aria-labelledby="sc-map-h">
     <Head id="sc-map-h" kicker="Harita" color="brand-orange" title="Her şey tek bakışta"
       lead={`${worlds.length} bölüm, ${total} kategori; hepsi bu ekranda. Soldaki şerit aynı bölümleri her sayfada taşır.`} />
-    {/* each card flies in from afar as it scrolls into view (the start side, from below, the end side; the wide ones
-        rise), tied to the scroll position: scrolling up flies it back out; its rows slide in after it. The card flies
-        inside its grid cell, and the cell (which stays put) is what the scroll is measured on */}
+    {/* each card slides in from its own side when it first comes into view (its rows after it): the lower cards are
+        not played before they are seen */}
     <div class="sc-map">
       {worlds.map(({ s, rows }, i) => <div class={`sc-map-cell${rows.length > LONG ? " is-wide" : ""}`}
-        ref={flyIn(rows.length > LONG ? "rise" : byColumn(i))}>
+        ref={slideIn(i, rows.length > LONG)}>
         <Card class={`sc-map-world sc-card${rows.length > LONG ? " is-wide" : ""}`} title={s.label} subtitle={s.desc}>
-          <Reveal class="sc-map-rows" effect="end" distance={60} scrub>
+          <Reveal class="sc-map-rows" effect="end" distance={24} stagger={40} delay={300} duration={500}>
             {rows.map((p) => { const n = under(p), color = BRAND_COLORS_ALL[k++ % BRAND_COLORS_ALL.length]!; return <ListRow class="sc-map-row" href={p.path} overflow="ellipsis" color={color}
               lead={<IconTile icon={p.icon} m:color={color} size="sm" />} title={p.title} sub={p.desc}
               trail={n ? <span class="sc-map-n" data-m-color={color}>{n}</span> : undefined} /> })}
           </Reveal>
         </Card>
       </div>)}
-      <div class="sc-map-cell" ref={flyIn("spin")}>
+      <div class="sc-map-cell" ref={slideIn(1, false)}>
         <Card class="sc-map-find">
           <p class="sc-map-find-t">Adını biliyorsan doğrudan git.</p>
           <p class="sc-map-find-x">Bileşen, sayfa ya da eylem: yazmaya başla, Enter ile aç.</p>
@@ -139,7 +119,7 @@ function Fast(props: { report: () => Report | null }) {
   ]
   return <section class="sc-sec" aria-labelledby="sc-fast-h">
     <Head id="sc-fast-h" kicker="Hız ve boyut" color="brand-blue" title="Küçük açılır, büyüdükçe yavaşlamaz" />
-    <Reveal class="sc-fast" effect={fly("flip")} scrub>
+    <Reveal class="sc-fast" effect="up" distance={56} stagger={110}>
       {cards.map((c) => <StatTile class="sc-fast-card sc-card" variant="card" size="xl" align="start" m:color={c.color} value={c.value} label={c.label}
         hint={<>{c.text}{() => { const m = c.more?.(); return m ? <span class="sc-fast-more">{m}</span> : null }}</>} />)}
     </Reveal>
@@ -161,9 +141,8 @@ function Start() {
   return <section class="sc-sec" aria-labelledby="sc-start-h">
     <Head id="sc-start-h" kicker="Başla" color="brand-green" title="Üç satırda ilk ekran" />
     <div class="sc-start">
-      {/* each side flies in inside its own cell (the cell stays put: the scroll is measured on it) */}
-      <Reveal class="sc-start-code" effect={fly("left")} scrub><CodeView code={START} lang="tsx" wrap label="Örnek kod" /></Reveal>
-      <Reveal class="sc-start-cell" effect={fly("right")} scrub>
+      <Reveal class="sc-start-code" effect="start" distance={72}><CodeView code={START} lang="tsx" wrap label="Örnek kod" /></Reveal>
+      <Reveal class="sc-start-cell" effect="end" distance={72} delay={90}>
         <div class="sc-start-out sc-card">
           <span class="sc-start-out-l">Sonuç</span>
           <Button variant="primary" icon={sparkles} on:click={(e: Event) => heartBurst(e.currentTarget as HTMLElement, { radius: 46 })}>Merhaba</Button>
