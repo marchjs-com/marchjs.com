@@ -1,5 +1,6 @@
 /* The playground's Extensions tab. */
-.sc-ext-tab { display: grid; gap: var(--m-space-2); padding: var(--m-space-3); font-size: var(--m-text-sm); overflow: auto; }
+.sc-ext-tab { box-sizing: border-box; block-size: 100%; display: grid; align-content: start; gap: var(--m-space-2); padding: var(--m-space-3); font-size: var(--m-text-sm); overflow: auto; }
+.sc-ext-tab > * { min-inline-size: 0; }
 .sc-ext-tab-head { display: flex; align-items: center; justify-content: space-between; gap: var(--m-space-2); }
 .sc-ext-tab-list { display: grid; gap: var(--m-space-1); margin: 0; padding: 0; list-style: none; }
 .sc-ext-tab-list > li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-1) var(--m-space-2); padding: var(--m-space-1) var(--m-space-2); border-radius: var(--m-radius-2); background: var(--m-surface-2); }
