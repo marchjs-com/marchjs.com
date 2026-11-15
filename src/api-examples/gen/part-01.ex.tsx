@@ -12,82 +12,83 @@ import e7 from "./core/main--if.x.tsx";
 import e8 from "./core/main--match.x.tsx";
 import e9 from "./core/main--portal.x.tsx";
 import e10 from "./core/main---portal-target.x.tsx";
-import e11 from "./core/main--switch.x.tsx";
-import e12 from "./core/main--try.x.tsx";
-import e13 from "./core/main--_enter.x.tsx";
-import e14 from "./core/main--_leave.x.tsx";
-import e15 from "./core/main--_prop.x.tsx";
-import e16 from "./core/main--_tpl.x.tsx";
-import e17 from "./core/main--apply-pipe.x.tsx";
-import e18 from "./core/main--batch.x.tsx";
-import e19 from "./core/main--catch-error.x.tsx";
-import e20 from "./core/main--computed.x.tsx";
-import e21 from "./core/main--context.x.tsx";
-import e22 from "./core/main--create-root.x.tsx";
-import e23 from "./core/main--define.x.tsx";
-import e24 from "./core/main--define-extension.x.tsx";
-import e25 from "./core/main--effect.x.tsx";
-import e26 from "./core/main--extend.x.tsx";
-import e27 from "./core/main--extensions.x.tsx";
-import e28 from "./core/main--get-owner.x.tsx";
-import e29 from "./core/main--h.x.tsx";
-import e30 from "./core/main--insert.x.tsx";
-import e31 from "./core/main--inside.x.tsx";
-import e32 from "./core/main--intercept.x.tsx";
-import e33 from "./core/main--is-reactive.x.tsx";
-import e34 from "./core/main--layers.x.tsx";
-import e35 from "./core/main--lazy-children.x.tsx";
-import e36 from "./core/main--locale.x.tsx";
-import e37 from "./core/main--messages.x.tsx";
-import e38 from "./core/main--missing.x.tsx";
-import e39 from "./core/main--on-cleanup.x.tsx";
-import e40 from "./core/main--open-layer.x.tsx";
-import e41 from "./core/main--part-of.x.tsx";
-import e42 from "./core/main--patch.x.tsx";
-import e43 from "./core/main--pipe.x.tsx";
-import e44 from "./core/main--portal-target.x.tsx";
-import e45 from "./core/main--provide.x.tsx";
-import e46 from "./core/main--reactive.x.tsx";
-import e47 from "./core/main--read.x.tsx";
-import e48 from "./core/main--register-transition.x.tsx";
-import e49 from "./core/main--render.x.tsx";
-import e50 from "./core/main--run-with-owner.x.tsx";
-import e51 from "./core/main--safe-url.x.tsx";
-import e52 from "./core/main--selector.x.tsx";
-import e53 from "./core/main--set-fallback-locale.x.tsx";
-import e54 from "./core/main--set-flip-hook.x.tsx";
-import e55 from "./core/main--set-locale.x.tsx";
-import e56 from "./core/main--signal.x.tsx";
-import e57 from "./core/main--store.x.tsx";
-import e58 from "./core/main--sx.x.tsx";
-import e59 from "./core/main--sx-value.x.tsx";
-import e60 from "./core/main--t.x.tsx";
-import e61 from "./core/main--to-date.x.tsx";
-import e62 from "./core/main--untrack.x.tsx";
-import e63 from "./core/main--unwrap.x.tsx";
-import e64 from "./core/main--use-context.x.tsx";
-import e65 from "./core/main--version.x.tsx";
-import e66 from "./core/main--with-extensions.x.tsx";
-import e67 from "./platform/behaviors.dismiss--dismiss.x.tsx";
-import e68 from "./platform/behaviors.drag--arrow-step.x.tsx";
-import e69 from "./platform/behaviors.drag--draggable.x.tsx";
-import e70 from "./platform/behaviors.drag--track.x.tsx";
-import e71 from "./platform/behaviors.dropzone--dropzone.x.tsx";
-import e72 from "./platform/behaviors.list-nav--list-nav.x.tsx";
-import e73 from "./platform/behaviors.list-nav--move-cursor.x.tsx";
-import e74 from "./platform/behaviors.resize-handle--resize-handle.x.tsx";
-import e75 from "./platform/behaviors.roving-focus--roving-focus.x.tsx";
-import e76 from "./platform/behaviors.swipe--fling.x.tsx";
-import e77 from "./platform/behaviors.swipe--nearest.x.tsx";
-import e78 from "./platform/behaviors.swipe--rubber-band.x.tsx";
-import e79 from "./platform/behaviors.swipe--swipeable.x.tsx";
-import e80 from "./platform/channel---channel-scope.x.tsx";
-import e81 from "./platform/channel--channel.x.tsx";
-import e82 from "./platform/channel--channel-devtools.x.tsx";
-import e83 from "./platform/channel--channel-scope.x.tsx";
-import e84 from "./platform/channel--define-channels.x.tsx";
-import e85 from "./platform/channel--of.x.tsx";
-import e86 from "./platform/channel--on-channels.x.tsx";
+import e11 from "./core/main---s-x.x.tsx";
+import e12 from "./core/main--switch.x.tsx";
+import e13 from "./core/main--try.x.tsx";
+import e14 from "./core/main--_enter.x.tsx";
+import e15 from "./core/main--_leave.x.tsx";
+import e16 from "./core/main--_prop.x.tsx";
+import e17 from "./core/main--_tpl.x.tsx";
+import e18 from "./core/main--apply-pipe.x.tsx";
+import e19 from "./core/main--batch.x.tsx";
+import e20 from "./core/main--catch-error.x.tsx";
+import e21 from "./core/main--computed.x.tsx";
+import e22 from "./core/main--context.x.tsx";
+import e23 from "./core/main--create-root.x.tsx";
+import e24 from "./core/main--define.x.tsx";
+import e25 from "./core/main--define-extension.x.tsx";
+import e26 from "./core/main--effect.x.tsx";
+import e27 from "./core/main--extend.x.tsx";
+import e28 from "./core/main--extensions.x.tsx";
+import e29 from "./core/main--get-owner.x.tsx";
+import e30 from "./core/main--h.x.tsx";
+import e31 from "./core/main--insert.x.tsx";
+import e32 from "./core/main--inside.x.tsx";
+import e33 from "./core/main--intercept.x.tsx";
+import e34 from "./core/main--is-reactive.x.tsx";
+import e35 from "./core/main--layers.x.tsx";
+import e36 from "./core/main--lazy-children.x.tsx";
+import e37 from "./core/main--locale.x.tsx";
+import e38 from "./core/main--messages.x.tsx";
+import e39 from "./core/main--missing.x.tsx";
+import e40 from "./core/main--on-cleanup.x.tsx";
+import e41 from "./core/main--open-layer.x.tsx";
+import e42 from "./core/main--part-of.x.tsx";
+import e43 from "./core/main--patch.x.tsx";
+import e44 from "./core/main--pipe.x.tsx";
+import e45 from "./core/main--portal-target.x.tsx";
+import e46 from "./core/main--provide.x.tsx";
+import e47 from "./core/main--reactive.x.tsx";
+import e48 from "./core/main--read.x.tsx";
+import e49 from "./core/main--register-transition.x.tsx";
+import e50 from "./core/main--render.x.tsx";
+import e51 from "./core/main--run-with-owner.x.tsx";
+import e52 from "./core/main--safe-url.x.tsx";
+import e53 from "./core/main--selector.x.tsx";
+import e54 from "./core/main--set-fallback-locale.x.tsx";
+import e55 from "./core/main--set-flip-hook.x.tsx";
+import e56 from "./core/main--set-locale.x.tsx";
+import e57 from "./core/main--signal.x.tsx";
+import e58 from "./core/main--store.x.tsx";
+import e59 from "./core/main--sx.x.tsx";
+import e60 from "./core/main--sx-value.x.tsx";
+import e61 from "./core/main--t.x.tsx";
+import e62 from "./core/main--to-date.x.tsx";
+import e63 from "./core/main--untrack.x.tsx";
+import e64 from "./core/main--unwrap.x.tsx";
+import e65 from "./core/main--use-context.x.tsx";
+import e66 from "./core/main--version.x.tsx";
+import e67 from "./core/main--with-extensions.x.tsx";
+import e68 from "./platform/behaviors.dismiss--dismiss.x.tsx";
+import e69 from "./platform/behaviors.drag--arrow-step.x.tsx";
+import e70 from "./platform/behaviors.drag--draggable.x.tsx";
+import e71 from "./platform/behaviors.drag--track.x.tsx";
+import e72 from "./platform/behaviors.dropzone--dropzone.x.tsx";
+import e73 from "./platform/behaviors.list-nav--list-nav.x.tsx";
+import e74 from "./platform/behaviors.list-nav--move-cursor.x.tsx";
+import e75 from "./platform/behaviors.resize-handle--resize-handle.x.tsx";
+import e76 from "./platform/behaviors.roving-focus--roving-focus.x.tsx";
+import e77 from "./platform/behaviors.swipe--fling.x.tsx";
+import e78 from "./platform/behaviors.swipe--nearest.x.tsx";
+import e79 from "./platform/behaviors.swipe--rubber-band.x.tsx";
+import e80 from "./platform/behaviors.swipe--swipeable.x.tsx";
+import e81 from "./platform/channel---channel-scope.x.tsx";
+import e82 from "./platform/channel--channel.x.tsx";
+import e83 from "./platform/channel--channel-devtools.x.tsx";
+import e84 from "./platform/channel--channel-scope.x.tsx";
+import e85 from "./platform/channel--define-channels.x.tsx";
+import e86 from "./platform/channel--of.x.tsx";
+import e87 from "./platform/channel--on-channels.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "hadi-march#Await": e0,
   "hadi-march#DEV": e1,
@@ -100,81 +101,82 @@ const examples: Record<string, ApiExample<any>> = {
   "hadi-march#Match": e8,
   "hadi-march#Portal": e9,
   "hadi-march#PortalTarget": e10,
-  "hadi-march#Switch": e11,
-  "hadi-march#Try": e12,
-  "hadi-march#_enter": e13,
-  "hadi-march#_leave": e14,
-  "hadi-march#_prop": e15,
-  "hadi-march#_tpl": e16,
-  "hadi-march#applyPipe": e17,
-  "hadi-march#batch": e18,
-  "hadi-march#catchError": e19,
-  "hadi-march#computed": e20,
-  "hadi-march#context": e21,
-  "hadi-march#createRoot": e22,
-  "hadi-march#define": e23,
-  "hadi-march#defineExtension": e24,
-  "hadi-march#effect": e25,
-  "hadi-march#extend": e26,
-  "hadi-march#extensions": e27,
-  "hadi-march#getOwner": e28,
-  "hadi-march#h": e29,
-  "hadi-march#insert": e30,
-  "hadi-march#inside": e31,
-  "hadi-march#intercept": e32,
-  "hadi-march#isReactive": e33,
-  "hadi-march#layers": e34,
-  "hadi-march#lazyChildren": e35,
-  "hadi-march#locale": e36,
-  "hadi-march#messages": e37,
-  "hadi-march#missing": e38,
-  "hadi-march#onCleanup": e39,
-  "hadi-march#openLayer": e40,
-  "hadi-march#partOf": e41,
-  "hadi-march#patch": e42,
-  "hadi-march#pipe": e43,
-  "hadi-march#portalTarget": e44,
-  "hadi-march#provide": e45,
-  "hadi-march#reactive": e46,
-  "hadi-march#read": e47,
-  "hadi-march#registerTransition": e48,
-  "hadi-march#render": e49,
-  "hadi-march#runWithOwner": e50,
-  "hadi-march#safeUrl": e51,
-  "hadi-march#selector": e52,
-  "hadi-march#setFallbackLocale": e53,
-  "hadi-march#setFlipHook": e54,
-  "hadi-march#setLocale": e55,
-  "hadi-march#signal": e56,
-  "hadi-march#store": e57,
-  "hadi-march#sx": e58,
-  "hadi-march#sxValue": e59,
-  "hadi-march#t": e60,
-  "hadi-march#toDate": e61,
-  "hadi-march#untrack": e62,
-  "hadi-march#unwrap": e63,
-  "hadi-march#useContext": e64,
-  "hadi-march#version": e65,
-  "hadi-march#withExtensions": e66,
-  "hadi-march/behaviors/dismiss#dismiss": e67,
-  "hadi-march/behaviors/drag#arrowStep": e68,
-  "hadi-march/behaviors/drag#draggable": e69,
-  "hadi-march/behaviors/drag#track": e70,
-  "hadi-march/behaviors/dropzone#dropzone": e71,
-  "hadi-march/behaviors/list-nav#listNav": e72,
-  "hadi-march/behaviors/list-nav#moveCursor": e73,
-  "hadi-march/behaviors/resize-handle#resizeHandle": e74,
-  "hadi-march/behaviors/roving-focus#rovingFocus": e75,
-  "hadi-march/behaviors/swipe#fling": e76,
-  "hadi-march/behaviors/swipe#nearest": e77,
-  "hadi-march/behaviors/swipe#rubberBand": e78,
-  "hadi-march/behaviors/swipe#swipeable": e79,
-  "hadi-march/channel#ChannelScope": e80,
-  "hadi-march/channel#channel": e81,
-  "hadi-march/channel#channelDevtools": e82,
-  "hadi-march/channel#channelScope": e83,
-  "hadi-march/channel#defineChannels": e84,
-  "hadi-march/channel#of": e85,
-  "hadi-march/channel#onChannels": e86,
+  "hadi-march#SX": e11,
+  "hadi-march#Switch": e12,
+  "hadi-march#Try": e13,
+  "hadi-march#_enter": e14,
+  "hadi-march#_leave": e15,
+  "hadi-march#_prop": e16,
+  "hadi-march#_tpl": e17,
+  "hadi-march#applyPipe": e18,
+  "hadi-march#batch": e19,
+  "hadi-march#catchError": e20,
+  "hadi-march#computed": e21,
+  "hadi-march#context": e22,
+  "hadi-march#createRoot": e23,
+  "hadi-march#define": e24,
+  "hadi-march#defineExtension": e25,
+  "hadi-march#effect": e26,
+  "hadi-march#extend": e27,
+  "hadi-march#extensions": e28,
+  "hadi-march#getOwner": e29,
+  "hadi-march#h": e30,
+  "hadi-march#insert": e31,
+  "hadi-march#inside": e32,
+  "hadi-march#intercept": e33,
+  "hadi-march#isReactive": e34,
+  "hadi-march#layers": e35,
+  "hadi-march#lazyChildren": e36,
+  "hadi-march#locale": e37,
+  "hadi-march#messages": e38,
+  "hadi-march#missing": e39,
+  "hadi-march#onCleanup": e40,
+  "hadi-march#openLayer": e41,
+  "hadi-march#partOf": e42,
+  "hadi-march#patch": e43,
+  "hadi-march#pipe": e44,
+  "hadi-march#portalTarget": e45,
+  "hadi-march#provide": e46,
+  "hadi-march#reactive": e47,
+  "hadi-march#read": e48,
+  "hadi-march#registerTransition": e49,
+  "hadi-march#render": e50,
+  "hadi-march#runWithOwner": e51,
+  "hadi-march#safeUrl": e52,
+  "hadi-march#selector": e53,
+  "hadi-march#setFallbackLocale": e54,
+  "hadi-march#setFlipHook": e55,
+  "hadi-march#setLocale": e56,
+  "hadi-march#signal": e57,
+  "hadi-march#store": e58,
+  "hadi-march#sx": e59,
+  "hadi-march#sxValue": e60,
+  "hadi-march#t": e61,
+  "hadi-march#toDate": e62,
+  "hadi-march#untrack": e63,
+  "hadi-march#unwrap": e64,
+  "hadi-march#useContext": e65,
+  "hadi-march#version": e66,
+  "hadi-march#withExtensions": e67,
+  "hadi-march/behaviors/dismiss#dismiss": e68,
+  "hadi-march/behaviors/drag#arrowStep": e69,
+  "hadi-march/behaviors/drag#draggable": e70,
+  "hadi-march/behaviors/drag#track": e71,
+  "hadi-march/behaviors/dropzone#dropzone": e72,
+  "hadi-march/behaviors/list-nav#listNav": e73,
+  "hadi-march/behaviors/list-nav#moveCursor": e74,
+  "hadi-march/behaviors/resize-handle#resizeHandle": e75,
+  "hadi-march/behaviors/roving-focus#rovingFocus": e76,
+  "hadi-march/behaviors/swipe#fling": e77,
+  "hadi-march/behaviors/swipe#nearest": e78,
+  "hadi-march/behaviors/swipe#rubberBand": e79,
+  "hadi-march/behaviors/swipe#swipeable": e80,
+  "hadi-march/channel#ChannelScope": e81,
+  "hadi-march/channel#channel": e82,
+  "hadi-march/channel#channelDevtools": e83,
+  "hadi-march/channel#channelScope": e84,
+  "hadi-march/channel#defineChannels": e85,
+  "hadi-march/channel#of": e86,
+  "hadi-march/channel#onChannels": e87,
 };
 export default examples;
