@@ -945,8 +945,8 @@ async function render(code: string): Promise<void> {
     print(`[${stamp()}] ✖ Çalışma hatası: ${String((e as Error)?.message ?? e)}`, "error")
   }
 }
-const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: true, language: true }} theme={previewTheme} mode={previewMode} language={previewLang} languages={languageList}
-  footer={() => (usage() ? <CodeView code={usage} lang="tsx" copy wrap label="Bileşenin kodu" /> : null)}>
+const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: true, language: true, fullscreen: true }} theme={previewTheme} mode={previewMode} language={previewLang} languages={languageList}
+  footer={() => (usage() ? <CodeView code={usage} lang="tsx" copy wrap buttons="icon" label="Bileşenin kodu" /> : null)}>
   <div class="sc-pv-root" m:no-select ref={previewReady}>
     <div class="sc-playground-empty"><b>Önizleme</b><span>Derleniyor…</span></div>
   </div>
