@@ -4,8 +4,8 @@
 // with reduced motion). Every number comes from home-stats.gen.ts (tools/gen-home-stats.js) or from march-report.json
 // (this build's measured sizes); none is typed here.
 import "./sections.css";
-import { onCleanup } from "march";
-import { reducedMotion, scrollTimeline } from "march/motion";
+import { onCleanup, signal } from "march";
+import { reducedMotion, scrollTimeline, onScrollProgress } from "march/motion";
 import { Link } from "march/router";
 import { appUrl } from "march/base";
 import { Button, Card, CodeView, IconTile, Kbd, ListRow, MadeWithMarch, StatTile, heartBurst, openPalette } from "march/ui";
@@ -15,6 +15,7 @@ import { BRAND_COLORS_ALL, type ColorToken } from "march/theme/colors.ts";
 import { HOME_STATS as S } from "../home-stats.gen.ts";
 import { pages } from "../app.tsx";
 import { withMeta, SECTIONS, sectionOf, type NavSection } from "../nav-meta.ts";
+import { fly, byColumn } from "./fly.ts";
 
 interface Report { entry?: { js: number }; boot?: { js: number } | null }
 const kb = (bytes: number): number => Math.round((bytes / 1024) * 10) / 10;
@@ -45,7 +46,7 @@ function words(el: Element): () => void {
 /** The head of a section: a small colored kicker, the title built word by word, an optional lead. */
 function Head(props: { kicker: string; title: string; lead?: string; color: ColorToken; id: string }) {
   return <SectionHead class="sc-sec-head" align="start" width="full" size="lg" m:color={props.color} eyebrow={props.kicker} titleId={props.id}
-    title={<span use:words>{props.title}</span>} lead={props.lead} reveal={{ effect: "up", scrub: true }} />
+    title={<span use:words>{props.title}</span>} lead={props.lead} reveal={{ effect: fly("rise"), scrub: true }} />
 }
 
 // ── counters ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -56,8 +57,16 @@ function Stats() {
     { value: S.animations.total, label: "animasyon" }, { value: S.managers, label: "yönetici" }, { value: S.tests, label: "test" },
     { value: S.dependencies, label: "bağımlılık" },
   ]
-  return <section class="sc-stats sc-card" aria-label="Rakamlarla March">
-    <StatsBand items={items} variant="plain" reveal={{ effect: "scale", scrub: true }} />
+  // the figures count from 0 with the scroll: the band's passage (fully in at 45 %) is the count, each figure a little
+  // after the one before; scrolling back up counts them down (reduced motion: the figures as they are)
+  const progress = signal(reducedMotion() ? 1 : 0)
+  const counted = items.map((it, k) => ({ ...it, get value(): number {
+    const p = Math.min(1, Math.max(0, (progress() - k * 0.05) / 0.7))
+    return Math.round(it.value * (1 - (1 - p) ** 3))
+  } }))
+  const follow = (el: Element) => { if (!reducedMotion()) onCleanup(onScrollProgress({ track: el, range: [0, 0.45] }, (p) => progress.set(p))) }
+  return <section class="sc-stats sc-card" aria-label="Rakamlarla MarchJS" ref={follow}>
+    <StatsBand items={counted} variant="plain" mode="none" reveal={{ effect: fly("stack"), scrub: true }} />
   </section>
 }
 
@@ -69,6 +78,13 @@ const MAP_ORDER = ["components", "built", "motion", "start", "look", "infra"];
 const LONG = 6;
 /** How deep a page can sit under a category. */
 const DEPTH = 8;
+
+/** A cell's ref: its content flies in on the given path, tied to the scroll (set up once the content is in the cell). */
+const flyIn = (path: Parameters<typeof fly>[0]) => (el: Element): void => {
+  let stop = (): void => {}, live = true
+  queueMicrotask(() => { if (live) stop = revealOnScroll(el, { effect: fly(path), scrub: true }) })
+  onCleanup(() => { live = false; stop() })
+}
 
 function WorldMap() {
   const all = withMeta(pages()).filter((p) => p.path !== "/")
@@ -86,22 +102,27 @@ function WorldMap() {
   return <section class="sc-sec" aria-labelledby="sc-map-h">
     <Head id="sc-map-h" kicker="Harita" color="brand-orange" title="Her şey tek bakışta"
       lead={`${worlds.length} bölüm, ${total} kategori; hepsi bu ekranda. Soldaki şerit aynı bölümleri her sayfada taşır.`} />
-    {/* each card rises as it itself scrolls into view, tied to the scroll position (scrolling up winds it back); one
-        Reveal around them all played as soon as the map's top came in, so the lower cards had finished unseen */}
+    {/* each card flies in from afar as it scrolls into view (the start side, from below, the end side; the wide ones
+        rise), tied to the scroll position: scrolling up flies it back out; its rows slide in after it. The card flies
+        inside its grid cell, and the cell (which stays put) is what the scroll is measured on */}
     <div class="sc-map">
-      {worlds.map(({ s, rows }, i) => <Card class={`sc-map-world sc-card${rows.length > LONG ? " is-wide" : ""}`} title={s.label} subtitle={s.desc}
-        ref={(el: Element) => onCleanup(revealOnScroll(el, { effect: "up", self: true, scrub: true, distance: 36 + (i % 3) * 12 }))}>
-        <Reveal class="sc-map-rows" effect="start" distance={14} scrub>
-          {rows.map((p) => { const n = under(p), color = BRAND_COLORS_ALL[k++ % BRAND_COLORS_ALL.length]!; return <ListRow class="sc-map-row" href={p.path} overflow="ellipsis" color={color}
-            lead={<IconTile icon={p.icon} m:color={color} size="sm" />} title={p.title} sub={p.desc}
-            trail={n ? <span class="sc-map-n" data-m-color={color}>{n}</span> : undefined} /> })}
-        </Reveal>
-      </Card>)}
-      <Card class="sc-map-find" ref={(el: Element) => onCleanup(revealOnScroll(el, { effect: "up", self: true, scrub: true }))}>
-        <p class="sc-map-find-t">Adını biliyorsan doğrudan git.</p>
-        <p class="sc-map-find-x">Bileşen, sayfa ya da eylem: yazmaya başla, Enter ile aç.</p>
-        <Button icon={search} onClick={openPalette}>Ara <Kbd keys="mod+k" /></Button>
-      </Card>
+      {worlds.map(({ s, rows }, i) => <div class={`sc-map-cell${rows.length > LONG ? " is-wide" : ""}`}
+        ref={flyIn(rows.length > LONG ? "rise" : byColumn(i))}>
+        <Card class={`sc-map-world sc-card${rows.length > LONG ? " is-wide" : ""}`} title={s.label} subtitle={s.desc}>
+          <Reveal class="sc-map-rows" effect="end" distance={60} scrub>
+            {rows.map((p) => { const n = under(p), color = BRAND_COLORS_ALL[k++ % BRAND_COLORS_ALL.length]!; return <ListRow class="sc-map-row" href={p.path} overflow="ellipsis" color={color}
+              lead={<IconTile icon={p.icon} m:color={color} size="sm" />} title={p.title} sub={p.desc}
+              trail={n ? <span class="sc-map-n" data-m-color={color}>{n}</span> : undefined} /> })}
+          </Reveal>
+        </Card>
+      </div>)}
+      <div class="sc-map-cell" ref={flyIn("spin")}>
+        <Card class="sc-map-find">
+          <p class="sc-map-find-t">Adını biliyorsan doğrudan git.</p>
+          <p class="sc-map-find-x">Bileşen, sayfa ya da eylem: yazmaya başla, Enter ile aç.</p>
+          <Button icon={search} onClick={openPalette}>Ara <Kbd keys="mod+k" /></Button>
+        </Card>
+      </div>
     </div>
   </section>
 }
@@ -118,7 +139,7 @@ function Fast(props: { report: () => Report | null }) {
   ]
   return <section class="sc-sec" aria-labelledby="sc-fast-h">
     <Head id="sc-fast-h" kicker="Hız ve boyut" color="brand-blue" title="Küçük açılır, büyüdükçe yavaşlamaz" />
-    <Reveal class="sc-fast" effect="up" scrub>
+    <Reveal class="sc-fast" effect={fly("flip")} scrub>
       {cards.map((c) => <StatTile class="sc-fast-card sc-card" variant="card" size="xl" align="start" m:color={c.color} value={c.value} label={c.label}
         hint={<>{c.text}{() => { const m = c.more?.(); return m ? <span class="sc-fast-more">{m}</span> : null }}</>} />)}
     </Reveal>
@@ -140,10 +161,13 @@ function Start() {
   return <section class="sc-sec" aria-labelledby="sc-start-h">
     <Head id="sc-start-h" kicker="Başla" color="brand-green" title="Üç satırda ilk ekran" />
     <div class="sc-start">
-      <Reveal class="sc-start-code" self effect="start" distance={46} scrub><CodeView code={START} lang="tsx" wrap label="Örnek kod" /></Reveal>
-      <Reveal class="sc-start-out sc-card" self effect="end" distance={46} scrub>
-        <span class="sc-start-out-l">Sonuç</span>
-        <Button variant="primary" icon={sparkles} on:click={(e: Event) => heartBurst(e.currentTarget as HTMLElement, { radius: 46 })}>Merhaba</Button>
+      {/* each side flies in inside its own cell (the cell stays put: the scroll is measured on it) */}
+      <Reveal class="sc-start-code" effect={fly("left")} scrub><CodeView code={START} lang="tsx" wrap label="Örnek kod" /></Reveal>
+      <Reveal class="sc-start-cell" effect={fly("right")} scrub>
+        <div class="sc-start-out sc-card">
+          <span class="sc-start-out-l">Sonuç</span>
+          <Button variant="primary" icon={sparkles} on:click={(e: Event) => heartBurst(e.currentTarget as HTMLElement, { radius: 46 })}>Merhaba</Button>
+        </div>
       </Reveal>
     </div>
     <div class="sc-start-cta">

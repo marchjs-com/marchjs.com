@@ -25,7 +25,8 @@
 /* a heading word (the words action ties its entrance to the scroll) */
 .sc-word { display: inline-block; transform-origin: 50% 100%; }
 .sc-map-world { min-inline-size: 0; }
-.sc-map-world.is-wide { grid-column: span 2; }
+.sc-map-cell { display: grid; min-inline-size: 0; }
+.sc-map-cell.is-wide { grid-column: span 2; }
 .sc-map-world .m-card-title { font-family: var(--m-font-display); font-weight: 800; font-size: 1.1875rem; letter-spacing: -.02em; }
 .sc-map-rows { display: grid; grid-template-columns: minmax(0, 1fr); gap: .125rem; }
 .sc-map-world.is-wide .sc-map-rows { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--m-space-2); }
@@ -51,7 +52,7 @@
 
 /* first example: the code and what it draws (the code wraps, it is never cut at the side) */
 .sc-start { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--m-space-3); }
-.sc-start-code { min-inline-size: 0; }
+.sc-start-code, .sc-start-cell { display: grid; min-inline-size: 0; }
 .sc-start-code .m-code-view { block-size: 100%; }
 .sc-start-out { position: relative; display: grid; place-items: center; min-block-size: 8.75rem; border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4);
   background: radial-gradient(var(--m-border-strong) 1px, transparent 1.5px) 0 0 / 1rem 1rem, var(--m-surface); }
@@ -66,7 +67,7 @@
 .sc-home-foot-links a:hover { color: var(--m-primary-text); }
 
 @container sc-home (max-width: 65rem) {
-  .sc-map-world.is-wide { grid-column: 1 / -1; }
+  .sc-map-cell.is-wide { grid-column: 1 / -1; }
   .sc-fast, .sc-start { grid-template-columns: minmax(0, 1fr); }
 }
 @container sc-home (max-width: 47.5rem) {
