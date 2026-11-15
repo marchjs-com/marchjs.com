@@ -20,7 +20,7 @@ import { filesOver } from "../../cli/perf.js";
 const here = dirname(fileURLToPath(import.meta.url));
 const dist = join(here, "dist");
 const cli = join(here, "..", "..", "cli", "march.js");
-export const CSP = "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; media-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types march-worker";
+export const CSP = "default-src 'none'; script-src 'self' blob: 'wasm-unsafe-eval'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; media-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types march-worker";
 
 const args = process.argv.slice(2);
 const release = args.includes("--release");
@@ -95,7 +95,15 @@ async function writePlaygroundTools(out) {
       b.onLoad({ filter: /.*/, namespace: "march-browser" }, () => ({ contents: `import * as sx from ${JSON.stringify(sx)}; export const importTs = async () => sx;`, loader: "js", resolveDir: root }));
     } }],
   });
-  console.log("✔ playground tools (esbuild-wasm, March compiler)");
+  // the preview runtime (loaded by /playground only): March and its components bundled once, and run(code, el), which
+  // imports the playground's build from a blob: URL (CSP script-src blob:) and renders it in the preview's stage
+  const { march } = await import(pathToFileURL(join(root, "compiler", "esbuild.js")).href);
+  await esbuild.build({
+    entryPoints: [join(here, "src", "playground", "preview-runtime.ts")], bundle: true, format: "esm", platform: "browser", target: "es2022", minify: true,
+    outdir: out, entryNames: "preview", assetNames: "[name]", logLevel: "error", loader: { ".woff2": "file", ".svg": "file", ".png": "file" },
+    plugins: [march({ dev: false, cssSplit: false, deepImports: false })],
+  });
+  console.log("✔ playground tools (esbuild-wasm, March compiler, TypeScript, preview runtime)");
 }
 if (serve) {
   const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".json": "application/json" };

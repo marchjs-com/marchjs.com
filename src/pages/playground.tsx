@@ -97,15 +97,41 @@ const propsPanel = () => <div class="sc-props">
 // the build: its steps go to the Console (lines written before the Console is there wait for it)
 let consoleApi: TerminalApi | null = null
 const waiting: [string, Parameters<TerminalApi["print"]>[1]][] = []
-const builder = createBuilder((text, tone) => { if (consoleApi) consoleApi.print(text, { tone }); else waiting.push([text, { tone }]) })
+type Tone = "success" | "warn" | "error" | "info" | "muted"
+const print = (text: string, tone?: Tone) => { if (consoleApi) consoleApi.print(text, { tone }); else waiting.push([text, { tone }]) }
+const builder = createBuilder(print)
+const stamp = () => new Date().toLocaleTimeString("tr-TR", { hour12: false })
 const consolePanel = () => <Terminal readonly scheme="dark" label="Derleme çıktısı" class="sc-console"
   ref={(api: TerminalApi) => { consoleApi = api; for (const [t, o] of waiting.splice(0)) api.print(t, o) }} />
 // lang.json: the texts the last build found (JSX text, titles, labels…), as a locale file lists them
 const langJson = () => Object.fromEntries(builder.texts().map((k) => [k, ""]))
 
-// the preview (AppPreview): its toolbar sets the preview's own theme, accent and light / dark; the stage in the middle
+// the preview (AppPreview): its toolbar sets the preview's own theme, accent and light / dark; each successful build's
+// PreviewControl is rendered in the middle of its stage by the preview runtime (playground/preview.js, loaded once)
+let previewEl: HTMLElement | null = null
+type Runtime = { run(code: string, el: HTMLElement): Promise<void>; stop(): void }
+let runtime: Promise<Runtime> | null = null
+const loadRuntime = () => (runtime ??= (async () => {
+  // its components' stylesheet, once
+  const link = document.createElement("link")
+  link.rel = "stylesheet"; link.href = appUrl("playground/preview.css")
+  document.head.append(link)
+  return await import(/* @vite-ignore */ appUrl("playground/preview.js")) as Runtime
+})())
+async function render(code: string): Promise<void> {
+  if (!previewEl) return
+  const t0 = performance.now()
+  try {
+    await (await loadRuntime()).run(code, previewEl)
+    print(`[${stamp()}] Önizleme çizildi · ${Math.round(performance.now() - t0)} ms`, "success")
+  } catch (e) {
+    print(`[${stamp()}] ✖ Çalışma hatası: ${String((e as Error)?.message ?? e)}`, "error")
+  }
+}
 const preview = () => <AppPreview>
-  <div class="sc-playground-empty"><b>Önizleme</b><span>Boş panel</span></div>
+  <div class="sc-pv-root" ref={(el: HTMLElement) => { previewEl = el }}>
+    <div class="sc-playground-empty"><b>Önizleme</b><span>Derleniyor…</span></div>
+  </div>
 </AppPreview>
 
 const PANELS: AppPanel[] = [
@@ -142,9 +168,9 @@ export default function PlaygroundPage(props: { name?: string }) {
   effect(() => {
     const now = { ...Object.fromEntries([...files].map(([p, s]) => [p, s()])), [ENTRY]: entrySource() }
     clearTimeout(timer)
-    timer = setTimeout(() => { void builder.build(now, ENTRY) }, 350)
+    timer = setTimeout(() => { void builder.build(now, ENTRY).then((r) => { if (r?.ok) void render(r.code) }) }, 350)
   })
-  onCleanup(() => { clearTimeout(timer); consoleApi = null })
+  onCleanup(() => { clearTimeout(timer); consoleApi = null; previewEl = null; void runtime?.then((r) => r.stop()) })
   return <div class="sc-playground">
     <AppUI title={props.name ?? "Test Bileşen"} tools={<PaletteButton label="Komut ara…" class="sc-playground-pal" />}
       panels={PANELS} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.playground.v3" label="Playground" />

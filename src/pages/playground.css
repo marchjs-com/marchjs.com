@@ -6,3 +6,4 @@
 .sc-lang { block-size: 100%; overflow: auto; padding: var(--m-space-2) var(--m-space-3); }
 .sc-console { block-size: 100%; border-radius: 0; }
 .sc-props { block-size: 100%; overflow: auto; }
+.sc-pv-root { display: grid; place-items: center; }
