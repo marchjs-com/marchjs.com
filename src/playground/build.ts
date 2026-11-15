@@ -16,9 +16,11 @@ interface Message { text: string; location?: { file: string; line: number; colum
 interface Esbuild {
   initialize(o: { wasmURL: string; worker: boolean }): Promise<void>;
   build(o: Record<string, unknown>): Promise<{ outputFiles?: { text: string }[]; warnings: Message[] }>;
+  transform(code: string, o: Record<string, unknown>): Promise<{ code: string }>;
 }
-/** What one build gives: the bundled module of the entry and the texts to translate. */
-export interface BuildResult { ok: boolean; code: string; texts: string[] }
+/** What one build gives: the bundled module of the entry, the texts to translate, each file the March compiler wrote
+ * (TypeScript still: `js` makes it a module) and when it was built. */
+export interface BuildResult { ok: boolean; code: string; texts: string[]; modules: Record<string, string>; at: number }
 
 const stamp = (): string => new Date().toLocaleTimeString("tr-TR", { hour12: false });
 const ms = (t0: number): string => `${Math.round(performance.now() - t0)} ms`;
@@ -59,7 +61,7 @@ export function createBuilder(log: BuildLog) {
     if (n !== run) return null; // a newer change is on its way
     const t0 = performance.now();
     say(`Derleniyor: ${entry}`, "info");
-    const found = new Set<string>();
+    const found = new Set<string>(), modules: Record<string, string> = {};
     const compile = t.compile;
     const memory = {
       name: "playground-files",
@@ -74,6 +76,7 @@ export function createBuilder(log: BuildLog) {
           try {
             const r = compile(source, { filename: a.path });
             for (const x of [...r.texts, ...r.keys]) found.add(x);
+            modules[a.path] = r.code;
             say(`✓ ${a.path} · ${ms(t1)}`, "success");
             return { contents: r.code, loader: "ts", warnings: r.warnings.map((text) => ({ text })) };
           } catch (err) {
@@ -86,7 +89,7 @@ export function createBuilder(log: BuildLog) {
     try {
       const out = await t.esbuild.build({ entryPoints: [entry], bundle: true, write: false, format: "esm", target: "es2022", plugins: [memory], logLevel: "silent" });
       const code = out.outputFiles?.[0]?.text ?? "";
-      const r = { ok: true, code, texts: [...found].sort((a, b) => a.localeCompare(b, "tr")) };
+      const r = { ok: true, code, texts: [...found].sort((a, b) => a.localeCompare(b, "tr")), modules, at: Date.now() };
       // kept even when another tab came to the front meanwhile: showing this one again needs no build
       memo.set(keyOf(files, entry), r);
       if (n !== run) return null;
@@ -99,8 +102,13 @@ export function createBuilder(log: BuildLog) {
       const errors = (err as { errors?: Message[] }).errors ?? [{ text: String((err as Error)?.message ?? err) }];
       for (const e of errors) say(`✖ ${where(e)}${e.text}`, "error");
       say(`Derleme başarısız: ${errors.length} hata · ${ms(t0)}`, "error");
-      return { ok: false, code: "", texts: [...texts()] };
+      return { ok: false, code: "", texts: [...texts()], modules: {}, at: Date.now() };
     }
   }
-  return { build, cached, texts };
+  /** A compiled file as a JavaScript module (esbuild prints it: types gone, laid out the same way every time). */
+  async function js(path: string, code: string): Promise<string> {
+    const t = await load();
+    return (await t.esbuild.transform(code, { loader: /\.jsx?$/.test(path) ? "js" : "ts", format: "esm", target: "es2022", sourcefile: path })).code;
+  }
+  return { build, cached, texts, js };
 }

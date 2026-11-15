@@ -12,10 +12,11 @@ import type { PlaygroundOption } from "hadi-march/components/meta.ts";
 import { appUrl } from "hadi-march/base";
 import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "hadi-march/ui";
 import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
-import { x as xIcon, plus, database, zap, monitor, sliders, packageBox, users, code, terminal, fileText, globe, plug } from "hadi-march/icons";
+import { x as xIcon, history, plus, database, zap, monitor, sliders, packageBox, users, code, terminal, fileText, globe, plug } from "hadi-march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "hadi-march/forms"
 import { COLOR_TOKENS } from "hadi-march/theme"
-import { createBuilder } from "../playground/build.ts";
+import { createBuilder, type BuildResult } from "../playground/build.ts";
+import { openBuildOutput } from "../playground/output.tsx";
 import { findRoots, exportRoots, viewRoots, type JsxRoot } from "../playground/roots.ts";
 import { iconPickerPacks, packRef } from "../icon-packs.ts";
 import { ExtensionsPanel, extensionOptions, extensionSpec, withExtensionSuggestions, NO_EXT, type ExtInfo } from "../playground/extensions-tab.tsx";
@@ -676,8 +677,19 @@ type Tone = "success" | "warn" | "error" | "info" | "muted"
 const print = (text: string, tone?: Tone) => { if (consoleApi) consoleApi.print(text, { tone }); else waiting.push([text, { tone }]) }
 const builder = createBuilder(print)
 const stamp = () => new Date().toLocaleTimeString("tr-TR", { hour12: false })
-const consolePanel = () => <Terminal readonly scheme="dark" height="100%" label="Derleme çıktısı" class="sc-console"
-  ref={(api: TerminalApi) => { consoleApi = api; for (const [t, o] of waiting.splice(0)) api.print(t, o) }} />
+/** The build the preview drew last: its files open in a dialog (the Console's button, the Terminal's `output`). */
+const lastBuild = signal<BuildResult | null>(null)
+const showOutput = async (): Promise<boolean> => {
+  const b = untrack(lastBuild)
+  if (!b) return false
+  await openBuildOutput({ build: b, name: untrack(active).replace(/\.[jt]sx?$/, ""), entry: ENTRY, js: builder.js })
+  return true
+}
+const consolePanel = () => <div class="sc-console-box">
+  <Terminal readonly scheme="dark" height="100%" label="Derleme çıktısı" class="sc-console"
+    ref={(api: TerminalApi) => { consoleApi = api; for (const [t, o] of waiting.splice(0)) api.print(t, o) }} />
+  <Button size="xs" variant="secondary" icon={history} class="sc-console-out" disabled={() => !lastBuild()} onClick={() => void showOutput()}>Son derlemeyi göster</Button>
+</div>
 // Terminal: the playground's command line (no shell: March is built here in the browser and exported, never
 // installed from npm). Its commands work on the component in work (props, events, the preview's language and theme,
 // a build, an accessibility check, the size of the build); a line that names no command is JavaScript, run in the
@@ -694,7 +706,7 @@ const buildNow = async () => {
   }
   const now = untrack(() => ({ [path]: withData(src), [ENTRY]: entrySource() }))
   const r = await builder.build(now, ENTRY)
-  if (r?.ok) await render(r.code)
+  if (r?.ok) { lastBuild.set(r); await render(r.code) }
   return r
 }
 const previewTheme = signal(""), previewMode = signal<"system" | "light" | "dark">("system")
@@ -825,6 +837,9 @@ const COMMANDS: Record<string, TerminalCommand> = {
     link.href = url; link.download = path; link.click()
     setTimeout(() => URL.revokeObjectURL(url), 1000)
     io.success(`${path} indirildi`)
+  } },
+  output: { desc: "Son derlemenin dosyalarını aç: klasörler, derlenmiş kod, zip olarak indir", run: async (_a, io) => {
+    if (await showOutput()) io.success("Son derleme açıldı"); else io.warn("Henüz derleme yok")
   } },
   size: { desc: "Son derlemenin boyutu (March'ın kendisi hariç)", run: async (_a, io) => {
     if (!lastCode) { io.warn("Henüz derleme yok"); return }
@@ -1048,7 +1063,7 @@ export default function PlaygroundPage(props: { name?: string }) {
     if (debugSvc()?.active()) { scheduleBuild(350); return }
     // built before with this very code (a tab shown again): the kept result, at once
     const kept = builder.cached(now, ENTRY)
-    if (kept) { print(`[${stamp()}] ↺ ${path}: bu kod daha önce derlendi, bellekteki sonuç kullanılıyor`, "muted"); void render(kept.code); return }
+    if (kept) { lastBuild.set(kept); print(`[${stamp()}] ↺ ${path}: bu kod daha önce derlendi, bellekteki sonuç kullanılıyor`, "muted"); void render(kept.code); return }
     scheduleBuild(350)
   })
   // the preview's language: its file, or the code's own texts

@@ -1,0 +1,5 @@
+/* The last build's dialog: the AppUI fills it (the dialog's own padding goes) */
+.m-dialog.sc-out-dialog { inline-size: min(80rem, 100%); }
+.sc-out-dialog > .m-dialog-body { display: flex; padding: 0; overflow: hidden; }
+.sc-out.m-app { flex: 1 1 auto; min-block-size: 0; }
+.sc-out-tree { block-size: 100%; overflow: auto; padding: var(--m-space-1); }

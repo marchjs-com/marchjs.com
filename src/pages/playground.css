@@ -9,6 +9,9 @@
 .sc-chip-dot { display: inline-block; inline-size: .625em; block-size: .625em; margin-inline-end: 4px; border-radius: 50%; background: var(--m-accent, var(--m-primary)); vertical-align: middle; }
 .sc-chip-sep { inline-size: 1px; align-self: stretch; margin-inline: 2px; background: var(--m-border); }
 .sc-console { block-size: 100%; border-radius: 0; }
+/* the Console's button at its top right: the last build's files in a dialog */
+.sc-console-box { position: relative; block-size: 100%; }
+.m-btn.sc-console-out { position: absolute; inset-block-start: var(--m-space-2); inset-inline-end: var(--m-space-3); z-index: 1; }
 .sc-props { block-size: 100%; overflow: auto; }
 /* the preview is split into a cell per exported component (its name in the corner when there are several) */
 .sc-pv-root { display: grid; align-self: stretch; inline-size: 100%; grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr)); }
