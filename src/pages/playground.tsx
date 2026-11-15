@@ -6,7 +6,7 @@
 // change is built in the page (playground/build.ts): the Console shows each step with its time and the errors,
 // lang.json the texts the build found. No tab has a close mark (groups still collapse to strips).
 import "./playground.css";
-import { h, render as mount, createRoot, signal, computed, effect, untrack, onCleanup, locale } from "hadi-march";
+import { h, render as mount, createRoot, signal, computed, effect, untrack, onCleanup } from "hadi-march";
 import { registry } from "hadi-march/components/registry.gen.ts";
 import type { PlaygroundOption } from "hadi-march/components/meta.ts";
 import { appUrl } from "hadi-march/base";
@@ -141,7 +141,7 @@ const inTree = computed((): string[] => { const out = new Set<string>(); const g
 const selected = signal("")
 const optionsBy = signal<Record<string, readonly PlaygroundOption[]>>({})
 const valuesBy = signal<Record<string, Record<string, unknown>>>({})
-interface ApiProp { name: string; type: string; doc: string; tr?: string }
+interface ApiProp { name: string; type: string; doc: string }
 /** Every prop a component exports (the API reference): its events and its accessibility props are read from it. */
 const apiPropsBy = signal<Record<string, ApiProp[]>>({})
 // an option that takes an icon (icon, iconEnd…): chosen with an IconPicker, kept as the icon's name. A yes / no icon
@@ -285,7 +285,7 @@ const extOptions = (name: string): PlaygroundOption[] => extensionOptions(extInf
 const isA11y = (o: PlaygroundOption): boolean => o.key.startsWith("a11y:")
 const options = (): readonly PlaygroundOption[] => optsOf(selected())
 // the set of options (the grid is made again when it changes: a component chosen, the root's tag read)
-const optionKeys = computed(() => `${selected()}:${options().map((o) => o.key).join(",")}:${selected() in tableBy() ? 1 : 0}:${selected() in apiPropsBy() ? 1 : 0}:${locale()}`)
+const optionKeys = computed(() => `${selected()}:${options().map((o) => o.key).join(",")}:${selected() in tableBy() ? 1 : 0}:${selected() in apiPropsBy() ? 1 : 0}`)
 const values = (): Record<string, unknown> => { const v = valuesBy()[selected()] ?? {}; return Object.fromEntries(options().map((o) => [o.key, v[o.key] ?? defaultOf(o)])) }
 const setValues = (v: Record<string, unknown>) => valuesBy.set({ ...valuesBy.peek(), [selected.peek()]: { ...v } })
 // March's classes: every .m-… class of the page's stylesheets (read once, when a class field first opens)
@@ -316,7 +316,7 @@ const classControl = comboControl(classList, { list: [], own: true, multi: true 
 // data-*: rows of key and value, written as data-key="value"
 const dataControl = (cp: Record<string, unknown>): unknown => h(KeyValueEditor, { ...cp, keyPlaceholder: "anahtar", valuePlaceholder: "değer", labels: { key: "anahtar", value: "değer", add: "Ekle" } })
 // each property's text under its name (muted, small): the API reference's (the prop's JSDoc), else the component's
-// docs table; in the showcase's language: Turkish (the prop's `@tr` JSDoc tag, `props[].tr`) when the page is Turkish
+// docs table; in the showcase's language when the text has one (the props' texts are English for now)
 const tableBy = signal<Record<string, Record<string, string>>>({})
 const tables = new Map<string, Promise<Record<string, { props?: [string, string, string, string][] }>>>()
 const plain = (md: string): string => md.replace(/`([^`]*)`/g, "$1").replace(/\*\*?([^*]+)\*\*?/g, "$1").trim()
@@ -333,9 +333,8 @@ effect(() => { for (const name of inTree()) if (!(name in untrack(tableBy))) voi
 /** The text under a property's name. */
 const describeProp = (name: string, o: PlaygroundOption): string => {
   const prop = String(o.prop || o.key).replace(/^(html|a11y|api|mp):/, "")
-  const api = (apiPropsBy()[name] ?? []).find((p) => p.name === prop)
-  const tr = locale().split("-")[0] === "tr" ? api?.tr : ""
-  return plain(tr || api?.doc || tableBy()[name]?.[prop] || "")
+  const api = (apiPropsBy()[name] ?? []).find((p) => p.name === prop)?.doc ?? ""
+  return plain(api || tableBy()[name]?.[prop] || "")
 }
 const asProperty = (o: PlaygroundOption): PropertySpec => {
   const spec = asPropertyBase(o), text = untrack(() => describeProp(selected(), o))
