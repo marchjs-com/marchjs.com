@@ -48,7 +48,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/language": { desc: "$ değişkenler, <For>, bind:, borular, sx", group: "Temel", icon: code },
   "/flow": { desc: "Düğüm tabanlı akış: tuval, palet, çalıştır/duraklat/adım, zaman çizelgesi", group: "Karmaşık bileşenler", icon: activity },
   "/test-bilesen": { desc: "Bileşen sayfası şablonu: sayfa ve altta önceki / sonraki", group: "Karmaşık bileşenler", icon: code },
-  "/playground": { desc: "IDE kabuğu tek başına, sayfanın tamamında", group: "Karmaşık bileşenler", icon: code },
+  "/playground": { desc: "Bileşen çalışma alanı: önizleme, özellikler, dosyalar, konsol", group: "Karmaşık bileşenler", icon: code },
   "/app-ui": { desc: "March IDE çekirdeği: yanaşan, daralan, sekmeli paneller ve hazır düzenler", group: "Karmaşık bileşenler", icon: code },
   "/ide": { desc: "Panel yerleşimi, özellik düzenleyici, araç ve durum çubukları, mini editör", group: "Karmaşık bileşenler", icon: code },
   "/ide-live": { desc: "Mini editör: dosya ağacı, sekmeli editör, ayarlar, konsol, komut paleti", group: "Karmaşık bileşenler", icon: code },

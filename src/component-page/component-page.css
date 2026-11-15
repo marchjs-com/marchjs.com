@@ -1,7 +1,8 @@
 /* Component page template (_layout.tsx): the page, Previous / Next at the bottom; the whole room under the top bar,
    the page takes what the footer leaves. */
-.sc-cpage { block-size: calc(100dvh - var(--m-topbar-h, 3.5rem)); min-block-size: 28rem; display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+.sc-cpage { --sc-cpage-foot: 4.5rem; block-size: calc(100dvh - var(--m-topbar-h, 3.5rem)); min-block-size: 28rem; min-inline-size: 0; overflow: clip; display: grid; grid-template-rows: minmax(0, 1fr) var(--sc-cpage-foot); }
 .sc-cpage-body { min-block-size: 0; display: grid; }
 .sc-cpage-body > * { min-block-size: 0; }
-.sc-cpage-body .sc-play-ide { block-size: 100%; min-block-size: 0; }
-.sc-cpage-foot.sc-topic-pager { position: static; padding-inline: var(--sc-gutter, var(--m-space-4)); }
+.sc-cpage-body .sc-playground { block-size: 100%; min-block-size: 0; }
+/* the footer is as tall as the side menu's footer: their top lines meet */
+.sc-cpage-foot.sc-topic-pager { position: static; box-sizing: border-box; block-size: var(--sc-cpage-foot); margin-inline: 0; min-inline-size: 0; padding-block: 0; padding-inline: var(--m-space-3); }
