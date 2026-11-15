@@ -144,6 +144,9 @@ const valuesBy = signal<Record<string, Record<string, unknown>>>({})
 interface ApiProp { name: string; type: string; doc: string; tr?: string }
 /** Every prop a component exports (the API reference): its events and its accessibility props are read from it. */
 const apiPropsBy = signal<Record<string, ApiProp[]>>({})
+/** The common props' texts (`m:color`, `m:tip`…) in the page's language, by name: from the API index (src/props CommonProps). */
+const commonText = signal<Record<string, string>>({})
+const pageLang = (): "tr" | "en" => (locale().split("-")[0] === "tr" ? "tr" : "en")
 // an option that takes an icon (icon, iconEnd…): chosen with an IconPicker, kept as the icon's name. A yes / no icon
 // option of the card (Button's "İkon" with toCode {plus}) starts at the icon its code names.
 const isIcon = (o: PlaygroundOption): boolean => /icon/i.test(o.key) || /icon/i.test(String(o.prop || ""))
@@ -285,7 +288,7 @@ const extOptions = (name: string): PlaygroundOption[] => extensionOptions(extInf
 const isA11y = (o: PlaygroundOption): boolean => o.key.startsWith("a11y:")
 const options = (): readonly PlaygroundOption[] => optsOf(selected())
 // the set of options (the grid is made again when it changes: a component chosen, the root's tag read)
-const optionKeys = computed(() => `${selected()}:${options().map((o) => o.key).join(",")}:${selected() in tableBy() ? 1 : 0}:${selected() in apiPropsBy() ? 1 : 0}:${locale()}`)
+const optionKeys = computed(() => `${selected()}:${options().map((o) => o.key).join(",")}:${selected() in tableBy() ? 1 : 0}:${selected() in apiPropsBy() ? 1 : 0}:${locale()}:${Object.keys(commonText()).length}`)
 const values = (): Record<string, unknown> => { const v = valuesBy()[selected()] ?? {}; return Object.fromEntries(options().map((o) => [o.key, v[o.key] ?? defaultOf(o)])) }
 const setValues = (v: Record<string, unknown>) => valuesBy.set({ ...valuesBy.peek(), [selected.peek()]: { ...v } })
 // March's classes: every .m-… class of the page's stylesheets (read once, when a class field first opens)
@@ -334,8 +337,8 @@ effect(() => { for (const name of inTree()) if (!(name in untrack(tableBy))) voi
 const describeProp = (name: string, o: PlaygroundOption): string => {
   const prop = String(o.prop || o.key).replace(/^(html|a11y|api|mp):/, "")
   const api = (apiPropsBy()[name] ?? []).find((p) => p.name === prop)
-  const tr = locale().split("-")[0] === "tr" ? api?.tr : ""
-  return plain(tr || api?.doc || tableBy()[name]?.[prop] || "")
+  const tr = pageLang() === "tr" ? api?.tr : ""
+  return plain(tr || api?.doc || (prop.startsWith("m:") ? commonText()[prop] : "") || tableBy()[name]?.[prop] || "")
 }
 const asProperty = (o: PlaygroundOption): PropertySpec => {
   const spec = asPropertyBase(o), text = untrack(() => describeProp(selected(), o))
@@ -494,8 +497,15 @@ const depsPanel = () => <div class="sc-deps">
 // Events: the callbacks a component exports (its on… props, from the API reference), each with a handler to try
 // it: none, write to the Console, a toast, or a counter. The handler goes to the rendered component with its props
 // (no build) and into the code under the preview. A component without callbacks says so.
-let indexP: Promise<MarchCatalog> | null = null
-const apiIndex = (): Promise<MarchCatalog> => (indexP ??= fetch(appUrl("api/index.tr.json")).then((r) => r.json() as Promise<MarchCatalog>))
+// the API index in the page's language (its summaries and the common props' texts); the docs files are shared
+const indexP = new Map<string, Promise<MarchCatalog>>()
+const apiIndex = (): Promise<MarchCatalog> => {
+  const lang = untrack(pageLang)
+  let p = indexP.get(lang)
+  if (!p) indexP.set(lang, (p = fetch(appUrl(`api/index.${lang}.json`)).then((r) => r.json() as Promise<MarchCatalog>)))
+  return p
+}
+effect(() => { pageLang(); void apiIndex().then((idx) => commonText.set(Object.fromEntries((idx as unknown as { common?: [string, string][] }).common ?? []))) })
 const chunks = new Map<number, Promise<Record<string, { props?: ApiProp[] }>>>()
 const eventsBy = signal<Record<string, ApiProp[]>>({})
 async function loadEvents(name: string): Promise<void> {
@@ -944,7 +954,7 @@ const PRESETS: Record<string, Preset> = {
   main: {
     title: "Playground",
     tree: () => row(
-      [0.6, col([0.7, tabs("preview")], [0.3, row([0.5, tabs(["props", "events", "data"])], [0.5, tabs(["deps", "a11y"])])])],
+      [0.6, col([0.7, tabs("preview")], [0.3, row([0.8, tabs(["props", "a11y", "events", "data"])], [0.2, tabs(["deps"])])])],
       [0.4, col([0.7, tabs(["c1", "c2", "c3"])], [0.3, tabs(["console", "debug", "terminal", "i18n", "ext"])])],
     ),
   },
@@ -1015,7 +1025,7 @@ export default function PlaygroundPage(props: { name?: string }) {
   onCleanup(() => { clearTimeout(timer); consoleApi = null; previewEl = null; void runtime?.then((r) => r.stop()) })
   return <div class="sc-playground">
     <AppUI title={props.name ?? "Test Bileşen"} description="bileşeni yaz, özelliklerini ayarla, önizlemede canlı dene" tools={<PaletteButton label="Komut ara…" class="sc-playground-pal" />}
-      panels={PANELS} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.playground.v6" label="Playground" api={followTabs}
+      panels={PANELS} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.playground.v7" label="Playground" api={followTabs}
       kit={(k: AppKit) => { debugSvc.set(k.service<DebuggerService>("debugger") ?? null); tsSvc = k.service<TypeScriptService>("typescript") ?? null }} />
   </div>
 }
