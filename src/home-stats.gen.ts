@@ -4,7 +4,7 @@ export const HOME_STATS = {
   "dependencies": 0,
   "components": 269,
   "registered": 186,
-  "exports": 1197,
+  "exports": 1198,
   "subpaths": 100,
   "categories": [
     {

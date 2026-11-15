@@ -20,7 +20,7 @@ import { filesOver } from "../../cli/perf.js";
 const here = dirname(fileURLToPath(import.meta.url));
 const dist = join(here, "dist");
 const cli = join(here, "..", "..", "cli", "march.js");
-export const CSP = "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; media-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types 'none'";
+export const CSP = "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; media-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types march-worker";
 
 const args = process.argv.slice(2);
 const release = args.includes("--release");
@@ -80,6 +80,12 @@ async function writePlaygroundTools(out) {
   mkdirSync(out, { recursive: true });
   copyFileSync(join(root, "node_modules", "esbuild-wasm", "esm", "browser.min.js"), join(out, "esbuild.js"));
   copyFileSync(join(root, "node_modules", "esbuild-wasm", "esbuild.wasm"), join(out, "esbuild.wasm"));
+  // the TypeScript language service: its worker (march-app-ui), the compiler and the lib .d.ts files it reads on demand
+  copyFileSync(join(root, "src", "components", "composite", "app-ui", "ts-worker.js"), join(out, "ts-worker.js"));
+  const tsLib = join(root, "node_modules", "typescript", "lib");
+  mkdirSync(join(out, "ts"), { recursive: true });
+  copyFileSync(join(tsLib, "typescript.js"), join(out, "ts", "typescript.js"));
+  for (const f of readdirSync(tsLib)) if (/^lib\..*\.d\.ts$/.test(f)) copyFileSync(join(tsLib, f), join(out, "ts", f));
   const sx = join(root, "src", "core", "sx.ts").split("\\").join("/");
   await esbuild.build({
     entryPoints: [join(root, "compiler", "index.js")], bundle: true, format: "esm", platform: "browser", target: "es2022", minify: true,

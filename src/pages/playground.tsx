@@ -1,14 +1,17 @@
 // Playground: the workspace of a component's page on march-app-ui (AppUI). The top bar: the component's name on the
 // left, the command palette and the Layout button on the right. Preview over Properties and Dependencies /
 // Accessibility on the left; the component's files over Console / Debugger / Terminal / lang.json on the right. The
-// .tsx tabs are files: the code editor plugin opens them, the March language plugin suggests March's exports. Every
+// .tsx tabs are files: the code editor plugin opens them, the March language plugin suggests March's exports. Button.tsx exports
+// the component under work; Properties shows its options, and the build renders it with them (PreviewControl.tsx). Every
 // change is built in the page (playground/build.ts): the Console shows each step with its time and the errors,
 // lang.json the texts the build found. No tab has a close mark (groups still collapse to strips).
 import "./playground.css";
-import { signal, effect, onCleanup } from "hadi-march";
+import { signal, computed, effect, untrack, onCleanup } from "hadi-march";
+import { registry } from "hadi-march/components/registry.gen.ts";
+import type { PlaygroundOption } from "hadi-march/components/meta.ts";
 import { appUrl } from "hadi-march/base";
-import { PaletteButton, JsonView, Terminal, type TerminalApi } from "hadi-march/ui";
-import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
+import { PaletteButton, JsonView, Terminal, PropertyGrid, type TerminalApi, type PropertySpec } from "hadi-march/ui";
+import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
 import { monitor, sliders, packageBox, users, code, terminal, bug, fileText, globe } from "hadi-march/icons";
 import { createBuilder } from "../playground/build.ts";
 
@@ -17,14 +20,7 @@ const panel = (id: string, title: string, icon: unknown): AppPanel => ({ id, tit
 
 // the component's files (kept for this visit)
 const SOURCES: Record<string, string> = {
-  "Component1.tsx": `import { Button } from "hadi-march/ui"
-
-export default function Component1() {
-  let $count = 0
-  return <Button variant="primary" title="Sayacı artırır" onClick={() => $count++}>
-    Tıklandı: {$count}
-  </Button>
-}
+  "Button.tsx": `export { Button } from "hadi-march/ui"
 `,
   "Component2.tsx": `import { Card, Badge } from "hadi-march/ui"
 
@@ -42,12 +38,61 @@ const total = computed(() => items().length)
 export const Component3 = () => <p>{total()} öğe</p>
 `,
 }
-const files = new Map<string, ReturnType<typeof signal<string>>>()
+// every file's text, made first: what reads them (the exported name, the build) finds them all
+const files = new Map(Object.entries(SOURCES).map(([p, text]) => [p, signal(text)] as const))
 const fileTab = (id: string, path: string): AppPanel => {
-  const text = signal(SOURCES[path] ?? "")
-  files.set(path, text)
+  const text = files.get(path) ?? signal("")
   return { id, title: path, icon: fileText, file: { path, text, set: (v: string) => text.set(v) } }
 }
+
+// the component under work: the first name Button.tsx exports; its Properties are the options of its showcase card
+// (its playground.ts); the preview entry renders it with the values chosen there
+const MAIN = "Button.tsx", ENTRY = "PreviewControl.tsx"
+const exportedName = computed(() => {
+  const src = files.get(MAIN)?.() ?? ""
+  return /export\s*\{\s*([A-Za-z_$][\w$]*)/.exec(src)?.[1] ?? /export\s+(?:default\s+)?(?:function|const|class)\s+([A-Za-z_$][\w$]*)/.exec(src)?.[1] ?? ""
+})
+const options = signal<readonly PlaygroundOption[]>([])
+const values = signal<Record<string, unknown>>({})
+effect(() => {
+  const name = exportedName(), entry = registry.find((e) => e.meta.name === name)
+  if (!entry) { options.set([]); values.set({}); return }
+  void entry.playground().then((m) => {
+    if (untrack(exportedName) !== name) return
+    const list = (m.default as { options: readonly PlaygroundOption[] }).options.filter((o) => o.prop !== false)
+    options.set(list)
+    values.set(Object.fromEntries(list.map((o) => [o.key, o.default])))
+  })
+})
+const asProperty = (o: PlaygroundOption): PropertySpec => {
+  const opts = o.options?.map((x) => (typeof x === "object" ? x : { value: x, label: String(x) }))
+  const type = typeof o.default === "boolean" ? "switch" : opts ? (opts.length <= 4 ? "segmented" : "select") : typeof o.default === "number" ? (o.min !== undefined && o.max !== undefined ? "slider" : "number") : "text"
+  return { key: o.key, label: o.label, type, ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}), ...(opts ? { options: opts } : {}), ...(o.min !== undefined ? { min: o.min } : {}), ...(o.max !== undefined ? { max: o.max } : {}), ...(o.step !== undefined ? { step: o.step } : {}) } as PropertySpec
+}
+// one prop of the entry's JSX: a string as an attribute, the rest as an expression; children between the tags
+const attr = (name: string, v: unknown): string => (typeof v === "string" ? `${name}=${JSON.stringify(v)}` : v === true ? name : `${name}={${JSON.stringify(v)}}`)
+const entrySource = computed(() => {
+  const name = exportedName()
+  if (!name) return "export default function PreviewControl() { return null }\n"
+  const v = values()
+  const visible = options().filter((o) => !o.visibleWhen || o.visibleWhen(v as never))
+  let children = ""
+  const props: string[] = []
+  for (const o of visible) {
+    const prop = o.prop || o.key, x = v[o.key]
+    if (prop === "children") { children = String(x ?? ""); continue }
+    if (x === "" || x === false || x === undefined || x === null) continue
+    if (o.toCode) continue // a value written as code of its own (an icon, a custom part): not in the preview
+    props.push(attr(prop, x))
+  }
+  const open = [name, ...props].join(" ")
+  return `import { ${name} } from "./${MAIN}"\n\nexport default function PreviewControl() {\n  return ${children ? `<${open}>${children}</${name}>` : `<${open} />`}\n}\n`
+})
+const propsPanel = () => <div class="sc-props">
+  {() => (options().length
+    ? <PropertyGrid properties={() => options().map(asProperty)} value={values} onChange={(v: Record<string, unknown>) => values.set({ ...v })} label={`${exportedName()} özellikleri`} saved={values} history={false} dirty={false} search={false} />
+    : <div class="sc-playground-empty"><b>Özellik yok</b><span>{exportedName() ? `${exportedName()} prop almıyor` : "Dışa aktarılan bileşen yok"}</span></div>)}
+</div>
 
 // the build: its steps go to the Console (lines written before the Console is there wait for it)
 let consoleApi: TerminalApi | null = null
@@ -65,10 +110,10 @@ const preview = () => <AppPreview>
 
 const PANELS: AppPanel[] = [
   { id: "preview", title: "Önizleme", icon: monitor, content: preview },
-  panel("props", "Özellikler", sliders),
+  { id: "props", title: "Özellikler", icon: sliders, disabled: () => !options().length, content: propsPanel },
   panel("deps", "Bağımlılıklar", packageBox),
   panel("a11y", "Erişilebilirlik", users),
-  fileTab("c1", "Component1.tsx"),
+  fileTab("c1", "Button.tsx"),
   fileTab("c2", "Component2.tsx"),
   fileTab("c3", "Component3.tsx"),
   { id: "console", title: "Konsol", icon: code, content: consolePanel },
@@ -87,15 +132,17 @@ const PRESETS: Record<string, Preset> = {
 }
 // March's exports for the suggestions: the API reference's index (one JSON file, fetched when the playground opens)
 const catalog = (): Promise<MarchCatalog> => fetch(appUrl("api/index.tr.json")).then((r) => r.json() as Promise<MarchCatalog>)
-const PLUGINS = [codeEditorPlugin(), marchLanguagePlugin({ catalog })]
+// the TypeScript language service in a worker (the build copies it, the compiler and the lib files to playground/)
+const typescript = typeScriptPlugin({ worker: appUrl("playground/ts-worker.js"), typescript: appUrl("playground/ts/typescript.js"), lib: appUrl("playground/ts/") })
+const PLUGINS = [typescript, codeEditorPlugin(), marchLanguagePlugin({ catalog })]
 
 export default function PlaygroundPage(props: { name?: string }) {
   // every change is built a moment after typing stops
   let timer: ReturnType<typeof setTimeout> | undefined
   effect(() => {
-    const now = Object.fromEntries([...files].map(([p, s]) => [p, s()]))
+    const now = { ...Object.fromEntries([...files].map(([p, s]) => [p, s()])), [ENTRY]: entrySource() }
     clearTimeout(timer)
-    timer = setTimeout(() => { void builder.build(now) }, 350)
+    timer = setTimeout(() => { void builder.build(now, ENTRY) }, 350)
   })
   onCleanup(() => { clearTimeout(timer); consoleApi = null })
   return <div class="sc-playground">

@@ -5,3 +5,4 @@
 .sc-playground-pal { min-inline-size: 0; max-inline-size: 15rem; }
 .sc-lang { block-size: 100%; overflow: auto; padding: var(--m-space-2) var(--m-space-3); }
 .sc-console { block-size: 100%; border-radius: 0; }
+.sc-props { block-size: 100%; overflow: auto; }
