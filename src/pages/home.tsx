@@ -12,7 +12,9 @@ import { cascade, elastic, blurIn, typewriter, flip, scramble, fade, type TextAn
 import { Button, Badge, CopyButton, LinkCard, SectionLabel, Overlay, type DrawContext } from "march/ui";
 import { Link } from "march/router";
 import type { ColorToken } from "march/theme";
-import { arrowRight, zap, grid, globe, gauge, palette, shieldCheck } from "march/icons";
+import { Icon, arrowRight, zap, grid, globe, gauge, palette, shieldCheck } from "march/icons";
+import { github } from "march/icons/simple-icons";
+import { REPO, INSTALL } from "../repo.ts";
 import { HOME_STATS as S } from "../home-stats.gen.ts";
 // the glass cards and everything below the fold are parts of their own: the first screen (title, silk, why March) does not
 // wait for the chart, the chat and the map. Each keeps its room while it loads, so nothing moves when it arrives.
@@ -160,7 +162,6 @@ function Title() {
 // ── why March ───────────────────────────────────────────────────────────────────────────────────────────────────
 
 // the package name is spliced in: the build rewrites `from "march…"` even inside strings
-const PKG = "march"
 const WHY: readonly { icon: unknown; color: ColorToken; title: string; text: () => unknown; href: string }[] = [
   { icon: zap, color: "brand-orange", title: "Öğrenmesi kolay", text: () => <><code>{"$sayi++"}</code> yaz, ekran güncellenir. Kanca yok, ezberlenecek kural yok.</>, href: "/language" },
   { icon: grid, color: "brand-blue", title: "Tek paket yeter", text: () => `${S.components} bileşen, form, veri, hareket. Başka paket kurmazsın: sıfır bağımlılık.`, href: "/buttons" },
@@ -178,6 +179,10 @@ export default function Home() {
       on:pointerdown={title.hold(true)} on:pointerup={title.hold(false)} on:pointercancel={title.hold(false)} on:pointerleave={title.hold(false)}>
       <Overlay class="sc-hero-silk" draw={silk()} animate />
       <Overlay class="sc-hero-dots" effect="dots" />
+      {/* the ribbon hanging from the top edge: the source on GitHub */}
+      <a class="sc-oss" href={REPO} target="_blank" rel="noopener" aria-label="Açık kaynak: MarchJS GitHub'da">
+        <span class="sc-oss-body"><Icon of={github} size="lg" /><span class="sc-oss-text"><span>Açık</span><span>Kaynak</span></span></span>
+      </a>
       <div class="sc-hero-in">
         <div class="sc-hero-copy">
           <span class="sc-hero-pill">
@@ -191,8 +196,8 @@ export default function Home() {
             <Button variant="primary" size="lg" href="/buttons" iconEnd={arrowRight}>Bileşenleri gez</Button>
             <Button size="lg" href="/social/post-card">Bir bileşeni parçala</Button>
             <span class="sc-hero-npm">
-              <code>{`npm i ${PKG}`}</code>
-              <CopyButton text={`npm i ${PKG}`} label="Kopyala" copiedLabel="Kopyalandı" />
+              <code>{INSTALL}</code>
+              <CopyButton text={INSTALL} label="Kopyala" copiedLabel="Kopyalandı" />
             </span>
           </div>
         </div>

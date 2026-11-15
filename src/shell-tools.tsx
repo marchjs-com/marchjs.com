@@ -1,7 +1,10 @@
 // Top bar tools: the search button in the middle (opens the command palette, Ctrl K), then at the end the page's own
 // title extras and actions (portal targets), the slow 3G indicator, the theme button (preview cards of every theme,
-// the accent list), the four HADİ accents as dots and light / dark. A lazy chunk with a placeholder of the same size.
-import { PaletteButton, ThemeMenu, ThemeToggle, Swatch, Button, accent, setAccent } from "march/ui";
+// the accent list), the four HADİ accents as dots, light / dark and the GitHub link (the source). A lazy chunk with a
+// placeholder of the same size.
+import { PaletteButton, ThemeMenu, ThemeToggle, Swatch, Button, IconButton, accent, setAccent } from "march/ui";
+import { github } from "march/icons/simple-icons";
+import { REPO } from "./repo.ts";
 import { PortalTarget } from "march";
 import type { ColorToken } from "march/theme";
 import { slow } from "./slow.ts";
@@ -25,6 +28,7 @@ export default function ShellTools() {
           onClick={() => setAccent(accent() === d.color ? "primary" : d.color)} />)}
       </div>
       <ThemeToggle />
+      <IconButton class="sc-github" icon={github} label="MarchJS GitHub'da: kaynak kod" variant="ghost" href={REPO} target="_blank" rel="noopener" />
     </div>
   </div>
 }
