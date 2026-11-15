@@ -1,4 +1,4 @@
-// Playground: the workspace of a component's page on march-app-ui (AppUI), and nothing else. Preview over Properties
+// Playground: the workspace of a component's page on march-app-ui (AppUI): a top bar with only the Layout button. Preview over Properties
 // and Dependencies / Accessibility on the left; the component's files over Console / Debugger / Terminal on the right.
 // No tab has a close mark (groups still collapse to strips). Panels are empty for now.
 import "./playground.css";
@@ -31,6 +31,6 @@ const PRESETS: Record<string, Preset> = {
 
 export default function PlaygroundPage() {
   return <div class="sc-playground">
-    <AppUI bar={false} panels={PANELS} presets={PRESETS} commands="playground" persist="sc.playground.v1" label="Playground" />
+    <AppUI panels={PANELS} presets={PRESETS} commands="playground" persist="sc.playground.v1" label="Playground" />
   </div>
 }
