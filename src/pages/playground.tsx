@@ -10,7 +10,7 @@ import { h, render as mount, createRoot, signal, computed, effect, untrack, onCl
 import { registry } from "hadi-march/components/registry.gen.ts";
 import type { PlaygroundOption } from "hadi-march/components/meta.ts";
 import { appUrl } from "hadi-march/base";
-import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "hadi-march/ui";
+import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "hadi-march/ui";
 import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
 import { x as xIcon, plus, database, zap, monitor, sliders, packageBox, users, code, terminal, fileText, globe } from "hadi-march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "hadi-march/forms"
@@ -788,7 +788,14 @@ const removeLang = (code: string): void => {
   if (previewLang() === code) previewLang.set("")
   print(`[${stamp()}] − ${code}.json silindi`, "warn")
 }
+// the note over the languages: what lang.json is and how to try it (closed once, kept closed)
+const LANG_NOTE_KEY = "sc.playground.langNote"
+const langNote = signal((() => { try { return localStorage.getItem(LANG_NOTE_KEY) !== "off" } catch { return true } })())
+const closeLangNote = (): void => { langNote.set(false); try { localStorage.setItem(LANG_NOTE_KEY, "off") } catch { /* private mode */ } }
 const langPanel = () => <div class="sc-lang">
+  {() => (langNote() ? <Alert tone="info" class="sc-lang-note" dismissable onDismiss={closeLangNote} dismissLabel="Bilgiyi kapat">
+    March, koddaki bütün metinleri kendisi bulur ve dil dosyasına çıkarır. Yeni bir dil eklemek için <b>+</b> düğmesine basın; çeviriyi denemek için önizlemedeki dil kutusundan dili değiştirin.
+  </Alert> : null)}
   <div class="sc-lang-bar">
     <div class="sc-lang-tabs" role="tablist" aria-label="Diller">
       {() => languageList().map((l) => <span class="sc-lang-tab" aria-current={() => (langShown() === l.value ? "true" : null)}>

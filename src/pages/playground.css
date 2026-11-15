@@ -4,6 +4,7 @@
 .sc-playground-empty b { color: var(--m-text); font: 800 var(--m-text-md) var(--m-font-display); }
 .sc-playground-pal { min-inline-size: 0; max-inline-size: 15rem; }
 .sc-lang { block-size: 100%; overflow: auto; padding: var(--m-space-2) var(--m-space-3); }
+.sc-lang-note { margin-block-end: var(--m-space-2); font-size: var(--m-text-sm); }
 .sc-console { block-size: 100%; border-radius: 0; }
 .sc-props { block-size: 100%; overflow: auto; }
 /* the preview is split into a cell per exported component (its name in the corner when there are several) */
