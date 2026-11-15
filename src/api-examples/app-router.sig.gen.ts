@@ -2,9 +2,9 @@
 /** Signatures of the exports this group has examples for: { subpath: { name: signature } }. */
 const sig: Record<string, Record<string, string>> = {
  "hadi-march/router": {
-  "Link": "function Link(props: { href: Href | (() => Href); exact?: boolean; replace?: boolean; modal?: boolean; outlet?: string; preload?: \"hover\" | \"visible\" | \"idle\" | \"none\"; prefetch?: \"hover\" | \"visible\" | \"idle\" | \"none\"; target?: string; children?: unknown; [k: string]: unknown }): unknown",
-  "Outlet": "function Outlet(props: { name?: string; empty?: Renderable; children?: unknown }): unknown",
-  "Router": "function Router(props: { loading?: Renderable; skeleton?: Renderable; fallback?: unknown; notFound?: Renderable; forbidden?: Renderable; wrap?: (page: () => unknown, to: RouteTarget) => unknown }): unknown",
+  "Link": "function Link(props: { href: Href | (() => Href); exact?: boolean; replace?: boolean; modal?: boolean; outlet?: string; preload?: \"hover\" | \"visible\" | \"idle\" | \"none\"; prefetch?: \"hover\" | \"visible\" | \"idle\" | \"none\"; target?: string; children?: unknown; [k: string]: unknown; }): unknown",
+  "Outlet": "function Outlet(props: { name?: string; empty?: Renderable; children?: unknown; }): unknown",
+  "Router": "function Router(props: { loading?: Renderable; skeleton?: Renderable; notFound?: Renderable; forbidden?: Renderable; wrap?: (page: () => unknown, to: RouteTarget) => unknown; }): unknown",
   "_resetRouter": "function _resetRouter(): void",
   "_router": "const _router",
   "back": "const back = (): void =>",

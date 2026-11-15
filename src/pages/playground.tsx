@@ -288,7 +288,7 @@ const extOptions = (name: string): PlaygroundOption[] => extensionOptions(extInf
 const isA11y = (o: PlaygroundOption): boolean => o.key.startsWith("a11y:")
 const options = (): readonly PlaygroundOption[] => optsOf(selected())
 // the set of options (the grid is made again when it changes: a component chosen, the root's tag read)
-const optionKeys = computed(() => `${selected()}:${options().map((o) => o.key).join(",")}:${selected() in tableBy() ? 1 : 0}:${selected() in apiPropsBy() ? 1 : 0}:${locale()}:${Object.keys(commonText()).length}`)
+const optionKeys = computed(() => `${selected()}:${options().map((o) => o.key).join(",")}:${selected() in tableBy() ? 1 : 0}:${selected() in apiPropsBy() ? 1 : 0}:${locale()}:${Object.values(commonText())[0] ?? ""}`)
 const values = (): Record<string, unknown> => { const v = valuesBy()[selected()] ?? {}; return Object.fromEntries(options().map((o) => [o.key, v[o.key] ?? defaultOf(o)])) }
 const setValues = (v: Record<string, unknown>) => valuesBy.set({ ...valuesBy.peek(), [selected.peek()]: { ...v } })
 // March's classes: every .m-… class of the page's stylesheets (read once, when a class field first opens)

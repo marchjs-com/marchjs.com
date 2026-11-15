@@ -2,7 +2,7 @@
 /** Signatures of the exports this group has examples for: { subpath: { name: signature } }. */
 const sig: Record<string, Record<string, string>> = {
  "hadi-march/channel": {
-  "ChannelScope": "function ChannelScope(props: { label?: string; children?: unknown }): unknown",
+  "ChannelScope": "function ChannelScope(props: { label?: string; children?: unknown; }): unknown",
   "channel": "function channel<T = void>(name: string, options: ChannelOptions = {}): Channel<T>",
   "channelDevtools": "const channelDevtools",
   "channelScope": "function channelScope(label?: string): void",

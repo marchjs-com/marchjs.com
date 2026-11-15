@@ -2,7 +2,7 @@
 /** Signatures of the exports this group has examples for: { subpath: { name: signature } }. */
 const sig: Record<string, Record<string, string>> = {
  "hadi-march/ui": {
-  "ToastHost": "function ToastHost(props: { /** Corner (or centre) of the screen the stack sits in (default \"bottom-end\"; start / end follow the writing direction). */ position?: \"bottom-end\" | \"bottom-start\" | \"bottom-center\" | \"top-end\" | \"top-start\" | \"top-center\" | undefined; class?: ClassProp; } = {}): Element",
+  "ToastHost": "function ToastHost(props: { position?: \"bottom-end\" | \"bottom-start\" | \"bottom-center\" | \"top-end\" | \"top-start\" | \"top-center\" | undefined; class?: ClassProp; } = {}): Element",
   "Toggle": "function Toggle(props: ToggleProps): unknown",
   "Toolbar": "function Toolbar(props: ToolbarProps): Element",
   "Tooltip": "function Tooltip(props: TooltipProps): unknown[]",

@@ -3,7 +3,7 @@
 const sig: Record<string, Record<string, string>> = {
  "hadi-march/ui": {
   "PostCard": "function PostCard(props: PostCardProps): Element",
-  "PostSkeleton": "function PostSkeleton(props: { media?: boolean; variant?: \"card\" | \"flat\" | undefined }): Element",
+  "PostSkeleton": "function PostSkeleton(props: { media?: boolean; variant?: \"card\" | \"flat\" | undefined; }): Element",
   "ProfileHeader": "function ProfileHeader(props: ProfileHeaderProps): Element",
   "Progress": "function Progress(props: ProgressProps): Element",
   "PropertyGrid": "function PropertyGrid(props: PropertyGridProps): Element",

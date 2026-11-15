@@ -21,8 +21,8 @@ const sig: Record<string, Record<string, string>> = {
   "unregisterServiceWorker": "function unregisterServiceWorker(): Promise<void>"
  },
  "hadi-march/errors": {
-  "ErrorInline": "function ErrorInline(props: { target: string }): unknown",
-  "ErrorPage": "function ErrorPage(props: { children?: unknown }): unknown",
+  "ErrorInline": "function ErrorInline(props: { target: string; }): unknown",
+  "ErrorPage": "function ErrorPage(props: { children?: unknown; }): unknown",
   "emitError": "function emitError(e: AppError): void",
   "errors": "const errors",
   "setErrorSink": "function setErrorSink(fn: Sink | null): void"
