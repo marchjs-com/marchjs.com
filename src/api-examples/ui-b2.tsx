@@ -1,10 +1,10 @@
-// API examples of hadi-march/ui, names "EasingCurveEditor" … "FieldContext" (code-point order; the neighbouring ranges: ui-b*.tsx).
+// API examples of march/ui, names "EasingCurveEditor" … "FieldContext" (code-point order; the neighbouring ranges: ui-b*.tsx).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`; components have Playground options.
-import { signal, useContext } from "hadi-march";
+import { signal, useContext } from "march";
 import {
   EasingCurveEditor, EditForm, EmailInput, Field, Button, Badge, TextInput, Empty, ErrorBox, Feed, FieldContext, type Post,
-} from "hadi-march/ui";
-import { fileText, Icon, inbox } from "hadi-march/icons";
+} from "march/ui";
+import { fileText, Icon, inbox } from "march/icons";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import { wait, useLog, Profile } from "./_ui-b.tsx";
@@ -17,11 +17,11 @@ const POSTS: Post[] = [
 ]
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     EasingCurveEditor: {
       code: `const curve = signal("out")
 <EasingCurveEditor value={curve} preview="scale" duration={600} />
-animate(card, frames, { easing: curve() })   // hadi-march/motion: a name or "cubic-bezier(…)"`,
+animate(card, frames, { easing: curve() })   // march/motion: a name or "cubic-bezier(…)"`,
       play: { options: [{ key: "preview", label: "Önizleme", default: "move", options: [{ value: "move", label: "kayma" }, { value: "scale", label: "büyüme" }, { value: "fade", label: "solma" }, { value: "none", label: "yok" }] }, { key: "presets", label: "Hazır eğriler", default: true }] },
       run: (p: { values: { preview: "move" | "scale" | "fade" | "none"; presets: boolean } }) => {
         const curve = signal("back")

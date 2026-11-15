@@ -1,9 +1,9 @@
 // Router demo layout: the frame of this demo is built once and stays while its tabs change below it.
 // The counter counts how often the frame was built during this visit (it starts again when you leave the demo).
-import { Outlet, path } from "hadi-march/router";
-import { Button } from "hadi-march/ui";
-import { onCleanup } from "hadi-march";
-import { TextInput, Field, Badge, Card, Grid } from "hadi-march/ui";
+import { Outlet, path } from "march/router";
+import { Button } from "march/ui";
+import { onCleanup } from "march";
+import { TextInput, Field, Badge, Card, Grid } from "march/ui";
 import { Section } from "../demo.tsx";
 
 let builds = 0

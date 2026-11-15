@@ -1,13 +1,13 @@
-// API examples of the table (hadi-march/table) and the CRUD screen built on it (hadi-march/crud). The <Table> and
+// API examples of the table (march/table) and the CRUD screen built on it (march/crud). The <Table> and
 // crud() examples load their modules when they open (the table renderer is the same lazy part the data page uses).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
-import { signal, untrack, Await } from "hadi-march";
-import { schema } from "hadi-march/schema";
+import { signal, untrack, Await } from "march";
+import { schema } from "march/schema";
 import {
   CellEditor, column, createTable, createVirtual, csvField, describeFilter, download, FilterControl, formatValue,
   isEmptyFilter, mapParams, matchFilter, sortRows, toCSV, toJSON, windowRange, type SortSpec,
-} from "hadi-march/table";
-import { Button, Badge, Segmented, TextInput, Slider } from "hadi-march/ui";
+} from "march/table";
+import { Button, Badge, Segmented, TextInput, Slider } from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import { ORDERS, money, type Order } from "./_orders.ts";
@@ -34,7 +34,7 @@ const OrderList = (props: { rows: () => readonly Order[] }) =>
 
 
 export default examples({
-  "hadi-march/crud": {
+  "march/crud": {
     crud: {
       code: `{crud({ list, create, update, remove }, {
   schema: Customer, title: "Müşteriler", mode: "client",
@@ -49,7 +49,7 @@ export default examples({
         })
         let rows = [{ id: 1, name: "HADİ", city: "İzmir", credit: 5000 }, { id: 2, name: "Bora Yapı", city: "Ankara", credit: 1200 }, { id: 3, name: "Çınar Gıda", city: "Bursa", credit: 800 }]
         let next = 4
-        return <Load load={() => import("hadi-march/crud")}>{({ crud }: { crud: (...a: any[]) => unknown }) => crud({
+        return <Load load={() => import("march/crud")}>{({ crud }: { crud: (...a: any[]) => unknown }) => crud({
           list: async () => { await wait(200); return rows },
           create: async (v) => { rows = [...rows, { ...(v as typeof rows[0]), id: next++ }] },
           update: async (id, v) => { rows = rows.map((r) => (r.id === id ? { ...r, ...v } : r)) },
@@ -58,7 +58,7 @@ export default examples({
       },
     },
   },
-  "hadi-march/table": {
+  "march/table": {
     CellEditor: {
       code: `// inside a custom cell: the editor of table.editing() (Enter saves, Escape cancels)
 {() => table.editing()?.key === col.key
@@ -282,7 +282,7 @@ orders.filter((o) => matchFilter(o, amount, { min: 1000 }))`,
       ] },
       run: (p: { values: { layout: "auto" | "table" | "cards"; selectable: boolean; paging: boolean } }) => <div>{() => {
         const { layout, selectable, paging } = p.values
-        return untrack(() => <Load load={() => import("hadi-march/table/render.ts")}>{({ Table }: { Table: (p: any) => unknown }) => <Table rows={ORDERS} columns={COLS} rowKey="id" pageSize={4} paging={paging} selectable={selectable} layout={layout} cardBreakpoint={520} caption="Siparişler" filename="hadi-siparisler" />}</Load>)
+        return untrack(() => <Load load={() => import("march/table/render.ts")}>{({ Table }: { Table: (p: any) => unknown }) => <Table rows={ORDERS} columns={COLS} rowKey="id" pageSize={4} paging={paging} selectable={selectable} layout={layout} cardBreakpoint={520} caption="Siparişler" filename="hadi-siparisler" />}</Load>)
       }}</div>,
     },
     toCSV: {

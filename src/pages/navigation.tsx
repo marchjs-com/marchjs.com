@@ -1,14 +1,14 @@
 // Navigation: NavSidebar — title, a "search or ask" box (Ctrl K), a featured item with a live badge, recent items,
 // collapsible categories (with counts, "expand/collapse all"). The showcase's own side menu is the same component.
-import { NavSidebar, Button, Card, Kbd, Stack, Segmented, Toggle, Field, Slider } from "hadi-march/ui";
+import { NavSidebar, Button, Card, Kbd, Stack, Segmented, Toggle, Field, Slider } from "march/ui";
 import {
   inbox, users, crown, shieldCheck, hourglass, wallet, diamond, receipt, creditCard, image, flag, eye, barChart, gauge, globe, settings, store, truck, packageBox, plus, minus,
-} from "hadi-march/icons";
+} from "march/icons";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
 import { Playground } from "../playground.tsx";
-import { Link } from "hadi-march/router";
+import { Link } from "march/router";
 import "./navigation.css";
 
 const CATEGORY_ICONS = { "Üyeler ve roller": users, "Ekonomi ve ödemeler": wallet, "İçerik ve moderasyon": image, "Raporlar ve analiz": barChart, "Mağaza ve ticaret": store }

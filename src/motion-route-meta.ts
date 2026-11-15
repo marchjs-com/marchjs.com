@@ -1,6 +1,6 @@
 // Route meta of the /motion/* pages (kept tiny: the router reads it before the page loads). The page transition
 // variants page (/motion/pages/<variant>) picks its transition per route: the variant in the path, the chosen speed.
-import { signal } from "hadi-march";
+import { signal } from "march";
 
 /** Page transition demo settings (the page's Playground writes them, the next navigation reads them). */
 export const pageFx = { duration: signal(720) };

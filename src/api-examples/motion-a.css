@@ -1,4 +1,4 @@
-/* API examples of hadi-march/motion (COMPOSITOR … magnet): small stages that hold the animated elements. */
+/* API examples of march/motion (COMPOSITOR … magnet): small stages that hold the animated elements. */
 .sc-ex-motion-a { display: grid; gap: var(--m-space-2); min-width: 0; }
 .sc-ex-motion-a-stage { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-3); min-width: 0; min-height: 7rem; padding: var(--m-space-3); overflow: hidden; border: 1px dashed var(--m-border); border-radius: var(--m-radius-2); }
 .sc-ex-motion-a-stage-free { overflow: visible; }

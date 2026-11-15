@@ -1,11 +1,11 @@
-// Messaging: parts of the page that do not know each other talk through typed channels (hadi-march/channel). Each part
+// Messaging: parts of the page that do not know each other talk through typed channels (march/channel). Each part
 // below imports only ./messaging/channels.ts. The live log at the bottom shows every message.
-import { Portal, computed } from "hadi-march";
-import { ChannelScope, channelDevtools, useChannel, type TrafficEntry } from "hadi-march/channel";
-import { lazy } from "hadi-march/lazy";
-import { Card, Button, Badge, Grid, Chip, Empty } from "hadi-march/ui";
-import { TextInput } from "hadi-march/forms";
-import { shoppingBag, plus, trash, send, externalLink, refresh } from "hadi-march/icons";
+import { Portal, computed } from "march";
+import { ChannelScope, channelDevtools, useChannel, type TrafficEntry } from "march/channel";
+import { lazy } from "march/lazy";
+import { Card, Button, Badge, Grid, Chip, Empty } from "march/ui";
+import { TextInput } from "march/forms";
+import { shoppingBag, plus, trash, send, externalLink, refresh } from "march/icons";
 import { ch, type Product, type Sale } from "../messaging/channels.ts";
 import { Demo, Section } from "../demo.tsx";
 

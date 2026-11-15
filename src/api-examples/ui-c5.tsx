@@ -1,7 +1,7 @@
-// API examples of hadi-march/ui, names QUICK_REACTIONS … RecordListEditor (code-point order). Layout and rules: tools/api-examples.js.
+// API examples of march/ui, names QUICK_REACTIONS … RecordListEditor (code-point order). Layout and rules: tools/api-examples.js.
 // Each `run` is a small live demo of its `code`; components re-create themselves for options they read once.
-import { signal } from "hadi-march";
-import { QUICK_REACTIONS, RadioGroup, Rating, ReactionPicker, RecordListEditor, Button } from "hadi-march/ui";
+import { signal } from "march";
+import { QUICK_REACTIONS, RadioGroup, Rating, ReactionPicker, RecordListEditor, Button } from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import "./ui-c.css";
@@ -12,7 +12,7 @@ const logger = () => { const lines = signal<string[]>([]); return [lines, (l: st
 const opts = (...pairs: [unknown, string][]) => pairs.map(([value, label]) => ({ value, label }))
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     QUICK_REACTIONS: {
       code: `QUICK_REACTIONS   // ["❤️", "😂", "😮", "😢", "🙏", "👍"]
 <ReactionPicker emojis={[...QUICK_REACTIONS, "🎉"]} onPick={react} />`,

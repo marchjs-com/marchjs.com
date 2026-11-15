@@ -3,18 +3,18 @@
 // bars, a press filters the list to that path); with an export picked, its page: badges, name, summary, the import
 // line (copied), the coloured signature, parameter / props / member tables, the reactivity lab (signal, computed,
 // effect, batch, untrack) or the live example, related exports, the component page, and the previous / next bar.
-// Deep links: /api/<subpath>/<name> (subpath without "hadi-march/", the core entry is "core").
+// Deep links: /api/<subpath>/<name> (subpath without "march/", the core entry is "core").
 // Data (tools/api-docs.js): public/api/index.<lang>.json (the search index, one file) and public/api/docs-<n>.json (the
 // full docs, fetched when one of their exports opens). Nothing of it is part of start-up.
 import "./api.css";
 import "../hub.css";
-import { SearchBox, Badge, Chip, CopyButton, Kbd, Markdown, registerCommands } from "hadi-march/ui";
-import { Link, navigate, params, query, path, type Href } from "hadi-march/router";
-import { appUrl } from "hadi-march/base";
-import { locale, effect, onCleanup, Try, signal, computed, untrack } from "hadi-march";
-import { fold } from "hadi-march/ui";
-import { lazy } from "hadi-march/lazy";
-import { Icon, arrowLeft, arrowRight, copy, list as listIcon } from "hadi-march/icons";
+import { SearchBox, Badge, Chip, CopyButton, Kbd, Markdown, registerCommands } from "march/ui";
+import { Link, navigate, params, query, path, type Href } from "march/router";
+import { appUrl } from "march/base";
+import { locale, effect, onCleanup, Try, signal, computed, untrack } from "march";
+import { fold } from "march/ui";
+import { lazy } from "march/lazy";
+import { Icon, arrowLeft, arrowRight, copy, list as listIcon } from "march/icons";
 import { loadExample } from "../api-examples.gen.ts";
 import type { ApiExampleModule } from "../api-examples/types.ts";
 import { ReactivityLab, type LabFocus } from "../api-examples/_lab.tsx";
@@ -302,7 +302,7 @@ function DocView(props: { subpath: string; name: string; file: number; lang: Lan
       {inst.length ? <Block title={T.members}><MemberTable rows={inst} T={T} /></Block> : null}
       {d.events?.length ? <Block title={T.events}><ul>{d.events.map((e) => <li>{e}</li>)}</ul></Block> : null}
       {d.value !== undefined ? <Block title={T.value}><ValueView value={d.value} T={T} /></Block> : null}
-      {LAB.has(d.name) && d.subpath === "hadi-march" ? <Block title={T.lab} hint={T.labHint}><ReactivityLab focus={d.name as LabFocus} /></Block> : null}
+      {LAB.has(d.name) && d.subpath === "march" ? <Block title={T.lab} hint={T.labHint}><ReactivityLab focus={d.name as LabFocus} /></Block> : null}
       {d.md ? <div class="sc-apip-md"><Markdown source={d.md} /></div> : null}
       <Example subpath={d.subpath} name={d.name} T={T} />
       {see.length ? <Block title={T.related}><div class="sc-apip-see">{see.map((x) => x.href ? <Link class="sc-apip-chip" href={x.href}><code>{x.n}</code></Link> : <span class="sc-apip-chip"><code>{x.n}</code></span>)}</div></Block> : null}

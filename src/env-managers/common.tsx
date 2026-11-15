@@ -1,5 +1,5 @@
 // Helpers shared by the environment manager demos (pages/managers-env.tsx and its lazy parts).
-import { Badge } from "hadi-march/ui";
+import { Badge } from "march/ui";
 
 export const yes = (v: boolean) => <Badge tone={v ? "success" : "neutral"} dot>{v ? "evet" : "hayır"}</Badge>
 export const time = (ms: number | null) => (ms ? new Date(ms).toLocaleTimeString("tr") : "—")

@@ -1,4 +1,4 @@
-/* API examples of hadi-march/flow: canvas stages, the palette beside a canvas, an edge drawing. */
+/* API examples of march/flow: canvas stages, the palette beside a canvas, an edge drawing. */
 .sc-ex-flow-stack { display: grid; gap: var(--m-space-3); min-width: 0; }
 .sc-ex-flow-stage { block-size: 18rem; min-width: 0; }
 .sc-ex-flow-stage > .m-ctxmenu, .sc-ex-flow-stage .m-flow { block-size: 100%; min-block-size: 0; }

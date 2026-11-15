@@ -2,8 +2,8 @@
 // The theme tokens switch with `data-theme` on <html> only, so an element cannot be given the other mode by an
 // attribute. This reads what the tokens would be in that mode (the root takes the mode for one style pass, with
 // transitions off and before any paint) and returns the ones that differ, to be written on the element.
-import { effect, signal, untrack, onCleanup } from "hadi-march";
-import { theme, colorTheme, accent } from "hadi-march/ui";
+import { effect, signal, untrack, onCleanup } from "march";
+import { theme, colorTheme, accent } from "march/ui";
 
 export type StageMode = "light" | "dark"
 

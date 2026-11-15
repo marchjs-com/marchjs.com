@@ -1,10 +1,10 @@
 // Sample page: a redesign launch. Every claim is shown, not told: a BeforeAfter for the whole screen and one for each
 // detail (feed, profile, reading), then the numbers that changed and a call to action.
-import { Button } from "hadi-march/ui";
-import { SiteNav, Hero, SiteSection, BeforeAfter, StatsBand, CtaBand, SiteFooter } from "hadi-march/components/landing/index.ts";
-import { arrowRight, sparkles, globe, message, mail } from "hadi-march/icons";
-import { MockApp } from "hadi-march/components/landing/demo-kit.tsx";
-import { FOOTER_COLUMNS } from "hadi-march/components/landing/site-footer/demo.tsx";
+import { Button } from "march/ui";
+import { SiteNav, Hero, SiteSection, BeforeAfter, StatsBand, CtaBand, SiteFooter } from "march/components/landing/index.ts";
+import { arrowRight, sparkles, globe, message, mail } from "march/icons";
+import { MockApp } from "march/components/landing/demo-kit.tsx";
+import { FOOTER_COLUMNS } from "march/components/landing/site-footer/demo.tsx";
 
 const LINKS = [{ label: "Karşılaştır", href: "#r-compare" }, { label: "Ayrıntılar", href: "#r-details" }, { label: "Rakamlar", href: "#r-numbers" }]
 

@@ -1,12 +1,12 @@
 // The code under a workbench stage. A folder whose playground.ts has `code` gets a CodeEditor: the code is written
 // from the options, an edit is read back into them (gen-code.ts), a changed prop flashes, the foot line says in
 // Turkish what could not be read. Other folders show the first code block of docs.md, read-only (the code widget).
-import { signal, effect, untrack, batch, onCleanup } from "hadi-march";
+import { signal, effect, untrack, batch, onCleanup } from "march";
 import { scopedMode } from "./stage-mode.ts";
-import { Widget, codeView, Kbd } from "hadi-march/ui";
-import type { PlaygroundOption, PlaygroundSpec, PlaygroundCode } from "hadi-march/ui";
-import { CodeEditor, jsxCompleter, type CodeMark, type JsxProp } from "hadi-march/components/composite/code-editor/index.ts";
-import { mProps } from "hadi-march/props";
+import { Widget, codeView, Kbd } from "march/ui";
+import type { PlaygroundOption, PlaygroundSpec, PlaygroundCode } from "march/ui";
+import { CodeEditor, jsxCompleter, type CodeMark, type JsxProp } from "march/components/composite/code-editor/index.ts";
+import { mProps } from "march/props";
 import { genCode, parseCode, lexCode, optionAttrs, choices, COMMON_ATTRS, type ExtraAttr } from "./gen-code.ts";
 
 type Values = Record<string, unknown>

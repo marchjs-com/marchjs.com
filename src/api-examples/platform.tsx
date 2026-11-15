@@ -3,43 +3,43 @@
 // accessibility, shortcut hints). Layout and rules: tools/api-examples.js. Examples that touch app-wide state (consent,
 // accessibility preferences, error handler, devtools switch) put it back when they close.
 import "./platform.css";
-import { signal, computed, effect, untrack, onCleanup, DEV, Await } from "hadi-march";
-import { Button, Badge, Kbd, Segmented, resolvedTheme } from "hadi-march/ui";
-import { TextInput } from "hadi-march/forms";
+import { signal, computed, effect, untrack, onCleanup, DEV, Await } from "march";
+import { Button, Badge, Kbd, Segmented, resolvedTheme } from "march/ui";
+import { TextInput } from "march/forms";
 import {
   channel, channelDevtools, channelScope, ChannelScope, defineChannels, of as spec, onChannels, resetChannelTabs,
   setChannelErrorHandler, useChannel,
-} from "hadi-march/channel";
-import { arrowStep, draggable, track } from "hadi-march/behaviors/drag";
-import { rovingFocus } from "hadi-march/behaviors/roving-focus";
-import { resizeHandle } from "hadi-march/behaviors/resize-handle";
-import { listNav, moveCursor } from "hadi-march/behaviors/list-nav";
-import { dropzone } from "hadi-march/behaviors/dropzone";
-import { fling, nearest, rubberBand, swipeable } from "hadi-march/behaviors/swipe";
-import { dismiss } from "hadi-march/behaviors/dismiss";
+} from "march/channel";
+import { arrowStep, draggable, track } from "march/behaviors/drag";
+import { rovingFocus } from "march/behaviors/roving-focus";
+import { resizeHandle } from "march/behaviors/resize-handle";
+import { listNav, moveCursor } from "march/behaviors/list-nav";
+import { dropzone } from "march/behaviors/dropzone";
+import { fling, nearest, rubberBand, swipeable } from "march/behaviors/swipe";
+import { dismiss } from "march/behaviors/dismiss";
 import {
   COLOR_TOKENS, contrast, contrastTheme, cream, DEFAULT_THEME, defineTheme, ensureContrast, HADI, hadi, indigo, minimal,
   neon, night, onBrandFill, themeCss, THEMES, type ThemeDef,
-} from "hadi-march/theme";
-import { Icon, defineIcon, isIconDef, svgIcon, users, search, star, bell, heart, zap } from "hadi-march/icons";
-import { consent } from "hadi-march/managers/consent";
-import { command } from "hadi-march/managers/command";
-import { undoHistory } from "hadi-march/managers/undo";
-import { create as createUndo } from "hadi-march/managers/undo/history";
-import { a11y } from "hadi-march/managers/accessibility";
-import { hotkeys } from "hadi-march/managers/hotkey";
-import { comboOf, shortcutHints, disposeShortcutHints } from "hadi-march/managers/shortcut-hint";
+} from "march/theme";
+import { Icon, defineIcon, isIconDef, svgIcon, users, search, star, bell, heart, zap } from "march/icons";
+import { consent } from "march/managers/consent";
+import { command } from "march/managers/command";
+import { undoHistory } from "march/managers/undo";
+import { create as createUndo } from "march/managers/undo/history";
+import { a11y } from "march/managers/accessibility";
+import { hotkeys } from "march/managers/hotkey";
+import { comboOf, shortcutHints, disposeShortcutHints } from "march/managers/shortcut-hint";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 export { default as SIG } from "./platform.sig.gen.ts";
 
 // The manager UIs, the context menu and the icon catalog load on demand (as their docs advise), not with this part.
-const catalogLib = () => import("hadi-march/icons/catalog")
-const menuLib = () => import("hadi-march/components/overlays/context-menu")
-const consentLib = () => import("hadi-march/managers/consent/ui")
-const commandLib = () => Promise.all([import("hadi-march/managers/command/ui"), import("hadi-march/ui/menu.ts"), menuLib()]).then(([c, m, x]) => ({ ...c, Menu: m.Menu, ContextMenu: x.ContextMenu }))
-const a11yLib = () => import("hadi-march/managers/accessibility/ui")
-const hintLib = () => import("hadi-march/managers/shortcut-hint/ui")
+const catalogLib = () => import("march/icons/catalog")
+const menuLib = () => import("march/components/overlays/context-menu")
+const consentLib = () => import("march/managers/consent/ui")
+const commandLib = () => Promise.all([import("march/managers/command/ui"), import("march/ui/menu.ts"), menuLib()]).then(([c, m, x]) => ({ ...c, Menu: m.Menu, ContextMenu: x.ContextMenu }))
+const a11yLib = () => import("march/managers/accessibility/ui")
+const hintLib = () => import("march/managers/shortcut-hint/ui")
 /** Renders `children(module)` once the module has loaded. */
 function Load<M>(p: { from: () => Promise<M>; children: (m: M) => unknown }) {
   return <Await for={p.from} loading={<p class="m-muted">Yükleniyor…</p>}>{p.children}</Await>
@@ -87,7 +87,7 @@ function ThemeBox(p: { def: () => ThemeDef; children?: unknown }) {
   effect(() => { for (const [k, v] of themeVars(p.def(), resolvedTheme() === "dark")) el.style.setProperty(k, v) })
   return el
 }
-import { aurora, noirGold, ember, voyage, graphite, paper, mint, candy, spaceTokens } from "hadi-march/theme";
+import { aurora, noirGold, ember, voyage, graphite, paper, mint, candy, spaceTokens } from "march/theme";
 const preset = (def: ThemeDef, code: string) => ({
   code,
   run: () => <Stack><ThemeBox def={() => def} /><Row><Out label="id" value={def.id} /><Out label="köşe" value={`${def.radius}px`} /><Out label="hep koyu" value={String(!!def.alwaysDark)} /></Row></Stack>,
@@ -121,7 +121,7 @@ function docCommands(add: (s: string) => void) {
 }
 
 export default examples({
-  "hadi-march/channel": {
+  "march/channel": {
     channel: {
       code: `const saved = channel<{ id: number }>("doc.saved", { sticky: true })
 saved.on((p) => console.log("kaydedildi", p.id))
@@ -267,7 +267,7 @@ resetChannelTabs()   // tests: drop the BroadcastChannel; the next emit opens a 
       },
     },
   },
-  "hadi-march/behaviors/drag": {
+  "march/behaviors/drag": {
     arrowStep: {
       code: `onKeyDown={(e) => { const s = arrowStep(e, rtl); if (s) move(s.dx, s.dy) }}   // Shift ×10`,
       run: () => {
@@ -314,7 +314,7 @@ resetChannelTabs()   // tests: drop the BroadcastChannel; the next emit opens a 
       },
     },
   },
-  "hadi-march/behaviors/roving-focus": {
+  "march/behaviors/roving-focus": {
     rovingFocus: {
       code: `const stop = rovingFocus(toolbar, { orientation: "horizontal", onMove: (el) => … })`,
       run: () => {
@@ -327,7 +327,7 @@ resetChannelTabs()   // tests: drop the BroadcastChannel; the next emit opens a 
       },
     },
   },
-  "hadi-march/behaviors/resize-handle": {
+  "march/behaviors/resize-handle": {
     resizeHandle: {
       code: `resizeHandle(grip, { value: () => width(), set: (w, done) => width.set(w), min: 80, max: 220, reset: () => width.set(140) })`,
       run: () => {
@@ -341,7 +341,7 @@ resetChannelTabs()   // tests: drop the BroadcastChannel; the next emit opens a 
       },
     },
   },
-  "hadi-march/behaviors/list-nav": {
+  "march/behaviors/list-nav": {
     listNav: {
       code: `const active = signal(-1)
 const onKey = listNav({ count: () => items().length, active, onPick: (i) => choose(items()[i]) })
@@ -378,7 +378,7 @@ moveCursor({ key: "End", index: 5, count: 12, columns: 4 })         // 7 (end of
       },
     },
   },
-  "hadi-march/behaviors/dropzone": {
+  "march/behaviors/dropzone": {
     dropzone: {
       code: `dropzone(zone, { accept: "image/*,.pdf", onFiles: upload, onReject: (f) => warn(f), onOver: (on) => over.set(on), paste: true })`,
       run: () => {
@@ -396,7 +396,7 @@ moveCursor({ key: "End", index: 5, count: 12, columns: 4 })         // 7 (end of
       },
     },
   },
-  "hadi-march/behaviors/swipe": {
+  "march/behaviors/swipe": {
     fling: {
       code: `const rest = fling(pos, velocity)          // where a release would come to rest
 const to = nearest([-120, 0, 120], rest)  // then snap`,
@@ -447,7 +447,7 @@ const to = nearest([-120, 0, 120], rest)  // then snap`,
       },
     },
   },
-  "hadi-march/behaviors/dismiss": {
+  "march/behaviors/dismiss": {
     dismiss: {
       code: `const stop = dismiss(panel, { inside: [trigger], onDismiss: (why) => close(why === "escape") })`,
       run: () => {
@@ -468,7 +468,7 @@ const to = nearest([-120, 0, 120], rest)  // then snap`,
       },
     },
   },
-  "hadi-march/theme": {
+  "march/theme": {
     COLOR_TOKENS: {
       code: `<Badge m:color="brand-blue">Aktivite</Badge>   // a color prop takes a COLOR_TOKENS name, never a raw color`,
       run: () => <Stack><div class="sc-row">{COLOR_TOKENS.map((c) => <Badge m:color={c}>{c}</Badge>)}</div><Out label="adet" value={COLOR_TOKENS.length} /></Stack>,
@@ -487,9 +487,9 @@ const to = nearest([-120, 0, 120], rest)  // then snap`,
         </Stack>
       },
     },
-    contrastTheme: { ...preset(contrastTheme, `import { contrastTheme, themeCss } from "hadi-march/theme"
+    contrastTheme: { ...preset(contrastTheme, `import { contrastTheme, themeCss } from "march/theme"
 themeCss(contrastTheme)   // the high contrast preset`) },
-    cream: { ...preset(cream, `import { cream } from "hadi-march/theme"
+    cream: { ...preset(cream, `import { cream } from "march/theme"
 cream.light.primary   // a warm, paper-like preset`) },
     DEFAULT_THEME: {
       code: `setColorTheme(DEFAULT_THEME)   // "hadi": the theme a fresh visitor sees`,
@@ -532,35 +532,35 @@ ensureContrast(HADI.orange, "#FFFFFF", 3)`,
       run: () => <div class="sc-ex-platform-swatches">{(Object.entries(HADI) as [string, string][]).map(([k, v]) =>
         <span class="sc-ex-platform-sw" style={{ background: v, color: onBrandFill(v) }} title={v}>{k}</span>)}</div>,
     },
-    hadi: { ...preset(hadi, `import { hadi } from "hadi-march/theme"
+    hadi: { ...preset(hadi, `import { hadi } from "march/theme"
 hadi.light.cat.slice(0, 4)   // the four brand colors`) },
-    indigo: { ...preset(indigo, `import { indigo } from "hadi-march/theme"
+    indigo: { ...preset(indigo, `import { indigo } from "march/theme"
 <div data-m-theme="indigo">…</div>   // after loadTheme("indigo")`) },
-    minimal: { ...preset(minimal, `import { minimal } from "hadi-march/theme"
+    minimal: { ...preset(minimal, `import { minimal } from "march/theme"
 minimal.radius   // a quiet, monochrome preset`) },
-    neon: { ...preset(neon, `import { neon } from "hadi-march/theme"
+    neon: { ...preset(neon, `import { neon } from "march/theme"
 neon.alwaysDark   // true: light mode shows the dark colors too`) },
-    aurora: { ...preset(aurora, `import { aurora } from "hadi-march/theme"
+    aurora: { ...preset(aurora, `import { aurora } from "march/theme"
 aurora.style   // { surface: "glass", glow: 0.55, accent: "gradient", tracking: -0.02 }`) },
-    noirGold: { ...preset(noirGold, `import { noirGold } from "hadi-march/theme"
+    noirGold: { ...preset(noirGold, `import { noirGold } from "march/theme"
 noirGold.style.surface   // "outlined": thin frames, no shadows`) },
-    ember: { ...preset(ember, `import { ember } from "hadi-march/theme"
+    ember: { ...preset(ember, `import { ember } from "march/theme"
 ember.style.density   // "comfortable"`) },
-    voyage: { ...preset(voyage, `import { voyage } from "hadi-march/theme"
+    voyage: { ...preset(voyage, `import { voyage } from "march/theme"
 voyage.style.shadow   // "none": flat surfaces`) },
-    graphite: { ...preset(graphite, `import { graphite } from "hadi-march/theme"
+    graphite: { ...preset(graphite, `import { graphite } from "march/theme"
 graphite.style.density   // "compact"`) },
-    paper: { ...preset(paper, `import { paper } from "hadi-march/theme"
+    paper: { ...preset(paper, `import { paper } from "march/theme"
 paper.display   // a serif for headings`) },
-    mint: { ...preset(mint, `import { mint } from "hadi-march/theme"
+    mint: { ...preset(mint, `import { mint } from "march/theme"
 mint.radius   // 18: big, soft corners`) },
-    candy: { ...preset(candy, `import { candy } from "hadi-march/theme"
+    candy: { ...preset(candy, `import { candy } from "march/theme"
 candy.style.accent   // "gradient": filled buttons go from the accent to the special color`) },
     spaceTokens: {
       code: `spaceTokens(4, "compact")   // { "space-1": "0.2188rem", …, "control-h": "1.9688rem", … }`,
       run: () => <Row>{(["compact", "normal", "comfortable"] as const).map((d) => <Out label={d} value={`space-4 ${spaceTokens(4, d)["space-4"]}`} />)}</Row>,
     },
-    night: { ...preset(night, `import { night } from "hadi-march/theme"
+    night: { ...preset(night, `import { night } from "march/theme"
 night.dark.bg`) },
     onBrandFill: {
       code: `const text = onBrandFill(HADI.green)   // white when it reaches 2.6:1, else near-black`,
@@ -592,7 +592,7 @@ themeCss(hadi, true)   // the default also styles <html> without data-m-theme`,
       },
     },
   },
-  "hadi-march/icons": {
+  "march/icons": {
     defineIcon: {
       code: `export const hadiLogo = defineIcon("hadi-logo", ["o:12,12,9", "M8 12h8", "M12 8v8"])
 <Icon of={hadiLogo} size="xl" />`,
@@ -633,9 +633,9 @@ themeCss(hadi, true)   // the default also styles <html> without data-m-theme`,
       },
     },
   },
-  "hadi-march/icons/catalog": {
+  "march/icons/catalog": {
     ICONS: {
-      code: `import { ICONS } from "hadi-march/icons/catalog"   // every icon by name: pickers and search
+      code: `import { ICONS } from "march/icons/catalog"   // every icon by name: pickers and search
 Object.keys(ICONS).filter((n) => n.includes(q)).map((n) => <Icon of={ICONS[n]} />)`,
       run: () => {
         const q = signal("arrow")
@@ -650,7 +650,7 @@ Object.keys(ICONS).filter((n) => n.includes(q)).map((n) => <Icon of={ICONS[n]} /
       },
     },
   },
-  "hadi-march/context-menu": {
+  "march/context-menu": {
     ContextMenu: {
       code: `<ContextMenu items={(target) => [{ label: "Yeniden adlandır", onSelect: () => rename(target) }, "-", remove]}>
   <FileList />
@@ -677,7 +677,7 @@ Object.keys(ICONS).filter((n) => n.includes(q)).map((n) => <Icon of={ICONS[n]} /
       },
     },
   },
-  "hadi-march/managers/consent/ui": {
+  "march/managers/consent/ui": {
     ConsentBanner: {
       code: `<ConsentBanner title="Gizlilik" text="Analitik için izninizi istiyoruz." />   // bottom layer, until decided`,
       play: { options: [{ key: "title", label: "Başlık", default: "Gizlilik", options: [{ value: "Gizlilik", label: "Gizlilik" }, { value: "Çerez tercihleri", label: "Çerez tercihleri" }] }] },
@@ -741,7 +741,7 @@ Object.keys(ICONS).filter((n) => n.includes(q)).map((n) => <Icon of={ICONS[n]} /
       },
     },
   },
-  "hadi-march/managers/command/ui": {
+  "march/managers/command/ui": {
     bindCommandKeys: {
       code: `bindCommandKeys()   // once in the shell: every command's shortcut runs it`,
       run: () => {
@@ -827,7 +827,7 @@ b.label()   b.disabled()   b.shortcut()   b.run()`,
       },
     },
   },
-  "hadi-march/managers/undo": {
+  "march/managers/undo": {
     undoHistory: {
       code: `const h = undoHistory({ mergeMs: 800 })   // an editor's own history, apart from the app's
 h.run("Yazma", () => text.set(next), () => text.set(prev), "typing")
@@ -852,9 +852,9 @@ h.undo()   h.redo()   h.past()`,
       },
     },
   },
-  "hadi-march/managers/undo/history": {
+  "march/managers/undo/history": {
     create: {
-      code: `import { create } from "hadi-march/managers/undo/history"
+      code: `import { create } from "march/managers/undo/history"
 const stack = create({ limit: 3, mergeMs: 0, commands: false }, (type, d) => log(type, d))`,
       run: () => {
         const [lines, add] = useLog(6)
@@ -869,7 +869,7 @@ const stack = create({ limit: 3, mergeMs: 0, commands: false }, (type, d) => log
       },
     },
   },
-  "hadi-march/managers/accessibility/ui": {
+  "march/managers/accessibility/ui": {
     AccessibilitySettings: {
       code: `<AccessibilitySettings />   // motion, text size, contrast, links, spacing, focus ring — saved on the device`,
       play: { options: [{ key: "sample", label: "Örnek alan", default: true }] },
@@ -894,7 +894,7 @@ const stack = create({ limit: 3, mergeMs: 0, commands: false }, (type, d) => log
       },
     },
   },
-  "hadi-march/managers/shortcut-hint": {
+  "march/managers/shortcut-hint": {
     comboOf: {
       code: `comboOf(button)   // "shift+s" from data-hotkey, else the first aria-keyshortcuts`,
       run: () => {
@@ -903,7 +903,7 @@ const stack = create({ limit: 3, mergeMs: 0, commands: false }, (type, d) => log
       },
     },
   },
-  "hadi-march/managers/shortcut-hint/ui": {
+  "march/managers/shortcut-hint/ui": {
     holdHint: {
       code: `<p class="m-muted">{holdHint()}</p>   // "Hold Alt to see shortcuts on the page." in the UI language`,
       run: () => {

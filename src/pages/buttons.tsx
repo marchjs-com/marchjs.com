@@ -3,10 +3,10 @@ import "./buttons.css";
 import {
   Button, IconButton, Chip, Card, LinkCard, IconTile, Tabs,
   Stack, Divider,
-} from "hadi-march/ui";
+} from "march/ui";
 import {
   plus, more, bell, search, filter, users, zap, shieldCheck,
-} from "hadi-march/icons";
+} from "march/icons";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 import { ComponentDemo } from "../component-demo.tsx";

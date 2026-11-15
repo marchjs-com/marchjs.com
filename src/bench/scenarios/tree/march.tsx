@@ -1,7 +1,7 @@
 // One value deep in a large tree, March: a recursive TreeNode component per node (components run once); each
 // leaf's value is a signal, bound to its text node. A step sets the target leaf's signal and only that text updates:
 // no component runs again and nothing is compared.
-import { render, signal } from "hadi-march"
+import { render, signal } from "march"
 import type { Tree, TNode } from "./def.ts"
 import type { ScenarioApp } from "../core.ts"
 

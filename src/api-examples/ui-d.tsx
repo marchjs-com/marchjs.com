@@ -1,7 +1,7 @@
-// API examples of hadi-march/ui, Section … Steps (first part of the fourth alphabetical range of the subpath).
+// API examples of march/ui, Section … Steps (first part of the fourth alphabetical range of the subpath).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
-import { signal, onCleanup } from "hadi-march";
-import { Section, Segmented, Select, Skeleton, Slider, Spacer, Spinner, Splitter, Stack, StatusBar, Stepper, Steps, Toggle, Button, Badge, type ColorToken } from "hadi-march/ui";
+import { signal, onCleanup } from "march";
+import { Section, Segmented, Select, Skeleton, Slider, Spacer, Spinner, Splitter, Stack, StatusBar, Stepper, Steps, Toggle, Button, Badge, type ColorToken } from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Row } from "./_kit.tsx";
 import { now, tl, COLORS } from "./_ui-d.ts";
@@ -9,7 +9,7 @@ import "./ui-d.css";
 export { default as SIG } from "./ui-d.sig.gen.ts";
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     Section: {
       code: `<Section title="Güvenlik" description="Oturum ve parola ayarları"
   actions={<Button size="sm">Düzenle</Button>}>

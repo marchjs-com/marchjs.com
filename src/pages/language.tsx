@@ -1,8 +1,8 @@
 // The March language: $ variables, derived values, <For>/<If>/<Switch>, bind:, on:…|prevent, class:, pipes, sx, async components.
-import "hadi-march/motion/install"; // <For animate> (FLIP) on this page
-import { Card, Button, TextInput, Field, Toggle, Badge, Stack, Segmented, Widget, codeView, confirm } from "hadi-march/ui";
-import type { CodeViewInput } from "hadi-march/ui";
-import { onCleanup, effect, untrack, signal, defineExtension, Extensions, extensions, type ExtensionPropsOf } from "hadi-march";
+import "march/motion/install"; // <For animate> (FLIP) on this page
+import { Card, Button, TextInput, Field, Toggle, Badge, Stack, Segmented, Widget, codeView, confirm } from "march/ui";
+import type { CodeViewInput } from "march/ui";
+import { onCleanup, effect, untrack, signal, defineExtension, Extensions, extensions, type ExtensionPropsOf } from "march";
 
 // The extensions the Extensions page shows. Each is applied in a scope (<Extensions use>), so the rest of the showcase
 // is not touched; the app-wide form is extend() / intercept().
@@ -19,7 +19,7 @@ const track = defineExtension<{ track: string }>({
   },
 })
 const isNew = defineExtension<{ isNew: boolean }>({ name: "is-new", props: { isNew: { type: "boolean", doc: "Kartı yeni diye işaretler" } } })
-declare module "hadi-march" {
+declare module "march" {
   interface ExtensionProps extends ExtensionPropsOf<typeof track>, ExtensionPropsOf<typeof isNew> {}
 }
 
@@ -167,7 +167,7 @@ const $left = $todos.filter((x) => !x.done).length   // derived (computed)
   <Demo wide title="Ortak prop'lar: m:parts" desc="m:parts, bir öğenin ya da bileşenin İÇİNDE çizilen bileşenlere türüne göre özellik verir: kartı yazan kişi bunun için ayrı bir prop açmak zorunda kalmaz. Anahtarlar bileşen adlarıdır; verdiğin değer içerideki bileşenin kendi aldığını ezer, en yakın kapsam kazanır, değer canlı kalır."
     code={`<MemberCard m:parts={{ Badge: { tone: $tone }, Button: { size: "sm", variant: "secondary" } }} />
 <section m:parts={{ Button: { size: "sm" } }}>…bölümdeki bütün düğmeler…</section>
-withParts(new Map([[Badge, { tone: "warn" }]]), () => h(MemberCard, props))   // elle yazım (hadi-march/props)`}>
+withParts(new Map([[Badge, { tone: "warn" }]]), () => h(MemberCard, props))   // elle yazım (march/props)`}>
     <div class="sc-options"><Field label="Rozet tonu (Badge)" group><Segmented aria-label="Rozet tonu" bind:value={$partTone} options={[{ value: "success", label: "başarı" }, { value: "warn", label: "uyarı" }, { value: "danger", label: "tehlike" }]} /></Field>
       <Toggle bind:value={$partSmall} label="Düğmeler küçük ve ikincil (Button)" /></div>
     <div sx={{ cols: 2, gap: 3 }}>
@@ -225,7 +225,7 @@ withParts(new Map([[Badge, { tone: "warn" }]]), () => h(MemberCard, props))   //
 extend([Button, IconButton], track)                 // app-wide; or only inside: <Extensions use={[track]}>
 <Button track="save">Save</Button>
 <Button track="share" m:extend={false}>Share</Button>   // this one takes no extension
-declare module "hadi-march" { interface ExtensionProps extends ExtensionPropsOf<typeof track> {} }`}>
+declare module "march" { interface ExtensionProps extends ExtensionPropsOf<typeof track> {} }`}>
     <div class="sc-options">
       <Toggle bind:value={$trackOn} label="İzleme askısı açık" />
       <Toggle bind:value={$optOut} label="Paylaş dışarıda kalsın (m:extend={false})" />
@@ -298,7 +298,7 @@ extensions.of(element)    // { component: "Card", steps: [{ name: "card-output",
     </div>
   </Demo></>,
     "code-widget": () => <Demo wide title="Kod sekmesi bir widget noktası" desc="Bütün Kod sekmeleri <Widget sources={[codeView]} /> ile çizilir. Varsayılan sağlayıcı CodeViewer (renkli, salt okunur); Kopyala ve Tam ekran ayrı widget'lardır. Anahtarı açınca ikinci bir sağlayıcı kaydedilir ve vitrindeki bütün Kod sekmeleri onu gösterir. Bir canlı kod editörü aynı noktaya sağlayıcı olarak eklenebilir."
-    code={`import { codeView } from "hadi-march/ui"
+    code={`import { codeView } from "march/ui"
 const off = codeView.provide({
 id: "plain",
 order: 1,                                  // higher than the default viewer (0)

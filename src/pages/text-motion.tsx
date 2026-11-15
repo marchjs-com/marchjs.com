@@ -1,13 +1,13 @@
-// Motion › Text animations: every hadi-march/motion/text export with a live preview, a replay button and its measured
+// Motion › Text animations: every march/motion/text export with a live preview, a replay button and its measured
 // cost; a shared playground (text, split unit, duration, stagger, easing — each option shows only where it has an
 // effect) with a Code tab. Cards play when they scroll into view; everything follows the global motion controls.
 import "./text-motion.css";
-import { signal, effect, onCleanup, untrack } from "hadi-march";
-import * as TX from "hadi-march/motion/text";
-import { TEXT_ANIMATIONS, type TextAnimMeta, type TextFamily, type TextOptionKey } from "hadi-march/motion/text/meta.ts";
-import { motion, ease } from "hadi-march/motion";
-import { Button, Badge, Tabs, CodeView, Slider, Field } from "hadi-march/ui";
-import { Segmented, TextInput } from "hadi-march/forms";
+import { signal, effect, onCleanup, untrack } from "march";
+import * as TX from "march/motion/text";
+import { TEXT_ANIMATIONS, type TextAnimMeta, type TextFamily, type TextOptionKey } from "march/motion/text/meta.ts";
+import { motion, ease } from "march/motion";
+import { Button, Badge, Tabs, CodeView, Slider, Field } from "march/ui";
+import { Segmented, TextInput } from "march/forms";
 import { Demo, Section } from "../demo.tsx";
 import { Playground, type PlayOption } from "../playground.tsx";
 import { TEXT_COSTS } from "../text-costs.gen.ts";
@@ -138,7 +138,7 @@ function Lab() {
   onCleanup(() => cur?.stop())
   const code = () => {
     const o = opts(), body = Object.entries(o).map(([k, v]) => `${k}: ${JSON.stringify(v)}`).join(", ")
-    return `import { ${name()} } from "hadi-march/motion/text";\n\nconst el = document.querySelector("h1")!;\nconst a = ${name()}(el${body ? `, { ${body} }` : ""});\n// a.replay(); a.stop(); a.playback.pause(); await a.finished;`
+    return `import { ${name()} } from "march/motion/text";\n\nconst el = document.querySelector("h1")!;\nconst a = ${name()}(el${body ? `, { ${body} }` : ""});\n// a.replay(); a.stop(); a.playback.pause(); await a.finished;`
   }
   const options: PlayOption[] = [
     { label: "Animasyon", get: name, set: name.set as (v: never) => void, options: TEXT_ANIMATIONS.map((a) => ({ value: a.name, label: a.name, hint: DESC[a.name] })) },

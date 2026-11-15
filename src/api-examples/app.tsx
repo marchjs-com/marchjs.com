@@ -1,14 +1,14 @@
-// API examples of the app toolkit: hadi-march/props, hadi-march/store, hadi-march/i18n and hadi-march/lazy (router: app-router.tsx).
+// API examples of the app toolkit: march/props, march/store, march/i18n and march/lazy (router: app-router.tsx).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
-import { signal, effect, untrack, onCleanup, locale, setLocale, messages, t } from "hadi-march";
-import { store, derive, history, on, persist, readonly, snapshot, storeLog, subscribe, type StoreEvent } from "hadi-march/store";
-import { mProps, registerMProp, withParts } from "hadi-march/props";
-import { dir, format, loadLocale, tKey, typed, unused } from "hadi-march/i18n";
+import { signal, effect, untrack, onCleanup, locale, setLocale, messages, t } from "march";
+import { store, derive, history, on, persist, readonly, snapshot, storeLog, subscribe, type StoreEvent } from "march/store";
+import { mProps, registerMProp, withParts } from "march/props";
+import { dir, format, loadLocale, tKey, typed, unused } from "march/i18n";
 import {
   lazy, skeleton, chunksOf, loadDelay, loaderKey, prefetchCommon, preloadChunks, preloadFiles, runLoad, saveData,
   setLoadDelay, setLoadRunner, setPreloadManifest, whenIdle, type LazyPlaceholder, type LazyWhen,
-} from "hadi-march/lazy";
-import { Button, Badge, Card, Segmented, TextInput, Checkbox } from "hadi-march/ui";
+} from "march/lazy";
+import { Button, Badge, Card, Segmented, TextInput, Checkbox } from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import "./app.css";
@@ -32,7 +32,7 @@ function Sales(props: { name: string }) {
 }
 
 export default examples({
-  "hadi-march/props": {
+  "march/props": {
     mProps: {
       code: `// what the compiler writes for <Card m:no-select={locked}>…</Card>
 mProps(h(Card, { title: "Kart" }, "…"), { "no-select": locked })`,
@@ -72,7 +72,7 @@ withParts(new Map([[Badge, { tone }]]), () => h(Card, { title: "Kart" }, …))`,
       },
     },
   },
-  "hadi-march/store": {
+  "march/store": {
     derive: {
       code: `const total = derive(() => cart.items.reduce((s, i) => s + i.price * i.qty, 0))
 total()   // recomputed only when an item changes`,
@@ -191,7 +191,7 @@ off()`,
       },
     },
   },
-  "hadi-march/i18n": {
+  "march/i18n": {
     dir: {
       code: `<div dir={dir()}>…</div>   // "rtl" for ar, he, fa…; setLocale() also sets <html dir>`,
       run: () => {
@@ -276,7 +276,7 @@ tt("cart.items", { n: 2 })   // tt("cart.items") or tt("cart.item", …) do not 
       },
     },
   },
-  "hadi-march/lazy": {
+  "march/lazy": {
     chunksOf: {
       code: `chunksOf("src/pages/users.tsx")   // ["assets/chunks/users-H.js", "assets/chunks/table-H.css", …] | null`,
       run: () => {
@@ -350,7 +350,7 @@ preloadFiles(files, true)                                                       
     },
     runLoad: {
       code: `const mod = await runLoad(() => import("./report.tsx"), { kind: "part", key: "report" })
-// preloads its chunks, honours setLoadDelay, goes through the load runner (hadi-march/net)`,
+// preloads its chunks, honours setLoadDelay, goes through the load runner (march/net)`,
       run: () => {
         const out = signal("—")
         const go = async () => { out.set("yükleniyor…"); const t0 = performance.now(); const m = await runLoad(() => wait(250, { rows: 3 }), { kind: "part", key: "api-ex-report" }); out.set(`${json(m)} · ${Math.round(performance.now() - t0)} ms`) }
@@ -387,16 +387,16 @@ setLoadDelay(0)`,
       run: () => {
         const log = signal<string[]>([])
         const go = async () => {
-          // is a runner installed (hadi-march/net)? with none and no delay runLoad calls the loader at once
+          // is a runner installed (march/net)? with none and no delay runLoad calls the loader at once
           const delay = loadDelay(); setLoadDelay(0)
           let direct = false
           void runLoad(() => { direct = true; return Promise.resolve(0) }, { kind: "part", key: "api-ex-probe" })
           setLoadDelay(delay)
           setLoadRunner((load, info) => { push(log, `runner: ${info.kind} "${info.key}"`); const t0 = performance.now(); return load().finally(() => push(log, `bitti: ${Math.round(performance.now() - t0)} ms`)) })
           try { await runLoad(() => wait(200, 0), { kind: "part", key: "api-ex-runner" }) } finally {
-            // put back what was there: hadi-march/net's runner (already loaded when it was installed) or none
-            if (direct) setLoadRunner(null); else (await import("hadi-march/net")).routeLoads()
-            push(log, direct ? "runner kaldırıldı" : "hadi-march/net runner'ı geri kuruldu")
+            // put back what was there: march/net's runner (already loaded when it was installed) or none
+            if (direct) setLoadRunner(null); else (await import("march/net")).routeLoads()
+            push(log, direct ? "runner kaldırıldı" : "march/net runner'ı geri kuruldu")
           }
         }
         return <div class="sc-ex-app-stack"><Row><Button onClick={go}>Kaydedici runner ile yükle</Button></Row><Log lines={log} /></div>

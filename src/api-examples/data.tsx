@@ -1,16 +1,16 @@
-// API examples of the data group: queries and mutations, access control, grouping (hadi-march/data), schemas
-// (hadi-march/schema) and the component registry (loaded when its example opens).
+// API examples of the data group: queries and mutations, access control, grouping (march/data), schemas
+// (march/schema) and the component registry (loaded when its example opens).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
-import { signal, computed, effect, untrack, onCleanup, Await } from "hadi-march";
-import { appUrl } from "hadi-march/base";
+import { signal, computed, effect, untrack, onCleanup, Await } from "march";
+import { appUrl } from "march/base";
 import {
   access, aggregate, aggregates, can, Can, clearCache, configure, denied, fetchJson, Gate, groupRows, hasMethod, hasRole,
   invalidate, mutation, query, resource, role, setAccess, signedIn, VirtualList, type AccessInput, type Denial,
-} from "hadi-march/data";
-import { fieldType, options, schema, TYPES, type FieldSpec } from "hadi-march/schema";
-import { Button, Badge, Segmented, Slider, TextInput } from "hadi-march/ui";
-import { Card, countLabel, IconTile, JsonView, Kanban, KeyValue, ListRow, StatTile, timePercent, TimeRuler, timeTicks, Timeline, Tree, type KanbanColumn, type TimelineItem, type TreeNode } from "hadi-march/data";
-import { bell, zap, star, trash, settings, users, globe, shieldCheck, search } from "hadi-march/icons";
+} from "march/data";
+import { fieldType, options, schema, TYPES, type FieldSpec } from "march/schema";
+import { Button, Badge, Segmented, Slider, TextInput } from "march/ui";
+import { Card, countLabel, IconTile, JsonView, Kanban, KeyValue, ListRow, StatTile, timePercent, TimeRuler, timeTicks, Timeline, Tree, type KanbanColumn, type TimelineItem, type TreeNode } from "march/data";
+import { bell, zap, star, trash, settings, users, globe, shieldCheck, search } from "march/icons";
 import { useLog } from "./_ui-b.tsx";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
@@ -68,7 +68,7 @@ const fetchStock = async (page: number, signal?: AbortSignal) => {
 const usersUrl = () => appUrl("demo-api/users.json")
 
 export default examples({
-  "hadi-march/data": {
+  "march/data": {
     access: {
       code: `const a = access()            // reactive: user, roles, perms, methods, meta
 <p>{() => access().user?.name ?? "Misafir"}</p>`,
@@ -606,7 +606,7 @@ countLabel(120, 999) // "120"`,
       },
     },
   },
-  "hadi-march/schema": {
+  "march/schema": {
     fieldType: {
       code: `fieldType("plate", {
   coerce: (v) => String(v ?? "").toUpperCase().replace(/\\s+/g, " ").trim(),
@@ -687,12 +687,12 @@ TYPES.list.coerce("a, b\\nc", field)        // ["a", "b", "c"]`,
       },
     },
   },
-  "hadi-march/components/registry.gen.ts": {
+  "march/components/registry.gen.ts": {
     registry: {
-      code: `import { registry } from "hadi-march/components/registry.gen.ts"
+      code: `import { registry } from "march/components/registry.gen.ts"
 const forms = registry.filter((e) => e.meta.category === "forms")
 const demo = await forms[0].demo()   // lazy demo module`,
-      run: () => <Await for={() => import("hadi-march/components/registry.gen.ts")} loading={<p class="m-muted">Yükleniyor…</p>}>{({ registry }: { registry: readonly { meta: { name: string; category: string; summary: string; status: string } }[] }) => {
+      run: () => <Await for={() => import("march/components/registry.gen.ts")} loading={<p class="m-muted">Yükleniyor…</p>}>{({ registry }: { registry: readonly { meta: { name: string; category: string; summary: string; status: string } }[] }) => {
         const cats = [...new Set(registry.map((e) => e.meta.category))].sort()
         const cat = signal(cats.includes("data") ? "data" : cats[0]!)
         const shown = () => registry.filter((e) => e.meta.category === cat())

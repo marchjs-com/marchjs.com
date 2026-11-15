@@ -1,7 +1,7 @@
 // "Slow 3G" simulation for the showcase: every lazy component and page chunk waits SLOW_MS before it loads (March's
 // setLoadDelay), so skeletons, the progress line and the crossfade can be seen. Kept for the tab (sessionStorage).
-import { signal, effect, createRoot } from "hadi-march";
-import { setLoadDelay } from "hadi-march/lazy";
+import { signal, effect, createRoot } from "march";
+import { setLoadDelay } from "march/lazy";
 
 export const SLOW_MS = 1600;
 const KEY = "sc.slow3g";

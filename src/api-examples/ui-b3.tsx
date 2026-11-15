@@ -1,9 +1,9 @@
-// API examples of hadi-march/ui, names "FileUpload" … "FormContext" (code-point order; the neighbouring ranges: ui-b*.tsx).
+// API examples of march/ui, names "FileUpload" … "FormContext" (code-point order; the neighbouring ranges: ui-b*.tsx).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`; components have Playground options.
-import { signal, useContext } from "hadi-march";
+import { signal, useContext } from "march";
 import {
   Field, Form, Button, Badge, FileUpload, FollowButton, FormActions, FormContext, type FollowState, type FormController,
-} from "hadi-march/ui";
+} from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import { wait, useLog, Profile } from "./_ui-b.tsx";
@@ -11,7 +11,7 @@ import "./ui-b.css";
 export { default as SIG } from "./ui-b3.sig.gen.ts";
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     FileUpload: {
       code: `<FileUpload accept="image/*,.pdf" multiple maxSize={5_000_000} bind:value={$files}
   upload={(file, { onProgress }) => api.upload(file, onProgress)} />`,

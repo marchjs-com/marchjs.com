@@ -1,9 +1,9 @@
 // Top bar tools: the search button in the middle (opens the command palette, Ctrl K), then at the end the page's own
 // title extras and actions (portal targets), the slow 3G indicator, the theme button (preview cards of every theme,
 // the accent list), the four HADİ accents as dots and light / dark. A lazy chunk with a placeholder of the same size.
-import { PaletteButton, ThemeMenu, ThemeToggle, Swatch, Button, accent, setAccent } from "hadi-march/ui";
-import { PortalTarget } from "hadi-march";
-import type { ColorToken } from "hadi-march/theme";
+import { PaletteButton, ThemeMenu, ThemeToggle, Swatch, Button, accent, setAccent } from "march/ui";
+import { PortalTarget } from "march";
+import type { ColorToken } from "march/theme";
 import { slow } from "./slow.ts";
 
 /** The accents one press away in the top bar (the theme menu lists them all). */

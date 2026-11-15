@@ -1,7 +1,7 @@
 // The menu manifest: page descriptions, groups and icons for the side menu and the home page (kept out of start-up:
 // the side menu loads it on first idle, test/boot-pages.test.js checks that no start-up piece imports it). A group is one of
 // MENU_GROUPS (src/components/categories.ts): İlk Adımlar, Temel, the component categories, Yöneticiler, Altyapı.
-import { activity, appWindow, film, alertCircle, barChart, code, compass, cpu, dashboard, edit, gauge, grid, layers, menu, message, heart, palette, play, search, server, sparkles, zap } from "hadi-march/icons";
+import { activity, appWindow, film, alertCircle, barChart, code, compass, cpu, dashboard, edit, gauge, grid, layers, menu, message, heart, palette, play, search, server, sparkles, zap } from "march/icons";
 import { HOME_STATS } from "./home-stats.gen.ts";
 
 export interface PageMeta { desc: string; group?: string; icon: unknown }
@@ -54,7 +54,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/ide-live": { desc: "Mini editör: dosya ağacı, sekmeli editör, ayarlar, konsol, komut paleti", group: "Karmaşık bileşenler", icon: code },
 };
 
-export { MENU_GROUPS } from "hadi-march/components/categories.ts";
+export { MENU_GROUPS } from "march/components/categories.ts";
 
 /** A section of the showcase: the thin rail lists the sections, the side menu shows the groups of one section at a time. */
 export interface NavSection {

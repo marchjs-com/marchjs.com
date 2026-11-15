@@ -1,8 +1,8 @@
-// API examples of hadi-march/motion, part three (resample … zoomThrough): clock, colour and path maths, morphs, page transitions, gestures, springs.
+// API examples of march/motion, part three (resample … zoomThrough): clock, colour and path maths, morphs, page transitions, gestures, springs.
 // page transition variants, gestures, springs and tweens. Layout and rules: tools/api-examples.js.
 // Every animation runs on the motion engine itself, so the global speed, "Stop all" and reduced motion reach it.
-import { signal, effect, onCleanup } from "hadi-march";
-import { Button, Segmented } from "hadi-march/ui";
+import { signal, effect, onCleanup } from "march";
+import { Button, Segmented } from "march/ui";
 import {
   animate, timeline, stagger, spring, tween, track, motion, installPresets, MORPH_ICONS, flipPage, cube, circle,
   morphPage, pixelDissolve, stack, wipe, zoomThrough,
@@ -11,14 +11,14 @@ import {
   morph, morphBack, morphIcon, morphPath, shapeMorph, shapePolygon, stateMorph, pointerDrag, scrollProgress,
   transitionFrames, resolveTransition, navDirection, usePageTransitions, viewTransition, webgl,
   type Playback, type ShapeName,
-} from "hadi-march/motion";
+} from "march/motion";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import { hold, tok, last, num, Pick, Swap, Replay, D, type Dir } from "./_motion-kit.tsx";
 export { default as SIG } from "./motion-c.sig.gen.ts";
 
 export default examples({
-  "hadi-march/motion": {
+  "march/motion": {
     resample: {
       code: `const { pts, closed } = resample("M50 8A42 42 0 1 1 49.9 8Z", 12)
 // pts = [x0, y0, x1, y1, …]: 12 evenly spaced points on the outline`,

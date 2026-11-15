@@ -1,6 +1,6 @@
 // The playground's preview runtime (playground/preview.js + preview.css, bundled at build time and loaded by
 // /playground only): March and its components, and `run(code, el)`, which runs the code the playground builds and
-// renders its default export into the preview's stage. The bundle's `import … from "hadi-march/…"` lines are turned
+// renders its default export into the preview's stage. The bundle's `import … from "march/…"` lines are turned
 // into this runtime's own modules; the module is imported from a blob: URL (the showcase's CSP allows script-src
 // blob: — the showcase is served from its own domain, with no sessions).
 import * as core from "../../../../src/index.ts";
@@ -10,7 +10,7 @@ import * as theme from "../../../../src/theme/index.ts";
 import * as motion from "../../../../src/motion/index.ts";
 import { withParts, mProps } from "../../../../src/props/index.ts";
 
-// the playground's helpers for a quick try (import { instrument, run } from "hadi-march/playground"): debug a piece of
+// the playground's helpers for a quick try (import { instrument, run } from "march/playground"): debug a piece of
 // code in the preview with your own Debugger. `instrument` writes the debugger's calls in (the page's TypeScript worker,
 // given by setHost), `run` runs the files it gave, each as a module (blob: URL, no eval), in order:
 //   const r = await instrument({ "app.ts": $code }); session.begin(r.metas); await run(r.files)
@@ -34,17 +34,17 @@ const playground = {
     }
   },
 };
-const MODULES: Record<string, unknown> = { "hadi-march": core, "hadi-march/ui": ui, "hadi-march/icons": icons, "hadi-march/theme": theme, "hadi-march/motion": motion, "hadi-march/playground": playground };
-// any other subpath of the components (hadi-march/actions…) is in the ui barrel too
-(globalThis as Record<string, unknown>)["__marchPreview"] = new Proxy(MODULES, { get: (m, k: string) => m[k] ?? (k.startsWith("hadi-march/") ? ui : undefined) });
+const MODULES: Record<string, unknown> = { "march": core, "march/ui": ui, "march/icons": icons, "march/theme": theme, "march/motion": motion, "march/playground": playground };
+// any other subpath of the components (march/actions…) is in the ui barrel too
+(globalThis as Record<string, unknown>)["__marchPreview"] = new Proxy(MODULES, { get: (m, k: string) => m[k] ?? (k.startsWith("march/") ? ui : undefined) });
 
-/** `import { a as b, c } from "hadi-march/x";` → `const { a: b, c } = __marchPreview["hadi-march/x"];` (and `* as x`). */
+/** `import { a as b, c } from "march/x";` → `const { a: b, c } = __marchPreview["march/x"];` (and `* as x`). */
 export function link(code: string): string {
   const mod = (path: string): string => `globalThis.__marchPreview[${JSON.stringify(path)}]`;
   return code
-    .replace(/import\s*\{([^}]*)\}\s*from\s*["'](hadi-march[^"']*)["'];?/g, (_, names: string, path: string) => `const {${names.replace(/\s+as\s+/g, ": ")}} = ${mod(path)};`)
-    .replace(/import\s*\*\s*as\s+([\w$]+)\s*from\s*["'](hadi-march[^"']*)["'];?/g, (_, name: string, path: string) => `const ${name} = ${mod(path)};`)
-    .replace(/import\s*["']hadi-march[^"']*["'];?/g, "");
+    .replace(/import\s*\{([^}]*)\}\s*from\s*["'](march(?:\/[^"']*)?)["'];?/g, (_, names: string, path: string) => `const {${names.replace(/\s+as\s+/g, ": ")}} = ${mod(path)};`)
+    .replace(/import\s*\*\s*as\s+([\w$]+)\s*from\s*["'](march(?:\/[^"']*)?)["'];?/g, (_, name: string, path: string) => `const ${name} = ${mod(path)};`)
+    .replace(/import\s*["']march(?:\/[^"']*)?["'];?/g, "");
 }
 
 // the props of what is rendered: a channel. setProps draws the already loaded component again with the new props

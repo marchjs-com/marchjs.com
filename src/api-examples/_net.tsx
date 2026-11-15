@@ -1,6 +1,6 @@
 // Small helpers the net, mock and seo API examples share: inputs bound to a signal, a code block, a tag list and a log
 // signal with push. Styles: net.css (classes sc-ex-net-…).
-import { signal } from "hadi-march";
+import { signal } from "march";
 import "./net.css";
 
 type Str = { (): string; set(v: string): void };

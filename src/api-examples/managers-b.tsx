@@ -1,31 +1,31 @@
-// API examples of hadi-march/managers, second half (disposeIdle … windowManager): dispose functions, the manager
+// API examples of march/managers, second half (disposeIdle … windowManager): dispose functions, the manager
 // handles, and the environment / data / ops managers. Layout and rules: tools/api-examples.js.
 // Every example leaves the global state as it found it: a manager it configures is put back (or disposed when it was not
 // running), what it binds is removed with the example, and nothing is left in storage.
-import { signal, computed, onCleanup } from "hadi-march";
-import { Button, Badge, Segmented, TextInput } from "hadi-march/ui";
-import type { Manager } from "hadi-march/managers";
-import { disposeIdle, idle, idleManager } from "hadi-march/managers/idle";
-import { disposeLayers, layer, layerManager, type LayerHandle } from "hadi-march/managers/layer";
-import { disposeLocation, distance, locationManager, locator } from "hadi-march/managers/location";
-import { disposeLog, logger, logManager, memoryTransport, type Level } from "hadi-march/managers/log";
-import { disposeNotifications, notificationManager, notifications } from "hadi-march/managers/notification";
-import { disposePerf, perf, perfManager, rateVital, THRESHOLDS, type VitalName } from "hadi-march/managers/perf";
-import { disposePermissions, permissionManager, permissions } from "hadi-march/managers/permission";
-import { disposePresence, presence, presenceManager } from "hadi-march/managers/presence";
-import { disposeRateLimit, rateLimit, rateManager } from "hadi-march/managers/rate";
-import { disposeScroll, scroll, scrollManager } from "hadi-march/managers/scroll";
-import { disposeSession, session, sessionManager } from "hadi-march/managers/session";
-import { disposeShortcutHints, shortcutHintManager, shortcutHints } from "hadi-march/managers/shortcut-hint";
-import { disposeStorage, persisted, storage, storageManager } from "hadi-march/managers/storage";
-import { disposeSync, sync, syncManager } from "hadi-march/managers/sync";
-import { disposeUndo, undoCommands, undoManager, undoStack } from "hadi-march/managers/undo";
-import { disposeViewport, viewport, viewportManager } from "hadi-march/managers/viewport";
-import { disposeWindow, windowManager } from "hadi-march/managers/window";
-import { flags, flagsManager } from "hadi-march/managers/flags";
-import { focus, focusManager } from "hadi-march/managers/focus";
-import { hotkeyLabel, hotkeyManager, hotkeys } from "hadi-march/managers/hotkey";
-import { command, commandManager, normalizeShortcut, onCommandRun, pickCommands } from "hadi-march/managers/command";
+import { signal, computed, onCleanup } from "march";
+import { Button, Badge, Segmented, TextInput } from "march/ui";
+import type { Manager } from "march/managers";
+import { disposeIdle, idle, idleManager } from "march/managers/idle";
+import { disposeLayers, layer, layerManager, type LayerHandle } from "march/managers/layer";
+import { disposeLocation, distance, locationManager, locator } from "march/managers/location";
+import { disposeLog, logger, logManager, memoryTransport, type Level } from "march/managers/log";
+import { disposeNotifications, notificationManager, notifications } from "march/managers/notification";
+import { disposePerf, perf, perfManager, rateVital, THRESHOLDS, type VitalName } from "march/managers/perf";
+import { disposePermissions, permissionManager, permissions } from "march/managers/permission";
+import { disposePresence, presence, presenceManager } from "march/managers/presence";
+import { disposeRateLimit, rateLimit, rateManager } from "march/managers/rate";
+import { disposeScroll, scroll, scrollManager } from "march/managers/scroll";
+import { disposeSession, session, sessionManager } from "march/managers/session";
+import { disposeShortcutHints, shortcutHintManager, shortcutHints } from "march/managers/shortcut-hint";
+import { disposeStorage, persisted, storage, storageManager } from "march/managers/storage";
+import { disposeSync, sync, syncManager } from "march/managers/sync";
+import { disposeUndo, undoCommands, undoManager, undoStack } from "march/managers/undo";
+import { disposeViewport, viewport, viewportManager } from "march/managers/viewport";
+import { disposeWindow, windowManager } from "march/managers/window";
+import { flags, flagsManager } from "march/managers/flags";
+import { focus, focusManager } from "march/managers/focus";
+import { hotkeyLabel, hotkeyManager, hotkeys } from "march/managers/hotkey";
+import { command, commandManager, normalizeShortcut, onCommandRun, pickCommands } from "march/managers/command";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 export { default as SIG } from "./managers-b.sig.gen.ts";
@@ -34,7 +34,7 @@ type Api = Record<string, any>
 /** The core exports (emit, onManager …) only come from the whole-package entry; it loads when its card opens. */
 function Lazy(p: { children: (api: Api) => unknown }) {
   const api = signal<Api | null>(null)
-  import("hadi-march/managers").then((m) => api.set(m))
+  import("march/managers").then((m) => api.set(m))
   return <div class="sc-ex-stack">{() => { const m = api(); return m ? p.children(m) : <span class="m-muted">Yükleniyor…</span> }}</div>
 }
 const clock = () => new Date().toLocaleTimeString("tr-TR")
@@ -461,7 +461,7 @@ function StorageDemo() {
 
 function SyncDemo() {
   const net = signal<any>(null)
-  Promise.all([import("hadi-march/net"), import("hadi-march/net/mock")]).then(([{ createNet }]) => {
+  Promise.all([import("march/net"), import("march/net/mock")]).then(([{ createNet }]) => {
     const n = createNet()
     n.mock({ "POST /demo/notes": () => ({ saved: true }) }, { delay: 400 })
     net.set(n)
@@ -507,7 +507,7 @@ function UndoCommandsDemo() {
 }
 
 export default examples({
-  "hadi-march/managers": {
+  "march/managers": {
     disposeIdle: { code: `idle()                       // dinlemeye başlar
 disposeIdle()                // dinleyiciler kalkar
 idle()                       // yeniden başlar`, run: disposeEx(idleManager, "idle()", "disposeIdle()", () => idle(), disposeIdle) },

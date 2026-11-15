@@ -2,17 +2,17 @@
 // pointer (hoverParallax with `hold`: leaving the bench changes nothing, the cards keep the pose they were left in);
 // each card holds real March components. The theme card restyles the whole showcase: color theme, accent, dark mode
 // and the corner radius (the theme wave spreads from the pressed control). On a phone the cards stack and stay put.
-import { effect, onCleanup } from "hadi-march";
-import { lazy } from "hadi-march/lazy";
-import { reveal, animate, inView, hoverParallax } from "hadi-march/motion";
-import { draggable } from "hadi-march/behaviors/drag";
+import { effect, onCleanup } from "march";
+import { lazy } from "march/lazy";
+import { reveal, animate, inView, hoverParallax } from "march/motion";
+import { draggable } from "march/behaviors/drag";
 import { Button, Swatch, ThemeSwatch, Toggle, Slider, Rating, SectionLabel, ChatBubble, TypingIndicator, LikeButton, heartBurst,
-  colorThemes, colorTheme, setColorTheme, accent, setAccent, resolvedTheme, setTheme } from "hadi-march/ui";
-import { tokenColor, BRAND_COLORS, type ColorToken } from "hadi-march/theme/colors.ts";
-import { sparkles } from "hadi-march/icons";
+  colorThemes, colorTheme, setColorTheme, accent, setAccent, resolvedTheme, setTheme } from "march/ui";
+import { tokenColor, BRAND_COLORS, type ColorToken } from "march/theme/colors.ts";
+import { sparkles } from "march/icons";
 
 // the chart is a part of its own (the charts page loads the same one): the cards do not wait for it
-const BarChart = lazy(() => import("hadi-march/charts/bar.ts"), { pick: "BarChart", placeholder: "chart", height: "7rem" });
+const BarChart = lazy(() => import("march/charts/bar.ts"), { pick: "BarChart", placeholder: "chart", height: "7rem" });
 
 const ACCENT_NAMES: Record<string, string> = { "brand-orange": "Turuncu", "brand-blue": "Mavi", "brand-green": "Yeşil", "brand-purple": "Mor" };
 

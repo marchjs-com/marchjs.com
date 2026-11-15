@@ -1,9 +1,9 @@
-// API examples of hadi-march/ui, names openDialogs … renameAt/renderFields (dialogs, parsers, JSON paths, forms, themes, shortcuts, widget points).
+// API examples of march/ui, names openDialogs … renameAt/renderFields (dialogs, parsers, JSON paths, forms, themes, shortcuts, widget points).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
-import { signal, computed, effect, onCleanup, untrack } from "hadi-march";
+import { signal, computed, effect, onCleanup, untrack } from "march";
 import {
   Button, Textarea, openDialog, closePalette, key, gradientCss, bezierCss, openDialogs, openDrawer, openMedia, openPalette, paletteOpen, parse, parseBezier, parseDate, parseGradient, parseJson, parseKey, parseNumber, pickMain, registerCommands, resolveColor, theme, toast, typeOf, Form, colorTheme, colorThemes, pickerKind, place, pointer, preloadPalette, prompt, quietMedia, rangePresets, rank, registerInput, registerPages, registerThemes, removeAt, renameAt, renderFields, score, todayIso, useForm,
-} from "hadi-march/ui";
+} from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import { Swatch, Field, Pick, DOC, json, now } from "./_ui-f-kit.tsx";
@@ -22,7 +22,7 @@ const DEMO_POINT = widgetPoint<{ lang: string }>("ex-api-pick-main", {
 
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     openDialogs: {
       code: `const dialog = openDialog(() => "Merhaba")
 openDialogs()        // 1

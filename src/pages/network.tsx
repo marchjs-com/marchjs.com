@@ -1,16 +1,16 @@
-// Network and errors: hadi-march/net (policies, priority, retry, middleware, Api classes, WebSocket, mock) and
-// hadi-march/errors (AppError, rules, de-duplication, dev layer) — live. Everything here goes through the one `net`
+// Network and errors: march/net (policies, priority, retry, middleware, Api classes, WebSocket, mock) and
+// march/errors (AppError, rules, de-duplication, dev layer) — live. Everything here goes through the one `net`
 // instance, so the request inspector also shows the page loads the router makes after this page was opened.
 import "./network.css";
-import "hadi-march/errors/errors.css";
-import { signal, effect, onCleanup, untrack } from "hadi-march";
-import { Button, Badge, Card, Grid } from "hadi-march/ui";
-import { Segmented, Slider, Toggle, TextInput } from "hadi-march/forms";
-import { net, Api, api, cache, timing, normalizeErrors, isAbort, ManagedSocket, type Ctx, type Step } from "hadi-march/net";
-import { crud, reply, mockSocketServer, type MockController } from "hadi-march/net/mock";
-import { errors, ErrorPage, ErrorInline, type Captured } from "hadi-march/errors";
-import { Try } from "hadi-march";
-import { appUrl } from "hadi-march/base";
+import "march/errors/errors.css";
+import { signal, effect, onCleanup, untrack } from "march";
+import { Button, Badge, Card, Grid } from "march/ui";
+import { Segmented, Slider, Toggle, TextInput } from "march/forms";
+import { net, Api, api, cache, timing, normalizeErrors, isAbort, ManagedSocket, type Ctx, type Step } from "march/net";
+import { crud, reply, mockSocketServer, type MockController } from "march/net/mock";
+import { errors, ErrorPage, ErrorInline, type Captured } from "march/errors";
+import { Try } from "march";
+import { appUrl } from "march/base";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 
@@ -295,7 +295,7 @@ users.search({ q })   // the older search is aborted`}>
     <LatestDemo />
   </Demo>,
     "mock": () => <Demo title="Mock ↔ gerçek, yavaş ağ, hata oranı" desc="Mock sağlayıcı tarayıcıda yanıt verir: tohumlu veri, durumlu CRUD, gecikme ve hata oranı."
-    code={`import { crud, reply } from "hadi-march/net/mock"
+    code={`import { crud, reply } from "march/net/mock"
 const m = net.mock({ ...crud("/demo-api/users", seed), "GET /demo-api/me.json": () => reply(401) }, { delay: [300, 600] })
 m.set({ errorRate: 0.2 })      net.mock(false)   // back to the server
 net.setOnline(false)            // requests wait in the offline queue`}>

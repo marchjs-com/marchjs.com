@@ -1,8 +1,8 @@
 // Feedback: alerts, progress, skeleton, spinner, empty state, error box, loader, notice.
-import { Progress, Skeleton, Spinner, Stack } from "hadi-march/ui";
-import { onCleanup } from "hadi-march";
-import { onFrame } from "hadi-march/motion";
-import { ProgressRing } from "hadi-march/charts";
+import { Progress, Skeleton, Spinner, Stack } from "march/ui";
+import { onCleanup } from "march";
+import { onFrame } from "march/motion";
+import { ProgressRing } from "march/charts";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 import { ComponentDemo } from "../component-demo.tsx";

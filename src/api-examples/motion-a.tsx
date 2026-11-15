@@ -1,7 +1,7 @@
-// API examples of hadi-march/motion, part A (COMPOSITOR … magnet). Every animation here runs on the motion engine, so the
+// API examples of march/motion, part A (COMPOSITOR … magnet). Every animation here runs on the motion engine, so the
 // global speed, "Stop all" and reduced motion reach it. Layout and rules: tools/api-examples.js.
-import { signal, effect, onCleanup, untrack, For, If } from "hadi-march";
-import { Button, Segmented } from "hadi-march/ui";
+import { signal, effect, onCleanup, untrack, For, If } from "march";
+import { Button, Segmented } from "march/ui";
 import {
   COMPOSITOR, DRIVER, Effect, MORPH_ICONS, MOTION_DEFAULTS, PAGE_VARIANTS, PRESETS, Playback, Track,
   animate, animateEl, animateValue, blinds, bounceEase, canvas2d, circle, clipAt, clipFrames, clipReveal, cssAnimations, cssVars,
@@ -9,8 +9,8 @@ import {
   ease, easingNames, filterBlur, flatten, flip, flipPage, followPath, frame, frameLoop, frameMonitor, getKeyframes, goo, hoverParallax,
   installFlip, installPresets, installTransitions, interpolatePath, inView, keyframeNames, keyframes, keyframesCss, magnet, morphIcon,
   normalize, stagger, timeline, transitionFrames,
-} from "hadi-march/motion";
-import type { PageVariant } from "hadi-march/motion";
+} from "march/motion";
+import type { PageVariant } from "march/motion";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import "./motion-a.css";
@@ -120,7 +120,7 @@ const ensureMotion = () => {
 }
 
 export default examples({
-  "hadi-march/motion": {
+  "march/motion": {
     animate: {
       code: `animate(card, [{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }],
   { duration: 500, easing: "out" })`,

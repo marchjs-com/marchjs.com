@@ -1,9 +1,9 @@
-// API examples of hadi-march/ui, names "ImageCropper" … "Kbd" (code-point order; the neighbouring ranges: ui-b*.tsx).
+// API examples of march/ui, names "ImageCropper" … "Kbd" (code-point order; the neighbouring ranges: ui-b*.tsx).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`; components have Playground options.
-import { signal } from "hadi-march";
+import { signal } from "march";
 import {
   Field, Button, TextInput, ImageCropper, IntInput, JsonEditor, JsonView, Kanban, Kbd, Loader, type ImageCropperProps, type KanbanColumn,
-} from "hadi-march/ui";
+} from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import { useLog } from "./_ui-b.tsx";
@@ -28,7 +28,7 @@ function picture(): Promise<string> {
 }
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     ImageCropper: {
       code: `<ImageCropper src={blobUrl} alt="Profil fotoğrafı" aspect={1} bind:value={$crop}
   api={(a) => cropper = a} />

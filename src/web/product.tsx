@@ -1,14 +1,14 @@
-// Sample page: a product landing page built only from the website blocks (hadi-march/landing).
-import { Button } from "hadi-march/ui";
-import { SiteNav, Hero, LogoCloud, SiteSection, FeatureGrid, ScrollStory, StatsBand, Pricing, ScrollProgress } from "hadi-march/components/landing/index.ts";
-import { lazy } from "hadi-march/lazy";
-import { arrowRight, sparkles } from "hadi-march/icons";
-import { MockApp, Wordmark, LOGO_NAMES } from "hadi-march/components/landing/demo-kit.tsx";
-import { FEATURES } from "hadi-march/components/landing/feature-grid/demo.tsx";
-import { STORY } from "hadi-march/components/landing/scroll-story/demo.tsx";
-import { STATS } from "hadi-march/components/landing/stats-band/demo.tsx";
-import { PLANS } from "hadi-march/components/landing/pricing/demo.tsx";
-import { Counter } from "hadi-march/components/landing/index.ts";
+// Sample page: a product landing page built only from the website blocks (march/landing).
+import { Button } from "march/ui";
+import { SiteNav, Hero, LogoCloud, SiteSection, FeatureGrid, ScrollStory, StatsBand, Pricing, ScrollProgress } from "march/components/landing/index.ts";
+import { lazy } from "march/lazy";
+import { arrowRight, sparkles } from "march/icons";
+import { MockApp, Wordmark, LOGO_NAMES } from "march/components/landing/demo-kit.tsx";
+import { FEATURES } from "march/components/landing/feature-grid/demo.tsx";
+import { STORY } from "march/components/landing/scroll-story/demo.tsx";
+import { STATS } from "march/components/landing/stats-band/demo.tsx";
+import { PLANS } from "march/components/landing/pricing/demo.tsx";
+import { Counter } from "march/components/landing/index.ts";
 
 const LINKS = [
   { label: "Neler var", href: "#p-features" }, { label: "Nasıl çalışır", href: "#p-story" },

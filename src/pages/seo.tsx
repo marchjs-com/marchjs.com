@@ -1,7 +1,7 @@
 // SEO: head tags per route (live), Open Graph / Twitter cards, JSON-LD builders, the page check and prerendering.
-import { Field, TextInput, Textarea, Segmented, Toggle, Button, Card, Stack, Badge } from "hadi-march/ui";
-import { installSeo, useHead, headTags, headToHtml, ld, checkHtml, formatIssues, resolveHead, type SeoIssue } from "hadi-march/seo";
-import { onCleanup } from "hadi-march";
+import { Field, TextInput, Textarea, Segmented, Toggle, Button, Card, Stack, Badge } from "march/ui";
+import { installSeo, useHead, headTags, headToHtml, ld, checkHtml, formatIssues, resolveHead, type SeoIssue } from "march/seo";
+import { onCleanup } from "march";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 

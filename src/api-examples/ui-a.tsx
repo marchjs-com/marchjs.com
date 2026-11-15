@@ -1,12 +1,12 @@
-// API examples of hadi-march/ui, names "ACCENT_CHOICES" … "Button" (code-point order; the subpath is split over several
+// API examples of march/ui, names "ACCENT_CHOICES" … "Button" (code-point order; the subpath is split over several
 // files by name range). Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`;
 // components have a Playground.
-import { signal } from "hadi-march"
+import { signal } from "march"
 import {
   ACCENT_CHOICES, AccentPicker, Accordion, ActionButton, ActivityBar, Alert, AppShell, AuthLayout, Avatar,
   AvatarGroup, Badge, BottomNav, Brand, Breadcrumbs, Button, action, setAccent, accent, toast,
-} from "hadi-march/ui"
-import { home, compass, user, files, folder, users, plus, bell, star, shieldCheck, mail, download, trash, sparkles, lock, zap } from "hadi-march/icons"
+} from "march/ui"
+import { home, compass, user, files, folder, users, plus, bell, star, shieldCheck, mail, download, trash, sparkles, lock, zap } from "march/icons"
 import { examples } from "./types.ts"
 import { Out, Log, Row } from "./_kit.tsx"
 import "./ui-a.css"
@@ -17,7 +17,7 @@ const now = () => new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minu
 const logOf = (max = 4) => { const lines = signal<string[]>([]); return [lines, (s: string) => lines.update((l) => [...l, `${now()} ${s}`].slice(-max))] as const }
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     ACCENT_CHOICES: {
       code: `ACCENT_CHOICES   // ["primary", "brand-orange", "brand-blue", … "neutral"]
 <AccentPicker choices={ACCENT_CHOICES.filter((c) => c.startsWith("brand-"))} />`,

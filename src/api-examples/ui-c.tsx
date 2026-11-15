@@ -1,7 +1,7 @@
-// API examples of hadi-march/ui, names LocaleSelect … MediaGrid (code-point order). Layout and rules: tools/api-examples.js.
+// API examples of march/ui, names LocaleSelect … MediaGrid (code-point order). Layout and rules: tools/api-examples.js.
 // Each `run` is a small live demo of its `code`; components re-create themselves for options they read once.
-import { signal, untrack, onCleanup, locale, setLocale } from "hadi-march";
-import { LocaleSelect, MadeWithMarch, MARCH_URL, Markdown, MarkdownEditor, Marquee, Media, MediaGrid, Button } from "hadi-march/ui";
+import { signal, untrack, onCleanup, locale, setLocale } from "march";
+import { LocaleSelect, MadeWithMarch, MARCH_URL, Markdown, MarkdownEditor, Marquee, Media, MediaGrid, Button } from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import "./ui-c.css";
@@ -21,7 +21,7 @@ const logger = () => { const lines = signal<string[]>([]); return [lines, (l: st
 const opts = (...pairs: [unknown, string][]) => pairs.map(([value, label]) => ({ value, label }))
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     LocaleSelect: {
       code: `<LocaleSelect options={[{ value: "tr", label: "Türkçe" }, { value: "en", label: "English" }]}
   onChange={(l) => saveProfile({ locale: l })} />`,

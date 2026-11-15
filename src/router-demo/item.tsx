@@ -1,6 +1,6 @@
 // Router demo: one record. The same page serves the named outlet (beside), the modal route (over the list) and a
 // full page (direct visit). close() is given in an outlet or a modal.
-import { Button } from "hadi-march/ui";
+import { Button } from "march/ui";
 import { PEOPLE } from "./data.ts";
 
 export default function RouterItem(props: { params: { id: string }; close?: () => void }) {

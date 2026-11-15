@@ -2,13 +2,13 @@
 // motion, character) with an fps / long-task panel; "one engine" (a DOM card, a canvas wave and a WebGL gradient in one
 // timeline); the keyframe gallery; a timeline editor; a curve editor; the 200-item stagger check; keyframes → CSS.
 import "./animation.css";
-import { onCleanup, effect } from "hadi-march";
+import { onCleanup, effect } from "march";
 import {
   animate, timeline, stagger, motion, frameMonitor, installPresets, keyframesCss, ease, springEase, canvas2d, webgl,
   PRESETS, type Playback, type PresetName,
-} from "hadi-march/motion";
-import { Button, Badge, Slider, Field, CodeView } from "hadi-march/ui";
-import { Segmented, Toggle } from "hadi-march/forms";
+} from "march/motion";
+import { Button, Badge, Slider, Field, CodeView } from "march/ui";
+import { Segmented, Toggle } from "march/forms";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 

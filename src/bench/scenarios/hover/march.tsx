@@ -1,6 +1,6 @@
 // Moving highlight, March: the hovered index is one signal and each row reads it through selector(), so a step
 // wakes only the row that loses the highlight and the row that gains it (two class bindings), not 10.000 rows.
-import { render, signal, selector } from "hadi-march"
+import { render, signal, selector } from "march"
 import { HOVER, type Item } from "./def.ts"
 import type { ScenarioApp } from "../core.ts"
 

@@ -1,14 +1,14 @@
 // Environment managers: Idle, Sync (offline queue over net), Device, Permission, Location, Notification, Window,
 // Scroll, Session and Presence — each with a live demo — and the `managers` channel every one of them reports to.
 // The demos live in env-managers/; Sync brings net, the mock server and its manager as a lazy part (sync-server.ts).
-import { onCleanup, untrack } from "hadi-march";
-import { Button, Card, Badge, Toggle, Slider, Field, TextInput, Progress, Chip } from "hadi-march/ui";
-import { onManager, managerChannel, type ManagerMessage } from "hadi-march/managers/channels";
-import { idle, configureIdle } from "hadi-march/managers/idle";
-import { device, configureDevice, type DeviceFeature } from "hadi-march/managers/device";
-import { appWindow } from "hadi-march/managers/window";
-import { scroll, configureScroll } from "hadi-march/managers/scroll";
-import { presence, configurePresence, type PresenceState } from "hadi-march/managers/presence";
+import { onCleanup, untrack } from "march";
+import { Button, Card, Badge, Toggle, Slider, Field, TextInput, Progress, Chip } from "march/ui";
+import { onManager, managerChannel, type ManagerMessage } from "march/managers/channels";
+import { idle, configureIdle } from "march/managers/idle";
+import { device, configureDevice, type DeviceFeature } from "march/managers/device";
+import { appWindow } from "march/managers/window";
+import { scroll, configureScroll } from "march/managers/scroll";
+import { presence, configurePresence, type PresenceState } from "march/managers/presence";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 import { yes, time, secs, clock, Signals } from "../env-managers/common.tsx";
@@ -30,7 +30,7 @@ function EventFeed() {
     code={`onManager("session:*", (m) => …)            // m.topic "session:warn", m.detail
 onManager("*", log)                          // her şey; bileşenle birlikte kalkar
 managerChannelOf("undo").on((e) => …)       // tek yöneticinin kanalı: { type, detail }
-onChannels("managers.*", (m) => …)           // hadi-march/channel joker karakteriyle`}>
+onChannels("managers.*", (m) => …)           // march/channel joker karakteriyle`}>
     <div class="sc-row">{NAMES.map((n) => <Chip selected={() => $only.has(n)} on:click={() => toggle(n)}>{n}</Chip>)}</div>
     <div class="sc-row"><Toggle bind:value={$paused} label="Akışı duraklat" /><Button variant="ghost" on:click={() => { $log = [] }}>Temizle</Button></div>
     <ol class="sc-mgr-feed" aria-live="polite">{() => shown().length ? shown().map((m) => <li><code>{m.topic}</code><span class="m-muted">{time(m.at)}</span>{m.detail !== undefined ? <span class="sc-mgr-detail">{JSON.stringify(m.detail)}</span> : null}</li>) : <li class="m-muted">Henüz olay yok.</li>}</ol>

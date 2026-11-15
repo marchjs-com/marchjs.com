@@ -1,12 +1,12 @@
 // Motion › SVG: stroke drawing, path morph (any point count), motion along a path, clip reveals and SVG filters
 // (blur, displacement, goo). Every animation is an engine Playback: global speed and "Stop all" reach it.
 import "../motion-pages.css";
-import { onCleanup } from "hadi-march";
-// each helper from its own module: the page carries only what it uses (the same names are on "hadi-march/motion")
-import { animate, type Playback } from "hadi-march/motion/engine/playback.ts";
-import { drawPath, morphPath, followPath } from "hadi-march/motion/svg.ts";
-import { clipReveal, type ClipShape, type ClipSide } from "hadi-march/motion/clip.ts";
-import { filterBlur, displace, goo } from "hadi-march/motion/svg-filter.ts";
+import { onCleanup } from "march";
+// each helper from its own module: the page carries only what it uses (the same names are on "march/motion")
+import { animate, type Playback } from "march/motion/engine/playback.ts";
+import { drawPath, morphPath, followPath } from "march/motion/svg.ts";
+import { clipReveal, type ClipShape, type ClipSide } from "march/motion/clip.ts";
+import { filterBlur, displace, goo } from "march/motion/svg-filter.ts";
 import { Section } from "../../demo.tsx";
 import { MotionDemo, opt, EASES } from "../../playground.tsx";
 
@@ -89,7 +89,7 @@ export default function MotionSvg() {
   return <Section kicker="Hareket" title="SVG animasyonları" lead="Çizgiler çizilerek belirir, şekiller nokta sayıları farklı olsa da birbirine dönüşür, öğeler bir yol boyunca yön alarak ilerler; kırpma ve SVG filtreleri ile ortaya çıkış. Hepsi tek hareket motorunda: global hız, Tümünü durdur ve hareketi azalt tercihi her birine ulaşır.">
     <MotionDemo wide title="Yol çizimi" desc="Her çizgi pathLength=1 ile ölçülmeden çizilir; stagger sırayla başlatır. Sil seçeneği aynı yolu tersine oynatır."
       call={() => `drawPath(svg.querySelectorAll("path"), { duration: ${$dDur}, easing: "${$dEase}", stagger: ${$dEach}${$dErase ? ", from: 1, to: 0" : ""} })`}
-      code={`import { drawPath } from "hadi-march/motion"
+      code={`import { drawPath } from "march/motion"
 
 drawPath(svg.querySelectorAll("path"), { duration: 1400, stagger: 120 })   // draw in
 drawPath(logo, { from: 1, to: 0, easing: "in" })                         // erase`}
@@ -110,7 +110,7 @@ drawPath(logo, { from: 1, to: 0, easing: "in" })                         // eras
 
     <MotionDemo title="Yol morph" desc="Komutları aynı olan yollar sayı sayı, farklı olanlar eşit aralıklı noktalara yeniden örneklenip en az yolu gidecek biçimde hizalanarak dönüşür."
       call={() => `morphPath(path, shapes.${$shape}, { easing: "${$mEase}", points: ${$mPoints}, duration: ${$mDur} })`}
-      code={`import { morphPath } from "hadi-march/motion"
+      code={`import { morphPath } from "march/motion"
 
 morphPath(pathEl, starD, { easing: "spring" })     // 10 corners → circle arcs → heart curves
 morphPath(pathEl, heartD, { points: 120 })          // more points: smoother outline mid-way`}
@@ -128,7 +128,7 @@ morphPath(pathEl, heartD, { points: 120 })          // more points: smoother out
 
     <MotionDemo title="Yol boyunca" desc="Öğe yolun üstünde yer alır ve teğete göre döner; iz aynı karede çizilir. Motorun tek değeri: duraklatınca birlikte durur."
       call={() => `followPath(plane, road, { rotate: ${$fRotate}, trail, duration: ${$fDur}, easing: "${$fEase}"${$fLoop ? ", iterations: Infinity, direction: \"alternate\"" : ""} })`}
-      code={`import { followPath, drawPath } from "hadi-march/motion"
+      code={`import { followPath, drawPath } from "march/motion"
 
 followPath(plane, roadD, { rotate: true, duration: 2600, trail: trailPath })   // trail drawn in the same frame`}
       options={[
@@ -146,7 +146,7 @@ followPath(plane, roadD, { rotate: true, duration: 2600, trail: trailPath })   /
 
     <MotionDemo title="Kırpma ile ortaya çıkış" desc="clip-path şekilleri: daire ve elmas tıklanan noktadan açılır, silme yazı yönüne göre aynalanır, panjur şeritleri birlikte açılır."
       call={() => `clipReveal(poster, { shape: "${$cShape}"${$cShape === "circle" || $cShape === "diamond" ? `, origin: { x: ${origin.x}, y: ${origin.y} }` : ""}${$cShape === "wipe" ? `, from: "${$cFrom}"` : ""}${$cShape === "blinds" ? `, count: ${$cCount}${$cVertical ? ", vertical: true" : ""}` : ""}${$cHide ? ", hide: true" : ""} })`}
-      code={`import { clipReveal } from "hadi-march/motion"
+      code={`import { clipReveal } from "march/motion"
 
 clipReveal(card, { shape: "circle", origin: { x: 20, y: 80 } })   // % of the element
 clipReveal(card, { shape: "wipe", from: "start" })                  // mirrors in RTL
@@ -168,7 +168,7 @@ clipReveal(card, { shape: "blinds", count: 7, hide: true })`}
 
     <MotionDemo title="SVG filtreleri" desc="Filtrenin sayıları motorda akar: yönlü bulanıklık bir hareket izi gibi oturur, türbülans ile yer değiştirme dalgalanıp durulur."
       call={() => $fx === "blur" ? `filterBlur(card, { from: ${Math.round($amount / 3)}, axis: "${$axis}" })` : `displace(card, { from: ${$amount}, frequency: ${$freq} })`}
-      code={`import { filterBlur, displace } from "hadi-march/motion"
+      code={`import { filterBlur, displace } from "march/motion"
 
 filterBlur(title, { from: 20, axis: "x" })              // motion blur settling to sharp
 displace(card, { from: 60, frequency: 0.02 })           // turbulence that calms down`}
@@ -185,7 +185,7 @@ displace(card, { from: 60, frequency: 0.02 })           // turbulence that calms
 
     <MotionDemo title="Goo" desc="Bulanıklık ve alfa kontrastı ile damlalar birbirine yaklaşınca kaynaşır. Damlaları motorun sonsuz animasyonları döndürür."
       call={() => $gOn ? `goo(container, { blur: ${$gBlur} })` : "// goo kapalı: damlalar ayrı"}
-      code={`import { goo, animate } from "hadi-march/motion"
+      code={`import { goo, animate } from "march/motion"
 
 const off = goo(container, { blur: 12 })                 // children melt where they meet
 animate(blob, [...orbit], { iterations: Infinity })`}

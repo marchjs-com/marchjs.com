@@ -1,8 +1,8 @@
 // Motion › Scroll: scroll-linked timelines, parallax layers, a sticky stage that steps through its scenes and a
 // progress indicator. Each runs in its own scroll box here (`source`), the page scroll works the same without it.
 import "../motion-pages.css";
-import { effect, onCleanup } from "hadi-march";
-import { scrollTimeline, parallaxLayers, stickyReveal, scrollIndicator } from "hadi-march/motion/scroll-fx.ts";
+import { effect, onCleanup } from "march";
+import { scrollTimeline, parallaxLayers, stickyReveal, scrollIndicator } from "march/motion/scroll-fx.ts";
 import { Section } from "../../demo.tsx";
 // the demo kit is part of the shared Playground module (as on the other /motion/* pages)
 import { MotionDemo, opt } from "../../playground.tsx";
@@ -61,7 +61,7 @@ export default function MotionScroll() {
   return <Section kicker="Hareket" title="Kaydırma animasyonları" lead="Kaydırma konumu bir zaman çizelgesini sürer: her kare motorun keyframe'i, aynı eğri ve stagger ile. Parallax katmanları farklı hızda kayar, yapışkan sahne adım adım değişir, ilerleme çubuğu yazı yönüne göre dolar. Duraklatınca donar; hareketi azalt tercihinde parallax durur.">
     <MotionDemo title="Kaydırma zaman çizelgesi" desc="Kartlar kutu içinde göründükçe keyframe'leri kaydırmayla ilerler; aralık, geçişin kaydırmanın hangi bölümünde olacağını seçer."
       call={() => $reverse ? `scrollTimeline(card, frames.${$fx}.reverse(), { source: box, range: [${(1 - $end / 100).toFixed(2)}, ${(1 - $start / 100).toFixed(2)}] })` : `scrollTimeline(card, frames.${$fx}, { source: box, range: [${($start / 100).toFixed(2)}, ${($end / 100).toFixed(2)}] })`}
-      code={`import { scrollTimeline } from "hadi-march/motion"
+      code={`import { scrollTimeline } from "march/motion"
 
 scrollTimeline(card, [{ opacity: 0, transform: "translateY(60px)" }, { opacity: 1, transform: "none" }],
   { range: [0, 0.45] })                 // from entering at the bottom to 45 % of the way through
@@ -81,7 +81,7 @@ scrollTimeline(timeline().add(…), null)  // any Playback or timeline, scrubbed
 
     <MotionDemo title="Parallax katmanları" desc="data-depth değeri büyük olan katman daha çok yol alır; eksi değerler ters yöne gider."
       call={() => `parallaxLayers(scene, { source: box, strength: ${$strength} })`}
-      code={`import { parallaxLayers } from "hadi-march/motion"
+      code={`import { parallaxLayers } from "march/motion"
 
 <div class="hero"><img data-depth="0.2" …/><img data-depth="0.6" …/><h1 data-depth="-0.3">…</h1></div>
 parallaxLayers(hero, { strength: 160 })`}
@@ -101,7 +101,7 @@ parallaxLayers(hero, { strength: 160 })`}
 
     <MotionDemo wide title="Yapışkan sahne" desc="Bölüm kaydıkça sahne yerinde kalır, adımlar sırayla gelir ve gider; etkin adım ekran okuyucuya da bildirilir."
       call={() => `stickyReveal(section, { steps: "[data-step]", onStep: (i) => … })  // etkin: ${$active + 1} / ${$steps}`}
-      code={`import { stickyReveal } from "hadi-march/motion"
+      code={`import { stickyReveal } from "march/motion"
 
 <section style="height: 400vh"><div class="stage" style="position: sticky; top: 0">
   <article data-step>…</article> <article data-step>…</article> …
@@ -121,7 +121,7 @@ stickyReveal(section, { onStep: (i) => (active = i) })   // sets --m-scroll (0..
 
     <MotionDemo title="İlerleme" desc="Kaydırma ilerlemesi bir çubuğu doldurur; yatayda yazı yönünün başından (sağdan sola yazımda sağdan). Bilgi taşıdığı için hareketi azalt tercihinde de çalışır."
       call={() => `scrollIndicator(bar, { source: article${$vertical ? ", vertical: true" : ""} })`}
-      code={`import { scrollIndicator } from "hadi-march/motion"
+      code={`import { scrollIndicator } from "march/motion"
 
 scrollIndicator(barEl)                          // the page
 scrollIndicator(barEl, { source: articleEl })   // a scroll box`}

@@ -1,12 +1,12 @@
 // Speed › Comparison › "Gerçekçi senaryolar": realistic workloads (small, frequent updates on a large page), kept apart
 // from the canonical operations. Its own lazy part of the benchmark page; every library's app is a lazy chunk too.
 // The state lives in this module, so a run's result is still there after a visit to another tab.
-import { appUrl } from "hadi-march/base"
-import { Button, Disclosure, toast } from "hadi-march/ui"
-import { ChoicePicker } from "hadi-march/forms"
-import { signal, t, untrack } from "hadi-march"
-import { lazy } from "hadi-march/lazy"
-import { play, x as stopIcon } from "hadi-march/icons"
+import { appUrl } from "march/base"
+import { Button, Disclosure, toast } from "march/ui"
+import { ChoicePicker } from "march/forms"
+import { signal, t, untrack } from "march"
+import { lazy } from "march/lazy"
+import { play, x as stopIcon } from "march/icons"
 import { factor, rank, unreliable, overlaps } from "./core.ts"
 import { LIBS, BASELINE, libById } from "./libs.ts"
 import { FRAME_MS } from "./scenarios/core.ts"

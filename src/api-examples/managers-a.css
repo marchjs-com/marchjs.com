@@ -1,4 +1,4 @@
-/* API examples of hadi-march/managers (managers-a.tsx). Logical properties only (RTL); colors are tokens. */
+/* API examples of march/managers (managers-a.tsx). Logical properties only (RTL); colors are tokens. */
 .sc-ex-managers-a-layer {
   position: absolute; inset-block-start: 6rem; inset-inline-end: var(--m-space-4); inline-size: min(16rem, calc(100vw - 2rem));
   display: grid; gap: var(--m-space-2); padding: var(--m-space-3); background: var(--m-surface); color: var(--m-text);

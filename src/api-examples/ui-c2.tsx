@@ -1,8 +1,8 @@
-// API examples of hadi-march/ui, names Menu … OverflowText (code-point order). Layout and rules: tools/api-examples.js.
+// API examples of march/ui, names Menu … OverflowText (code-point order). Layout and rules: tools/api-examples.js.
 // Each `run` is a small live demo of its `code`; components re-create themselves for options they read once.
-import { signal } from "hadi-march";
-import { Menu, MoneyInput, MultiSelect, NavMenu, NavSidebar, Notice, NumberInput, OverflowText, Button } from "hadi-march/ui";
-import { inbox, users, wallet, settings, copy, trash, columns, barChart, dashboard } from "hadi-march/icons";
+import { signal } from "march";
+import { Menu, MoneyInput, MultiSelect, NavMenu, NavSidebar, Notice, NumberInput, OverflowText, Button } from "march/ui";
+import { inbox, users, wallet, settings, copy, trash, columns, barChart, dashboard } from "march/icons";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import "./ui-c.css";
@@ -14,7 +14,7 @@ const logger = () => { const lines = signal<string[]>([]); return [lines, (l: st
 const opts = (...pairs: [unknown, string][]) => pairs.map(([value, label]) => ({ value, label }))
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     Menu: {
       code: `<Menu label="İşlemler" args={[row]} items={[
   { label: "Düzenle", onSelect: (r) => edit(r), shortcut: "mod+e" },

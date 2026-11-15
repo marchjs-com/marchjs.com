@@ -1,9 +1,9 @@
-import { t } from "hadi-march";
-import "hadi-march/css/themes.css"; // the gallery shows every theme at once (other pages load themes on demand)
+import { t } from "march";
+import "march/css/themes.css"; // the gallery shows every theme at once (other pages load themes on demand)
 // Themes and tokens: each theme scoped with real components (data-m-theme); color, type, radius and shadow tokens.
-import { Button, Badge, Chip, Toggle, Progress, Avatar, AvatarGroup, setColorTheme, colorTheme, ThemeSwatch } from "hadi-march/ui";
-import { THEMES } from "hadi-march/theme";
-import { check } from "hadi-march/icons";
+import { Button, Badge, Chip, Toggle, Progress, Avatar, AvatarGroup, setColorTheme, colorTheme, ThemeSwatch } from "march/ui";
+import { THEMES } from "march/theme";
+import { check } from "march/icons";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
@@ -41,7 +41,7 @@ function MiniApp(props: { id: string; name: string; desc: string }) {
 export default function Themes(props: { params?: { rest?: string } }) {
   const RENDER: Record<string, () => unknown> = {
     "presets": () => <Demo wide title="Hazır temalar" desc="Her kart kendi temasıyla çizildi (data-m-theme kapsamı). Seçtiğin tema bütün vitrine uygulanır; açık/koyu üst çubuktan."
-    code={`import { setColorTheme, ThemePicker } from "hadi-march/ui"
+    code={`import { setColorTheme, ThemePicker } from "march/ui"
 setColorTheme("neon")          // <html data-m-theme="neon">
 <ThemePicker />                 // top bar: theme + light/dark/system
 <section data-m-theme="night">…</section>   // only this section uses Night Blue`}>

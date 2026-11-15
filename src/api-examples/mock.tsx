@@ -1,11 +1,11 @@
-// API examples of hadi-march/net/mock (in-memory server), hadi-march/sw (shown without registering or removing a
-// worker) and hadi-march/errors. Layout and rules: tools/api-examples.js.
-import { signal, effect, onCleanup } from "hadi-march";
-import { Button, Badge } from "hadi-march/ui";
-import { Net, createNet, AppError, ManagedSocket } from "hadi-march/net";
-import { crud, fake, fromOpenApi, mock, MockReply, mockRequested, mockSocketServer, MockTransport, reply, rng, sample } from "hadi-march/net/mock";
-import { registerServiceWorker, applyUpdate, swState, unregisterServiceWorker } from "hadi-march/sw";
-import { emitError, ErrorInline, ErrorPage, errors, setErrorSink } from "hadi-march/errors";
+// API examples of march/net/mock (in-memory server), march/sw (shown without registering or removing a
+// worker) and march/errors. Layout and rules: tools/api-examples.js.
+import { signal, effect, onCleanup } from "march";
+import { Button, Badge } from "march/ui";
+import { Net, createNet, AppError, ManagedSocket } from "march/net";
+import { crud, fake, fromOpenApi, mock, MockReply, mockRequested, mockSocketServer, MockTransport, reply, rng, sample } from "march/net/mock";
+import { registerServiceWorker, applyUpdate, swState, unregisterServiceWorker } from "march/sw";
+import { emitError, ErrorInline, ErrorPage, errors, setErrorSink } from "march/errors";
 import { Out, Log, Row } from "./_kit.tsx";
 import { J, msg, now, lines, Text, Pre, Tags } from "./_net.tsx";
 import { mockNet } from "./_mocknet.ts";
@@ -21,7 +21,7 @@ const PETS = {
   components: { schemas: { Pet: { type: "object", properties: { id: { type: "integer", minimum: 1, maximum: 99 }, name: { type: "string" }, kind: { type: "string", enum: ["kedi", "köpek", "kuş"] } } } } },
 };
 
-/** True when hadi-march/errors collects reported errors now (probe with a unique, silent error, then drop it). */
+/** True when march/errors collects reported errors now (probe with a unique, silent error, then drop it). */
 function collectorOn(): boolean {
   const probe = new AppError(`probe-${Date.now()}-${Math.random()}`, { severity: "info" });
   let hit = false;
@@ -35,7 +35,7 @@ function collectorOn(): boolean {
 const restoreSink = (had: boolean): void => setErrorSink(had ? (e) => { errors.capture(e); } : null);
 
 export default examples({
-  "hadi-march/net/mock": {
+  "march/net/mock": {
     crud: {
       code: `net.mock({ ...crud("/todos", [{ id: "1", title: "Süt al" }]) })
 await net.post("/todos", { title: "Ekmek" })   // 201, stored in memory
@@ -149,7 +149,7 @@ r()   // 0.6011… — the same sequence for the same seed`,
       },
     },
   },
-  "hadi-march/sw": {
+  "march/sw": {
     applyUpdate: {
       code: `registerServiceWorker({ onUpdate: () => toast("Yeni sürüm hazır", { action: { label: "Yenile", onClick: applyUpdate } }) })`,
       run: () => {
@@ -188,10 +188,10 @@ toast("Çevrimdışı veriler silindi")`,
       },
     },
   },
-  "hadi-march/errors": {
+  "march/errors": {
     emitError: {
       code: `emitError(new AppError("Senkron başarısız", { type: "server", source: "manual" }))
-// goes to the collector of hadi-march/errors (nothing happens until it is installed)`,
+// goes to the collector of march/errors (nothing happens until it is installed)`,
       run: () => {
         const log = lines()
         const go = () => {
@@ -241,7 +241,7 @@ errors.list()   // recent, de-duplicated`,
       },
     },
     setErrorSink: {
-      code: `setErrorSink((e) => myLogger.send(e))   // without hadi-march/errors (smaller apps)
+      code: `setErrorSink((e) => myLogger.send(e))   // without march/errors (smaller apps)
 setErrorSink(null)                       // reported errors go nowhere`,
       run: () => {
         const log = lines()

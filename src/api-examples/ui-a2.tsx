@@ -1,12 +1,12 @@
-// API examples of hadi-march/ui, names "ButtonGroup" … "ChoicePicker" (code-point order; the subpath is split over several
+// API examples of march/ui, names "ButtonGroup" … "ChoicePicker" (code-point order; the subpath is split over several
 // files by name range). Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`;
 // components have a Playground.
-import { signal, computed } from "hadi-march"
+import { signal, computed } from "march"
 import {
   Button, ButtonGroup, Calendar, Card, Carousel, ChatBubble, ChatComposer, ChatThread, Checkbox, CheckboxGroup, Chip,
   ChoicePicker, action,
-} from "hadi-march/ui"
-import { plus, zap } from "hadi-march/icons"
+} from "march/ui"
+import { plus, zap } from "march/icons"
 import { examples } from "./types.ts"
 import { Out, Log, Row } from "./_kit.tsx"
 import "./ui-a.css"
@@ -20,7 +20,7 @@ const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart
 const addDays = (n: number) => iso(new Date(Date.now() + n * 86_400_000))
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     ButtonGroup: {
       code: `<ButtonGroup label="Hizalama" attached>
   <Button aria-pressed={align() === "start"} onClick={() => align.set("start")}>Sol</Button>

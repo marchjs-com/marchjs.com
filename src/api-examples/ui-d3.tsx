@@ -1,8 +1,8 @@
-// API examples of hadi-march/ui, Timeline … Wizard.
+// API examples of march/ui, Timeline … Wizard.
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
-import { signal, computed, effect, untrack, onCleanup } from "hadi-march";
-import { Timeline, ToastHost, Toggle, Toolbar, Tooltip, Tree, TreeEditor, TypingIndicator, UpdateBanner, UrlInput, UserMenu, Widget, Wizard, Button, Badge, Divider, toast, widgetPoint, type ColorToken, type TreeNode, type TimelineItem } from "hadi-march/ui";
-import { schema } from "hadi-march/schema";
+import { signal, computed, effect, untrack, onCleanup } from "march";
+import { Timeline, ToastHost, Toggle, Toolbar, Tooltip, Tree, TreeEditor, TypingIndicator, UpdateBanner, UrlInput, UserMenu, Widget, Wizard, Button, Badge, Divider, toast, widgetPoint, type ColorToken, type TreeNode, type TimelineItem } from "march/ui";
+import { schema } from "march/schema";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import { now, tl, COLORS } from "./_ui-d.ts";
@@ -11,7 +11,7 @@ export { default as SIG } from "./ui-d3.sig.gen.ts";
 
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     ToastHost: {
       code: `// once, near the root of the app:
 <ToastHost />

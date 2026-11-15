@@ -2,12 +2,12 @@
 // its side slot, the DockLayout workspace: file tree, editor tabs, inspector, console; the StatusBar in its status slot);
 // PropertyGrid, OverflowToolbar, Breadcrumbs and the command palette (every action is a command: Ctrl+K finds it).
 // Demo data is neutral ("hadi" project).
-import { signal, computed, effect, onCleanup } from "hadi-march";
-import { Tree, PaletteButton, toast, PropertyGrid, OverflowToolbar, StatusBar, ActivityBar, Breadcrumbs, type PropertySpec } from "hadi-march/ui";
-import { AppUI, row, col, tabs, type DockApi, type DockPanel, type Preset } from "hadi-march/app-ui";
-import { command } from "hadi-march/managers/command";
-import { bindCommandKeys } from "hadi-march/managers/command/ui";
-import { dirtyState } from "hadi-march/managers/dirty";
+import { signal, computed, effect, onCleanup } from "march";
+import { Tree, PaletteButton, toast, PropertyGrid, OverflowToolbar, StatusBar, ActivityBar, Breadcrumbs, type PropertySpec } from "march/ui";
+import { AppUI, row, col, tabs, type DockApi, type DockPanel, type Preset } from "march/app-ui";
+import { command } from "march/managers/command";
+import { bindCommandKeys } from "march/managers/command/ui";
+import { dirtyState } from "march/managers/dirty";
 import { files as filesIcon, fileText, folder, search, terminal, sliders, gitBranch, alertTriangle, play, save as saveIcon, columns, settings, sparkles, plus } from "./icons.ts";
 
 interface File { name: string; dir: string; text: string }

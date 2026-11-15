@@ -1,7 +1,7 @@
-// API examples of hadi-march/ui, names RichTextEditor … SearchBox (code-point order). Layout and rules: tools/api-examples.js.
+// API examples of march/ui, names RichTextEditor … SearchBox (code-point order). Layout and rules: tools/api-examples.js.
 // Each `run` is a small live demo of its `code`; components re-create themselves for options they read once.
-import { signal } from "hadi-march";
-import { RichTextEditor, SearchBox } from "hadi-march/ui";
+import { signal } from "march";
+import { RichTextEditor, SearchBox } from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import "./ui-c.css";
@@ -13,7 +13,7 @@ const logger = () => { const lines = signal<string[]>([]); return [lines, (l: st
 const opts = (...pairs: [unknown, string][]) => pairs.map(([value, label]) => ({ value, label }))
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     RichTextEditor: {
       code: `<RichTextEditor value={body} placeholder="Bir şeyler yazın… (@ bahset, : emoji)"
   mentions={[{ id: "ada", label: "Ada" }]} toolbar={["bold", "italic", "link", "|", "ul"]} />`,

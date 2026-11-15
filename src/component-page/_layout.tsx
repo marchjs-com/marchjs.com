@@ -3,8 +3,8 @@
 // uses it says what it shows through COMPONENT_PAGES (title, previous and next page).
 import "./component-page.css";
 import "../hub.css";
-import { Outlet, Link, path, type Href } from "hadi-march/router";
-import { Icon, arrowLeft, arrowRight } from "hadi-march/icons";
+import { Outlet, Link, path, type Href } from "march/router";
+import { Icon, arrowLeft, arrowRight } from "march/icons";
 
 export interface ComponentPageInfo { title: string; prev?: { href: string; title: string }; next?: { href: string; title: string } }
 /** The pages drawn in the template: path → title and neighbours. */

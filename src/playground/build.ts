@@ -2,11 +2,11 @@
 // (playground/esbuild.js + esbuild.wasm, on the page's thread: the page's CSP has 'wasm-unsafe-eval') bundles the
 // preview entry (PreviewControl.tsx, written from the Properties panel) with the component's files from memory; each
 // file goes through the March compiler first (bundled for the browser at build time, playground/march-compiler.js),
-// which also lists the texts people read. hadi-march stays outside the bundle (the page has it). Each step is reported
+// which also lists the texts people read. march stays outside the bundle (the page has it). Each step is reported
 // with a timestamp; the texts of the last build make the locale file (lang.json). A successful build is kept: the same
 // files are not built twice (a tab shown again).
-import { signal } from "hadi-march";
-import { appUrl } from "hadi-march/base";
+import { signal } from "march";
+import { appUrl } from "march/base";
 
 type Tone = "success" | "warn" | "error" | "info" | "muted";
 /** Where the build reports (the Console panel: a read-only Terminal). */
@@ -66,8 +66,8 @@ export function createBuilder(log: BuildLog) {
     const memory = {
       name: "playground-files",
       setup(b: { onResolve: (o: object, f: (a: { path: string }) => object) => void; onLoad: (o: object, f: (a: { path: string }) => object) => void }) {
-        // hadi-march is the page's: left outside the bundle
-        b.onResolve({ filter: /^hadi-march(\/|$)/ }, (a) => ({ path: a.path, external: true }));
+        // march is the page's: left outside the bundle
+        b.onResolve({ filter: /^(hadi-)?march(\/|$)/ }, (a) => ({ path: a.path.replace(/^hadi-/, ""), external: true }));
         b.onResolve({ filter: /.*/ }, (a) => ({ path: a.path.replace(/^\.\//, ""), namespace: "files" }));
         b.onLoad({ filter: /.*/, namespace: "files" }, (a) => {
           const source = files[a.path];

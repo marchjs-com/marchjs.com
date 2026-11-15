@@ -1,6 +1,6 @@
 // Router demo: a second page under the same layout (different toolbar buttons).
-import { Portal } from "hadi-march";
-import { Button, toast } from "hadi-march/ui";
+import { Portal } from "march";
+import { Button, toast } from "march/ui";
 
 export default function RouterAbout() {
   return <>

@@ -2,8 +2,8 @@
 // (signal → computed → effect), written with the real primitives. A write lights the signal, a dot runs along the
 // wire to the computed, then to the effect, which counts its runs; "Üç kez +1" runs the effect three times, or once
 // inside batch. The box of the page's own export is ringed.
-import { signal, computed, effect, batch, untrack, onCleanup } from "hadi-march";
-import { Button, Toggle } from "hadi-march/ui";
+import { signal, computed, effect, batch, untrack, onCleanup } from "march";
+import { Button, Toggle } from "march/ui";
 
 export type LabFocus = "signal" | "computed" | "effect" | "batch" | "untrack"
 

@@ -4,9 +4,9 @@
 // A component with its own package entry (meta.entry) has no lazy loader in the registry: its page passes `view` and
 // `spec` (imported statically) and the card draws them at once.
 // This file stays small (every component page imports it); the workbench itself is one lazy part.
-import { lazy } from "hadi-march/lazy";
-import { cards, cardCode } from "hadi-march/components/cards.gen.ts";
-import type { PlaygroundSpec } from "hadi-march/ui";
+import { lazy } from "march/lazy";
+import { cards, cardCode } from "march/components/cards.gen.ts";
+import type { PlaygroundSpec } from "march/ui";
 
 export type DemoView = (p: { values: never }) => unknown
 

@@ -1,4 +1,4 @@
-/* API examples of the charts group (hadi-march/charts). */
+/* API examples of the charts group (march/charts). */
 .sc-ex-charts-stack { display: grid; gap: var(--m-space-3); min-width: 0; }
 .sc-ex-charts-svg { display: block; inline-size: 100%; max-inline-size: 22rem; block-size: auto; overflow: visible; }
 .sc-ex-charts-svg text { fill: currentColor; font-size: 10px; }

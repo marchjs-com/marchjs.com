@@ -1,16 +1,16 @@
 // Charts: stats, line/area (zoom), bar, pie, bar list, heatmap, progress ring. Colors come from the theme.
-import { Stat, BarList, ProgressRing, Sparkline } from "hadi-march/charts";
-import { lazy } from "hadi-march/lazy";
+import { Stat, BarList, ProgressRing, Sparkline } from "march/charts";
+import { lazy } from "march/lazy";
 
 // the big charts load when they come into view (chart-shaped placeholder, same height); each from its own module
-const xy = () => import("hadi-march/charts/xy.ts")
+const xy = () => import("march/charts/xy.ts")
 const LineChart = lazy(xy, { pick: "LineChart", when: "visible", placeholder: "chart", height: "15rem" })
 const AreaChart = lazy(xy, { pick: "AreaChart", when: "visible", placeholder: "chart", height: "15rem" })
-const BarChart = lazy(() => import("hadi-march/charts/bar.ts"), { pick: "BarChart", when: "visible", placeholder: "chart", height: "15rem" })
-const PieChart = lazy(() => import("hadi-march/charts/pie.ts"), { pick: "PieChart", when: "visible", placeholder: "chart", height: "15rem" })
-const Heatmap = lazy(() => import("hadi-march/charts/heatmap.ts"), { pick: "Heatmap", when: "visible", placeholder: "chart", height: "12rem" })
-import { Card, Button, Grid } from "hadi-march/ui";
-import { users, activity, diamond, message, plus } from "hadi-march/icons";
+const BarChart = lazy(() => import("march/charts/bar.ts"), { pick: "BarChart", when: "visible", placeholder: "chart", height: "15rem" })
+const PieChart = lazy(() => import("march/charts/pie.ts"), { pick: "PieChart", when: "visible", placeholder: "chart", height: "15rem" })
+const Heatmap = lazy(() => import("march/charts/heatmap.ts"), { pick: "Heatmap", when: "visible", placeholder: "chart", height: "12rem" })
+import { Card, Button, Grid } from "march/ui";
+import { users, activity, diamond, message, plus } from "march/icons";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 

@@ -1,4 +1,4 @@
-// API examples of the core entry (hadi-march): reactivity, rendering, control flow, portals, pipes, i18n, sx.
+// API examples of the core entry (march): reactivity, rendering, control flow, portals, pipes, i18n, sx.
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
 import {
   signal, computed, effect, batch, untrack, selector, onCleanup, createRoot, getOwner, runWithOwner, catchError, context, provide,
@@ -6,8 +6,8 @@ import {
   safeUrl, registerTransition, If, Else, For, Switch, Match, Try, Await, Dynamic, setFlipHook, Portal, PortalTarget,
   portalTarget, openLayer, layers, render, define, pipe, applyPipe, toDate, t, locale, messages, missing,
   setFallbackLocale, sx, sxValue, SX, version, extend, intercept, inside, partOf, defineExtension, withExtensions, Extensions, extensions,
-} from "hadi-march";
-import { Button, Badge, Segmented } from "hadi-march/ui";
+} from "march";
+import { Button, Badge, Segmented } from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 export { default as SIG } from "./core.sig.gen.ts";
@@ -31,7 +31,7 @@ type Lines = (() => string[]) & { update(fn: (l: string[]) => string[]): unknown
 const logLine = (s: Lines, line: string) => s.update((l) => [...l.slice(-4), `${now()} ${line}`])
 
 export default examples({
-  "hadi-march": {
+  "march": {
     _enter: {
       code: `// written by the compiler, not by hand:
 async function Profile() {
@@ -134,7 +134,7 @@ intercept(Chip, { name: "upper", props: (p) => ({ label: p.label.toUpperCase() }
   setup({ props, roots }) { for (const el of roots()) el.setAttribute("data-testid", props.testId) },
 })
 // declare it once for the JSX types:
-declare module "hadi-march" { interface ExtensionProps extends ExtensionPropsOf<typeof testIds> {} }`,
+declare module "march" { interface ExtensionProps extends ExtensionPropsOf<typeof testIds> {} }`,
       run: () => {
         const testIds = defineExtension<{ testId: string }>({
           name: "test-ids",
@@ -546,7 +546,7 @@ read(() => count())   // the current value`,
     registerTransition: {
       code: `registerTransition("fade", (el, dir, done) => fade(el, dir).then(done))
 <div transition="fade">…</div>`,
-      run: () => <p class="m-muted">hadi-march/motion bu kancayla geçişlerini kaydeder; <code>transition="fade"</code> gibi her öğe onu kullanır.</p>,
+      run: () => <p class="m-muted">march/motion bu kancayla geçişlerini kaydeder; <code>transition="fade"</code> gibi her öğe onu kullanır.</p>,
     },
     render: {
       code: `const dispose = render(() => <App />, document.getElementById("app"))
@@ -579,9 +579,9 @@ safeUrl("javascript:alert(1)")      // "about:blank"`,
       run: () => { messages("en", { "api.ex.only-en": "Only in English" }); setFallbackLocale("en"); return <Out label='t("api.ex.only-en")' value={() => t("api.ex.only-en")} /> },
     },
     setFlipHook: {
-      code: `import { installFlip } from "hadi-march/motion"
+      code: `import { installFlip } from "march/motion"
 installFlip()   // calls setFlipHook(flip): <For animate> moves rows smoothly`,
-      run: () => <p class="m-muted"><code>{"<For animate>"}</code> yeniden sıralamayı bu kancayla canlandırır; hadi-march/motion içindeki installFlip() onu kurar.</p>,
+      run: () => <p class="m-muted"><code>{"<For animate>"}</code> yeniden sıralamayı bu kancayla canlandırır; march/motion içindeki installFlip() onu kurar.</p>,
     },
     setLocale: {
       code: `await setLocale("en")   // loads a lazy pack first, updates <html lang dir>`,
@@ -696,7 +696,7 @@ const size = useContext(Size)`,
       },
     },
     version: {
-      code: `import { version } from "hadi-march"   // "0.1.0"`,
+      code: `import { version } from "march"   // "0.1.0"`,
       run: () => <Out label="version" value={version} />,
     },
   },

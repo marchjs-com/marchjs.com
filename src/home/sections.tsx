@@ -4,14 +4,14 @@
 // with reduced motion). Every number comes from home-stats.gen.ts (tools/gen-home-stats.js) or from march-report.json
 // (this build's measured sizes); none is typed here.
 import "./sections.css";
-import { inView, reducedMotion } from "hadi-march/motion";
-import { tilt } from "hadi-march/motion/text";
-import { Link } from "hadi-march/router";
-import { appUrl } from "hadi-march/base";
-import { Button, Card, CodeView, IconTile, Kbd, ListRow, MadeWithMarch, StatTile, heartBurst, openPalette } from "hadi-march/ui";
-import { Reveal, SectionHead, StatsBand } from "hadi-march/components/landing/index.ts";
-import { search, sparkles } from "hadi-march/icons";
-import { BRAND_COLORS_ALL, type ColorToken } from "hadi-march/theme/colors.ts";
+import { inView, reducedMotion } from "march/motion";
+import { tilt } from "march/motion/text";
+import { Link } from "march/router";
+import { appUrl } from "march/base";
+import { Button, Card, CodeView, IconTile, Kbd, ListRow, MadeWithMarch, StatTile, heartBurst, openPalette } from "march/ui";
+import { Reveal, SectionHead, StatsBand } from "march/components/landing/index.ts";
+import { search, sparkles } from "march/icons";
+import { BRAND_COLORS_ALL, type ColorToken } from "march/theme/colors.ts";
 import { HOME_STATS as S } from "../home-stats.gen.ts";
 import { pages } from "../app.tsx";
 import { withMeta, SECTIONS, sectionOf, type NavSection } from "../nav-meta.ts";
@@ -110,8 +110,8 @@ function Fast(props: { report: () => Report | null }) {
 
 // ── first example ───────────────────────────────────────────────────────────────────────────────────────────────
 
-// the package name is spliced in: the build rewrites `from "hadi-march…"` even inside strings
-const PKG = "hadi-march"
+// the package name is spliced in: the build rewrites `from "march…"` even inside strings
+const PKG = "march"
 const START = [
   `import { render } from "${PKG}"`,
   `import { Button } from "${PKG}/ui"`,

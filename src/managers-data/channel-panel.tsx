@@ -1,6 +1,6 @@
 // The channel panel of the managers pages: every event on "managers.*", newest first.
-import { Badge } from "hadi-march/ui";
-import { onChannels } from "hadi-march/channel";
+import { Badge } from "march/ui";
+import { onChannels } from "march/channel";
 import { Demo } from "../demo.tsx";
 
 /** Every manager event on the "managers.*" channels, newest first. */
@@ -14,7 +14,7 @@ export function ChannelPanel() {
     $log = [{ n: ++n, name: m.name.slice(9), type: p.type, detail: d.length > 70 ? d.slice(0, 70) + "…" : d }, ...$log].slice(0, 8)
   })
   return <Demo wide title="Kanal trafiği" desc="Her yönetici olaylarını kendi kanalına yayınlar (managers.clipboard, managers.undo…). Bu panel tek bir onChannels('managers.*') dinleyicisi: aşağıdaki demoları kullandıkça olaylar burada akar."
-    code={`import { onChannels, channel } from "hadi-march/channel"
+    code={`import { onChannels, channel } from "march/channel"
 onChannels("managers.*", (m) => devtools.push(m.name, m.payload.type, m.payload.detail))
 channel("managers.undo").on(({ type }) => …)   // tek yönetici`}>
     <ol class="sc-md-feed" aria-live="polite">

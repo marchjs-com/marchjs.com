@@ -1,7 +1,7 @@
 // Router demo: the list page (its own toolbar buttons through <Portal to="toolbar">).
 
-import { Portal } from "hadi-march";
-import { Button, toast } from "hadi-march/ui";
+import { Portal } from "march";
+import { Button, toast } from "march/ui";
 import { PEOPLE } from "./data.ts";
 
 export default function RouterList() {

@@ -2,9 +2,9 @@
 // extension did to the component chosen: props before → after, wrapped callbacks, render, setup), the Properties
 // panel's extension group (its options), and the editor's suggestions for the props extensions add (`<Button tr|` →
 // track). The data comes from the preview runtime's March (its `extensions`), read after every build and props change.
-import { Badge, Button, CodeView } from "hadi-march/ui";
-import type { AppPlugin, LanguageService } from "hadi-march/app-ui";
-import type { PlaygroundOption } from "hadi-march/components/meta.ts";
+import { Badge, Button, CodeView } from "march/ui";
+import type { AppPlugin, LanguageService } from "march/app-ui";
+import type { PlaygroundOption } from "march/components/meta.ts";
 import "./extensions-tab.css";
 
 import type { ExtInfo, Spec } from "./extensions-info.ts";
@@ -24,8 +24,8 @@ const changes = (s: ExtInfo["traces"][number]["steps"][number]): [string, string
   return [...keys].filter((k) => show(s.before![k]) !== show(s.after![k])).map((k) => [k, k in s.before! ? show(s.before![k]) : "—", show(s.after![k])])
 }
 
-const EXAMPLE = `import { extend, intercept, defineExtension } from "hadi-march"
-import { Button } from "hadi-march/ui"
+const EXAMPLE = `import { extend, intercept, defineExtension } from "march"
+import { Button } from "march/ui"
 
 const track = defineExtension({
   name: "track",

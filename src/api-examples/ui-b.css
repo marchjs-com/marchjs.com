@@ -1,4 +1,4 @@
-/* API examples of hadi-march/ui "Dialog" … "Loader" (ui-b.tsx): stages that need a size or a shape. */
+/* API examples of march/ui "Dialog" … "Loader" (ui-b.tsx): stages that need a size or a shape. */
 .sc-ex-ui-b-dock { height: 18rem; min-width: 0; }
 .sc-ex-ui-b-pane { display: grid; align-content: start; gap: var(--m-space-1); padding: var(--m-space-2) var(--m-space-3); font-size: var(--m-text-sm); }
 .sc-ex-ui-b-pane p { margin: 0; overflow-wrap: anywhere; }

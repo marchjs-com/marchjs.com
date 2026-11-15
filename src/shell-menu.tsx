@@ -2,11 +2,11 @@
 // (not part of start-up). The rail lists the six sections (nav-meta.ts SECTIONS) and the start page; the menu
 // (NavSidebar) shows the groups of one section. The top bar's trail gets its sections, categories and sibling menus
 // from here too (the start-up trail knows only the page title).
-import { signal, effect, untrack } from "hadi-march";
-import { NavSidebar, ActivityBar, MadeWithMarch, type Crumb } from "hadi-march/ui";
-import { Icon, defineIcon, home } from "hadi-march/icons";
-import { Link, path, navigate, type Href } from "hadi-march/router";
-import { viewport } from "hadi-march/managers/viewport";
+import { signal, effect, untrack } from "march";
+import { NavSidebar, ActivityBar, MadeWithMarch, type Crumb } from "march/ui";
+import { Icon, defineIcon, home } from "march/icons";
+import { Link, path, navigate, type Href } from "march/router";
+import { viewport } from "march/managers/viewport";
 import { pages, setTrail } from "./app.tsx";
 import { withMeta, MENU_GROUPS, SECTIONS, sectionOf, type NavSection } from "./nav-meta.ts";
 

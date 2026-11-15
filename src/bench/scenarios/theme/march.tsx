@@ -1,7 +1,7 @@
 // Theme change, March: the theme is provided at the top with context(); its accent is a signal. Each card's
 // badge reads it with useContext() and binds it to its class, so a change updates only those 2.000 class bindings:
 // the cards themselves and the list never run again.
-import { render, signal, context, useContext, type Accessor } from "hadi-march"
+import { render, signal, context, useContext, type Accessor } from "march"
 import { FIRST, badgeClass, type Card } from "./def.ts"
 import type { ScenarioApp } from "../core.ts"
 

@@ -1,6 +1,6 @@
-// Helpers the hadi-march/ui "Dialog" … "Loader" example files (ui-b*.tsx) share.
-import { signal } from "hadi-march";
-import { schema } from "hadi-march/schema";
+// Helpers the march/ui "Dialog" … "Loader" example files (ui-b*.tsx) share.
+import { signal } from "march";
+import { schema } from "march/schema";
 
 export const now = () => new Date().toLocaleTimeString("tr-TR")
 export const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))

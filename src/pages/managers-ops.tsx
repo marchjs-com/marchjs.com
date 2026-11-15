@@ -1,11 +1,11 @@
 // Operations managers: FeatureFlag, Log, Performance, RateLimit (events on the "managers.*" channels).
 import "./managers-data.css";
-import { onCleanup } from "hadi-march";
-import { Button, Card, Badge, Toggle, Segmented, Slider, Field, TextInput, toast } from "hadi-march/ui";
-import { flags, configureFlags, bucket } from "hadi-march/managers/flags";
-import { logger, configureLog, consoleTransport, memoryTransport, beaconTransport, type Level } from "hadi-march/managers/log";
-import { perf, type VitalName } from "hadi-march/managers/perf";
-import { rateLimit } from "hadi-march/managers/rate";
+import { onCleanup } from "march";
+import { Button, Card, Badge, Toggle, Segmented, Slider, Field, TextInput, toast } from "march/ui";
+import { flags, configureFlags, bucket } from "march/managers/flags";
+import { logger, configureLog, consoleTransport, memoryTransport, beaconTransport, type Level } from "march/managers/log";
+import { perf, type VitalName } from "march/managers/perf";
+import { rateLimit } from "march/managers/rate";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 import { ticker, tone } from "../managers-data/ticker.ts";

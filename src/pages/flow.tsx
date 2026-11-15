@@ -2,18 +2,18 @@
 // record) and ContextMenu — one live order flow that really runs: values travel along the edges, branches skip, a
 // declined card shakes its node, the timeline records every step. JSON in and out through the readable schema.
 import "./flow.css";
-import { Kbd } from "hadi-march/ui";
-import { FlowEditorStage } from "hadi-march/components/composite/flow-canvas/editor.tsx";
-// the flow components and ContextMenu have their own entries (hadi-march/flow, hadi-march/context-menu): their demos
+import { Kbd } from "march/ui";
+import { FlowEditorStage } from "march/components/composite/flow-canvas/editor.tsx";
+// the flow components and ContextMenu have their own entries (march/flow, march/context-menu): their demos
 // and option specs are imported here and drawn with the light Playground, so this route stays inside its budget
-import FlowCanvasDemo, { code as canvasCode } from "hadi-march/components/composite/flow-canvas/demo.tsx";
-import canvasSpec from "hadi-march/components/composite/flow-canvas/playground.ts";
-import FlowControlsDemo, { code as controlsCode } from "hadi-march/components/composite/flow-controls/demo.tsx";
-import controlsSpec from "hadi-march/components/composite/flow-controls/playground.ts";
-import FlowPaletteDemo, { code as paletteCode } from "hadi-march/components/composite/flow-palette/demo.tsx";
-import paletteSpec from "hadi-march/components/composite/flow-palette/playground.ts";
-import ContextMenuDemo, { code as menuCode } from "hadi-march/components/overlays/context-menu/demo.tsx";
-import menuSpec from "hadi-march/components/overlays/context-menu/playground.ts";
+import FlowCanvasDemo, { code as canvasCode } from "march/components/composite/flow-canvas/demo.tsx";
+import canvasSpec from "march/components/composite/flow-canvas/playground.ts";
+import FlowControlsDemo, { code as controlsCode } from "march/components/composite/flow-controls/demo.tsx";
+import controlsSpec from "march/components/composite/flow-controls/playground.ts";
+import FlowPaletteDemo, { code as paletteCode } from "march/components/composite/flow-palette/demo.tsx";
+import paletteSpec from "march/components/composite/flow-palette/playground.ts";
+import ContextMenuDemo, { code as menuCode } from "march/components/overlays/context-menu/demo.tsx";
+import menuSpec from "march/components/overlays/context-menu/playground.ts";
 import { Demo, Section } from "../demo.tsx";
 import { LitePlayground } from "../play-lite.tsx";
 

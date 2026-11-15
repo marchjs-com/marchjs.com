@@ -2,16 +2,16 @@
 // Performance and RateLimit (the last four on managers-ops.tsx). Each demo drives the real manager; the channel panel at the top shows the events they
 // publish on "managers.*".
 import "./managers-data.css";
-import { onCleanup } from "hadi-march";
-import { Button, Card, Badge, Toggle, Segmented, Slider, Field, TextInput, Kbd, Alert, toast } from "hadi-march/ui";
-import { clipboard } from "hadi-march/managers/clipboard";
-import { undoStack, undoCommands, disposeUndo } from "hadi-march/managers/undo";
-import { dirtyState, configureDirty } from "hadi-march/managers/dirty";
-import { storage, persisted, configureStorage } from "hadi-march/managers/storage";
-import { appCache, configureCache } from "hadi-march/managers/cache";
-import { appConfig, configureAppConfig } from "hadi-march/managers/config";
-import { command } from "hadi-march/managers/command";
-import { CommandButton, bindCommandKeys } from "hadi-march/managers/command/ui";
+import { onCleanup } from "march";
+import { Button, Card, Badge, Toggle, Segmented, Slider, Field, TextInput, Kbd, Alert, toast } from "march/ui";
+import { clipboard } from "march/managers/clipboard";
+import { undoStack, undoCommands, disposeUndo } from "march/managers/undo";
+import { dirtyState, configureDirty } from "march/managers/dirty";
+import { storage, persisted, configureStorage } from "march/managers/storage";
+import { appCache, configureCache } from "march/managers/cache";
+import { appConfig, configureAppConfig } from "march/managers/config";
+import { command } from "march/managers/command";
+import { CommandButton, bindCommandKeys } from "march/managers/command/ui";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 import { ticker } from "../managers-data/ticker.ts";
@@ -157,7 +157,7 @@ function CacheDemo() {
   onCleanup(() => configureCache({ maxEntries: 500, ttl: "5m" }))
   return <Demo title="Önbellek" desc="TTL, LRU, etiket, eşzamanlı istek birleştirme ve bayat-iken-yenile. follow(onInvalidate) ile net.invalidate('rates') bu önbelleği de temizler. Sayaçlar ve kayıtlar canlı."
     code={`const kur = await appCache().wrap("rates:1", () => net.get("/kur"), { ttl: "5m", swr: true, tags: ["rates"] })
-appCache().follow(onInvalidate)   // hadi-march/net: net.invalidate("rates") burayı da temizler
+appCache().follow(onInvalidate)   // march/net: net.invalidate("rates") burayı da temizler
 appCache().invalidate("rates")   appCache().stats()   appCache().entries()`}>
     <div class="sc-row">
       <Segmented bind:value={$id} options={[1, 2, 3, 4, 5, 6].map((n) => ({ value: n, label: `#${n}` }))} />

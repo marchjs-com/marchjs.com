@@ -1,10 +1,10 @@
-// API examples of hadi-march/ui, names "Dialog" … "EMOJI_SET" (code-point order; the neighbouring ranges: ui-b*.tsx).
+// API examples of march/ui, names "Dialog" … "EMOJI_SET" (code-point order; the neighbouring ranges: ui-b*.tsx).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`; components have Playground options.
-import { signal } from "hadi-march";
+import { signal } from "march";
 import {
   Dialog, Disclosure, Divider, DockLayout, row, col, tabs, Drawer, Dropdown, EASING_PRESETS, EMOJI_SET, KeyValue, Button, Segmented, TextInput, type DockApi,
-} from "hadi-march/ui";
-import { folder, fileText } from "hadi-march/icons";
+} from "march/ui";
+import { folder, fileText } from "march/icons";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import { useLog } from "./_ui-b.tsx";
@@ -12,7 +12,7 @@ import "./ui-b.css";
 export { default as SIG } from "./ui-b.sig.gen.ts";
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     Dialog: {
       code: `const open = signal(false)
 <Button onClick={() => open.set(true)}>Aç</Button>

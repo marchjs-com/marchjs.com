@@ -1,10 +1,10 @@
 // Sample page: a personal portfolio — projects open into their detail page with a shared element transition.
-import { Button } from "hadi-march/ui";
-import { lazy } from "hadi-march/lazy";
-import { SiteNav, Hero, SiteSection, ProjectGrid, HorizontalScroll, SiteFooter, type Project } from "hadi-march/components/landing/index.ts";
-import { sharedTransition } from "hadi-march/motion";
-import { arrowRight, mail, message } from "hadi-march/icons";
-import { PROJECTS, Cover } from "hadi-march/components/landing/project-grid/demo.tsx";
+import { Button } from "march/ui";
+import { lazy } from "march/lazy";
+import { SiteNav, Hero, SiteSection, ProjectGrid, HorizontalScroll, SiteFooter, type Project } from "march/components/landing/index.ts";
+import { sharedTransition } from "march/motion";
+import { arrowRight, mail, message } from "march/icons";
+import { PROJECTS, Cover } from "march/components/landing/project-grid/demo.tsx";
 
 // about, skills, career and contact load as they come near (a long page stays light)
 const PortfolioMore = lazy(() => import("./portfolio-more.tsx"), { when: "visible", placeholder: "block", height: "120rem" })

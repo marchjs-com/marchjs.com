@@ -1,7 +1,7 @@
 // The route table: every page's path, title and lazy loader. A start-up chunk of its own (budget.boot, grouped with
 // the shell pieces), not part of the entry: adding a page adds a line here and a chunk, never entry bytes
 // (test/entry-pages.test.js checks it).
-import type { RouteTarget } from "hadi-march/router";
+import type { RouteTarget } from "march/router";
 import { PAGES, SUB_PAGES } from "./nav.ts";
 import { HUBS } from "./topics.ts";
 import { SHELL, setPages } from "./app.tsx";

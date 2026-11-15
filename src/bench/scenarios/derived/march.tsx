@@ -1,7 +1,7 @@
 // Derived values, March: each field is a signal and each computed cell a computed() reading its fields, so an
 // edit re-runs only the computeds that read that field (dependencies are tracked, not declared) and only their bound
 // text and class update. The class is a second computed over the value, so it changes only when the flag flips.
-import { render, signal, computed } from "hadi-march"
+import { render, signal, computed } from "march"
 import { evalComp, compClass, type Form, type Edit } from "./def.ts"
 import type { ScenarioApp } from "../core.ts"
 

@@ -1,9 +1,9 @@
 // Icon pack gallery data for the Icons page: plain JSON in dist/icon-packs/ (build.mjs writes it with
 // `march icons gallery`), fetched when a pack is opened and kept for the visit. No JavaScript bundle carries icon data.
-import type { IconDef } from "hadi-march/icons";
-import { packIcon } from "hadi-march/icons/packs";
-import { appUrl } from "hadi-march/base";
-import type { IconPickerPack } from "hadi-march/ui";
+import type { IconDef } from "march/icons";
+import { packIcon } from "march/icons/packs";
+import { appUrl } from "march/base";
+import type { IconPickerPack } from "march/ui";
 
 /** [name, export name, shapes, flags?, evenOdd?] — flags: 1 mirrors in RTL, 2 filled; evenOdd: shapes filled even-odd. */
 export type PackRow = [name: string, exp: string, d: string[], flags?: number, eo?: number[]];
@@ -52,6 +52,6 @@ export const packRef = (ref: string): IconDef | undefined => refs.get(ref)
 export function importLine(pack: string, exp: string, size: string): string {
   const use = `<Icon of={${exp}} size="${size}" />`;
   return pack === "march"
-    ? `import { Icon, ${exp} } from "hadi-march/icons"\n${use}`
-    : `import { Icon } from "hadi-march/icons"\nimport { ${exp} } from "hadi-march/icons/${pack}"\n${use}`;
+    ? `import { Icon, ${exp} } from "march/icons"\n${use}`
+    : `import { Icon } from "march/icons"\nimport { ${exp} } from "march/icons/${pack}"\n${use}`;
 }

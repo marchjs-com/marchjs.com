@@ -1,9 +1,9 @@
-// Shared helpers of the motion-b / motion-c API examples (hadi-march/motion): held playbacks, a choice control, a
+// Shared helpers of the motion-b / motion-c API examples (march/motion): held playbacks, a choice control, a
 // two-page swap that plays page transition frames, a replay stage.
 import "./motion-b.css";
-import { signal, onCleanup } from "hadi-march";
-import { Button, Segmented } from "hadi-march/ui";
-import { animate, nextFrame, type Playback } from "hadi-march/motion";
+import { signal, onCleanup } from "march";
+import { Button, Segmented } from "march/ui";
+import { animate, nextFrame, type Playback } from "march/motion";
 import { Row } from "./_kit.tsx";
 
 export type Dir = "forward" | "back"

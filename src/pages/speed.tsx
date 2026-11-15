@@ -1,22 +1,22 @@
 // Speed: a live network panel to see lazy loading and caching (which page fetched which chunk when, from the network or
 // the cache), the build's per-route size report and the optional service worker.
-import { Button, Badge, Card, Grid, Stack, Toggle, toast } from "hadi-march/ui";
-import { lazy } from "hadi-march/lazy";
-import { Link } from "hadi-march/router";
+import { Button, Badge, Card, Grid, Stack, Toggle, toast } from "march/ui";
+import { lazy } from "march/lazy";
+import { Link } from "march/router";
 import { slow, SLOW_MS } from "../slow.ts";
-import { registerServiceWorker, unregisterServiceWorker, swState } from "hadi-march/sw";
+import { registerServiceWorker, unregisterServiceWorker, swState } from "march/sw";
 import { netLog, clearNetLog, type NetEntry } from "../perflog.ts";
 import { resolveSize, type FileSize } from "../netsize.ts";
-import { appUrl } from "hadi-march/base";
+import { appUrl } from "march/base";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 
 interface ReportRow { name: string; kind?: string; js: number; css: number; limit?: number | null; over?: boolean; files?: string[] }
 interface ChunkStats { minSize: number; files: number; bytes: number; smallest: { file: string; bytes: number } | null; under: number }
 interface Report { files?: Record<string, FileSize>; chunks?: ChunkStats; entry: ReportRow; routes: ReportRow[]; parts?: ReportRow[]; budget: { entry: number; route: number; part?: number } | null }
-/** "../../src/charts/xy.ts" → "hadi-march/charts/xy.ts" (library parts by their import name) */
+/** "../../src/charts/xy.ts" → "march/charts/xy.ts" (library parts by their import name) */
 const LIB_PATH = /^(?:\.\.\/)+src\//
-const shortName = (n: string): string => n.replace(LIB_PATH, "hadi-march/")
+const shortName = (n: string): string => n.replace(LIB_PATH, "march/")
 type Row = ReportRow & { kind: string; state: "over" | "near" | "ok" }
 /** Report rows with their budget state; over first, then near the limit (90%+), then the rest in report order. */
 function reportRows(r: Report): Row[] {
@@ -28,7 +28,7 @@ function reportRows(r: Report): Row[] {
 const KIND: Record<string, string> = { entry: "giriş", route: "sayfa", layout: "yerleşim", part: "parça" }
 
 // a lazy component for the slow 3G demo: skeleton on its first arrival, instant afterwards (no skeleton when cached)
-const PieChart = lazy(() => import("hadi-march/charts/pie.ts"), { pick: "PieChart", when: "immediate", placeholder: "chart", height: "14rem" })
+const PieChart = lazy(() => import("march/charts/pie.ts"), { pick: "PieChart", when: "immediate", placeholder: "chart", height: "14rem" })
 const SHARE = [{ label: "Uygulama", value: 4200 }, { label: "Web", value: 2900 }, { label: "Davet", value: 1800 }, { label: "Diğer", value: 610 }]
 
 /** The build's chunk manifest (the JSON data block in index.html): dynamic import source → its files. */
@@ -80,9 +80,9 @@ export default function Speed(props: { params?: { rest?: string } }) {
 
   const RENDER: Record<string, () => unknown> = {
     "slow-3g": () => <Demo wide title="Yavaş 3G" desc={`Açıkken her tembel parça ve sayfa yüklenmeden önce ${SLOW_MS / 1000} sn bekler (setLoadDelay ile benzetim). Böylece iskelet, ilerleme çizgisi ve yumuşak geliş görünür. Bu sekme boyunca açık kalır; Veri ya da Grafikler sayfasına gidip bak. Aynı parça ikinci kez istendiğinde önbellektedir, iskelet hiç görünmez.`}
-    code={`import { setLoadDelay } from "hadi-march/lazy"
+    code={`import { setLoadDelay } from "march/lazy"
 setLoadDelay(1600)   // demo / test: every lazy() part and route waits 1.6 s
-const Pie = lazy(() => import("hadi-march/charts/pie.ts"), { pick: "PieChart", placeholder: "chart", height: "14rem" })`}>
+const Pie = lazy(() => import("march/charts/pie.ts"), { pick: "PieChart", placeholder: "chart", height: "14rem" })`}>
     <div class="sc-row">
       <Toggle value={slow} label="Yavaş 3G" />
       <Button size="sm" on:click={() => { $showPie = !$showPie }}>{() => ($showPie ? "Grafiği kaldır" : "Grafiği göster")}</Button>
@@ -196,7 +196,7 @@ export default { budget: { entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, 
     }}
   </Demo>,
     "offline": () => <Demo title="Çevrimdışı önbellek (service worker)" desc="İsteğe bağlı: march.config.js › sw: true derlemede sw.js yazar. Parçalar ilk gelişte önbelleğe girer; ikinci ziyarette sayfa ağ olmadan açılır; yeni sürümde eski önbellek silinir."
-    code={`import { registerServiceWorker, applyUpdate } from "hadi-march/sw"
+    code={`import { registerServiceWorker, applyUpdate } from "march/sw"
 registerServiceWorker({ onUpdate: () => toast("Yeni sürüm", { action: { label: "Yenile", onClick: applyUpdate } }) })`}>
     <Stack gap={3}>
       <p>Durum: <strong>{() => SW_TEXT[swState()] ?? swState()}</strong></p>

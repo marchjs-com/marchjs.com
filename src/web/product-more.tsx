@@ -1,10 +1,10 @@
 // Sample product page, lower half: loaded when it comes near the viewport (see product.tsx).
-import { Button } from "hadi-march/ui";
-import { SiteSection, Testimonials, Faq, CtaBand, SiteFooter } from "hadi-march/components/landing/index.ts";
-import { arrowRight, sparkles, globe, message, mail } from "hadi-march/icons";
-import { QUOTES } from "hadi-march/components/landing/testimonials/demo.tsx";
-import { FAQ } from "hadi-march/components/landing/faq/demo.tsx";
-import { FOOTER_COLUMNS } from "hadi-march/components/landing/site-footer/demo.tsx";
+import { Button } from "march/ui";
+import { SiteSection, Testimonials, Faq, CtaBand, SiteFooter } from "march/components/landing/index.ts";
+import { arrowRight, sparkles, globe, message, mail } from "march/icons";
+import { QUOTES } from "march/components/landing/testimonials/demo.tsx";
+import { FAQ } from "march/components/landing/faq/demo.tsx";
+import { FOOTER_COLUMNS } from "march/components/landing/site-footer/demo.tsx";
 
 export default function ProductMore() {
   return <>

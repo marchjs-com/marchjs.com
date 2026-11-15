@@ -1,7 +1,7 @@
 // IDE shell (Complex components): DockLayout, PropertyGrid, OverflowToolbar, StatusBar, ActivityBar, Breadcrumbs and the
 // command palette, each as its own card, then a mini editor built only from them.
 import "./ide.css";
-import { Button } from "hadi-march/ui";
+import { Button } from "march/ui";
 import { Hub } from "../hub.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
 import { Demo } from "../demo.tsx";

@@ -1,11 +1,11 @@
-// API examples of hadi-march/ui, names "accent" … "deepEqual" (second half: ui-e2.tsx): accent and color themes, actions and
+// API examples of march/ui, names "accent" … "deepEqual" (second half: ui-e2.tsx): accent and color themes, actions and
 // dialogs, calendar math, color and gradient helpers, crop geometry, clone and deep equality.
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
-import { signal, computed, onCleanup } from "hadi-march";
-import type { Signal } from "hadi-march";
+import { signal, computed, onCleanup } from "march";
+import type { Signal } from "march";
 import {
   Button, Badge, Segmented, TextInput, Slider, Widget, accent, setAccent, ACCENT_CHOICES, accepts, action, addDays, addMonths, askReason, bezierCss, EASING_PRESETS, bootLoader, clampPan, clone, closeAll, closePalette, openPalette, paletteOpen, codeView, colorAt, colorTheme, colorThemes, confirm, contrastOf, convert, countLabel, coverScale, cropToCanvas, currencyInfo, dayLabel, deepEqual, format, gradientCss, hsvToRgb, openDialog,
-} from "hadi-march/ui";
+} from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import "./ui-e.css";
@@ -37,7 +37,7 @@ const CODE_SRC: Record<string, string> = {
 }
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     accent: {
       code: `setAccent("brand-green")   // recolors components without their own color; remembered
 accent()                   // "brand-green"`,

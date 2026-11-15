@@ -2,17 +2,17 @@
 // focus-visible, roving tabindex), HotkeyManager (scopes, sequences, pause, list), AnnouncerManager (live regions),
 // AccessibilityManager (user preferences applied app-wide, page audit) and ShortcutHintManager (hold Alt, "?" help).
 import "./managers-a11y.css";
-import { onCleanup, effect, signal } from "hadi-march";
-import { Button, Card, Badge, Field, Alert, Kbd, openDialog } from "hadi-march/ui";
-import { Segmented, Toggle, TextInput } from "hadi-march/forms";
-import { layer, type LayerHandle } from "hadi-march/managers/layer";
-import { focus } from "hadi-march/managers/focus";
-import { hotkeys } from "hadi-march/managers/hotkey";
-import { announce, announcer } from "hadi-march/managers/announcer";
-import { a11y, type A11yIssue } from "hadi-march/managers/accessibility";
-import { AccessibilitySettings } from "hadi-march/managers/accessibility/ui";
-import { shortcutHints, disposeShortcutHints } from "hadi-march/managers/shortcut-hint";
-import { ShortcutHints } from "hadi-march/managers/shortcut-hint/ui";
+import { onCleanup, effect, signal } from "march";
+import { Button, Card, Badge, Field, Alert, Kbd, openDialog } from "march/ui";
+import { Segmented, Toggle, TextInput } from "march/forms";
+import { layer, type LayerHandle } from "march/managers/layer";
+import { focus } from "march/managers/focus";
+import { hotkeys } from "march/managers/hotkey";
+import { announce, announcer } from "march/managers/announcer";
+import { a11y, type A11yIssue } from "march/managers/accessibility";
+import { AccessibilitySettings } from "march/managers/accessibility/ui";
+import { shortcutHints, disposeShortcutHints } from "march/managers/shortcut-hint";
+import { ShortcutHints } from "march/managers/shortcut-hint/ui";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 
@@ -198,7 +198,7 @@ function AccessibilityDemo() {
     <Demo wide title="Erişilebilirlik tercihleri: tüm uygulamada" desc="Seçimler bu cihazda saklanır ve hemen bütün vitrine uygulanır: hareket (sistem / azalt / tam — hareket motoru buna uyar), yazı boyutu, yüksek karşıtlık, bağlantı altı çizgisi, WCAG metin aralığı ve belirgin odak halkası."
       code={`a11y.set({ fontScale: 1.25, contrast: true })
 a11y.prefs()   a11y.reset()
-<AccessibilitySettings />   openAccessibilityPanel()   // hadi-march/managers/accessibility/ui`}>
+<AccessibilitySettings />   openAccessibilityPanel()   // march/managers/accessibility/ui`}>
       <AccessibilitySettings />
       <div class="sc-row"><Button variant="ghost" on:click={() => a11y.reset()}>Varsayılana dön</Button></div>
     </Demo>

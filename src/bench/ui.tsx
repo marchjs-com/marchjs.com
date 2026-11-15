@@ -1,10 +1,10 @@
 // Speed › Comparison: the shared presentation of both test tabs (no measurement here). A sticky settings panel with
 // labelled groups, the library and option toggles, live result bars that grow with the motion engine as results come
 // in, and the small "live preview" window the apps are drawn in while they are measured.
-import { effect, signal, t } from "hadi-march"
-import { animateEl } from "hadi-march/motion"
-import { Progress } from "hadi-march/ui"
-import { Icon, check, crown, alertTriangle, sliders, chevronDown } from "hadi-march/icons"
+import { effect, signal, t } from "march"
+import { animateEl } from "march/motion"
+import { Progress } from "march/ui"
+import { Icon, check, crown, alertTriangle, sliders, chevronDown } from "march/icons"
 import { LIBS } from "./libs.ts"
 
 /** The tab whose test is running (null: none): the other tabs stay put (the stage the apps are drawn in must stay in the page). */

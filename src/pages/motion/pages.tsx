@@ -2,12 +2,12 @@
 // pixel dissolve, morph). Each variant is its own route (/motion/pages/<variant>) whose meta.transition names it, so a
 // visit plays that variant; Back plays it in reverse; RTL mirrors the directional ones. All frames are engine animations.
 import "../motion-pages.css";
-import { effect, onCleanup } from "hadi-march";
-import { Link, path, back } from "hadi-march/router";
-import { motion } from "hadi-march/motion/engine/motion.ts";
-import { usePageTransitions, PAGE_VARIANTS } from "hadi-march/motion/page-fx.ts";
-import { definePageTransition } from "hadi-march/motion/page.ts";
-import { Button, setTheme, resolvedTheme, setColorTheme, colorTheme, colorThemes } from "hadi-march/ui";
+import { effect, onCleanup } from "march";
+import { Link, path, back } from "march/router";
+import { motion } from "march/motion/engine/motion.ts";
+import { usePageTransitions, PAGE_VARIANTS } from "march/motion/page-fx.ts";
+import { definePageTransition } from "march/motion/page.ts";
+import { Button, setTheme, resolvedTheme, setColorTheme, colorTheme, colorThemes } from "march/ui";
 import { WAVE_SHAPES, waveShape, waveDuration, setWave } from "../../wave.ts";
 import { Section } from "../../demo.tsx";
 import { MotionDemo, opt } from "../../playground.tsx";
@@ -57,7 +57,7 @@ export default function MotionPages() {
   return <Section kicker="Hareket" title="Sayfa geçişi efektleri" lead="On geçiş, her biri ayrı dışa aktarım: yalnız kullandıklarını kaydet, sonra rota başına meta.transition ile seç. Geri gidince geçiş tersine oynar; yönlü olanlar sağdan sola yazımda aynalanır. View Transitions olan tarayıcıda sözde öğeler, ötekilerde sayfanın kendisi motorla canlanır.">
     <MotionDemo wide title="Rota başına geçiş" desc="Her kart kendi rotasına gider ve o rotanın geçişini oynatır. Bir karta bas, sonra Geri ile dön: aynı geçiş tersine oynar."
       call={() => `{ path: "/motion/pages/${v}", meta: { transition: { type: "${v}", duration: ${$dur} } } }`}
-      code={`import { usePageTransitions, circle, cube, wipe } from "hadi-march/motion"
+      code={`import { usePageTransitions, circle, cube, wipe } from "march/motion"
 
 usePageTransitions(circle, cube, wipe)            // only what you use is bundled
 createRouter({ routes: {
@@ -83,11 +83,11 @@ createRouter({ routes: {
 
     <MotionDemo wide title="Tema geçişleri" desc="Tema, renk teması, vurgu ya da koyu / açık değişince yeni görünüm bir geçişle gelir. Geçiş boyunca sayfa canlı ve tıklanabilir kalır; eski görünüm üstte canlı bir kopya olarak durur ve boyanarak kaybolur. Seçtiğin geçiş bütün vitrinde kullanılır."
       call={() => `installThemeWave({ shape: "${waveShape()}"${waveShape() === "spray" ? `, worklet: "/spray-worklet.js"` : ""}${waveDuration() ? `, duration: ${waveDuration()}` : ""} })`}
-      code={`import { installThemeWave } from "hadi-march/motion"
+      code={`import { installThemeWave } from "march/motion"
 
 installThemeWave({ shape: "drip" })            // paint poured from the top
 installThemeWave({ shape: "spray", worklet: "/spray-worklet.js" })
-// spray-worklet.js: copy hadi-march/src/motion/spray-worklet.js next to your page (CSP script-src 'self')
+// spray-worklet.js: copy march/src/motion/spray-worklet.js next to your page (CSP script-src 'self')
 // shapes: "circle" | "drip" | "spray" | "sweep" | "splat"; every setTheme / setColorTheme / setAccent uses it`}
       options={[
         opt("Geçiş", () => waveShape(), (x: string) => setWave(x as never, waveDuration.peek()), { options: WAVE_SHAPES }),
@@ -101,7 +101,7 @@ installThemeWave({ shape: "spray", worklet: "/spray-worklet.js" })
 
     <MotionDemo title="Kendi geçişin" desc="definePageTransition ile yeni bir ad eklenir: her taraf (giden, gelen) ve yön (ileri, geri) için keyframe döndür. Bu sayfanın Sarmal geçişi böyle tanımlı; açıyı ve derinliği değiştirip dene."
       call={() => `definePageTransition("spiral", …rotate(${$spin}deg) scale(${($depth / 100).toFixed(2)})…)`}
-      code={`import { definePageTransition } from "hadi-march/motion"
+      code={`import { definePageTransition } from "march/motion"
 
 definePageTransition("spiral", (side, dir, rtl) => {
   const k = (dir === "back" ? -1 : 1) * (rtl ? -1 : 1)

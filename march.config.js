@@ -24,14 +24,14 @@ export default {
   components: "src/components",
   html: "index.html",
   port: 5180,
-  alias: { "hadi-march": "../../src" },
+  alias: { "march": "../../src" },
   // sw.js only for the local preview (build.mjs --serve): the published showcase must not leave a worker registered
   sw: process.env.MARCH_SHOWCASE_SW === "1",
   // stable file names (main.js, chunks/home.js…, version in ?v=): each deploy overwrites the same paths
   stableNames: true,
   // no _headers file: the publishing host refuses names starting with "_" (caching is set on the host)
   headers: false,
-  // every page is written as <route>/index.html at build time (hadi-march/seo), so each opens directly on a static host
+  // every page is written as <route>/index.html at build time (march/seo), so each opens directly on a static host
   // without rewrites; addresses with params (/navigation/router/item/7) go through 404.html (docs/hosting.md)
   seo: { prerender: true, routes: NAV_PATHS },
   // the build fails when the entry, a route or a lazy part (lazy() component, shell piece) grows past it
@@ -67,7 +67,7 @@ export default {
     "src/components/composite/property-grid/demo.tsx": "IDE shell component demo: loads with its card only (folded into the registry, every page with a component card would download it)",
     "src/components/composite/property-grid/index.ts": "PropertyGrid (7 KB), shared by its card and the IDE shell demo page: either host would make the other download it",
     "src/env-managers/sync-server.ts": "Sync demo of the environment managers page: net and its mock arrive only when that demo is drawn",
-    "src/components/composite/consent-banner/index.ts": "the consent UI (hadi-march/managers/consent/ui), lazy on purpose: loaded by the managers page and the ConsentBanner card, never folded into the component registry",
+    "src/components/composite/consent-banner/index.ts": "the consent UI (march/managers/consent/ui), lazy on purpose: loaded by the managers page and the ConsentBanner card, never folded into the component registry",
     ".ex.tsx": "API reference examples, one part of ~1/14 of them (api-examples/gen/part-NN.ex.tsx, tools/api-examples.js): loads when a card of its range opens; joining the API page would make the page download every example",
     ".demos.gen.ts":"component cards of one showcase page (tools/gen-registry.js): joining the registry would make every page with a component card load them",
     "src/motion/scroll.ts": "motion values, scroll and pointer (4 KB) shared by /flow, the home page group and four demos: start-up is at its budget and any page host would push a demo part past 25 KB",

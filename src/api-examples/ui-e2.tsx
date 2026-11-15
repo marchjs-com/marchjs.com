@@ -1,11 +1,11 @@
-// API examples of hadi-march/ui, names "defineMeta" … "openDialog" (first half: ui-e.tsx): component meta, text and number
+// API examples of march/ui, names "defineMeta" … "openDialog" (first half: ui-e.tsx): component meta, text and number
 // formatting, key helpers, JSON paths, forms helpers, Markdown and HTML conversion, dialogs.
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
-import { signal, untrack } from "hadi-march";
-import type { Signal } from "hadi-march";
+import { signal, untrack } from "march";
+import type { Signal } from "march";
 import {
   Button, Badge, Segmented, TextInput, Textarea, Slider, Kbd, action, isAction, colorTheme, colorThemes, defineMeta, definePlayground, distance, firstDayOf, fold, format, formatCount, formatDate, formatKey, formatNumber, frameSize, freeKey, getAt, gradientCss, heartBurst, heartPop, hsvToRgb, htmlToMarkdown, initials, inputFor, insertAfter, isMac, isSafeLink, key, loadTheme, markdownNodes, mediaKind, mix, model, normalizePhone, openDialog,
-} from "hadi-march/ui";
+} from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import "./ui-e.css";
@@ -27,7 +27,7 @@ function Stepper(props: { value?: number | Signal<number>; onChange?: (v: number
 }
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     defineMeta: {
       code: `export default defineMeta({
   name: "Chip", status: "stable", since: "1.0.0", category: "actions",

@@ -2,7 +2,7 @@
 // The sample sites built from these blocks live in their own section (/sites, pages/sites.tsx); an old sample address
 // (/web/product, /web?view=product) moves there.
 import "./web.css";
-import { query, navigate } from "hadi-march/router";
+import { query, navigate } from "march/router";
 import { Hub } from "../hub.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
 import { HUBS } from "../topics.ts";

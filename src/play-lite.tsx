@@ -2,9 +2,9 @@
 // look (sc-play) and the same rules (an option shows only while it has an effect, booleans are switches), but every
 // choice is a Segmented control (a feature page's options are few) and a spec is read from playground.ts directly.
 // The full Playground (ChoicePicker: chips, cards, grids, Combobox) lives in playground.tsx.
-import { signal, untrack, If } from "hadi-march";
-import { Segmented, Toggle, Field } from "hadi-march/forms";
-import type { PlaygroundOption, PlaygroundSpec } from "hadi-march/ui";
+import { signal, untrack, If } from "march";
+import { Segmented, Toggle, Field } from "march/forms";
+import type { PlaygroundOption, PlaygroundSpec } from "march/ui";
 
 type View<V> = (p: { values: V }) => unknown
 

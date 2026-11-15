@@ -2,7 +2,7 @@
 // render(); a start disposes the previous instance and renders the page afresh. The compiled templates are cloned,
 // the static data is written once, and only the counter text is bound to a signal. The click reaches the plain
 // onClick handler.
-import { render } from "hadi-march"
+import { render } from "march"
 import { rowsFor, HEADS, type Dash, type Run } from "./def.ts"
 import type { ScenarioApp } from "../core.ts"
 

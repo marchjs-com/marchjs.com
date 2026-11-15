@@ -2,11 +2,11 @@
 // (meta.transition); back reverses it; RTL mirrors the slide; a tile moves from the grid to its page (shared element);
 // the same record in a modal swaps with a transition. Global speed and "Stop all" reach every frame of it.
 import "./transitions.css";
-import { signal, effect, onCleanup } from "hadi-march";
-import { Link, path, back } from "hadi-march/router";
-import { motion } from "hadi-march/motion";
-import { Button, Badge, Card, Slider, Field } from "hadi-march/ui";
-import { Toggle } from "hadi-march/forms";
+import { signal, effect, onCleanup } from "march";
+import { Link, path, back } from "march/router";
+import { motion } from "march/motion";
+import { Button, Badge, Card, Slider, Field } from "march/ui";
+import { Toggle } from "march/forms";
 import { Demo, Section } from "../demo.tsx";
 import { TILES } from "../transitions-demo/tiles.ts";
 import TilePage from "../transitions-demo/tile.tsx";

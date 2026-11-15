@@ -3,13 +3,13 @@
 // writing direction for the preview only, the blocks it is made of (links to their pages), its source and the
 // previous / next sample. Inside the frame (?bare=1) the site draws alone.
 import "./web.css";
-import { computed, signal, effect, onCleanup } from "hadi-march";
-import { Link, query, navigate } from "hadi-march/router";
-import { colorThemes, loadTheme, ThemeSwatch } from "hadi-march/ui";
-import { Icon, arrowLeft, arrowRight, maximize, minimize, externalLink, rotateCw } from "hadi-march/icons";
-import { DevicePreview, previewFrame } from "hadi-march/components/layout/index.ts";
-import { appUrl } from "hadi-march/base";
-import { lazy } from "hadi-march/lazy";
+import { computed, signal, effect, onCleanup } from "march";
+import { Link, query, navigate } from "march/router";
+import { colorThemes, loadTheme, ThemeSwatch } from "march/ui";
+import { Icon, arrowLeft, arrowRight, maximize, minimize, externalLink, rotateCw } from "march/icons";
+import { DevicePreview, previewFrame } from "march/components/layout/index.ts";
+import { appUrl } from "march/base";
+import { lazy } from "march/lazy";
 import { Hub } from "../hub.tsx";
 import { HUBS, SITE_KINDS } from "../topics.ts";
 

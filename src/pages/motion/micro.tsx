@@ -1,13 +1,13 @@
 // Motion › Micro-interactions: ripple, magnetic pull, tilt + hover parallax, spring press and a button that morphs
-// through loading / success / error (confetti from hadi-march/fx on success). All on the motion engine.
+// through loading / success / error (confetti from march/fx on success). All on the motion engine.
 import "../motion-pages.css";
-import { onCleanup } from "hadi-march";
-import { ripple, hoverParallax, stateMorph, type ButtonState } from "hadi-march/motion/micro.ts";
-import { magnet, press } from "hadi-march/motion/gestures.ts";
+import { onCleanup } from "march";
+import { ripple, hoverParallax, stateMorph, type ButtonState } from "march/motion/micro.ts";
+import { magnet, press } from "march/motion/gestures.ts";
 import { Section } from "../../demo.tsx";
 // the demo kit is part of the shared Playground module (as on the other /motion/* pages)
 import { MotionDemo, opt } from "../../playground.tsx";
-import { Icon, heart, star, sparkles, send } from "hadi-march/icons";
+import { Icon, heart, star, sparkles, send } from "march/icons";
 
 export default function MotionMicro() {
   document.title = "Mikro etkileşimler · March"
@@ -39,7 +39,7 @@ export default function MotionMicro() {
   return <Section kicker="Hareket" title="Mikro etkileşimler" lead="Dokunuşa cevap veren küçük hareketler: basılan yerden yayılan dalga, imlece çekilen düğme, katmanları derinliğine göre kayan kart, yaylı basma ve yükleniyor → tamam / hata durumuna dönüşen düğme. Hareketi azalt tercihinde hepsi sakinleşir.">
     <MotionDemo title="Dalga (ripple)" desc="Basılan noktadan yayılan mürekkep; klavyeyle (Enter, boşluk) ortadan. Rengi öğenin yazı rengi."
       call={() => `use:ripple={{ duration: ${$rDur}, opacity: ${($rInk / 100).toFixed(2)}${$rCenter ? ", center: true" : ""} }}`}
-      code={`import { ripple } from "hadi-march/motion"
+      code={`import { ripple } from "march/motion"
 
 <button use:ripple>Kaydet</button>
 <div class="card" use:ripple={{ duration: 800, center: true }} tabindex="0">…</div>`}
@@ -57,7 +57,7 @@ export default function MotionMicro() {
 
     <MotionDemo title="Mıknatıs" desc="Düğme imlece doğru çekilir, bırakınca yayla yerine oturur."
       call={() => `use:magnet={{ strength: ${($mPull / 100).toFixed(2)} }}`}
-      code={`import { magnet } from "hadi-march/motion"
+      code={`import { magnet } from "march/motion"
 
 <button use:magnet={{ strength: 0.3 }}>Başla</button>`}
       options={[opt("Çekim", () => $mPull, (v: number) => { $mPull = v }, { min: 5, max: 60, unit: "%" })]}>
@@ -69,7 +69,7 @@ export default function MotionMicro() {
 
     <MotionDemo wide title="Eğim ve katman parallax" desc="Kart imlece doğru eğilir, içindeki katmanlar derinliklerine göre farklı miktarda kayar; çıkınca yayla toplanır."
       call={() => `use:hoverParallax={{ depth: ${$pDepth}, tilt: ${$pTilt} }}`}
-      code={`import { hoverParallax } from "hadi-march/motion"
+      code={`import { hoverParallax } from "march/motion"
 
 <div use:hoverParallax={{ depth: 16, tilt: 8 }}>
   <img data-depth="0.3" …/>   <h3 data-depth="1">…</h3>   // deeper layers move more
@@ -89,7 +89,7 @@ export default function MotionMicro() {
 
     <MotionDemo title="Yaylı basma" desc="Basılı tutunca küçülür, bırakınca seçilen yayla aşıp yerine oturur."
       call={() => `use:press={{ scale: ${($sScale / 100).toFixed(2)}, easing: "${$sEase}" }}`}
-      code={`import { press } from "hadi-march/motion"
+      code={`import { press } from "march/motion"
 
 <button use:press>…</button>                                   // 0.97, back easing
 <button use:press={{ scale: 0.9, easing: "spring-wobbly" }}>…</button>`}
@@ -105,7 +105,7 @@ export default function MotionMicro() {
 
     <MotionDemo wide title="Durum morph" desc="Kaydet: düğme daireye daralır ve döner; sonuç gelince onay ya da çarpı çizilir (hata sallanır), başarıda konfeti; sonra eski hâline yayla döner. Ekran okuyucuya durum bildirilir."
       call={() => `stateMorph(button, "${$state}")  // ${$wait} ms sonra: stateMorph(button, "${$result}"${$result === "success" && $confetti ? ", { confetti: true }" : ""})`}
-      code={`import { stateMorph } from "hadi-march/motion"
+      code={`import { stateMorph } from "march/motion"
 
 stateMorph(btn, "loading")
 try { await save(); stateMorph(btn, "success", { confetti: true }) }

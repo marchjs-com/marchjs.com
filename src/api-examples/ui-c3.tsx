@@ -1,8 +1,8 @@
-// API examples of hadi-march/ui, names OverflowToolbar … PhoneInput (code-point order). Layout and rules: tools/api-examples.js.
+// API examples of march/ui, names OverflowToolbar … PhoneInput (code-point order). Layout and rules: tools/api-examples.js.
 // Each `run` is a small live demo of its `code`; components re-create themselves for options they read once.
-import { signal, computed } from "hadi-march";
-import { OverflowToolbar, Overlay, Page, Pager, Pagination, PaletteButton, PasswordInput, PercentInput, PhoneInput, Progress, PROP_RANGE, PROP_UNIT, Button, Segmented } from "hadi-march/ui";
-import { plus, copy, trash, columns, eye } from "hadi-march/icons";
+import { signal, computed } from "march";
+import { OverflowToolbar, Overlay, Page, Pager, Pagination, PaletteButton, PasswordInput, PercentInput, PhoneInput, Progress, PROP_RANGE, PROP_UNIT, Button, Segmented } from "march/ui";
+import { plus, copy, trash, columns, eye } from "march/icons";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import "./ui-c.css";
@@ -14,7 +14,7 @@ const logger = () => { const lines = signal<string[]>([]); return [lines, (l: st
 const opts = (...pairs: [unknown, string][]) => pairs.map(([value, label]) => ({ value, label }))
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     OverflowToolbar: {
       code: `<OverflowToolbar label="Belge" items={[
   { id: "new", label: "Yeni", icon: plus, onSelect: create, priority: 10 },

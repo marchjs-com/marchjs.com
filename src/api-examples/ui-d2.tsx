@@ -1,7 +1,7 @@
-// API examples of hadi-march/ui, StoryProgress … TimeInput.
+// API examples of march/ui, StoryProgress … TimeInput.
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
-import { signal, untrack } from "hadi-march";
-import { StoryProgress, StoryRing, StoryViewer, Tab, Tabs, Textarea, TextInput, ThemeMenu, ThemePicker, ThemeSwatch, ThemeToggle, TimeInput, Button, theme, resolvedTheme, colorTheme, setColorTheme, accent, setAccent, type ColorToken, type StoryGroup } from "hadi-march/ui";
+import { signal, untrack } from "march";
+import { StoryProgress, StoryRing, StoryViewer, Tab, Tabs, Textarea, TextInput, ThemeMenu, ThemePicker, ThemeSwatch, ThemeToggle, TimeInput, Button, theme, resolvedTheme, colorTheme, setColorTheme, accent, setAccent, type ColorToken, type StoryGroup } from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import { tl, COLORS } from "./_ui-d.ts";
@@ -22,7 +22,7 @@ const STORIES: StoryGroup[] = [
 ]
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     StoryProgress: {
       code: `<StoryProgress count={items.length} index={i} duration={4000}
   paused={holding} onDone={() => i.update((x) => x + 1)} />`,

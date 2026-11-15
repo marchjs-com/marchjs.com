@@ -1,6 +1,6 @@
 // Layout: the Grid's last-row behaviours (default / fill="stretch" / fill="last" / balance) side by side; card count,
 // columns and container width are adjustable. All CSS (flex-wrap + :has()), no JS measuring.
-import { Grid, Segmented, Slider, Field, Card, Badge } from "hadi-march/ui";
+import { Grid, Segmented, Slider, Field, Card, Badge } from "march/ui";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 import { Playground } from "../playground.tsx";

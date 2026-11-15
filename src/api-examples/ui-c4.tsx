@@ -1,7 +1,7 @@
-// API examples of hadi-march/ui, names PostCard … PullToRefresh (code-point order). Layout and rules: tools/api-examples.js.
+// API examples of march/ui, names PostCard … PullToRefresh (code-point order). Layout and rules: tools/api-examples.js.
 // Each `run` is a small live demo of its `code`; components re-create themselves for options they read once.
-import { signal } from "hadi-march";
-import { PostCard, PostSkeleton, ProfileHeader, Progress, PropertyGrid, PullToRefresh, Button } from "hadi-march/ui";
+import { signal } from "march";
+import { PostCard, PostSkeleton, ProfileHeader, Progress, PropertyGrid, PullToRefresh, Button } from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import "./ui-c.css";
@@ -21,7 +21,7 @@ const logger = () => { const lines = signal<string[]>([]); return [lines, (l: st
 const opts = (...pairs: [unknown, string][]) => pairs.map(([value, label]) => ({ value, label }))
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     PostCard: {
       code: `<PostCard post={post} onLike={(liked) => post.set({ ...post(), liked, likes: post().likes + (liked ? 1 : -1) })}
   onComment={(p) => openThread(p.id)} />`,

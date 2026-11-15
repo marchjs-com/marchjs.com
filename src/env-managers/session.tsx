@@ -1,7 +1,7 @@
 // Session demo of the environment managers page.
-import { onCleanup } from "hadi-march";
-import { Button, Card, Badge, Toggle, Slider, Field, Alert, Progress, toast } from "hadi-march/ui";
-import { session, configureSession } from "hadi-march/managers/session";
+import { onCleanup } from "march";
+import { Button, Card, Badge, Toggle, Slider, Field, Alert, Progress, toast } from "march/ui";
+import { session, configureSession } from "march/managers/session";
 import { Demo } from "../demo.tsx";
 import { secs } from "./common.tsx";
 

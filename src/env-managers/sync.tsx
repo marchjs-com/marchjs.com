@@ -1,8 +1,8 @@
 // Sync demo of the environment managers page. The manager, net and the mock server come in a lazy part
 // (sync-server.ts) when the demo is drawn; the controls here use only components the page already has.
-import { onCleanup } from "hadi-march";
-import { Button, Card, Badge, Toggle, Segmented, Slider, Field, TextInput } from "hadi-march/ui";
-import type { SyncItem } from "hadi-march/managers/sync";
+import { onCleanup } from "march";
+import { Button, Card, Badge, Toggle, Segmented, Slider, Field, TextInput } from "march/ui";
+import type { SyncItem } from "march/managers/sync";
 import type { SyncDemoApi, Answer } from "./sync-server.ts";
 import { Demo } from "../demo.tsx";
 import { time } from "./common.tsx";

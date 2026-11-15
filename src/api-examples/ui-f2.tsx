@@ -1,9 +1,9 @@
-// API examples of hadi-march/ui, names resolveColor … widgetPoint (dialogs, parsers, JSON paths, forms, themes, shortcuts, widget points).
+// API examples of march/ui, names resolveColor … widgetPoint (dialogs, parsers, JSON paths, forms, themes, shortcuts, widget points).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
-import { signal, computed, effect, onCleanup, untrack } from "hadi-march";
+import { signal, computed, effect, onCleanup, untrack } from "march";
 import {
   Button, Textarea, key, parse, parseJson, resolveColor, theme, toast, typeOf, Form, colorTheme, pointer, renderFields, resolvedTheme, rgbToHsv, sample, sampleTrack, schemaAt, score, setTheme, todayIso, useForm, Kbd, Widget, accent, addDays, getAt, insertAfter, setAccent, setColorTheme, setThemeBase, shapesFor, shortcuts, sorter, targetVars, timelineCode, tokenize, tokenLines, typingText, updateAt, useFormContext, validateJson,
-} from "hadi-march/ui";
+} from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import { Swatch, Field, Pick, KT, DOC, SCHEMA, json, now } from "./_ui-f-kit.tsx";
@@ -21,7 +21,7 @@ function FormPeek() {
 
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     resolveColor: {
       code: `resolveColor("brand-orange", document.body)   // "#F2801F" (temanın o andaki değeri)
 resolveColor("#336699")                        // CSS rengi olduğu gibi döner`,

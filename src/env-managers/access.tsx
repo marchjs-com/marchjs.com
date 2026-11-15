@@ -1,10 +1,10 @@
 // Permission, Location and Notification demos of the environment managers page.
-import { onCleanup } from "hadi-march";
-import { Button, Card, Badge, Toggle, Segmented, Field, TextInput, confirm, toast } from "hadi-march/ui";
-import { permissions, configurePermissions, type PermissionKind } from "hadi-march/managers/permission";
-import { locator, configureLocation, type GeoPoint } from "hadi-march/managers/location";
-import { notifications, configureNotifications } from "hadi-march/managers/notification";
-import { consent } from "hadi-march/managers/consent";
+import { onCleanup } from "march";
+import { Button, Card, Badge, Toggle, Segmented, Field, TextInput, confirm, toast } from "march/ui";
+import { permissions, configurePermissions, type PermissionKind } from "march/managers/permission";
+import { locator, configureLocation, type GeoPoint } from "march/managers/location";
+import { notifications, configureNotifications } from "march/managers/notification";
+import { consent } from "march/managers/consent";
 import { Demo } from "../demo.tsx";
 import { time, Signals, STATE_TONE, STATE_TEXT } from "./common.tsx";
 

@@ -1,11 +1,11 @@
 // Overlay: layers inside a container — video, image, SVG, canvas drawing and CSS effects — that never take input.
-import { Overlay, Button, TextInput, Card, Grid, toast } from "hadi-march/ui";
-import type { DrawFn } from "hadi-march/ui";
+import { Overlay, Button, TextInput, Card, Grid, toast } from "march/ui";
+import type { DrawFn } from "march/ui";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 import { Playground } from "../playground.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
-import { appUrl } from "hadi-march/base";
+import { appUrl } from "march/base";
 
 // public files under the showcase's root (a relative "media/…" would resolve against the route's address)
 const DUSK = appUrl("media/dusk.jpg"), WAVES = appUrl("media/hadi-waves.webm"), WAVES_POSTER = appUrl("media/hadi-waves.jpg");

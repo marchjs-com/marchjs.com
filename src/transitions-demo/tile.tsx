@@ -1,7 +1,7 @@
 // Page transitions demo: one tile's page. The big tile carries the same data-m-shared name as the small one in the
 // grid, so it moves from there to here. In the modal, the previous / next links swap the page inside it.
-import { back } from "hadi-march/router";
-import { Button } from "hadi-march/ui";
+import { back } from "march/router";
+import { Button } from "march/ui";
 import { TILES } from "./tiles.ts";
 
 export default function TilePage(props: { id: string; close?: () => void }) {

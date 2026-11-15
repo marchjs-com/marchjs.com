@@ -2,7 +2,7 @@
 // Pages under the 10 KB chunk minimum are part of this module (the build would fold them into it anyway; importing
 // them statically keeps this chunk its own, out of the entry's shared page group); larger pages stay lazy chunks,
 // keyed by full path ("/path": () => import(…)) so the size report budgets them as routes.
-import { lazy } from "hadi-march/lazy";
+import { lazy } from "march/lazy";
 import { motionTransition } from "./motion-route-meta.ts";
 import MotionMorph from "./pages/motion/morph.tsx";
 import MotionPages from "./pages/motion/pages.tsx";

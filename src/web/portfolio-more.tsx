@@ -1,9 +1,9 @@
 // Sample portfolio, lower half: about, skills, career and contact (loaded when it comes near, see portfolio.tsx).
-import { signal } from "hadi-march";
-import { Button } from "hadi-march/ui";
-import { TextInput, Textarea } from "hadi-march/forms";
-import { SiteSection, FeatureGrid, Roadmap, StatsBand } from "hadi-march/components/landing/index.ts";
-import { palette, code, zap, globe, layers, users } from "hadi-march/icons";
+import { signal } from "march";
+import { Button } from "march/ui";
+import { TextInput, Textarea } from "march/forms";
+import { SiteSection, FeatureGrid, Roadmap, StatsBand } from "march/components/landing/index.ts";
+import { palette, code, zap, globe, layers, users } from "march/icons";
 
 /** A light contact form: three labelled fields and a button (the full form engine is not needed here). */
 function ContactForm(props: { onSent: () => void }) {

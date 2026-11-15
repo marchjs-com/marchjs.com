@@ -3,13 +3,13 @@
 // after another on the same page, each in its own host element (no iframe: the CSP has no frame-src).
 // Tabs (kept in ?tab=): basic tests · realistic scenarios · download size · method. A test tab is a sticky settings
 // panel beside a live result area (src/bench/ui.tsx); only the presentation lives here, the measurement is in src/bench.
-import { Button, Tabs, Disclosure, toast } from "hadi-march/ui"
-import { ChoicePicker } from "hadi-march/forms"
-import { lazy } from "hadi-march/lazy"
-import { t, untrack } from "hadi-march"
-import { query, setQuery } from "hadi-march/router"
-import { appUrl } from "hadi-march/base"
-import { play, x as stopIcon, copy as copyIcon, download as downloadIcon, link as linkIcon } from "hadi-march/icons"
+import { Button, Tabs, Disclosure, toast } from "march/ui"
+import { ChoicePicker } from "march/forms"
+import { lazy } from "march/lazy"
+import { t, untrack } from "march"
+import { query, setQuery } from "march/router"
+import { appUrl } from "march/base"
+import { play, x as stopIcon, copy as copyIcon, download as downloadIcon, link as linkIcon } from "march/icons"
 import { OPS, stats, factor, rank, unreliable, encodeResult, decodeResult, type RunResult, type Stats } from "../bench/core.ts"
 import { LIBS, BASELINE, libById } from "../bench/libs.ts"
 import { runBench, type Progress as RunProgress } from "../bench/runner.ts"

@@ -1,6 +1,6 @@
 // Showcase channels: every name and payload of the "Messaging" page in one place (a wrong name or payload does not
 // compile). Parts of the page import only this file, never each other.
-import { defineChannels, of } from "hadi-march/channel";
+import { defineChannels, of } from "march/channel";
 
 export interface Product { id: string; name: string; price: number }
 export interface Sale { month: string; total: number }

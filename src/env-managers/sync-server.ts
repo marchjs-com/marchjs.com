@@ -1,9 +1,9 @@
 // Lazy part of the environment managers page: the Sync manager over its own Net with a mock server. No UI here, so
 // the part downloads only net, the mock and the manager; the page draws the controls once it has arrived.
-import { signal } from "hadi-march";
-import { createNet } from "hadi-march/net";
-import { reply } from "hadi-march/net/mock";
-import { sync, configureSync } from "hadi-march/managers/sync";
+import { signal } from "march";
+import { createNet } from "march/net";
+import { reply } from "march/net/mock";
+import { sync, configureSync } from "march/managers/sync";
 
 /** What the mock server answers to POST /demo/notes. */
 export type Answer = "ok" | "busy" | "reject";

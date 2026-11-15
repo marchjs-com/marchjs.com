@@ -1,9 +1,9 @@
 // Motion › Morph: container transforms (button → dialog, card → page), shared element FLIP, icon morphs and shape
 // morphs. Each one is an engine Playback (global speed, "Stop all", reduced motion).
 import "../motion-pages.css";
-import { morph, morphBack, morphIcon, shapeMorph, MORPH_ICONS, type MorphIconName, type ShapeName } from "hadi-march/motion/morph.ts";
-import type { Playback } from "hadi-march/motion";
-import { Button } from "hadi-march/ui";
+import { morph, morphBack, morphIcon, shapeMorph, MORPH_ICONS, type MorphIconName, type ShapeName } from "march/motion/morph.ts";
+import type { Playback } from "march/motion";
+import { Button } from "march/ui";
 import { Section } from "../../demo.tsx";
 import { MotionDemo, opt, EASES } from "../../playground.tsx";
 
@@ -95,7 +95,7 @@ export default function MotionMorph() {
   return <Section kicker="Hareket" title="Morph" lead="Bir öğe başka bir öğeye dönüşür: düğme diyaloğa, kart sayfaya büyür; içerik gerilmez, kırpılarak açılır, renk ve köşe yarıçapı birlikte akar. Aynı resim bir yerden ötekine FLIP ile taşınır; ikonlar ve şekiller nokta nokta dönüşür.">
     <MotionDemo wide title="Düğme → diyalog" desc="Diyalog düğmenin kutusundan büyür (kırpma + taşıma), kapatınca düğmeye geri küçülür ve odak düğmeye döner. Esc kapatır."
       call={() => `morph(button, dialog, { duration: ${$bDur}, easing: "${$bEase}", fadeContent: ${$bFade} })`}
-      code={`import { morph, morphBack } from "hadi-march/motion"
+      code={`import { morph, morphBack } from "march/motion"
 
 open = true; morph(button, dialog)                              // dialog grows out of the button
 await morphBack(dialog, button).finished; open = false          // and shrinks back into it`}
@@ -117,7 +117,7 @@ await morphBack(dialog, button).finished; open = false          // and shrinks b
 
     <MotionDemo wide title="Kart → sayfa" desc="Kart, seçilince bulunduğu yerden sayfa boyutuna açılır; geri dönünce yeniden karta küçülür."
       call={() => `morph(card, page, { duration: ${$cDur}, easing: "${$cEase}" })`}
-      code={`import { morph, morphBack } from "hadi-march/motion"
+      code={`import { morph, morphBack } from "march/motion"
 
 morph(cardEl, pageEl, { duration: 600 })
 morphBack(pageEl, cardEl).finished.then(() => (open = null))`}
@@ -142,7 +142,7 @@ morphBack(pageEl, cardEl).finished.then(() => (open = null))`}
 
     <MotionDemo title="Paylaşılan öğe" desc="Küçük resim seçilince büyük alandaki aynı kişi, küçük resmin yerinden ölçeklenerek gelir (FLIP)."
       call={() => `morph(thumb, big, { mode: "scale", hideSource: false, duration: ${$sDur}, easing: "${$sEase}" })`}
-      code={`import { morph } from "hadi-march/motion"
+      code={`import { morph } from "march/motion"
 
 morph(thumbEl, bigEl, { mode: "scale", hideSource: false })   // same picture, scaled from there to here`}
       options={[
@@ -162,7 +162,7 @@ morph(thumbEl, bigEl, { mode: "scale", hideSource: false })   // same picture, s
 
     <MotionDemo title="İkon morph" desc="Oynat↔duraklat, menü↔kapat, ekle↔onay: her ikon aynı yapıda üç çubuk, bu yüzden nokta nokta dönüşür."
       call={() => `morphIcon(path, "${iconOn[0] ? "pause" : "play"}", { easing: "${$iEase}", duration: ${$iDur} })  // tık: ${$iconTick}`}
-      code={`import { morphIcon, MORPH_ICONS } from "hadi-march/motion"
+      code={`import { morphIcon, MORPH_ICONS } from "march/motion"
 
 <svg viewBox="0 0 24 24"><path d={MORPH_ICONS.play} /></svg>
 morphIcon(path, playing ? "pause" : "play")             // play pause menu close plus check minus`}
@@ -179,7 +179,7 @@ morphIcon(path, playing ? "pause" : "play")             // play pause menu close
 
     <MotionDemo title="Şekil morph" desc="Sekiz şekil aynı açılarda örneklenmiş clip-path çokgenleri: tarayıcı aralarını kendisi ara değerler, motor zamanlar."
       call={() => `shapeMorph(el, "${$shape}", { easing: "${$shEase}", points: ${$shPoints} })`}
-      code={`import { shapeMorph, shapePolygon } from "hadi-march/motion"
+      code={`import { shapeMorph, shapePolygon } from "march/motion"
 
 shapeMorph(el, "star", { easing: "spring" })        // circle square triangle diamond hexagon star blob flower
 el.style.clipPath = shapePolygon("hexagon")         // a static outline`}

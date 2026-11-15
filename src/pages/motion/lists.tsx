@@ -1,11 +1,11 @@
 // Motion › Lists: add / remove / reorder with FLIP (any renderer: the container is watched), exit ghosts, and
 // staggered entrances (linear, from the centre, across a grid).
 import "../motion-pages.css";
-import { effect, onCleanup } from "hadi-march";
-import { animateList, staggerIn, listFrames, type ListPreset } from "hadi-march/motion/list.ts";
-import { animate } from "hadi-march/motion/engine/playback.ts";
-import { Button } from "hadi-march/ui";
-import { Icon, plus, refresh, x as xIcon } from "hadi-march/icons";
+import { effect, onCleanup } from "march";
+import { animateList, staggerIn, listFrames, type ListPreset } from "march/motion/list.ts";
+import { animate } from "march/motion/engine/playback.ts";
+import { Button } from "march/ui";
+import { Icon, plus, refresh, x as xIcon } from "march/icons";
 import { Section } from "../../demo.tsx";
 // the demo kit is part of the shared Playground module (as on the other /motion/* pages)
 import { MotionDemo, opt } from "../../playground.tsx";
@@ -56,7 +56,7 @@ export default function MotionLists() {
   return <Section kicker="Hareket" title="Liste animasyonları" lead="Ekle, kaldır, karıştır, sırala: öğeler yeni yerlerine kayar, giden öğe yerinde bir kopyayla çıkar, gelenler sırayla belirir. Kapsayıcı izlendiği için her çizim yöntemiyle çalışır; uçuştaki bir öğe yeniden yer değiştirirse ekranda olduğu yerden devam eder.">
     <MotionDemo wide title="Ekle, kaldır, sırala" desc="animateList(kapsayıcı) çocukları izler: eklenen gelir, silinen çıkar, yer değiştirenler FLIP ile kayar."
       call={() => `animateList(ul, { enter: "${$enter}", exit: "${$exit}", duration: ${$dur}, stagger: 40 })  // ${$items.length} öğe`}
-      code={`import { animateList } from "hadi-march/motion"
+      code={`import { animateList } from "march/motion"
 
 const off = animateList(ul, { enter: "pop", exit: "scale", stagger: 40 })
 // render the list any way you like: <For each={$items} key="id">…</For>`}
@@ -85,7 +85,7 @@ const off = animateList(ul, { enter: "pop", exit: "scale", stagger: 40 })
 
     <MotionDemo wide title="Sırayla giriş" desc="staggerIn bir öğe kümesini sırayla getirir: baştan, sondan, ortadan, kenarlardan ya da ızgarada uzaklığa göre."
       call={() => `staggerIn(grid.children, { preset: "${$sPreset}", each: ${$each}, from: "${$from}"${$grid ? ", grid: [4, 3]" : ""} })`}
-      code={`import { staggerIn } from "hadi-march/motion"
+      code={`import { staggerIn } from "march/motion"
 
 staggerIn(".tile", { preset: "rise", each: 45, from: "center", grid: [4, 3] })`}
       options={[
@@ -101,7 +101,7 @@ staggerIn(".tile", { preset: "rise", each: 45, from: "center", grid: [4, 3] })`}
 
     <MotionDemo title="Hazır hareketler" desc="listFrames(ad, yön, rtl) giriş ve çıkış keyframe'lerini verir; animateList ve staggerIn de bunları kullanır. Bir karta bas ya da hepsini oynat. Kayma sağdan sola yazımda aynalanır."
       call={() => `listFrames(preset, "${$side}", ${$rtl})`}
-      code={`import { listFrames, animate } from "hadi-march/motion"
+      code={`import { listFrames, animate } from "march/motion"
 
 animate(el, listFrames("pop", "in"), { easing: "spring" })
 animate(el, listFrames("slide", "out", isRtl))`}

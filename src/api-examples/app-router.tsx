@@ -1,15 +1,15 @@
-// API examples of hadi-march/router (the app group continues in app.tsx: store, i18n, lazy).
+// API examples of march/router (the app group continues in app.tsx: store, i18n, lazy).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
 // The page has one router (the showcase's own, hash mode): these examples never change its route. They read its live
 // state, change only the query string of this page (?color=…, ?~aside=…) or show what a call returns without making it.
-import { signal, effect, untrack, onCleanup, createRoot, h } from "hadi-march";
+import { signal, effect, untrack, onCleanup, createRoot, h } from "march";
 import {
   _router, back, beforeLeave, closeModal, compilePath, fillPath, Link, matchRoute, navigate, navigating,
   navigationSignal, onRouteChange, openOutlet, Outlet, outletRoute, params, path, prefetch, prefetchLinks, preload, query,
   queryParam, route, routeError, setMeta, setQuery, transitionOutlet, type CompiledRoute, type RouteTarget,
-} from "hadi-march/router";
-import { skeleton } from "hadi-march/lazy";
-import { Button, Card, Segmented, TextInput, Checkbox } from "hadi-march/ui";
+} from "march/router";
+import { skeleton } from "march/lazy";
+import { Button, Card, Segmented, TextInput, Checkbox } from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import "./app.css";
@@ -40,7 +40,7 @@ const TABLE: CompiledRoute[] = ["/", "/orders", "/orders/:id", "/orders/:id/edit
 const PEOPLE = ["1", "2", "3"]
 
 export default examples({
-  "hadi-march/router": {
+  "march/router": {
     _resetRouter: {
       code: `afterEach(() => _resetRouter())   // tests: drop the router, its guards and its page cache`,
       run: () => <div class="sc-ex-app-stack">
@@ -359,7 +359,7 @@ route()?.meta.title`,
       </div>,
     },
     setHeadHandler: {
-      code: `setHeadHandler((to, head, title) => applyHead(head, title))   // hadi-march/seo installs this`,
+      code: `setHeadHandler((to, head, title) => applyHead(head, title))   // march/seo installs this`,
       run: () => <div class="sc-ex-app-stack">
         <p class="m-muted">Bu sayfada kurulu işleyici değiştirilmez. Bir sonraki gezinmede şunları alır:</p>
         <Row><Out label="to.path" value={() => route()?.path ?? "null"} /><Out label="title" value={() => { path(); return document.title }} /></Row>
@@ -380,7 +380,7 @@ route()?.meta.title`,
     },
     setNavigationWrapper: {
       code: `setNavigationWrapper(async (apply, { pop }) => {
-  await fadeOut(main); apply(); await fadeIn(main)   // hadi-march/motion uses it for View Transitions
+  await fadeOut(main); apply(); await fadeIn(main)   // march/motion uses it for View Transitions
 })`,
       run: () => {
         // the page's own wrapper (page transitions) stays: the same kind of function, called by hand

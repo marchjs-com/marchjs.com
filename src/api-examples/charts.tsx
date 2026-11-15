@@ -1,11 +1,11 @@
-// API examples of hadi-march/charts: the chart components (SVG, reactive, accessible) and the scale / layout helpers
+// API examples of march/charts: the chart components (SVG, reactive, accessible) and the scale / layout helpers
 // they are built on. Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
-import { signal, computed } from "hadi-march";
+import { signal, computed } from "march";
 import {
   arcPath, AreaChart, BarChart, BarList, heatLevel, Heatmap, LineChart, lttb, niceStep, niceTicks, PieChart, pieLayout,
   ProgressRing, scaleBand, scaleLinear, scaleTime, Sparkline, Stat, timeTicks,
-} from "hadi-march/charts";
-import { Button, Segmented, Slider } from "hadi-march/ui";
+} from "march/charts";
+import { Button, Segmented, Slider } from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import "./charts.css";
@@ -26,7 +26,7 @@ const SERIES = { revenue: "Gelir", expenses: "Gider" }
 const fmtDay = (ms: number) => new Date(ms).toLocaleDateString("tr-TR", { day: "numeric", month: "short" })
 
 export default examples({
-  "hadi-march/charts": {
+  "march/charts": {
     arcPath: {
       code: `const d = arcPath(60, 60, 50, 30, 0, Math.PI / 2)   // a quarter of a ring
 <path d={d} class="slice" />

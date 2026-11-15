@@ -1,12 +1,12 @@
 // What the first paint does not need: command palette, toasts, commands, motion extras, the Speed page's network log.
 // Loaded right after the shell (when idle).
-import { t } from "hadi-march";
-import { CommandPalette, ToastHost, Dialog, registerCommands, toast, setColorTheme, colorThemes, setTheme } from "hadi-march/ui";
-import { PortalTarget } from "hadi-march";
-import { Outlet, navigate } from "hadi-march/router";
-import { palette, moon, sun, sparkles, hash } from "hadi-march/icons";
+import { t } from "march";
+import { CommandPalette, ToastHost, Dialog, registerCommands, toast, setColorTheme, colorThemes, setTheme } from "march/ui";
+import { PortalTarget } from "march";
+import { Outlet, navigate } from "march/router";
+import { palette, moon, sun, sparkles, hash } from "march/icons";
 import "./perflog.ts";
-import { whenIdle } from "hadi-march/lazy";
+import { whenIdle } from "march/lazy";
 
 // the motion engine (transitions, <For animate> FLIP, page transitions) is its own lazy part, loaded once the browser
 // is idle after start-up: the first paint and the start-up download do not wait for it (a navigation before then has
@@ -33,7 +33,7 @@ async function goToSection(path: string, id: string): Promise<void> {
   head.focus({ preventScroll: true })
   // a short flash on the motion engine (global speed and reduced motion apply)
   const target = el
-  void import("hadi-march/motion").then((m) => m.animate(target, [{ boxShadow: "0 0 0 0 transparent" }, { boxShadow: "0 0 0 6px color-mix(in srgb, var(--m-primary) 35%, transparent)" }, { boxShadow: "0 0 0 0 transparent" }], { duration: 1400, easing: "easeInOutCubic" }))
+  void import("march/motion").then((m) => m.animate(target, [{ boxShadow: "0 0 0 0 transparent" }, { boxShadow: "0 0 0 6px color-mix(in srgb, var(--m-primary) 35%, transparent)" }, { boxShadow: "0 0 0 0 transparent" }], { duration: 1400, easing: "easeInOutCubic" }))
 }
 
 export default function ShellLate() {

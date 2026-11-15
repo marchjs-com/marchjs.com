@@ -1,10 +1,10 @@
-// API examples of hadi-march/managers, first half (DEFAULT_CATEGORIES … disposeHotkeys). Layout and rules: tools/api-examples.js.
+// API examples of march/managers, first half (DEFAULT_CATEGORIES … disposeHotkeys). Layout and rules: tools/api-examples.js.
 // A manager is app-wide, so every demo leaves it as it found it: the config it changed is put back, the memory-only
 // storage it used is gone with the instance, and a manager it started is disposed when the card closes.
-import { signal, onCleanup, effect, untrack } from "hadi-march";
-import { createNet } from "hadi-march/net";
-import { Button, Badge, Segmented } from "hadi-march/ui";
-import { TextInput } from "hadi-march/forms";
+import { signal, onCleanup, effect, untrack } from "march";
+import { createNet } from "march/net";
+import { Button, Badge, Segmented } from "march/ui";
+import { TextInput } from "march/forms";
 import {
   DEFAULT_CATEGORIES, DEFAULT_PREFS, LEVELS, THRESHOLDS, a11y, a11yManager, announce, announcer, announcerManager, appCache,
   appConfig, appWindow, ariaKeys, audit, beaconTransport, bucket, cacheManager, clipboard, clipboardManager, command,
@@ -19,8 +19,8 @@ import {
   logger, memoryTransport, notificationManager, notifications, onManager, perf, perfManager, permissionManager, permissions,
   presence, presenceManager, scroll, scrollManager, session, sessionManager, shortcutHintManager, shortcutHints, storage,
   storageManager, sync, syncManager, undoManager, undoStack, viewport, viewportManager, windowManager,
-} from "hadi-march/managers";
-import type { Manager } from "hadi-march/managers";
+} from "march/managers";
+import type { Manager } from "march/managers";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import "./managers-a.css";
@@ -863,7 +863,7 @@ function DisposeHotkeys() {
 }
 
 export default examples({
-  "hadi-march/managers": {
+  "march/managers": {
     DEFAULT_CATEGORIES: {
       code: `configureConsent({ categories: [...DEFAULT_CATEGORIES, { id: "survey", title: "Surveys", description: "Short feedback prompts." }] })
 DEFAULT_CATEGORIES.map((c) => c.id)   // necessary, preferences, analytics, marketing, thirdParty`,

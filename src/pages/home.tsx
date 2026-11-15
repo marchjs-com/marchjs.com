@@ -5,14 +5,14 @@
 // The page is its own lazy route chunk; the cards and the sections are lazy parts of it. No number here is typed by hand: they come from home-stats.gen.ts
 // (tools/gen-home-stats.js) and march-report.json.
 import "./home.css";
-import { lazy } from "hadi-march/lazy";
-import { onFrame, inView, reducedMotion, spotlight } from "hadi-march/motion";
-import { onCleanup } from "hadi-march";
-import { cascade, elastic, blurIn, typewriter, flip, scramble, fade, type TextAnimation } from "hadi-march/motion/text";
-import { Button, Badge, CopyButton, LinkCard, SectionLabel, Overlay, type DrawContext } from "hadi-march/ui";
-import { Link } from "hadi-march/router";
-import type { ColorToken } from "hadi-march/theme";
-import { arrowRight, zap, grid, globe, gauge, palette, shieldCheck } from "hadi-march/icons";
+import { lazy } from "march/lazy";
+import { onFrame, inView, reducedMotion, spotlight } from "march/motion";
+import { onCleanup } from "march";
+import { cascade, elastic, blurIn, typewriter, flip, scramble, fade, type TextAnimation } from "march/motion/text";
+import { Button, Badge, CopyButton, LinkCard, SectionLabel, Overlay, type DrawContext } from "march/ui";
+import { Link } from "march/router";
+import type { ColorToken } from "march/theme";
+import { arrowRight, zap, grid, globe, gauge, palette, shieldCheck } from "march/icons";
 import { HOME_STATS as S } from "../home-stats.gen.ts";
 // the glass cards and everything below the fold are parts of their own: the first screen (title, silk, why March) does not
 // wait for the chart, the chat and the map. Each keeps its room while it loads, so nothing moves when it arrives.
@@ -99,7 +99,7 @@ function isDark(ctx: CanvasRenderingContext2D, bg: string): boolean {
 // ── the turning line of the title ───────────────────────────────────────────────────────────────────────────────
 
 type Play = (el: HTMLElement) => TextAnimation
-/** The phrases of the middle line; each enters with another text effect of hadi-march/motion/text (its export name is shown).
+/** The phrases of the middle line; each enters with another text effect of march/motion/text (its export name is shown).
  *  Every effect keeps its letters split when it ends (keep): the last frame is the phrase as it stays, so nothing
  *  moves or recolours when the effect is over (plain text would kern and take the ribbon differently). */
 const PHRASES: readonly { text: string; fx: string; play: Play }[] = [
@@ -159,8 +159,8 @@ function Title() {
 
 // ── why March ───────────────────────────────────────────────────────────────────────────────────────────────────
 
-// the package name is spliced in: the build rewrites `from "hadi-march…"` even inside strings
-const PKG = "hadi-march"
+// the package name is spliced in: the build rewrites `from "march…"` even inside strings
+const PKG = "march"
 const WHY: readonly { icon: unknown; color: ColorToken; title: string; text: () => unknown; href: string }[] = [
   { icon: zap, color: "brand-orange", title: "Öğrenmesi kolay", text: () => <><code>{"$sayi++"}</code> yaz, ekran güncellenir. Kanca yok, ezberlenecek kural yok.</>, href: "/language" },
   { icon: grid, color: "brand-blue", title: "Tek paket yeter", text: () => `${S.components} bileşen, form, veri, hareket. Başka paket kurmazsın: sıfır bağımlılık.`, href: "/buttons" },

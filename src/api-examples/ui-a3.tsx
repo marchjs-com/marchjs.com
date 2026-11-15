@@ -1,12 +1,12 @@
-// API examples of hadi-march/ui, names "CodeInput" … "DateTimeInput" (code-point order; the subpath is split over several
+// API examples of march/ui, names "CodeInput" … "DateTimeInput" (code-point order; the subpath is split over several
 // files by name range). Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`;
 // components have a Playground.
-import { signal, onCleanup } from "hadi-march"
+import { signal, onCleanup } from "march"
 import {
   Button, CodeInput, CodeView, CodeViewer, ColorInput, ColorPicker, Combobox, Chip, CopyButton, CountRoll, DatePicker,
   DateRangePicker, DateTimeInput, DEFAULT_CROP, DEFAULT_TOOLS, registerCommands, openPalette,
-} from "hadi-march/ui"
-import { search, fileText, plus, heart, star, calendar } from "hadi-march/icons"
+} from "march/ui"
+import { search, fileText, plus, heart, star, calendar } from "march/icons"
 import { examples } from "./types.ts"
 import { Out, Log, Row } from "./_kit.tsx"
 import "./ui-a.css"
@@ -19,7 +19,7 @@ const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart
 const addDays = (n: number) => iso(new Date(Date.now() + n * 86_400_000))
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     CodeInput: {
       code: `<CodeInput length={6} groups={[3, 3]} autofocus onComplete={(code) => verify(code)} />
 <CodeInput length={4} mask pattern="numeric" />   // PIN`,

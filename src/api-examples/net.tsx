@@ -1,10 +1,10 @@
-// API examples of hadi-march/net: the request client, middleware, transports and managed sockets. Every request is
-// answered by an in-memory mock (hadi-march/net/mock): nothing leaves the page. Layout and rules: tools/api-examples.js.
-import { signal, onCleanup } from "hadi-march";
-import { Button, Badge } from "hadi-march/ui";
-import { runLoad } from "hadi-march/lazy";
-import { net, Net, createNet, Api, api, AppError, auth, acceptLanguage, idempotencyKey, retry, cache, timing, log, record, replay, normalizeErrors, compose, named, duration, buildUrl, sleep, onInvalidate, HttpTransport, SseTransport, resolveUrl, parseBody, headersOf, WsTransport, ManagedSocket, socket, closeSockets, setSocketFactory, backoff, jsonProtocol, isAbort, routeLoads, type Ctx, type Middleware, type Recording } from "hadi-march/net";
-import { crud, mockSocketServer, reply } from "hadi-march/net/mock";
+// API examples of march/net: the request client, middleware, transports and managed sockets. Every request is
+// answered by an in-memory mock (march/net/mock): nothing leaves the page. Layout and rules: tools/api-examples.js.
+import { signal, onCleanup } from "march";
+import { Button, Badge } from "march/ui";
+import { runLoad } from "march/lazy";
+import { net, Net, createNet, Api, api, AppError, auth, acceptLanguage, idempotencyKey, retry, cache, timing, log, record, replay, normalizeErrors, compose, named, duration, buildUrl, sleep, onInvalidate, HttpTransport, SseTransport, resolveUrl, parseBody, headersOf, WsTransport, ManagedSocket, socket, closeSockets, setSocketFactory, backoff, jsonProtocol, isAbort, routeLoads, type Ctx, type Middleware, type Recording } from "march/net";
+import { crud, mockSocketServer, reply } from "march/net/mock";
 import { Out, Log, Row } from "./_kit.tsx";
 import { J, msg, now, lines, Text, Pre, Tags } from "./_net.tsx";
 import { mockNet } from "./_mocknet.ts";
@@ -14,9 +14,9 @@ export { default as SIG } from "./net.sig.gen.ts";
 
 
 export default examples({
-  "hadi-march/net": {
+  "march/net": {
     acceptLanguage: {
-      code: `net.use(acceptLanguage())                       // locale() of hadi-march
+      code: `net.use(acceptLanguage())                       // locale() of march
 net.use(acceptLanguage(() => user.language))   // or your own`,
       run: () => {
         const lang = signal("tr"), out = signal("—")
@@ -261,7 +261,7 @@ net.use(trace)   // shown as "trace" in ctx.steps and the request inspector`,
       },
     },
     net: {
-      code: `import { net } from "hadi-march/net"
+      code: `import { net } from "march/net"
 const users = await net.get<User[]>("/api/users", { category: "users", cache: "5m" })
 net.pending("users")   // reactive count of requests in flight`,
       run: () => {

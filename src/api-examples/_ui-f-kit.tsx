@@ -1,6 +1,6 @@
 // Shared helpers of the ui-f API example files (a file starting with "_" is not an example file).
-import { effect } from "hadi-march";
-import { Segmented, TextInput, schemaAt, sample } from "hadi-march/ui";
+import { effect } from "march";
+import { Segmented, TextInput, schemaAt, sample } from "march/ui";
 import "./ui-f.css";
 
 export type Model = Parameters<typeof sample>[0];

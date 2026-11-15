@@ -1,21 +1,21 @@
 // Managers: ViewportManager (live signal panel, when: props, container sizes), ConsentManager (banner, preferences,
 // analytics off without consent, third-party placeholder), CommandManager (one command in palette, menu, toolbar, button).
-import { onCleanup } from "hadi-march";
-import { Button, Menu, Card, Badge, Toggle, Segmented, Slider, Field, Alert, Kbd, openPalette } from "hadi-march/ui";
-import { command as commandIcon, refresh, trash, download, copy, settings } from "hadi-march/icons";
-import { viewport, configureViewport } from "hadi-march/managers/viewport";
-import { consent, configureConsent } from "hadi-march/managers/consent";
-import { lazy } from "hadi-march/lazy";
-import type { ConsentBannerProps, ConsentGateProps } from "hadi-march/components/composite/consent-banner";
+import { onCleanup } from "march";
+import { Button, Menu, Card, Badge, Toggle, Segmented, Slider, Field, Alert, Kbd, openPalette } from "march/ui";
+import { command as commandIcon, refresh, trash, download, copy, settings } from "march/icons";
+import { viewport, configureViewport } from "march/managers/viewport";
+import { consent, configureConsent } from "march/managers/consent";
+import { lazy } from "march/lazy";
+import type { ConsentBannerProps, ConsentGateProps } from "march/components/composite/consent-banner";
 
 // the consent UI is lazy (as its docs recommend): it loads with this section, not with the page
-const consentUi = () => import("hadi-march/components/composite/consent-banner")
+const consentUi = () => import("march/components/composite/consent-banner")
 const ConsentBanner = lazy<ConsentBannerProps>(consentUi, { pick: "ConsentBanner", placeholder: "none" })
 const ConsentGate = lazy<ConsentGateProps>(consentUi, { pick: "ConsentGate", placeholder: "card" })
 const showConsentBanner = (): void => { void consentUi().then((m) => m.showConsentBanner()) }
 const openConsentPreferences = (): void => { void consentUi().then((m) => m.openConsentPreferences()) }
-import { command, commands, onCommandRun } from "hadi-march/managers/command";
-import { commandItems, CommandButton, CommandToolbar, bindCommandKeys } from "hadi-march/managers/command/ui";
+import { command, commands, onCommandRun } from "march/managers/command";
+import { commandItems, CommandButton, CommandToolbar, bindCommandKeys } from "march/managers/command/ui";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 import { ComponentDemo } from "../component-demo.tsx";

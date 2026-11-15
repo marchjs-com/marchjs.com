@@ -1,12 +1,12 @@
 // Sample page: an anti-landing. It opens with who HADİ is not for (the visitor marks what applies and gets an honest
 // verdict), then compares it with the alternatives including the rows where it is behind. Built from NotForYou and
 // HonestCompare.
-import { Button } from "hadi-march/ui";
-import { SiteNav, Hero, SiteSection, NotForYou, HonestCompare, CtaBand, SiteFooter } from "hadi-march/components/landing/index.ts";
-import { arrowRight, sparkles, globe, message, mail } from "hadi-march/icons";
-import { NOT_FOR_YOU, FOR_YOU } from "hadi-march/components/landing/not-for-you/demo.tsx";
-import { COMPARE_COLUMNS, COMPARE_ROWS } from "hadi-march/components/landing/honest-compare/demo.tsx";
-import { FOOTER_COLUMNS } from "hadi-march/components/landing/site-footer/demo.tsx";
+import { Button } from "march/ui";
+import { SiteNav, Hero, SiteSection, NotForYou, HonestCompare, CtaBand, SiteFooter } from "march/components/landing/index.ts";
+import { arrowRight, sparkles, globe, message, mail } from "march/icons";
+import { NOT_FOR_YOU, FOR_YOU } from "march/components/landing/not-for-you/demo.tsx";
+import { COMPARE_COLUMNS, COMPARE_ROWS } from "march/components/landing/honest-compare/demo.tsx";
+import { FOOTER_COLUMNS } from "march/components/landing/site-footer/demo.tsx";
 
 const LINKS = [{ label: "Kimin için değil", href: "#h-check" }, { label: "Karşılaştırma", href: "#h-compare" }]
 

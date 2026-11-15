@@ -1,8 +1,8 @@
 // Overlays: Dialog, Drawer, confirm, prompt, reason, toast (undo), command palette.
 import {
   Button, openDialog, openDrawer, confirm, prompt, askReason, toast, openPalette, Field, TextInput, Toggle, Stack, Kbd, Alert, Avatar, Badge, Divider,
-} from "hadi-march/ui";
-import { trash, edit, sliders, command, bell, check, alertTriangle, info, xCircle } from "hadi-march/icons";
+} from "march/ui";
+import { trash, edit, sliders, command, bell, check, alertTriangle, info, xCircle } from "march/icons";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 import { ComponentDemo } from "../component-demo.tsx";

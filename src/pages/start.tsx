@@ -1,7 +1,7 @@
 // İlk Adımlar: install, the first component, the march CLI, the project layout and where to go next.
-import { Button, LinkCard, Grid, KeyValue } from "hadi-march/ui";
-import { arrowRight } from "hadi-march/icons";
-import { Link, type Href } from "hadi-march/router";
+import { Button, LinkCard, Grid, KeyValue } from "march/ui";
+import { arrowRight } from "march/icons";
+import { Link, type Href } from "march/router";
 import { Demo, Section } from "../demo.tsx";
 
 // every export of every subpath, generated from the JSDoc of the sources (tools/api-coverage.js)
@@ -48,7 +48,7 @@ export function Counter() {
 }
 
 // src/main.tsx
-import { render } from "hadi-march"
+import { render } from "march"
 render(() => <Counter />, document.getElementById("app")!)`}>
       <Counter />
     </Demo>
@@ -89,10 +89,10 @@ public/                copied as is`}>
     </Demo>
 
     <Demo wide title="6. API başvurusu" desc="Her alt yolun her dışa aktarımı kendi sayfasında: imza, parametreler, açıklama, örnekler ve canlı demo."
-      code={`import { createRouter, Link, navigate } from "hadi-march/router"
-import { lazy } from "hadi-march/lazy"
-import { Chip } from "hadi-march/actions"      // bileşenler kategorisinin alt yolundan
-import { Button, toast } from "hadi-march/ui"  // ya da hepsi tek yerden`}>
+      code={`import { createRouter, Link, navigate } from "march/router"
+import { lazy } from "march/lazy"
+import { Chip } from "march/actions"      // bileşenler kategorisinin alt yolundan
+import { Button, toast } from "march/ui"  // ya da hepsi tek yerden`}>
       <p><Link href={"/api" as Href}>API başvurusunu aç →</Link></p>
     </Demo>
   </Section>

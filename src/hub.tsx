@@ -5,11 +5,11 @@
 // /<section>#<demo> link moves to the topic that has the demo. A press on a card turns its drawing into the topic's
 // stage (a view transition through the page change; a plain change without one).
 import "./hub.css";
-import { signal, computed, effect, onCleanup } from "hadi-march";
-import { Link, navigate, type Href } from "hadi-march/router";
-import { Chip, CopyButton, SearchBox, Grid } from "hadi-march/ui";
-import { Icon, arrowLeft, arrowRight, copy, code } from "hadi-march/icons";
-import { cards } from "hadi-march/components/cards.gen.ts";
+import { signal, computed, effect, onCleanup } from "march";
+import { Link, navigate, type Href } from "march/router";
+import { Chip, CopyButton, SearchBox, Grid } from "march/ui";
+import { Icon, arrowLeft, arrowRight, copy, code } from "march/icons";
+import { cards } from "march/components/cards.gen.ts";
 import { HUBS, type Topic } from "./topics.ts";
 import { sectionOf, PAGE_META } from "./nav-meta.ts";
 import { HubArt, loadArt } from "./hub-art.tsx";
@@ -55,7 +55,7 @@ function apiOf(t: Topic): { name: string; from: string; href: Href } | null {
   const c = t.name ? cards.find((e) => e.n === t.name && e.a) : undefined
   if (!c?.a) return null
   const path = c.a.split("/").slice(0, -1).join("/")
-  return { name: c.n, from: path === "core" ? "hadi-march" : `hadi-march/${path}`, href: `/api/${c.a}` as Href }
+  return { name: c.n, from: path === "core" ? "march" : `march/${path}`, href: `/api/${c.a}` as Href }
 }
 
 /** A topic page: sibling strip, head (title, March name, sentence, import line, API), the topic, previous / next. */

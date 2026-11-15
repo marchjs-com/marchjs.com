@@ -1,12 +1,12 @@
-// API examples of hadi-march/seo (head tags; nothing is left changed in the page's own head), seo/hydrate and the safe
+// API examples of march/seo (head tags; nothing is left changed in the page's own head), seo/hydrate and the safe
 // content core (dom/safe, dom/sanitize, dom/to-markdown). Layout and rules: tools/api-examples.js.
-import { signal, effect, onCleanup } from "hadi-march";
-import { Button, Badge } from "hadi-march/ui";
-import { _resetHead, _resetSeo, applyHead, checkHtml, formatIssues, headTags, headToHtml, installSeo, jsonLdText, ld, ogTags, resolveHead, scanTags, tagKey, twitterTags, useHead } from "hadi-march/seo";
-import { hydrate, prerenderedFor } from "hadi-march/seo/hydrate";
-import { RICH_SCHEMA } from "hadi-march/dom/safe";
-import { BLOCKS, decodeEntities, normalizeBlocks, parseHtml, sanitizeNode } from "hadi-march/dom/sanitize";
-import { toMarkdown } from "hadi-march/dom/to-markdown";
+import { signal, effect, onCleanup } from "march";
+import { Button, Badge } from "march/ui";
+import { _resetHead, _resetSeo, applyHead, checkHtml, formatIssues, headTags, headToHtml, installSeo, jsonLdText, ld, ogTags, resolveHead, scanTags, tagKey, twitterTags, useHead } from "march/seo";
+import { hydrate, prerenderedFor } from "march/seo/hydrate";
+import { RICH_SCHEMA } from "march/dom/safe";
+import { BLOCKS, decodeEntities, normalizeBlocks, parseHtml, sanitizeNode } from "march/dom/sanitize";
+import { toMarkdown } from "march/dom/to-markdown";
 import { Out, Log, Row } from "./_kit.tsx";
 import { J, now, lines, Text, Area, Pre, Tags } from "./_net.tsx";
 import { examples } from "./types.ts";
@@ -39,7 +39,7 @@ const PAGE = `<!doctype html>
 const RICH = `<h2>Sürüm notları</h2><p><b>HADİ</b> artık <i>daha hızlı</i>. <a href="https://hadisosyal.com/notlar">Ayrıntılar</a></p><ul><li>Yeni tablo</li><li>Koyu tema</li></ul>`;
 
 export default examples({
-  "hadi-march/seo": {
+  "march/seo": {
     _resetHead: {
       code: `afterEach(() => { _resetHead() })   // tests: forget what applyHead wrote`,
       run: () => {
@@ -226,7 +226,7 @@ tagKey("link", { rel: "canonical", href: "/x" }) // "link:canonical"`,
       },
     },
   },
-  "hadi-march/seo/hydrate": {
+  "march/seo/hydrate": {
     hydrate: {
       code: `// index.html carries the prerendered page: <div id="app" data-m-prerender="/">…</div>
 hydrate(() => <App />, document.getElementById("app")!)   // swaps in one step when ready`,
@@ -256,7 +256,7 @@ hydrate(() => <App />, document.getElementById("app")!)   // swaps in one step w
       },
     },
   },
-  "hadi-march/dom/safe": {
+  "march/dom/safe": {
     RICH_SCHEMA: {
       code: `parseHtml(html, RICH_SCHEMA)                        // the rich text allowlist (default)
 parseHtml(html, { tags: { p: [], strong: [] } })   // your own, smaller one`,
@@ -269,7 +269,7 @@ parseHtml(html, { tags: { p: [], strong: [] } })   // your own, smaller one`,
       },
     },
   },
-  "hadi-march/dom/sanitize": {
+  "march/dom/sanitize": {
     BLOCKS: {
       code: `BLOCKS.has("p")      // true
 BLOCKS.has("strong") // false (inline)`,
@@ -322,7 +322,7 @@ editor.append(frag)`,
       },
     },
   },
-  "hadi-march/dom/to-markdown": {
+  "march/dom/to-markdown": {
     toMarkdown: {
       code: `const md = toMarkdown(editor)   // "## Sürüm notları\\n\\n**HADİ** artık *daha hızlı*. …"
 save({ body: md })`,

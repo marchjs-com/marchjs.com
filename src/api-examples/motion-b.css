@@ -1,4 +1,4 @@
-/* API examples of hadi-march/motion (measure … zoomThrough): small stages that play real engine animations. */
+/* API examples of march/motion (measure … zoomThrough): small stages that play real engine animations. */
 .sc-ex-motion-b-stage { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--m-space-3); min-block-size: 6.5rem; min-inline-size: 0; padding: var(--m-space-3); overflow: hidden; border: 1px dashed var(--m-border); border-radius: var(--m-radius-2); background: var(--m-surface); }
 .sc-ex-motion-b-stack { display: grid; gap: var(--m-space-3); min-inline-size: 0; }
 .sc-ex-motion-b-box { inline-size: 2.5rem; block-size: 2.5rem; border-radius: var(--m-radius-2); background: var(--m-brand-orange); }

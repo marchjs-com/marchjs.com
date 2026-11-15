@@ -1,8 +1,8 @@
-// API examples of hadi-march/ui, names "GradientEditor" … "IconButton" (code-point order; the neighbouring ranges: ui-b*.tsx).
+// API examples of march/ui, names "GradientEditor" … "IconButton" (code-point order; the neighbouring ranges: ui-b*.tsx).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`; components have Playground options.
-import { signal } from "hadi-march";
-import { Button, GradientEditor, Grid, HADI_RING, IconButton, Card } from "hadi-march/ui";
-import { star, bell, trash, settings, users, zap, globe, shieldCheck, search } from "hadi-march/icons";
+import { signal } from "march";
+import { Button, GradientEditor, Grid, HADI_RING, IconButton, Card } from "march/ui";
+import { star, bell, trash, settings, users, zap, globe, shieldCheck, search } from "march/icons";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import { useLog } from "./_ui-b.tsx";
@@ -10,7 +10,7 @@ import "./ui-b.css";
 export { default as SIG } from "./ui-b4.sig.gen.ts";
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     GradientEditor: {
       code: `const bg = signal("linear-gradient(90deg, var(--m-brand-orange), var(--m-brand-purple))")
 <GradientEditor value={bg} types={["linear", "radial"]} />

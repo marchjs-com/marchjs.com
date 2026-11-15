@@ -1,10 +1,10 @@
-// API examples of hadi-march/ui, names "KeyValue" … "Loader" (code-point order; the neighbouring ranges: ui-b*.tsx).
+// API examples of march/ui, names "KeyValue" … "Loader" (code-point order; the neighbouring ranges: ui-b*.tsx).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`; components have Playground options.
-import { signal } from "hadi-march";
+import { signal } from "march";
 import {
   KeyValue, Button, Empty, Loader, KeyframeTimeline, KeyValueEditor, LikeButton, LinkCard, ListDetail, ListEditor,
-} from "hadi-march/ui";
-import { folder, edit, inbox } from "hadi-march/icons";
+} from "march/ui";
+import { folder, edit, inbox } from "march/icons";
 import { examples } from "./types.ts";
 import { Out, Row } from "./_kit.tsx";
 import { wait } from "./_ui-b.tsx";
@@ -12,7 +12,7 @@ import "./ui-b.css";
 export { default as SIG } from "./ui-b6.sig.gen.ts";
 
 export default examples({
-  "hadi-march/ui": {
+  "march/ui": {
     KeyframeTimeline: {
       code: `const anim = signal({ duration: 1500, tracks: [
   { id: "a", target: "Kart", prop: "x", keys: [{ at: 0, value: 0 }, { at: 1500, value: 120 }] },

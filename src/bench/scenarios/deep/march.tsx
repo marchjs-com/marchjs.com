@@ -3,7 +3,7 @@
 // selector function is passed as a prop too. Only the measured items read the unit (one per group), so a
 // unit step updates only those 200 value text bindings; a focus step
 // marks just the old and the new item's class binding. No component runs again and nothing is compared.
-import { render, signal, selector } from "hadi-march"
+import { render, signal, selector } from "march"
 import { FIRST_UNIT, NO_FOCUS, fmt, itemClass, type Deep, type Panel, type Group, type Item, type Step } from "./def.ts"
 import type { ScenarioApp } from "../core.ts"
 

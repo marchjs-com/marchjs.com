@@ -1,10 +1,10 @@
 // Motion and effects: spring/tween, FLIP lists, transitions, timeline + stagger, drag, magnet, tilt, parallax,
 // spotlight, particles, confetti, reveal on scroll. All of it honours "reduce motion".
-import "hadi-march/motion/install"; // fly, blur… transitions and <For animate> on this page (the shell installs them later, when idle)
-import { spring, tween, timeline, stagger, drag, magnet, tilt, press, parallax, reveal, inView } from "hadi-march/motion";
-import { Particles, confetti, spotlight } from "hadi-march/fx";
-import { Button, IconButton, Card, Badge, Slider, Field, toast } from "hadi-march/ui";
-import { plus, refresh, sparkles, x as xIcon } from "hadi-march/icons";
+import "march/motion/install"; // fly, blur… transitions and <For animate> on this page (the shell installs them later, when idle)
+import { spring, tween, timeline, stagger, drag, magnet, tilt, press, parallax, reveal, inView } from "march/motion";
+import { Particles, confetti, spotlight } from "march/fx";
+import { Button, IconButton, Card, Badge, Slider, Field, toast } from "march/ui";
+import { plus, refresh, sparkles, x as xIcon } from "march/icons";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 
@@ -83,5 +83,5 @@ const x = spring(() => $hedef, { stiffness: 210, damping: 16 })
     <div class="sc-reveal-grid">{Array.from({ length: 6 }, (_, i) => <Card use:reveal={{ delay: i * 70, y: 24 }}><strong>Kart {i + 1}</strong><p class="m-muted">Sırayla belirir.</p></Card>)}</div>
   </Demo>,
   }
-  return <Hub section="/motion" kicker="Hareket" title="Hareket ve efektler" lead="hadi-march/motion: yay fiziği, tween, FLIP, zaman çizelgesi, jestler ve kaydırma tetikleyicileri. hadi-march/fx: parçacıklar, konfeti, spot ışığı. Satır içi stil yerine CSS değişkenleri; 'hareketi azalt' açıkken sakinleşir." render={RENDER} params={props.params} />
+  return <Hub section="/motion" kicker="Hareket" title="Hareket ve efektler" lead="march/motion: yay fiziği, tween, FLIP, zaman çizelgesi, jestler ve kaydırma tetikleyicileri. march/fx: parçacıklar, konfeti, spot ışığı. Satır içi stil yerine CSS değişkenleri; 'hareketi azalt' açıkken sakinleşir." render={RENDER} params={props.params} />
 }

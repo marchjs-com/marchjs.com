@@ -6,15 +6,15 @@
 // change is built in the page (playground/build.ts): the Console shows each step with its time and the errors,
 // lang.json the texts the build found. No tab has a close mark (groups still collapse to strips).
 import "./playground.css";
-import { h, render as mount, createRoot, signal, computed, effect, untrack, onCleanup, SX, locale } from "hadi-march";
-import { registry } from "hadi-march/components/registry.gen.ts";
-import type { PlaygroundOption } from "hadi-march/components/meta.ts";
-import { appUrl } from "hadi-march/base";
-import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "hadi-march/ui";
-import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
-import { x as xIcon, history, plus, database, zap, monitor, sliders, packageBox, users, code, terminal, fileText, globe, plug } from "hadi-march/icons";
-import { KeyValueEditor, TextInput, JsonEditor } from "hadi-march/forms"
-import { COLOR_TOKENS } from "hadi-march/theme"
+import { h, render as mount, createRoot, signal, computed, effect, untrack, onCleanup, SX, locale } from "march";
+import { registry } from "march/components/registry.gen.ts";
+import type { PlaygroundOption } from "march/components/meta.ts";
+import { appUrl } from "march/base";
+import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "march/ui";
+import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "march/app-ui";
+import { x as xIcon, history, plus, database, zap, monitor, sliders, packageBox, users, code, terminal, fileText, globe, plug } from "march/icons";
+import { KeyValueEditor, TextInput, JsonEditor } from "march/forms"
+import { COLOR_TOKENS } from "march/theme"
 import { createBuilder, type BuildResult } from "../playground/build.ts";
 import { openBuildOutput } from "../playground/output.tsx";
 import { findRoots, exportRoots, viewRoots, type JsxRoot } from "../playground/roots.ts";
@@ -24,9 +24,9 @@ import { ExtensionsPanel, extensionOptions, extensionSpec, withExtensionSuggesti
 
 // the component's files (kept for this visit)
 const SOURCES: Record<string, string> = {
-  "Button.tsx": `export { Button } from "hadi-march/ui"
+  "Button.tsx": `export { Button } from "march/ui"
 `,
-  "Component2.tsx": `import { Card, Badge } from "hadi-march/ui"
+  "Component2.tsx": `import { Card, Badge } from "march/ui"
 
 export function Component2(props: { title: string; count: number }) {
   return <Card title={props.title}>
@@ -34,7 +34,7 @@ export function Component2(props: { title: string; count: number }) {
   </Card>
 }
 `,
-  "Component3.tsx": `import { signal, computed } from "hadi-march"
+  "Component3.tsx": `import { signal, computed } from "march"
 
 const items = signal(["elma", "armut"])
 const total = computed(() => items().length)
@@ -185,7 +185,7 @@ const GLOBAL_ATTRS = ["dir", "id", "lang", "title", "translate"]
 // name, its texts for screen readers: from the API reference)
 const A11Y_ATTRS = ["accesskey", "aria-describedby", "aria-description", "aria-hidden", "aria-label", "aria-labelledby", "role", "tabindex"]
 const A11Y_GROUP = "Erişilebilirlik", COMMON_GROUP = "Ortak (m:)", SX_GROUP = "sx"
-// sx: the design-token shorthands (hadi-march's SX table), one property per key, on any component (its root)
+// sx: the design-token shorthands (march's SX table), one property per key, on any component (its root)
 const SX_SPEC = SX as unknown as Record<string, readonly (string | number)[]>
 /** A key's values: a number range (0–8) or its words. */
 const sxValues = (k: string): string[] => { const s = SX_SPEC[k] ?? [], lo = s[0], hi = s[1]; return typeof lo === "number" ? Array.from({ length: (hi as number) - lo + 1 }, (_, i) => String(lo + i)) : s.map(String) }
@@ -195,7 +195,7 @@ const SX_GROUPS: Record<string, readonly (readonly string[])[]> = {
   flex: [["row", "col"], ["wrap"], ["center", "between", "end"], ["grow"]],
 }
 const sxOptions = (): PlaygroundOption[] => Object.keys(SX_SPEC).map((k) => ({ key: `sx:${k}`, label: k, prop: `sx.${k}`, default: "", kind: "text" as const }))
-// March's common props (hadi-march/props): every component takes them
+// March's common props (march/props): every component takes them
 const COMMON_PROPS = ["m:color", "m:dir", "m:lang", "m:no-select", "m:reveal", "m:test", "m:theme", "m:tip"]
 const COMMON_BOOL = new Set(["m:no-select", "m:reveal"])
 // the values an attribute (or an exported prop) takes: one of a list (a select), one of a list or your own (`own`:
@@ -567,7 +567,7 @@ async function loadEvents(name: string): Promise<void> {
   const api = rootTag(name) ?? name
   const idx = await apiIndex() as unknown as { subpaths: { subpath: string; items: [string, string, string, string, number][] }[] }
   let found: { key: string; chunk: number } | null = null
-  for (const sp of idx.subpaths) for (const it of sp.items) if (it[0] === api && it[1] === "component" && (!found || sp.subpath === "hadi-march/ui")) found = { key: `${sp.subpath}#${api}`, chunk: it[4] }
+  for (const sp of idx.subpaths) for (const it of sp.items) if (it[0] === api && it[1] === "component" && (!found || sp.subpath === "march/ui")) found = { key: `${sp.subpath}#${api}`, chunk: it[4] }
   let all: ApiProp[] = []
   if (found) {
     const { key, chunk } = found
@@ -960,7 +960,7 @@ const loadRuntime = () => (runtime ??= (async () => {
   document.head.append(link)
   const r = await import(/* @vite-ignore */ appUrl("playground/preview.js")) as Runtime
   r.onData((values) => liveData.set(values))
-  // import { instrument, run } from "hadi-march/playground": the code's own debugging, with the page's TypeScript worker
+  // import { instrument, run } from "march/playground": the code's own debugging, with the page's TypeScript worker
   r.setHost({ instrument: (files) => (tsSvc ? tsSvc.instrument(files) : Promise.reject(new Error("TypeScript yok"))) })
   runtimeNow = r
   return r

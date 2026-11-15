@@ -4,10 +4,10 @@
 // is chosen in the tree. The code is esbuild's print of it (laid out the same way every time). The toolbar has one
 // button: download every file as a zip.
 import "./output.css";
-import { signal, computed, effect, untrack } from "hadi-march";
-import { openDialog, Tree, Button } from "hadi-march/ui";
-import { AppUI, codeEditorPlugin, groups, row, tabs, type AppPanel, type DockApi, type Preset } from "hadi-march/app-ui";
-import { fileText, folder, download } from "hadi-march/icons";
+import { signal, computed, effect, untrack } from "march";
+import { openDialog, Tree, Button } from "march/ui";
+import { AppUI, codeEditorPlugin, groups, row, tabs, type AppPanel, type DockApi, type Preset } from "march/app-ui";
+import { fileText, folder, download } from "march/icons";
 import { zip } from "./zip.ts";
 import type { BuildResult } from "./build.ts";
 
@@ -37,9 +37,9 @@ export async function outputFiles(o: OutputSource): Promise<Record<string, strin
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>${name}</title>
-    <!-- hadi-march npm'de yok: github.com/tlghn/hadimarch deposundan kur, yolunu buraya yaz -->
+    <!-- march npm'de yok: github.com/tlghn/hadimarch deposundan kur, yolunu buraya yaz -->
     <script type="importmap">
-      { "imports": { "hadi-march": "./hadi-march/src/index.ts", "hadi-march/": "./hadi-march/src/" } }
+      { "imports": { "march": "./march/src/index.ts", "march/": "./march/src/" } }
     </script>
   </head>
   <body>
@@ -49,7 +49,7 @@ export async function outputFiles(o: OutputSource): Promise<Record<string, strin
 </html>
 `,
     "assets/main.js": `// the page's start: every component the bundle exports, each in its own section
-import { h, render } from "hadi-march";
+import { h, render } from "march";
 import * as app from "./app.js";
 
 const root = document.getElementById("app");

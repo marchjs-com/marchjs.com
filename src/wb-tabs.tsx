@@ -2,12 +2,12 @@
 // lights up), Erişilebilirlik (keyboard, screen reader, focus) and Parçalar ve ilgili (the components it is built from
 // and the ones built from it). The text comes from the folder's docs.md (tools/gen-registry.js writes one JSON per
 // category under public/comp/<category>.json), fetched when a tab first opens.
-import { signal, effect, untrack, onCleanup } from "hadi-march";
-import { Link, type Href } from "hadi-march/router";
-import { Tabs } from "hadi-march/ui";
-import { appUrl } from "hadi-march/base";
-import type { PlaygroundOption, PlaygroundSpec } from "hadi-march/ui";
-import { cards, type CardEntry } from "hadi-march/components/cards.gen.ts";
+import { signal, effect, untrack, onCleanup } from "march";
+import { Link, type Href } from "march/router";
+import { Tabs } from "march/ui";
+import { appUrl } from "march/base";
+import type { PlaygroundOption, PlaygroundSpec } from "march/ui";
+import { cards, type CardEntry } from "march/components/cards.gen.ts";
 import { demoId } from "./component-demo.tsx";
 import { HUBS } from "./topics.ts";
 

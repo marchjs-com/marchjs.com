@@ -1,19 +1,19 @@
-// Icons: the March set, open-source icon packs (hadi-march/icons/<pack>), icons by name, stroke / fill / RTL.
+// Icons: the March set, open-source icon packs (march/icons/<pack>), icons by name, stroke / fill / RTL.
 // The March gallery reads the catalog (one separate module); pack galleries fetch JSON (dist/icon-packs) only when a
 // pack is opened, so no icon data rides along with this page or the start-up.
-import { ICONS } from "hadi-march/icons/catalog";
-import { Icon, type IconDef } from "hadi-march/icons";
-import { registerIconPack, icon, Icon as NamedIcon } from "hadi-march/icons/packs";
-import { arrowLeft as lucideArrow, undo2 } from "hadi-march/icons/lucide";
-import { arrowLeft as tablerArrow } from "hadi-march/icons/tabler";
-import { arrowLeft as heroArrow } from "hadi-march/icons/heroicons";
-import { arrowLeft as phosphorArrow } from "hadi-march/icons/phosphor";
-import { arrowBack } from "hadi-march/icons/material-symbols";
-import { arrowLeftLine } from "hadi-march/icons/remix";
-import { arrowLeft as bootstrapArrow } from "hadi-march/icons/bootstrap";
-import { arrowLeft as featherArrow } from "hadi-march/icons/feather";
-import { SearchBox, toast, Segmented, RadioGroup, TextInput } from "hadi-march/ui";
-import { onCleanup, effect } from "hadi-march";
+import { ICONS } from "march/icons/catalog";
+import { Icon, type IconDef } from "march/icons";
+import { registerIconPack, icon, Icon as NamedIcon } from "march/icons/packs";
+import { arrowLeft as lucideArrow, undo2 } from "march/icons/lucide";
+import { arrowLeft as tablerArrow } from "march/icons/tabler";
+import { arrowLeft as heroArrow } from "march/icons/heroicons";
+import { arrowLeft as phosphorArrow } from "march/icons/phosphor";
+import { arrowBack } from "march/icons/material-symbols";
+import { arrowLeftLine } from "march/icons/remix";
+import { arrowLeft as bootstrapArrow } from "march/icons/bootstrap";
+import { arrowLeft as featherArrow } from "march/icons/feather";
+import { SearchBox, toast, Segmented, RadioGroup, TextInput } from "march/ui";
+import { onCleanup, effect } from "march";
 // the window of core/virtual.ts (windowRange), inlined: importing that module from this page changes which pages share
 // it, and the build's chunk packer then regroups unrelated pages under the 10 KB floor
 const windowRange = ({ count, scrollTop = 0, height, rowHeight, overscan = 6 }: { count: number; scrollTop?: number; height: number; rowHeight: number; overscan?: number }) => { const first = Math.min(count, Math.floor(Math.max(0, scrollTop) / rowHeight)); const start = Math.max(0, first - overscan); const end = Math.min(count, first + Math.ceil(height / rowHeight) + 1 + overscan); return { start, end } };
@@ -29,7 +29,7 @@ function copy(text: string, what: string): void {
   toast(`${what} kopyalandı`, { kind: "success" });
 }
 
-// the showcase's packs answer <Icon name="pack:…"> from the same gallery data (an app registers hadi-march/icons/<pack>/pack)
+// the showcase's packs answer <Icon name="pack:…"> from the same gallery data (an app registers march/icons/<pack>/pack)
 let registered = false;
 function registerGalleryPacks(list: PackInfo[]): void {
   if (registered) return;
@@ -77,7 +77,7 @@ function MarchSet() {
   let $size = "lg"
   const list = () => ALL.filter(([name, d]) => !$q || name.toLowerCase().includes($q.toLowerCase()) || d.name.includes($q.toLowerCase()))
   return <Demo wide title="İkon seti" desc="Ara, boyut seç, ikona tıkla: içe aktarma satırı seçili boyutla kopyalanır."
-    code={`import { Icon, users, search } from "hadi-march/icons"
+    code={`import { Icon, users, search } from "march/icons"
 
 <Icon of={users} size="lg" />
 <Button icon={search}>Ara</Button>   // every icon prop takes an icon`}>
@@ -147,9 +147,9 @@ function PackGallery() {
   }
   return <Demo wide title="İkon paketleri" desc="Açık kaynak ikon setleri: paket seç, tüm paketlerde ara, ikona tıkla; doğru içe aktarma satırı kopyalanır. Izgara sanal: binlerce ikonun yalnız görünenleri çizilir."
     code={`// one icon, one export: only what you import is bundled
-import { Icon } from "hadi-march/icons"
-import { rocket } from "hadi-march/icons/lucide"
-import { chartBar } from "hadi-march/icons/tabler"
+import { Icon } from "march/icons"
+import { rocket } from "march/icons/lucide"
+import { chartBar } from "march/icons/tabler"
 
 <Icon of={rocket} size="lg" />
 <Button icon={chartBar}>Rapor</Button>
@@ -181,7 +181,7 @@ import { chartBar } from "hadi-march/icons/tabler"
       }}
     </div>
     <IconGrid count={() => $list.length} cell={cell} label="İkonlar" empty={$failed ? "Yüklenemedi." : $names || !searching() ? "Sonuç yok." : "Aranıyor…"} />
-    <p class="sc-pack-note">Her paket kendi lisans metniyle gelir (<code>hadi-march/icons/&lt;paket&gt;/LICENSE</code>). Marka ikonları (Simple Icons) markalarının sahiplerine aittir.</p>
+    <p class="sc-pack-note">Her paket kendi lisans metniyle gelir (<code>march/icons/&lt;paket&gt;/LICENSE</code>). Marka ikonları (Simple Icons) markalarının sahiplerine aittir.</p>
   </Demo>
 }
 
@@ -190,9 +190,9 @@ function ByName() {
   const shown = ["user", "lucide:rocket", "tabler:chart-bar", "phosphor:planet", "material-symbols:bolt", "simple-icons:github"]
   void loadIndex().then(registerGalleryPacks, () => {})
   return <Demo wide title="İsimle ikon" desc="Paketi kaydet, ikonu adıyla çağır: önek paketi seçer, öneksiz ad March setidir. Paket ilk kullanımda tembel yüklenir."
-    code={`import { registerIconPack, icon, Icon } from "hadi-march/icons/packs"
-import lucide from "hadi-march/icons/lucide/pack"
-import tabler from "hadi-march/icons/tabler/pack"
+    code={`import { registerIconPack, icon, Icon } from "march/icons/packs"
+import lucide from "march/icons/lucide/pack"
+import tabler from "march/icons/tabler/pack"
 
 registerIconPack(lucide)
 registerIconPack(tabler)
@@ -218,9 +218,9 @@ function StrokeFillRtl() {
   const set: [string, IconDef][] = [["Lucide", lucideArrow], ["Tabler", tablerArrow], ["Heroicons", heroArrow], ["Feather", featherArrow],
     ["Phosphor", phosphorArrow], ["Material Symbols", arrowBack], ["Remix", arrowLeftLine], ["Bootstrap", bootstrapArrow], ["Lucide undo", undo2]]
   return <Demo wide title="Çizgi, dolgu ve sağdan sola" desc="Her paket kendi ızgarası, çizgi kalınlığı ya da dolgusuyla çizilir; renk currentColor, boyut size'dan gelir. Yön bildiren ikonlar (ok, geri, geri al) sağdan sola metinde kendiliğinden aynalanır."
-    code={`import { Icon } from "hadi-march/icons"
-import { arrowLeft } from "hadi-march/icons/lucide"      // stroke, 24 grid, 2 px
-import { arrowBack } from "hadi-march/icons/material-symbols" // fill, 960 grid
+    code={`import { Icon } from "march/icons"
+import { arrowLeft } from "march/icons/lucide"      // stroke, 24 grid, 2 px
+import { arrowBack } from "march/icons/material-symbols" // fill, 960 grid
 
 <Icon of={arrowLeft} />   // in <div dir="rtl"> it points the other way
 <Icon of={arrowBack} />`}>

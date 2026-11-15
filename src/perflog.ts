@@ -1,8 +1,8 @@
 // Showcase network log: records every file loaded since start (PerformanceObserver › resource) with the page it was
 // loaded on, when, its size and where it came from (network, HTTP cache, service worker, preload). The Speed page shows
 // it live. Data only: no inline styles, no innerHTML.
-import { signal } from "hadi-march";
-import { appBase, appBaseUrl } from "hadi-march/base";
+import { signal } from "march";
+import { appBase, appBaseUrl } from "march/base";
 import { measured, wireBytes, reportKey, type Timing } from "./netsize.ts";
 
 export interface NetEntry extends Timing {

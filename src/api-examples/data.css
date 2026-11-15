@@ -1,4 +1,4 @@
-/* API examples of the data group (hadi-march/data, schema, components/registry.gen.ts). */
+/* API examples of the data group (march/data, schema, components/registry.gen.ts). */
 .sc-ex-data-stack { display: grid; gap: var(--m-space-3); min-width: 0; }
 .sc-ex-data-pre { max-block-size: 12rem; margin: 0; padding: var(--m-space-2); overflow: auto; border-radius: var(--m-radius-1); background: var(--m-surface-2); font-family: var(--m-font-mono); font-size: var(--m-text-xs); white-space: pre-wrap; overflow-wrap: anywhere; }
 .sc-ex-data-list { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; font-size: var(--m-text-sm); }

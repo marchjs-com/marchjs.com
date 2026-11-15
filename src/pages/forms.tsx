@@ -1,10 +1,10 @@
 // Forms: form from a schema + validation, the choice looks side by side, then one card per input (src/components/forms/<name>/: demo, Playground, Code) and the wizard.
-import { schema } from "hadi-march/schema";
-import { Form, Field, Checkbox, Toggle, RadioGroup, CheckboxGroup, Slider, ColorInput, Rating, toast, Card } from "hadi-march/ui";
-import { users, zap, shieldCheck } from "hadi-march/icons";
-import type { ColorToken } from "hadi-march/theme";
-import { shapesFor } from "hadi-march/ui";
-import { Stack } from "hadi-march/ui";
+import { schema } from "march/schema";
+import { Form, Field, Checkbox, Toggle, RadioGroup, CheckboxGroup, Slider, ColorInput, Rating, toast, Card } from "march/ui";
+import { users, zap, shieldCheck } from "march/icons";
+import type { ColorToken } from "march/theme";
+import { shapesFor } from "march/ui";
+import { Stack } from "march/ui";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 import { Playground } from "../playground.tsx";

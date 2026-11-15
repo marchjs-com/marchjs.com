@@ -1,16 +1,16 @@
-// API examples of hadi-march/flow: the node editor (FlowCanvas, Minimap, FlowPalette), running a flow (createFlowRunner,
+// API examples of march/flow: the node editor (FlowCanvas, Minimap, FlowPalette), running a flow (createFlowRunner,
 // FlowControls, FlowTimeline) and the model helpers (createFlow, validateFlow, layout and geometry). One small order
 // flow serves every example; the flows here keep their changes out of the app's undo history (undo: false).
 // Layout and rules: tools/api-examples.js.
 import "./flow.css";
-import { signal, computed, effect, onCleanup, Await } from "hadi-march";
-import { Button, Segmented } from "hadi-march/ui";
+import { signal, computed, effect, onCleanup, Await } from "march";
+import { Button, Segmented } from "march/ui";
 // the model and the runner are small and load with this part; the editor components (FlowCanvas …) load on demand
 import {
   createFlow, boundsOf, edgePath, emit, emitted, endOf, FLOW_SCHEMA, layeredLayout, NODE_HEAD, NODE_W, PORT_ROW, portPoint, portsOf,
   validateFlow, type FlowDoc, type FlowNodeType, type FlowRunContext,
-} from "hadi-march/components/composite/flow-canvas/model.ts";
-import { createFlowRunner } from "hadi-march/components/composite/flow-controls/runner.ts";
+} from "march/components/composite/flow-canvas/model.ts";
+import { createFlowRunner } from "march/components/composite/flow-controls/runner.ts";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 export { default as SIG } from "./flow.sig.gen.ts";
@@ -29,8 +29,8 @@ const doc = (): FlowDoc => ({
   edges: [{ id: "e1", from: "order.out", to: "check.in" }, { id: "e2", from: "check.yes", to: "mail.in" }, { id: "e3", from: "check.no", to: "note.in" }],
 })
 const newFlow = (d: FlowDoc = doc()) => createFlow({ types: TYPES, doc: d, undo: false })
-const flowLib = () => import("hadi-march/flow")
-/** Renders `children(module)` once hadi-march/flow has loaded. */
+const flowLib = () => import("march/flow")
+/** Renders `children(module)` once march/flow has loaded. */
 function Load<M>(p: { from: () => Promise<M>; children: (m: M) => unknown }) {
   return <Await for={p.from} loading={<p class="m-muted">Yükleniyor…</p>}>{p.children}</Await>
 }
@@ -39,7 +39,7 @@ const json = (v: unknown) => JSON.stringify(v)
 const pt = (p: { x: number; y: number } | null) => (p ? `${Math.round(p.x)}, ${Math.round(p.y)}` : "null")
 
 export default examples({
-  "hadi-march/flow": {
+  "march/flow": {
     boundsOf: {
       code: `boundsOf(flow)                    // { x, y, w, h } of every node
 boundsOf(flow, flow.selection())  // only the selected ones`,

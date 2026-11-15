@@ -1,9 +1,9 @@
 // The showcase's theme transition: the shape every theme, colour theme, accent or light / dark change comes in with
-// (themeWave of hadi-march/motion). Chosen on Motion › Page transitions (Tema geçişleri), remembered in the browser.
+// (themeWave of march/motion). Chosen on Motion › Page transitions (Tema geçişleri), remembered in the browser.
 // The spray draws with the paint worklet the build copies next to the page (spray-worklet.js).
-import { signal } from "hadi-march";
-import { appUrl } from "hadi-march/base";
-import { installThemeWave, type ThemeWaveShape } from "hadi-march/motion";
+import { signal } from "march";
+import { appUrl } from "march/base";
+import { installThemeWave, type ThemeWaveShape } from "march/motion";
 
 const KEY = "sc.wave";
 /** The shapes, in the order the chooser shows them. */

@@ -1,5 +1,5 @@
 // The shape of an API example file (examples/showcase/src/api-examples/<group>.tsx; layout: tools/api-examples.js).
-import type { PlaygroundSpec } from "hadi-march/ui";
+import type { PlaygroundSpec } from "march/ui";
 
 /** One export's example: the code shown, the live result and, optionally, Playground options for it. */
 export interface ApiExample<V = Record<string, unknown>> {
