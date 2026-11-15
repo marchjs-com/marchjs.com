@@ -10,10 +10,10 @@ import { h, render as mount, createRoot, signal, computed, effect, untrack, onCl
 import { registry } from "hadi-march/components/registry.gen.ts";
 import type { PlaygroundOption } from "hadi-march/components/meta.ts";
 import { appUrl } from "hadi-march/base";
-import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Combobox, Toggle, Select, Badge, Button, toast, colorThemes, Tree, CodeView, type TerminalApi, type PropertySpec } from "hadi-march/ui";
+import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, type TerminalApi, type PropertySpec } from "hadi-march/ui";
 import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, groups, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
-import { database, zap, monitor, sliders, packageBox, users, code, terminal, bug, fileText, globe } from "hadi-march/icons";
-import { KeyValueEditor, TextInput } from "hadi-march/forms"
+import { x as xIcon, plus, database, zap, monitor, sliders, packageBox, users, code, terminal, bug, fileText, globe } from "hadi-march/icons";
+import { KeyValueEditor, TextInput, JsonEditor } from "hadi-march/forms"
 import { COLOR_TOKENS } from "hadi-march/theme"
 import { createBuilder } from "../playground/build.ts";
 
@@ -485,17 +485,20 @@ const handlerFns = (name: string): Record<string, unknown> => {
 // has them, whatever it passes on to its element
 const DOM_EVENTS = ["blur", "click", "contextmenu", "dblclick", "focus", "keydown", "keyup", "pointerenter", "pointerleave"]
 const FIELD_EVENTS = ["change", "input"]
+const tagEvents = (tag: string): string[] => [...DOM_EVENTS, ...(["input", "textarea", "select"].includes(tag) ? FIELD_EVENTS : []), ...(tag === "form" ? ["submit"] : [])].sort()
 const domEvents = (name: string): string[] => { const tag = rootTags()[name] ?? ""; return [...DOM_EVENTS, ...(["input", "textarea", "select"].includes(tag) ? FIELD_EVENTS : []), ...(tag === "form" ? ["submit"] : [])].sort() }
 /** The code of the chosen handlers: [event, expression]. */
 const handlerCode = (name: string): [string, string][] => Object.entries(handlersBy()[name] ?? {}).filter(([ev, how]) => how && (isRoot(name) || !ev.startsWith("on:"))).map(([ev, how]) =>
   [ev, how === "log" ? `(...a) => console.log("${ev}", ...a)` : how === "toast" ? `() => toast("${ev} çalıştı")` : "() => count++"])
 const eventsPanel = () => <div class="sc-events">
   {() => {
-    const name = selected(), local = localComps()[name], list = local ? local.props.filter((p) => /^on[A-Z]/.test(p.name)) : eventsBy()[name]
+    // an HTML element of the tree (<div>): it exports nothing, it has its HTML events
+    const name = selected(), tag = /^<([\w-]+)>$/.exec(name)?.[1], local = localComps()[name]
+    const list = tag ? [] : local ? local.props.filter((p) => /^on[A-Z]/.test(p.name)) : eventsBy()[name]
     rootTags()
     if (!name) return <div class="sc-playground-empty"><b>Olay yok</b><span>Dışa aktarılan bileşen yok</span></div>
     if (!list) return <div class="sc-playground-empty"><span>Olaylar okunuyor…</span></div>
-    const dom = isRoot(name) ? domEvents(name) : []
+    const dom = tag ? tagEvents(tag) : isRoot(name) ? domEvents(name) : []
     const row = (ev: string, sub: string) => <li class="sc-events-row">
       <span class="sc-events-name"><code>{ev}</code><small>{sub}</small></span>
       <Badge tone="info">{() => String(fired()[`${name}.${ev}`] ?? 0)}</Badge>
@@ -503,12 +506,12 @@ const eventsPanel = () => <div class="sc-events">
         onChange={(v: Handler | null) => handlersBy.set({ ...handlersBy.peek(), [name]: { ...handlersBy.peek()[name], [ev]: v ?? "" } })} />
     </li>
     return untrack(() => <div>
-      <h3 class="sc-events-head">Bileşen olayları</h3>
-      {list.length
+      {tag ? null : <h3 class="sc-events-head">Bileşen olayları</h3>}
+      {tag ? null : list.length
         ? <ul class="sc-events-list" aria-label={`${name} olayları`}>{list.map((p) => row(p.name, p.doc || p.type))}</ul>
         : <p class="sc-events-none">{name} olay dışa aktarmıyor</p>}
       {dom.length ? <h3 class="sc-events-head">HTML olayları</h3> : null}
-      {dom.length ? <ul class="sc-events-list" aria-label={`${name} HTML olayları`}>{dom.map((ev) => row(`on:${ev}`, `<${rootTags()[name] || "öğe"}> üzerinde`))}</ul> : null}
+      {dom.length ? <ul class="sc-events-list" aria-label={`${name} HTML olayları`}>{dom.map((ev) => row(`on:${ev}`, `<${tag ?? (rootTags()[name] || "öğe")}> üzerinde`))}</ul> : null}
     </div>)
   }}
 </div>
@@ -560,13 +563,65 @@ const stamp = () => new Date().toLocaleTimeString("tr-TR", { hour12: false })
 const consolePanel = () => <Terminal readonly scheme="dark" height="100%" label="Derleme çıktısı" class="sc-console"
   ref={(api: TerminalApi) => { consoleApi = api; for (const [t, o] of waiting.splice(0)) api.print(t, o) }} />
 // lang.json: the texts the last build found (JSX text, titles, labels…), as a locale file lists them
-const langJson = () => Object.fromEntries(builder.texts().map((k) => [k, ""]))
+// lang.json: the default language is the code's own texts (each key is its own text); a language added with + starts
+// as a copy of it under its code and is translated here; the preview's language tool lists them all
+const langJson = () => Object.fromEntries(builder.texts().map((k) => [k, k]))
+const LANGS_KEY = "sc.playground.langs"
+const readLangs = (): Record<string, Record<string, string>> => { try { return JSON.parse(localStorage.getItem(LANGS_KEY) ?? "{}") as Record<string, Record<string, string>> } catch { return {} } }
+const langs = signal<Record<string, Record<string, string>>>(readLangs())
+const saveLangs = (v: Record<string, Record<string, string>>): void => { langs.set(v); try { localStorage.setItem(LANGS_KEY, JSON.stringify(v)) } catch { /* private mode */ } }
+/** A language's file: every key of the code, its own translations kept (a new text starts as itself). */
+const langFile = (code: string): Record<string, string> => { const own = langs()[code] ?? {}; return Object.fromEntries(Object.entries(langJson()).map(([k, v]) => [k, own[k] ?? v])) }
+const langShown = signal("")
+const previewLang = signal("")
+/** A language's name in itself ("English", "Türkçe"); the code when the browser does not know it. */
+const langName = (code: string): string => { try { const n = new Intl.DisplayNames([code], { type: "language" }).of(code); return n && n !== code ? n.charAt(0).toLocaleUpperCase(code) + n.slice(1) : code } catch { return code } }
+const languageList = () => [{ value: "", label: "Varsayılan" }, ...Object.keys(langs()).sort().map((c) => ({ value: c, label: `${langName(c)}: ${c}` }))]
+let addCode = ""
+const addLang = (): void => {
+  const code = addCode.trim().toLowerCase()
+  if (!/^[a-z]{2,3}(-[a-z0-9]{2,8})*$/.test(code)) { toast("Dil kodu: tr, en, de, pt-br gibi"); return }
+  if (langs()[code]) { langShown.set(code); return }
+  saveLangs({ ...langs(), [code]: langFile(langShown()) })
+  langShown.set(code)
+  print(`[${stamp()}] + ${langName(code)}: ${code} eklendi (kopyalanan: ${langShown() ? langShown() : "Varsayılan"})`, "success")
+}
+/** Remove an added language (the default stays); the preview falls back to the default when it showed it. */
+const removeLang = (code: string): void => {
+  const { [code]: _gone, ...rest } = langs()
+  saveLangs(rest)
+  if (langShown() === code) langShown.set("")
+  if (previewLang() === code) previewLang.set("")
+  print(`[${stamp()}] − ${code}.json silindi`, "warn")
+}
+const langPanel = () => <div class="sc-lang">
+  <div class="sc-lang-bar">
+    <div class="sc-lang-tabs" role="tablist" aria-label="Diller">
+      {() => languageList().map((l) => <span class="sc-lang-tab" aria-current={() => (langShown() === l.value ? "true" : null)}>
+        <button type="button" role="tab" class="sc-lang-tab-name" aria-selected={() => String(langShown() === l.value)} on:click={() => langShown.set(l.value)}>{l.label}</button>
+        {l.value ? <IconButton class="sc-lang-tab-x" size="xs" icon={xIcon} label={`${l.label} dilini sil`} on:click={() => removeLang(l.value)} /> : null}
+      </span>)}
+    </div>
+    <Dropdown icon={plus} label="Dil ekle" size="sm" variant="ghost" placement="bottom-end" panelClass="sc-lang-new">
+      {(close: () => void) => <div class="sc-lang-new-body">
+        <span class="sc-lang-new-hint">{() => `${langShown() ? `${langName(langShown())}: ${langShown()}` : "Varsayılan"} kopyalanır`}</span>
+        <div class="sc-lang-new-row">
+          <TextInput aria-label="Yeni dilin kodu" placeholder="tr, en, de…" onChange={(v: string) => { addCode = v }} onKeyDown={(e: KeyboardEvent) => { if (e.key === "Enter") { addLang(); close() } }} />
+          <Button size="sm" variant="primary" on:click={() => { addLang(); close() }}>Ekle</Button>
+        </div>
+      </div>}
+    </Dropdown>
+  </div>
+  {() => { const code = langShown(); return untrack(() => (code
+    ? <JsonEditor value={langFile(code)} onChange={(v: unknown) => { if (v && typeof v === "object") saveLangs({ ...langs(), [code]: v as Record<string, string> }) }} aria-label={`${code}.json`} />
+    : <JsonView value={langJson} open={2} label="Varsayılan metinler" />)) }}
+</div>
 
 // the preview (AppPreview): its toolbar sets the preview's own theme, accent and light / dark; each successful build's
 // PreviewControl is rendered in the middle of its stage by the preview runtime (playground/preview.js, loaded once)
 let previewEl: HTMLElement | null = null
 type Parts = Record<string, Record<string, unknown>>
-type Runtime = { run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void }
+type Runtime = { run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void }
 let runtime: Promise<Runtime> | null = null
 const loadRuntime = () => (runtime ??= (async () => {
   // its components' stylesheet, once
@@ -594,7 +649,7 @@ async function render(code: string): Promise<void> {
     print(`[${stamp()}] ✖ Çalışma hatası: ${String((e as Error)?.message ?? e)}`, "error")
   }
 }
-const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: true }}
+const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: true, language: true }} language={previewLang} languages={languageList}
   footer={() => (usage() ? <CodeView code={usage} lang="tsx" copy wrap label="Bileşenin kodu" /> : null)}>
   <div class="sc-pv-root" m:no-select ref={(el: HTMLElement) => { previewEl = el }}>
     <div class="sc-playground-empty"><b>Önizleme</b><span>Derleniyor…</span></div>
@@ -614,7 +669,7 @@ const PANELS: AppPanel[] = [
   { id: "console", title: "Konsol", icon: code, content: consolePanel },
   panel("debug", "Hata ayıklayıcı", bug),
   panel("terminal", "Terminal", terminal),
-  { id: "i18n", title: "lang.json", icon: globe, content: () => <div class="sc-lang"><JsonView value={langJson} open={2} label="Çevrilecek metinler" /></div> },
+  { id: "i18n", title: "lang.json", icon: globe, content: langPanel },
 ]
 const PRESETS: Record<string, Preset> = {
   main: {
@@ -644,21 +699,29 @@ export default function PlaygroundPage(props: { name?: string }) {
     if (kept) { print(`[${stamp()}] ↺ ${path}: bu kod daha önce derlendi, bellekteki sonuç kullanılıyor`, "muted"); void render(kept.code); return }
     timer = setTimeout(() => { void builder.build(now, ENTRY).then((r) => { if (r?.ok) void render(r.code) }) }, 350)
   })
+  // the preview's language: its file, or the code's own texts
+  effect(() => { const code = previewLang(), file = code ? langFile(code) : null; void runtime?.then((r) => r.setLanguage(file)) })
   // a property changes: the rendered component takes it at once (no build)
   effect(() => { const p = rootProps(), parts = partsNow(); void runtime?.then((r) => { r.setProps(p, parts); readTag() }) })
   // HTML events chosen in Events: listened to on the preview, for the element each exported component draws
   effect(() => {
+    // what is chosen is read first (so the effect follows it even before the preview is there)
+    const tags = inTree().filter((n) => n.startsWith("<"))
+    const chosen = [...exportedNames(), ...tags].flatMap((name) => Object.entries(handlersBy()[name] ?? {}).filter(([ev, how]) => how && ev.startsWith("on:")).map(([ev, how]) => [name, ev, how] as const))
+    rootTags()
     const el = previewEl
     if (!el) return
-    const offs = exportedNames().flatMap((name) => Object.entries(handlersBy()[name] ?? {}).filter(([ev, how]) => how && ev.startsWith("on:")).map(([ev, how]) => {
-      const type = ev.slice(3), run = handle(name, ev, how as Handler)
+    const offs = chosen.map(([name, ev, how]) => {
+      const type = ev.slice(3), run = handle(name, ev, how as Handler), tag = /^<([\w-]+)>$/.exec(name)?.[1]
       const fn = (e: Event) => {
+        const target = e.target as Element
+        if (tag) { const hit = target.closest?.(tag); if (hit && el.contains(hit) && (!["pointerenter", "pointerleave"].includes(type) || hit === target)) run(e); return }
         const root = el.querySelector(`.sc-pv-cell[data-pv="${name}"] > .sc-pv-stage`)?.firstElementChild
         if (root && (e.target === root || (!["pointerenter", "pointerleave"].includes(type) && root.contains(e.target as Node)))) run(e)
       }
       el.addEventListener(type, fn, true)
       return () => el.removeEventListener(type, fn, true)
-    }))
+    })
     onCleanup(() => offs.forEach((off) => off()))
   })
   onCleanup(() => { clearTimeout(timer); consoleApi = null; previewEl = null; void runtime?.then((r) => r.stop()) })

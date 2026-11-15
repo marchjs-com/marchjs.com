@@ -68,10 +68,42 @@ const watchData = (): void => {
     return dispose;
   });
 };
+// the language: the drawn texts (and title / placeholder / aria-label / alt) that are keys of the chosen language's
+// dictionary are written in it; what is drawn later is translated as it comes; the default draws the code's own texts
+let dict: Record<string, string> | null = null;
+const ATTRS = ["title", "placeholder", "aria-label", "alt", "label"];
+const translate = (root: Node): void => {
+  if (!dict) return;
+  const d = dict;
+  const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
+  for (let n: Node | null = root; n; n = walk.nextNode()) {
+    if (n.nodeType === 3) {
+      const text = n.nodeValue ?? "", key = text.trim(), to = d[key];
+      if (key && to !== undefined && to !== key) n.nodeValue = text.replace(key, to);
+    } else if (n.nodeType === 1) {
+      for (const a of ATTRS) { const v = (n as Element).getAttribute(a)?.trim(); const to = v ? d[v] : undefined; if (v && to !== undefined && to !== v) (n as Element).setAttribute(a, to); }
+    }
+  }
+};
+const watchers = new Map<HTMLElement, MutationObserver>();
+const follow = (el: HTMLElement): void => {
+  watchers.get(el)?.disconnect();
+  const mo = new MutationObserver((list) => { for (const m of list) { if (m.type === "characterData") translate(m.target); else m.addedNodes.forEach((n) => translate(n)); } });
+  mo.observe(el, { childList: true, subtree: true, characterData: true });
+  watchers.set(el, mo);
+  translate(el);
+};
+let lastProps: Record<string, Props> = {}, lastParts: Record<string, Parts> = {};
+/** The preview's language: its dictionary (text → text), or null for the code's own texts. Everything is drawn again. */
+export function setLanguage(next: Record<string, string> | null): void {
+  dict = next && Object.keys(next).length ? next : null;
+  setProps(lastProps, lastParts);
+}
 /** Send new props (and parts) to the rendered components, by name (the Properties panel calls it on every change). */
 export function setProps(props: Record<string, Props>, parts: Record<string, Parts> = {}): void {
+  lastProps = props; lastParts = parts;
   if (!last) return;
-  for (const [name, cell] of last.cells) { cell.dispose(); cell.dispose = draw(cell.C, cell.el, props[name] ?? {}, parts[name] ?? {}); }
+  for (const [name, cell] of last.cells) { cell.dispose(); cell.dispose = draw(cell.C, cell.el, props[name] ?? {}, parts[name] ?? {}); if (dict) follow(cell.el); else watchers.get(cell.el)?.disconnect(); }
 }
 /**
  * Run `code` (an ES module) and render every component it exports (a name with a capital letter) into a cell of
@@ -85,6 +117,7 @@ export async function run(code: string, el: HTMLElement, props: Record<string, P
   const comps = Object.entries(mod).filter(([k, v]) => /^[A-Z]/.test(k) && typeof v === "function") as [string, Comp][];
   if (!comps.length) { URL.revokeObjectURL(url); throw new Error("dışa aktarılan bir bileşen yok"); }
   stop();
+  lastProps = props; lastParts = parts;
   el.replaceChildren();
   el.dataset["cells"] = String(comps.length);
   const cells = new Map<string, Cell>();
@@ -101,6 +134,7 @@ export async function run(code: string, el: HTMLElement, props: Record<string, P
     box.append(tag, stage);
     el.append(box);
     cells.set(name, { C, el: stage, dispose: draw(C, stage, props[name] ?? {}, parts[name] ?? {}) });
+    if (dict) follow(stage);
   }
   last = { url, cells };
   data = (mod["__marchData"] as Record<string, unknown> | undefined) ?? {};
@@ -110,6 +144,8 @@ export async function run(code: string, el: HTMLElement, props: Record<string, P
 /** Remove what the last run rendered. */
 export function stop(): void {
   dataStop?.(); dataStop = null;
+  for (const mo of watchers.values()) mo.disconnect();
+  watchers.clear();
   if (!last) return;
   for (const cell of last.cells.values()) cell.dispose();
   URL.revokeObjectURL(last.url);

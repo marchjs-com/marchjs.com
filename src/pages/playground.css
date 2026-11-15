@@ -30,3 +30,16 @@
 .sc-data-name { display: inline-flex; align-items: center; gap: var(--m-space-1); }
 .sc-data-value { overflow-wrap: anywhere; color: var(--m-text-2); }
 .sc-data-push { grid-column: 2; display: flex; gap: var(--m-space-1); }
+/* lang.json: a slim strip of the languages (the one shown underlined in the accent; its × on hover or when shown) and + at its end */
+.sc-lang-bar { position: sticky; inset-block-start: 0; z-index: 1; display: flex; align-items: center; gap: var(--m-space-1); margin: calc(-1 * var(--m-space-2)) calc(-1 * var(--m-space-3)) var(--m-space-2); padding-inline: var(--m-space-2); background: var(--m-surface); border-block-end: 1px solid var(--m-border); }
+.sc-lang-tabs { display: flex; flex: 1; min-inline-size: 0; overflow-x: auto; scrollbar-width: none; }
+.sc-lang-tab { display: inline-flex; align-items: center; border-block-end: 2px solid transparent; margin-block-end: -1px; }
+.sc-lang-tab[aria-current="true"] { border-block-end-color: var(--m-accent, var(--m-primary)); }
+.sc-lang-tab-name { padding: var(--m-space-2) var(--m-space-2); border: 0; background: none; font: var(--m-weight-medium) var(--m-text-sm) var(--m-font-mono); color: var(--m-muted); cursor: pointer; white-space: nowrap; }
+.sc-lang-tab[aria-current="true"] .sc-lang-tab-name, .sc-lang-tab-name:hover { color: var(--m-text); }
+.sc-lang-tab-name:focus-visible { outline: 2px solid var(--m-accent, var(--m-focus)); outline-offset: -2px; border-radius: var(--m-radius-1); }
+.sc-lang-tab-x { margin-inline-start: calc(-1 * var(--m-space-1)); opacity: 0; transition: opacity var(--m-dur) var(--m-ease); }
+.sc-lang-tab:hover .sc-lang-tab-x, .sc-lang-tab:focus-within .sc-lang-tab-x, .sc-lang-tab[aria-current="true"] .sc-lang-tab-x { opacity: 1; }
+.sc-lang-new-body { display: grid; gap: var(--m-space-2); padding: var(--m-space-3); min-inline-size: 15rem; }
+.sc-lang-new-hint { color: var(--m-muted); font-size: var(--m-text-xs); }
+.sc-lang-new-row { display: flex; gap: var(--m-space-2); }
