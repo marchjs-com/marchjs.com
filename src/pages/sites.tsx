@@ -37,7 +37,7 @@ const PARTS: Record<string, { file: string; blocks: string[] }> = {
 }
 const SAMPLES = (HUBS["/sites"] ?? []).filter((t) => LOAD[t.slug]).map((t) => ({ view: t.slug, title: t.title, ...PARTS[t.slug]! }))
 type Sample = typeof SAMPLES[number]
-const SOURCE = "https://github.com/marchjs/march/blob/main/examples/showcase/src/web/"
+const SOURCE = "https://github.com/marchjs-com/march/blob/main/examples/showcase/src/web/"
 // desktop: the full frame; the others: a real device body (DevicePreview) with touch
 const DEVICES = [{ id: "desktop", label: "Masaüstü" }, { id: "iphone-15", label: "iPhone" }, { id: "pixel-8", label: "Pixel" }, { id: "ipad", label: "iPad" }] as const
 const blockName = (folder: string): string => folder.split("-").map((w) => w[0]!.toUpperCase() + w.slice(1)).join("")
