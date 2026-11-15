@@ -66,6 +66,8 @@ const draw = (C: Comp, el: HTMLElement, props: Props, parts: Parts): (() => void
   // m:color, m:theme… (the common props) go on what the component draws, as the compiler writes them
   const common: Record<string, unknown> = {};
   for (const k of Object.keys(rest)) if (k.startsWith("m:")) { if (rest[k] !== undefined) common[k.slice(2)] = rest[k]; delete rest[k]; }
+  // sx: its classes on the component's root, as the compiler sends a component's sx
+  if ("sx" in rest) { if (rest["sx"] !== undefined) common["sx"] = rest["sx"]; delete rest["sx"]; }
   const own = resolve(rest);
   // m:parts: the components by themselves (this runtime's ui), each with its props
   const map = new Map<unknown, Record<string, unknown>>();

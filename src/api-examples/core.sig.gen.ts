@@ -13,6 +13,7 @@ const sig: Record<string, Record<string, string>> = {
   "Match": "function Match<T>(props: MatchProps<T>): MatchDescriptor",
   "Portal": "function Portal(props: PortalProps): null",
   "PortalTarget": "function PortalTarget(props: PortalTargetProps): Element",
+  "SX": "const SX",
   "Switch": "function Switch(props: SwitchProps): () => unknown",
   "Try": "function Try(props: TryProps): () => unknown",
   "_enter": "function _enter<T>(owner: Owner | null, value: T): T",

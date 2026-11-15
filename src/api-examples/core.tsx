@@ -5,7 +5,7 @@ import {
   useContext, reactive, isReactive, read, DEV, _enter, _leave, _tpl, _prop, store, patch, unwrap, h, Fragment, insert, lazyChildren,
   safeUrl, registerTransition, If, Else, For, Switch, Match, Try, Await, Dynamic, setFlipHook, Portal, PortalTarget,
   portalTarget, openLayer, layers, render, define, pipe, applyPipe, toDate, t, locale, messages, missing,
-  setFallbackLocale, sx, sxValue, version, extend, intercept, inside, partOf, defineExtension, withExtensions, Extensions, extensions,
+  setFallbackLocale, sx, sxValue, SX, version, extend, intercept, inside, partOf, defineExtension, withExtensions, Extensions, extensions,
 } from "hadi-march";
 import { Button, Badge, Segmented } from "hadi-march/ui";
 import { examples } from "./types.ts";
@@ -637,6 +637,11 @@ cart.items.push({ name: "Kalem" })   // only what read items updates`,
     sx: {
       code: `sx({ p: 3, radius: 2, shadow: 1 })   // "m-p-3 m-radius-2 m-shadow-1"`,
       run: () => <div class="sc-ex-stack"><Out label="sx({ p: 3, radius: 2 })" value={sx({ p: 3, radius: 2 })} /><div class={sx({ p: 3, radius: 2 })}>sx ile kenar boşluğu ve köşe</div></div>,
+    },
+    SX: {
+      code: `SX.p          // [0, 8]: p takes 0…8
+SX.display    // ["block", "inline", …, "none"]`,
+      run: () => <div class="sc-ex-stack"><Out label="SX.p" value={JSON.stringify(SX.p)} /><Out label="SX.display" value={JSON.stringify(SX.display)} /></div>,
     },
     sxValue: {
       code: `<div sx={$big ? { p: 4 } : { p: 1 }} />   // compiler: class={sxValue(…)}`,

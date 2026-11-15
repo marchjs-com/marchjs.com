@@ -6,7 +6,7 @@
 // change is built in the page (playground/build.ts): the Console shows each step with its time and the errors,
 // lang.json the texts the build found. No tab has a close mark (groups still collapse to strips).
 import "./playground.css";
-import { h, render as mount, createRoot, signal, computed, effect, untrack, onCleanup, locale } from "hadi-march";
+import { h, render as mount, createRoot, signal, computed, effect, untrack, onCleanup, SX, locale } from "hadi-march";
 import { registry } from "hadi-march/components/registry.gen.ts";
 import type { PlaygroundOption } from "hadi-march/components/meta.ts";
 import { appUrl } from "hadi-march/base";
@@ -183,7 +183,17 @@ const GLOBAL_ATTRS = ["dir", "id", "lang", "title", "translate"]
 // the Accessibility tab: the attributes of accessibility, and the props a component exports for it (its accessible
 // name, its texts for screen readers: from the API reference)
 const A11Y_ATTRS = ["accesskey", "aria-describedby", "aria-description", "aria-hidden", "aria-label", "aria-labelledby", "role", "tabindex"]
-const A11Y_GROUP = "Erişilebilirlik", COMMON_GROUP = "Ortak (m:)"
+const A11Y_GROUP = "Erişilebilirlik", COMMON_GROUP = "Ortak (m:)", SX_GROUP = "sx"
+// sx: the design-token shorthands (hadi-march's SX table), one property per key, on any component (its root)
+const SX_SPEC = SX as unknown as Record<string, readonly (string | number)[]>
+/** A key's values: a number range (0–8) or its words. */
+const sxValues = (k: string): string[] => { const s = SX_SPEC[k] ?? [], lo = s[0], hi = s[1]; return typeof lo === "number" ? Array.from({ length: (hi as number) - lo + 1 }, (_, i) => String(lo + i)) : s.map(String) }
+// keys whose words combine, and the words of each that exclude each other (one size, one colour, one alignment…)
+const SX_GROUPS: Record<string, readonly (readonly string[])[]> = {
+  text: [["xs", "sm", "md", "lg", "xl", "2xl"], ["muted", "danger", "success", "warn"], ["left", "center", "right"], ["mono"], ["bold"]],
+  flex: [["row", "col"], ["wrap"], ["center", "between", "end"], ["grow"]],
+}
+const sxOptions = (): PlaygroundOption[] => Object.keys(SX_SPEC).map((k) => ({ key: `sx:${k}`, label: k, prop: `sx.${k}`, default: "", kind: "text" as const }))
 // March's common props (hadi-march/props): every component takes them
 const COMMON_PROPS = ["m:color", "m:text-color", "m:dir", "m:lang", "m:no-select", "m:reveal", "m:test", "m:theme", "m:tip"]
 const COMMON_BOOL = new Set(["m:no-select", "m:reveal"])
@@ -279,9 +289,9 @@ const collator = new Intl.Collator("tr")
 /** Every option of a component: March's (by label), then its HTML attributes (by name). */
 const optsOf = (name: string): readonly PlaygroundOption[] => {
   const march = optionsBy()[name]
-  return march ? [...[...march, ...apiOptions(name)].sort((a, b) => collator.compare(a.label, b.label)), ...extOptions(name), ...commonOptions(name), ...htmlOptions(name), ...a11yOptions(name)] : []
+  return march ? [...[...march, ...apiOptions(name)].sort((a, b) => collator.compare(a.label, b.label)), ...extOptions(name), ...commonOptions(name), ...sxOptions(), ...htmlOptions(name), ...a11yOptions(name)] : []
 }
-const isHtml = (o: PlaygroundOption): boolean => /^(html|a11y|mp|api|ext):/.test(o.key)
+const isHtml = (o: PlaygroundOption): boolean => /^(html|a11y|mp|api|ext|sx):/.test(o.key)
 // the props the code's extensions add to a component (the preview runtime's March: read after every build): their own
 // group in Properties, named by the extension
 const extInfo = signal<ExtInfo>(NO_EXT, { equals: (a, b) => JSON.stringify(a) === JSON.stringify(b) })
@@ -348,11 +358,25 @@ const asProperty = (o: PlaygroundOption): PropertySpec => {
 /** At most this many fixed values are a button group; more are chips that wrap (a colour token's chip in its colour). */
 const SEGMENTS = 7
 type Choice = { value: unknown; label: string; title?: string; color?: string }
-const chipsControl = (choices: readonly Choice[], name: string) => (cp: Record<string, unknown>): unknown =>
-  h("div", { class: "sc-chips", role: "group", "aria-label": name }, choices.map((c) => {
-    const chip = h(Chip, { size: "sm", selected: () => (cp["value"] ?? "") === c.value, onClick: () => (cp["setValue"] as (v: unknown) => void)(c.value), title: c.title ?? null, children: c.color ? [h("span", { class: "sc-chip-dot", "aria-hidden": "true" }), c.label] : c.label }) as Element
+// `multi`: several values at once (a list; a press adds or takes one out, "—" clears them); `groups`: values that
+// exclude each other (two sizes): one per group, a divider between the groups
+const chipsControl = (choices: readonly Choice[], name: string, multi = false, groups?: readonly (readonly string[])[]) => (cp: Record<string, unknown>): unknown =>
+  h("div", { class: "sc-chips", role: "group", "aria-label": name }, choices.map((c, i) => {
+    const groupOf = (v: unknown): readonly string[] | undefined => groups?.find((g) => g.includes(String(v)))
+    const now = (): unknown[] => (Array.isArray(cp["value"]) ? cp["value"] as unknown[] : cp["value"] ? [cp["value"]] : [])
+    const on = (): boolean => (multi && c.value !== "" ? now().includes(c.value) : multi ? !now().length : (cp["value"] ?? "") === c.value)
+    const press = (): void => {
+      const set = cp["setValue"] as (v: unknown) => void
+      if (!multi || c.value === "") { set(c.value); return }
+      const mates = groupOf(c.value) ?? []
+      const next = on() ? now().filter((x) => x !== c.value) : [...now().filter((x) => !mates.includes(String(x))), c.value]
+      set(next.length ? next : "")
+    }
+    const chip = h(Chip, { size: "sm", selected: on, onClick: press, title: c.title ?? null, children: c.color ? [h("span", { class: "sc-chip-dot", "aria-hidden": "true" }), c.label] : c.label }) as Element
     if (c.color) chip.setAttribute("data-m-color", c.color)
-    return chip
+    // a new group starts: a thin divider before its first value
+    const prev = choices[i - 1]
+    return groups && prev && prev.value !== "" && groupOf(prev.value) !== groupOf(c.value) ? [h("span", { class: "sc-chip-sep", "aria-hidden": "true" }), chip] : chip
   }))
 const asPropertyBase = (o: PlaygroundOption): PropertySpec => {
   if (isTri(o)) return { key: o.key, label: o.label, group: MARCH_GROUP, control: (cp: Record<string, unknown>) => h(Toggle, { ...cp, tristate: true }), ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}) } as PropertySpec
@@ -365,6 +389,13 @@ const asPropertyBase = (o: PlaygroundOption): PropertySpec => {
   }
   if (isHtml(o)) {
     const name = String(o.prop)
+    // an sx key: its values as a button group or chips (the empty one first: not set)
+    if (o.key.startsWith("sx:")) {
+      const k = String(o.label), opts = [{ value: "", label: "—", title: "yok" }, ...sxValues(k).map((x) => ({ value: x, label: x }))]
+      // keys whose words combine (text: muted + center + bold; flex: row + wrap): one per group
+      if (SX_GROUPS[k]) return { key: o.key, label: o.label, group: SX_GROUP, control: chipsControl(opts, k, true, SX_GROUPS[k]) } as PropertySpec
+      return (opts.length <= SEGMENTS ? { key: o.key, label: o.label, group: SX_GROUP, type: "segmented", options: opts } : { key: o.key, label: o.label, group: SX_GROUP, control: chipsControl(opts, k) }) as PropertySpec
+    }
     const group = isA11y(o) ? A11Y_GROUP : o.key.startsWith("mp:") ? COMMON_GROUP : o.key.startsWith("api:") ? MARCH_GROUP : HTML_GROUP, label = o.label
     if (o.default === null) return { key: o.key, label, group, type: "number" } as PropertySpec
     if (name === "m:theme") return { key: o.key, label, group, control: chipsControl([{ value: "", label: "—", title: "sayfanın teması" }, ...colorThemes().map((x) => ({ value: x.id, label: x.name }))], name) } as PropertySpec
@@ -435,6 +466,10 @@ function propsOf(opts: readonly PlaygroundOption[], v: Record<string, unknown>, 
     if (x === OMIT || x === "" || x === null || (x === false && !o.toCode && !isTri(o))) { if (changed && x === false) out[prop] = false; continue }
     out[prop] = x
   }
+  // the sx keys (sx.p, sx.text…) become one sx object; a number scale's value is a number
+  const sxo: Record<string, unknown> = {}
+  for (const k of Object.keys(out)) if (k.startsWith("sx.")) { const v = out[k], key = k.slice(3); delete out[k]; if (v !== undefined && v !== "" && !(Array.isArray(v) && !v.length)) sxo[key] = typeof SX_SPEC[key]?.[0] === "number" ? Number(v) : Array.isArray(v) && v.length === 1 ? v[0] : v }
+  if (Object.keys(sxo).length) out["sx"] = sxo; else if (!changed) out["sx"] = undefined
   return out
 }
 // a top-level element takes only what was changed in Properties (its written props stay under them)
@@ -465,7 +500,7 @@ const usageOf = (name: string): string => {
   const opts = optsOf(name), v = valuesBy()[name] ?? {}
   const changed = propsOf(opts, v, true)
   const byProp = (prop: string) => opts.find((o) => (o.prop || o.key) === prop)
-  const attrs = Object.entries(changed).filter(([k]) => k !== "children").map(([k, x]) => (x === true ? k : `${k}=${jsxValue(byProp(k), x, v)}`))
+  const attrs = Object.entries(changed).filter(([k]) => k !== "children").map(([k, x]) => (k === "sx" ? `sx={{ ${Object.entries(x as Record<string, unknown>).map(([a, b]) => `${a}: ${JSON.stringify(b)}`).join(", ")} }}` : x === true ? k : `${k}=${jsxValue(byProp(k), x, v)}`))
   attrs.push(...handlerCode(name).map(([ev, code]) => `${ev}={${code}}`))
   const parts = Object.entries(partsFor(name)).map(([n, p]) => {
     const po = optsOf(n), pv = valuesBy()[n] ?? {}
