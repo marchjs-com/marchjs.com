@@ -10,7 +10,7 @@ import { signal, computed, effect, untrack, onCleanup } from "hadi-march";
 import { registry } from "hadi-march/components/registry.gen.ts";
 import type { PlaygroundOption } from "hadi-march/components/meta.ts";
 import { appUrl } from "hadi-march/base";
-import { PaletteButton, JsonView, Terminal, PropertyGrid, type TerminalApi, type PropertySpec } from "hadi-march/ui";
+import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, type TerminalApi, type PropertySpec } from "hadi-march/ui";
 import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, groups, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
 import { monitor, sliders, packageBox, users, code, terminal, bug, fileText, globe } from "hadi-march/icons";
 import { createBuilder } from "../playground/build.ts";
@@ -68,6 +68,15 @@ const exportedName = computed(() => {
   return /export\s*\{\s*([A-Za-z_$][\w$]*)/.exec(src)?.[1] ?? /export\s+(?:default\s+)?(?:function|const|class)\s+([A-Za-z_$][\w$]*)/.exec(src)?.[1] ?? ""
 })
 const options = signal<readonly PlaygroundOption[]>([])
+// an option that takes an icon (icon, iconEnd…): chosen with an IconPicker, kept as the icon's name. A yes / no icon
+// option of the card (Button's "İkon" with toCode {plus}) starts at the icon its code names.
+const isIcon = (o: PlaygroundOption): boolean => /icon/i.test(String(o.prop || o.key)) && !/spinner/i.test(o.key)
+const iconDefault = (o: PlaygroundOption): string | null => {
+  if (typeof o.default === "string") return o.default || null
+  if (o.default !== true) return null
+  const code = typeof o.toCode === "object" ? (o.toCode as Record<string, unknown>)["true"] : null
+  return typeof code === "string" ? (/^\{([A-Za-z_$][\w$]*)\}$/.exec(code)?.[1] ?? null) : null
+}
 const values = signal<Record<string, unknown>>({})
 effect(() => {
   const name = exportedName(), entry = registry.find((e) => e.meta.name === name)
@@ -76,10 +85,11 @@ effect(() => {
     if (untrack(exportedName) !== name) return
     const list = (m.default as { options: readonly PlaygroundOption[] }).options.filter((o) => o.prop !== false)
     options.set(list)
-    values.set(Object.fromEntries(list.map((o) => [o.key, o.default])))
+    values.set(Object.fromEntries(list.map((o) => [o.key, isIcon(o) ? iconDefault(o) : o.default])))
   })
 })
 const asProperty = (o: PlaygroundOption): PropertySpec => {
+  if (isIcon(o)) return { key: o.key, label: o.label, control: (cp: Record<string, unknown>) => IconPicker({ value: () => (cp["value"] as string | null) ?? null, onChange: (n: string | null) => (cp["setValue"] as (v: unknown) => void)(n), label: o.label }) } as PropertySpec
   const opts = o.options?.map((x) => (typeof x === "object" ? x : { value: x, label: String(x) }))
   const type = typeof o.default === "boolean" ? "switch" : opts ? (opts.length <= 4 ? "segmented" : "select") : typeof o.default === "number" ? (o.min !== undefined && o.max !== undefined ? "slider" : "number") : "text"
   return { key: o.key, label: o.label, type, ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}), ...(opts ? { options: opts } : {}), ...(o.min !== undefined ? { min: o.min } : {}), ...(o.max !== undefined ? { max: o.max } : {}), ...(o.step !== undefined ? { step: o.step } : {}) } as PropertySpec
@@ -92,15 +102,30 @@ const entrySource = computed(() => {
   const name = exportedName()
   return name ? `import { ${name} } from "./${active()}"\n\nexport default ${name}\n` : "export default function PreviewControl() { return null }\n"
 })
-// the Properties' values as the component's props: the shown options only, empty / off left out, code-only values
-// (an icon, a custom part) left out
+// an option whose card writes its value as code of its own (toCode: Button's spinner "off" → {false}, "own" →
+// {<MyDots />}): the code turned into a value the preview can take. null: the prop is left out; a literal: its value;
+// an icon's name: the icon (as "icon:name", the runtime takes it); a JSX part of the card's own: a stand-in "•••".
+const OMIT = Symbol("omit")
+function fromCode(o: PlaygroundOption, x: unknown, v: Record<string, unknown>): unknown {
+  const map = o.toCode
+  const code = typeof map === "function" ? (map as (x: unknown, v: unknown) => unknown)(x, v) : (map as Record<string, unknown>)[String(x)]
+  if (code === undefined) return x
+  if (code === null) return OMIT
+  const inner = /^\{([\s\S]*)\}$/.exec(String(code))?.[1]?.trim() ?? String(code)
+  if (/^(true|false|null|-?\d+(\.\d+)?|"[^"]*")$/.test(inner)) return JSON.parse(inner)
+  if (/^[A-Za-z_$][\w$]*$/.test(inner)) return `icon:${inner}`
+  if (inner.startsWith("<")) return "•••"
+  return OMIT
+}
+// the Properties' values as the component's props: the shown options only, empty / off left out
 const propsOf = (v: Record<string, unknown>): Record<string, unknown> => {
   const out: Record<string, unknown> = {}
   for (const o of options()) {
-    const prop = o.prop || o.key, x = v[o.key]
+    const prop = o.prop || o.key
     out[prop] = undefined
-    if (o.toCode || (o.visibleWhen && !o.visibleWhen(v as never))) continue
-    if (x === "" || x === false || x === null) continue
+    if (o.visibleWhen && !o.visibleWhen(v as never)) continue
+    const x = o.toCode && !isIcon(o) ? fromCode(o, v[o.key], v) : v[o.key]
+    if (x === OMIT || x === "" || x === null || (x === false && !o.toCode)) continue
     out[prop] = x
   }
   return out
@@ -145,7 +170,7 @@ async function render(code: string): Promise<void> {
     print(`[${stamp()}] ✖ Çalışma hatası: ${String((e as Error)?.message ?? e)}`, "error")
   }
 }
-const preview = () => <AppPreview>
+const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: true }}>
   <div class="sc-pv-root" ref={(el: HTMLElement) => { previewEl = el }}>
     <div class="sc-playground-empty"><b>Önizleme</b><span>Derleniyor…</span></div>
   </div>

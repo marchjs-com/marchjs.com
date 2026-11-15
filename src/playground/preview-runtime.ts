@@ -29,7 +29,12 @@ let last: { dispose: () => void; url: string; C: (p: object) => unknown; el: HTM
 const draw = (C: (p: object) => unknown, el: HTMLElement, props: Record<string, unknown>): (() => void) => {
   el.replaceChildren();
   const { children, ...rest } = props;
-  const own = Object.fromEntries(Object.entries(rest).filter(([, v]) => v !== undefined));
+  // an icon prop comes as the icon's name ("plus"): the icon itself is taken from this runtime's icons
+  const own = Object.fromEntries(Object.entries(rest).filter(([, v]) => v !== undefined)
+    .map(([k, v]) => {
+      const name = typeof v === "string" ? (v.startsWith("icon:") ? v.slice(5) : /icon/i.test(k) ? v : "") : "";
+      return [k, name && name in icons ? (icons as Record<string, unknown>)[name] : v];
+    }));
   return core.render(() => (children === undefined || children === "" ? core.h(C, own) : core.h(C, own, children)), el);
 };
 /** Send new props to the rendered component (the Properties panel calls it on every change). */

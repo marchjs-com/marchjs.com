@@ -35,6 +35,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "code", title: "Kod girişi", name: "CodeInput", desc: "Doğrulama kodu kutuları, yapıştırma.", group: "Metin girişi" },
     { slug: "choice-variants", title: "Seçim görünümleri", desc: "Aynı seçici beş görünümde; boyut, köşe ve renk.", group: "Seçim" },
     { slug: "select", title: "Açılır liste", name: "Select", desc: "Tek seçim, gruplar, klavye.", group: "Seçim" },
+    { slug: "icon-picker", title: "Simge seçici", name: "IconPicker", desc: "Arama, süzgeç çipleri ve bütün simgelerin ızgarası.", group: "Seçim" },
     { slug: "combobox", title: "Aramalı seçim", name: "Combobox", desc: "Yazdıkça süzülen seçenekler, eşzamansız arama.", group: "Seçim" },
     { slug: "multi-select", title: "Çoklu seçim", name: "MultiSelect", desc: "Çipli çoklu seçim.", group: "Seçim" },
     { slug: "choice-picker", title: "Seçenek kartları", name: "ChoicePicker", desc: "İkonlu, açıklamalı büyük seçenekler.", group: "Seçim" },
