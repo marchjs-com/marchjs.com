@@ -280,7 +280,7 @@ const isHtml = (o: PlaygroundOption): boolean => /^(html|a11y|mp|api):/.test(o.k
 const isA11y = (o: PlaygroundOption): boolean => o.key.startsWith("a11y:")
 const options = (): readonly PlaygroundOption[] => optsOf(selected())
 // the set of options (the grid is made again when it changes: a component chosen, the root's tag read)
-const optionKeys = computed(() => `${selected()}:${options().map((o) => o.key).join(",")}`)
+const optionKeys = computed(() => `${selected()}:${options().map((o) => o.key).join(",")}:${selected() in tableBy() ? 1 : 0}:${selected() in apiPropsBy() ? 1 : 0}`)
 const values = (): Record<string, unknown> => { const v = valuesBy()[selected()] ?? {}; return Object.fromEntries(options().map((o) => [o.key, v[o.key] ?? defaultOf(o)])) }
 const setValues = (v: Record<string, unknown>) => valuesBy.set({ ...valuesBy.peek(), [selected.peek()]: { ...v } })
 // March's classes: every .m-… class of the page's stylesheets (read once, when a class field first opens)
@@ -310,7 +310,32 @@ const comboControl = (list: () => readonly string[], set: ValueSet, label: strin
 const classControl = comboControl(classList, { list: [], own: true, multi: true }, "class", "m-… ya da kendi sınıfın")
 // data-*: rows of key and value, written as data-key="value"
 const dataControl = (cp: Record<string, unknown>): unknown => h(KeyValueEditor, { ...cp, keyPlaceholder: "anahtar", valuePlaceholder: "değer", labels: { key: "anahtar", value: "değer", add: "Ekle" } })
+// each property's text under its name (muted, small): the API reference's (the prop's JSDoc), else the component's
+// docs table; in the showcase's language when the text has one (the props' texts are English for now)
+const tableBy = signal<Record<string, Record<string, string>>>({})
+const tables = new Map<string, Promise<Record<string, { props?: [string, string, string, string][] }>>>()
+const plain = (md: string): string => md.replace(/`([^`]*)`/g, "$1").replace(/\*\*?([^*]+)\*\*?/g, "$1").trim()
+async function loadTable(name: string): Promise<void> {
+  const folder = metaOf(name) ? registry.find((e) => e.meta === metaOf(name)!.meta)?.folder : undefined
+  if (!folder) { tableBy.set({ ...tableBy.peek(), [name]: {} }); return }
+  const cat = folder.split("/")[0]!
+  if (!tables.has(cat)) tables.set(cat, fetch(appUrl(`comp/${cat}.json`)).then((r) => r.json()).catch(() => ({})))
+  const rows = (await tables.get(cat)!)[folder]?.props ?? [], out: Record<string, string> = {}
+  for (const [names, , , text] of rows) for (const m of names.matchAll(/`([^`]+)`/g)) if (text) out[m[1]!] = plain(text)
+  tableBy.set({ ...tableBy.peek(), [name]: out })
+}
+effect(() => { for (const name of inTree()) if (!(name in untrack(tableBy))) void loadTable(name) })
+/** The text under a property's name. */
+const describeProp = (name: string, o: PlaygroundOption): string => {
+  const prop = String(o.prop || o.key).replace(/^(html|a11y|api|mp):/, "")
+  const api = (apiPropsBy()[name] ?? []).find((p) => p.name === prop)?.doc ?? ""
+  return plain(api || tableBy()[name]?.[prop] || "")
+}
 const asProperty = (o: PlaygroundOption): PropertySpec => {
+  const spec = asPropertyBase(o), text = untrack(() => describeProp(selected(), o))
+  return text ? { ...spec, description: text } : spec
+}
+const asPropertyBase = (o: PlaygroundOption): PropertySpec => {
   if (isTri(o)) return { key: o.key, label: o.label, group: MARCH_GROUP, control: (cp: Record<string, unknown>) => h(Toggle, { ...cp, tristate: true }), ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}) } as PropertySpec
   if (isIcon(o)) return { key: o.key, label: o.label, control: (cp: Record<string, unknown>) => IconPicker({ value: () => (cp["value"] as string | null) ?? null, onChange: (n: string | null) => (cp["setValue"] as (v: unknown) => void)(n), label: o.label, packs: iconPickerPacks }), group: MARCH_GROUP, ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}) } as PropertySpec
   if (isHtml(o)) {
