@@ -5,7 +5,7 @@
 // is chosen in the tree. The code is esbuild's print of it (laid out the same way every time). The toolbar has one
 // button: download every file as a zip.
 import "./output.css";
-import { signal, computed, effect, untrack } from "march";
+import { signal, computed, effect, untrack, version } from "march";
 import { openDialog, Tree, Button } from "march/ui";
 import { AppUI, codeEditorPlugin, groups, row, tabs, type AppPanel, type DockApi, type Preset } from "march/app-ui";
 import { fileText, folder, download } from "march/icons";
@@ -89,16 +89,24 @@ if (lang) {
 `;
   return head + pick + LANGUAGE + DRAW + FOLLOW;
 }
+/** Where the page takes MarchJS from: this version on cdn.marchjs.com (tools/build-cdn.js). */
+const CDN = `https://cdn.marchjs.com/${version}`;
+/** A stylesheet import (`import "march/css/props.css"`) leaves: a browser does not import CSS as a module, march.css has it. */
+const cssFree = (js: string): string => js.replace(/^\s*import\s*["'][^"']+\.css["'];?\s*\n/gm, "");
 /** The files of the output, path → text: the page, its start, the bundle, each compiled module, the texts and every
- * added language (lang/<code>.json). */
+ * added language (lang/<code>.json). The page loads MarchJS from cdn.marchjs.com. */
 export async function outputFiles(o: OutputSource): Promise<Record<string, string>> {
   const { build: b, name } = o;
   const langs = o.languages ?? {}, codes = Object.keys(langs).sort();
   const modules = await Promise.all(Object.entries(b.modules).filter(([p]) => p !== o.entry).map(async ([p, code]): Promise<[string, string]> => {
     // the modules import each other as .js
     const js = (await o.js(p, code)).replace(/(from\s+["']\.\/[^"']+?)\.[jt]sx?(["'])/g, "$1.js$2");
-    return [`src/${base(p)}.js`, js];
+    return [`src/${base(p)}.js`, cssFree(js)];
   }));
+  const start = startFile(codes), bundle = cssFree(b.code);
+  // every march module the page imports, from cdn.marchjs.com at this version
+  const specs = [...new Set([start, bundle, ...modules.map(([, js]) => js)].flatMap((js) => [...js.matchAll(/from\s*["'](march(?:\/[\w./-]+)?)["']/g)].map((m) => m[1] as string)))].sort();
+  const imports = Object.fromEntries(specs.map((s) => [s, `${CDN}/${s === "march" ? "march" : s.slice("march/".length)}.js`]));
   const out: Record<string, string> = {
     "index.html": `<!doctype html>
 <html lang="tr">
@@ -106,9 +114,10 @@ export async function outputFiles(o: OutputSource): Promise<Record<string, strin
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>${name}</title>
-    <!-- march npm'de yok: github.com/tlghn/hadimarch deposundan kur, yolunu buraya yaz -->
+    <!-- MarchJS ${version} from cdn.marchjs.com: every style in march.css, the modules by the import map -->
+    <link rel="stylesheet" href="${CDN}/march.css" />
     <script type="importmap">
-      { "imports": { "march": "./march/src/index.ts", "march/": "./march/src/" } }
+${JSON.stringify({ imports }, null, 2).replace(/^/gm, "      ")}
     </script>
   </head>
   <body>
@@ -117,8 +126,8 @@ export async function outputFiles(o: OutputSource): Promise<Record<string, strin
   </body>
 </html>
 `,
-    "assets/main.js": startFile(codes),
-    "assets/app.js": b.code,
+    "assets/main.js": start,
+    "assets/app.js": bundle,
     ...Object.fromEntries(modules),
   };
   if (b.texts.length) out["lang.json"] = json(Object.fromEntries(b.texts.map((k) => [k, k])));
