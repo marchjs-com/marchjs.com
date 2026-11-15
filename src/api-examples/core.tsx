@@ -5,7 +5,7 @@ import {
   useContext, reactive, isReactive, read, DEV, _enter, _leave, _tpl, _prop, store, patch, unwrap, h, Fragment, insert, lazyChildren,
   safeUrl, registerTransition, If, Else, For, Switch, Match, Try, Await, Dynamic, setFlipHook, Portal, PortalTarget,
   portalTarget, openLayer, layers, render, define, pipe, applyPipe, toDate, t, locale, messages, missing,
-  setFallbackLocale, sx, sxValue, version, extend, intercept, defineExtension, withExtensions, Extensions, extensions,
+  setFallbackLocale, sx, sxValue, version, extend, intercept, inside, partOf, defineExtension, withExtensions, Extensions, extensions,
 } from "hadi-march";
 import { Button, Badge, Segmented } from "hadi-march/ui";
 import { examples } from "./types.ts";
@@ -19,6 +19,10 @@ function Counter(props: { label?: string }) {
   return <Button onClick={() => n.update((x) => x + 1)}>{() => `${props.label ?? "Sayaç"}: ${n()}`}</Button>
 }
 
+/** A panel that draws a Badge of its own and one inside a Card: inside() reaches both, partOf() only its own. */
+function Panel(props: { title: string }) {
+  return <div class="sc-row"><Badge>{`${props.title}: kendi rozeti`}</Badge><Card title="İçindeki kart"><Badge>Karttaki rozet</Badge></Card></div>
+}
 /** A small local component the extension examples change (so nothing else on the page is touched). */
 function Chip(props: { label: string; tone?: "neutral" | "danger"; onClick?: () => void }) {
   return <Button variant={props.tone === "danger" ? "danger" : "secondary"} onClick={() => props.onClick?.()}>{() => props.label}</Button>
@@ -144,6 +148,26 @@ declare module "hadi-march" { interface ExtensionProps extends ExtensionPropsOf<
           <Button onClick={() => ids.set([...host.querySelectorAll("[data-testid]")].map((e) => e.getAttribute("data-testid")).join(", "))}>data-testid oku</Button>
           <Out label="data-testid" value={ids} />
         </Row>
+      },
+    },
+    inside: {
+      code: `// every Badge drawn anywhere inside a Card (any depth): the ones outside stay as they are
+intercept(inside(Card, Badge), { name: "card-badges", props: () => ({ tone: "success" }) })
+inside(Toolbar, Button, Icon)    // a chain; a step may be a list [Card, Dialog] or "*"`,
+      run: () => {
+        onCleanup(intercept(inside(Panel, Badge), { name: "panel-badges", props: () => ({ tone: "success" }) }))
+        return <Row>
+          {h(Panel, { title: "Panel" })}
+          <Badge>Panelin dışında</Badge>
+        </Row>
+      },
+    },
+    partOf: {
+      code: `// only Button's own Spinner (its nearest component is Button), not a Spinner in a Card inside the Button
+intercept(partOf(Button, Spinner), { name: "small-spinner", props: () => ({ size: "em" }) })`,
+      run: () => {
+        onCleanup(intercept(partOf(Panel, Badge), { name: "panel-own-badge", props: () => ({ tone: "danger" }) }))
+        return <Row>{h(Panel, { title: "Kendi rozeti kırmızı" })}</Row>
       },
     },
     withExtensions: {
