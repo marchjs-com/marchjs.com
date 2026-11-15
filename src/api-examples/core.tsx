@@ -164,16 +164,17 @@ withExtensions([defineExtension({ name: "small", target: Button, props: (p) => (
   props: { isNew: { type: "boolean" } },
   render: (next, p) => (p.isNew ? <span class="with-badge">{next()} <Badge>yeni</Badge></span> : next()),
 })
-<Extensions use={[badge]}><Chip label="Raporlar" isNew /> <Chip label="Ayarlar" /></Extensions>
-<Chip label="Raporlar" isNew m:extend={false} />   // this one takes no extension`,
-      run: () => {
+<Extensions use={[badge]}><Chip label="Reports" isNew /> <Chip label="Settings" /></Extensions>
+<Chip label="Reports" isNew m:extend={false} />   // this one takes no extension`,
+      play: { options: [{ key: "on", label: "use", default: true }, { key: "badge", label: "Rozet", default: "yeni", options: [{ value: "yeni", label: "yeni" }, { value: "beta", label: "beta" }] }, { key: "out", label: "m:extend={false}", default: true }] },
+      run: (p: { values: { on: boolean; badge: string; out: boolean } }) => {
         const badge = defineExtension<{ isNew: boolean }>({
           name: "new-badge", target: Chip,
           props: { isNew: { type: "boolean", doc: "Yeni rozeti" } },
-          render: (next, p) => (p.isNew ? <span class="sc-row">{next()} <Badge tone="success">yeni</Badge></span> : next()),
+          render: (next, q) => (q.isNew ? <span class="sc-row">{next()} <Badge tone="success">{p.values.badge}</Badge></span> : next()),
         })
         return <Row>
-          <Extensions use={[badge]}>{h(Chip, { label: "Raporlar", isNew: true })} {h(Chip, { label: "Ayarlar" })} {h(Chip, { label: "Dışarıda kalan", isNew: true, "m:extend": false })}</Extensions>
+          {() => { const on = p.values.on, out = p.values.out; p.values.badge; return untrack(() => <Extensions use={on ? [badge] : []}>{h(Chip, { label: "Raporlar", isNew: true })} {h(Chip, { label: "Ayarlar" })} {h(Chip, { label: "Dışarıda kalan", isNew: true, "m:extend": out ? false : ["new-badge"] })}</Extensions>) }}
         </Row>
       },
     },

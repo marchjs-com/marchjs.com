@@ -1,0 +1,8 @@
+/* March dili › Eklentiler: the event log, the wrapped / replaced card, the trace line. */
+.sc-ext-log { display: grid; gap: 2px; min-height: 2.5rem; max-height: 8rem; margin: var(--m-space-3) 0 0; padding: var(--m-space-2) var(--m-space-3); overflow: auto; border-radius: var(--m-radius-2); background: var(--m-surface-2); font-family: var(--m-font-mono); font-size: var(--m-text-xs); list-style: none; }
+.sc-ext-new { position: relative; display: grid; }
+.sc-ext-new > .m-card { outline: 2px solid color-mix(in oklab, var(--m-success, #16a34a) 55%, transparent); outline-offset: 2px; }
+.sc-ext-badge { position: absolute; inset-block-start: calc(-1 * var(--m-space-2)); inset-inline-end: var(--m-space-3); }
+.sc-ext-locked { display: flex; flex-direction: column; justify-content: center; gap: var(--m-space-2); min-block-size: 6rem; padding: var(--m-space-4); border: 1px dashed var(--m-border); border-radius: var(--m-radius-3); background: repeating-linear-gradient(135deg, var(--m-surface-2) 0 10px, transparent 10px 20px); color: var(--m-text-muted, inherit); }
+.sc-ext-locked > :first-child { align-self: flex-start; }
+.sc-ext-trace { padding: 2px var(--m-space-2); border-radius: var(--m-radius-1); background: var(--m-surface-2); font-size: var(--m-text-xs); white-space: normal; }
