@@ -2,13 +2,13 @@
 // hadi-march/ui › DockLayout
 import { signal } from "hadi-march";
 import { fileText, folder } from "hadi-march/icons";
-import { Button, type DockApi, DockLayout } from "hadi-march/ui";
+import { Button, type DockApi, DockLayout, col, row, tabs } from "hadi-march/ui";
 import { Row } from "../../_kit.tsx";
 import type { ApiExample } from "../../types.ts";
 import "../../ui-b.css";
 
 const example: ApiExample<any> = {
-      code: `<DockLayout label="Çalışma alanı" layout={{ row: [["files"], ["editor", "log"]], share: .3 }} panels={[
+      code: `<DockLayout label="Çalışma alanı" layout={row([.3, tabs("files")], [.7, tabs(["editor", "log"])])} panels={[
   { id: "files", title: "Dosyalar", icon: folder, content: () => <FileTree /> },
   { id: "editor", title: "app.ts", content: () => <Editor />, dirty: () => $dirty },
   { id: "log", title: "Günlük", content: () => <Log />, badge: () => $errors },
@@ -24,11 +24,11 @@ const example: ApiExample<any> = {
           { id: "log", title: "Günlük", content: () => <div class="sc-ex-ui-b-pane"><Button size="sm" onClick={() => errors.update((n) => n + 1)}>Hata ekle</Button></div>, badge: () => errors() || null },
         ]
         return <div class="sc-ex-stack">
-          <Row><Button size="sm" onClick={() => dock?.open("log")}>Günlüğe geç</Button><Button size="sm" variant="ghost" onClick={() => dock?.reset()}>Yerleşimi sıfırla</Button></Row>
+          <Row><Button size="sm" onClick={() => dock?.open("log")}>Günlüğe geç</Button><Button size="sm" variant="ghost" onClick={() => dock?.collapse("files")}>Dosyaları daralt</Button><Button size="sm" variant="ghost" onClick={() => dock?.reset()}>Yerleşimi sıfırla</Button></Row>
           <div class="sc-ex-ui-b-dock">{() => {
             const s = p.values.split
             return <DockLayout panels={panels} label="HADİ çalışma alanı" commands={false}
-              layout={s === "row" ? { row: [["files"], ["editor", "log"]], share: 0.32 } : { column: [["editor", "log"], ["files"]], share: 0.6 }} api={(a: DockApi) => (dock = a)} />
+              layout={s === "row" ? row([0.32, tabs("files")], [0.68, tabs(["editor", "log"])]) : col([0.6, tabs(["editor", "log"])], [0.4, tabs("files")])} api={(a: DockApi) => (dock = a)} />
           }}</div>
         </div>
       },

@@ -1,8 +1,10 @@
-// IDE shell demo: a small editor built only from March pieces — ActivityBar, DockLayout (file tree, editor tabs,
-// inspector, console), PropertyGrid, OverflowToolbar, Breadcrumbs, StatusBar and the command palette (every action is
-// a command: Ctrl+K finds it). Demo data is neutral ("hadi" project).
+// IDE shell demo: a small editor on march-app-ui. AppUI is the base (top bar with the Layout menu, the ActivityBar in
+// its side slot, the DockLayout workspace: file tree, editor tabs, inspector, console; the StatusBar in its status slot);
+// PropertyGrid, OverflowToolbar, Breadcrumbs and the command palette (every action is a command: Ctrl+K finds it).
+// Demo data is neutral ("hadi" project).
 import { signal, computed, effect, onCleanup } from "hadi-march";
-import { Tree, PaletteButton, toast, DockLayout, PropertyGrid, OverflowToolbar, StatusBar, ActivityBar, Breadcrumbs, type DockApi, type DockPanel, type PropertySpec } from "hadi-march/ui";
+import { Tree, PaletteButton, toast, PropertyGrid, OverflowToolbar, StatusBar, ActivityBar, Breadcrumbs, type PropertySpec } from "hadi-march/ui";
+import { AppUI, row, col, tabs, type DockApi, type DockPanel, type Preset } from "hadi-march/app-ui";
 import { command } from "hadi-march/managers/command";
 import { bindCommandKeys } from "hadi-march/managers/command/ui";
 import { dirtyState } from "hadi-march/managers/dirty";
@@ -15,6 +17,11 @@ const START: File[] = [
   { name: "theme.css", dir: "src", text: `:root {\n  --brand: #f2801f;\n  --radius: 12px;\n}\n` },
   { name: "README.md", dir: "", text: `# hadi\n\nKüçük örnek proje. Ctrl+K ile komutları ara.\n` },
 ]
+// the base layout: explorer | editors over settings and console
+const PRESETS: Record<string, Preset> = {
+  main: { title: "Editör", tree: () => row([0.24, tabs("files")], [0.76, col([0.62, tabs(["file:app.ts", "file:theme.css"])], [0.38, tabs(["inspector", "console"])])]) },
+  focus: { title: "Odak", tree: () => row([0.2, tabs("files", { collapsed: true })], [0.8, col([0.8, tabs(["file:app.ts", "file:theme.css"])], [0.2, tabs(["console", "inspector"], { collapsed: true })])]) },
+}
 const LANG: Record<string, string> = { ts: "TypeScript", css: "CSS", md: "Markdown" }
 const langOf = (n: string) => LANG[n.split(".").pop() ?? ""] ?? "Metin"
 
@@ -55,8 +62,8 @@ export default function MiniIde() {
   function openFile(n: string) {
     if (!open().includes(n)) open.set([...open(), n])
     active.set(n)
-    // next to the other editors (the group of an open editor), else where the focus is
-    queueMicrotask(() => dock?.open(`file:${n}`, open().map((x) => `file:${x}`).find((x) => x !== `file:${n}`)))
+    // a new editor goes next to the other editors (its `place`); an open one comes to the front
+    queueMicrotask(() => dock?.open(`file:${n}`))
   }
   function format() {
     const n = active(), f = file(n)
@@ -139,10 +146,12 @@ export default function MiniIde() {
   </div>
 
   const panels = computed((): DockPanel[] => [
-    { id: "files", title: "Gezgin", icon: filesIcon, closable: false, content: explorer },
-    ...open().map((n): DockPanel => ({ id: `file:${n}`, title: n, icon: fileText, dirty: () => isDirty(n), content: editor(n) })),
-    { id: "inspector", title: "Ayarlar", icon: sliders, content: () => <PropertyGrid properties={SETTINGS} value={settingsVal} label="Editör ayarları" saved={{ fontSize: 13, tabSize: 2, wrap: false, lineNumbers: true, accent: "orange" }} id="mini-ide-settings" dirty={false} /> },
-    { id: "console", title: "Konsol", icon: terminal, badge: () => logs().filter((l) => l.kind === "err").length || null, content: consolePanel },
+    { id: "files", title: "Gezgin", icon: filesIcon, min: [150, 120], content: explorer },
+    ...open().map((n): DockPanel => ({ id: `file:${n}`, title: n, icon: fileText, closable: true, dirty: () => isDirty(n), content: editor(n),
+      // beside the other editors: the group of another open file, else right of the explorer
+      place: { near: open().map((x) => `file:${x}`).find((x) => x !== `file:${n}`) ?? "files", zone: open().length > 1 ? "center" : "right", size: 0.7 } })),
+    { id: "inspector", title: "Ayarlar", icon: sliders, place: { near: "console", zone: "center" }, content: () => <PropertyGrid properties={SETTINGS} value={settingsVal} label="Editör ayarları" saved={{ fontSize: 13, tabSize: 2, wrap: false, lineNumbers: true, accent: "orange" }} id="mini-ide-settings" dirty={false} /> },
+    { id: "console", title: "Konsol", icon: terminal, min: [180, 80], place: { near: "files", zone: "right", size: 0.7 }, badge: () => logs().filter((l) => l.kind === "err").length || null, content: consolePanel },
   ])
 
   const crumbs = () => {
@@ -155,7 +164,9 @@ export default function MiniIde() {
   }
 
   return <div class="sc-ide" aria-label="Örnek editör">
-    <div class="sc-ide-top">
+    <AppUI id="mini-ide-dock" class="sc-ide-app" panels={panels} presets={PRESETS} commands="ide.dock" label="Editör çalışma alanı" persist="sc.mini-ide.v2" api={(a: DockApi) => { dock = a }}
+      onClose={(id: string) => { if (id.startsWith("file:")) open.set(open().filter((x) => `file:${x}` !== id)) }}
+      tools={<div class="sc-ide-top">
       <Breadcrumbs items={crumbs} label="Dosya yolu" />
       <OverflowToolbar label="Editör araçları" items={[
         { id: "save", command: "ide.save", priority: 10 },
@@ -167,20 +178,16 @@ export default function MiniIde() {
         { id: "reset", label: "Yerleşimi sıfırla", icon: settings, command: "ide.dock.reset", priority: 1 },
       ]} />
       <PaletteButton label="Komut ara…" class="sc-ide-pal" />
-    </div>
-    <div class="sc-ide-body">
-      <ActivityBar value={view} controls="mini-ide-dock" label="Görünümler" onChange={(v: string | null) => { view.set(v); if (v) dock?.open("files"); else dock?.minimize("files") }} items={[
+      </div>}
+      side={
+      <ActivityBar value={view} controls="mini-ide-dock" label="Görünümler" onChange={(v: string | null) => { view.set(v); if (v) dock?.open("files"); else dock?.collapse("files") }} items={[
         { id: "files", label: "Gezgin", icon: filesIcon },
         { id: "search", label: "Ara", icon: search },
         { id: "git", label: "Kaynak denetimi", icon: gitBranch, badge: () => dirtyList().length },
         { id: "settings", label: "Ayarlar", icon: settings, position: "end", onSelect: () => dock?.open("inspector") },
       ]} />
-      <div id="mini-ide-dock" class="sc-ide-dock">
-        <DockLayout panels={panels} commands="ide.dock" label="Editör çalışma alanı" persist="sc.mini-ide.layout" api={(a: DockApi) => { dock = a }}
-          onClose={(id: string) => { if (id.startsWith("file:")) open.set(open().filter((x) => `file:${x}` !== id)) }}
-          layout={{ row: [["files"], { column: [["file:app.ts", "file:theme.css"], ["inspector", "console"]], share: 0.62 }], share: 0.24 }} />
-      </div>
-    </div>
+      }
+      status={
     <StatusBar label="Editör durumu" items={[
       { id: "branch", icon: gitBranch, text: "main", title: "Dal", onSelect: () => { toast("Dal: main") }, priority: 6 },
       { id: "problems", icon: alertTriangle, text: () => `${logs().filter((l) => l.kind === "err").length} hata`, tone: () => (logs().some((l) => l.kind === "err") ? "danger" : "neutral"), onSelect: () => dock?.open("console"), priority: 5 },
@@ -189,5 +196,6 @@ export default function MiniIde() {
       { id: "lang", side: "end", text: () => langOf(active()), priority: 3 },
       { id: "save", side: "end", live: true, priority: 9, text: () => (saving() ? "Kaydediliyor…" : dirtyList().length ? `${dirtyList().length} kaydedilmemiş` : "Kaydedildi"), tone: () => (saving() ? "busy" : dirtyList().length ? "warn" : "success"), command: "ide.saveAll" },
     ]} />
+      } />
   </div>
 }

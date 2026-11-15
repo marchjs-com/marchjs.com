@@ -253,7 +253,8 @@ export const HUBS: Record<string, readonly Topic[]> = {
   ],
   "/ide": [
     { slug: "live", title: "Canlı demo", desc: "Bu sayfadaki bileşenlerin hepsiyle kurulu küçük bir editör: dosya ağacı, sekmeli editörler, ayarlar…", group: "Kabuk" },
-    { slug: "dock-layout", title: "Kenetlenen paneller", name: "DockLayout", desc: "Sekmeyi bir grubun kenarına bırak: yeni bölme; ortasına ya da sekmelerin arasına: sekme; alanın kenarına:…", group: "Karmaşık bileşenler" },
+    { slug: "app-ui", title: "march-app-ui", name: "AppUI", desc: "March IDE çekirdeği: üst çubuk, Yerleşim menüsü, yan ve alt yuvalar, çalışma alanı", group: "Karmaşık bileşenler" },
+    { slug: "dock-layout", title: "Kenetlenen paneller", name: "DockLayout", desc: "Sekmeyi bir grubun kenarına, ortasına ya da alanın kenarına bırak; kapatınca şeride daralır, açınca eski boyutuyla döner", group: "Karmaşık bileşenler" },
     { slug: "property-grid", title: "Özellik ızgarası", name: "PropertyGrid", desc: "Gruplu, aranabilir satırlar; her tür kendi form denetimiyle düzenlenir.", group: "Karmaşık bileşenler" },
     { slug: "overflow-toolbar", title: "Taşan araç çubuğu", name: "OverflowToolbar", desc: "Genişliği daralt: önceliği en düşük öğeler “Daha fazla” menüsüne geçer, yer açılınca kayarak geri gelir.", group: "Eylemler" },
     { slug: "status-bar", title: "Durum çubuğu", name: "StatusBar", desc: "Başta ve sonda öğeler; düğmeler bir eylem ya da komut çalıştırır.", group: "Yerleşim" },

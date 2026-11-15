@@ -21,13 +21,12 @@
 .sc-ab-stage.is-h > .m-ab { order: 2; }
 .sc-ab-view { display: grid; place-items: center; padding: var(--m-space-4); background: var(--m-surface); }
 /* mini editor (ide/mini-ide.tsx) */
-.sc-ide { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: 34rem; min-width: 0; border: 1px solid var(--m-border); border-radius: var(--m-radius-3); overflow: hidden; background: var(--m-surface); }
-.sc-ide-top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, auto) auto; align-items: center; gap: var(--m-space-2); padding: .25rem .5rem; border-block-end: 1px solid var(--m-border); background: var(--m-surface-2); min-width: 0; }
+.sc-ide { display: grid; height: 34rem; min-width: 0; border: 1px solid var(--m-border); border-radius: var(--m-radius-3); overflow: hidden; background: var(--m-surface); }
+.sc-ide-app { min-height: 0; }
+.sc-ide-app > .m-app-bar { padding: .25rem .5rem; border-block-end: 1px solid var(--m-border); background: var(--m-surface-2); }
+.sc-ide-top { flex: 1 1 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, auto) auto; align-items: center; gap: var(--m-space-2); min-width: 0; }
 .sc-ide-top > .m-otb { min-width: 2.5rem; }
 .sc-ide-pal { min-width: 0; max-width: 13rem; }
-.sc-ide-body { display: grid; grid-template-columns: auto minmax(0, 1fr); min-height: 0; }
-.sc-ide-dock { min-width: 0; min-height: 0; }
-.sc-ide-dock > .m-dock { border-radius: 0; min-height: 0; }
 .sc-ide-side { display: grid; align-content: start; gap: .375rem; min-width: 0; height: 100%; padding: .375rem; overflow: auto; }
 .sc-ide-search .m-input { min-height: 1.875rem; font-size: var(--m-text-sm); }
 .sc-ide-editor { --sc-ide-c: var(--m-cat-1, var(--m-primary)); display: grid; grid-template-columns: auto minmax(0, 1fr); height: 100%; min-height: 8rem; font: var(--sc-ide-fs, 13px)/1.6 var(--m-font-mono); }

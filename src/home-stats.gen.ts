@@ -3,7 +3,7 @@
 export const HOME_STATS = {
   "dependencies": 0,
   "components": 268,
-  "registered": 185,
+  "registered": 186,
   "exports": 1193,
   "subpaths": 100,
   "categories": [
@@ -65,7 +65,7 @@ export const HOME_STATS = {
     {
       "id": "composite",
       "label": "Karmaşık bileşenler",
-      "components": 31
+      "components": 32
     },
     {
       "id": "landing",
@@ -85,7 +85,7 @@ export const HOME_STATS = {
   },
   "managers": 30,
   "themes": 16,
-  "tests": 1254,
+  "tests": 1250,
   "testFiles": 301,
   "budget": {
     "entry": 15360,

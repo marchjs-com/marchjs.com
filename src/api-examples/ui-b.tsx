@@ -2,7 +2,7 @@
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`; components have Playground options.
 import { signal } from "hadi-march";
 import {
-  Dialog, Disclosure, Divider, DockLayout, Drawer, Dropdown, EASING_PRESETS, EMOJI_SET, KeyValue, Button, Segmented, TextInput, type DockApi,
+  Dialog, Disclosure, Divider, DockLayout, row, col, tabs, Drawer, Dropdown, EASING_PRESETS, EMOJI_SET, KeyValue, Button, Segmented, TextInput, type DockApi,
 } from "hadi-march/ui";
 import { folder, fileText } from "hadi-march/icons";
 import { examples } from "./types.ts";
@@ -64,7 +64,7 @@ export default examples({
       },
     },
     DockLayout: {
-      code: `<DockLayout label="Çalışma alanı" layout={{ row: [["files"], ["editor", "log"]], share: .3 }} panels={[
+      code: `<DockLayout label="Çalışma alanı" layout={row([.3, tabs("files")], [.7, tabs(["editor", "log"])])} panels={[
   { id: "files", title: "Dosyalar", icon: folder, content: () => <FileTree /> },
   { id: "editor", title: "app.ts", content: () => <Editor />, dirty: () => $dirty },
   { id: "log", title: "Günlük", content: () => <Log />, badge: () => $errors },
@@ -80,11 +80,11 @@ export default examples({
           { id: "log", title: "Günlük", content: () => <div class="sc-ex-ui-b-pane"><Button size="sm" onClick={() => errors.update((n) => n + 1)}>Hata ekle</Button></div>, badge: () => errors() || null },
         ]
         return <div class="sc-ex-stack">
-          <Row><Button size="sm" onClick={() => dock?.open("log")}>Günlüğe geç</Button><Button size="sm" variant="ghost" onClick={() => dock?.reset()}>Yerleşimi sıfırla</Button></Row>
+          <Row><Button size="sm" onClick={() => dock?.open("log")}>Günlüğe geç</Button><Button size="sm" variant="ghost" onClick={() => dock?.collapse("files")}>Dosyaları daralt</Button><Button size="sm" variant="ghost" onClick={() => dock?.reset()}>Yerleşimi sıfırla</Button></Row>
           <div class="sc-ex-ui-b-dock">{() => {
             const s = p.values.split
             return <DockLayout panels={panels} label="HADİ çalışma alanı" commands={false}
-              layout={s === "row" ? { row: [["files"], ["editor", "log"]], share: 0.32 } : { column: [["editor", "log"], ["files"]], share: 0.6 }} api={(a: DockApi) => (dock = a)} />
+              layout={s === "row" ? row([0.32, tabs("files")], [0.68, tabs(["editor", "log"])]) : col([0.6, tabs(["editor", "log"])], [0.4, tabs("files")])} api={(a: DockApi) => (dock = a)} />
           }}</div>
         </div>
       },

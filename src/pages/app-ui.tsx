@@ -1,11 +1,11 @@
 // march-app-ui: the core of March IDE, alone on the page (in the site's theme and accent). Panels are empty for now; drag a tab to a side,
 // collapse a group to a strip, fill the area, pick a ready-made layout from the top bar.
 import "./app-ui.css";
-import { AppUI, row, col, tabs, type AppPanel, type Preset } from "hadi-march/app-ui";
+import { AppUI, row, col, tabs, type DockPanel, type Preset } from "hadi-march/app-ui";
 import { files, code, monitor, users, terminal, bug } from "hadi-march/icons";
 
 const empty = (name: string) => () => <div class="sc-appui-empty"><b>{name}</b><span>Boş panel</span></div>;
-const PANELS: AppPanel[] = [
+const PANELS: DockPanel[] = [
   { id: "files", title: "Dosyalar", icon: files, min: [150, 160], place: { near: "editor", zone: "left", size: 0.2 }, content: empty("Dosyalar") },
   { id: "editor", title: "Düzenleyici", icon: code, min: [260, 180], place: { near: "preview", zone: "left", size: 0.5 }, content: empty("Düzenleyici") },
   { id: "preview", title: "Önizleme", icon: monitor, min: [220, 180], place: { near: "editor", zone: "right", size: 0.45 }, content: empty("Önizleme") },
