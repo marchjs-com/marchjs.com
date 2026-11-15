@@ -67,7 +67,6 @@ import e62 from "./app-router/router--router.x.tsx";
 import e63 from "./app-router/router--_reset-router.x.tsx";
 import e64 from "./app-router/router--_router.x.tsx";
 import e65 from "./app-router/router--back.x.tsx";
-import e66 from "./app-router/router--before-leave.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "hadi-march/motion/text#tilt": e0,
   "hadi-march/motion/text#trackIn": e1,
@@ -135,6 +134,5 @@ const examples: Record<string, ApiExample<any>> = {
   "hadi-march/router#_resetRouter": e63,
   "hadi-march/router#_router": e64,
   "hadi-march/router#back": e65,
-  "hadi-march/router#beforeLeave": e66,
 };
 export default examples;

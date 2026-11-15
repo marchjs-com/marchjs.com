@@ -1,0 +1,4 @@
+/* march-app-ui page: the workspace fills the room under the top bar. */
+.sc-appui { block-size: calc(100dvh - var(--m-topbar-h, 3.5rem)); min-block-size: 22rem; background: var(--m-bg); }
+.sc-appui-empty { block-size: 100%; display: grid; place-content: center; justify-items: center; gap: var(--m-space-1); color: var(--m-muted); font-size: var(--m-text-sm); text-align: center; }
+.sc-appui-empty b { color: var(--m-text); font: 800 var(--m-text-md) var(--m-font-display); }

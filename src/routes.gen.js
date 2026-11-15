@@ -2,6 +2,7 @@
 export default {
   "/animation": () => import("./pages/animation.tsx"),
   "/api": () => import("./pages/api.tsx"),
+  "/app-ui": () => import("./pages/app-ui.tsx"),
   "/bench": () => import("./pages/bench.tsx"),
   "/big-data": () => import("./pages/big-data.tsx"),
   "/buttons": () => import("./pages/buttons.tsx"),

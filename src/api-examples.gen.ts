@@ -61,7 +61,7 @@ const bySubpath: Record<string, [part: number, first: string][]> = {
   "hadi-march/net": [[8,"Api"]],
   "hadi-march/net/mock": [[8,"MockReply"]],
   "hadi-march/props": [[8,"mProps"]],
-  "hadi-march/router": [[8,"Link"],[9,"closeModal"]],
+  "hadi-march/router": [[8,"Link"],[9,"beforeLeave"]],
   "hadi-march/schema": [[9,"TYPES"]],
   "hadi-march/seo": [[9,"_resetHead"]],
   "hadi-march/seo/hydrate": [[9,"hydrate"]],
@@ -69,7 +69,7 @@ const bySubpath: Record<string, [part: number, first: string][]> = {
   "hadi-march/sw": [[9,"applyUpdate"]],
   "hadi-march/table": [[9,"CellEditor"],[10,"describeFilter"]],
   "hadi-march/theme": [[10,"COLOR_TOKENS"]],
-  "hadi-march/ui": [[10,"ACCENT_CHOICES"],[11,"CopyButton"],[12,"NumberInput"],[13,"UrlInput"],[14,"preloadPalette"]],
+  "hadi-march/ui": [[10,"ACCENT_CHOICES"],[11,"CopyButton"],[12,"NumberInput"],[13,"UrlInput"],[14,"pointer"]],
 };
 /** The example of an export (its part: a lazy file, loaded once), resolving to null when it has none; null at once
  *  when its subpath has no examples. */

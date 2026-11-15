@@ -76,7 +76,6 @@ import e71 from "./ui-f/ui--parse-number.x.tsx";
 import e72 from "./ui-f/ui--pick-main.x.tsx";
 import e73 from "./ui-f/ui--picker-kind.x.tsx";
 import e74 from "./ui-f/ui--place.x.tsx";
-import e75 from "./ui-f/ui--pointer.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "hadi-march/ui#UrlInput": e0,
   "hadi-march/ui#UserMenu": e1,
@@ -153,6 +152,5 @@ const examples: Record<string, ApiExample<any>> = {
   "hadi-march/ui#pickMain": e72,
   "hadi-march/ui#pickerKind": e73,
   "hadi-march/ui#place": e74,
-  "hadi-march/ui#pointer": e75,
 };
 export default examples;
