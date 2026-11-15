@@ -882,7 +882,7 @@ const langShown = signal("")
 const previewLang = signal("")
 /** A language's name in itself ("English", "Türkçe"); the code when the browser does not know it. */
 const langName = (code: string): string => { try { const n = new Intl.DisplayNames([code], { type: "language" }).of(code); return n && n !== code ? n.charAt(0).toLocaleUpperCase(code) + n.slice(1) : code } catch { return code } }
-const languageList = () => [{ value: "", label: "Varsayılan" }, ...Object.keys(langs()).sort().map((c) => ({ value: c, label: `${langName(c)}: ${c}` }))]
+const languageList = () => [{ value: "", label: "Varsayılan Dil" }, ...Object.keys(langs()).sort().map((c) => ({ value: c, label: `${langName(c)}: ${c}` }))]
 let addCode = ""
 const LANG_CODE = /^[a-z]{2,3}(-[a-z0-9]{2,8})*$/
 const addLang = (given = addCode): void => {
@@ -891,7 +891,7 @@ const addLang = (given = addCode): void => {
   if (langs()[code]) { langShown.set(code); return }
   saveLangs({ ...langs(), [code]: langFile(langShown()) })
   langShown.set(code)
-  print(`[${stamp()}] + ${langName(code)}: ${code} eklendi (kopyalanan: ${langShown() ? langShown() : "Varsayılan"})`, "success")
+  print(`[${stamp()}] + ${langName(code)}: ${code} eklendi (kopyalanan: ${langShown() ? langShown() : "Varsayılan Dil"})`, "success")
 }
 /** Remove an added language (the default stays); the preview falls back to the default when it showed it. */
 const removeLang = (code: string): void => {
@@ -918,7 +918,7 @@ const langPanel = () => <div class="sc-lang">
     </div>
     <Dropdown icon={plus} label="Dil ekle" size="sm" variant="ghost" placement="bottom-end" panelClass="sc-lang-new">
       {(close: () => void) => <div class="sc-lang-new-body">
-        <span class="sc-lang-new-hint">{() => `${langShown() ? `${langName(langShown())}: ${langShown()}` : "Varsayılan"} kopyalanır`}</span>
+        <span class="sc-lang-new-hint">{() => `${langShown() ? `${langName(langShown())}: ${langShown()}` : "Varsayılan Dil"} kopyalanır`}</span>
         <div class="sc-lang-new-row">
           <TextInput aria-label="Yeni dilin kodu" placeholder="tr, en, de…" onChange={(v: string) => { addCode = v }} onKeyDown={(e: KeyboardEvent) => { if (e.key === "Enter") { addLang(); close() } }} />
           <Button size="sm" variant="primary" on:click={() => { addLang(); close() }}>Ekle</Button>
