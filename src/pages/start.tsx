@@ -28,7 +28,7 @@ export default function Start() {
   return <Section kicker="İlk Adımlar" title="March ile başla"
     lead="March, sinyallerle çalışan, sıfır bağımlılıklı bir TypeScript çatısıdır: bileşenler bir kez çalışır, değişen yalnız ilgili DOM düğümüdür. Tek derleme aracı esbuild.">
     <Demo wide title="1. Kurulum" desc="Paketi bir commit'e sabitleyerek kur; esbuild derleyici, TypeScript ise tür denetimi için."
-      lang="bash" code={`npm i github:tlghn/hadimarch#<commit-sha>
+      lang="bash" code={`npm i github:marchjs/march#<commit-sha>
 npm i -D esbuild typescript
 npx march dev       # index.html + src/main.tsx, live reload, error overlay
 npx march build     # dist/`}>
