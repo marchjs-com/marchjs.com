@@ -141,6 +141,39 @@ export async function run(code: string, el: HTMLElement, props: Record<string, P
   watchData();
   return [...cells.keys()];
 }
+/**
+ * Run a line of JavaScript the Terminal was given, in the running preview: the module's data (its signals and
+ * computed values: `count`, `count.set(5)`), March's modules (`march`, `ui`, `icons`, `theme`, `motion`) and what the
+ * page gives in `scope` ($el, $props…) are in scope. An expression gives its value (awaited); a line of statements runs
+ * (nothing is kept between lines). Like the build, the line is a module imported from a blob: URL (no eval).
+ */
+export async function evaluate(line: string, scope: Record<string, unknown> = {}): Promise<unknown> {
+  const all: Record<string, unknown> = { march: core, ui, icons, theme, motion, ...data, ...scope };
+  const names = Object.keys(all).filter((k) => /^[A-Za-z_$][\w$]*$/.test(k));
+  (globalThis as Record<string, unknown>)["__marchEval"] = all;
+  // the module marks that it ran: an error after that is the line's own (a JSON.parse…), not a line that is no expression
+  const head = `globalThis.__marchEvalRan = true;\nconst { ${names.join(", ")} } = globalThis.__marchEval;\n`;
+  const g = globalThis as Record<string, unknown>;
+  g["__marchEvalRan"] = false;
+  const load = async (body: string): Promise<unknown> => {
+    const url = URL.createObjectURL(new Blob([link(head + body)], { type: "text/javascript" }));
+    try { return ((await import(/* @vite-ignore */ url)) as { default: unknown }).default; }
+    finally { URL.revokeObjectURL(url); }
+  };
+  const src = line.trim().replace(/;+$/, "");
+  let first: unknown;
+  try { return await load(`export default await (async () => (\n${src}\n))();\n`); }
+  catch (e) { if (!(e instanceof SyntaxError) || g["__marchEvalRan"]) throw e; first = e; }
+  // statements whose last one is an expression (const x = 2; x * 10): that one's value
+  const cut = src.lastIndexOf(";");
+  if (cut > 0) {
+    try { return await load(`export default await (async () => {\n${src.slice(0, cut + 1)}\nreturn (\n${src.slice(cut + 1)}\n);\n})();\n`); }
+    catch (e) { if (!(e instanceof SyntaxError) || g["__marchEvalRan"]) throw e; }
+  }
+  // not an expression: statements; when they do not parse either, the expression's error is the one to read
+  try { return await load(`export default await (async () => {\n${src}\n})();\n`); }
+  catch (e) { throw e instanceof SyntaxError && !g["__marchEvalRan"] ? first : e; }
+}
 /** Remove what the last run rendered. */
 export function stop(): void {
   dataStop?.(); dataStop = null;

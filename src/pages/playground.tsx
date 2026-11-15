@@ -10,7 +10,7 @@ import { h, render as mount, createRoot, signal, computed, effect, untrack, onCl
 import { registry } from "hadi-march/components/registry.gen.ts";
 import type { PlaygroundOption } from "hadi-march/components/meta.ts";
 import { appUrl } from "hadi-march/base";
-import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, type TerminalApi, type PropertySpec } from "hadi-march/ui";
+import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "hadi-march/ui";
 import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, groups, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
 import { x as xIcon, plus, database, zap, monitor, sliders, packageBox, users, code, terminal, bug, fileText, globe } from "hadi-march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "hadi-march/forms"
@@ -54,7 +54,9 @@ const fileTab = (id: string, path: string): AppPanel => {
 const ENTRY = "PreviewControl.tsx"
 const FILE_OF: Record<string, string> = { c1: "Button.tsx", c2: "Component2.tsx", c3: "Component3.tsx" }
 const active = signal("Button.tsx")
+let dock: DockApi | null = null
 const followTabs = (api: DockApi) => {
+  dock = api
 
   effect(() => {
     const L = api.layout()
@@ -562,6 +564,181 @@ const builder = createBuilder(print)
 const stamp = () => new Date().toLocaleTimeString("tr-TR", { hour12: false })
 const consolePanel = () => <Terminal readonly scheme="dark" height="100%" label="Derleme çıktısı" class="sc-console"
   ref={(api: TerminalApi) => { consoleApi = api; for (const [t, o] of waiting.splice(0)) api.print(t, o) }} />
+// Terminal: the playground's command line (no shell: March is built here in the browser and exported, never
+// installed from npm). Its commands work on the component in work (props, events, the preview's language and theme,
+// a build, an accessibility check, the size of the build); a line that names no command is JavaScript, run in the
+// running preview with the file's signals in scope (count.set(3)), $el (the chosen component's element) and $props.
+/** Build the file in front now (its kept result is not used); the steps go to the Console. */
+const buildNow = async () => {
+  const path = untrack(active), now = untrack(() => ({ [path]: withData(files.get(path)?.() ?? ""), [ENTRY]: entrySource() }))
+  const r = await builder.build(now, ENTRY)
+  if (r?.ok) await render(r.code)
+  return r
+}
+const previewTheme = signal(""), previewMode = signal<"system" | "light" | "dark">("system")
+/** The element the chosen component draws in the preview (an HTML tag of the tree: its first one). */
+const chosenEl = (): HTMLElement | null => {
+  const name = selected.peek(), tag = /^<([\w-]+)>$/.exec(name)?.[1]
+  if (tag) return previewEl?.querySelector<HTMLElement>(`.sc-pv-stage ${tag}`) ?? null
+  const cell = previewEl?.querySelector<HTMLElement>(`.sc-pv-cell[data-pv="${name}"] > .sc-pv-stage`) ?? previewEl?.querySelector<HTMLElement>(".sc-pv-stage")
+  return (cell?.firstElementChild as HTMLElement | null) ?? null
+}
+/** The chosen component's options by prop name (the shown one when several write one prop). */
+const optionsByProp = (): Map<string, PlaygroundOption> => {
+  const v = values(), out = new Map<string, PlaygroundOption>()
+  for (const o of options()) { const k = String(o.prop || o.key); if (!out.has(k) || !o.visibleWhen || o.visibleWhen(v as never)) out.set(k, o) }
+  return out
+}
+/** A typed value: true / false / null, a number, JSON; anything else is text. */
+const typed = (text: string): unknown => { const p = parse(text); return p.ok ? p.value : text }
+const describe = (v: unknown): string => v instanceof Element ? `<${v.tagName.toLowerCase()}${v.id ? `#${v.id}` : ""}${v.classList.length ? `.${[...v.classList].join(".")}` : ""}>` : short(v)
+/** Print what a line of JavaScript gave: a value, a tree for an object, a signal's value. */
+const show = (v: unknown, io: TerminalIO): void => {
+  if (v === undefined) io.print("undefined", { tone: "muted" })
+  // a signal or a computed value (an accessor: it has peek): its value, read without following it
+  else if (typeof v === "function") io.print("peek" in v ? `${"set" in v ? "sinyal" : "hesaplanan"} → ${short((v as { peek(): unknown }).peek())}` : `ƒ ${v.name || "fonksiyon"}`, { color: 6 })
+  else if (v instanceof Element) io.print(describe(v), { color: 4 })
+  else if (v && typeof v === "object") io.json(v, 1)
+  else io.print(typeof v === "string" ? JSON.stringify(v) : String(v), { color: typeof v === "number" ? 3 : 2 })
+}
+// the accessibility check: the preview's elements without a name, images without alt, hidden focusable ones,
+// repeated ids, a positive tabindex, and text whose contrast is under WCAG AA (4.5, 3 for large text)
+const rgb = (c: string): [number, number, number, number] | null => { const m = /rgba?\(([\d.]+)[, ]+([\d.]+)[, ]+([\d.]+)(?:[,/ ]+([\d.]+%?))?/.exec(c); if (!m) return null; const a = m[4] ? (m[4].endsWith("%") ? parseFloat(m[4]) / 100 : +m[4]) : 1; return [+m[1]!, +m[2]!, +m[3]!, a] }
+const lum = ([r, g, b]: readonly number[]): number => { const f = (x: number) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4 }; return 0.2126 * f(r!) + 0.7152 * f(g!) + 0.0722 * f(b!) }
+const bgOf = (el: Element | null): readonly number[] => { for (let n = el; n; n = n.parentElement) { const c = rgb(getComputedStyle(n).backgroundColor); if (c && c[3] > 0.5) return c } return [255, 255, 255] }
+const nameOf = (el: Element): string => {
+  const by = el.getAttribute("aria-labelledby")
+  const label = el.id ? el.ownerDocument.querySelector(`label[for="${CSS.escape(el.id)}"]`) : null
+  const own = el.getAttribute("aria-label") || (by ? by.split(/\s+/).map((id) => el.ownerDocument.getElementById(id)?.textContent || "").join(" ") : "")
+  const text = el.tagName === "IMG" ? el.getAttribute("alt") || "" : el.textContent || ""
+  return (own || text || label?.textContent || el.closest("label")?.textContent || el.getAttribute("title") || "").trim()
+}
+const FOCUSABLE = "a[href], button, input, select, textarea, [tabindex], [contenteditable=true], [role=button], [role=link], [role=checkbox], [role=switch], [role=tab], [role=menuitem]"
+interface Issue { problem: string; element: string }
+const audit = (root: HTMLElement): Issue[] => {
+  const out: Issue[] = [], add = (problem: string, el: Element) => out.push({ problem, element: describe(el) })
+  for (const el of root.querySelectorAll("img:not([alt])")) add("alt yok", el)
+  for (const el of root.querySelectorAll(FOCUSABLE)) {
+    if (el.closest("[hidden], [inert]") || (el as HTMLInputElement).type === "hidden") continue
+    if (!nameOf(el)) add("erişilebilir adı yok", el)
+    if (el.closest("[aria-hidden=true]") && !el.hasAttribute("disabled") && el.getAttribute("tabindex") !== "-1") add("aria-hidden içinde odaklanabilir", el)
+    if (+(el.getAttribute("tabindex") ?? 0) > 0) add("tabindex > 0 (sırayı bozar)", el)
+  }
+  const ids = new Map<string, number>()
+  for (const el of root.querySelectorAll("[id]")) ids.set(el.id, (ids.get(el.id) ?? 0) + 1)
+  for (const [id, n] of ids) if (n > 1) out.push({ problem: `id ${n} kez tekrar ediyor`, element: `#${id}` })
+  for (const el of root.querySelectorAll<HTMLElement>("*")) {
+    if (![...el.childNodes].some((n) => n.nodeType === 3 && n.nodeValue?.trim()) || !el.offsetParent) continue
+    const st = getComputedStyle(el), fg = rgb(st.color)
+    if (!fg) continue
+    const [hi, lo] = [lum(fg), lum(bgOf(el))].sort((x, y) => y - x) as [number, number], ratio = (hi + 0.05) / (lo + 0.05)
+    const large = parseFloat(st.fontSize) >= 24 || (parseFloat(st.fontSize) >= 18.66 && +st.fontWeight >= 700)
+    if (ratio < (large ? 3 : 4.5)) add(`kontrast ${ratio.toFixed(2)} (en az ${large ? 3 : 4.5})`, el)
+  }
+  return out
+}
+const gzipSize = async (text: string): Promise<number> => (await new Response(new Blob([text]).stream().pipeThrough(new CompressionStream("gzip"))).arrayBuffer()).byteLength
+const kb = (n: number): string => (n < 1024 ? `${n} B` : `${(n / 1024).toFixed(2)} KB`)
+const HANDLER_NAMES: Record<string, Handler> = { log: "log", toast: "toast", count: "count", none: "" }
+const EMITTABLE = [...DOM_EVENTS, ...FIELD_EVENTS, "submit"].sort()
+const fileNames = (): string[] => [...files.keys()]
+const propNames = (): string[] => [...optionsByProp().keys()]
+const COMMANDS: Record<string, TerminalCommand> = {
+  build: { desc: "Öndeki dosyayı şimdi derle (adımlar Konsol'da)", run: async (_a, io) => {
+    const s = io.spinner(`${active()} derleniyor`), r = await buildNow()
+    if (r?.ok) s.done(`${active()} derlendi, önizleme çizildi`); else s.fail("Derleme başarısız: ayrıntı Konsol'da")
+  } },
+  files: { desc: "Dosyalar (öndeki işaretli)", run: (_a, io) => { for (const f of files.keys()) io.print(`${f === active() ? "▸" : " "} ${f}`, f === active() ? { color: 2 } : {}) } },
+  open: { desc: "Bir dosyayı öne getir", args: [{ name: "dosya", required: true, get choices() { return fileNames() } }], run: (a, io) => {
+    const id = Object.entries(FILE_OF).find(([, f]) => f === a.args["dosya"])?.[0]
+    if (id && dock) { dock.open(id); io.success(`${String(a.args["dosya"])} önde`) }
+  } },
+  select: { desc: "Bağımlılık ağacından bir bileşen seç", args: [{ name: "bileşen", get choices() { return inTree() } }], run: (a, io) => {
+    if (a.args["bileşen"]) selected.set(String(a.args["bileşen"]))
+    io.print(`Seçili: ${selected()}`, { color: 2 })
+  } },
+  props: { desc: "Seçili bileşenin özellikleri", options: { changed: { alias: "c", desc: "Yalnız değişenler" } }, run: (a, io) => {
+    const v = values(), rows = [...optionsByProp()].map(([prop, o]) => [prop, short(v[o.key] ?? defaultOf(o)), short(defaultOf(o))])
+      .filter((r) => !a.options["changed"] || r[1] !== r[2])
+    if (rows.length) io.table(rows, ["özellik", "değer", "varsayılan"]); else io.print(a.options["changed"] ? "Değişen özellik yok" : `${selected()} özellik almıyor`, { tone: "muted" })
+  } },
+  set: { desc: "Özellik ver: set variant danger · set disabled true · set label \"Kaydet\"", args: [{ name: "özellik", required: true, get choices() { return propNames() } }, { name: "değer", rest: true }], run: (a, io) => {
+    const o = optionsByProp().get(String(a.args["özellik"]))!, raw = String(a.args["değer"] ?? "")
+    const x = o.key === "html:data" || typeof o.default !== "string" ? typed(raw) : raw === "null" ? null : raw
+    setValues({ ...values(), [o.key]: x })
+    io.success(`${String(a.args["özellik"])} = ${short(x)}`)
+  } },
+  reset: { desc: "Özellikleri (ya da birini) varsayılana döndür", args: [{ name: "özellik", get choices() { return propNames() } }], run: (a, io) => {
+    const one = a.args["özellik"] ? optionsByProp().get(String(a.args["özellik"])) : null
+    setValues(one ? { ...values(), [one.key]: defaultOf(one) } : Object.fromEntries(options().map((o) => [o.key, defaultOf(o)])))
+    io.success(one ? `${String(a.args["özellik"])} varsayılanda` : `${selected()}: tüm özellikler varsayılanda`)
+  } },
+  on: { desc: "Bir olaya işleyici bağla: on onClick log · on on:click toast · on onChange none", args: [
+    { name: "olay", required: true, get choices() { const n = selected(); return [...(localComps()[n]?.props.filter((p) => /^on[A-Z]/.test(p.name)) ?? eventsBy()[n] ?? []).map((p) => p.name), ...(n.startsWith("<") ? tagEvents(n.slice(1, -1)) : isRoot(n) ? domEvents(n) : []).map((e) => `on:${e}`)] } },
+    { name: "işleyici", required: true, choices: Object.keys(HANDLER_NAMES) }], run: (a, io) => {
+    const n = selected.peek(), ev = String(a.args["olay"])
+    handlersBy.set({ ...handlersBy.peek(), [n]: { ...handlersBy.peek()[n], [ev]: HANDLER_NAMES[String(a.args["işleyici"])]! } })
+    io.success(`${n}.${ev} → ${String(a.args["işleyici"])}`)
+  } },
+  emit: { desc: "Seçili bileşenin öğesinde bir HTML olayı çalıştır: emit click · emit keydown --key=Enter", args: [{ name: "olay", required: true, choices: EMITTABLE }], options: { key: { type: "string", desc: "Klavye olayının tuşu" } }, run: (a, io) => {
+    const el = chosenEl(), type = String(a.args["olay"])
+    if (!el) { io.error("Önizlemede seçili bileşenin öğesi yok"); return }
+    if (type === "click") el.click()
+    else if (type === "focus") el.focus()
+    else if (type === "blur") el.blur()
+    else el.dispatchEvent(type.startsWith("key") ? new KeyboardEvent(type, { key: String(a.options["key"] ?? "Enter"), bubbles: true }) : type.startsWith("pointer") ? new PointerEvent(type) : new Event(type, { bubbles: true, cancelable: true }))
+    io.success(`${type} → ${describe(el)}`)
+  } },
+  data: { desc: "Dosyanın sinyalleri, hesaplanan değerleri ve sabitleri", run: (_a, io) => {
+    const list = dataItems()
+    if (!list.length) { io.print("Kodda sinyal, hesaplanan değer ya da sabit yok", { tone: "muted" }); return }
+    io.table(list.map((d) => [d.name, d.kind, d.kind === "signal" || d.kind === "computed" ? short(liveData()[d.name]) : d.init]), ["ad", "tür", "değer"])
+    io.print("Değiştirmek için JavaScript: ad.set(değer) · listeye ekle: ad.set([...ad(), x])", { tone: "muted" })
+  } },
+  code: { desc: "Önizlemedeki bileşenin kodu", run: (_a, io) => { if (usage()) io.print(usage(), { color: 6 }); else io.print("Dışa aktarılan bileşen yok", { tone: "muted" }) } },
+  copy: { desc: "Bileşenin kodunu panoya kopyala", run: async (_a, io) => { await navigator.clipboard.writeText(usage()); io.success("Kod panoda") } },
+  download: { desc: "Bir dosyayı indir (varsayılan: öndeki)", args: [{ name: "dosya", get choices() { return fileNames() } }], run: (a, io) => {
+    const path = String(a.args["dosya"] ?? active()), url = URL.createObjectURL(new Blob([files.get(path)?.() ?? ""], { type: "text/plain" }))
+    const link = document.createElement("a")
+    link.href = url; link.download = path; link.click()
+    setTimeout(() => URL.revokeObjectURL(url), 1000)
+    io.success(`${path} indirildi`)
+  } },
+  size: { desc: "Son derlemenin boyutu (March'ın kendisi hariç)", run: async (_a, io) => {
+    if (!lastCode) { io.warn("Henüz derleme yok"); return }
+    io.table([[active(), kb(new Blob([lastCode]).size), kb(await gzipSize(lastCode))]], ["dosya", "ham", "gzip"])
+  } },
+  a11y: { desc: "Önizlemenin erişilebilirlik denetimi (ad, alt, odak, id, kontrast)", run: (_a, io) => {
+    if (!previewEl) { io.error("Önizleme yok"); return }
+    const found = audit(previewEl)
+    if (found.length) { io.warn(`${found.length} sorun`); io.table(found.map((f) => [f.problem, f.element]), ["sorun", "öğe"]) } else io.success("Sorun bulunmadı")
+  } },
+  lang: { desc: "Diller: lang · lang use en · lang add de · lang rm de", run: (_a, io) => {
+    for (const l of languageList()) io.print(`${l.value === previewLang() ? "▸" : " "} ${l.label}`, l.value === previewLang() ? { color: 2 } : {})
+  }, sub: {
+    use: { desc: "Önizlemenin dili", args: [{ name: "dil", required: true, get choices() { return ["default", ...Object.keys(langs())] } }], run: (a, io) => { const c = String(a.args["dil"]); previewLang.set(c === "default" ? "" : c); io.success(`Önizleme: ${c === "default" ? "Varsayılan" : langName(c)}`) } },
+    add: { desc: "Dil ekle (gösterilen dil kopyalanır)", args: [{ name: "dil", required: true }], run: (a, io) => { const c = String(a.args["dil"]).toLowerCase(); if (!LANG_CODE.test(c)) { io.error("Dil kodu: tr, en, de, pt-br gibi"); return } addLang(c) } },
+    rm: { desc: "Eklenen bir dili sil", args: [{ name: "dil", required: true, get choices() { return Object.keys(langs()) } }], run: (a) => removeLang(String(a.args["dil"])) },
+  } },
+  theme: { desc: "Önizlemenin teması: theme · theme page · theme <ad>", args: [{ name: "tema", get choices() { return ["page", ...colorThemes().map((x) => x.id)] } }], run: (a, io) => {
+    const t = a.args["tema"]
+    if (t) previewTheme.set(t === "page" ? "" : String(t))
+    io.print(`Tema: ${previewTheme() ? colorThemes().find((x) => x.id === previewTheme())?.name ?? previewTheme() : "Sayfa teması"}`, { color: 2 })
+  } },
+  mode: { desc: "Önizlemenin aydınlık / karanlık modu", args: [{ name: "mod", choices: ["system", "light", "dark"] }], run: (a, io) => {
+    if (a.args["mod"]) previewMode.set(a.args["mod"] as "system" | "light" | "dark")
+    io.print(`Mod: ${previewMode()}`, { color: 2 })
+  } },
+}
+/** A line that names no command: JavaScript, run in the preview. */
+const evalLine = async (line: string, io: TerminalIO): Promise<void> => {
+  if (!runtime || !previewEl) { io.error("Önizleme henüz çizilmedi"); return }
+  const r = await runtime
+  show(await r.evaluate(line, { $el: chosenEl(), $preview: previewEl, $props: propsFor(selected.peek()), toast }), io)
+}
+const terminalPanel = () => <Terminal scheme="dark" height="100%" prompt="› " persist="sc.playground" label="Playground terminali" class="sc-console"
+  commands={COMMANDS} fallback={evalLine} labels={{ command: "Komut ya da JavaScript" }}
+  welcome={["[info] help: komutlar · Tab: tamamla · ↑ ↓: geçmiş", "[info] Komut olmayan satır JavaScript olarak önizlemede çalışır: count.set(3), $el, $props"]} />
 // lang.json: the texts the last build found (JSX text, titles, labels…), as a locale file lists them
 // lang.json: the default language is the code's own texts (each key is its own text); a language added with + starts
 // as a copy of it under its code and is translated here; the preview's language tool lists them all
@@ -578,9 +755,10 @@ const previewLang = signal("")
 const langName = (code: string): string => { try { const n = new Intl.DisplayNames([code], { type: "language" }).of(code); return n && n !== code ? n.charAt(0).toLocaleUpperCase(code) + n.slice(1) : code } catch { return code } }
 const languageList = () => [{ value: "", label: "Varsayılan" }, ...Object.keys(langs()).sort().map((c) => ({ value: c, label: `${langName(c)}: ${c}` }))]
 let addCode = ""
-const addLang = (): void => {
-  const code = addCode.trim().toLowerCase()
-  if (!/^[a-z]{2,3}(-[a-z0-9]{2,8})*$/.test(code)) { toast("Dil kodu: tr, en, de, pt-br gibi"); return }
+const LANG_CODE = /^[a-z]{2,3}(-[a-z0-9]{2,8})*$/
+const addLang = (given = addCode): void => {
+  const code = given.trim().toLowerCase()
+  if (!LANG_CODE.test(code)) { toast("Dil kodu: tr, en, de, pt-br gibi"); return }
   if (langs()[code]) { langShown.set(code); return }
   saveLangs({ ...langs(), [code]: langFile(langShown()) })
   langShown.set(code)
@@ -621,7 +799,7 @@ const langPanel = () => <div class="sc-lang">
 // PreviewControl is rendered in the middle of its stage by the preview runtime (playground/preview.js, loaded once)
 let previewEl: HTMLElement | null = null
 type Parts = Record<string, Record<string, unknown>>
-type Runtime = { run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void }
+type Runtime = { evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void }
 let runtime: Promise<Runtime> | null = null
 const loadRuntime = () => (runtime ??= (async () => {
   // its components' stylesheet, once
@@ -638,8 +816,11 @@ const readTag = (): void => {
   for (const cell of previewEl?.querySelectorAll<HTMLElement>(".sc-pv-cell") ?? []) out[cell.dataset["pv"] ?? ""] = cell.querySelector(".sc-pv-stage")?.firstElementChild?.tagName.toLowerCase() ?? ""
   if (JSON.stringify(out) !== JSON.stringify(untrack(rootTags))) rootTags.set(out)
 }
+/** The code of the last build the preview drew (the Terminal's size reads it). */
+let lastCode = ""
 async function render(code: string): Promise<void> {
   if (!previewEl) return
+  lastCode = code
   const t0 = performance.now()
   try {
     await (await loadRuntime()).run(code, previewEl, untrack(rootProps), untrack(partsNow))
@@ -649,7 +830,7 @@ async function render(code: string): Promise<void> {
     print(`[${stamp()}] ✖ Çalışma hatası: ${String((e as Error)?.message ?? e)}`, "error")
   }
 }
-const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: true, language: true }} language={previewLang} languages={languageList}
+const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: true, language: true }} theme={previewTheme} mode={previewMode} language={previewLang} languages={languageList}
   footer={() => (usage() ? <CodeView code={usage} lang="tsx" copy wrap label="Bileşenin kodu" /> : null)}>
   <div class="sc-pv-root" m:no-select ref={(el: HTMLElement) => { previewEl = el }}>
     <div class="sc-playground-empty"><b>Önizleme</b><span>Derleniyor…</span></div>
@@ -668,7 +849,7 @@ const PANELS: AppPanel[] = [
   fileTab("c3", "Component3.tsx"),
   { id: "console", title: "Konsol", icon: code, content: consolePanel },
   panel("debug", "Hata ayıklayıcı", bug),
-  panel("terminal", "Terminal", terminal),
+  { id: "terminal", title: "Terminal", icon: terminal, content: terminalPanel },
   { id: "i18n", title: "lang.json", icon: globe, content: langPanel },
 ]
 const PRESETS: Record<string, Preset> = {
@@ -697,7 +878,7 @@ export default function PlaygroundPage(props: { name?: string }) {
     // built before with this very code (a tab shown again): the kept result, at once
     const kept = builder.cached(now, ENTRY)
     if (kept) { print(`[${stamp()}] ↺ ${path}: bu kod daha önce derlendi, bellekteki sonuç kullanılıyor`, "muted"); void render(kept.code); return }
-    timer = setTimeout(() => { void builder.build(now, ENTRY).then((r) => { if (r?.ok) void render(r.code) }) }, 350)
+    timer = setTimeout(() => { void buildNow() }, 350)
   })
   // the preview's language: its file, or the code's own texts
   effect(() => { const code = previewLang(), file = code ? langFile(code) : null; void runtime?.then((r) => r.setLanguage(file)) })
