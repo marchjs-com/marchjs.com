@@ -10,7 +10,7 @@ import { h, render as mount, createRoot, signal, computed, effect, untrack, onCl
 import { registry } from "hadi-march/components/registry.gen.ts";
 import type { PlaygroundOption } from "hadi-march/components/meta.ts";
 import { appUrl } from "hadi-march/base";
-import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "hadi-march/ui";
+import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "hadi-march/ui";
 import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "hadi-march/app-ui";
 import { x as xIcon, plus, database, zap, monitor, sliders, packageBox, users, code, terminal, fileText, globe, plug } from "hadi-march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "hadi-march/forms"
@@ -344,8 +344,15 @@ const asProperty = (o: PlaygroundOption): PropertySpec => {
   const spec = asPropertyBase(o), text = untrack(() => describeProp(selected(), o))
   return text ? { ...spec, description: text, name: String(o.prop || o.key).replace(/^(html|a11y|api|mp):/, "") } : spec
 }
-/** At most this many fixed values are a button group; more are a select. */
+/** At most this many fixed values are a button group; more are chips that wrap (a colour token's chip in its colour). */
 const SEGMENTS = 7
+type Choice = { value: unknown; label: string; title?: string; color?: string }
+const chipsControl = (choices: readonly Choice[], name: string) => (cp: Record<string, unknown>): unknown =>
+  h("div", { class: "sc-chips", role: "group", "aria-label": name }, choices.map((c) => {
+    const chip = h(Chip, { size: "sm", selected: () => (cp["value"] ?? "") === c.value, onClick: () => (cp["setValue"] as (v: unknown) => void)(c.value), title: c.title ?? null, children: c.color ? [h("span", { class: "sc-chip-dot", "aria-hidden": "true" }), c.label] : c.label }) as Element
+    if (c.color) chip.setAttribute("data-m-color", c.color)
+    return chip
+  }))
 const asPropertyBase = (o: PlaygroundOption): PropertySpec => {
   if (isTri(o)) return { key: o.key, label: o.label, group: MARCH_GROUP, control: (cp: Record<string, unknown>) => h(Toggle, { ...cp, tristate: true }), ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}) } as PropertySpec
   if (isIcon(o)) return { key: o.key, label: o.label, control: (cp: Record<string, unknown>) => IconPicker({ value: () => (cp["value"] as string | null) ?? null, onChange: (n: string | null) => (cp["setValue"] as (v: unknown) => void)(n), label: o.label, packs: iconPickerPacks }), group: MARCH_GROUP, ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}) } as PropertySpec
@@ -359,7 +366,7 @@ const asPropertyBase = (o: PlaygroundOption): PropertySpec => {
     const name = String(o.prop)
     const group = isA11y(o) ? A11Y_GROUP : o.key.startsWith("mp:") ? COMMON_GROUP : o.key.startsWith("api:") ? MARCH_GROUP : HTML_GROUP, label = o.label
     if (o.default === null) return { key: o.key, label, group, type: "number" } as PropertySpec
-    if (name === "m:theme") return { key: o.key, label, group, type: "select", options: colorThemes().map((x) => ({ value: x.id, label: x.name })) } as PropertySpec
+    if (name === "m:theme") return { key: o.key, label, group, control: chipsControl([{ value: "", label: "—", title: "sayfanın teması" }, ...colorThemes().map((x) => ({ value: x.id, label: x.name }))], name) } as PropertySpec
     if (name === "class") return { key: o.key, label, group, control: classControl } as PropertySpec
     if (name === "data") return { key: o.key, label, group, control: dataControl } as PropertySpec
     const set = valuesOf.get(o.key) ?? ATTR_VALUES[name]
@@ -368,12 +375,15 @@ const asPropertyBase = (o: PlaygroundOption): PropertySpec => {
     // fits, a select past SEGMENTS values
     if (set) {
       const opts = [{ value: "", label: "—", title: "boş (bileşenin varsayılanı)" }, ...set.list.map((x) => ({ value: x, label: x }))]
-      return { key: o.key, label, group, type: opts.length <= SEGMENTS ? "segmented" : "select", options: opts } as PropertySpec
+      if (opts.length <= SEGMENTS) return { key: o.key, label, group, type: "segmented", options: opts } as PropertySpec
+      return { key: o.key, label, group, control: chipsControl(opts.map((x) => (name === "m:color" && x.value ? { ...x, color: x.value } : x)), name) } as PropertySpec
     }
     return { key: o.key, label, group, type: typeof o.default === "boolean" ? "switch" : "text" } as PropertySpec
   }
   const opts = o.options?.map((x) => (typeof x === "object" ? x : { value: x, label: String(x) }))
-  const type = typeof o.default === "boolean" ? "switch" : opts ? (opts.length <= SEGMENTS ? "segmented" : "select") : typeof o.default === "number" ? (o.min !== undefined && o.max !== undefined ? "slider" : "number") : "text"
+  // a card option with a long list of values: chips that wrap, like the attributes' (a select hides them)
+  if (opts && opts.length > SEGMENTS && typeof o.default !== "boolean") return { key: o.key, label: o.label, group: MARCH_GROUP, control: chipsControl(opts.map((x) => ({ value: x.value, label: String(x.label ?? x.value) })), o.label), ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}) } as PropertySpec
+  const type = typeof o.default === "boolean" ? "switch" : opts ? "segmented" : typeof o.default === "number" ? (o.min !== undefined && o.max !== undefined ? "slider" : "number") : "text"
   return { key: o.key, label: o.label, type, group: MARCH_GROUP, ...(o.visibleWhen ? { hidden: (v: Record<string, unknown>) => !o.visibleWhen!(v as never) } : {}), ...(opts ? { options: opts } : {}), ...(o.min !== undefined ? { min: o.min } : {}), ...(o.max !== undefined ? { max: o.max } : {}), ...(o.step !== undefined ? { step: o.step } : {}) } as PropertySpec
 }
 // the preview entry: the exported component, rendered by the preview runtime with the Properties' values. The values

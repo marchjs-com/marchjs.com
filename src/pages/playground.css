@@ -5,6 +5,8 @@
 .sc-playground-pal { min-inline-size: 0; max-inline-size: 15rem; }
 .sc-lang { block-size: 100%; overflow: auto; padding: var(--m-space-2) var(--m-space-3); }
 .sc-lang-note { margin-block-end: var(--m-space-2); font-size: var(--m-text-sm); }
+.sc-chips { display: flex; flex-wrap: wrap; gap: 4px; padding-block: 2px; }
+.sc-chip-dot { display: inline-block; inline-size: .625em; block-size: .625em; margin-inline-end: 4px; border-radius: 50%; background: var(--m-accent, var(--m-primary)); vertical-align: middle; }
 .sc-console { block-size: 100%; border-radius: 0; }
 .sc-props { block-size: 100%; overflow: auto; }
 /* the preview is split into a cell per exported component (its name in the corner when there are several) */
