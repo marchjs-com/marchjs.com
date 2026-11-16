@@ -277,7 +277,7 @@
 /* top bar: the trail keeps its own width, the search sits in the middle of what is left, the look controls at the end */
 .sc-shell { --m-topbar-h: 3.75rem; }
 .sc-shell .m-shell-header { gap: var(--m-space-4); padding-inline: var(--m-space-5); border-block-end-color: var(--m-border-subtle); }
-.sc-top-crumbs { flex: 1.6 1 0; min-inline-size: 0; }
+.sc-top-crumbs { flex: 1 1 0; min-inline-size: 0; } /* the same share as the tools at the end: the search sits in the middle */
 /* the section and category steps arrive with the menu's manifest: they fade in instead of popping */
 .sc-top-crumbs.is-full .m-bc-li:not(:first-child) { animation: m-fade-in .28s var(--m-ease-out) both; }
 .sc-top-crumbs .m-bc { font-size: var(--m-text-md); }

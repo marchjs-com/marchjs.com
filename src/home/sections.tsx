@@ -6,11 +6,12 @@
 import "./sections.css";
 import { onCleanup, signal } from "march";
 import { inView, reducedMotion } from "march/motion";
-import { tilt } from "march/motion/text";
 import { Link } from "march/router";
 import { appUrl } from "march/base";
 import { Button, Card, CodeView, IconTile, Kbd, ListRow, MadeWithMarch, StatTile, heartBurst, openPalette } from "march/ui";
-import { Reveal, SectionHead, StatsBand, revealOnScroll } from "march/components/landing/index.ts";
+import { Reveal, StatsBand, revealOnScroll } from "march/components/landing/index.ts";
+import { Head } from "./head.tsx";
+import { Features } from "./features.tsx";
 import { search, sparkles } from "march/icons";
 import { BRAND_COLORS_ALL, type ColorToken } from "march/theme/colors.ts";
 import { HOME_STATS as S } from "../home-stats.gen.ts";
@@ -20,20 +21,6 @@ import { withMeta, SECTIONS, sectionOf, type NavSection } from "../nav-meta.ts";
 
 interface Report { entry?: { js: number }; boot?: { js: number } | null }
 const kb = (bytes: number): number => Math.round((bytes / 1024) * 10) / 10;
-
-/** Action on a heading: its words tilt in one after another when it scrolls into view (the text is there at once with reduced motion). */
-function words(el: Element): () => void {
-  if (reducedMotion() || el.ownerDocument?.documentElement.hasAttribute("data-m-hydrating")) return () => {}
-  const h = el as HTMLElement
-  h.style.setProperty("opacity", "0")
-  return inView(el, { once: true, enter: () => { h.style.removeProperty("opacity"); tilt(h, { by: "word", stagger: 70, duration: 700 }) } })
-}
-
-/** The head of a section: a small colored kicker, the title built word by word, an optional lead. */
-function Head(props: { kicker: string; title: string; lead?: string; color: ColorToken; id: string }) {
-  return <SectionHead class="sc-sec-head" align="start" width="full" size="lg" m:color={props.color} eyebrow={props.kicker} titleId={props.id}
-    title={<span use:words>{props.title}</span>} lead={props.lead} reveal={{ effect: "up", stagger: 90 }} />
-}
 
 // ── counters ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -177,6 +164,7 @@ export default function HomeSections() {
   return <div class="sc-home-rest">
     <Stats />
     <div class="sc-home-body">
+      <Features />
       <WorldMap />
       <Fast report={report} />
       <Start />

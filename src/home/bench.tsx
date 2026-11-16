@@ -157,7 +157,7 @@ const weekRows = (values: readonly number[]) => values.map((v, i) => ({ day: DAY
 
 function ChartTile(props: { values: () => readonly number[] }) {
   return <Tile class="sc-btile-chart" depth={0.45} order={2} title="Haftalık katılım">
-    <BarChart data={() => weekRows(props.values())} x="day" y={SERIES} stacked legend={false} grid={false} height={112} title="Haftalık katılım"
+    <BarChart data={() => weekRows(props.values())} x="day" y={SERIES} stacked legend={false} grid={false} height={112} title="Haftalık katılım" animate="spring-wobbly"
       colors={BRAND_COLORS.map(tokenColor)} />
   </Tile>
 }
@@ -196,16 +196,8 @@ function ControlsTile(props: { onJoin: () => void }) {
 
 export default function Bench() {
   let $week: readonly number[] = WEEK
-  // "Katıl" stirs the chart: the bars spring to new heights (each value glides from where it is, overshooting a little;
-  // the chart draws its bars as attributes, so the values themselves are what move)
-  let glide: { cancel(): void } | null = null
-  const stir = (): void => {
-    const from = [...$week], to = WEEK.map(() => Math.round(30 + Math.random() * 65))
-    glide?.cancel()
-    if (reducedMotion()) { $week = to; return }
-    glide = animateValue(0, 1, { easing: "spring-wobbly", onUpdate: (t: number) => { $week = from.map((v, i) => v + (to[i]! - v) * t) } })
-  }
-  onCleanup(() => glide?.cancel())
+  // "Katıl" stirs the chart: the bars spring to their new heights (BarChart animate), the axis takes the new scale at once
+  const stir = (): void => { $week = WEEK.map(() => Math.round(30 + Math.random() * 65)) }
   return <div class="sc-bench" role="group" aria-label="Canlı tezgâh: denetimler bu sayfayı değiştirir"
     use:hoverParallax={{ depth: -26, layerTilt: 6, hold: true, glare: true, selector: ".sc-btile:not(.is-held)" }}>
     <ThemeTile />
