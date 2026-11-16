@@ -149,11 +149,39 @@ export function HomeToc() {
 
   onCleanup(() => { alive = false; removeEventListener("scroll", spy); removeEventListener("resize", spy) })
 
+  // the fisheye: near the pointer (or the focused mark) the marks grow apart and show their names, the nearest the
+  // largest; each item gets --k from 0 (far) to 1 (under the pointer). Distances are taken from where the marks stood
+  // before they grew, so the list does not chase its own growth.
+  let list: HTMLElement | undefined
+  let base: number[] = []
+  const REACH = 110
+  const rest = () => {
+    if (!list) return []
+    const r = list.getBoundingClientRect(), n = ITEMS.length, step = r.height / n, mid = r.top + r.height / 2
+    return ITEMS.map((_, i) => mid + (i - (n - 1) / 2) * step)
+  }
+  let lens: number | null = null, lensQueued = false
+  const paint = () => {
+    lensQueued = false
+    if (!list) return
+    const items = list.children
+    for (let i = 0; i < items.length; i++) {
+      const d = lens == null ? REACH : Math.abs(lens - (base[i] ?? 0))
+      const k = d >= REACH ? 0 : (1 + Math.cos((d / REACH) * Math.PI)) / 2
+      ;(items[i] as HTMLElement).style.setProperty("--k", k ? k.toFixed(3) : "0")
+    }
+  }
+  const lensAt = (y: number | null) => { lens = y; if (!lensQueued) { lensQueued = true; nextFrame(paint) } }
+  const enter = () => { if (lens == null) base = rest() }
   const fill = () => ($active < 0 ? 0 : $active / (ITEMS.length - 1))
   // in <body>: a section above may move or scale its content (transform), which would carry a fixed rail with it
   return <Portal mount={document.body}><nav class="sc-toc" aria-label="Bölümler">
     <span class="sc-toc-line" aria-hidden="true"><span class="sc-toc-fill" style={() => ({ "--sc-toc-fill": String(fill()) })} /></span>
-    <ol class="sc-toc-list">
+    <ol class="sc-toc-list" ref={(el: HTMLElement) => { list = el }}
+      on:pointerenter={enter} on:pointermove={(e: PointerEvent) => { if (!base.length) enter(); lensAt(e.clientY) }}
+      on:pointerleave={() => { lensAt(null); base = [] }}
+      on:focusin={(e: FocusEvent) => { const li = (e.target as Element).closest("li"); if (!li || !list) return; enter(); lensAt(base[[...list.children].indexOf(li)] ?? null) }}
+      on:focusout={() => { lensAt(null); base = [] }}>
       {ITEMS.map((it, i) => <li class="sc-toc-item" class:is-on={() => $active === i} class:is-past={() => i < $active}>
         <a class="sc-toc-mark" href={`#${it.slug}`} aria-current={() => ($active === i ? "location" : null)}
           on:click={(e: MouseEvent) => { e.preventDefault(); void jump(i) }}>
