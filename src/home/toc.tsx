@@ -171,7 +171,7 @@ export function HomeToc() {
       ;(items[i] as HTMLElement).style.setProperty("--k", k ? k.toFixed(3) : "0")
     }
   }
-  const lensAt = (y: number | null) => { lens = y; if (!lensQueued) { lensQueued = true; nextFrame(paint) } }
+  const lensAt = (y: number | null) => { lens = y; list?.classList.toggle("is-lens", y != null); if (!lensQueued) { lensQueued = true; nextFrame(paint) } }
   const enter = () => { if (lens == null) base = rest() }
   const fill = () => ($active < 0 ? 0 : $active / (ITEMS.length - 1))
   // in <body>: a section above may move or scale its content (transform), which would carry a fixed rail with it
