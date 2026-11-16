@@ -18,35 +18,38 @@
   .sc-toc-fill { position: absolute; inset: 0; background: var(--sc-toc-past); transform-origin: top; scale: 1 var(--sc-toc-fill, 0);
     transition: scale var(--m-dur-slow, .4s) var(--m-ease-out, ease-out); }
   .sc-toc-list { position: relative; display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
-  .sc-toc-item { --k: 0; display: flex; justify-content: flex-end; align-items: center;
-    block-size: calc(var(--sc-toc-step) + var(--k) * 1.5rem); transition: block-size .14s var(--m-ease-out, ease-out); }
-  .sc-toc-mark { position: relative; display: grid; place-items: center end; inline-size: 1.5rem; block-size: 100%; min-block-size: .75rem; color: inherit; text-decoration: none; border-radius: var(--m-radius-full); }
+  /* --sc-toc-d: the dot's size, set on the item so its name's capsule can wrap around it */
+  .sc-toc-item { --k: 0; --sc-toc-d: calc(.25rem + var(--k) * 1.125rem); display: flex; justify-content: flex-end; align-items: center;
+    block-size: calc(var(--sc-toc-step) + var(--k) * 1.75rem); transition: block-size .14s var(--m-ease-out, ease-out); }
+  .sc-toc-item.is-on { --sc-toc-d: calc(.625rem + var(--k) * .875rem); }
+  .sc-toc-mark { position: relative; flex: none; display: grid; place-items: center end; inline-size: 1.5rem; block-size: 100%; min-block-size: .75rem; color: inherit; text-decoration: none; border-radius: var(--m-radius-full); }
   /* while magnified each mark reaches over its name and the gaps beside it: the pointer moving across names or between
      marks stays on the rail, the lens does not drop */
   .sc-toc-list.is-lens .sc-toc-mark { inline-size: 16rem; }
-  .sc-toc-mark { flex: none; }
   .sc-toc-mark:focus-visible { outline: none; }
   .sc-toc-mark:focus-visible .sc-toc-dot { box-shadow: 0 0 0 1px var(--sc-toc-c), 0 0 0 4px color-mix(in srgb, var(--sc-toc-c) 30%, transparent); }
   /* the dot grows by its size, not a scale: its 1px ring stays 1px however large it gets */
-  .sc-toc-dot { --sc-toc-d: calc(.3125rem + var(--k) * .875rem); inline-size: var(--sc-toc-d); block-size: var(--sc-toc-d);
+  .sc-toc-dot { position: relative; z-index: 1; inline-size: var(--sc-toc-d); block-size: var(--sc-toc-d);
     margin-inline-end: calc((1.5rem - var(--sc-toc-d)) / 2); border-radius: var(--m-radius-full); background: var(--m-surface, #fff);
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--m-muted) 70%, transparent);
     transition: inline-size .14s var(--m-ease-out, ease-out), block-size .14s var(--m-ease-out, ease-out), margin .14s var(--m-ease-out, ease-out), background var(--m-dur-fast, .15s), box-shadow var(--m-dur-fast, .15s); }
   .sc-toc-item.is-past .sc-toc-dot { background: var(--sc-toc-past); box-shadow: 0 0 0 1px var(--sc-toc-past); }
-  .sc-toc-item.is-on .sc-toc-dot { --sc-toc-d: calc(.75rem + var(--k) * .5rem); background: var(--sc-toc-c);
-    box-shadow: 0 0 0 1px var(--sc-toc-c), 0 0 0 4px color-mix(in srgb, var(--sc-toc-c) 22%, transparent); }
-  /* the names: hidden far from the pointer, larger and clearer the nearer; the one being read always shown, largest */
-  .sc-toc-label { position: absolute; inset-inline-end: calc(1.5rem + .25rem + var(--k) * .375rem); inset-block-start: 50%; translate: 0 -50%; white-space: nowrap;
-    padding: .125rem .5rem; border-radius: var(--m-radius-full); line-height: 1.35;
-    font-size: calc(.625rem + var(--k) * .3125rem); font-weight: var(--m-weight-medium, 500);
-    color: var(--m-text); background: color-mix(in srgb, var(--m-surface-raised, var(--m-surface)) 92%, transparent);
-    box-shadow: 0 1px 4px rgb(0 0 0 / calc(.06 + var(--k) * .08));
+  .sc-toc-item.is-on .sc-toc-dot { background: var(--sc-toc-c); box-shadow: 0 0 0 1px var(--sc-toc-c), 0 0 0 4px color-mix(in srgb, var(--sc-toc-c) 22%, transparent); }
+  /* the names: a capsule that wraps its dot (the dot sits in its end), shown only while the rail is magnified, larger
+     and clearer the nearer the pointer; the one being read then always shown, the largest */
+  .sc-toc-label { --sc-toc-pad: .25rem; position: absolute; inset-block-start: 50%; translate: 0 -50%; white-space: nowrap;
+    inset-inline-end: calc((1.5rem - var(--sc-toc-d)) / 2 - var(--sc-toc-pad));
+    padding-block: calc(.125rem + var(--k) * .0625rem); padding-inline: .625rem calc(var(--sc-toc-d) + var(--sc-toc-pad) * 2);
+    min-block-size: calc(var(--sc-toc-d) + var(--sc-toc-pad) * 2); box-sizing: border-box; display: flex; align-items: center;
+    border-radius: var(--m-radius-full); line-height: 1.3;
+    font-size: calc(.625rem + var(--k) * .375rem); font-weight: var(--m-weight-medium, 500);
+    color: var(--m-text); background: color-mix(in srgb, var(--m-surface-raised, var(--m-surface)) 94%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--m-border) 70%, transparent), 0 2px 8px rgb(0 0 0 / calc(.04 + var(--k) * .08));
     opacity: var(--k); pointer-events: none;
-    transition: opacity .14s, font-size .14s var(--m-ease-out, ease-out), inset-inline-end .14s var(--m-ease-out, ease-out); }
+    transition: opacity .14s, font-size .14s var(--m-ease-out, ease-out), padding .14s var(--m-ease-out, ease-out), inset-inline-end .14s var(--m-ease-out, ease-out); }
   .sc-toc-mark:hover .sc-toc-label { color: var(--sc-toc-c); }
-  /* the names show only while the rail is magnified; the one being read then always, the largest */
   .sc-toc-list:not(.is-lens) .sc-toc-label { opacity: 0; }
   .sc-toc-list.is-lens .sc-toc-item.is-on .sc-toc-label { opacity: 1; font-size: 1.0625rem; font-weight: var(--m-weight-bold, 700); color: var(--sc-toc-c);
-    padding: .1875rem .75rem; box-shadow: var(--m-shadow-2, 0 2px 8px rgb(0 0 0 / .12)); }
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--sc-toc-c) 45%, transparent), var(--m-shadow-2, 0 2px 8px rgb(0 0 0 / .12)); }
 }
 @media (prefers-reduced-motion: reduce) { .sc-toc-fill, .sc-toc-dot, .sc-toc-label, .sc-toc-item { transition: none; } }
