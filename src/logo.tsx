@@ -1,7 +1,7 @@
 // The MarchJS mark: an M drawn as 15 dots. Each leg runs from a large dot at the top to a large dot at the foot,
 // smallest in the middle, its colour blending from the top corner to the foot; the dots between the peaks hang on a
-// curve to the red one at the centre. Each pair of dots is spaced in proportion to their sizes. The same drawing is
-// public/favicon.svg.
+// curve to the red one at the centre. Each pair of dots is spaced in proportion to their sizes. public/favicon.svg is
+// the small version: 9 dots, so the M still reads at 16 px.
 
 /** [cx, cy, r, fill] in a 120 × 104 box: the left leg top to foot, the right leg, then the curve between the peaks. */
 export const MARK_DOTS: [number, number, number, string][] = [
