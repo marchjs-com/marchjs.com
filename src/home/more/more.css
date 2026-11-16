@@ -69,7 +69,7 @@
 .sc-social { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--m-space-4); align-items: start; }
 
 /* ── comparison */
-.sc-cmp { padding: var(--m-space-4); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); background: var(--m-surface); overflow-x: auto; }
+.sc-cmp { padding: var(--m-space-4); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); background: var(--m-surface); overflow: hidden; }
 
 /* ── the closing invitation */
 .sc-cta { display: grid; justify-items: center; gap: var(--m-space-4); padding: var(--m-space-8) var(--m-space-5); text-align: center; border-radius: var(--m-radius-4);
@@ -113,5 +113,7 @@
 @media (prefers-reduced-motion: reduce) { .sc-pal-key, .sc-ai-caret { animation: none; } .sc-ai-app { transition: none; } }
 @media (max-width: 1000px) { .sc-layers, .sc-cta-ways { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 760px) {
+  /* narrow: the table scrolls sideways inside its card */
+  .sc-cmp { overflow-x: auto; }
   .sc-form, .sc-charts, .sc-social, .sc-pal-band, .sc-layers, .sc-cta-ways, .sc-ai { grid-template-columns: minmax(0, 1fr); }
 }

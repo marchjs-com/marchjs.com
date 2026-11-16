@@ -36,12 +36,13 @@ function Social() {
 const COLUMNS = [{ id: "us", name: "MarchJS" }, { id: "vdom", name: "Sanal DOM'lu çatılar" }, { id: "kits", name: "Bileşen paketleri" }]
 const ROWS = [
   { label: "Yalnız değişen düğüm güncellenir", values: { us: true, vdom: false, kits: "partial" } },
-  { label: "Çalışma zamanı bağımlılığı", values: { us: "Yok", vdom: "Var", kits: "Çok" } },
+  { label: "Çalışma zamanında bağımlılık yok", values: { us: true, vdom: false, kits: false } },
   { label: `${S.components} bileşen tek pakette`, values: { us: true, vdom: false, kits: "partial" } },
   { label: "Tarayıcıda IDE ve dışa aktarma", values: { us: true, vdom: false, kits: false } },
   { label: "Katı CSP, Trusted Types", values: { us: true, vdom: "partial", kits: "partial" } },
   { label: "Sağdan sola diller, çeviri", values: { us: true, vdom: "partial", kits: "partial" } },
-  { label: "Topluluk ve eklenti sayısı", values: { us: "Yeni", vdom: "Çok geniş", kits: "Geniş" }, note: "Burada gerideyiz: MarchJS yeni, topluluğu büyüyor." },
+  // counted honestly: where MarchJS is behind is a "no" for it (the summary says so too)
+  { label: "Geniş topluluk ve hazır eklentiler", values: { us: false, vdom: true, kits: true }, note: "Burada gerideyiz: MarchJS yeni, topluluğu büyüyor." },
 ]
 
 function Compare() {
