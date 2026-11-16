@@ -75,6 +75,8 @@
 .sc-vs-tool { display: grid; place-items: center; inline-size: 2rem; block-size: 2rem; padding: 0; border: 0; border-radius: var(--m-radius-2);
   background: transparent; color: var(--m-text); cursor: pointer; transition: background-color .15s, scale .15s var(--m-ease-out, ease-out); }
 .sc-vs-tool:hover { background: var(--m-surface); }
+/* the selection already has this style: pressed (a press takes it off) */
+.sc-vs-tool.is-on { background: var(--m-surface); color: var(--m-accent, var(--m-primary)); box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 35%, transparent); }
 .sc-vs-tool:active { scale: .92; }
 .sc-vs-tool:focus-visible { outline: 2px solid var(--m-focus, var(--m-primary)); outline-offset: 1px; }
 .sc-vs-tpls { display: flex; flex-wrap: wrap; gap: var(--m-space-1); }

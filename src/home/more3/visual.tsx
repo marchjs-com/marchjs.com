@@ -379,34 +379,70 @@ let $count = 0
 function MarkdownLive() {
   let $md = TEMPLATES[0]!.text
   let box: HTMLElement | undefined
-  const grab = (el: Element) => { box = el as HTMLElement; return () => { box = undefined } }
   const words = () => $md.trim().split(/\s+/).filter(Boolean).length
   const heads = () => $md.split("\n").filter((l) => /^#{1,6}\s/.test(l)).length
-  /** Wrap the selection (or a placeholder) in `before` / `after`, then select what was wrapped. */
-  const wrap = (before: string, after: string, fill: string) => {
-    const ta = box?.querySelector("textarea")
-    if (!ta) return
-    const s = ta.selectionStart, e = ta.selectionEnd
-    const sel = $md.slice(s, e) || fill
-    $md = $md.slice(0, s) + before + sel + after + $md.slice(e)
-    queueMicrotask(() => { ta.focus(); ta.setSelectionRange(s + before.length, s + before.length + sel.length) })
+  // where the selection is (read again on every selection change, so the tools show what it already has)
+  let $s = 0
+  let $e = 0
+  const area = () => box?.querySelector("textarea") ?? null
+  const track = () => { const ta = area(); if (ta && ta.ownerDocument.activeElement === ta) { $s = ta.selectionStart; $e = ta.selectionEnd } }
+  const grab = (el: Element) => {
+    box = el as HTMLElement
+    el.ownerDocument.addEventListener("selectionchange", track)
+    return () => { el.ownerDocument.removeEventListener("selectionchange", track); box = undefined }
   }
-  /** Start the current line with `mark`. */
+  const select = (a: number, b: number) => queueMicrotask(() => { const ta = area(); if (!ta) return; ta.focus(); ta.setSelectionRange(a, b); $s = a; $e = b })
+  const run = (ch: string, from: number, step: number) => { let n = 0; while ($md[from + n * step] === ch) n++; return n }
+  /** The selection without the marks it starts or ends with, and how many `ch` marks stand right around that core. */
+  const around = (ch: string) => {
+    let a = $s, b = $e
+    while (a < b && $md[a] === ch) a++
+    while (b > a && $md[b - 1] === ch) b--
+    return { a, b, n: Math.min(run(ch, a - 1, -1), run(ch, b, 1)) }
+  }
+  /** An inline style made of `ch` repeated `size` times on both sides (bold **, italic *, code `). */
+  const inline = (ch: string, size: number, fill: string) => {
+    const on = () => { const n = around(ch).n; return size === 2 ? n >= 2 : ch === "*" ? n === 1 || n >= 3 : n >= 1 }
+    const toggle = () => {
+      const { a, b } = around(ch), mark = ch.repeat(size)
+      if (on()) { $md = $md.slice(0, a - size) + $md.slice(a, b) + $md.slice(b + size); select(a - size, b - size); return }
+      const s = $s, sel = $md.slice($s, $e) || fill
+      $md = $md.slice(0, s) + mark + sel + mark + $md.slice($e)
+      select(s + size, s + size + sel.length)
+    }
+    return { on, toggle }
+  }
+  /** A link: [text](url) around the selection; pressing it again leaves the text. */
+  const linked = (url: string) => {
+    const at = () => { const a = $s, b = $e; if ($md[a - 1] !== "[" || !$md.startsWith("](", b)) return -1; return $md.indexOf(")", b + 2) }
+    const on = () => at() >= 0
+    const toggle = () => {
+      const a = $s, b = $e, end = at()
+      if (end >= 0) { $md = $md.slice(0, a - 1) + $md.slice(a, b) + $md.slice(end + 1); select(a - 1, b - 1); return }
+      const sel = $md.slice(a, b) || "bağlantı"
+      $md = $md.slice(0, a) + "[" + sel + "](" + url + ")" + $md.slice(b)
+      select(a + 1, a + 1 + sel.length)
+    }
+    return { on, toggle }
+  }
+  /** A line mark ("- ", "> ") at the start of the current line; pressing it again takes it off. */
   const line = (mark: string) => {
-    const ta = box?.querySelector("textarea")
-    if (!ta) return
-    const s = ta.selectionStart
-    const at = $md.lastIndexOf("\n", s - 1) + 1
-    $md = $md.slice(0, at) + mark + $md.slice(at)
-    queueMicrotask(() => { ta.focus(); ta.setSelectionRange(s + mark.length, s + mark.length) })
+    const start = () => $md.lastIndexOf("\n", $s - 1) + 1
+    const on = () => $md.startsWith(mark, start())
+    const toggle = () => {
+      const at = start(), d = on() ? -mark.length : mark.length
+      $md = d < 0 ? $md.slice(0, at) + $md.slice(at + mark.length) : $md.slice(0, at) + mark + $md.slice(at)
+      select(Math.max(at, $s + d), Math.max(at, $e + d))
+    }
+    return { on, toggle }
   }
   const TOOLS = [
-    { label: "Kalın", icon: bold, run: () => wrap("**", "**", "kalın") },
-    { label: "İtalik", icon: italic, run: () => wrap("*", "*", "eğik") },
-    { label: "Kod", icon: code, run: () => wrap("`", "`", "kod") },
-    { label: "Bağlantı", icon: link, run: () => wrap("[", "](https://marchjs.com)", "bağlantı") },
-    { label: "Liste", icon: list, run: () => line("- ") },
-    { label: "Alıntı", icon: quote, run: () => line("> ") },
+    { label: "Kalın", icon: bold, ...inline("*", 2, "kalın") },
+    { label: "İtalik", icon: italic, ...inline("*", 1, "eğik") },
+    { label: "Kod", icon: code, ...inline("`", 1, "kod") },
+    { label: "Bağlantı", icon: link, ...linked("https://marchjs.com") },
+    { label: "Liste", icon: list, ...line("- ") },
+    { label: "Alıntı", icon: quote, ...line("> ") },
   ]
 
   return <section class="sc-sec" aria-labelledby="sc-vs-md-h">
@@ -416,7 +452,8 @@ function MarkdownLive() {
       <div class="sc-vs-card sc-vs-mdin" use:grab>
         <div class="sc-vs-mdbar">
           <div class="sc-vs-tools" role="toolbar" aria-label="Biçim">
-            {TOOLS.map((t) => <button type="button" class="sc-vs-tool" title={t.label} aria-label={t.label} on:click={t.run}><Icon of={t.icon} /></button>)}
+            {TOOLS.map((t) => <button type="button" class="sc-vs-tool" class:is-on={t.on} aria-pressed={() => String(t.on())} title={t.label} aria-label={t.label}
+              on:pointerdown={(e: PointerEvent) => e.preventDefault()} on:click={t.toggle}><Icon of={t.icon} /></button>)}
           </div>
           <div class="sc-vs-tpls">
             {TEMPLATES.map((t) => <Button variant="ghost" size="sm" on:click={() => { $md = t.text }}>{t.label}</Button>)}
