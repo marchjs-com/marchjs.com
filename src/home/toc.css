@@ -23,7 +23,7 @@
   .sc-toc-item { --k: 0; --y: 0px; --sc-toc-s: calc(.25 + var(--k) * .6667); display: flex; justify-content: flex-end; align-items: center;
     block-size: var(--sc-toc-step); translate: 0 var(--y); }
   .sc-toc-item.is-on { --sc-toc-s: calc(.4167 + var(--k) * .5833); }
-  .sc-toc-mark { position: relative; flex: none; display: grid; place-items: center end; inline-size: 1.5rem; block-size: 100%; min-block-size: .75rem; color: inherit; text-decoration: none; border-radius: var(--m-radius-full); }
+  .sc-toc-mark { position: relative; flex: none; display: flex; align-items: center; justify-content: flex-end; inline-size: 1.5rem; block-size: 100%; min-block-size: .75rem; color: inherit; text-decoration: none; border-radius: var(--m-radius-full); }
   /* while magnified each mark reaches over its name and the gaps beside it: the pointer moving across names or between
      marks stays on the rail, the lens does not drop */
   .sc-toc-list.is-lens .sc-toc-mark { inline-size: 16rem; }
