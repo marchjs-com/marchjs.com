@@ -59,8 +59,8 @@
 /* the glare follows the pointer (hoverParallax `glare` writes its place inside each card) */
 .sc-btile-in::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(16rem circle at var(--m-glare-x, 50%) var(--m-glare-y, -40%), color-mix(in srgb, white 16%, transparent), transparent 65%); }
 .sc-btile-title { margin: 0; }
-.sc-btile-theme { inset-inline-start: 0; inset-block-start: 0; inline-size: 54%; }
-.sc-btile-chat { inset-inline-end: 0; inset-block-start: 4%; inline-size: 41%; }
+.sc-btile-theme { inset-inline-start: -3%; inset-block-start: 0; inline-size: 50%; }
+.sc-btile-chat { inset-inline-end: 0; inset-block-start: 4%; inline-size: 50%; }
 .sc-btile-chart { inset-inline-start: 4%; inset-block-end: 0; inline-size: 43%; }
 .sc-btile-ctl { inset-inline-end: 1%; inset-block-end: 3%; inline-size: 47%; }
 .sc-btile-row { display: flex; flex-wrap: wrap; align-items: center; gap: .375rem; }
@@ -71,6 +71,19 @@
 .sc-btile-toggle { display: flex; flex-direction: row-reverse; justify-content: space-between; inline-size: 100%; font-size: var(--m-text-sm); font-weight: var(--m-weight-semibold); }
 .sc-btile-range { display: flex; flex-direction: column; gap: var(--m-space-1); font-size: var(--m-text-sm); font-weight: var(--m-weight-semibold); }
 .sc-btile-chat .m-msg-text { font-size: var(--m-text-sm); }
+.sc-chat-msg > .m-avatar { flex: none; }
+.sc-chat-msg > :not(.m-avatar) { min-inline-size: 0; }
+/* in the narrow card a message may use the whole row next to its avatar */
+.sc-chat-msg > .m-msg { flex: 1; }
+.sc-chat-msg .m-msg-col { max-inline-size: 100%; }
+.sc-chat-msg.is-mine { flex-direction: row-reverse; }
+/* the chat card's conversation: a fixed box, the messages pinned to its bottom; a new one grows in and pushes the older
+   ones up, the top fades out (no scroll bar) */
+.sc-chat { display: flex; flex-direction: column; justify-content: flex-end; gap: var(--m-space-2); block-size: 12rem; overflow: hidden;
+  mask-image: linear-gradient(to bottom, transparent, black 1.5rem); }
+.sc-chat-msg { display: flex; align-items: flex-end; gap: .375rem; flex: none; animation: sc-chat-in var(--m-dur-slow) var(--m-ease-out) both; animation-duration: .45s; }
+@keyframes sc-chat-in { from { opacity: 0; max-block-size: 0; translate: 0 .75rem; scale: .96; } to { opacity: 1; max-block-size: 8rem; translate: 0 0; scale: 1; } }
+@media (prefers-reduced-motion: reduce) { .sc-chat-msg { animation: none; } }
 .sc-btile-chart .m-chart { inline-size: 100%; }
 .sc-btile-ctl-row { display: flex; flex-wrap: wrap; align-items: center; gap: .625rem; }
 

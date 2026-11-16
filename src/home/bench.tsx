@@ -2,11 +2,11 @@
 // pointer (hoverParallax with `hold`: leaving the bench changes nothing, the cards keep the pose they were left in);
 // each card holds real March components. The theme card restyles the whole showcase: color theme, accent, dark mode
 // and the corner radius (the theme wave spreads from the pressed control). On a phone the cards stack and stay put.
-import { effect, onCleanup } from "march";
+import { effect, onCleanup, For } from "march";
 import { lazy } from "march/lazy";
 import { reveal, animate, animateValue, inView, hoverParallax, reducedMotion } from "march/motion";
 import { draggable } from "march/behaviors/drag";
-import { Button, Swatch, ThemeSwatch, Toggle, Slider, Rating, SectionLabel, ChatBubble, TypingIndicator, LikeButton, heartBurst,
+import { Avatar, Button, Swatch, ThemeSwatch, Toggle, Slider, Rating, SectionLabel, ChatBubble, TypingIndicator, LikeButton, heartBurst,
   colorThemes, colorTheme, setColorTheme, accent, setAccent, resolvedTheme, setTheme } from "march/ui";
 import { tokenColor, BRAND_COLORS, type ColorToken } from "march/theme/colors.ts";
 import { sparkles } from "march/icons";
@@ -92,11 +92,60 @@ function ThemeTile() {
   </Tile>
 }
 
+/** The people of the chat card (each with a HADİ colour for the name and the avatar) and their conversation: one
+ * message after another, each typed first ("… yazıyor" with the name). */
+interface Person { name: string; color: ColorToken; tone: number; mine?: boolean }
+const PEOPLE: readonly Person[] = [
+  { name: "Tolgahan", color: "brand-orange", tone: 0 }, { name: "Öykü", color: "brand-blue", tone: 1 },
+  { name: "Bulut", color: "brand-green", tone: 2 }, { name: "Rüzgar", color: "brand-purple", tone: 3 },
+  // the one reading: their messages on the end side, in the accent colour
+  { name: "Ben", color: "primary", tone: 0, mine: true },
+]
+const person = (name: string): Person => PEOPLE.find((p) => p.name === name) ?? PEOPLE[0]!
+const TALK: readonly { who: string; text: string }[] = [
+  { who: "Öykü", text: "MarchJS'i duydunuz mu? 🧡" },
+  { who: "Bulut", text: "Sinyallerle çalışan çatı mı?" },
+  { who: "Tolgahan", text: "Evet! Bileşen bir kez çalışıyor, yalnız değişen yer güncelleniyor" },
+  { who: "Rüzgar", text: "Sanal DOM yok mu yani?" },
+  { who: "Tolgahan", text: "Yok, bağımlılık da yok 😎" },
+  { who: "Öykü", text: "Tarayıcıda yazıp tek tıkla dışa aktarıyorum, kurulum bile yok" },
+  { who: "Bulut", text: "Temaları da çok güzel, koyu kipte bile" },
+  { who: "Rüzgar", text: "Tamam, bu akşam deniyorum 🚀" },
+  { who: "Ben", text: "Çok iyiymiş cidden! Ben de hemen deniyorum!" },
+]
+/** Typing time grows with the message (ms); the pause after a message; when the card's own entrance is over. */
+const typingMs = (text: string): number => Math.min(2200, 700 + text.length * 25)
+const CHAT_GAP = 650, CHAT_ENTERED = 250 + 1 * 150 + 1100
+
 function ChatTile() {
+  // the messages arrive one by one once the card is in view: "… yazıyor" with the name, then the message with its
+  // sender's avatar and name; the list is pinned to the bottom of a fixed box, so each new message pushes the older
+  // ones up (no scroll bar)
+  let $count = 0
+  let $typing: string | null = null
+  const play = (box: Element) => onCleanup(inView(box, { once: true, threshold: 1, rootMargin: "0px", enter: () => {
+    if (reducedMotion()) { $count = TALK.length; return }
+    const timers: ReturnType<typeof setTimeout>[] = []
+    let at = CHAT_ENTERED
+    TALK.forEach((m, i) => {
+      timers.push(setTimeout(() => { $typing = m.who }, at))
+      at += typingMs(m.text)
+      timers.push(setTimeout(() => { $typing = null; $count = i + 1 }, at))
+      at += CHAT_GAP
+    })
+    onCleanup(() => timers.forEach(clearTimeout))
+  } }))
   return <Tile class="sc-btile-chat" depth={0.6} order={1} title="Sohbet">
-    <ChatBubble text="Cumartesi konsere geliyor musun?" swipe={false} tools={false} />
-    <ChatBubble mine m:color="primary" text="Biletimi aldım bile, kapıda buluşalım" swipe={false} tools={false} />
-    <TypingIndicator names={["Deniz"]} />
+    <div class="sc-chat" ref={play}>
+      <For each={() => TALK.slice(0, $count)}>{(m: () => (typeof TALK)[number]) =>
+        <div class={`sc-chat-msg${person(m().who).mine ? " is-mine" : ""}`}>
+          <Avatar name={m().who} color={person(m().who).color} size="xs" decorative />
+          <ChatBubble mine={person(m().who).mine} m:color={person(m().who).mine ? "primary" : undefined} sender={m().who} senderColor={person(m().who).tone}
+            text={m().text} swipe={false} tools={false} />
+        </div>}</For>
+      {() => ($typing ? <div class={`sc-chat-msg${person($typing).mine ? " is-mine" : ""}`}><Avatar name={$typing} color={person($typing).color} size="xs" decorative />
+        <TypingIndicator names={[$typing]} text label={(n: readonly string[]) => (person(n[0]!).mine ? "Yazıyorsun…" : `${n[0]} yazıyor…`)} /></div> : null)}
+    </div>
   </Tile>
 }
 
@@ -113,15 +162,19 @@ function ChartTile(props: { values: () => readonly number[] }) {
   </Tile>
 }
 
-/** The likes the tile counts up to, its stars, and how long (ms): once the whole tile is in view and its own entrance is over
- * (ENTERED ms: the tile's reveal delay and duration), ease in-out, then a firework. */
-const LIKES = 32800, STARS = 5, LIKES_MS = 1500, ENTERED = 250 + 3 * 150 + 1100
+/** The likes the tile counts up to (the minutes since 1 November 2026, read when the count starts), its stars, and how
+ * long (ms): once the whole tile is in view and its own entrance is over (ENTERED ms: the tile's reveal delay and
+ * duration), ease in-out, then a firework. */
+const SINCE = new Date(2026, 10, 1).getTime()
+const likesNow = (): number => Math.max(0, Math.floor((Date.now() - SINCE) / 60000))
+const STARS = 5, LIKES_MS = 1500, ENTERED = 250 + 3 * 150 + 1100
 
 function ControlsTile(props: { onJoin: () => void }) {
   let $liked = false
   let $likes = 0
   let $stars = 0
   const count = (tile: Element) => onCleanup(inView(tile, { once: true, threshold: 1, rootMargin: "0px", enter: () => {
+    const LIKES = likesNow()
     if (reducedMotion()) { $likes = LIKES; $stars = STARS; return }
     // the stars fill from empty to five in the same time, each one smoothly (Rating fills the fraction of a star)
     const fill = animateValue(0, STARS, { duration: LIKES_MS, delay: ENTERED, easing: "in-out", onUpdate: (v: number) => { $stars = v } })
