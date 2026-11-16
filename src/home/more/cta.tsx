@@ -8,7 +8,7 @@ import { github } from "march/icons/simple-icons";
 import { version } from "march";
 import { REPO, INSTALL } from "../../repo.ts";
 
-const CDN = `<script type="module" src="https://cdn.marchjs.com/${version}/march.js"></script>`
+const CDN = `<script type="module" src="https://cdn.marchjs.com/latest/march.js"></script>`
 
 export default function Cta() {
   return <section class="sc-cta" aria-labelledby="sc-cta-h">
@@ -20,7 +20,7 @@ export default function Cta() {
         <Button variant="primary" href="/playground" iconEnd={arrowRight}>Playground</Button>
       </div>
       <div class="sc-cta-way sc-card">
-        <b>CDN</b><span>Tek satır, sürümlü ve önbellekli.</span>
+        <b>CDN</b><span>{`Tek satır, hep en yeni sürüm. Sabitlemek için latest yerine ${version} yaz.`}</span>
         <code class="sc-cta-code">{CDN}</code><CopyButton text={CDN} label="CDN satırını kopyala" />
       </div>
       <div class="sc-cta-way sc-card">

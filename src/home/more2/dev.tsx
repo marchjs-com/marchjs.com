@@ -3,7 +3,7 @@
 // from one place (a live Button), and widget points that any code fills (with the CDN one-liner). Real components
 // and the real compiler output; the numbers come from home-stats.gen.ts.
 import "./dev.css";
-import { onCleanup, intercept, version } from "march";
+import { onCleanup, intercept } from "march";
 import { inView, reducedMotion } from "march/motion";
 import { Badge, Button, Chip, CodeView, CopyButton, Toggle } from "march/ui";
 import { Terminal, type TerminalApi } from "march/components/composite/terminal";
@@ -185,7 +185,7 @@ function Extensions() {
 interface CardInput { title: string }
 /** A widget point the section fills: a plain card by default; the button adds a provider that draws it richer. */
 const point = widgetPoint<CardInput>("sc-dv-card", { defaults: [{ id: "plain", render: (input) => <div class="sc-dv-wcard"><b>{input.title}</b><span>Varsayılan sağlayıcı</span></div> }] })
-const CDN = `<script type="module" src="https://cdn.marchjs.com/${version}/march.js"></script>`
+const CDN = `<script type="module" src="https://cdn.marchjs.com/latest/march.js"></script>`
 
 function Embed() {
   let $rich = false
