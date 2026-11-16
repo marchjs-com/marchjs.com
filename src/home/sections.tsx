@@ -23,6 +23,8 @@ const MoreData = lazy(() => import("./more2/data.tsx"), { when: "visible", place
 const MoreMotion = lazy(() => import("./more2/motion.tsx"), { when: "visible", placeholder: "none", height: "60rem" })
 const MoreApp = lazy(() => import("./more2/app.tsx"), { when: "visible", placeholder: "none", height: "60rem" })
 const MoreDev = lazy(() => import("./more2/dev.tsx"), { when: "visible", placeholder: "none", height: "60rem" })
+const MoreVisual = lazy(() => import("./more3/visual.tsx"), { when: "visible", placeholder: "none", height: "60rem" })
+const MoreTools = lazy(() => import("./more3/tools.tsx"), { when: "visible", placeholder: "none", height: "60rem" })
 const MorePeople = lazy(() => import("./more/people.tsx"), { when: "visible", placeholder: "none", height: "40rem" })
 const Cta = lazy(() => import("./more/cta.tsx"), { when: "visible", placeholder: "none", height: "24rem" })
 import { search, sparkles } from "march/icons";
@@ -185,10 +187,12 @@ export default function HomeSections() {
       <MoreUi />
       <Design />
       <MoreLive />
+      <MoreVisual />
       <MoreData />
       <MoreMotion />
       <MoreApp />
       <MoreDev />
+      <MoreTools />
       <MorePeople />
       <WorldMap />
       <Fast report={report} />
