@@ -159,7 +159,8 @@ function Extensions() {
   const mine = (p: { class?: unknown }): boolean => String(p.class ?? "").includes("sc-dv-ext-btn")
   onCleanup(intercept(Button, {
     name: "sc-dv-campaign",
-    props: (p) => ($on && mine(p) ? { variant: "primary", icon: sparkles } : null),
+    // a prop it adds later is named on every run (null while off), so the Button knows it from the start
+    props: (p) => (!mine(p) ? null : $on ? { variant: "primary", icon: sparkles } : { icon: null }),
     on: { onClick: (next: (...a: unknown[]) => unknown, ...args: unknown[]) => { if ($on) $clicks++; return next(...args) } },
   }))
   return <section class="sc-sec" aria-labelledby="sc-dv-ext-h">
