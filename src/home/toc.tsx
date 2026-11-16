@@ -1,7 +1,6 @@
 // The home page's sections as addresses and a timeline. Every section has its own #name; as the page scrolls, the
 // section being read writes its name into the address bar (replaceState: no history entry per section). On a wide
-// screen a timeline rail stands at the side: a mark per section, the one being read lit and named, the line filled up to
-// it; a press on a mark scrolls to that section (a section in a part not loaded yet is loaded on the way).
+// screen a timeline rail stands at the side: a dot per section, the one being read lit, the ones behind it light; a press on a mark scrolls to that section (a section in a part not loaded yet is loaded on the way).
 import "./toc.css";
 import { onCleanup, Portal, untrack } from "march";
 import { nextFrame, reducedMotion } from "march/motion";
@@ -198,11 +197,9 @@ export function HomeToc() {
     if (!drawing) { drawing = true; nextFrame(draw) }
   }
   const enter = () => { if (!base.length) base = rest() }
-  const fill = () => ($active < 0 ? 0 : $active / (ITEMS.length - 1))
   // in <body>: a section above may move or scale its content (transform), which would carry a fixed rail with it
   return <Portal mount={document.body}><nav class="sc-toc" aria-label="Bölümler">
     <div class="sc-toc-rail">
-    <span class="sc-toc-line" aria-hidden="true"><span class="sc-toc-fill" style={() => ({ "--sc-toc-fill": String(fill()) })} /></span>
     <ol class="sc-toc-list" ref={(el: HTMLElement) => { list = el }}
       on:pointerenter={enter} on:pointermove={(e: PointerEvent) => { enter(); lensAt(e.clientY) }}
       on:pointerleave={() => lensAt(null)}
