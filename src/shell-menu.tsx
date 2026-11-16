@@ -3,15 +3,13 @@
 // (NavSidebar) shows the groups of one section. The top bar's trail gets its sections, categories and sibling menus
 // from here too (the start-up trail knows only the page title).
 import { signal, effect, untrack } from "march";
+import { MarchLogo } from "./logo.tsx";
 import { NavSidebar, ActivityBar, MadeWithMarch, type Crumb } from "march/ui";
-import { Icon, defineIcon, home } from "march/icons";
+import { home } from "march/icons";
 import { Link, path, navigate, type Href } from "march/router";
 import { viewport } from "march/managers/viewport";
 import { pages, setTrail } from "./app.tsx";
 import { withMeta, MENU_GROUPS, SECTIONS, sectionOf, type NavSection } from "./nav-meta.ts";
-
-/** The March mark. */
-export const marchMark = defineIcon("march", ["M5 19V6.5l7 7 7-7V19"]);
 
 const SECTION_KEY = "sc.section";
 const HOME = "home";
@@ -91,7 +89,7 @@ export default function ShellMenu() {
 
   return <>
     <div class="sc-rail" data-rail-only={() => (railOnly() ? "" : null)}>
-      <Link href="/" class="sc-rail-logo" aria-label="March: ana sayfa"><Icon of={marchMark} /></Link>
+      <Link href="/" class="sc-rail-logo" aria-label="MarchJS: ana sayfa"><MarchLogo /></Link>
       <ActivityBar class="sc-rail-bar" label="Bölümler" items={rail} value={() => marked()} onChange={pick} collapsible={false} showLabels tooltips={false}
         orientation={() => (narrow() ? "horizontal" : "vertical")} />
     </div>

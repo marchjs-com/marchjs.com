@@ -262,10 +262,13 @@
 .sc-tools-placeholder { display: block; flex: 1 1 0; block-size: 2.375rem; }
 /* the rail: the March mark, then the start page and the six sections (ActivityBar with names) */
 .sc-rail { display: flex; flex: none; flex-direction: column; align-items: center; inline-size: 4.75rem; block-size: 100%; background: var(--m-surface); border-inline-end: 1px solid var(--m-border); }
-.sc-rail-logo { display: grid; flex: none; place-items: center; inline-size: 2.5rem; block-size: 2.5rem; margin-block: var(--m-space-3) var(--m-space-2); border-radius: var(--m-radius-3);
-  background: var(--m-brand-gradient); color: var(--m-on-scrim); box-shadow: 0 6px 16px -6px var(--m-cat-1); transition: scale var(--m-dur) var(--m-ease-spring); }
-.sc-rail-logo:hover { scale: 1.06; }
-.sc-rail-logo .m-svg { width: 1.375rem; height: 1.375rem; stroke-width: 2.4; }
+.sc-rail-logo { display: grid; flex: none; place-items: center; inline-size: 2.75rem; block-size: 2.5rem; margin-block: var(--m-space-3) var(--m-space-2);
+  border-radius: var(--m-radius-3); transition: scale var(--m-dur) var(--m-ease-spring); }
+.sc-rail-logo:hover { scale: 1.08; }
+/* the MarchJS mark (logo.tsx): a ribbon M; with the wordmark under it in the heading font */
+.sc-logo { display: inline-flex; flex-direction: column; align-items: center; gap: var(--m-space-1); }
+.sc-logo-mark { inline-size: 2.5rem; block-size: auto; overflow: visible; }
+.sc-logo-word { font-family: var(--m-font-display); font-weight: var(--m-display-weight, var(--m-weight-bold)); font-size: var(--m-text-lg); color: var(--m-text); letter-spacing: -.01em; }
 .sc-rail-bar.m-ab { flex: 1 1 auto; inline-size: 100%; block-size: auto; min-block-size: 0; border: 0; background: none; }
 /* the menu's title is the section's name, in the display face */
 .sc-shell .m-sb-head { gap: 0; padding: var(--m-space-4) var(--m-space-4) var(--m-space-2); border-block-end: 0; }
