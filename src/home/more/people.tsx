@@ -25,7 +25,8 @@ function Social() {
     <Head id="sc-social-h" kicker="Sosyal" color="brand-purple" title="Bir sosyal uygulamanın parçaları hazır"
       lead="Gönderi kartı, beğeni patlaması, sohbet balonları, hikâye halkası, takip düğmesi: hepsi bir uygulamada nasılsa öyle, dokunmatikte de." />
     <Reveal class="sc-social" effect="up" stagger={120}>
-      {$posts.map((p) => <PostCard post={() => $posts.find((x) => x.id === p.id) ?? p} onLike={like} />)}
+      {/* the cards are made once (from the fixed list); only their post changes, so the like burst plays on the card you see */}
+      {POSTS.map((p) => <PostCard post={() => $posts.find((x) => x.id === p.id) ?? p} onLike={like} />)}
     </Reveal>
   </section>
 }
