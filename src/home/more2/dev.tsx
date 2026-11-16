@@ -62,7 +62,7 @@ export const Box = () => _$t1((_r) => {
 function Language() {
   let $at = 0
   return <section class="sc-sec" aria-labelledby="sc-dv-lang-h">
-    <Head id="sc-dv-lang-h" kicker="Dil" color="brand-orange" title="Yazdığın kadar kısa, derlendiği kadar hızlı"
+    <Head id="sc-dv-lang-h" kicker="Dil" color="brand-orange" title="Kısa yazılan, hızlı derlenen bir dil" example="Yazdığın kadar kısa, derlendiği kadar hızlı"
       lead="$ ile başlayan değişken bir sinyaldir; bind:, on:, use:, m: ve sx tek satırda iş görür. Derleyici bunu şablon klonlayan, yalnız değişen düğümü güncelleyen sade koda çevirir." />
     <div class="sc-dv-tabs" role="group" aria-label="Örnek">
       {LANG.map((x, i) => <Chip size="sm" selected={() => $at === i} onClick={() => { $at = i }}>{x.name}</Chip>)}
@@ -106,7 +106,7 @@ function Cli() {
     onCleanup(() => { off(); stop?.() })
   }
   return <section class="sc-sec" aria-labelledby="sc-dv-cli-h">
-    <Head id="sc-dv-cli-h" kicker="Komut satırı" color="brand-green" title="Üç komut: geliştir, derle, denetle"
+    <Head id="sc-dv-cli-h" kicker="Komut satırı" color="brand-green" title="Geliştirme, derleme ve denetim tek komut satırında" example="Üç komut: geliştir, derle, denetle"
       lead="Tek derleme aracı esbuild. march dev canlı yeniler ve hatayı sayfanın üstüne yazar; march build sayfaları parçalara ayırıp bütçeleri denetler; march check March sözdizimini de anlar." />
     <Reveal class="sc-dv-term" effect="up">
       <div ref={play}><Terminal readonly scheme="dark" height="16rem" label="March komut satırı" ref={(a: TerminalApi) => { api = a }} /></div>
@@ -128,7 +128,7 @@ function Size() {
   const most = Math.max(...BUDGETS.map((b) => b.bytes))
   const grow = (box: Element) => onCleanup(inView(box, { once: true, threshold: 0.4, enter: () => { $shown = true } }))
   return <section class="sc-sec" aria-labelledby="sc-dv-size-h">
-    <Head id="sc-dv-size-h" kicker="Boyut" color="brand-blue" title="Yalnız kullandığın pakete girer"
+    <Head id="sc-dv-size-h" kicker="Boyut" color="brand-blue" title="Kullanılmayan kod derlemeye girmez" example="Yalnız kullandığın pakete girer"
       lead="Bir bileşeni içe aktarırsan yalnız o ve CSS'i gelir; geri kalan paket derlemeye hiç girmez. Bütçeler her derlemede ölçülür, aşan derleme yayına çıkmaz." />
     <div class={() => `sc-dv-bars sc-card${$shown ? " is-shown" : ""}`} ref={grow}>
       {BUDGETS.map((b) => <div class="sc-dv-bar">
@@ -163,7 +163,7 @@ function Extensions() {
     on: { onClick: (next: (...a: unknown[]) => unknown, ...args: unknown[]) => { if ($on) $clicks++; return next(...args) } },
   }))
   return <section class="sc-sec" aria-labelledby="sc-dv-ext-h">
-    <Head id="sc-dv-ext-h" kicker="Eklentiler" color="brand-purple" title="Bileşene dokunmadan değiştir"
+    <Head id="sc-dv-ext-h" kicker="Eklentiler" color="brand-purple" title="Eklentilerle bileşenleri dışarıdan değiştir" example="Bileşene dokunmadan değiştir"
       lead="Bir yerden kaydedilen eklenti, seçtiğin bileşenlere yeni prop ekler, props'u ve tıklamayı araya girerek değiştirir. Sarmalayıcı bileşen yok, kopya yok." />
     <Reveal class="sc-dv-ext" effect="up" stagger={110}>
       <div class="sc-dv-ext-demo sc-card">
@@ -198,7 +198,7 @@ function Embed() {
   }
   onCleanup(() => remove?.())
   return <section class="sc-sec" aria-labelledby="sc-dv-embed-h">
-    <Head id="sc-dv-embed-h" kicker="Her yere" color="brand-blue" title="Bir sayfaya göm, bir noktayı doldur"
+    <Head id="sc-dv-embed-h" kicker="Her yere" color="brand-blue" title="Her sayfaya gömülebilir" example="Bir sayfaya göm, bir noktayı doldur"
       lead="Tek satırla CDN'den her sayfaya eklenir. Widget noktaları, uygulamanın bir yerini başka kodun doldurmasına izin verir: eklentiler, temalar, panolar." />
     <Reveal class="sc-dv-embed" effect="up" stagger={110}>
       <div class="sc-dv-embed-demo sc-card">

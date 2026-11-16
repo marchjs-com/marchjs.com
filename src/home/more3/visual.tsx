@@ -80,7 +80,7 @@ function Charts() {
   const pick = (p: PiePoint<Slice>) => { $slice = `${p.label}: ${num(p.value)} etkinlik, ${percent.format(p.share)}` }
 
   return <section class="sc-sec" aria-labelledby="sc-vs-charts-h">
-    <Head id="sc-vs-charts-h" kicker="Grafik" color="brand-purple" title="Çubuğun ötesi: halka, ısı haritası, kayan çubuklar"
+    <Head id="sc-vs-charts-h" kicker="Grafik" color="brand-purple" title="Halka, ısı haritası ve çubuk grafikler" example="Çubuğun ötesi: halka, ısı haritası, kayan çubuklar"
       lead="Bir dilime dokun, bir hücrenin üstüne gel, efsaneden bir seriyi kapat. Dönemi değiştir: halka yeniden bölünür, çubuklar yeni boylarına süzülür. Hepsi SVG, hepsi erişilebilir, hepsi tek veri kaynağından." />
     <Reveal class="sc-vs-charts" effect="up">
       <div class="sc-vs-bar">
@@ -158,7 +158,7 @@ function Gallery() {
   let $likes = 0
   const like = () => { $likes++; toast(`Beğendin. Bu galeride ${num($likes)} beğeni.`) }
   return <section class="sc-sec" aria-labelledby="sc-vs-media-h">
-    <Head id="sc-vs-media-h" kicker="Medya" color="brand-orange" title="Fotoğrafa dokun, galeri açılsın"
+    <Head id="sc-vs-media-h" kicker="Medya" color="brand-orange" title="Galeri ve ışık kutusuyla medya" example="Fotoğrafa dokun, galeri açılsın"
       lead={`${num(SHOTS.length)} kare, bir video dahil. Izgara kendini düzenler, fazlası "+N" olur; dokununca ışık kutusu açılır, oklarla gezilir. Çift dokunuş beğenir.`} />
     <Reveal class="sc-vs-media" effect="up">
       <div class="sc-vs-card sc-vs-gridcard">
@@ -202,7 +202,7 @@ function Landing() {
   let $period: "monthly" | "yearly" = "monthly"
   const saved = (PRO.monthly - PRO.yearly) * 12
   return <section class="sc-sec" aria-labelledby="sc-vs-landing-h">
-    <Head id="sc-vs-landing-h" kicker="Satış sayfası" color="brand-green" title="Fiyat tablosu hazır, ikna da"
+    <Head id="sc-vs-landing-h" kicker="Satış sayfası" color="brand-green" title="Fiyat tablosu ve kullanıcı yorumları" example="Aylık ile yıllık arasında geç, fiyatlar yeni tutara yuvarlansın"
       lead="Aylık ve yıllık arasında geçince rakamlar yeni tutara yuvarlanır, öne çıkan plan parlar. Altında üyelerin sözleri iki şerit halinde akar. Hepsi tek satırlık bileşen." />
     <Reveal class="sc-vs-landing" effect="up">
       <div class="sc-vs-card sc-vs-pricing">
@@ -298,7 +298,7 @@ function Social() {
   }
 
   return <section class="sc-sec" aria-labelledby="sc-vs-social-h">
-    <Head id="sc-vs-social-h" kicker="Sosyal" color="brand-blue" title="Hikâye, takip, sohbet: gerçek bir uygulama gibi"
+    <Head id="sc-vs-social-h" kicker="Sosyal" color="brand-blue" title="Hikâye, takip ve sohbet bileşenleri" example="Hikâye, takip, sohbet: gerçek bir uygulama gibi"
       lead="Halkaya dokun, hikâyeler açılsın; izlenen halka sakinleşir. Takip düğmesi şekil değiştirip renk saçar. Sohbete yaz: karşı taraf yazıyor görünür, sonra cevap verir. Bir mesaja tepki bırak." />
     <Reveal class="sc-vs-social" effect="up">
       <div class="sc-vs-card sc-vs-profile">
@@ -410,7 +410,7 @@ function MarkdownLive() {
   ]
 
   return <section class="sc-sec" aria-labelledby="sc-vs-md-h">
-    <Head id="sc-vs-md-h" kicker="Markdown" color="brand-gold" title="Solda yaz, sağda gör"
+    <Head id="sc-vs-md-h" kicker="Markdown" color="brand-gold" title="Canlı Markdown düzenleyici" example="Solda yaz, sağda gör"
       lead="Her tuşta yeniden çizilir, ama asla HTML dizesiyle değil: metindeki etiketler metin olarak kalır, bağlantılar güvenlik süzgecinden geçer. Bir şablon seç ya da kendin yaz." />
     <Reveal class="sc-vs-md" effect="up">
       <div class="sc-vs-card sc-vs-mdin" use:grab>

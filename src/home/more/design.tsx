@@ -9,7 +9,7 @@ import { Head } from "../head.tsx";
 
 export default function Design() {
   return <section class="sc-sec" aria-labelledby="sc-design-h">
-    <Head id="sc-design-h" kicker="Kendi teman" color="brand-orange" title="Temalar yetmedi mi? Zevkine göre tasarla"
+    <Head id="sc-design-h" kicker="Kendi teman" color="brand-orange" title="Tema düzenleyiciyle kendi temanı tasarla" example="Temalar yetmedi mi? Zevkine göre tasarla"
       lead="Her renk, yazı tipi, köşe ve gölge bir belirteç. Burada değiştir, önizlemede canlı gör, kontrastı denetle; beğenince bu sayfaya uygula ya da kod olarak al." />
     <Reveal class="sc-design sc-card" effect="up">
       <ThemeEditor base={"hadi"} tabs={["colors", "type", "shape"]} storageKey={false} share={false} warnUnsaved={false} nameField={false} historyButtons={false} />

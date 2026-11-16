@@ -43,7 +43,7 @@ const CATEGORIES = ["Spor", "Ev", "Elektronik", "Giyim"]
 
 function DataTableSection() {
   return <section class="sc-sec" aria-labelledby="sc-dt-table-h">
-    <Head id="sc-dt-table-h" kicker="Veri" color="brand-blue" title={`${PRODUCTS.length.toLocaleString("tr")} satır, tek satır kadar hafif`}
+    <Head id="sc-dt-table-h" kicker="Veri" color="brand-blue" title="Büyük veri için hızlı bir tablo" example={`${PRODUCTS.length.toLocaleString("tr")} satır, tek satır kadar hafif`}
       lead="Sırala, süz, ara, seç: tablo yazarken yanıt verir. Sunucudan sayfa sayfa gelen veriyle, sanal kaydırmayla ve dar ekranda kart görünümüyle aynı bileşen." />
     <Reveal class="sc-dt-table sc-card" effect="up">
       <Table rows={PRODUCTS} rowKey="id" selectable pageSize={6} exportable={false} columns={[
@@ -80,7 +80,7 @@ function Board() {
     if (to === "done") toast(`“${task.title}” bitti`, { kind: "success" })
   }
   return <section class="sc-sec" aria-labelledby="sc-dt-board-h">
-    <Head id="sc-dt-board-h" kicker="Pano" color="brand-orange" title="Kartı tut, sütuna bırak"
+    <Head id="sc-dt-board-h" kicker="Pano" color="brand-orange" title="Sürükle bırak pano" example="Kartı tut, sütuna bırak"
       lead="Sürükle bırak fareyle, kalemle, dokunarak; klavyede Alt ve ok tuşlarıyla. Kart taşınırken iz bırakır, bırakıldığı yere yumuşakça oturur." />
     <Reveal class="sc-dt-board sc-card" effect="up">
       <Kanban columns={$board} itemKey={(t: Task) => t.id} onMove={move}
@@ -115,7 +115,7 @@ function Dates() {
     return `${longDate(r.from)} – ${longDate(r.to)} · ${n} gece`
   }
   return <section class="sc-sec" aria-labelledby="sc-dt-date-h">
-    <Head id="sc-dt-date-h" kicker="Takvim" color="brand-green" title="Tarih seçmek hiç bu kadar kolay olmadı"
+    <Head id="sc-dt-date-h" kicker="Takvim" color="brand-green" title="Tarih ve aralık seçen takvim" example="Bir aralık seç ya da hazır aralıklardan birine dokun"
       lead="Ay ızgarası, aralık seçimi, hazır aralıklar, yerel gün ve ay adları; yaz saati değişse de gün kaymaz. Klavyeyle de tam kullanılır." />
     <Reveal class="sc-dt-dates" effect="up" stagger={110}>
       <div class="sc-dt-cal sc-card">
@@ -151,7 +151,7 @@ function Files() {
   let $picked: string[] = []
   let $drag = true
   return <section class="sc-sec" aria-labelledby="sc-dt-tree-h">
-    <Head id="sc-dt-tree-h" kicker="Ağaç" color="brand-purple" title={`${NODE_COUNT.toLocaleString("tr")} düğüm, akıcı bir ağaç`}
+    <Head id="sc-dt-tree-h" kicker="Ağaç" color="brand-purple" title="Büyük ağaçlar için sanal ağaç" example={`${NODE_COUNT.toLocaleString("tr")} düğüm, akıcı bir ağaç`}
       lead="Yalnız görünen satırlar çizilir, klasörler istenince yüklenir. Ara: eşleşen yol açılır ve vurgulanır. Sürükle: önüne, arkasına, içine bırak." />
     <Reveal class="sc-dt-files" effect="up" stagger={110}>
       <div class="sc-dt-tree sc-card">
@@ -204,7 +204,7 @@ function Welcome() {
     </div>,
   ]
   return <section class="sc-sec" aria-labelledby="sc-dt-flow-h">
-    <Head id="sc-dt-flow-h" kicker="Akış" color="brand-blue" title="Karşılama akışı, üç adımda"
+    <Head id="sc-dt-flow-h" kicker="Akış" color="brand-blue" title="Adım, sekme ve açılır bölümlerle akışlar" example="Karşılama akışı, üç adımda"
       lead="Adımlar, sekmeler ve açılır bölümler birlikte: geçişte vurgu bir adımdan ötekine akar, panel geçmişe kayarken yenisi gelecekten gelir." />
     <Reveal class="sc-dt-flow sc-card" effect="up">
       <Stepper steps={[{ title: "Sen", description: "Rolünü seç" }, { title: "Tercihler", description: "Tema, dil, bildirim" }, { title: "Hazır", description: "Başla" }]}

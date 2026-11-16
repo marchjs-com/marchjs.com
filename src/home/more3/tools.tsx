@@ -55,7 +55,7 @@ function FlowSection() {
   const last = (): TimelineEntry | undefined => runner.timeline().filter((e) => e.status === "done" && typeof e.value === "string").at(-1)
   const missing = (): boolean => !flow.edges().some((e) => e.to === "ticket.in")
   return <section class="sc-sec" aria-labelledby="sc-tl-flow-h">
-    <Head id="sc-tl-flow-h" kicker="Akış düzenleyici" color="brand-orange" title="Düğümleri sürükle, bağla, çalıştır"
+    <Head id="sc-tl-flow-h" kicker="Akış düzenleyici" color="brand-orange" title="Düğüm tabanlı akış düzenleyici" example="Düğümleri sürükle, bağla, çalıştır"
       lead="Bir anketin yolculuğu: düğümleri tut taşı, bir çıkıştan girişe çizgi çek, ardından çalıştır. Değer kenar boyunca akar, her düğüm sırası gelince yanar; adım adım da gidebilirsin." />
     <Reveal class="sc-tl-flow" effect="up" stagger={110}>
       <div class="sc-tl-flow-stage">
@@ -107,7 +107,7 @@ function EasingSection() {
     onCleanup(() => { off(); stop?.(); stopAll() })
   }
   return <section class="sc-sec" aria-labelledby="sc-tl-ease-h">
-    <Head id="sc-tl-ease-h" kicker="Yumuşatma eğrisi" color="brand-purple" title="Eğriyi çek, hareket anında değişsin"
+    <Head id="sc-tl-ease-h" kicker="Yumuşatma eğrisi" color="brand-purple" title="Yumuşatma eğrisi düzenleyici" example="Eğriyi çek, hareket anında değişsin"
       lead="İki tutamacı sürükle: top, kart ve çubuk aynı eğriyle oynar. Taşma, sekme, yavaş kalkış… hepsi tek bir cubic-bezier; motor onu adıyla da tanır." />
     <Reveal class="sc-tl-ease" effect="up" stagger={110}>
       <div class="sc-tl-ease-editor sc-card">
@@ -194,7 +194,7 @@ function UndoSection() {
   }
   const saved = (): boolean => { hist.past(); return hist.atSaved() }
   return <section class="sc-sec" aria-labelledby="sc-tl-undo-h">
-    <Head id="sc-tl-undo-h" kicker="Geri al, yinele" color="brand-pink" title="Her fırça darbesi geri alınabilir"
+    <Head id="sc-tl-undo-h" kicker="Geri al, yinele" color="brand-pink" title="Geri al ve yinele tarihçesi" example="Her fırça darbesi geri alınabilir"
       lead="Kareleri boya, sil, temizle; her darbe tek adım olarak tarihçeye yazılır. Düğmelerle ya da klavyeyle geri dön, yinele; tarihçede nerede olduğunu hep gör." />
     <Reveal class="sc-tl-undo" effect="up" stagger={110}>
       <div class="sc-tl-undo-board sc-card" on:keydown={keys}>
@@ -238,7 +238,7 @@ function PickersSection() {
   let $font = ""
   let $stack = ""
   return <section class="sc-sec" aria-labelledby="sc-tl-pick-h">
-    <Head id="sc-tl-pick-h" kicker="Seçiciler" color="brand-gold" title="Renk, ikon, yazı tipi: üçü bir kartı giydirir"
+    <Head id="sc-tl-pick-h" kicker="Seçiciler" color="brand-gold" title="Renk, ikon ve yazı tipi seçicileri" example="Renk, ikon, yazı tipi: üçü bir kartı giydirir"
       lead="Renk seçici karşıtlığı ölçer, ikon seçici adıyla arar, yazı tipi seçici önizleyerek yükler. Hangisine dokunsan kart o an değişir." />
     <Reveal class="sc-tl-pick" effect="up" stagger={110}>
       <div class="sc-tl-pick-col sc-card">
@@ -295,7 +295,7 @@ function A11ySection() {
   }
   const on = (v: boolean): string | null => (v ? "" : null)
   return <section class="sc-sec" aria-labelledby="sc-tl-a11y-h">
-    <Head id="sc-tl-a11y-h" kicker="Erişilebilirlik" color="brand-green" title="Herkes için, önce bu kartta dene"
+    <Head id="sc-tl-a11y-h" kicker="Erişilebilirlik" color="brand-green" title="Herkes için erişilebilirlik ayarları" example="Ayarları önce bu kartta dene, sonra bütün sayfaya uygula"
       lead="Yazı boyutu, karşıtlık, metin aralığı, odak halkası, hareket: ayarlar yalnızca örnek kartı değiştirir. Beğenirsen tek tıkla tüm sayfaya uygula; denetçi de eksikleri söyler." />
     <Reveal class="sc-tl-a11y" effect="up" stagger={110}>
       <div class="sc-tl-a11y-panel sc-card">

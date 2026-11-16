@@ -21,6 +21,10 @@
 .sc-sec-head .m-section-head-title { font-family: var(--m-font-display); }
 .sc-sec-head .m-section-head-caps { display: inline-flex; align-items: center; gap: var(--m-space-2); letter-spacing: .12em; font-weight: var(--m-weight-bold); }
 .sc-sec-head .m-section-head-caps::before { content: ""; inline-size: 1.125rem; block-size: .1875rem; border-radius: var(--m-radius-full); background: currentColor; }
+/* the head's example: what the demo below shows, under the lead */
+.sc-sec-lead { display: block; }
+.sc-sec-example { display: flex; align-items: baseline; gap: var(--m-space-2); margin-block-start: var(--m-space-3); font-size: var(--m-text-sm); font-style: italic; color: var(--m-text-2, var(--m-text)); }
+.sc-sec-example b { flex: none; font-style: normal; font-size: var(--m-text-xs); letter-spacing: .08em; text-transform: uppercase; padding: .125rem .5rem; border-radius: var(--m-radius-full); color: var(--m-accent, var(--m-primary)); background: color-mix(in srgb, currentColor 12%, transparent); }
 
 /* the map: one card per section, as many columns as fit; the components section takes two */
 .sc-map { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.625rem), 1fr)); gap: var(--m-space-3); }

@@ -50,7 +50,7 @@ function Router() {
     onCleanup(() => { off(); stop?.() })
   }
   return <section class="sc-sec" aria-labelledby="sc-ap-route-h">
-    <Head id="sc-ap-route-h" kicker="Yönlendirici" color="brand-blue" title="Her sayfa kendi parçası, istenince gelir"
+    <Head id="sc-ap-route-h" kicker="Yönlendirici" color="brand-blue" title="Sayfaları parça parça yükleyen yönlendirici" example="Her sayfa kendi parçası, istenince gelir"
       lead={`Uygulamanın kabuğu ${kb(S.budget.entry)} ile açılır; her sayfa ayrı bir parça olarak gezinirken yüklenir ve hiçbiri ${kb(S.budget.route)} sınırını aşamaz. Bağlantının üstüne gelince önceden yüklenir.`} />
     <Reveal class="sc-ap-route" effect="up" stagger={100}>
       <div class="sc-ap-shell sc-card" ref={play}>
@@ -85,7 +85,7 @@ function Keep() {
   onCleanup(persist(state, KEY))
   const saved = storage().persistent("local")
   return <section class="sc-sec" aria-labelledby="sc-ap-keep-h">
-    <Head id="sc-ap-keep-h" kicker="Kalıcı durum" color="brand-green" title="Sayfayı yenile, yerinde kalır"
+    <Head id="sc-ap-keep-h" kicker="Kalıcı durum" color="brand-green" title="Tarayıcıya yazılan kalıcı durum" example="Sayfayı yenile, yerinde kalır"
       lead="Reaktif bir depo tek satırla tarayıcıya yazılır; sürümler arası taşıma, süre sonu ve sekmeler arası eşitleme depolama yöneticisinde hazır." />
     <Reveal class="sc-ap-keep" effect="up" stagger={100}>
       <div class="sc-ap-keep-card sc-card">
@@ -114,7 +114,7 @@ function Device() {
   let $copyText = "MarchJS 🧡"
   const ago = (): string => { const s = Math.max(0, Math.round((Date.now() - i.lastActive()) / 1000)); return s < 2 ? "şimdi" : `${s} sn önce` }
   return <section class="sc-sec" aria-labelledby="sc-ap-dev-h">
-    <Head id="sc-ap-dev-h" kicker="Cihaz" color="brand-orange" title="Tarayıcının gücü, sinyal olarak"
+    <Head id="sc-ap-dev-h" kicker="Cihaz" color="brand-orange" title="Cihaz yöneticileri tarayıcıyı sinyale çevirir" example="Tarayıcının gücü, sinyal olarak"
       lead={`Bağlantı, ekran, pano, boşta kalma, konum, bildirim, izinler: ${S.managers} yönetici her şeyi okunur bir sinyale çevirir. Değişince yalnız ona bakan yer güncellenir.`} />
     <Reveal class="sc-ap-dev" effect="scale" stagger={70}>
       <div class="sc-ap-tile sc-card"><span class="sc-ap-cap">Durum</span>
@@ -151,7 +151,7 @@ function Locales() {
   const at = Date.now()
   const ago = (code: string): string => new Intl.RelativeTimeFormat(code, { numeric: "auto" }).format(-$n, "day")
   return <section class="sc-sec" aria-labelledby="sc-ap-intl-h">
-    <Head id="sc-ap-intl-h" kicker="Çeviri" color="brand-purple" title="Bir sayı, dört dil, doğru dilbilgisi"
+    <Head id="sc-ap-intl-h" kicker="Çeviri" color="brand-purple" title="Her dilin kendi kuralıyla çeviri" example="Bir sayı, dört dil, doğru dilbilgisi"
       lead="Çoğul kuralları, para birimleri, tarihler ve göreli zaman her dilin kendi kuralıyla yazılır. Kaydırıcıyı oynat: Arapçanın altı çoğul biçimi bile doğru seçilir." />
     <div class="sc-ap-intl">
       <label class="sc-ap-intl-n"><span>Sayı</span><Slider bind:value={$n} min={0} max={24} aria-label="Sayı" /><b>{() => String($n)}</b></label>
@@ -190,7 +190,7 @@ function Offline() {
     onCleanup(() => { off(); stop?.() })
   }
   return <section class="sc-sec" aria-labelledby="sc-ap-sw-h">
-    <Head id="sc-ap-sw-h" kicker="Çevrimdışı" color="brand-green" title="İnternet gitse de uygulama açık kalır"
+    <Head id="sc-ap-sw-h" kicker="Çevrimdışı" color="brand-green" title="Çevrimdışı da çalışan uygulamalar" example="İnternet gitse de uygulama açık kalır"
       lead="Servis çalışanı tek çağrıyla kurulur: önbellek sürüm başına ayrılır, eski sürümler temizlenir, yeni sürüm hazır olunca bir bant sorar." />
     <div class="sc-ap-sw" ref={play}>
       <ol class="sc-ap-steps">

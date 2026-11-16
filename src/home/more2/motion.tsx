@@ -52,7 +52,7 @@ function Springs() {
     back(Math.cos(a) * r, Math.sin(a) * r * 0.6)
   }
   return <section class="sc-sec" aria-labelledby="sc-mx-spring-h">
-    <Head id="sc-mx-spring-h" kicker="Yay fiziği" color="brand-orange" title="Fırlat, geri yaylansın"
+    <Head id="sc-mx-spring-h" kicker="Yay fiziği" color="brand-orange" title="Gerçek yay fiziğiyle hareket" example="Fırlat, geri yaylansın"
       lead="Gerçek yay fiziği: sertlik, sönüm, kütle. Kartı tut, sürükle, bırak; seçtiğin yayla yerine döner. Her geçiş aynı motordan geçer, genel hız ve duraklatma onu da durdurur." />
     <Reveal class="sc-mx-spring" effect="up" stagger={100}>
       <div class="sc-mx-spring-stage sc-card">
@@ -89,7 +89,7 @@ function Flip() {
   // the list watches its own children: added ones pop in, removed ones fade where they were, the rest glide (FLIP)
   const watch = (el: Element) => onCleanup(animateList(el as HTMLElement, { enter: "pop", exit: "fade", easing: "spring", stagger: 40 }))
   return <section class="sc-sec" aria-labelledby="sc-mx-flip-h">
-    <Head id="sc-mx-flip-h" kicker="FLIP" color="brand-blue" title="Liste değişir, her öğe kendi yolundan gider"
+    <Head id="sc-mx-flip-h" kicker="FLIP" color="brand-blue" title="FLIP ile liste animasyonları" example="Liste değişir, her öğe kendi yolundan gider"
       lead="Karıştır, sırala, ekle, çıkar: yer değiştiren her kart eski yerinden yenisine süzülür, gelen belirir, giden yerinde söner. Tek satır: animateList." />
     <Reveal class="sc-mx-flip" effect="up" stagger={100}>
       <div class="sc-mx-flip-tools">
@@ -136,7 +136,7 @@ function Loops() {
     onCleanup(() => run?.stop())
   }
   return <section class="sc-sec" aria-labelledby="sc-mx-loop-h">
-    <Head id="sc-mx-loop-h" kicker="Döngü efektleri" color="brand-purple" title="Bazı kelimeler hiç durmaz"
+    <Head id="sc-mx-loop-h" kicker="Döngü efektleri" color="brand-purple" title="Sonsuz döngüde metin efektleri" example="Bazı kelimeler hiç durmaz"
       lead="Dalga, gökkuşağı, neon, parıltı, ışıma: harf harf ya da kelime kelime, sonsuz döngüde. Ekrandan çıkınca durur, geri gelince devam eder." />
     <Reveal class="sc-mx-loop" effect="scale">
       <div class="sc-mx-loop-stage sc-card"><span class="sc-mx-loop-word" ref={start}>{LOOP_TEXT}</span></div>
@@ -158,7 +158,7 @@ function Effects() {
   let $fx: "particles" | "aurora" | "noise" = "particles"
   const title = () => <div class="sc-mx-fx-copy"><b class="sc-mx-fx-title">Sahne senin</b><span>Arka plan efektleri: tuval, CSS değişkenleri, CSP uyumlu</span></div>
   return <section class="sc-sec" aria-labelledby="sc-mx-fx-h">
-    <Head id="sc-mx-fx-h" kicker="Efektler" color="brand-green" title="Başlığın arkasında bir dünya"
+    <Head id="sc-mx-fx-h" kicker="Efektler" color="brand-green" title="Parçacık, kutup ışığı ve gren efektleri" example="Başlığın arkasında bir dünya"
       lead="Fareye yaklaşan parçacıklar, akan kutup ışıkları, film greni: ayrı bir modül, yalnız kullanınca yüklenir; ekran dışında durur." />
     <Reveal class="sc-mx-fx" effect="up" stagger={100}>
       <div class="sc-mx-fx-stage">
@@ -212,7 +212,7 @@ function Pages() {
     void pIn.finished.then(() => { a.classList.remove("is-leaving"); running.forEach((r) => r.cancel()); running = []; busy = false })
   }
   return <section class="sc-sec" aria-labelledby="sc-mx-page-h">
-    <Head id="sc-mx-page-h" kicker="Sayfa geçişleri" color="brand-orange" title="Ekranlar arasında sinema"
+    <Head id="sc-mx-page-h" kicker="Sayfa geçişleri" color="brand-orange" title="Rotalar arasında sayfa geçişleri" example="Ekranlar arasında sinema"
       lead="Küp, deste, perde, panjur, yakınlaşma: her rota kendi geçişini seçer, geri gidince tersine oynar, sağdan sola dillerde aynalanır." />
     <Reveal class="sc-mx-page" effect="up" stagger={100}>
       <div class="sc-mx-page-app sc-card">

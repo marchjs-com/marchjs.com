@@ -70,7 +70,7 @@ function Signals() {
     onCleanup(() => { stop(); timer?.() })
   }
   return <section class="sc-sec" aria-labelledby="sc-live-h">
-    <Head id="sc-live-h" kicker="Sinyaller" color="brand-orange" title="Bir kez çalışır, sonra yalnız değişen yer"
+    <Head id="sc-live-h" kicker="Sinyaller" color="brand-orange" title="Sinyaller yalnız değişen yeri günceller" example="Bir kez çalışır, sonra yalnız değişen yer"
       lead="Sanal DOM yok, yeniden çizim yok. Bir değer değişince ona bağlı tek düğüm güncellenir; bileşenin kendisi bir daha çalışmaz." />
     <Reveal class="sc-live" effect="up" stagger={120}>
       <div class="sc-live-code sc-card">
@@ -111,7 +111,7 @@ function Package() {
   const CHIPS = ["Formlar", "Hareket", "Grafik", "Sohbet"]
   const pick = (c: string): void => { $picked = $picked.includes(c) ? $picked.filter((x) => x !== c) : [...$picked, c] }
   return <section class="sc-sec" aria-labelledby="sc-kit-h">
-    <Head id="sc-kit-h" kicker="Tek paket" color="brand-blue" title={`${S.components} bileşen, tek pakette`}
+    <Head id="sc-kit-h" kicker="Tek paket" color="brand-blue" title="Her şey tek pakette, başka bağımlılık yok" example={`${S.components} bileşen, tek pakette`}
       lead={`${S.icons.total.toLocaleString("tr")} ikon, ${S.animations.total} animasyon, ${S.themes} tema, ${S.managers} yönetici. Hepsi aynı paketten, başka bağımlılık yok; yalnız kullandığın derlenir.`} />
     <div class="sc-kit-rows" aria-hidden="true">
       {ROWS.map((row, i) => <div class={`sc-kit-row is-${i + 1}`}><div class="sc-kit-track">{[...row, ...row].map((n) => <span class="sc-kit-name">{n}</span>)}</div></div>)}
@@ -175,7 +175,7 @@ function Ide() {
     onCleanup(() => { stop(); on = false; clearTimeout(timer) })
   }
   return <section class="sc-sec" aria-labelledby="sc-try-h">
-    <Head id="sc-try-h" kicker="Tarayıcıda IDE" color="brand-green" title="Yaz, gör, dışa aktar"
+    <Head id="sc-try-h" kicker="Tarayıcıda IDE" color="brand-green" title="Tarayıcıda çalışan bir IDE" example="Yaz, gör, dışa aktar"
       lead="Kurulum yok, npm yok. Playground'da bileşenini yaz, önizlemede harf harf gör; son derlemeyi zip olarak indir ya da cdn.marchjs.com'dan yükle." />
     <Reveal class="sc-try" effect="up" stagger={120}>
       <div class="sc-try-win sc-card" ref={run}>
@@ -240,7 +240,7 @@ function Motion() {
     onCleanup(() => { stop(); timer?.(); run?.stop() })
   }
   return <section class="sc-sec" aria-labelledby="sc-move-h">
-    <Head id="sc-move-h" kicker="Hareket" color="brand-purple" title="Her harf sahneye çıkar"
+    <Head id="sc-move-h" kicker="Hareket" color="brand-purple" title="Kendi hareket motoruyla gelen animasyonlar" example="Her harf sahneye çıkar"
       lead={`${S.animations.text} metin efekti, yay fiziği, kaydırma, sayfa geçişleri; hepsi kendi hareket motorunda, hareket azaltma tercihine uyar.`} />
     <Reveal class="sc-move" effect="scale" stagger={100}>
       <div class="sc-move-stage sc-card" ref={stage}>
@@ -284,7 +284,7 @@ function Global() {
     onCleanup(() => { stop(); timer?.() })
   }
   return <section class="sc-sec" aria-labelledby="sc-intl-h">
-    <Head id="sc-intl-h" kicker="Her dilde" color="brand-blue" title="Her dilde, her yönde"
+    <Head id="sc-intl-h" kicker="Her dilde" color="brand-blue" title="Çeviri, yerelleştirme ve sağdan sola baştan içinde" example="Her dilde, her yönde"
       lead="Metinler çevrilir, sayılar ve tarihler yerelleşir, sağdan sola diller düzeni kendiliğinden aynalar. Erişilebilirlik sonradan eklenmez, baştan içindedir." />
     <Reveal class="sc-intl" effect="up" stagger={120}>
       <div class="sc-intl-demo sc-card" ref={cycle}>
@@ -325,7 +325,7 @@ const SAFE: readonly { icon: unknown; text: string }[] = [
 
 function Secure() {
   return <section class="sc-sec" aria-labelledby="sc-safe-h">
-    <Head id="sc-safe-h" kicker="Güvenlik" color="brand-green" title="Katı CSP ile ilk günden"
+    <Head id="sc-safe-h" kicker="Güvenlik" color="brand-green" title="Güvenlik baştan: her bileşen katı CSP altında çalışır" example="Katı CSP ile ilk günden"
       lead="Sonradan yamanmaz: her bileşen en sıkı içerik güvenliği politikası altında yazılır ve test edilir." />
     <Reveal class="sc-safe" effect="up" stagger={110}>
       <div class="sc-safe-code"><CodeView code={CSP} lang="sh" label="Güvenlik başlığı" /></div>

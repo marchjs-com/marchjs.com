@@ -36,7 +36,7 @@ function Forms() {
     toast(`Hoş geldin ${$name.trim()}!`, { kind: "success" })
   }
   return <section class="sc-sec" aria-labelledby="sc-form-h">
-    <Head id="sc-form-h" kicker="Formlar" color="brand-orange" title="Yazarken denetler, bekletmez"
+    <Head id="sc-form-h" kicker="Formlar" color="brand-orange" title="Doğrulaması hazır formlar" example="Yazarken denetler, bekletmez"
       lead="Alanlar, kurallar, hata metinleri ve güç ölçer hazır. Şemadan form üretilir; sunucunun hatası doğru alanın altına düşer." />
     <Reveal class="sc-form" effect="up" stagger={110}>
       <form class="sc-form-card sc-card" on:submit={send} novalidate>
@@ -61,7 +61,7 @@ function Forms() {
 
 function Themes() {
   return <section class="sc-sec" aria-labelledby="sc-theme-h">
-    <Head id="sc-theme-h" kicker="Temalar" color="brand-purple" title={`${S.themes} tema, tek dokunuş`}
+    <Head id="sc-theme-h" kicker="Temalar" color="brand-purple" title={`${S.themes} hazır tema`} example="Bir temaya dokun, bütün sayfa ona bürünsün"
       lead="Her biri renk, yazı tipi, köşe ve gölgeden oluşan bir kişilik. Birine dokun, bütün sayfa ona bürünür; kendi temanı da yazabilirsin." />
     <Reveal class="sc-themes" effect="scale" stagger={45}>
       {colorThemes().map((th) => <button type="button" class={() => `sc-theme${colorTheme() === th.id ? " is-on" : ""}`} aria-pressed={() => String(colorTheme() === th.id)}
@@ -85,7 +85,7 @@ function Icons() {
   let $q = ""
   const shown = () => WALL.filter(([n]) => n.includes($q.trim().toLowerCase()))
   return <section class="sc-sec" aria-labelledby="sc-icon-h">
-    <Head id="sc-icon-h" kicker="İkonlar" color="brand-blue" title={`${S.icons.total.toLocaleString("tr")} ikon, yalnız kullandığın gelir`}
+    <Head id="sc-icon-h" kicker="İkonlar" color="brand-blue" title={`${S.icons.total.toLocaleString("tr")} ikonluk bir ikon kütüphanesi`} example="Yalnız kullandığın ikon derlemeye girer"
       lead={`Yerleşik set ve ${S.icons.packs} açık kaynak paket (Lucide, Tabler, Phosphor…). Her ikon tek başına içe aktarılır; paketin geri kalanı derlemeye girmez.`} />
     <div class="sc-glyphs">
       <TextInput bind:value={$q} placeholder="İkon ara: heart, star, mail…" aria-label="İkon ara" class="sc-glyphs-search" />
@@ -117,7 +117,7 @@ function Layers() {
     { icon: bell, title: "Bildirim", text: "Üst üste dizilir, kendiliğinden kaybolur", run: () => toast("Kaydedildi", { kind: "success" }) },
   ]
   return <section class="sc-sec" aria-labelledby="sc-layer-h">
-    <Head id="sc-layer-h" kicker="Katmanlar" color="brand-green" title="Bir dokunuşla açılır, doğru yere kapanır"
+    <Head id="sc-layer-h" kicker="Katmanlar" color="brand-green" title="Diyalog, çekmece ve bildirim tek katman yöneticisinden" example="Bir dokunuşla açılır, doğru yere kapanır"
       lead="Diyalog, çekmece, onay ve bildirim: hepsi aynı katman yöneticisinden çıkar, birbirinin üstünde doğru sıralanır, erişilebilirlik kuralları hazırdır." />
     <Reveal class="sc-layers" effect="up" stagger={90}>
       {LAYERS.map((l) => <button type="button" class="sc-layer sc-card" on:click={() => void l.run()}>
@@ -133,7 +133,7 @@ function Layers() {
 function Palette() {
   return <section class="sc-sec sc-pal-band" aria-labelledby="sc-pal-h">
     <div class="sc-pal-copy">
-      <Head id="sc-pal-h" kicker="Klavye" color="brand-orange" title="Her şey bir tuş uzakta"
+      <Head id="sc-pal-h" kicker="Klavye" color="brand-orange" title="Klavye kısayolları ve komut paleti" example="Her şey bir tuş uzakta"
         lead="Komut paleti, kısayollar, kısayol ipuçları: uygulamanın her eylemi klavyeyle bulunur ve çalıştırılır. Bu sayfada da açık." />
       <Button variant="primary" icon={search} on:click={openPalette}>Komut paletini aç <Kbd keys="mod+k" /></Button>
     </div>

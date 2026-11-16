@@ -55,7 +55,7 @@ function Charts() {
     onCleanup(() => { off(); stop?.() })
   }
   return <section class="sc-sec" aria-labelledby="sc-chart-h">
-    <Head id="sc-chart-h" kicker="Grafikler" color="brand-blue" title="Veri akar, grafik takip eder"
+    <Head id="sc-chart-h" kicker="Grafikler" color="brand-blue" title="Canlı veriye bağlı grafikler" example="Veri akar, grafik takip eder"
       lead="Çizgi, çubuk, pasta, ısı haritası: SVG, erişilebilir tablo görünümü ve klavyeyle gezinme hazır. Yalnız değişen nokta güncellenir; binlerce nokta seyreltilerek çizilir." />
     <Reveal class="sc-charts" effect="up" stagger={110}>
       <div class="sc-chart-card sc-card" ref={feed}>
@@ -101,7 +101,7 @@ function Tests() {
     onCleanup(() => { off(); stop?.() })
   }
   return <section class="sc-sec" aria-labelledby="sc-test-h">
-    <Head id="sc-test-h" kicker="Testler" color="brand-green" title={`${S.tests.toLocaleString("tr")} test, her değişiklikte`}
+    <Head id="sc-test-h" kicker="Testler" color="brand-green" title={`${S.tests.toLocaleString("tr")} testle korunan bir kütüphane`} example="Her değişiklikte bütün testler baştan koşar"
       lead="Her bileşenin davranışı, erişilebilirliği, boyut bütçesi ve güvenlik kuralları test edilir. Bir değişiklik ancak hepsi geçince yayına girer." />
     <Reveal class="sc-tests" effect="up">
       <div class="sc-tests-term" ref={run}>

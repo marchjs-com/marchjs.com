@@ -192,7 +192,7 @@ export default function Ai() {
   const start = (box: Element) => onCleanup(inView(box, { once: true, rootMargin: "0px", threshold: 0.35, enter: () => { if ($phase === "idle") play(0) } }))
   const go = (d: number): void => play((($at + d) % EXAMPLES.length + EXAMPLES.length) % EXAMPLES.length)
   return <section class="sc-sec" aria-labelledby="sc-ai-h">
-    <Head id="sc-ai-h" kicker="Yapay zekâ" color="brand-purple" title="Yapay zekâ ajanları için hazır"
+    <Head id="sc-ai-h" kicker="Yapay zekâ" color="brand-purple" title="Yapay zekâ ajanları MarchJS'i tanır" example="Bir istek yaz, ajan uygulamayı saniyeler içinde kursun"
       lead="Ajanlar MarchJS'i tanır: kurallarını, bileşenlerini ve sözdizimini depodaki yönergelerden okur. Ne istediğini yaz; uygulaman saniyeler içinde hazır olsun." />
     <Reveal class="sc-ai" effect="up" stagger={110}>
       <div class="sc-ai-chat sc-card" ref={start}>

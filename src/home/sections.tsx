@@ -97,7 +97,7 @@ function WorldMap() {
   const total = worlds.reduce((n, w) => n + w.rows.length, 0)
   let k = 0
   return <section class="sc-sec" aria-labelledby="sc-map-h">
-    <Head id="sc-map-h" kicker="Harita" color="brand-orange" title="Her şey tek bakışta"
+    <Head id="sc-map-h" kicker="Harita" color="brand-orange" title="Bütün bileşenlerin haritası" example="Her şey tek bakışta"
       lead={`${worlds.length} bölüm, ${total} kategori; hepsi bu ekranda. Soldaki şerit aynı bölümleri her sayfada taşır.`} />
     {/* each card slides in from its own side when it first comes into view (its rows after it): the lower cards are
         not played before they are seen */}
@@ -137,7 +137,7 @@ function Fast(props: { report: () => Report | null }) {
   // couple dozen) when the cards come into view
   const high = (v: number): number => Math.max(v * 6, 24)
   return <section class="sc-sec" aria-labelledby="sc-fast-h">
-    <Head id="sc-fast-h" kicker="Hız ve boyut" color="brand-blue" title="Küçük açılır, büyüdükçe yavaşlamaz" />
+    <Head id="sc-fast-h" kicker="Hız ve boyut" color="brand-blue" title="Hız ve boyut her derlemede ölçülür" example="Küçük açılır, büyüdükçe yavaşlamaz" />
     <Reveal class="sc-fast" effect="up" distance={56} stagger={110}>
       {cards.map((c) => <StatTile class="sc-fast-card sc-card" variant="card" size="xl" align="start" m:color={c.color} value={<Counter from={high(c.value)} value={c.value} suffix={c.unit} duration={COUNT_MS} easing="in-out" />} label={c.label}
         hint={<>{c.text}{() => { const m = c.more?.(); return m ? <span class="sc-fast-more">{m}</span> : null }}</>} />)}
@@ -158,7 +158,7 @@ const START = [
 
 function Start() {
   return <section class="sc-sec" aria-labelledby="sc-start-h">
-    <Head id="sc-start-h" kicker="Başla" color="brand-green" title="Üç satırda ilk ekran" />
+    <Head id="sc-start-h" kicker="Başla" color="brand-green" title="Kurulumdan ilk ekrana" example="Üç satırda ilk ekran" />
     <div class="sc-start">
       <Reveal class="sc-start-code" effect="start" distance={72}><CodeView code={START} lang="tsx" wrap label="Örnek kod" /></Reveal>
       <Reveal class="sc-start-cell" effect="end" distance={72} delay={90}>

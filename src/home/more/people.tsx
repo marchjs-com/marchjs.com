@@ -22,7 +22,7 @@ function Social() {
     $posts = $posts.map((p) => (p.id === post.id ? { ...p, liked: next, likes: p.likes + (next ? 1 : -1) } : p))
   }
   return <section class="sc-sec" aria-labelledby="sc-social-h">
-    <Head id="sc-social-h" kicker="Sosyal" color="brand-purple" title="Bir sosyal uygulamanın parçaları hazır"
+    <Head id="sc-social-h" kicker="Sosyal" color="brand-purple" title="Sosyal uygulama bileşenleri hazır" example="Bir sosyal uygulamanın parçaları hazır"
       lead="Gönderi kartı, beğeni patlaması, sohbet balonları, hikâye halkası, takip düğmesi: hepsi bir uygulamada nasılsa öyle, dokunmatikte de." />
     <Reveal class="sc-social" effect="up" stagger={120}>
       {/* the cards are made once (from the fixed list); only their post changes, so the like burst plays on the card you see */}
@@ -47,7 +47,7 @@ const ROWS = [
 
 function Compare() {
   return <section class="sc-sec" aria-labelledby="sc-cmp-h">
-    <Head id="sc-cmp-h" kicker="Dürüst karşılaştırma" color="brand-orange" title="Nerede öndeyiz, nerede değiliz"
+    <Head id="sc-cmp-h" kicker="Dürüst karşılaştırma" color="brand-orange" title="Başka kütüphanelerle dürüst bir karşılaştırma" example="Nerede öndeyiz, nerede değiliz"
       lead="Yalnız iyi yanları değil, geride kaldığımız yeri de yazıyoruz. Seç, karar ver." />
     <Reveal class="sc-cmp sc-card" effect="up">
       <HonestCompare columns={COLUMNS} rows={ROWS} caption="MarchJS karşılaştırması" />
