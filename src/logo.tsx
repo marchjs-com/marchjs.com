@@ -4,7 +4,7 @@
 import { uid } from "march/core/util.ts";
 
 /** The M's centre line (viewBox 0 0 120 104): up the left leg, over the left arch, down into the valley, over the right arch, down the right leg. */
-export const MARK_PATH = "M20 88C20 62 23 30 35 21C45 14 52 25 56 37L60 50L64 37C68 25 75 14 85 21C97 30 100 62 100 88"
+export const MARK_PATH = "M16 88C26 68 29 40 36 24C41 14 51 22 56 37L60 50L64 37C69 22 79 14 84 24C91 40 94 68 104 88"
 
 /** `<MarchLogo />` — the mark alone; `<MarchLogo wordmark />` with "MarchJS" under it. */
 export function MarchLogo(props: { wordmark?: boolean; class?: string }) {
