@@ -154,7 +154,7 @@ export function HomeToc() {
   // before they grew, so the list does not chase its own growth.
   let list: HTMLElement | undefined
   let base: number[] = []
-  const REACH = 110
+  const REACH = 130
   const rest = () => {
     if (!list) return []
     const r = list.getBoundingClientRect(), n = ITEMS.length, step = r.height / n, mid = r.top + r.height / 2
