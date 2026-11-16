@@ -4,12 +4,13 @@
 // and the corner radius (the theme wave spreads from the pressed control). On a phone the cards stack and stay put.
 import { effect, onCleanup } from "march";
 import { lazy } from "march/lazy";
-import { reveal, animate, inView, hoverParallax } from "march/motion";
+import { reveal, animate, animateValue, inView, hoverParallax, reducedMotion } from "march/motion";
 import { draggable } from "march/behaviors/drag";
 import { Button, Swatch, ThemeSwatch, Toggle, Slider, Rating, SectionLabel, ChatBubble, TypingIndicator, LikeButton, heartBurst,
   colorThemes, colorTheme, setColorTheme, accent, setAccent, resolvedTheme, setTheme } from "march/ui";
 import { tokenColor, BRAND_COLORS, type ColorToken } from "march/theme/colors.ts";
 import { sparkles } from "march/icons";
+import { celebrate } from "./celebrate.ts";
 
 // the chart is a part of its own (the charts page loads the same one): the cards do not wait for it
 const BarChart = lazy(() => import("march/charts/bar.ts"), { pick: "BarChart", placeholder: "chart", height: "7rem" });
@@ -112,12 +113,27 @@ function ChartTile(props: { values: () => readonly number[] }) {
   </Tile>
 }
 
+/** The likes the tile counts up to, its stars, and how long (ms): once the whole tile is in view and its own entrance is over
+ * (ENTERED ms: the tile's reveal delay and duration), ease in-out, then a firework. */
+const LIKES = 32800, STARS = 5, LIKES_MS = 1500, ENTERED = 250 + 3 * 150 + 1100
+
 function ControlsTile(props: { onJoin: () => void }) {
   let $liked = false
-  let $likes = WEEK.reduce((a, b) => a + b, 0)
-  let $stars = 4
+  let $likes = 0
+  let $stars = 0
+  const count = (tile: Element) => onCleanup(inView(tile, { once: true, threshold: 1, rootMargin: "0px", enter: () => {
+    if (reducedMotion()) { $likes = LIKES; $stars = STARS; return }
+    // the stars fill from empty to five in the same time, each one smoothly (Rating fills the fraction of a star)
+    const fill = animateValue(0, STARS, { duration: LIKES_MS, delay: ENTERED, easing: "in-out", onUpdate: (v: number) => { $stars = v } })
+    const run = animateValue(0, LIKES, { duration: LIKES_MS, delay: ENTERED, easing: "in-out", onUpdate: (v: number) => { $likes = Math.round(v) + ($liked ? 1 : 0) } })
+    const t = setTimeout(() => {
+      const like = tile.querySelector<HTMLElement>(".m-like-count")?.closest<HTMLElement>("button")
+      if (like) celebrate(like, like.querySelector<HTMLElement>(".m-like-count"))
+    }, ENTERED + LIKES_MS)
+    onCleanup(() => { run.cancel(); fill.cancel(); clearTimeout(t) })
+  } }))
   return <Tile class="sc-btile-ctl" depth={0.8} order={3} title="Gerçek bileşenler">
-    <div class="sc-btile-ctl-row">
+    <div class="sc-btile-ctl-row" ref={count}>
       <Button variant="primary" icon={sparkles} on:click={(e: Event) => { heartBurst(e.currentTarget as HTMLElement, { radius: 46 }); props.onJoin() }}>Katıl</Button>
       <LikeButton liked={$liked} count={$likes} countFormat="full" label="Beğen" onToggle={(on: boolean) => { $liked = on; $likes += on ? 1 : -1 }} />
       <Rating bind:value={$stars} m:color="brand-gold" label="Puan" />
@@ -127,8 +143,16 @@ function ControlsTile(props: { onJoin: () => void }) {
 
 export default function Bench() {
   let $week: readonly number[] = WEEK
-  // "Katıl" stirs the chart: the bars glide to new heights
-  const stir = (): void => { $week = WEEK.map(() => Math.round(30 + Math.random() * 65)) }
+  // "Katıl" stirs the chart: the bars spring to new heights (each value glides from where it is, overshooting a little;
+  // the chart draws its bars as attributes, so the values themselves are what move)
+  let glide: { cancel(): void } | null = null
+  const stir = (): void => {
+    const from = [...$week], to = WEEK.map(() => Math.round(30 + Math.random() * 65))
+    glide?.cancel()
+    if (reducedMotion()) { $week = to; return }
+    glide = animateValue(0, 1, { easing: "spring-wobbly", onUpdate: (t: number) => { $week = from.map((v, i) => v + (to[i]! - v) * t) } })
+  }
+  onCleanup(() => glide?.cancel())
   return <div class="sc-bench" role="group" aria-label="Canlı tezgâh: denetimler bu sayfayı değiştirir"
     use:hoverParallax={{ depth: -26, layerTilt: 6, hold: true, glare: true, selector: ".sc-btile:not(.is-held)" }}>
     <ThemeTile />

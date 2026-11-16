@@ -4,7 +4,7 @@
 // with reduced motion). Every number comes from home-stats.gen.ts (tools/gen-home-stats.js) or from march-report.json
 // (this build's measured sizes); none is typed here.
 import "./sections.css";
-import { onCleanup } from "march";
+import { onCleanup, signal } from "march";
 import { inView, reducedMotion } from "march/motion";
 import { tilt } from "march/motion/text";
 import { Link } from "march/router";
@@ -14,6 +14,7 @@ import { Reveal, SectionHead, StatsBand, revealOnScroll } from "march/components
 import { search, sparkles } from "march/icons";
 import { BRAND_COLORS_ALL, type ColorToken } from "march/theme/colors.ts";
 import { HOME_STATS as S } from "../home-stats.gen.ts";
+import { celebrate } from "./celebrate.ts";
 import { pages } from "../app.tsx";
 import { withMeta, SECTIONS, sectionOf, type NavSection } from "../nav-meta.ts";
 
@@ -36,15 +37,28 @@ function Head(props: { kicker: string; title: string; lead?: string; color: Colo
 
 // ── counters ────────────────────────────────────────────────────────────────────────────────────────────────────
 
+/** How long the figures count, ms. */
+const COUNT_MS = 1500
+
 function Stats() {
   const items = [
     { value: S.components, label: "bileşen" }, { value: S.exports, label: "dışa aktarım" }, { value: S.icons.total, label: "ikon" },
     { value: S.animations.total, label: "animasyon" }, { value: S.managers, label: "yönetici" }, { value: S.tests, label: "test" },
     { value: S.dependencies, label: "bağımlılık" },
   ]
-  // each figure counts up from 0 when the band comes into view (StatsBand's Counter)
-  return <section class="sc-stats sc-card" aria-label="Rakamlarla MarchJS">
-    <StatsBand items={items} variant="plain" reveal={{ effect: "scale", stagger: 60 }} />
+  // the figures wait at 0 until the whole band is in view, then count up together in a second and a half (ease in-out);
+  // as each reaches its value, a firework of the brand colours goes off over it and a ghost of the number zooms out
+  const ready = signal(false)
+  const counted = items.map((it) => ({ ...it, value: () => (ready() ? it.value : 0) }))
+  const burst = (band: Element) => band.querySelectorAll<HTMLElement>(".m-stats-item").forEach((item, i) => {
+    setTimeout(() => celebrate(item, item.querySelector<HTMLElement>(".m-stat-tile-value")), i * 90)
+  })
+  const watch = (band: Element) => onCleanup(inView(band, { once: true, threshold: 1, rootMargin: "0px", enter: () => {
+    ready.set(true)
+    if (!reducedMotion()) { const t = setTimeout(() => burst(band), COUNT_MS); onCleanup(() => clearTimeout(t)) }
+  } }))
+  return <section class="sc-stats sc-card" aria-label="Rakamlarla MarchJS" ref={watch}>
+    <StatsBand items={counted} variant="plain" duration={COUNT_MS} easing="in-out" reveal={{ effect: "scale", stagger: 60 }} />
   </section>
 }
 

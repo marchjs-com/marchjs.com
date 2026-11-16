@@ -78,3 +78,7 @@
   .sc-home-foot { padding-inline: var(--m-space-4); }
 }
 @media (prefers-reduced-motion: reduce) { .sc-map-row, .sc-map-row .m-icon-tile { transition: none; } .sc-map-row:hover, .sc-map-row:hover .m-icon-tile { transform: none; } }
+/* a figure is the centre of its firework (the stats band) */
+.sc-stats .m-stats-item { position: relative; }
+/* the ghost of a number that reached its value (celebrate.ts): over it, growing from its centre */
+.sc-ghost { position: absolute; margin: 0; pointer-events: none; transform-origin: 50% 50%; z-index: 1; }
