@@ -51,22 +51,22 @@ function Springs() {
     const a = Math.random() * Math.PI * 2, r = 90 + Math.random() * 60
     back(Math.cos(a) * r, Math.sin(a) * r * 0.6)
   }
-  return <section class="sc-sec" aria-labelledby="sc-hm-spring-h">
-    <Head id="sc-hm-spring-h" kicker="Yay fiziği" color="brand-orange" title="Fırlat, geri yaylansın"
+  return <section class="sc-sec" aria-labelledby="sc-mx-spring-h">
+    <Head id="sc-mx-spring-h" kicker="Yay fiziği" color="brand-orange" title="Fırlat, geri yaylansın"
       lead="Gerçek yay fiziği: sertlik, sönüm, kütle. Kartı tut, sürükle, bırak; seçtiğin yayla yerine döner. Her geçiş aynı motordan geçer, genel hız ve duraklatma onu da durdurur." />
-    <Reveal class="sc-hm-spring" effect="up" stagger={100}>
-      <div class="sc-hm-spring-stage sc-card">
-        <div class="sc-hm-spring-home" aria-hidden="true" />
-        <div class={() => `sc-hm-spring-card${$held ? " is-held" : ""}`} ref={grab} style={{ translate: `${$x}px ${$y}px` }}
+    <Reveal class="sc-mx-spring" effect="up" stagger={100}>
+      <div class="sc-mx-spring-stage sc-card">
+        <div class="sc-mx-spring-home" aria-hidden="true" />
+        <div class={() => `sc-mx-spring-card${$held ? " is-held" : ""}`} ref={grab} style={{ translate: `${$x}px ${$y}px` }}
           role="img" aria-label="Sürüklenebilir kart">
           <Icon of={sparkles} size="xl" /><b>Beni sürükle</b><span>bırakınca yaylanır</span>
         </div>
       </div>
-      <div class="sc-hm-spring-side">
-        <div class="sc-hm-chips" role="group" aria-label="Yay">
+      <div class="sc-mx-spring-side">
+        <div class="sc-mx-chips" role="group" aria-label="Yay">
           {SPRINGS.map((s) => <Chip size="sm" selected={() => $spring === s.name} onClick={() => { $spring = s.name; fling() }}>{s.label}</Chip>)}
         </div>
-        <code class="sc-hm-code">{() => `animate(card, frames, { easing: "${$spring}" })`}</code>
+        <code class="sc-mx-code">{() => `animate(card, frames, { easing: "${$spring}" })`}</code>
         <Button variant="primary" icon={zap} on:click={fling}>Fırlat</Button>
       </div>
     </Reveal>
@@ -88,18 +88,18 @@ function Flip() {
   const drop = (): void => { if ($items.length > 1) { const k = Math.floor(Math.random() * $items.length); $items = $items.filter((_, i) => i !== k) } }
   // the list watches its own children: added ones pop in, removed ones fade where they were, the rest glide (FLIP)
   const watch = (el: Element) => onCleanup(animateList(el as HTMLElement, { enter: "pop", exit: "fade", easing: "spring", stagger: 40 }))
-  return <section class="sc-sec" aria-labelledby="sc-hm-flip-h">
-    <Head id="sc-hm-flip-h" kicker="FLIP" color="brand-blue" title="Liste değişir, her öğe kendi yolundan gider"
+  return <section class="sc-sec" aria-labelledby="sc-mx-flip-h">
+    <Head id="sc-mx-flip-h" kicker="FLIP" color="brand-blue" title="Liste değişir, her öğe kendi yolundan gider"
       lead="Karıştır, sırala, ekle, çıkar: yer değiştiren her kart eski yerinden yenisine süzülür, gelen belirir, giden yerinde söner. Tek satır: animateList." />
-    <Reveal class="sc-hm-flip" effect="up" stagger={100}>
-      <div class="sc-hm-flip-tools">
+    <Reveal class="sc-mx-flip" effect="up" stagger={100}>
+      <div class="sc-mx-flip-tools">
         <Button size="sm" variant="primary" on:click={shuffle}>Karıştır</Button>
         <Button size="sm" on:click={sort}>Sırala</Button>
         <Button size="sm" on:click={add}>Ekle</Button>
         <Button size="sm" variant="ghost" on:click={drop}>Çıkar</Button>
       </div>
-      <div class="sc-hm-flip-list" ref={watch}>
-        <For each={$items} key="id">{(it: () => Item) => <div class={`sc-hm-flip-item sc-card is-${it().tone + 1}`}><b>{it().name}</b></div>}</For>
+      <div class="sc-mx-flip-list" ref={watch}>
+        <For each={$items} key="id">{(it: () => Item) => <div class={`sc-mx-flip-item sc-card is-${it().tone + 1}`}><b>{it().name}</b></div>}</For>
       </div>
     </Reveal>
   </section>
@@ -135,12 +135,12 @@ function Loops() {
     queueMicrotask(() => play($at))
     onCleanup(() => run?.stop())
   }
-  return <section class="sc-sec" aria-labelledby="sc-hm-loop-h">
-    <Head id="sc-hm-loop-h" kicker="Döngü efektleri" color="brand-purple" title="Bazı kelimeler hiç durmaz"
+  return <section class="sc-sec" aria-labelledby="sc-mx-loop-h">
+    <Head id="sc-mx-loop-h" kicker="Döngü efektleri" color="brand-purple" title="Bazı kelimeler hiç durmaz"
       lead="Dalga, gökkuşağı, neon, parıltı, ışıma: harf harf ya da kelime kelime, sonsuz döngüde. Ekrandan çıkınca durur, geri gelince devam eder." />
-    <Reveal class="sc-hm-loop" effect="scale">
-      <div class="sc-hm-loop-stage sc-card"><span class="sc-hm-loop-word" ref={start}>{LOOP_TEXT}</span></div>
-      <div class="sc-hm-chips" role="group" aria-label="Döngü efekti">
+    <Reveal class="sc-mx-loop" effect="scale">
+      <div class="sc-mx-loop-stage sc-card"><span class="sc-mx-loop-word" ref={start}>{LOOP_TEXT}</span></div>
+      <div class="sc-mx-chips" role="group" aria-label="Döngü efekti">
         {LOOPS.map((l, i) => <Chip size="sm" selected={() => $at === i} onClick={() => play(i)}>{l.name}</Chip>)}
       </div>
     </Reveal>
@@ -156,17 +156,17 @@ const AURORA = ["var(--m-brand-orange, var(--m-cat-1))", "var(--m-brand-blue, va
 
 function Effects() {
   let $fx: "particles" | "aurora" | "noise" = "particles"
-  const title = () => <div class="sc-hm-fx-copy"><b class="sc-hm-fx-title">Sahne senin</b><span>Arka plan efektleri: tuval, CSS değişkenleri, CSP uyumlu</span></div>
-  return <section class="sc-sec" aria-labelledby="sc-hm-fx-h">
-    <Head id="sc-hm-fx-h" kicker="Efektler" color="brand-green" title="Başlığın arkasında bir dünya"
+  const title = () => <div class="sc-mx-fx-copy"><b class="sc-mx-fx-title">Sahne senin</b><span>Arka plan efektleri: tuval, CSS değişkenleri, CSP uyumlu</span></div>
+  return <section class="sc-sec" aria-labelledby="sc-mx-fx-h">
+    <Head id="sc-mx-fx-h" kicker="Efektler" color="brand-green" title="Başlığın arkasında bir dünya"
       lead="Fareye yaklaşan parçacıklar, akan kutup ışıkları, film greni: ayrı bir modül, yalnız kullanınca yüklenir; ekran dışında durur." />
-    <Reveal class="sc-hm-fx" effect="up" stagger={100}>
-      <div class="sc-hm-fx-stage">
+    <Reveal class="sc-mx-fx" effect="up" stagger={100}>
+      <div class="sc-mx-fx-stage">
         {() => ($fx === "particles" ? <><Particles count={70} links={120} speed={0.4} color="var(--m-accent, var(--m-primary))" interactive class="m-fx-fill" />{title()}</>
           : $fx === "aurora" ? <><Aurora colors={AURORA} />{title()}</>
-            : <Noise class="sc-hm-fx-grain">{title()}</Noise>)}
+            : <Noise class="sc-mx-fx-grain">{title()}</Noise>)}
       </div>
-      <div class="sc-hm-chips" role="group" aria-label="Efekt">
+      <div class="sc-mx-chips" role="group" aria-label="Efekt">
         {FX.map((f) => <Chip size="sm" selected={() => $fx === f.id} onClick={() => { $fx = f.id }}>{f.label}</Chip>)}
       </div>
     </Reveal>
@@ -211,25 +211,25 @@ function Pages() {
     running = [pIn, pOut]
     void pIn.finished.then(() => { a.classList.remove("is-leaving"); running.forEach((r) => r.cancel()); running = []; busy = false })
   }
-  return <section class="sc-sec" aria-labelledby="sc-hm-page-h">
-    <Head id="sc-hm-page-h" kicker="Sayfa geçişleri" color="brand-orange" title="Ekranlar arasında sinema"
+  return <section class="sc-sec" aria-labelledby="sc-mx-page-h">
+    <Head id="sc-mx-page-h" kicker="Sayfa geçişleri" color="brand-orange" title="Ekranlar arasında sinema"
       lead="Küp, deste, perde, panjur, yakınlaşma: her rota kendi geçişini seçer, geri gidince tersine oynar, sağdan sola dillerde aynalanır." />
-    <Reveal class="sc-hm-page" effect="up" stagger={100}>
-      <div class="sc-hm-page-app sc-card">
-        <div class="sc-hm-page-stage">
-          {SCREENS.map((s, i) => <div class={() => `sc-hm-page-pane is-${i + 1}${$tab === i ? " is-on" : ""}`} ref={(el: HTMLElement) => { panes[i] = el }}>
+    <Reveal class="sc-mx-page" effect="up" stagger={100}>
+      <div class="sc-mx-page-app sc-card">
+        <div class="sc-mx-page-stage">
+          {SCREENS.map((s, i) => <div class={() => `sc-mx-page-pane is-${i + 1}${$tab === i ? " is-on" : ""}`} ref={(el: HTMLElement) => { panes[i] = el }}>
             <Avatar name={s.title} size="lg" decorative />
             <b>{s.title}</b><span>{s.text}</span>
-            <div class="sc-hm-page-row"><Badge tone="info">{s.title}</Badge><Icon of={i === 1 ? heart : star} size="md" /></div>
+            <div class="sc-mx-page-row"><Badge tone="info">{s.title}</Badge><Icon of={i === 1 ? heart : star} size="md" /></div>
           </div>)}
         </div>
-        <nav class="sc-hm-page-tabs" aria-label="Ekranlar">
-          {SCREENS.map((s, i) => <button type="button" class={() => `sc-hm-page-tab${$tab === i ? " is-on" : ""}`} aria-current={() => ($tab === i ? "page" : null)} on:click={() => go(i)}>
+        <nav class="sc-mx-page-tabs" aria-label="Ekranlar">
+          {SCREENS.map((s, i) => <button type="button" class={() => `sc-mx-page-tab${$tab === i ? " is-on" : ""}`} aria-current={() => ($tab === i ? "page" : null)} on:click={() => go(i)}>
             <Icon of={s.icon} size="md" /><span>{s.title}</span>
           </button>)}
         </nav>
       </div>
-      <div class="sc-hm-chips" role="group" aria-label="Geçiş">
+      <div class="sc-mx-chips" role="group" aria-label="Geçiş">
         {VARIANTS.map((v, i) => <Chip size="sm" selected={() => $variant === i} onClick={() => { $variant = i; go(($tab + 1) % SCREENS.length) }}>{v.label}</Chip>)}
       </div>
     </Reveal>
