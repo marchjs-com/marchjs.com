@@ -107,6 +107,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "pagination", title: "Sayfalama", name: "Pagination", desc: "Kısaltmalı sayfa numaraları.", group: "Sayfa içi" },
     { slug: "pull-to-refresh", title: "Çekerek yenile", name: "PullToRefresh", desc: "Dokunmatikte aşağı çek, yenile.", group: "Sayfa içi" },
     { slug: "overflow-text", title: "Taşan metin", name: "OverflowText", desc: "OverflowText ve Marquee.", group: "Sayfa içi" },
+    { slug: "section-timeline", title: "Bölüm zaman çizelgesi", name: "SectionTimeline", desc: "Bölüm başına bir nokta, okunan renkli; Dock gibi büyür, basınca kayar, adresi izler.", group: "Sayfa içi" },
     { slug: "page-dots", title: "Sayfa noktaları", name: "PageDots", desc: "Sayfa başına bir nokta, etkin olan uzun ve renkli; tıklanır ya da yalnız konumu gösterir.", group: "Sayfa içi" },
     { slug: "period-nav", title: "Dönem gezinme", name: "PeriodNav", desc: "Önceki, bugün, sonraki; istenirse okların arasında dönemin adı.", group: "Sayfa içi" },
   ],

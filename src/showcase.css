@@ -495,3 +495,9 @@ button.sc-part:hover, button.sc-part:focus-visible, a.sc-part:hover, a.sc-part:f
 .sc-a6-rz { position: relative; display: grid; align-content: start; gap: var(--m-space-2); max-inline-size: 100%; padding: var(--m-space-3) var(--m-space-4); border: 1px solid var(--m-border); border-radius: var(--m-radius-2); background: var(--m-surface); }
 .sc-a6-rz > p { margin: 0; overflow: hidden; }
 .sc-top-crumbs > .m-lazy-slot { inline-size: 100%; }
+/* SectionTimeline stage: a box of sections that scrolls, the timeline following it */
+.sc-stl-box { flex: 1 1 18rem; min-inline-size: 0; block-size: 18rem; overflow: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: var(--m-space-3);
+  padding: var(--m-space-3); border: 1px solid var(--m-border); border-radius: var(--m-radius-3); background: var(--m-bg-subtle, var(--m-surface)); }
+.sc-stl-sec { flex: none; min-block-size: 9rem; padding: var(--m-space-4); border-radius: var(--m-radius-2); background: var(--m-surface); }
+.sc-stl-sec h3 { margin: 0 0 var(--m-space-2); font-size: var(--m-text-md); }
+.sc-stl-sec p { margin: 0; color: var(--m-muted); font-size: var(--m-text-sm); }

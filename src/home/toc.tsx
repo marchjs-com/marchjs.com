@@ -1,10 +1,8 @@
-// The home page's sections as addresses and a timeline. Every section has its own #name; as the page scrolls, the
-// section being read writes its name into the address bar (replaceState: no history entry per section). On a wide
-// screen a timeline rail stands at the side: a dot per section, the one being read lit, the ones behind it light; a press on a mark scrolls to that section (a section in a part not loaded yet is loaded on the way).
+// The home page's sections on a SectionTimeline (march/navigation): every section has its own #name, which the address
+// follows as the page scrolls; on a wide screen the dots stand at the side, magnify near the pointer and scroll to a
+// section when pressed (a section in a lazy part not loaded yet is reached through the part's slot).
 import "./toc.css";
-import { onCleanup, Portal, untrack } from "march";
-import { nextFrame, reducedMotion } from "march/motion";
-import { hash } from "march/router";
+import { SectionTimeline, type SectionTimelineItem } from "march/components/navigation/section-timeline";
 
 /** One section: the id of its heading, its address (#name), its timeline label, the lazy part it lives in (-1: none). */
 interface Item { head: string; slug: string; label: string; part: number }
@@ -64,155 +62,16 @@ export const ITEMS: readonly Item[] = [
   I("sc-start-h", "start", "Başla"),
 ]
 
-/** The section of an item, when it is on the page (its part loaded). */
-const sectionOf = (it: Item): HTMLElement | null => document.getElementById(it.head)?.closest("section") ?? null
+/** The heading's section. */
+const sectionOf = (head: string): Element | null => document.getElementById(head)?.closest("section") ?? null
 /** The slot of a lazy part (it holds the part's room until it arrives). */
-const slotOf = (part: number): Element | null => (part < 0 ? null : document.querySelectorAll(".sc-home-body > .m-lazy-slot")[part] ?? null)
-/** Where an item stands now: its section, or while its part is not loaded the part's slot (for the part's first item). */
-const placeOf = (it: Item, i: number): Element | null => sectionOf(it) ?? (ITEMS[i - 1]?.part !== it.part ? slotOf(it.part) : null)
-/** Room left above a section when it is scrolled to (the sticky top bar and a little air). */
-const TOP = 80
-/** The line a section must pass to count as being read: a third of the way down the screen. */
-const READ = 0.33
-const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
+const slotOf = (part: number): Element | null => document.querySelectorAll(".sc-home-body > .m-lazy-slot")[part] ?? null
+
+const SECTIONS: SectionTimelineItem[] = ITEMS.map((it) => ({
+  label: it.label, slug: it.slug, target: () => sectionOf(it.head),
+  placeholder: it.part < 0 ? undefined : () => slotOf(it.part),
+}))
 
 export function HomeToc() {
-  let $active = -1
-  let jumping = false
-  let alive = true
-  // the #name this page wrote last (replaceState does not tell the router)
-  let shown = untrack(hash)
-
-  /** The section being read: the last one whose top has passed the reading line. */
-  const measure = () => {
-    const line = innerHeight * READ
-    let at = -1
-    ITEMS.forEach((it, i) => { const el = placeOf(it, i); if (el && el.getBoundingClientRect().top <= line) at = i })
-    return at
-  }
-  /** Write the section's name into the address (no history entry); above the first section the address has none. */
-  const address = (i: number) => {
-    const want = i < 0 ? "" : `#${ITEMS[i]!.slug}`
-    if (shown === want) return
-    shown = want
-    window.history.replaceState(window.history.state, "", `${location.pathname}${location.search}${want}`)
-  }
-  let queued = false
-  const spy = () => {
-    if (queued || !alive) return
-    queued = true
-    nextFrame(() => {
-      queued = false
-      if (!alive || jumping) return
-      const i = measure()
-      if (i !== $active) { $active = i; address(i) }
-    })
-  }
-  addEventListener("scroll", spy, { passive: true })
-  addEventListener("resize", spy, { passive: true })
-
-  const top = (el: Element) => el.getBoundingClientRect().top + scrollY - TOP
-  /** Scroll to a section; a part not loaded yet is brought near (it loads as it comes into view), then the section. */
-  const jump = async (i: number, smooth = true) => {
-    const it = ITEMS[i]
-    if (!it) return
-    jumping = true
-    $active = i
-    address(i)
-    try {
-      for (let k = 0; k < 80 && alive && !sectionOf(it); k++) {
-        const slot = slotOf(it.part)
-        if (!slot) return
-        scrollTo({ top: top(slot), behavior: "instant" })
-        await wait(150)
-      }
-      const behavior = smooth && !reducedMotion() ? "smooth" : "instant"
-      // parts above may still arrive and push the section down: scroll again until it stays where it should be
-      for (let k = 0; k < 4 && alive; k++) {
-        const el = sectionOf(it)
-        if (!el) return
-        if (Math.abs(el.getBoundingClientRect().top - TOP) < 6) break
-        scrollTo({ top: top(el), behavior: k ? "instant" : behavior })
-        await wait(k ? 250 : 700)
-      }
-    } finally {
-      jumping = false
-      spy()
-    }
-  }
-
-  // an address that names a section (a shared link): go there once the page is drawn
-  const first = ITEMS.findIndex((it) => `#${it.slug}` === shown)
-  if (first >= 0) void wait(300).then(() => jump(first, false))
-  else spy()
-
-  onCleanup(() => { alive = false; removeEventListener("scroll", spy); removeEventListener("resize", spy) })
-
-  // the fisheye: near the pointer (or the focused mark) the marks grow apart and show their names, the nearest the
-  // largest; each item gets --k from 0 (far) to 1 (under the pointer) and --y, how far it moves to make room. Nothing
-  // here changes a size: the items move (translate), the dots and names scale, so a frame lays nothing out (a size
-  // change made this page lay out everything, several ms a frame). Distances are taken from where the marks stand
-  // unmoved, so the list does not chase its own growth. Drawn once per frame, only changed values are written; coming
-  // and going it swells and settles by one strength.
-  let list: HTMLElement | undefined
-  let base: number[] = []
-  const REACH = 130
-  const rest = () => {
-    if (!list) return []
-    const r = list.getBoundingClientRect(), n = ITEMS.length, step = r.height / n, mid = r.top + r.height / 2
-    return ITEMS.map((_, i) => mid + (i - (n - 1) / 2) * step)
-  }
-  let lens: number | null = null, at = 0, power = 0, drawing = false
-  const drawn: string[] = ITEMS.map(() => "0"), moved: string[] = ITEMS.map(() => "0")
-  /** Room a fully magnified mark takes beyond its step, in px. */
-  const GROW = 28
-  const draw = () => {
-    if (!list || !alive) { drawing = false; return }
-    const want = lens == null ? 0 : 1
-    power += (want - power) * (reducedMotion() ? 1 : 0.3)
-    if (Math.abs(want - power) < 0.01) power = want
-    const items = list.children, ks: number[] = []
-    let total = 0
-    for (let i = 0; i < items.length; i++) {
-      const d = Math.abs(at - (base[i] ?? 0))
-      const k = d >= REACH ? 0 : power * (1 + Math.cos((d / REACH) * Math.PI)) / 2
-      ks.push(k); total += k * GROW
-    }
-    // each mark moves by the room the ones above it took, the whole list growing evenly up and down
-    let above = 0
-    for (let i = 0; i < items.length; i++) {
-      const k = ks[i]!, el = items[i] as HTMLElement
-      const v = k < 0.005 ? "0" : k.toFixed(2), y = `${Math.round(above + (k * GROW) / 2 - total / 2)}px`
-      above += k * GROW
-      if (drawn[i] !== v) { drawn[i] = v; el.style.setProperty("--k", v) }
-      if (moved[i] !== y) { moved[i] = y; el.style.setProperty("--y", y) }
-    }
-    list.classList.toggle("is-lens", power > 0)
-    if (power === want) { drawing = false; if (!power) base = [] ; return }
-    nextFrame(draw)
-  }
-  const lensAt = (y: number | null) => {
-    lens = y
-    if (y != null) at = y
-    if (!drawing) { drawing = true; nextFrame(draw) }
-  }
-  const enter = () => { if (!base.length) base = rest() }
-  // in <body>: a section above may move or scale its content (transform), which would carry a fixed rail with it
-  return <Portal mount={document.body}><nav class="sc-toc" aria-label="Bölümler">
-    <div class="sc-toc-rail">
-    <ol class="sc-toc-list" ref={(el: HTMLElement) => { list = el }}
-      on:pointerenter={enter} on:pointermove={(e: PointerEvent) => { enter(); lensAt(e.clientY) }}
-      on:pointerleave={() => lensAt(null)}
-      on:focusin={(e: FocusEvent) => { const li = (e.target as Element).closest("li"); if (!li || !list) return; enter(); lensAt(base[[...list.children].indexOf(li)] ?? null) }}
-      on:focusout={() => lensAt(null)}>
-      {ITEMS.map((it, i) => <li class="sc-toc-item" class:is-on={() => $active === i} class:is-past={() => i < $active}>
-        <a class="sc-toc-mark" href={`#${it.slug}`} aria-current={() => ($active === i ? "location" : null)}
-          on:click={(e: MouseEvent) => { e.preventDefault(); void jump(i) }}>
-          <svg class="sc-toc-dot" viewBox="0 0 24 24" aria-hidden="true"><circle class="sc-toc-halo" cx="12" cy="12" r="11.5" /><circle cx="12" cy="12" r="11.5" /></svg>
-          <span class="sc-toc-label">{it.label}</span>
-        </a>
-      </li>)}
-    </ol>
-    </div>
-  </nav></Portal>
+  return <SectionTimeline class="sc-toc" items={SECTIONS} fixed hash intro />
 }

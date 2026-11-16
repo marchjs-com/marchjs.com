@@ -1,58 +1,7 @@
-/* The home page's section timeline (toc.tsx): a column of dots at the side of a wide screen, one per section; the one
-   being read in full colour, the ones behind it light, the ones ahead without colour. Near the pointer it magnifies like
-   a dock: the dots move apart and swell, their names open in capsules around them, larger the nearer they are (toc.tsx
-   sets --k, 0…1, and --y on each item). Hidden on narrow screens and touch (the address still follows the sections). */
-.sc-toc { display: none; }
+/* The home page's SectionTimeline (toc.tsx): only on a wide screen with a pointer (on narrow screens and touch the
+   address still follows the sections); the page's content leaves it room at the side. */
+.sc-toc.m-stl { display: none; }
 @media (min-width: 75rem) and (hover: hover) {
   .sc-home-body { padding-inline-end: max(var(--m-space-6), calc((100cqi - 74rem) / 2), 5.5rem); }
-  .sc-toc {
-    --sc-toc-c: var(--m-accent, var(--m-primary));
-    /* only the section being read is in full colour; the ones behind it light, the ones ahead without colour */
-    --sc-toc-past: color-mix(in srgb, var(--sc-toc-c) 38%, var(--m-surface, #fff));
-    --sc-toc-step: min(1.5vh, .9375rem);
-    /* a fixed box of its own size, closed to the page (contain: strict): the rail growing and shrinking under the pointer
-       lays out and paints only inside it; the box itself lets the pointer through, only the rail takes it */
-    display: flex; flex-direction: column; justify-content: center; align-items: flex-end;
-    position: fixed; inset-inline-end: 0; inset-block: 0; z-index: 5; inline-size: 19rem; padding-inline-end: var(--m-space-4); box-sizing: border-box;
-    contain: strict; pointer-events: none;
-  }
-  .sc-toc-rail { position: relative; inline-size: 1.5rem; pointer-events: auto; }
-  .sc-toc-list { position: relative; display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
-  /* each item keeps its step; the fisheye moves it (--y) and scales its dot and name (--k): no size changes, so a frame
-     of it lays nothing out */
-  .sc-toc-item { --k: 0; --y: 0px; --sc-toc-s: calc(.25 + var(--k) * .4167); display: flex; justify-content: flex-end; align-items: center;
-    block-size: var(--sc-toc-step); translate: 0 var(--y); }
-  .sc-toc-item.is-on { --sc-toc-s: calc(.4167 + var(--k) * .25); }
-  .sc-toc-mark { position: relative; flex: none; display: flex; align-items: center; justify-content: flex-end; inline-size: 1.5rem; block-size: 100%; min-block-size: .75rem; color: inherit; text-decoration: none; border-radius: var(--m-radius-full); }
-  /* while magnified each mark reaches over its name and the gaps beside it: the pointer moving across names or between
-     marks stays on the rail, the lens does not drop */
-  .sc-toc-list.is-lens .sc-toc-mark { inline-size: 16rem; }
-  /* and over the room the magnified marks move apart by (they move, their boxes do not grow): a fixed catch area, so
-     the gap between two names is still the rail */
-  .sc-toc-list.is-lens .sc-toc-mark::before { content: ""; position: absolute; inset-inline: 0; inset-block-start: 50%; block-size: 2.75rem; translate: 0 -50%; }
-  .sc-toc-mark:focus-visible { outline: none; }
-  /* the dot: a circle scaled from 6px to 16px (10px to 16px for the section being read); its stroke does not scale, so
-     the ring is 1px at every size */
-  .sc-toc-dot { position: relative; z-index: 1; inline-size: 1.5rem; block-size: 1.5rem; overflow: visible; scale: var(--sc-toc-s); }
-  .sc-toc-dot circle { fill: var(--m-surface, #fff); stroke: color-mix(in srgb, var(--m-muted) 70%, transparent); stroke-width: 1px; vector-effect: non-scaling-stroke;
-    transition: fill var(--m-dur-fast, .15s), stroke var(--m-dur-fast, .15s); }
-  .sc-toc-dot .sc-toc-halo { stroke: transparent; stroke-width: 9px; }
-  .sc-toc-item.is-past .sc-toc-dot circle { fill: var(--sc-toc-past); stroke: var(--sc-toc-past); }
-  .sc-toc-item.is-on .sc-toc-dot circle { fill: var(--sc-toc-c); stroke: var(--sc-toc-c); }
-  .sc-toc-item.is-on .sc-toc-dot .sc-toc-halo, .sc-toc-mark:focus-visible .sc-toc-halo { stroke: color-mix(in srgb, var(--sc-toc-c) 22%, transparent); }
-  /* the names: a capsule that wraps its dot (the dot sits in its end), scaled about the dot's centre; shown only near the
-     pointer, larger and clearer the nearer it is */
-  .sc-toc-label { --sc-toc-pad: .25rem; position: absolute; inset-inline-end: calc(-1 * var(--sc-toc-pad)); inset-block-start: 50%; white-space: nowrap;
-    display: flex; align-items: center; box-sizing: border-box; min-block-size: calc(1.5rem + var(--sc-toc-pad) * 2);
-    padding-block: .125rem; padding-inline: .75rem calc(1.5rem + var(--sc-toc-pad) * 2);
-    border-radius: var(--m-radius-full); line-height: 1.3; font-size: .9375rem; font-weight: var(--m-weight-medium, 500);
-    color: var(--m-text); background: color-mix(in srgb, var(--m-surface-raised, var(--m-surface)) 94%, transparent);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--m-border) 70%, transparent), 0 2px 8px rgb(0 0 0 / .08);
-    translate: 0 -50%; transform-origin: calc(100% - var(--sc-toc-pad) - .75rem) 50%; scale: calc(.72 + var(--k) * .28);
-    opacity: var(--k); pointer-events: none; }
-  .sc-toc-mark:hover .sc-toc-label { color: var(--sc-toc-c); }
-  .sc-toc-list:not(.is-lens) .sc-toc-label { opacity: 0; }
-  /* the section being read: its name like the others (only near the pointer, not coloured), a little bolder */
-  .sc-toc-item.is-on .sc-toc-label { font-weight: var(--m-weight-bold, 700); }
+  .sc-toc.m-stl { display: flex; }
 }
-@media (prefers-reduced-motion: reduce) { .sc-toc-fill, .sc-toc-dot circle { transition: none; } }
