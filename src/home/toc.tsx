@@ -150,8 +150,11 @@ export function HomeToc() {
   onCleanup(() => { alive = false; removeEventListener("scroll", spy); removeEventListener("resize", spy) })
 
   // the fisheye: near the pointer (or the focused mark) the marks grow apart and show their names, the nearest the
-  // largest; each item gets --k from 0 (far) to 1 (under the pointer). Distances are taken from where the marks stood
-  // before they grew, so the list does not chase its own growth.
+  // largest; each item gets --k from 0 (far) to 1 (under the pointer) and --y, how far it moves to make room. Nothing
+  // here changes a size: the items move (translate), the dots and names scale, so a frame lays nothing out (a size
+  // change made this page lay out everything, several ms a frame). Distances are taken from where the marks stand
+  // unmoved, so the list does not chase its own growth. Drawn once per frame, only changed values are written; coming
+  // and going it swells and settles by one strength.
   let list: HTMLElement | undefined
   let base: number[] = []
   const REACH = 130
@@ -160,35 +163,59 @@ export function HomeToc() {
     const r = list.getBoundingClientRect(), n = ITEMS.length, step = r.height / n, mid = r.top + r.height / 2
     return ITEMS.map((_, i) => mid + (i - (n - 1) / 2) * step)
   }
-  let lens: number | null = null, lensQueued = false
-  const paint = () => {
-    lensQueued = false
-    if (!list) return
-    const items = list.children
+  let lens: number | null = null, at = 0, power = 0, drawing = false
+  const drawn: string[] = ITEMS.map(() => "0"), moved: string[] = ITEMS.map(() => "0")
+  /** Room a fully magnified mark takes beyond its step, in px. */
+  const GROW = 28
+  const draw = () => {
+    if (!list || !alive) { drawing = false; return }
+    const want = lens == null ? 0 : 1
+    power += (want - power) * (reducedMotion() ? 1 : 0.3)
+    if (Math.abs(want - power) < 0.01) power = want
+    const items = list.children, ks: number[] = []
+    let total = 0
     for (let i = 0; i < items.length; i++) {
-      const d = lens == null ? REACH : Math.abs(lens - (base[i] ?? 0))
-      const k = d >= REACH ? 0 : (1 + Math.cos((d / REACH) * Math.PI)) / 2
-      ;(items[i] as HTMLElement).style.setProperty("--k", k ? k.toFixed(3) : "0")
+      const d = Math.abs(at - (base[i] ?? 0))
+      const k = d >= REACH ? 0 : power * (1 + Math.cos((d / REACH) * Math.PI)) / 2
+      ks.push(k); total += k * GROW
     }
+    // each mark moves by the room the ones above it took, the whole list growing evenly up and down
+    let above = 0
+    for (let i = 0; i < items.length; i++) {
+      const k = ks[i]!, el = items[i] as HTMLElement
+      const v = k < 0.005 ? "0" : k.toFixed(2), y = `${Math.round(above + (k * GROW) / 2 - total / 2)}px`
+      above += k * GROW
+      if (drawn[i] !== v) { drawn[i] = v; el.style.setProperty("--k", v) }
+      if (moved[i] !== y) { moved[i] = y; el.style.setProperty("--y", y) }
+    }
+    list.classList.toggle("is-lens", power > 0)
+    if (power === want) { drawing = false; if (!power) base = [] ; return }
+    nextFrame(draw)
   }
-  const lensAt = (y: number | null) => { lens = y; list?.classList.toggle("is-lens", y != null); if (!lensQueued) { lensQueued = true; nextFrame(paint) } }
-  const enter = () => { if (lens == null) base = rest() }
+  const lensAt = (y: number | null) => {
+    lens = y
+    if (y != null) at = y
+    if (!drawing) { drawing = true; nextFrame(draw) }
+  }
+  const enter = () => { if (!base.length) base = rest() }
   const fill = () => ($active < 0 ? 0 : $active / (ITEMS.length - 1))
   // in <body>: a section above may move or scale its content (transform), which would carry a fixed rail with it
   return <Portal mount={document.body}><nav class="sc-toc" aria-label="Bölümler">
+    <div class="sc-toc-rail">
     <span class="sc-toc-line" aria-hidden="true"><span class="sc-toc-fill" style={() => ({ "--sc-toc-fill": String(fill()) })} /></span>
     <ol class="sc-toc-list" ref={(el: HTMLElement) => { list = el }}
-      on:pointerenter={enter} on:pointermove={(e: PointerEvent) => { if (!base.length) enter(); lensAt(e.clientY) }}
-      on:pointerleave={() => { lensAt(null); base = [] }}
+      on:pointerenter={enter} on:pointermove={(e: PointerEvent) => { enter(); lensAt(e.clientY) }}
+      on:pointerleave={() => lensAt(null)}
       on:focusin={(e: FocusEvent) => { const li = (e.target as Element).closest("li"); if (!li || !list) return; enter(); lensAt(base[[...list.children].indexOf(li)] ?? null) }}
-      on:focusout={() => { lensAt(null); base = [] }}>
+      on:focusout={() => lensAt(null)}>
       {ITEMS.map((it, i) => <li class="sc-toc-item" class:is-on={() => $active === i} class:is-past={() => i < $active}>
         <a class="sc-toc-mark" href={`#${it.slug}`} aria-current={() => ($active === i ? "location" : null)}
           on:click={(e: MouseEvent) => { e.preventDefault(); void jump(i) }}>
-          <span class="sc-toc-dot" aria-hidden="true" />
+          <svg class="sc-toc-dot" viewBox="0 0 24 24" aria-hidden="true"><circle class="sc-toc-halo" cx="12" cy="12" r="11.5" /><circle cx="12" cy="12" r="11.5" /></svg>
           <span class="sc-toc-label">{it.label}</span>
         </a>
       </li>)}
     </ol>
+    </div>
   </nav></Portal>
 }
