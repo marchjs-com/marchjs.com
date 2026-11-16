@@ -20,15 +20,18 @@
   .sc-toc-list { position: relative; display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
   /* each item keeps its step; the fisheye moves it (--y) and scales its dot and name (--k): no size changes, so a frame
      of it lays nothing out */
-  .sc-toc-item { --k: 0; --y: 0px; --sc-toc-s: calc(.25 + var(--k) * .6667); display: flex; justify-content: flex-end; align-items: center;
+  .sc-toc-item { --k: 0; --y: 0px; --sc-toc-s: calc(.25 + var(--k) * .4167); display: flex; justify-content: flex-end; align-items: center;
     block-size: var(--sc-toc-step); translate: 0 var(--y); }
-  .sc-toc-item.is-on { --sc-toc-s: calc(.4167 + var(--k) * .5833); }
+  .sc-toc-item.is-on { --sc-toc-s: calc(.4167 + var(--k) * .25); }
   .sc-toc-mark { position: relative; flex: none; display: flex; align-items: center; justify-content: flex-end; inline-size: 1.5rem; block-size: 100%; min-block-size: .75rem; color: inherit; text-decoration: none; border-radius: var(--m-radius-full); }
   /* while magnified each mark reaches over its name and the gaps beside it: the pointer moving across names or between
      marks stays on the rail, the lens does not drop */
   .sc-toc-list.is-lens .sc-toc-mark { inline-size: 16rem; }
+  /* and over the room the magnified marks move apart by (they move, their boxes do not grow): a fixed catch area, so
+     the gap between two names is still the rail */
+  .sc-toc-list.is-lens .sc-toc-mark::before { content: ""; position: absolute; inset-inline: 0; inset-block-start: 50%; block-size: 2.75rem; translate: 0 -50%; }
   .sc-toc-mark:focus-visible { outline: none; }
-  /* the dot: a circle scaled from 6px to 22px (10px to 24px for the section being read); its stroke does not scale, so
+  /* the dot: a circle scaled from 6px to 16px (10px to 16px for the section being read); its stroke does not scale, so
      the ring is 1px at every size */
   .sc-toc-dot { position: relative; z-index: 1; inline-size: 1.5rem; block-size: 1.5rem; overflow: visible; scale: var(--sc-toc-s); }
   .sc-toc-dot circle { fill: var(--m-surface, #fff); stroke: color-mix(in srgb, var(--m-muted) 70%, transparent); stroke-width: 1px; vector-effect: non-scaling-stroke;
