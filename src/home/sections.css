@@ -1,7 +1,9 @@
 /* Home sections below the hero (home/sections.tsx): counters, the map, speed and size, the first example, the footer.
    Theme tokens and logical properties only. Widths follow the page's room (the sc-home container of home.css). */
 .sc-home-rest { display: flex; flex-direction: column; }
-.sc-home-body { display: flex; flex-direction: column; gap: clamp(3rem, 6cqi, 4.5rem); box-sizing: border-box; inline-size: 100%; padding: clamp(3rem, 6cqi, 4.5rem) max(var(--m-space-6), calc((100cqi - 74rem) / 2)) var(--m-space-7); }
+.sc-home-body { --sc-sec-gap: clamp(3rem, 6cqi, 4.5rem); display: flex; flex-direction: column; gap: var(--sc-sec-gap); box-sizing: border-box; inline-size: 100%; padding: clamp(3rem, 6cqi, 4.5rem) max(var(--m-space-6), calc((100cqi - 74rem) / 2)) var(--m-space-7); }
+/* a lazy part brings several sections at once: they keep the same space between them as the others */
+.sc-home-body > .m-lazy-slot { display: flex; flex-direction: column; gap: var(--sc-sec-gap); }
 
 /* counters: one card that overlaps the hero's lower edge; the figures count when it scrolls into view (StatsBand) */
 .sc-stats { position: relative; z-index: 2; box-sizing: border-box; margin-block-start: -3.25rem; margin-inline: max(var(--m-space-6), calc((100cqi - 74rem) / 2)); overflow: hidden;

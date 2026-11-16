@@ -2,7 +2,7 @@
 // line by line into a read-only terminal.
 import "./more.css";
 import { onCleanup } from "march";
-import { inView, reducedMotion } from "march/motion";
+import { inView, onFrame, reducedMotion } from "march/motion";
 import { LineChart, BarChart } from "march/charts";
 import { Terminal, type TerminalApi } from "march/components/composite/terminal";
 import { Reveal } from "march/components/landing/index.ts";
@@ -22,17 +22,34 @@ const start = (): { t: number; visits: number; sales: number }[] => {
 const DAYS = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"]
 const week = () => DAYS.map((day) => ({ day, value: Math.round(20 + Math.random() * 75) }))
 
+type Point = { t: number; visits: number; sales: number }
+const lerp = (a: Point, b: Point, k: number): Point => ({ t: a.t + (b.t - a.t) * k, visits: a.visits + (b.visits - a.visits) * k, sales: a.sales + (b.sales - a.sales) * k })
+
 function Charts() {
-  let $points = start()
+  // the line flows: every frame the window slides on by a fraction of a step (the first point eases out of the left
+  // edge, the newest one grows towards the next value on the right), so it never jumps a whole step
+  let buf: Point[] = start()
+  const last0 = buf[buf.length - 1]!
+  buf.push({ t: last0.t + 1, visits: next(last0.visits), sales: next(last0.sales) * 0.7 })
+  let $points = buf.slice(0, POINTS)
   let $week = week()
-  let tick = 0
+  let phase = 0, tick = 0
+  const draw = (): void => {
+    const n = buf.length - 1
+    $points = [lerp(buf[0]!, buf[1]!, phase), ...buf.slice(1, n), lerp(buf[n - 1]!, buf[n]!, phase)]
+  }
   const feed = (box: Element) => {
     let stop: (() => void) | undefined
     const off = inView(box, { once: false, rootMargin: "0px", threshold: 0.3,
-      enter: () => { if (!reducedMotion()) stop ??= every(FEED_MS, () => {
-        const last = $points[$points.length - 1]!
-        $points = [...$points.slice(1), { t: last.t + 1, visits: next(last.visits), sales: next(last.sales) * 0.7 }]
-        if (++tick % 4 === 0) $week = week()
+      enter: () => { if (!reducedMotion()) stop ??= onFrame((_t: number, dt: number) => {
+        phase += Math.min(dt, 100) / FEED_MS
+        while (phase >= 1) {
+          phase -= 1
+          const last = buf[buf.length - 1]!
+          buf = [...buf.slice(1), { t: last.t + 1, visits: next(last.visits), sales: next(last.sales) * 0.7 }]
+          if (++tick % 4 === 0) $week = week()
+        }
+        draw()
       }) },
       leave: () => { stop?.(); stop = undefined } })
     onCleanup(() => { off(); stop?.() })
