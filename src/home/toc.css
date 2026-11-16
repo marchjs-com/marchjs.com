@@ -1,0 +1,36 @@
+/* The home page's section timeline (toc.tsx): a thin rail at the side of a wide screen, a mark per section, the line
+   filled up to the section being read, its name beside it; a mark's name shows on hover and focus. Hidden on narrow
+   screens and touch (the address still follows the sections there). */
+.sc-toc { display: none; }
+@media (min-width: 75rem) and (hover: hover) {
+  .sc-home-body { padding-inline-end: max(var(--m-space-6), calc((100cqi - 74rem) / 2), 5.5rem); }
+  .sc-toc {
+    --sc-toc-c: var(--m-accent, var(--m-primary));
+    display: block; position: fixed; inset-inline-end: var(--m-space-4); inset-block-start: 50%; translate: 0 -50%; z-index: 5;
+    block-size: min(78vh, 56rem); inline-size: 1.5rem;
+  }
+  .sc-toc-line { position: absolute; inset-block: .5rem; inset-inline-end: calc(.75rem - 1px); inline-size: 2px; border-radius: 2px;
+    background: color-mix(in srgb, var(--m-border) 80%, transparent); overflow: hidden; }
+  .sc-toc-fill { position: absolute; inset: 0; background: var(--sc-toc-c); transform-origin: top; scale: 1 var(--sc-toc-fill, 0);
+    transition: scale var(--m-dur-slow, .4s) var(--m-ease-out, ease-out); }
+  .sc-toc-list { position: relative; display: flex; flex-direction: column; justify-content: space-between; block-size: 100%; margin: 0; padding: 0; list-style: none; }
+  .sc-toc-item { display: flex; justify-content: flex-end; }
+  .sc-toc-mark { position: relative; display: grid; place-items: center; inline-size: 1.5rem; block-size: .875rem; color: inherit; text-decoration: none; border-radius: var(--m-radius-full); }
+  .sc-toc-mark:focus-visible { outline: 2px solid var(--sc-toc-c); outline-offset: 1px; }
+  .sc-toc-dot { inline-size: .375rem; block-size: .375rem; border-radius: var(--m-radius-full); background: var(--m-surface, #fff);
+    box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--m-muted) 70%, transparent);
+    transition: scale var(--m-dur-fast, .15s) var(--m-ease-out, ease-out), background var(--m-dur-fast, .15s), box-shadow var(--m-dur-fast, .15s); }
+  .sc-toc-item.is-past .sc-toc-dot { background: var(--sc-toc-c); box-shadow: 0 0 0 1.5px var(--sc-toc-c); }
+  .sc-toc-item.is-on .sc-toc-dot { scale: 1.9; background: var(--m-surface, #fff); box-shadow: 0 0 0 1.5px var(--sc-toc-c), 0 0 0 4px color-mix(in srgb, var(--sc-toc-c) 22%, transparent); }
+  .sc-toc-mark:hover .sc-toc-dot { scale: 1.6; }
+  /* the name: beside the mark, for the section being read and the mark under the pointer or focus */
+  .sc-toc-label { position: absolute; inset-inline-end: calc(100% + .375rem); inset-block-start: 50%; translate: .375rem -50%; white-space: nowrap;
+    padding: .1875rem .625rem; border-radius: var(--m-radius-full); font-size: var(--m-text-xs); font-weight: var(--m-weight-medium, 500); line-height: 1.4;
+    color: var(--m-text); background: var(--m-surface-raised, var(--m-surface)); box-shadow: var(--m-shadow-2, 0 2px 8px rgb(0 0 0 / .12));
+    opacity: 0; pointer-events: none; transition: opacity var(--m-dur-fast, .15s), translate var(--m-dur-fast, .15s) var(--m-ease-out, ease-out); }
+  .sc-toc-item.is-on .sc-toc-label { color: var(--sc-toc-c); }
+  .sc-toc-item.is-on .sc-toc-label, .sc-toc-mark:hover .sc-toc-label, .sc-toc-mark:focus-visible .sc-toc-label { opacity: 1; translate: 0 -50%; }
+  /* pointing at another mark: its name wins, the reading one steps back */
+  .sc-toc-list:hover .sc-toc-item.is-on .sc-toc-mark:not(:hover) .sc-toc-label { opacity: .35; }
+}
+@media (prefers-reduced-motion: reduce) { .sc-toc-fill, .sc-toc-dot, .sc-toc-label { transition: none; } }

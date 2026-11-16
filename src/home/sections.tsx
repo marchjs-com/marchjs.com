@@ -12,6 +12,7 @@ import { Button, Card, CodeView, IconTile, Kbd, ListRow, MadeWithMarch, StatTile
 import { Reveal, StatsBand, Counter, revealOnScroll } from "march/components/landing/index.ts";
 import { Head } from "./head.tsx";
 import { Features } from "./features.tsx";
+import { HomeToc } from "./toc.tsx";
 import { lazy } from "march/lazy";
 
 // the further sections, each file a lazy part loaded as it comes near (the home page's first chunk stays small)
@@ -199,6 +200,7 @@ export default function HomeSections() {
       <Start />
       <Cta />
     </div>
+    <HomeToc />
     <footer class="sc-home-foot">
       <MadeWithMarch variant="badge" />
       <span class="sc-home-foot-links">
