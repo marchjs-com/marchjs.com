@@ -9,9 +9,18 @@ import { inView, reducedMotion } from "march/motion";
 import { Link } from "march/router";
 import { appUrl } from "march/base";
 import { Button, Card, CodeView, IconTile, Kbd, ListRow, MadeWithMarch, StatTile, heartBurst, openPalette } from "march/ui";
-import { Reveal, StatsBand, revealOnScroll } from "march/components/landing/index.ts";
+import { Reveal, StatsBand, Counter, revealOnScroll } from "march/components/landing/index.ts";
 import { Head } from "./head.tsx";
 import { Features } from "./features.tsx";
+import { lazy } from "march/lazy";
+
+// the further sections, each file a lazy part loaded as it comes near (the home page's first chunk stays small)
+const Ai = lazy(() => import("./more/ai.tsx"), { when: "visible", placeholder: "none", height: "36rem" })
+const MoreUi = lazy(() => import("./more/ui.tsx"), { when: "visible", placeholder: "none", height: "60rem" })
+const Design = lazy(() => import("./more/design.tsx"), { when: "visible", placeholder: "none", height: "48rem" })
+const MoreLive = lazy(() => import("./more/live.tsx"), { when: "visible", placeholder: "none", height: "40rem" })
+const MorePeople = lazy(() => import("./more/people.tsx"), { when: "visible", placeholder: "none", height: "40rem" })
+const Cta = lazy(() => import("./more/cta.tsx"), { when: "visible", placeholder: "none", height: "24rem" })
 import { search, sparkles } from "march/icons";
 import { BRAND_COLORS_ALL, type ColorToken } from "march/theme/colors.ts";
 import { HOME_STATS as S } from "../home-stats.gen.ts";
@@ -113,15 +122,18 @@ function WorldMap() {
 function Fast(props: { report: () => Report | null }) {
   // measured sizes of this build; no line when the build wrote none (never "0 KB")
   const measured = (): string | null => { const r = props.report(); return r?.boot?.js ? `Bu derlemede ölçülen açılış: ${kb(r.boot.js)} KB (gzip).` : null }
-  const cards: Array<{ value: string; color: ColorToken; label: string; text: string; more?: () => string | null }> = [
-    { value: `${S.budget.boot / 1024} KB`, color: "brand-orange", label: "Açılış bütçesi", text: "Vitrinin tamamı bu bütçeyle açılır; yalnız kullandığın bileşen derlenir.", more: measured },
-    { value: `${S.budget.route / 1024} KB`, color: "brand-blue", label: "Sayfa bütçesi", text: "Hiçbir sayfa bundan büyük açılamaz; sayfalar ve ağır özellikler tembel gelir." },
-    { value: `${S.dependencies}`, color: "brand-green", label: "Bağımlılık", text: "Çalışma zamanında başka paket yok. Sanal DOM yok, yapılandırma yok." },
+  const cards: Array<{ value: number; unit?: string; color: ColorToken; label: string; text: string; more?: () => string | null }> = [
+    { value: S.budget.boot / 1024, unit: " KB", color: "brand-orange", label: "Açılış bütçesi", text: "Vitrinin tamamı bu bütçeyle açılır; yalnız kullandığın bileşen derlenir.", more: measured },
+    { value: S.budget.route / 1024, unit: " KB", color: "brand-blue", label: "Sayfa bütçesi", text: "Hiçbir sayfa bundan büyük açılamaz; sayfalar ve ağır özellikler tembel gelir." },
+    { value: S.dependencies, color: "brand-green", label: "Bağımlılık", text: "Çalışma zamanında başka paket yok. Sanal DOM yok, yapılandırma yok." },
   ]
+  // small is the point: each figure counts down to its value from far above (six times as much; dependencies from a
+  // couple dozen) when the cards come into view
+  const high = (v: number): number => Math.max(v * 6, 24)
   return <section class="sc-sec" aria-labelledby="sc-fast-h">
     <Head id="sc-fast-h" kicker="Hız ve boyut" color="brand-blue" title="Küçük açılır, büyüdükçe yavaşlamaz" />
     <Reveal class="sc-fast" effect="up" distance={56} stagger={110}>
-      {cards.map((c) => <StatTile class="sc-fast-card sc-card" variant="card" size="xl" align="start" m:color={c.color} value={c.value} label={c.label}
+      {cards.map((c) => <StatTile class="sc-fast-card sc-card" variant="card" size="xl" align="start" m:color={c.color} value={<Counter from={high(c.value)} value={c.value} suffix={c.unit} duration={COUNT_MS} easing="in-out" />} label={c.label}
         hint={<>{c.text}{() => { const m = c.more?.(); return m ? <span class="sc-fast-more">{m}</span> : null }}</>} />)}
     </Reveal>
     <Link href="/speed" class="sc-fast-link">Canlı ağ paneli</Link>
@@ -165,9 +177,15 @@ export default function HomeSections() {
     <Stats />
     <div class="sc-home-body">
       <Features />
+      <Ai />
+      <MoreUi />
+      <Design />
+      <MoreLive />
+      <MorePeople />
       <WorldMap />
       <Fast report={report} />
       <Start />
+      <Cta />
     </div>
     <footer class="sc-home-foot">
       <MadeWithMarch variant="badge" />

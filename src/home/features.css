@@ -82,8 +82,8 @@
 
 /* ── secure: the policy header, what it means */
 .sc-safe { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--m-space-4); align-items: stretch; }
-.sc-safe-code { display: flex; border-radius: var(--m-radius-4); overflow: hidden; }
-.sc-safe-code .m-code-view { flex: 1; }
+.sc-safe-code { display: flex; min-inline-size: 0; }
+.sc-safe-code > .m-code { flex: 1; min-inline-size: 0; border-radius: var(--m-radius-4); }
 .sc-safe-list .m-svg { color: var(--sc-c3); }
 
 @media (max-width: 1100px) { .sc-kit-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }

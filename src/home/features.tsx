@@ -4,7 +4,8 @@
 // by letter). Real components throughout; the numbers come from home-stats.gen.ts.
 import "./features.css";
 import { onCleanup } from "march";
-import { inView, onFrame, reducedMotion } from "march/motion";
+import { inView, reducedMotion } from "march/motion";
+import { every } from "./clock.ts";
 import { Link } from "march/router";
 import { Avatar, AvatarGroup, Badge, Button, Chip, CodeView, LikeButton, Progress, Rating, Slider, Toggle } from "march/ui";
 import { bounceIn, elastic, glitch, inkBleed, jelly, pixelate, splitFlap, swing } from "march/motion/text";
@@ -14,11 +15,6 @@ import { Icon, arrowRight, check, eye, globe, lock, shieldCheck, sparkles } from
 import { HOME_STATS as S } from "../home-stats.gen.ts";
 import { Head } from "./head.tsx";
 
-/** Run `fn` every `ms` on the motion clock (it follows the global speed and pause; a hidden tab does not pile up). */
-function every(ms: number, fn: () => void): () => void {
-  let waited = 0
-  return onFrame((_t: number, dt: number) => { waited += Math.min(dt, 100); if (waited >= ms) { waited = 0; fn() } })
-}
 
 // ── signals ─────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -126,7 +122,7 @@ function Package() {
         <Progress value={$volume} label="Ses düzeyi" />
       </div>
       <div class="sc-kit-tile sc-card"><span class="sc-kit-cap">Toggle</span>
-        <Toggle bind:checked={$notify}>Bildirimler</Toggle>
+        <Toggle bind:value={$notify}>Bildirimler</Toggle>
         <span class="sc-kit-note">{() => ($notify ? "Bildirimler açık" : "Sessiz")}</span>
       </div>
       <div class="sc-kit-tile sc-card"><span class="sc-kit-cap">Rating · LikeButton</span>
@@ -332,7 +328,7 @@ function Secure() {
     <Head id="sc-safe-h" kicker="Güvenlik" color="brand-green" title="Katı CSP ile ilk günden"
       lead="Sonradan yamanmaz: her bileşen en sıkı içerik güvenliği politikası altında yazılır ve test edilir." />
     <Reveal class="sc-safe" effect="up" stagger={110}>
-      <div class="sc-safe-code sc-card"><CodeView code={CSP} lang="sh" label="Güvenlik başlığı" /></div>
+      <div class="sc-safe-code"><CodeView code={CSP} lang="sh" label="Güvenlik başlığı" /></div>
       <ul class="sc-safe-list">
         {SAFE.map((x) => <li class="sc-card"><Icon of={x.icon as never} size="lg" /><span>{x.text}</span></li>)}
       </ul>
