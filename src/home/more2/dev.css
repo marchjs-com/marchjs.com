@@ -1,0 +1,45 @@
+/* The home page's developer sections (home/more2/dev.tsx): the language, the CLI, size, extensions, embedding. */
+
+/* ── the language: what you write beside what the compiler writes */
+.sc-dv-tabs { display: flex; flex-wrap: wrap; gap: var(--m-space-1); }
+.sc-dv-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: var(--m-space-4); align-items: start; }
+.sc-dv-side { display: grid; gap: var(--m-space-2); min-inline-size: 0; }
+.sc-dv-cap { font-size: var(--m-text-xs); font-weight: var(--m-weight-bold); letter-spacing: .1em; text-transform: uppercase; color: var(--m-muted); }
+
+/* ── the CLI: the terminal on a soft glow */
+.sc-dv-term { border-radius: var(--m-radius-4); overflow: hidden; box-shadow: var(--m-shadow-3); }
+
+/* ── size: one bar per budget, growing when the card comes into view */
+.sc-dv-bars { display: grid; gap: var(--m-space-4); padding: var(--m-space-5); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); background: var(--m-surface); }
+.sc-dv-bar { display: grid; gap: var(--m-space-2); }
+.sc-dv-bar-top { display: flex; align-items: center; justify-content: space-between; gap: var(--m-space-2); }
+.sc-dv-bar-top b { font: 800 1.125rem / 1.1 var(--m-font-display); }
+.sc-dv-bar-track { block-size: .875rem; border-radius: var(--m-radius-full); background: var(--m-bg-subtle); overflow: hidden; }
+.sc-dv-bar-fill { display: block; block-size: 100%; inline-size: 0; border-radius: inherit;
+  background: linear-gradient(90deg, var(--m-brand-orange, var(--m-primary)), var(--m-brand-blue, var(--m-info)));
+  transition: inline-size 1.2s var(--m-ease-out); }
+.sc-dv-bars.is-shown .sc-dv-bar-fill { inline-size: var(--sc-dv-w); }
+.sc-dv-bar:nth-child(2) .sc-dv-bar-fill { transition-delay: .12s; } .sc-dv-bar:nth-child(3) .sc-dv-bar-fill { transition-delay: .24s; }
+.sc-dv-bar-text { font-size: var(--m-text-sm); color: var(--m-muted); }
+
+/* ── extensions: the live stage and the code that changes it */
+.sc-dv-ext { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--m-space-4); align-items: start; }
+.sc-dv-ext-demo, .sc-dv-embed-demo, .sc-dv-embed-cdn { display: flex; flex-direction: column; align-items: flex-start; gap: var(--m-space-4); padding: var(--m-space-5);
+  border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); background: var(--m-surface); min-inline-size: 0; }
+.sc-dv-stage { display: flex; flex-wrap: wrap; gap: var(--m-space-3); padding: var(--m-space-4); inline-size: 100%; box-sizing: border-box; border: 1.5px dashed var(--m-border); border-radius: var(--m-radius-3); }
+.sc-dv-note { font-size: var(--m-text-sm); color: var(--m-muted); }
+
+/* ── embedding: a widget point, its provider swapped live; the CDN line */
+.sc-dv-embed { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--m-space-4); align-items: stretch; }
+.sc-dv-embed-demo > .m-widget { inline-size: 100%; }
+.sc-dv-wcard { display: grid; gap: var(--m-space-1); padding: var(--m-space-4); border-radius: var(--m-radius-3); background: var(--m-bg-subtle);
+  animation: m-fade-in var(--m-dur-slow) var(--m-ease-out); }
+.sc-dv-wcard.is-rich { justify-items: start; background: color-mix(in srgb, var(--m-brand-green, var(--m-success)) 12%, var(--m-surface)); border: var(--m-border-w, 1px) solid color-mix(in srgb, var(--m-brand-green, var(--m-success)) 40%, transparent); }
+.sc-dv-wcard b { font: 800 1.125rem / 1.1 var(--m-font-display); }
+.sc-dv-wcard span { font-size: var(--m-text-sm); color: var(--m-muted); }
+.sc-dv-cdn { max-inline-size: 100%; overflow-x: auto; padding: var(--m-space-2) var(--m-space-3); border-radius: var(--m-radius-2); background: var(--m-bg-subtle); font: 500 var(--m-text-xs) / 1.4 var(--m-font-mono); white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) { .sc-dv-bar-fill { transition: none; } .sc-dv-wcard { animation: none; } }
+@media (max-width: 760px) {
+  .sc-dv-pair, .sc-dv-ext, .sc-dv-embed { grid-template-columns: minmax(0, 1fr); }
+}

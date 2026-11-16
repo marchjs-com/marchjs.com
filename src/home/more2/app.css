@@ -1,0 +1,75 @@
+/* The home page's app sections (home/more2/app.tsx): router, lasting state, the device, every language, offline. */
+
+/* shared: a small caption, a quiet note */
+.sc-ap-cap { display: inline-flex; align-items: center; gap: .25rem; font-size: var(--m-text-xs); font-weight: var(--m-weight-bold); letter-spacing: .1em; text-transform: uppercase; color: var(--m-muted); }
+.sc-ap-note { font-size: var(--m-text-sm); color: var(--m-muted); }
+
+/* ── router: the shell and its pages, each bar fills as its chunk loads */
+.sc-ap-route { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--m-space-4); align-items: start; }
+.sc-ap-shell { display: grid; gap: var(--m-space-3); padding: var(--m-space-5); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); background: var(--m-surface); }
+.sc-ap-shell-top { display: flex; align-items: center; gap: var(--m-space-2); color: var(--sc-c2); }
+.sc-ap-shell-top b { color: var(--m-text); }
+.sc-ap-routes { display: grid; gap: var(--m-space-2); margin: 0; padding: 0; list-style: none; }
+.sc-ap-routebtn { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) minmax(0, 1.2fr) 5rem; align-items: center; gap: var(--m-space-3); inline-size: 100%;
+  padding: var(--m-space-2) var(--m-space-3); border: var(--m-border-w, 1px) solid var(--m-border-subtle); border-radius: var(--m-radius-3); background: var(--m-bg-subtle);
+  color: var(--m-text); font: inherit; text-align: start; cursor: pointer; transition: border-color var(--m-dur) var(--m-ease), background-color var(--m-dur) var(--m-ease); }
+.sc-ap-routebtn code { font: 600 var(--m-text-sm) / 1 var(--m-font-mono); color: var(--sc-c2); }
+.sc-ap-routename { font-weight: var(--m-weight-semibold); }
+.sc-ap-routebtn.is-current { border-color: var(--m-accent, var(--m-primary-solid)); background: color-mix(in srgb, var(--m-accent, var(--m-primary-solid)) 7%, var(--m-surface)); }
+.sc-ap-bar { block-size: .5rem; border-radius: var(--m-radius-full); background: var(--m-border-subtle); overflow: hidden; }
+.sc-ap-bar i { display: block; block-size: 100%; inline-size: calc(var(--sc-ap-fill, .5) * 100%); border-radius: inherit;
+  background: linear-gradient(90deg, var(--sc-c2), var(--sc-c3)); transform: scaleX(0); transform-origin: left; transition: transform .7s var(--m-ease-out); }
+.sc-ap-routebtn.is-loaded .sc-ap-bar i { transform: scaleX(1); }
+.sc-ap-bar i:dir(rtl) { transform-origin: right; }
+.sc-ap-state { font-size: var(--m-text-xs); color: var(--m-muted); text-align: end; }
+.sc-ap-routebtn.is-loaded .sc-ap-state { color: var(--m-success); font-weight: var(--m-weight-semibold); }
+.sc-ap-points { display: grid; gap: var(--m-space-2); margin: 0; padding: 0; list-style: none; }
+.sc-ap-points li { display: flex; align-items: center; gap: var(--m-space-3); padding: var(--m-space-3) var(--m-space-4); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-3);
+  background: var(--m-surface); font-weight: var(--m-weight-semibold); }
+.sc-ap-points .m-svg { color: var(--sc-c2); flex: none; }
+
+/* ── lasting state: the card, the code beside it */
+.sc-ap-keep { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--m-space-4); align-items: start; }
+.sc-ap-keep-card { display: grid; gap: var(--m-space-3); padding: var(--m-space-5); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); background: var(--m-surface); }
+.sc-ap-count { display: flex; align-items: baseline; gap: var(--m-space-2); }
+.sc-ap-count b { font: 800 clamp(2.5rem, 6cqi, 3.5rem) / 1 var(--m-font-display); letter-spacing: -.04em; color: var(--sc-c3); font-variant-numeric: tabular-nums; }
+.sc-ap-count span { color: var(--m-muted); }
+.sc-ap-keep-actions { display: flex; flex-wrap: wrap; gap: var(--m-space-2); }
+.sc-ap-keep-hint { display: flex; align-items: center; gap: var(--m-space-2); margin: 0; font-size: var(--m-text-sm); color: var(--m-muted); }
+.sc-ap-code { border-radius: var(--m-radius-4); }
+
+/* ── the device: five live tiles */
+.sc-ap-dev { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--m-space-3); }
+.sc-ap-tile { display: flex; flex-direction: column; gap: var(--m-space-2); min-inline-size: 0; padding: var(--m-space-4); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); background: var(--m-surface); }
+.sc-ap-tile > b { font: 800 1.375rem / 1.15 var(--m-font-display); letter-spacing: -.02em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.sc-ap-presence.is-active { color: var(--m-success); } .sc-ap-presence.is-idle { color: var(--m-warn); }
+.sc-ap-presence.is-away { color: var(--sc-c2); } .sc-ap-presence.is-offline { color: var(--m-danger); }
+
+/* ── every language: the count, four cards */
+.sc-ap-intl { display: grid; gap: var(--m-space-4); }
+.sc-ap-intl-n { display: grid; grid-template-columns: auto minmax(0, 22rem) auto; align-items: center; gap: var(--m-space-3); font-weight: var(--m-weight-semibold); }
+.sc-ap-intl-n b { font: 800 1.5rem / 1 var(--m-font-display); font-variant-numeric: tabular-nums; min-inline-size: 2ch; }
+.sc-ap-intl-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--m-space-3); }
+.sc-ap-intl-card { display: flex; flex-direction: column; gap: var(--m-space-2); min-inline-size: 0; padding: var(--m-space-4); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); background: var(--m-surface); }
+.sc-ap-intl-card > b { font: 800 1.25rem / 1.2 var(--m-font-display); color: var(--sc-c4); }
+
+/* ── offline: the steps light up in turn */
+.sc-ap-sw { display: grid; gap: var(--m-space-3); }
+.sc-ap-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--m-space-3); margin: 0; padding: 0; list-style: none; counter-reset: none; }
+.sc-ap-step { display: flex; flex-direction: column; gap: var(--m-space-2); padding: var(--m-space-4); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); background: var(--m-surface);
+  transition: border-color var(--m-dur-slow) var(--m-ease), translate var(--m-dur-slow) var(--m-ease-spring), box-shadow var(--m-dur-slow) var(--m-ease); }
+.sc-ap-step > span:last-child { font-size: var(--m-text-sm); color: var(--m-muted); }
+.sc-ap-step.is-on { border-color: var(--sc-c3); translate: 0 -4px; box-shadow: var(--m-shadow-2); }
+.sc-ap-dot { display: grid; place-items: center; inline-size: 2rem; block-size: 2rem; border-radius: var(--m-radius-full); background: var(--m-bg-subtle); font-weight: var(--m-weight-bold); }
+.sc-ap-step.is-on .sc-ap-dot, .sc-ap-step.is-done .sc-ap-dot { background: var(--sc-c3); color: var(--m-on-primary); }
+.sc-ap-sw-live { display: flex; align-items: center; gap: var(--m-space-2); margin: 0; }
+
+@media (prefers-reduced-motion: reduce) { .sc-ap-bar i, .sc-ap-step, .sc-ap-routebtn { transition: none; } }
+@media (max-width: 1100px) { .sc-ap-dev { grid-template-columns: repeat(3, minmax(0, 1fr)); } .sc-ap-intl-grid, .sc-ap-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+  .sc-ap-route, .sc-ap-keep { grid-template-columns: minmax(0, 1fr); }
+  .sc-ap-dev, .sc-ap-intl-grid, .sc-ap-steps { grid-template-columns: minmax(0, 1fr); }
+  .sc-ap-routebtn { grid-template-columns: 5.5rem minmax(0, 1fr) 4.5rem; }
+  .sc-ap-bar { grid-column: 1 / -1; grid-row: 2; }
+  .sc-ap-intl-n { grid-template-columns: auto minmax(0, 1fr) auto; }
+}

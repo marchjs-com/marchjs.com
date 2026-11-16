@@ -1,0 +1,35 @@
+/* The home page's data and flow sections (home/more2/data.tsx): table, board, calendar, file tree, welcome flow. */
+
+/* ── table */
+.sc-dt-table { padding: var(--m-space-4); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); background: var(--m-surface); min-inline-size: 0; overflow-x: auto; }
+
+/* ── board */
+.sc-dt-board { padding: var(--m-space-4); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); background: var(--m-surface); min-inline-size: 0; overflow-x: auto; }
+.sc-dt-task { display: flex; flex-direction: column; align-items: flex-start; gap: var(--m-space-2); }
+.sc-dt-task b { font-weight: var(--m-weight-semibold); }
+
+/* ── calendar: the month on one side, the stay and its presets on the other */
+.sc-dt-dates { display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr); gap: var(--m-space-4); align-items: start; }
+.sc-dt-cal, .sc-dt-stay, .sc-dt-tree, .sc-dt-treeside { display: flex; flex-direction: column; gap: var(--m-space-3); padding: var(--m-space-4); border: var(--m-border-w, 1px) solid var(--m-border);
+  border-radius: var(--m-radius-4); background: var(--m-surface); min-inline-size: 0; }
+.sc-dt-cap { font-size: var(--m-text-xs); font-weight: var(--m-weight-bold); letter-spacing: .1em; text-transform: uppercase; color: var(--m-muted); }
+.sc-dt-sum { margin: 0; font: 800 clamp(1.125rem, 2.2cqi, 1.5rem) / 1.25 var(--m-font-display); letter-spacing: -.02em; color: var(--m-text); }
+
+/* ── file tree */
+.sc-dt-files { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--m-space-4); align-items: start; }
+.sc-dt-keys { display: grid; gap: var(--m-space-2); margin: 0; padding: 0; list-style: none; font-size: var(--m-text-sm); color: var(--m-muted); }
+.sc-dt-keys kbd { display: inline-block; min-inline-size: 1.5rem; margin-inline-end: .25rem; padding: .0625rem .375rem; border: var(--m-border-w, 1px) solid var(--m-border);
+  border-block-end-width: 2px; border-radius: var(--m-radius-1); background: var(--m-bg-subtle); font: 600 var(--m-text-xs) / 1.4 var(--m-font-mono); text-align: center; color: var(--m-text); }
+
+/* ── welcome flow */
+.sc-dt-flow { padding: var(--m-space-5); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); background: var(--m-surface); min-inline-size: 0; }
+.sc-dt-panel { display: grid; gap: var(--m-space-3); padding-block: var(--m-space-3); }
+.sc-dt-lead { margin: 0; font: 800 1.25rem / 1.2 var(--m-font-display); }
+.sc-dt-role { margin: 0; color: var(--m-text-2, var(--m-muted)); }
+.sc-dt-ready { justify-items: center; text-align: center; padding-block: var(--m-space-6); }
+.sc-dt-big { font: 800 clamp(2.5rem, 7cqi, 4.5rem) / 1 var(--m-font-display); letter-spacing: -.04em;
+  background: linear-gradient(90deg, var(--sc-c1), var(--sc-c4), var(--sc-c2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+@media (max-width: 760px) {
+  .sc-dt-dates, .sc-dt-files { grid-template-columns: minmax(0, 1fr); }
+}
