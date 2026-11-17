@@ -13,8 +13,16 @@
     radial-gradient(50rem 32rem at 88% 18%, color-mix(in srgb, var(--sc-c2) 16%, transparent), transparent 60%),
     radial-gradient(44rem 30rem at 70% 100%, color-mix(in srgb, var(--sc-c4) 13%, transparent), transparent 60%), var(--m-surface); }
 :root[data-theme="dark"] .sc-hero { --sc-glass: color-mix(in srgb, var(--m-text) 6%, transparent); --sc-glass-2: color-mix(in srgb, var(--m-text) 11%, transparent); }
-.sc-hero-silk { opacity: .42; filter: blur(1.625rem) saturate(1.25); }
-:root[data-theme="dark"] .sc-hero-silk { opacity: .5; }
+/* (its strength through Overlay's own knob, not `opacity`: a stylesheet loaded later with the Overlay's base rule — the
+   Playground's preview — would otherwise set it back to full) */
+.sc-hero-silk { --m-ov-opacity: .42; filter: blur(1.625rem) saturate(1.25); }
+/* wide screens: the hero (and its silk) runs under the floating rail to the screen edge; the rail stays on top
+   (--sc-nav-w: showcase.css). The content keeps its place: the room under the rail is padding. */
+@media (min-width: 901px) {
+  .sc-home { margin-inline-start: calc(-1 * var(--sc-nav-w, 0px)); padding-inline-start: var(--sc-nav-w, 0px); }
+  .sc-hero { margin-inline-start: calc(-1 * var(--sc-nav-w, 0px)); padding-inline-start: calc(var(--sc-gutter) + var(--sc-nav-w, 0px)); border-end-start-radius: 0; }
+}
+:root[data-theme="dark"] .sc-hero-silk { --m-ov-opacity: .5; }
 .sc-hero-dots { opacity: .5; mask-image: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 75%); }
 .sc-hero-in { position: relative; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); column-gap: var(--m-space-6); row-gap: var(--m-space-3); align-items: center; }
 .sc-hero-copy { display: flex; flex-direction: column; align-items: flex-start; min-inline-size: 0; }
@@ -134,7 +142,7 @@
 .sc-oss { --sc-oss-c: var(--m-accent, var(--m-primary-solid, var(--m-primary))); position: absolute; z-index: 3; inset-block-start: 0; inset-inline-end: calc(var(--sc-gutter) + var(--m-space-2));
   display: block; color: var(--m-on-accent, var(--m-on-primary)); text-decoration: none;
   filter: drop-shadow(0 .5rem .75rem color-mix(in srgb, var(--m-scrim) 26%, transparent)) drop-shadow(0 1px 1px color-mix(in srgb, var(--m-scrim) 20%, transparent));
-  animation: sc-oss-drop .9s var(--m-ease-spring) .35s both; }
+  transform-origin: 50% 0; animation: sc-oss-drop 1.5s var(--m-ease-out) .35s both; }
 .sc-oss-body { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: .45rem;
   inline-size: 4.5rem; padding: 1.15rem .5rem 1.75rem; box-sizing: border-box; text-align: center;
   font: var(--m-display-weight, 700) var(--m-text-sm) / 1.15 var(--m-font-display, var(--m-font)); letter-spacing: .01em;
@@ -158,6 +166,32 @@
 .sc-oss:hover .sc-oss-body::after, .sc-oss:focus-visible .sc-oss-body::after { translate: 70% 0; }
 .sc-oss:focus-visible { outline: none; }
 .sc-oss:focus-visible .sc-oss-body { box-shadow: inset 0 0 0 2px var(--m-on-accent, var(--m-on-primary)); }
-@keyframes sc-oss-drop { from { translate: 0 -105%; } }
+/* in the floating shell the hero runs up under the top bar: the ribbon hangs from the bar's lower edge, at its end
+   (clear of the bar's rounded corner: its radius, then a little room), and follows the bar as it narrows to a page (--sc-shift-r, shell-menu.tsx fit) */
+@media (min-width: 901px) {
+  .sc-shell .sc-oss { z-index: 2; inset-block-start: calc(var(--sc-bar-top) + var(--sc-bar-h)); inset-inline-end: calc(var(--sc-gap) + var(--sc-shift-r, 0px) + var(--m-radius-4) + var(--m-space-3));
+    transition: inset-inline-end var(--m-dur-slow) var(--m-ease-out); }
+}
+/* it unrolls from its top edge, from no length to its full length, and sways like cloth as it comes (it swings from
+   its top, the fabric lagging a little behind each swing), settling still. In the shell it waits for the top bar to
+   stop sliding (shell-menu.tsx fit adds .is-in) */
+.sc-shell .sc-oss:not(.is-in) { animation: none; scale: 1 0; }
+.sc-shell .sc-oss.is-in { animation-delay: 0s; }
+/* leaving the start page it rolls back up the same way (the unrolling played backwards, quicker): during the page
+   change it is its own picture, so it can move apart from the page going out */
+@media (min-width: 901px) {
+  :root[data-m-vt] .sc-shell .sc-oss.is-in { view-transition-name: sc-oss; }
+}
+::view-transition-old(sc-oss) { transform-origin: 50% 0; animation: sc-oss-drop .6s var(--m-ease-out) reverse both; }
+::view-transition-new(sc-oss) { animation: none; }
+@media (prefers-reduced-motion: reduce) { ::view-transition-old(sc-oss) { animation: none; opacity: 0; } }
+@keyframes sc-oss-drop {
+  0% { scale: 1 0; rotate: 0deg; transform: skewX(0deg); }
+  35% { scale: 1 1.04; rotate: 5deg; transform: skewX(-4deg); }
+  55% { scale: 1 .98; rotate: -3.5deg; transform: skewX(3deg); }
+  72% { scale: 1 1.01; rotate: 2deg; transform: skewX(-1.75deg); }
+  86% { scale: 1 1; rotate: -.75deg; transform: skewX(.75deg); }
+  100% { scale: 1 1; rotate: 0deg; transform: none; }
+}
 @media (prefers-reduced-motion: reduce) { .sc-oss { animation: none; } .sc-oss-body, .sc-oss-body::after { transition: none; } }
 @media (max-width: 640px) { .sc-oss { inset-inline-end: var(--m-space-4); } .sc-oss-body { inline-size: 3.75rem; padding: .9rem .4rem 1.45rem; font-size: .6875rem; } }

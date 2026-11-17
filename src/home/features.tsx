@@ -45,6 +45,7 @@ function Signals() {
   }
   // every DOM node that changes glows for a moment: only those, the rest of the panel stays as it is
   function watch(panel: Element): void {
+    const glows = new WeakMap<Element, ReturnType<typeof setTimeout>>()
     const mo = new MutationObserver((list) => {
       for (const m of list) {
         const at = (m.type === "characterData" ? m.target.parentElement : m.target) as Element | null
@@ -52,10 +53,11 @@ function Signals() {
         // the glow itself is a class change of the row: not a change of the panel (it would glow forever)
         if (!row || (m.type === "attributes" && m.target === row)) continue
         $changes++
-        row.classList.remove("is-glow")
-        void row.offsetWidth
+        // a row already glowing keeps glowing a while longer (no restart: reading a size to restart it would force a
+        // layout of the page)
         row.classList.add("is-glow")
-        setTimeout(() => row.classList.remove("is-glow"), GLOW_MS)
+        clearTimeout(glows.get(row))
+        glows.set(row, setTimeout(() => row.classList.remove("is-glow"), GLOW_MS))
       }
     })
     mo.observe(panel, { subtree: true, characterData: true, childList: true, attributes: true, attributeFilter: ["aria-valuenow", "class"] })

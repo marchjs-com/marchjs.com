@@ -66,6 +66,7 @@
 /* footer */
 .sc-home-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--m-space-4); box-sizing: border-box; inline-size: 100%;
   padding: var(--m-space-6) max(var(--m-space-6), calc((100cqi - 74rem) / 2)); border-block-start: var(--m-border-w, 1px) solid var(--m-border); color: var(--m-text-2); font-size: var(--m-text-sm); }
+.sc-home-foot-line { color: var(--m-faint); font-size: var(--m-text-xs); }
 .sc-home-foot-links { display: flex; flex-wrap: wrap; gap: var(--m-space-4); }
 .sc-home-foot-links a { color: inherit; }
 .sc-home-foot-links a:hover { color: var(--m-primary-text); }

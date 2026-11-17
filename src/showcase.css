@@ -1,6 +1,7 @@
 /* Showcase layout. March tokens only; every theme and light/dark follows by itself. */
-.sc-nav-foot { margin: 0; padding: var(--m-space-2); color: var(--m-faint); font-size: var(--m-text-xs); }
-.sc-nav-foot-line { margin: 0 0 var(--m-space-1); }
+/* the page footer (shell-late.tsx): the licence line and "made with March", under every page but the start page */
+.sc-page-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--m-space-2) var(--m-space-4); margin-block-start: var(--m-space-8); padding: var(--m-space-5) var(--m-space-6) var(--m-space-6);
+  border-block-start: 1px solid var(--m-border-subtle); color: var(--m-faint); font-size: var(--m-text-xs); }
 .sc-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-2); }
 .sc-row-between { justify-content: space-between; } .sc-row-end { justify-content: flex-end; } .sc-row-center { justify-content: center; }
 .sc-nowrap { flex-wrap: nowrap; white-space: nowrap; }
@@ -248,12 +249,20 @@
 
 /* ---------- shell: the section rail, the side menu beside it, the top bar (trail · search · look) */
 /* placeholders of the lazy rail + menu and of the top bar tools: same size, no layout shift */
-.sc-nav-placeholder { width: calc(4.75rem + var(--m-sb-w, 17.5rem)); height: 100%; background: var(--m-surface); border-inline-end: 1px solid var(--m-border); }
+.sc-nav-placeholder { width: calc(4.75rem + 2 * var(--sc-gap)); height: 100%; }
 /* the start page shows only the rail (wide screens; a section picked there opens the menu): shell-menu.tsx */
-.sc-nav-placeholder[data-rail-only] { width: 4.75rem; }
+.sc-nav-placeholder[data-rail-only] { width: calc(4.75rem + var(--sc-gap)); }
 @media (min-width: 901px) {
-  .sc-rail[data-rail-only] + .m-sb-wrap { display: none; }
+  .sc-rail[data-rail-only]:not([data-pin]) + .m-sb-wrap { display: none; }
   .sc-rail:not([data-rail-only]) + .m-sb-wrap { animation: sc-menu-in var(--m-dur-slow) var(--m-ease-out); }
+  /* the menu card does not sit beside the page: a section's menu floats beside the rail while the pointer is on it */
+  .sc-rail:not([data-float], [data-pin]) + .m-sb-wrap { display: none; }
+  /* pinned (a section or a page with pages under it was chosen): the menu sits beside the page, which makes room for
+     it; it slides in with the rail toward a narrow page (the card: the wrapper is display: contents) */
+  .sc-rail[data-pin] + .m-sb-wrap .m-nav.m-sb { translate: var(--sc-shift-l, 0px) 0; transition: translate var(--m-dur-slow) var(--m-ease-out); }
+  /* the start page: the menu a section shows floats beside the rail, over the page (the page does not move) */
+  .sc-rail[data-float]:not([data-pin]) + .m-sb-wrap .m-nav.m-sb { position: fixed; z-index: calc(var(--m-z-sticky) + 3); inset-block-start: var(--m-sb-gap-top, var(--sc-gap));
+    inset-inline-start: calc(2 * var(--sc-gap) + 4.75rem + var(--sc-shift-l, 0px)); margin: 0; animation: sc-menu-in var(--m-dur-slow) var(--m-ease-out); }
 }
 @keyframes sc-menu-in { from { opacity: 0; translate: -.75rem 0; } }
 @media (prefers-reduced-motion: reduce) { .sc-rail + .m-sb-wrap { animation: none; } }
@@ -261,15 +270,17 @@
 .sc-tools { display: contents; }
 .sc-tools-placeholder { display: block; flex: 1 1 0; block-size: 2.375rem; }
 /* the rail: the March mark, then the start page and the six sections (ActivityBar with names) */
-.sc-rail { display: flex; flex: none; flex-direction: column; align-items: center; inline-size: 4.75rem; block-size: 100%; background: var(--m-surface); border-inline-end: 1px solid var(--m-border); }
-.sc-rail-logo { display: grid; flex: none; place-items: center; inline-size: 2.75rem; block-size: 2.5rem; margin-block: var(--m-space-3) var(--m-space-2);
-  border-radius: var(--m-radius-3); transition: scale var(--m-dur) var(--m-ease-spring); }
-.sc-rail-logo:hover { scale: 1.08; }
+/* the rail and the menu float as two cards off the screen edge (the menu: NavSidebar floating) */
+.sc-rail { display: flex; flex: none; flex-direction: column; align-items: center; inline-size: 4.75rem; block-size: calc(100% - 2 * var(--sc-gap)); margin: var(--sc-gap) 0 var(--sc-gap) var(--sc-gap);
+  background: var(--m-surface); border: 1px solid var(--m-border-subtle); border-radius: var(--m-radius-4); box-shadow: var(--m-shadow-3); overflow: hidden; }
+/* the mark at the top-left corner: its own control (app.tsx), shown on wide screens (floating shell below) */
+.sc-corner-logo { display: none; }
 /* the MarchJS mark (logo.tsx): a ribbon M; with the wordmark under it in the heading font */
 .sc-logo { display: inline-flex; flex-direction: column; align-items: center; gap: var(--m-space-1); }
 .sc-logo-mark { inline-size: 2.5rem; block-size: auto; overflow: visible; }
 .sc-logo-word { font-family: var(--m-font-display); font-weight: var(--m-display-weight, var(--m-weight-bold)); font-size: var(--m-text-lg); color: var(--m-text); letter-spacing: -.01em; }
-.sc-rail-bar.m-ab { flex: 1 1 auto; inline-size: 100%; block-size: auto; min-block-size: 0; border: 0; background: none; }
+.sc-rail-bar.m-ab { flex: 1 1 auto; inline-size: 100%; block-size: auto; min-block-size: 0; }
+.sc-rail-bar.m-ab:not(.is-glass) { border: 0; background: none; }
 /* the menu's title is the section's name, in the display face */
 .sc-shell .m-sb-head { gap: 0; padding: var(--m-space-4) var(--m-space-4) var(--m-space-2); border-block-end: 0; }
 .sc-shell .m-sb-titlebar .m-panel-header-title { font-size: var(--m-text-xl); letter-spacing: -.02em; }
@@ -278,7 +289,7 @@
 /* headings scroll away with their rows (a stuck heading over hidden rows read as an empty block) */
 .sc-shell .m-sb-section.m-section-label { position: static; }
 /* top bar: the trail keeps its own width, the search sits in the middle of what is left, the look controls at the end */
-.sc-shell { --m-topbar-h: 3.75rem; }
+.sc-shell { --m-topbar-h: 3.75rem; --sc-gap: var(--m-space-3); --m-sb-gap: var(--sc-gap); --sc-nav-w: calc(4.75rem + var(--sc-gap)); }
 .sc-shell .m-shell-header { gap: var(--m-space-4); padding-inline: var(--m-space-5); border-block-end-color: var(--m-border-subtle); }
 .sc-top-crumbs { flex: 1 1 0; min-inline-size: 0; } /* the same share as the tools at the end: the search sits in the middle */
 /* the section and category steps arrive with the menu's manifest: they fade in instead of popping */
@@ -299,8 +310,7 @@
   .sc-nav-placeholder { display: none; }
   .sc-shell.m-shell-has-header > .m-shell-nav { position: fixed; inset: auto 0 0; display: block; block-size: auto; padding: 0 0 env(safe-area-inset-bottom, 0px); border-block-start: 1px solid var(--m-border);
     background: var(--m-surface); z-index: calc(var(--m-z-sticky) + 2); }
-  .sc-rail { flex-direction: row; inline-size: 100%; block-size: auto; border-inline-end: 0; }
-  .sc-rail-logo { display: none; }
+  .sc-rail { flex-direction: row; inline-size: 100%; block-size: auto; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
   .sc-rail-bar.m-ab { border: 0; }
   .sc-shell.m-shell-has-header .m-shell-header { gap: var(--m-space-2); padding-inline: var(--m-space-3); }
   .sc-shell { --sc-bottom-bar: calc(3.875rem + env(safe-area-inset-bottom, 0px)); }
@@ -508,3 +518,100 @@ button.sc-part:hover, button.sc-part:focus-visible, a.sc-part:hover, a.sc-part:f
 .sc-thn-stage { position: relative; display: flex; block-size: 30rem; border: 1px solid var(--m-border); border-radius: var(--m-radius-4); background: var(--m-bg-subtle, var(--m-surface)); overflow: hidden; }
 .sc-thn-page { flex: 1; min-inline-size: 0; padding: 4rem var(--m-space-6) var(--m-space-6); display: flex; flex-direction: column; gap: var(--m-space-2); }
 .sc-thn-page h3 { margin: 0; font-family: var(--m-font-display); font-size: var(--m-text-3xl, 2rem); }
+/* the glass of the rail, the menu and its floating pages (ActivityBar / NavSidebar `glass`): how much of the surface shows */
+:root { --m-glass-tint: 47%; --m-glass-blur: 8.5px; }
+/* how far the frame comes in to a narrow page (shell-menu.tsx fit): set on the parts that move; not inherited, so a
+   change restyles only them */
+@property --sc-shift-l { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --sc-shift-r { syntax: "<length>"; inherits: false; initial-value: 0px; }
+/* ---------- floating shell (wide screens): the top bar and the rail are cards off the screen edges meeting at the
+   top-left corner; the mark floats over the corner (with its own shadow) and both cards are cut round it (a mask) */
+@media (min-width: 901px) {
+  /* the joint (the mark's centre) is as far from the top as from the left: the bar sits lower than the gap (--sc-bar-top) */
+  .sc-shell { --sc-bar-h: 3.75rem; --sc-joint-x: calc(var(--sc-gap) + 2.375rem); --sc-joint-y: var(--sc-joint-x); --sc-bar-top: calc(var(--sc-joint-y) - var(--sc-bar-h) / 2); --sc-hole: 2.875rem;
+    --sc-bar-end: calc(var(--sc-bar-top) + var(--sc-bar-h) + var(--sc-gap));
+    --m-sb-gap-top: var(--sc-bar-end); }
+  /* the cut covers the card and 4rem round it, so the card's whole shadow is kept outside the hole */
+  .sc-shell .m-shell-header, .sc-rail { mask: radial-gradient(circle at calc(var(--sc-cx) + 4rem) calc(var(--sc-cy) + 4rem), transparent var(--sc-hole), black calc(var(--sc-hole) + .5px))
+    -4rem -4rem / calc(100% + 8rem) calc(100% + 8rem) no-repeat border-box no-clip; }
+  .sc-shell .m-shell-header { --sc-cx: calc(var(--sc-joint-x) - var(--sc-gap)); --sc-cy: calc(var(--sc-joint-y) - var(--sc-bar-top)); }
+  .sc-rail { --sc-cx: calc(var(--sc-joint-x) - var(--sc-gap)); --sc-cy: calc(var(--sc-joint-y) - var(--sc-gap)); }
+  /* the frame comes in to a narrow page's content (shell-menu.tsx fit): the bar narrows, the rail and the mark slide in */
+  .sc-shell .m-shell-header { position: fixed; inset-block-start: var(--sc-bar-top); inset-inline: calc(var(--sc-gap) + var(--sc-shift-l, 0px)) calc(var(--sc-gap) + var(--sc-shift-r, 0px));
+    transition: inset-inline-start var(--m-dur-slow) var(--m-ease-out), inset-inline-end var(--m-dur-slow) var(--m-ease-out); min-block-size: var(--sc-bar-h); block-size: var(--sc-bar-h);
+    padding-inline: calc(var(--sc-joint-x) + var(--sc-hole) - var(--sc-gap) + var(--m-space-3)) var(--m-space-4); border-radius: var(--m-radius-4);
+    /* glass, the same as the rail and the menu (ActivityBar / NavSidebar `glass`): see-through, the backdrop blurred, a
+       hairline edge and a light lip mixed from the theme's surface, a domed light, a sweep of light on hover */
+    border: 1px solid color-mix(in srgb, color-mix(in srgb, var(--m-surface), var(--m-text) 14%) 65%, transparent);
+    background: color-mix(in srgb, var(--m-surface) var(--m-glass-tint, 28%), transparent);
+    -webkit-backdrop-filter: blur(var(--m-glass-blur, 18px)) saturate(170%); backdrop-filter: blur(var(--m-glass-blur, 18px)) saturate(170%);
+    box-shadow: 0 .5rem 1.25rem color-mix(in srgb, black 10%, transparent), inset 0 1px 0 color-mix(in srgb, color-mix(in srgb, var(--m-surface), white 25%) 60%, transparent); }
+  .sc-shell .m-shell-header::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: radial-gradient(140% 70% at 50% 0%, color-mix(in srgb, color-mix(in srgb, var(--m-surface), white 35%) 55%, transparent), transparent 70%),
+      linear-gradient(to top, color-mix(in srgb, black 7%, transparent), transparent 40%); }
+  .sc-shell .m-shell-header::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: linear-gradient(115deg, transparent 40%, color-mix(in srgb, color-mix(in srgb, var(--m-surface), white 55%) 55%, transparent) 50%, transparent 60%) no-repeat;
+    background-size: 300% 100%; background-position: 100% 0; transition: background-position calc(var(--m-dur-slow) * 3) var(--m-ease-out); }
+  .sc-shell .m-shell-header:hover::after { background-position: 0 0; }
+  /* the bar's content above its lights */
+  .sc-shell .m-shell-header > * { position: relative; }
+  .sc-shell .m-shell-main { padding-block-start: var(--sc-bar-end); }
+  /* the rail, the mark and the menu share one shadow; the rail runs up to the corner, its items start under the hole */
+  /* (no filter on the column: a filter would cut the rail's glass off from what is behind it) */
+  .sc-shell > .m-shell-nav { z-index: calc(var(--m-z-sticky) + 2); }
+  /* the rail is as tall as its items, at most the screen less the gaps; more items scroll inside */
+  /* the rail is as tall as its items, at most the screen less the gaps; more items scroll inside. Its look is the
+     ActivityBar's own glass (shell-menu.tsx): the rail itself is only the frame (the mask, the room under the mark) */
+  /* (the shadow is the rail's, not the bar's: the rail scrolls, so a shadow inside it would be cut off) */
+  .sc-rail { align-self: flex-start; block-size: auto; max-block-size: calc(100% - 2 * var(--sc-gap)); overflow-y: auto; scrollbar-width: none; margin-block-start: var(--sc-gap);
+    border: 0; border-radius: var(--m-radius-4); background: none; translate: var(--sc-shift-l, 0px) 0; transition: translate var(--m-dur-slow) var(--m-ease-out);
+    box-shadow: 0 .75rem 2rem color-mix(in srgb, var(--sc-rail-shade) 18%, transparent), 0 .125rem .5rem color-mix(in srgb, var(--sc-rail-shade) 12%, transparent); }
+  .sc-rail { --sc-rail-shade: black; }
+  /* the cut (mask) makes the rail a backdrop root, so a blur on the bar inside it would see nothing: the rail itself
+     holds the glass's tint and blur, the bar keeps its edge, dome and shine */
+  .sc-rail:has(> .sc-rail-bar.is-glass) { background: color-mix(in srgb, var(--m-surface) var(--m-glass-tint, 28%), transparent);
+    -webkit-backdrop-filter: blur(var(--m-glass-blur, 18px)) saturate(170%); backdrop-filter: blur(var(--m-glass-blur, 18px)) saturate(170%); }
+  .sc-rail > .sc-rail-bar.m-ab.is-glass { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .sc-rail-bar.m-ab.is-glass { box-sizing: border-box; min-block-size: 100%; border-width: 1px; border-style: solid; border-radius: var(--m-radius-4);
+    padding-block: calc(var(--sc-joint-y) + var(--sc-hole) - var(--sc-gap) + var(--m-space-2)) var(--m-space-3); }
+  /* outside the shell: the same measures as .sc-shell (gap, bar height, the joint at the rail's middle) */
+  /* a round of glass: a clear, blurred backdrop; domed (a gloss on the top, a darker rim at the bottom); a hairline
+     glass edge and a soft shadow round it so it sits a little above; now and then a light sweeps across (app.tsx) */
+  .sc-corner-logo { --sc-gap: var(--m-space-3); --sc-bar-h: 3.75rem; --sc-badge: 5rem; position: fixed; z-index: calc(var(--m-z-sticky) + 4); display: grid; place-items: center; overflow: hidden;
+    inset-block-start: calc(var(--sc-gap) + 2.375rem - var(--sc-badge) / 2); inset-inline-start: calc(var(--sc-gap) + 2.375rem - var(--sc-badge) / 2);
+    inline-size: var(--sc-badge); block-size: var(--sc-badge); border-radius: 50%; border: 1px solid color-mix(in srgb, color-mix(in srgb, var(--m-surface), white 35%) var(--sc-glass-edge), transparent);
+    background: radial-gradient(circle at 50% 120%, color-mix(in srgb, var(--m-surface) 40%, transparent), transparent 60%), color-mix(in srgb, var(--m-surface) 16%, transparent);
+    backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%);
+    box-shadow: 0 .75rem 2rem color-mix(in srgb, var(--m-text) 18%, transparent), 0 .125rem .375rem color-mix(in srgb, var(--m-text) 12%, transparent),
+      inset 0 -.5rem 1rem color-mix(in srgb, black var(--sc-glass-rim), transparent), inset 0 .125rem .25rem color-mix(in srgb, color-mix(in srgb, var(--m-surface), white 35%) var(--sc-glass-lip), transparent);
+    translate: var(--sc-shift-l, 0px) 0; transition: scale var(--m-dur) var(--m-ease-spring), translate var(--m-dur-slow) var(--m-ease-out); }
+  .sc-corner-logo:hover { scale: 1.06; }
+  /* the glass's lights are mixed from the theme's surface (white on a light page, a lighter tone of it on a dark one) */
+  .sc-corner-logo { --sc-glass-edge: 70%; --sc-glass-lip: 85%; --sc-glass-gloss: 75%; --sc-glass-rim: 9%; }
+  /* the dome's gloss: a soft light on the upper half */
+  .sc-corner-logo::before { content: ""; position: absolute; z-index: 2; inset: 5% 14% 50%; border-radius: 50%; pointer-events: none;
+    background: linear-gradient(to bottom, color-mix(in srgb, color-mix(in srgb, var(--m-surface), white 35%) var(--sc-glass-gloss), transparent), transparent); }
+  /* the sweep: a slanted band of light crossing the glass */
+  .sc-corner-logo::after { content: ""; position: absolute; z-index: 3; inset: -20%; pointer-events: none; translate: -110% 0;
+    background: linear-gradient(115deg, transparent 38%, color-mix(in srgb, color-mix(in srgb, var(--m-surface), white 35%) 80%, transparent) 50%, transparent 62%); }
+  .sc-corner-logo.is-shine::after { animation: sc-shine 1.1s var(--m-ease-out); }
+  .sc-corner-logo .sc-logo-mark { position: relative; z-index: 1; inline-size: 3.25rem; filter: drop-shadow(0 .125rem .25rem color-mix(in srgb, var(--m-text) 18%, transparent)); }
+  /* the home hero runs under the bar too */
+  /* (the page itself goes up under the bar, not only its hero: a page transition takes the page's box as its picture,
+     so a hero sticking out above it would be missing during the change and drawn afterwards) */
+  .sc-shell .sc-home { margin-block-start: calc(-1 * var(--sc-bar-end)); }
+  .sc-shell .sc-home .sc-hero { padding-block-start: calc(var(--m-space-4) + var(--sc-bar-end)); min-block-size: 100dvh; }
+}
+@keyframes sc-shine { from { translate: -110% 0; } to { translate: 110% 0; } }
+@media (prefers-reduced-motion: reduce) { .sc-corner-logo.is-shine::after { animation: none; } .sc-shell .m-shell-header::after { display: none; } }
+/* page transitions lift the page into a layer drawn over everything; the start page's hero runs under the rail and the
+   bar, so the frame (rail, bar, mark) is lifted too, into layers above the page's, and stays still while it changes */
+/* (only while a page transition runs: a view-transition-name cuts an element's glass off from what is behind it) */
+@media (min-width: 901px) {
+  :root[data-m-vt] .sc-shell > .m-shell-nav { view-transition-name: sc-frame-nav; }
+  :root[data-m-vt] .sc-shell .m-shell-header { view-transition-name: sc-frame-bar; }
+  :root[data-m-vt] .sc-corner-logo { view-transition-name: sc-frame-mark; }
+}
+::view-transition-group(sc-frame-nav), ::view-transition-group(sc-frame-bar), ::view-transition-group(sc-frame-mark) { z-index: 2; animation: none; }
+::view-transition-old(sc-frame-nav), ::view-transition-old(sc-frame-bar), ::view-transition-old(sc-frame-mark) { display: none; }
+::view-transition-new(sc-frame-nav), ::view-transition-new(sc-frame-bar), ::view-transition-new(sc-frame-mark) { animation: none; }

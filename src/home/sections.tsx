@@ -203,6 +203,7 @@ export default function HomeSections() {
     <HomeToc />
     <footer class="sc-home-foot">
       <MadeWithMarch variant="badge" />
+      <span class="sc-home-foot-line">MIT · sıfır bağımlılık · CSP uyumlu</span>
       <span class="sc-home-foot-links">
         <Link href="/start">İlk Adımlar</Link>
         <Link href="/api">API başvurusu</Link>
