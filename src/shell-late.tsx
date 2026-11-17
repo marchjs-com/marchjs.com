@@ -1,11 +1,12 @@
 // What the first paint does not need: command palette, toasts, commands, motion extras, the Speed page's network log.
 // Loaded right after the shell (when idle).
-import { t } from "march";
+import { t, signal, effect } from "march";
 import { CommandPalette, ToastHost, Dialog, MadeWithMarch, registerCommands, toast, setColorTheme, colorThemes, setTheme } from "march/ui";
 import { PortalTarget } from "march";
-import { Outlet, navigate, path } from "march/router";
+import { Outlet, navigate, path, navigating } from "march/router";
 import { palette, moon, sun, sparkles, hash } from "march/icons";
 import "./perflog.ts";
+import { busyLogo } from "./logo-busy.ts";
 import { whenIdle } from "march/lazy";
 
 // the motion engine (transitions, <For animate> FLIP, page transitions) is its own lazy part, loaded once the browser
@@ -35,6 +36,26 @@ async function goToSection(path: string, id: string): Promise<void> {
   const target = el
   void import("march/motion").then((m) => m.animate(target, [{ boxShadow: "0 0 0 0 transparent" }, { boxShadow: "0 0 0 6px color-mix(in srgb, var(--m-primary) 35%, transparent)" }, { boxShadow: "0 0 0 0 transparent" }], { duration: 1400, easing: "easeInOutCubic" }))
 }
+
+/** The corner mark turns while something loads: a page (the router resolving it) or a part of it (its skeleton is in
+ *  the page). Its dots leave the M for a turning spiral and come back when it is done (logo-busy.ts). A load shorter
+ *  than BUSY_AFTER shows nothing. */
+const BUSY_AFTER = 200
+function busyMark(): void {
+  const doc = globalThis.document
+  const mark = doc?.querySelector<SVGSVGElement>(".sc-corner-logo .sc-logo-mark"), outlet = doc?.querySelector(".m-shell-main")
+  if (!mark || !outlet) return
+  const set = busyLogo(mark)
+  const skeleton = signal(!!outlet.querySelector(".sc-page-skel"))
+  if (typeof MutationObserver === "function") new MutationObserver(() => skeleton.set(!!outlet.querySelector(".sc-page-skel"))).observe(outlet, { childList: true, subtree: true })
+  let wait: ReturnType<typeof setTimeout> | undefined
+  effect(() => {
+    if (navigating() || skeleton()) { wait ??= setTimeout(() => set(true), BUSY_AFTER); return }
+    clearTimeout(wait); wait = undefined
+    set(false)
+  })
+}
+busyMark()
 
 export default function ShellLate() {
   registerCommands([

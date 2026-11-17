@@ -22,11 +22,12 @@ export const MARK_DOTS: [number, number, number, string][] = [
   [80.2, 36.4, 6.75, "#8379DE"],
 ]
 
-/** `<MarchLogo />` — the mark alone; `<MarchLogo wordmark />` with "MarchJS" under it. */
+/** `<MarchLogo />` — the mark alone; `<MarchLogo wordmark />` with "MarchJS" under it. While something loads the
+ *  corner mark's dots leave the M for a turning spiral and come back (logo-busy.ts). */
 export function MarchLogo(props: { wordmark?: boolean; class?: string }) {
   return <span class={`sc-logo ${props.class ?? ""}`}>
     <svg class="sc-logo-mark" viewBox="0 0 120 104" role="img" aria-label="MarchJS">
-      {MARK_DOTS.map(([cx, cy, r, fill]) => <circle cx={cx} cy={cy} r={r} fill={fill} />)}
+      {MARK_DOTS.map(([cx, cy, r, fill], i) => <circle cx={cx} cy={cy} r={r} fill={fill} />)}
     </svg>
     {props.wordmark ? <span class="sc-logo-word">MarchJS</span> : null}
   </span>
