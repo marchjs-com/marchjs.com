@@ -1401,7 +1401,7 @@ async function render(code: string): Promise<void> {
     showRunError(e)
   }
 }
-const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: true, language: true, fullscreen: true }} theme={previewTheme} mode={previewMode} language={previewLang} languages={languageList}>
+const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: true, language: true, fullscreen: true, device: true }} theme={previewTheme} mode={previewMode} language={previewLang} languages={languageList}>
   <div class="sc-pv-root" m:no-select ref={previewReady}>
     <div class="sc-playground-empty"><b>Önizleme</b><span>Derleniyor…</span></div>
   </div>
