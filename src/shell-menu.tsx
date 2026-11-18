@@ -8,6 +8,7 @@ import { home } from "march/icons";
 import { Link, path, navigate, type Href } from "march/router";
 import { viewport } from "march/managers/viewport";
 import { pages, setTrail } from "./app.tsx";
+import { ideOpen } from "./playground/ide-open.ts";
 import { withMeta, MENU_GROUPS, SECTIONS, sectionOf, type NavSection } from "./nav-meta.ts";
 
 const SECTION_KEY = "sc.section";
@@ -82,7 +83,7 @@ export default function ShellMenu() {
   }
   // wide screens: choosing a section on the rail, or a page in the menu that has pages under it, pins the menu: it
   // sits beside the page (the page makes room for it) with the chosen page's branch open in it (NavSidebar pinCurrent);
-  // the start page has none
+  // the start page has none, nor MarchIDE (it takes the whole page: playground/ide-open.ts)
   const pin = signal(false)
   // (on the start page the menu leaves after the page transition, together with the frame sliding in)
   // (the menu comes in with the new page, in the same swap: shown before it, the old page would move first)
@@ -180,7 +181,7 @@ export default function ShellMenu() {
   })
 
   return <>
-    <div class="sc-rail" data-rail-only={() => (railOnly() ? "" : null)} data-float={() => (peek() ? "" : null)} data-pin={() => (pin() && wide() ? "" : null)}>
+    <div class="sc-rail" data-rail-only={() => (railOnly() ? "" : null)} data-float={() => (peek() ? "" : null)} data-pin={() => (pin() && wide() && !ideOpen() ? "" : null)}>
       <ActivityBar class="sc-rail-bar" label="Bölümler" items={rail} value={() => marked()} onChange={pick} collapsible={false} showLabels tooltips={false} glass={() => !narrow()}
         orientation={() => (narrow() ? "horizontal" : "vertical")} />
     </div>

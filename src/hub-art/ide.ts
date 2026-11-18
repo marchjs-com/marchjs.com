@@ -1,6 +1,6 @@
 import type { ArtSet } from "./types.ts";
 
-/** Drawings for the IDE shell section (topics.ts › "/ide"). */
+/** Drawings for the IDE shell section (topics.ts › "/ide-shell"). */
 export const art: ArtSet = {
   // A small editor: activity bar, file tree, tabbed code, status line.
   "live": [["box", 10, 6, 130, 68, 7], ["dot", 17, 16, 2.500], ["dot", 17, 26, 2.500, { o: 0.4 }], ["dot", 17, 36, 2.500, { o: 0.4 }], ["path", "M24 7v58", { o: 0.4 }], ["ln", 29, 14, 20], ["ln", 33, 23, 16], ["path", "M56 7v58", { o: 0.4 }], ["fill", 60, 10, 24, 8, 3, { o: 0.3 }], ["ln", 88, 11.500, 18, { o: 0.2 }], ["ln", 62, 26, 40, { o: 0.6 }], ["ln", 68, 35, 54], ["ln", 62, 44, 20], ["fill", 86, 42.500, 2, 8, 1, { mv: { opacity: 0 } }], ["path", "M11 65h128", { o: 0.4 }]],

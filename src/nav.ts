@@ -41,9 +41,9 @@ export const PAGES: PageInfo[] = [
   { path: "/managers-env", title: "Ortam yöneticileri" },
   { path: "/flow", title: "Akış editörü" },
   { path: "/app-ui", title: "march-app-ui" },
-  { path: "/playground", title: "Playground" },
+  { path: "/ide", title: "MarchIDE" },
   { path: "/test-bilesen", title: "Test Bileşen" },
-  { path: "/ide", title: "IDE kabuğu" },
+  { path: "/ide-shell", title: "IDE kabuğu" },
   { path: "/ide-live", title: "IDE kabuğu: canlı demo" },
 ];
 /** Pages under one wildcard route (the menu lists them under their parent; titles for the breadcrumb). */

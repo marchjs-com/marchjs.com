@@ -1,52 +1,54 @@
-// Playground: the workspace of a component's page on march-app-ui (AppUI). The top bar: the component's name on the
+// The "component" layout of MarchIDE (ide.json › layout: "component"): the workspace of a component's page on march-app-ui (AppUI). The top bar: the component's name on the
 // left, the command palette and the Layout button on the right. Preview over Properties and Dependencies /
 // Accessibility on the left; the component's files over Console / Debugger / Terminal / lang.json on the right. The
 // .tsx tabs are files: the code editor plugin opens them, the March language plugin suggests March's exports. Button.tsx exports
 // the component under work; Properties shows its options, and the build renders it with them (PreviewControl.tsx). Every
 // change is built in the page (playground/build.ts): the Console shows each step with its time and the errors,
 // lang.json the texts the build found. No tab has a close mark (groups still collapse to strips).
-import "./playground.css";
-import { h, render as mount, createRoot, signal, computed, effect, untrack, onCleanup, SX, locale } from "march";
+import "./component.css";
+import { h, render as mount, createRoot, signal, computed, effect, untrack, onCleanup, SX, locale, t } from "march";
 import { registry } from "march/components/registry.gen.ts";
 import type { PlaygroundOption } from "march/components/meta.ts";
 import { appUrl } from "march/base";
 import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "march/ui";
 import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "march/app-ui";
-import { x as xIcon, history, plus, database, zap, monitor, sliders, packageBox, users, code, terminal, fileText, globe, plug } from "march/icons";
+import { x as xIcon, save, history, plus, database, zap, monitor, sliders, layers, braces, users, code, terminal, fileText, globe, plug } from "march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "march/forms"
 import { COLOR_TOKENS } from "march/theme"
-import { createBuilder, type BuildResult } from "../playground/build.ts";
-import { openBuildOutput } from "../playground/output.tsx";
-import { findRoots, exportRoots, viewRoots, type JsxRoot } from "../playground/roots.ts";
-import { iconPickerPacks, packRef } from "../icon-packs.ts";
-import { ExtensionsPanel, extensionOptions, extensionSpec, withExtensionSuggestions, NO_EXT, type ExtInfo } from "../playground/extensions-tab.tsx";
+import { createBuilder, type BuildResult } from "../build.ts";
+import { openBuildOutput } from "../output.tsx";
+import { findRoots, exportRoots, viewRoots, jsxTree, type JsxRoot, type JsxNode } from "../roots.ts";
+import { iconPickerPacks, packRef, loadPack } from "../../icon-packs.ts";
+import type { IdeJson, IdeSource } from "../ide.ts";
+// the ide.json texts as t`…` (tools/gen-ide-texts.js): imported so the build collects them for translation
+import "../ide-texts.gen.tsx";
+import { idle } from "../march-ide.tsx";
+import { HUBS } from "../../topics.ts";
+import { IDE_PAGES } from "../ide-pages.ts";
+import { ExtensionsPanel, extensionOptions, extensionSpec, withExtensionSuggestions, NO_EXT, type ExtInfo, type OwnProp } from "../extensions-tab.tsx";
+import { CORE_PROPS } from "../prop-suggest.ts";
 
 
-// the component's files (kept for this visit)
-const SOURCES: Record<string, string> = {
-  "Button.tsx": `export { Button } from "march/ui"
-`,
-  "Component2.tsx": `import { Card, Badge } from "march/ui"
-
-export function Component2(props: { title: string; count: number }) {
-  return <Card title={props.title}>
-    <Badge tone="info">{props.count} yeni</Badge>
-  </Card>
+// the workspace's files (from its ide.json, kept for this visit): every file's text, made before anything reads them
+// (the exported name, the build)
+const files = new Map<string, ReturnType<typeof signal<string>>>()
+/** Every file's text as last saved: the build, the preview and the language file follow it, not the typing (Ctrl + S
+ * or the bar's Save button saves; the TypeScript check runs on the typed text, in its worker). */
+const saved = new Map<string, ReturnType<typeof signal<string>>>()
+const isDirty = (path: string): boolean => { const t = files.get(path), s = saved.get(path); return !!t && !!s && t() !== s() }
+const anyDirty = (): boolean => [...files.keys()].some(isDirty)
+/** Saves a file (else every file): its text becomes the saved one, which builds it. Returns whether anything changed. */
+const saveFiles = (path?: string): boolean => {
+  let changed = false
+  for (const p of path ? [path] : [...files.keys()]) {
+    const t = files.get(p), s = saved.get(p)
+    if (t && s && s.peek() !== t.peek()) { s.set(t.peek()); changed = true }
+  }
+  return changed
 }
-`,
-  "Component3.tsx": `import { signal, computed } from "march"
-
-const items = signal(["elma", "armut"])
-const total = computed(() => items().length)
-
-export const Component3 = () => <p>{total()} öğe</p>
-`,
-}
-// every file's text, made first: what reads them (the exported name, the build) finds them all
-const files = new Map(Object.entries(SOURCES).map(([p, text]) => [p, signal(text)] as const))
 const fileTab = (id: string, path: string): AppPanel => {
   const text = files.get(path) ?? signal("")
-  return { id, title: path, icon: fileText, file: { path, text, set: (v: string) => text.set(v) } }
+  return { id, title: path, icon: fileText, dirty: () => isDirty(path), file: { path, text, set: (v: string) => text.set(v) } }
 }
 
 // the component under work: the first name Button.tsx exports; its Properties are the options of its showcase card
@@ -54,8 +56,9 @@ const fileTab = (id: string, path: string): AppPanel => {
 // a playground, not a project: the code tab in front (of the files' group) is the one built, previewed, translated
 // (lang.json) and whose Properties show; the others wait
 const ENTRY = "PreviewControl.tsx"
-const FILE_OF: Record<string, string> = { c1: "Button.tsx", c2: "Component2.tsx", c3: "Component3.tsx" }
-const active = signal("Button.tsx")
+// a file's tab id (c1, c2…) → its name
+const FILE_OF: Record<string, string> = {}
+const active = signal("")
 let dock: DockApi | null = null
 const followTabs = (api: DockApi) => {
   dock = api
@@ -69,17 +72,20 @@ const followTabs = (api: DockApi) => {
     if (file && file !== untrack(active)) { active.set(file); print(`[${stamp()}] ${file} sekmesi etkin`, "info") }
   })
 }
+/** The text of the file in front as saved: the editor draws every key at once, the analyses below (its roots, exports,
+ * own components, data, the Hierarchy's tree, the live code) and the build follow the saves, not the typing. */
+const settledText = (): string => saved.get(active())?.() ?? ""
 // the components the file in front exports (names with a capital letter): each has a cell of the preview and a root
 // in the Dependencies tree
 // the elements the file writes at its top level, assigned to nothing (<CodeEditor … />): components of their own,
 // named by their tag (CodeEditor_1); their props are the written ones, Properties go over them
-const jsxRoots = computed((): JsxRoot[] => findRoots(files.get(active())?.() ?? ""), { equals: (a, b) => !!a && !!b && a.map((r) => r.name + r.tag).join() === b.map((r) => r.name + r.tag).join() })
+const jsxRoots = computed((): JsxRoot[] => findRoots(settledText()), { equals: (a, b) => !!a && !!b && a.map((r) => r.name + r.tag).join() === b.map((r) => r.name + r.tag).join() })
 /** The tag a top-level element's name stands for (CodeEditor_1 → CodeEditor); undefined for a name the file exports. */
 const rootTag = (name: string): string | undefined => jsxRoots().find((r) => r.name === name)?.tag
 /** The code built: the top-level elements written as exports. */
 const forBuild = (src: string): string => exportRoots(src)
 const exportedNames = computed((): string[] => {
-  const src = files.get(active())?.() ?? "", out: string[] = []
+  const src = settledText(), out: string[] = []
   for (const m of src.matchAll(/export\s*\{([^}]*)\}/g)) for (const part of (m[1] ?? "").split(",")) { const n = part.trim().replace(/^type\s+/, "").split(/\s+as\s+/).pop()?.trim(); if (n) out.push(n) }
   for (const m of src.matchAll(/export\s+(?:async\s+)?(?:function\*?|const|let|class)\s+([A-Za-z_$][\w$]*)/g)) out.push(m[1]!)
   for (const r of jsxRoots()) out.push(r.name)
@@ -92,27 +98,26 @@ const isRoot = (name: string): boolean => exportedNames().includes(name)
 const metaOf = (name: string) => { const tag = rootTag(name) ?? name; return registry.find((e) => e.meta.name === tag) }
 // a component written in the file in front (not one of March's): its props read from its type (`props: { … }`, or
 // an interface / type of the file), its parts from its JSX (the March components and the file's own ones it draws)
-interface LocalComp { props: ApiProp[]; uses: string[] }
+interface LocalComp { props: ApiProp[]; from: number; to: number }
 const typeFields = (body: string): ApiProp[] => body.split(/[;\n]/).map((line) => /^\s*(?:readonly\s+)?([\w$]+)(\?)?\s*:\s*(.+?)\s*,?\s*$/.exec(line))
   .filter((m): m is RegExpExecArray => !!m).map((m) => ({ name: m[1]!, type: `${m[3]!}${m[2] ? " | undefined" : ""}`, doc: "" }))
 const localComps = computed((): Record<string, LocalComp> => {
-  const src = files.get(active())?.() ?? "", out: Record<string, LocalComp> = {}
+  const src = settledText(), out: Record<string, LocalComp> = {}
   const starts = [...src.matchAll(/(?:function\s+([A-Z][\w$]*)\s*(?:<[^>]*>)?\s*\(|(?:const|let)\s+([A-Z][\w$]*)\s*=\s*(?:async\s*)?\()/g)]
   starts.forEach((m, i) => {
-    const name = (m[1] ?? m[2])!, body = src.slice(m.index!, starts[i + 1]?.index ?? src.length)
+    const name = (m[1] ?? m[2])!, from = m.index!, to = starts[i + 1]?.index ?? src.length, body = src.slice(from, to)
     // the first parameter's type: written in place, or a name the file declares
     const t = /\(\s*(?:[\w$]+|\{[^}]*\})\s*:\s*(\{[^{}]*\}|[A-Z][\w$]*)/.exec(body)?.[1] ?? ""
     const decl = t.startsWith("{") ? t.slice(1, -1) : t ? (new RegExp(`(?:interface\\s+${t}\\b[^{]*|type\\s+${t}\\s*=\\s*)\\{([^}]*)\\}`).exec(src)?.[1] ?? "") : ""
-    out[name] = { props: typeFields(decl), uses: [...new Set([...body.matchAll(/<([A-Za-z][\w$-]*)/g)].map((x) => (/^[a-z]/.test(x[1]!) ? `<${x[1]}>` : x[1]!)))].filter((n) => n !== name) }
+    out[name] = { props: typeFields(decl), from, to }
   })
-  for (const c of Object.values(out)) c.uses = c.uses.filter((n) => n.startsWith("<") || metaOf(n) || n in out)
   return out
 })
 // Data: what the file declares at its top (signals, computed values, constants): the Data tab shows them; a signal is
 // set (or pushed to) in the running preview at once, a constant's value is written into the code (and built again)
 interface DataItem { name: string; kind: "signal" | "computed" | "const" | "let"; init: string; from: number; to: number }
 const dataItems = computed((): DataItem[] => {
-  const src = files.get(active())?.() ?? "", out: DataItem[] = []
+  const src = settledText(), out: DataItem[] = []
   for (const m of src.matchAll(/^(?:export\s+)?(const|let)\s+([a-z_$][\w$]*)\s*(?::[^=\n]+)?=\s*(.+)$/gm)) {
     const [, decl, name, rest] = m as unknown as [string, "const" | "let", string, string]
     const kind = /^signal\s*[<(]/.test(rest) ? "signal" : /^computed\s*[<(]/.test(rest) ? "computed" : decl
@@ -125,19 +130,40 @@ const dataItems = computed((): DataItem[] => {
 }, { equals: (a, b) => !!a && !!b && JSON.stringify(a) === JSON.stringify(b) })
 /** The props a component exports: the file's own component's from its type, March's from the API reference. */
 const exportedProps = (name: string): ApiProp[] => localComps()[name]?.props ?? apiPropsBy()[name] ?? []
+// Hierarchy: every element the file in front draws, where it is written and nested as in the code (a Button written
+// twice is two rows), each March component with the parts it is built from (its composedOf, recursively) under it.
+// Choosing a row shows that component's Properties.
 interface DepNode { id: string; label: string; children?: DepNode[] }
 const depTree = computed((): DepNode[] => {
-  const roots = exportedNames()
+  const src = settledText(), roots = exportedNames()
   if (!roots.length) return []
-  const walk = (name: string, path: string, seen: Set<string>): DepNode => {
-    const local = localComps()[name]
-    const kids = seen.has(name) ? [] : (local ? local.uses : (metaOf(name)?.meta.composedOf ?? []).filter((k) => metaOf(k)))
-    const next = new Set(seen).add(name)
-    return { id: path, label: name, ...(kids.length ? { children: kids.map((k) => walk(k, `${path}/${k}`, next)) } : {}) }
+  let n = 0
+  const make = (label: string, kids: DepNode[]): DepNode => ({ id: `${label}#${n++}`, label, ...(kids.length ? { children: kids } : {}) })
+  // a March component's parts, recursively (a part already above it is not repeated)
+  const parts = (name: string, seen: ReadonlySet<string>): DepNode[] => (seen.has(name) || localComps()[name] ? [] :
+    (metaOf(name)?.meta.composedOf ?? []).filter((k) => metaOf(k)).map((k) => make(k, parts(k, new Set(seen).add(name)))))
+  // a written element: what is written inside it, then (a March component) its own parts; a fragment is its children
+  const written = (j: JsxNode): DepNode[] => {
+    if (!j.tag) return j.kids.flatMap(written)
+    const label = /^[a-z]/.test(j.tag) ? `<${j.tag}>` : j.tag
+    return [make(label, [...j.kids.flatMap(written), ...parts(label, new Set())])]
   }
-  return roots.map((r) => walk(r, r, new Set()))
+  return roots.map((r) => {
+    const local = localComps()[r], top = jsxRoots().find((x) => x.name === r)
+    // the file's own component: the elements its body draws; a top-level element: what is written inside it
+    if (local) return make(r, jsxTree(src, local.from, local.to).flatMap(written))
+    if (top) { const j = jsxTree(src, top.from, top.to)[0]; return make(r, [...(j?.kids.flatMap(written) ?? []), ...parts(top.tag, new Set())]) }
+    return make(r, parts(r, new Set()))
+  })
 })
-const inTree = computed((): string[] => { const out = new Set<string>(); const go = (n: DepNode): void => { out.add(n.label); n.children?.forEach(go) }; depTree().forEach(go); return [...out] })
+// the instances the preview draws now (its runtime's componentTree): the Hierarchy shows them, one row each
+interface LiveItem { id: number; parent: number; name: string; key: string; elId: string; text: string }
+const liveTree = signal<LiveItem[]>([])
+const inTree = computed((): string[] => {
+  const out = new Set<string>(); const go = (n: DepNode): void => { out.add(n.label); n.children?.forEach(go) }; depTree().forEach(go)
+  for (const it of liveTree()) out.add(it.name)
+  return [...out]
+}, { equals: (a, b) => !!a && !!b && a.join() === b.join() })
 /** The component whose Properties show (chosen in the Dependencies tree; the exported one by default). */
 const selected = signal("")
 const optionsBy = signal<Record<string, readonly PlaygroundOption[]>>({})
@@ -300,8 +326,47 @@ const isA11y = (o: PlaygroundOption): boolean => o.key.startsWith("a11y:")
 const options = (): readonly PlaygroundOption[] => optsOf(selected())
 // the set of options (the grid is made again when it changes: a component chosen, the root's tag read)
 const optionKeys = computed(() => `${selected()}:${options().map((o) => o.key).join(",")}:${selected() in tableBy() ? 1 : 0}:${selected() in apiPropsBy() ? 1 : 0}:${locale()}:${Object.values(commonText())[0] ?? ""}`)
-const values = (): Record<string, unknown> => { const v = valuesBy()[selected()] ?? {}; return Object.fromEntries(options().map((o) => [o.key, v[o.key] ?? defaultOf(o)])) }
-const setValues = (v: Record<string, unknown>) => valuesBy.set({ ...valuesBy.peek(), [selected.peek()]: { ...v } })
+// an instance chosen in the Hierarchy (one of several Buttons) takes its own values: Properties changes that one
+// only (the runtime gives them to the instance with its key). The exported component on top and a choice made by name
+// (no instance) keep the values of the component's kind.
+const selectedInst = signal<{ key: string; name: string; root: boolean } | null>(null)
+const valuesByInst = signal<Record<string, Record<string, unknown>>>({})
+/** "Tüm örneklere uygula" (Properties' bar): while on, a change is the kind's, so every instance of it takes it. */
+const applyAll = signal(false)
+const instOn = (): string | null => { const s = selectedInst(); return s && !s.root && !applyAll() && s.name === selected() ? s.key : null }
+/** What a change in Properties goes to, in words: the instance (with its text), or every instance of the kind. */
+const target = (): string => {
+  const name = selected(), k = instOn()
+  if (!name) return ""
+  if (k) { const it = liveTree().find((x) => x.key === k); return it?.text ? `${name} · “${it.text}”` : name }
+  const many = liveTree().filter((x) => x.name === name).length
+  return many > 1 ? `tüm ${name} örnekleri (${many})` : name
+}
+const values = (): Record<string, unknown> => { const k = instOn(), v = (k ? valuesByInst()[k] : valuesBy()[selected()]) ?? {}; return Object.fromEntries(options().map((o) => [o.key, v[o.key] ?? defaultOf(o)])) }
+const setValues = (v: Record<string, unknown>) => {
+  const k = untrack(instOn), name = selected.peek()
+  if (k) { valuesByInst.set({ ...valuesByInst.peek(), [k]: { ...v } }); return }
+  // for the whole kind: what changed is taken off the instances' own values too, so every instance shows it
+  const before = untrack(values), changed = Object.keys(v).filter((x) => JSON.stringify(v[x]) !== JSON.stringify(before[x]))
+  if (untrack(applyAll) && changed.length) {
+    const next = { ...valuesByInst.peek() }
+    for (const [key, own] of Object.entries(next)) if (nameOfKey(key) === name) { const o = { ...own }; for (const x of changed) delete o[x]; next[key] = o }
+    valuesByInst.set(next)
+  }
+  valuesBy.set({ ...valuesBy.peek(), [name]: { ...v } })
+}
+// the instance a choice made by name stands on (the first one opened, a tab shown, the command line): the row the
+// Hierarchy marks is the instance Properties changes, so what is shown chosen and what a change goes to are one
+effect(() => {
+  const items = liveTree(), name = selected(), inst = untrack(selectedInst)
+  if (inst && inst.name === name && items.some((x) => x.key === inst.key)) return
+  const it = items.find((x) => x.name === name)
+  untrack(() => selectedInst.set(it ? { key: it.key, name, root: it.parent === 0 } : null))
+})
+/** An instance key's component: "SaveBar/SaveBar:0/Button:1" → Button. */
+const nameOfKey = (key: string): string => (key.split("/").pop() ?? "").replace(/:\d+$/, "")
+/** Chooses a live instance (a Hierarchy row, a focus in the preview). */
+const chooseInst = (it: LiveItem): void => { selectedInst.set({ key: it.key, name: it.name, root: it.parent === 0 }); pickedId.set(`${it.name}#i${it.id}`); selected.set(it.name) }
 // March's classes: every .m-… class of the page's stylesheets (read once, when a class field first opens)
 let marchClasses: string[] | null = null
 const classList = (): string[] => {
@@ -498,11 +563,15 @@ const jsxValue = (o: PlaygroundOption | undefined, x: unknown, v: Record<string,
   return typeof x === "string" ? JSON.stringify(x) : `{${JSON.stringify(x)}}`
 }
 const objValue = (o: PlaygroundOption | undefined, x: unknown, v: Record<string, unknown>): string => { const j = jsxValue(o, x, v); return j.startsWith("{") ? j.slice(1, -1) : j }
+/** What was changed in a component's values, as JSX attributes: [prop, its code] (`["size", 'size="lg"']`). */
+const attrsOf = (name: string, v: Record<string, unknown>): [string, string][] => {
+  const opts = optsOf(name), byProp = (prop: string) => opts.find((o) => (o.prop || o.key) === prop)
+  return Object.entries(propsOf(opts, v, true)).filter(([k]) => k !== "children").map(([k, x]): [string, string] =>
+    [k, k === "sx" ? `sx={{ ${Object.entries(x as Record<string, unknown>).map(([a, b]) => `${a}: ${JSON.stringify(b)}`).join(", ")} }}` : x === true ? k : `${k}=${jsxValue(byProp(k), x, v)}`])
+}
 const usageOf = (name: string): string => {
-  const opts = optsOf(name), v = valuesBy()[name] ?? {}
-  const changed = propsOf(opts, v, true)
-  const byProp = (prop: string) => opts.find((o) => (o.prop || o.key) === prop)
-  const attrs = Object.entries(changed).filter(([k]) => k !== "children").map(([k, x]) => (k === "sx" ? `sx={{ ${Object.entries(x as Record<string, unknown>).map(([a, b]) => `${a}: ${JSON.stringify(b)}`).join(", ")} }}` : x === true ? k : `${k}=${jsxValue(byProp(k), x, v)}`))
+  const v = valuesBy()[name] ?? {}
+  const attrs = attrsOf(name, v).map(([, a]) => a)
   attrs.push(...handlerCode(name).map(([ev, code]) => `${ev}={${code}}`))
   const parts = Object.entries(partsFor(name)).map(([n, p]) => {
     const po = optsOf(n), pv = valuesBy()[n] ?? {}
@@ -517,6 +586,94 @@ const usageOf = (name: string): string => {
 }
 /** The code of every exported component, one under the other. */
 const usage = computed((): string => exportedNames().map(usageOf).join("\n"))
+// The TSX box under the preview: the file in front, whole (it scrolls), and under it the calls with what Properties
+// changed. The instance chosen in the Hierarchy is found where it is written (its key followed down the file's JSX:
+// the root component's body, then each component inside it by its place among the ones of its name; one written in a
+// .map stands for all it draws), its lines are marked and the box scrolls to them.
+const fileCode = (): string => settledText()
+const tsxCode = computed((): string => {
+  const src = withInstanceValues(fileCode()).replace(/\s+$/, ""), calls = usage()
+  const plain = exportedNames().every((n) => usageOf(n) === `<${(rootTag(n) ?? n).replace(/^<(.*)>$/, "$1")} />`)
+  return plain || !calls ? src : `${src}\n\n// önizlemede, Özellikler'de değişenlerle:\n${calls}`
+})
+/** Where an instance (by its key) is written in the file: its element, or the root component's body, or null. */
+const writtenAt = (key: string, src: string): { node: JsxNode | null; body: [number, number] | null; whole: boolean } => {
+  const steps = key.split("/").slice(1).map((x) => { const m = /^(.*):(\d+)$/.exec(x); return { name: m?.[1] ?? x, n: Number(m?.[2] ?? 0) } })
+  const root = steps[0]
+  if (!root) return { node: null, body: null, whole: false }
+  const local = localComps()[root.name], top = jsxRoots().find((x) => x.name === root.name)
+  let nodes: JsxNode[] = local ? jsxTree(src, local.from, local.to) : top ? jsxTree(src, top.from, top.to) : []
+  let hit: JsxNode | null = !local && top ? nodes[0] ?? null : null
+  if (hit) nodes = hit.kids
+  // the components under a list of elements (through the plain elements and fragments, down to the next components)
+  const comps = (list: readonly JsxNode[]): JsxNode[] => list.flatMap((k) => (!k.tag || /^[a-z]/.test(k.tag) ? comps(k.kids) : [k]))
+  // whole: every step found in the code (a part a component draws itself, its Spinner, is not written there)
+  let whole = true
+  for (const st of steps.slice(1)) {
+    const same = comps(nodes).filter((k) => k.tag === st.name)
+    if (!same.length) { whole = false; break }
+    hit = same[Math.min(st.n, same.length - 1)]!
+    nodes = hit.kids
+  }
+  return { node: steps.length > 1 ? hit : !local ? hit : null, body: local ? [local.from, local.to] : null, whole }
+}
+const selectedRange = computed((): [number, number] | null => {
+  const inst = selectedInst()
+  if (!inst) return null
+  const w = writtenAt(inst.key, fileCode())
+  return w.node ? [w.node.from, w.node.to] : w.body
+})
+/** The end of an element's opening tag (before its `>` or `/>`). */
+const openEnd = (src: string, from: number): number => {
+  let depth = 0
+  for (let i = from + 1; i < src.length; i++) {
+    const c = src[i]
+    if (c === '"' || c === "'") { const e = src.indexOf(c, i + 1); i = e < 0 ? src.length : e; continue }
+    if (c === "{") depth++
+    else if (c === "}") depth--
+    else if (depth === 0 && c === ">") return src[i - 1] === "/" ? i - 1 : i
+  }
+  return src.length
+}
+/** The file with the instances' own values written into the elements they stand for: an attribute there is
+ *  replaced, a new one added; an element that draws several instances (a .map) gets a note instead. */
+const withInstanceValues = (src: string): string => {
+  const edits: { at: number; end: number; text: string }[] = []
+  const byNode = new Map<number, { node: JsxNode; keys: string[] }>()
+  for (const it of liveTree()) { const w = writtenAt(it.key, src); if (w.node && w.whole) { const g = byNode.get(w.node.from) ?? { node: w.node, keys: [] }; g.keys.push(it.key); byNode.set(w.node.from, g) } }
+  for (const { node, keys } of byNode.values()) {
+    const own = keys.map((k) => ({ k, attrs: attrsOf(nameOfKey(k), valuesByInst()[k] ?? {}) })).filter((x) => x.attrs.length)
+    if (!own.length) continue
+    const end = openEnd(src, node.from)
+    if (keys.length > 1) { edits.push({ at: end, end, text: ` {/* ${own.map((x) => `${Number(/:(\d+)$/.exec(x.k)?.[1] ?? 0) + 1}. örnek: ${x.attrs.map(([, a]) => a).join(" ")}`).join("; ")} */}` }); continue }
+    let tag = src.slice(node.from, end)
+    for (const [prop, attr] of own[0]!.attrs) {
+      // the attribute as written (prop="…", prop='…', prop={…} or a bare prop), after a space
+      const re = new RegExp("(\\s)" + prop.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(=(\"[^\"]*\"|'[^']*'|\\{[^}]*\\}))?(?=[\\s/>]|$)")
+      tag = re.test(tag) ? tag.replace(re, `$1${attr}`) : `${tag} ${attr}`
+    }
+    edits.push({ at: node.from, end, text: tag })
+  }
+  let out = src
+  for (const e of edits.sort((a, b) => b.at - a.at)) out = out.slice(0, e.at) + e.text + out.slice(e.end)
+  return out
+}
+const lineAt = (src: string, at: number): number => src.slice(0, at).split("\n").length
+/** Marks the chosen element's lines in the TSX box and scrolls them into its view (smoothly; at once with reduced motion). */
+const markTsx = (): void => { setTimeout(() => {
+  const pre = document.querySelector<HTMLElement>(".sc-pv-code .m-code-pre"), r = untrack(selectedRange), src = untrack(fileCode)
+  if (!pre) return
+  const lines = pre.querySelectorAll<HTMLElement>(".m-code-line")
+  lines.forEach((l) => l.classList.remove("is-hl"))
+  if (!r) return
+  const a = lineAt(src, r[0]), b = lineAt(src, r[1])
+  for (let i = a; i <= b; i++) lines[i - 1]?.classList.add("is-hl")
+  const first = lines[a - 1]
+  if (!first) return
+  const top = pre.scrollTop + first.getBoundingClientRect().top - pre.getBoundingClientRect().top - pre.clientHeight / 4
+  pre.scrollTo({ top: Math.max(0, top), behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
+}, 0) }
+effect(() => { selectedRange(); tsxCode(); markTsx() })
 // Accessibility: the accessible name, description, role… of the component chosen (its exported props for them first)
 // a grid panel: made again (the old one disposed and removed) whenever the component chosen or its set of options
 // changes, so it always shows that component's own values; drawn by hand into its box, one grid at a time
@@ -529,6 +686,11 @@ const gridPanel = (make: () => unknown) => () => {
   onCleanup(() => { gone = true; dispose?.() })
   return <div class="sc-props">
     {() => { optionKeys(); if (!queued) { queued = true; queueMicrotask(rebuild) } return null }}
+    <div class="sc-props-bar">
+      <span class="sc-props-target" title={target}>{target}</span>
+      <Chip size="sm" icon={layers} selectedIcon={false} selected={() => applyAll()} onClick={() => applyAll.set(!applyAll.peek())}
+        title="Açıkken bir değişiklik aynı türdeki her bileşene uygulanır">Tüm örneklere uygula</Chip>
+    </div>
     {inner}
   </div>
 }
@@ -538,15 +700,102 @@ const a11yPanel = gridPanel(() => { const list = options().filter(isA11y); retur
 const propsPanel = gridPanel(() => (options().length
   ? <PropertyGrid persist="sc.playground.props" openGroups={[MARCH_GROUP]} properties={options().filter((o) => !isA11y(o)).map(asProperty)} value={values()} onChange={setValues} label={`${selected()} özellikleri`} saved={values()} footer={false} history={false} dirty={false} search={false} />
   : <div class="sc-playground-empty"><b>Özellik yok</b><span>{selected() ? `${selected()} prop almıyor` : "Dışa aktarılan bileşen yok"}</span></div>))
-// Dependencies: the tree of the components the work is built from; the one chosen shows its Properties
-const allIds = (nodes: readonly DepNode[]): string[] => { const ids: string[] = []; const go = (n: DepNode): void => { ids.push(n.id); n.children?.forEach(go) }; nodes.forEach(go); return ids }
+// Hierarchy: every component the preview draws, one row per instance, under the instance that drew it (its root's id
+// and text beside it); before the preview has drawn, the tree of what the file writes (depTree). The filter keeps the
+// rows whose name, id or text has what is typed (and the rows above them). Choosing one shows its Properties and
+// points at it in the preview.
+interface ShownNode { id: string; label: string; meta?: string; name: string; elId: string; text: string; children?: ShownNode[] }
+// the filter: typed text (in the fields chosen), one component (the list of what is on screen), March's or the file's
+// own, and either the rows above a match kept (the path to it) or the matches alone, in a flat list
+type TreeField = "name" | "id" | "text"
+const treeFilter = signal(""), treeComp = signal<string | null>(null), treeFields = signal<readonly TreeField[]>(["name", "id", "text"])
+const treeOrigin = signal<"all" | "march" | "own">("all"), treeFlat = signal(false)
+const liveNodes = (items: readonly LiveItem[]): ShownNode[] => {
+  const ids = new Set(items.map((x) => x.id)), kids = new Map<number, LiveItem[]>()
+  for (const it of items) { const at = ids.has(it.parent) ? it.parent : 0; const list = kids.get(at) ?? []; list.push(it); kids.set(at, list) }
+  const make = (it: LiveItem): ShownNode => {
+    const ch = (kids.get(it.id) ?? []).map(make), meta = [it.elId && `#${it.elId}`, it.text && `“${it.text}”`].filter(Boolean).join("  ")
+    return { id: `${it.name}#i${it.id}`, label: it.name, name: it.name, elId: it.elId, text: it.text, ...(meta ? { meta } : {}), ...(ch.length ? { children: ch } : {}) }
+  }
+  return (kids.get(0) ?? []).map(make)
+}
+const staticNodes = (nodes: readonly DepNode[]): ShownNode[] => nodes.map((n) => ({ id: n.id, label: n.label, name: n.label, elId: "", text: "", ...(n.children ? { children: staticNodes(n.children) } : {}) }))
+/** Every row of the tree, unfiltered. */
+const treeAll = computed((): ShownNode[] => (liveTree().length ? liveNodes(liveTree()) : staticNodes(depTree())))
+const flat = (nodes: readonly ShownNode[]): ShownNode[] => nodes.flatMap((n) => [n, ...flat(n.children ?? [])])
+/** The components on screen with how many of each (the component list). */
+const treeNames = computed((): { name: string; count: number }[] => {
+  const by = new Map<string, number>()
+  for (const n of flat(treeAll())) if (!n.name.startsWith("<")) by.set(n.name, (by.get(n.name) ?? 0) + 1)
+  return [...by].map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+})
+const isOwn = (name: string): boolean => name in localComps() || !metaOf(name)
+const hits = (n: ShownNode): boolean => {
+  const q = treeFilter().trim().toLocaleLowerCase("tr"), comp = treeComp(), origin = treeOrigin(), f = treeFields()
+  if (comp && n.name !== comp) return false
+  if (origin !== "all" && (n.name.startsWith("<") || isOwn(n.name) !== (origin === "own"))) return false
+  if (!q) return true
+  return (f.includes("name") && n.name.toLocaleLowerCase("tr").includes(q)) || (f.includes("id") && n.elId.toLocaleLowerCase("tr").includes(q))
+    || (f.includes("text") && n.text.toLocaleLowerCase("tr").includes(q))
+}
+const filtering = (): boolean => !!treeFilter().trim() || !!treeComp() || treeOrigin() !== "all"
+const keep = (nodes: readonly ShownNode[]): ShownNode[] => nodes.flatMap((n) => {
+  const ch = keep(n.children ?? [])
+  return hits(n) || ch.length ? [{ ...n, children: ch.length ? ch : undefined }] : []
+})
+const shownTree = computed((): ShownNode[] => {
+  if (!filtering()) return treeAll()
+  return treeFlat() ? flat(treeAll()).filter(hits).map((n) => ({ ...n, children: undefined })) : keep(treeAll())
+})
+const hitCount = computed((): [number, number] => { const all = flat(treeAll()); return [filtering() ? all.filter(hits).length : all.length, all.length] })
+const allIds = (nodes: readonly ShownNode[]): string[] => { const ids: string[] = []; const go = (n: ShownNode): void => { ids.push(n.id); n.children?.forEach(go) }; nodes.forEach(go); return ids }
 // the row chosen (a component may sit at several places of the tree; the first one when chosen elsewhere)
 const pickedId = signal("")
-const selectedId = (): string | undefined => { const ids = allIds(depTree()); const p = pickedId(); return p && ids.includes(p) && p.split("/").pop() === selected() ? p : ids.find((id) => id.split("/").pop() === selected()) }
+const labelOfId = (id: string): string => id.slice(0, id.lastIndexOf("#"))
+const selectedId = (): string | undefined => {
+  // a chosen instance is followed by its key (the preview draws again with new ids)
+  const inst = selectedInst(), it = inst && inst.name === selected() ? liveTree().find((x) => x.key === inst.key) : undefined
+  if (it) return `${it.name}#i${it.id}`
+  const ids = allIds(shownTree()); const p = pickedId(); return p && ids.includes(p) && labelOfId(p) === selected() ? p : ids.find((id) => labelOfId(id) === selected()) }
+/** Brings the chosen row into the middle of the Hierarchy (smoothly; at once with reduced motion). Only the panel's own
+ * list scrolls, not the page or the workspace around it. */
+const revealRow = (): void => { setTimeout(() => {
+  const box = document.querySelector<HTMLElement>(".sc-deps"), row = box?.querySelector<HTMLElement>('[role="treeitem"][aria-selected="true"] > .m-tree-row')
+  if (!box || !row) return
+  const top = box.scrollTop + row.getBoundingClientRect().top - box.getBoundingClientRect().top - (box.clientHeight - row.offsetHeight) / 2
+  box.scrollTo({ top: Math.max(0, top), behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
+}, 0) }
+/** The preview's instances again (their texts change as the preview runs). */
+const readTree = (): void => { if (runtimeNow) liveTree.set(runtimeNow.componentTree()) }
+const FIELDS: readonly [TreeField, string][] = [["name", "Ad"], ["id", "ID"], ["text", "Metin"]]
+const toggleField = (f: TreeField): void => { const now = treeFields.peek(); const next = now.includes(f) ? now.filter((x) => x !== f) : [...now, f]; treeFields.set(next.length ? next : [f]) }
+const clearTree = (): void => { treeFilter.set(""); treeComp.set(null); treeOrigin.set("all") }
 const depsPanel = () => <div class="sc-deps">
-  {() => (depTree().length
-    ? <Tree nodes={depTree()} toggle="chevron" expanded={allIds(depTree())} selected={() => selectedId()} label="Bileşenin parçaları" onSelect={(n: { id: string; label: unknown }) => { pickedId.set(n.id); selected.set(String(n.label)) }} />
-    : <div class="sc-playground-empty"><b>Bağımlılık yok</b><span>Dışa aktarılan bileşen yok</span></div>)}
+  <div class="sc-deps-bar" role="search" aria-label="Hiyerarşi süzgeci">
+    <div class="sc-deps-row">
+    <TextInput class="sc-deps-q" type="search" aria-label="Hiyerarşide ara" placeholder="Ara…" value={treeFilter()}
+      onChange={(v: string) => { readTree(); treeFilter.set(v) }} onKeyDown={(e: KeyboardEvent) => { if (e.key === "Escape") clearTree() }} />
+    <Combobox class="sc-deps-comp" aria-label="Bileşen" placeholder="Bileşen" value={treeComp()}
+      options={treeNames().map((x) => ({ value: x.name, label: x.name, hint: String(x.count) }))} onChange={(v: unknown) => treeComp.set((v as string | null) || null)} />
+    </div>
+    <div class="sc-deps-opts">
+      {FIELDS.map(([f, label]) => <Chip size="sm" selectedIcon={false} selected={() => treeFields().includes(f)} onClick={() => toggleField(f)}>{label}</Chip>)}
+      <span class="sc-deps-sep" aria-hidden="true" />
+      <Chip size="sm" selectedIcon={false} selected={() => treeOrigin() === "march"} onClick={() => treeOrigin.set(treeOrigin.peek() === "march" ? "all" : "march")}>March</Chip>
+      <Chip size="sm" selectedIcon={false} selected={() => treeOrigin() === "own"} onClick={() => treeOrigin.set(treeOrigin.peek() === "own" ? "all" : "own")}>Benim</Chip>
+      <span class="sc-deps-sep" aria-hidden="true" />
+      <Chip size="sm" selectedIcon={false} selected={() => treeFlat()} onClick={() => treeFlat.set(!treeFlat.peek())} title="Yalnız eşleşenler, düz liste">Düz</Chip>
+      <span class="sc-deps-count" aria-live="polite">{() => { const [n, all] = hitCount(); return filtering() ? `${n}/${all}` : String(all) }}</span>
+      {() => (filtering() ? <IconButton size="sm" variant="ghost" icon={xIcon} label="Süzgeci temizle" on:click={clearTree} /> : null)}
+    </div>
+  </div>
+  {() => (shownTree().length
+    ? <Tree nodes={shownTree()} toggle="chevron" expanded={allIds(shownTree())} selected={() => selectedId()} label="Hiyerarşi"
+      onSelect={(n: { id: string }) => {
+        const i = /#i(\d+)$/.exec(n.id), it = i ? liveTree.peek().find((x) => x.id === +i[1]!) : undefined
+        if (it) { chooseInst(it); runtimeNow?.highlight(it.id) } else { selectedInst.set(null); pickedId.set(n.id); selected.set(labelOfId(n.id)) }
+      }} />
+    : <div class="sc-playground-empty"><b>{filtering() ? "Eşleşen yok" : "Hiyerarşi boş"}</b><span>{filtering() ? "Süzgeci gevşetin ya da temizleyin" : "Dışa aktarılan bileşen yok"}</span></div>)}
 </div>
 
 // Events: the callbacks a component exports (its on… props, from the API reference), each with a handler to try
@@ -563,17 +812,79 @@ const apiIndex = (): Promise<MarchCatalog> => {
 effect(() => { pageLang(); void apiIndex().then((idx) => commonText.set(Object.fromEntries((idx as unknown as { common?: [string, string][] }).common ?? []))) })
 const chunks = new Map<number, Promise<Record<string, { props?: ApiProp[] }>>>()
 const eventsBy = signal<Record<string, ApiProp[]>>({})
-async function loadEvents(name: string): Promise<void> {
-  const api = rootTag(name) ?? name
+/** A March component's props as the API reference has them (its name as March exports it), fetched once. */
+async function apiProps(api: string): Promise<ApiProp[]> {
   const idx = await apiIndex() as unknown as { subpaths: { subpath: string; items: [string, string, string, string, number][] }[] }
   let found: { key: string; chunk: number } | null = null
   for (const sp of idx.subpaths) for (const it of sp.items) if (it[0] === api && it[1] === "component" && (!found || sp.subpath === "march/ui")) found = { key: `${sp.subpath}#${api}`, chunk: it[4] }
-  let all: ApiProp[] = []
-  if (found) {
-    const { key, chunk } = found
-    if (!chunks.has(chunk)) chunks.set(chunk, fetch(appUrl(`api/docs-${chunk}.json`)).then((r) => r.json()))
-    all = (await chunks.get(chunk)!)[key]?.props ?? []
+  if (!found) return []
+  const { key, chunk } = found
+  if (!chunks.has(chunk)) chunks.set(chunk, fetch(appUrl(`api/docs-${chunk}.json`)).then((r) => r.json()))
+  return (await chunks.get(chunk)!)[key]?.props ?? []
+}
+/** The code editor's props of a tag (its list inside `<Button …>` and the pointer's rest on a prop): the file's own
+ * component's, else March's, each with its type and its text in the page's language. */
+const editorProps = async (name: string): Promise<OwnProp[]> => {
+  await ensureOptions(name)
+  const tr = untrack(pageLang) === "tr"
+  const api = new Map((untrack(localComps)[name]?.props ?? untrack(apiPropsBy)[name] ?? []).map((p) => [p.name, p] as const))
+  const textOf = (p: ApiProp | undefined): string => plain((tr && p?.tr) || p?.doc || "")
+  const out: OwnProp[] = [], seen = new Set<string>()
+  // the Properties panel's options, in its order: March's (the card's, the API's, the extensions'), the common ones
+  // (m:…), the HTML and accessibility attributes; each with its values and its text
+  for (const o of untrack(() => optsOf(name))) {
+    if (o.key.startsWith("sx:")) continue
+    const prop = String(o.prop || o.key).replace(/^(html|a11y|api|mp|ext:[^:]+):/, "")
+    if (!prop || prop === "data" || prop === "children" || seen.has(prop)) continue
+    seen.add(prop)
+    const group = /^(html|a11y):/.test(o.key) ? "HTML" : o.key.startsWith("mp:") ? "Ortak" : "March"
+    const a = api.get(prop)
+    // an attribute's words (dir, loading…) only for the attribute: March's own `loading` is a yes / no
+    const set = valuesOf.get(o.key) ?? (group === "March" ? undefined : ATTR_VALUES[prop])
+    const values = (o.options ?? []).map((x) => String(typeof x === "object" ? x.value : x)).filter((x) => x !== "")
+    const words = values.length ? values : [...(set?.list ?? [])]
+    const write: OwnProp["write"] = isIcon(o) ? "code" : typeof o.default === "boolean" || BOOL_ATTRS.has(prop) || COMMON_BOOL.has(prop) ? "bare"
+      : typeof o.default === "number" || o.default === null ? "code" : "text"
+    out.push({ name: prop, group, write, ...(isIcon(o) ? { icon: true } : {}), ...(a?.type ? { type: a.type } : {}), ...(words.length ? { values: words } : {}),
+      doc: untrack(() => describeProp(name, o)) || textOf(a) })
   }
+  // the rest the component takes (events, children…): March's too, written as code
+  for (const a of api.values()) if (!seen.has(a.name) && a.name !== "children") { seen.add(a.name); out.push({ name: a.name, type: a.type, doc: textOf(a), group: "March", ...(/^on[A-Z]/.test(a.name) ? { write: "code" as const } : /icon/i.test(a.name) ? { write: "code" as const, icon: true } : {}) }) }
+  // the directives every tag takes: sx, class, style, ref and the DOM events (on:click…)
+  for (const p of CORE_PROPS) if (!seen.has(p.name)) out.push(p)
+  return out
+}
+/** A component's options and API props, loaded once (the Properties panel loads them for the components on screen; the
+ * code editor asks for any tag it is in). */
+async function ensureOptions(name: string): Promise<void> {
+  if (!untrack(optionsBy)[name]) {
+    const entry = metaOf(name)
+    if (!entry || untrack(localComps)[name]) optionsBy.set({ ...optionsBy.peek(), [name]: [] })
+    else {
+      const m = await entry.playground()
+      const list = (m.default as { options: readonly PlaygroundOption[] }).options.filter((o) => o.prop !== false)
+      if (!optionsBy.peek()[name]) optionsBy.set({ ...optionsBy.peek(), [name]: list })
+      if (!valuesBy.peek()[name]) valuesBy.set({ ...valuesBy.peek(), [name]: Object.fromEntries(list.map((o) => [o.key, defaultOf(o)])) })
+    }
+  }
+  if (!(name in untrack(apiPropsBy))) await loadEvents(name)
+}
+/** A component under the pointer in the code editor: the file's own (no summary), else March's from the API index
+ * (its subpath and its summary in the page's language); null for a name that is no component. */
+const editorComponent = async (name: string): Promise<{ sub?: string; summary?: string } | null> => {
+  if (untrack(localComps)[name]) return { summary: "Bu dosyanın bileşeni." }
+  const idx = await apiIndex() as unknown as { subpaths: { subpath: string; items: [string, string, string?][] }[] }
+  let hit: { sub: string; summary?: string } | null = null
+  for (const sp of idx.subpaths) for (const it of sp.items) if (it[0] === name && it[1] === "component" && (!hit || sp.subpath === "march/ui")) hit = { sub: sp.subpath, ...(it[2] ? { summary: plain(it[2]) } : {}) }
+  // a whole sentence reads better than the index's short line: in Turkish the components page's (topics.ts), else the
+  // component's own summary (its meta, as written: braces in it are code, not placeholders)
+  const topic = Object.values(HUBS).flat().find((x) => x.name === name)
+  const own = untrack(pageLang) === "tr" && topic?.desc ? topic.desc : registry.find((e) => e.meta.name === name)?.meta.summary
+  if (hit && own) hit.summary = own
+  return hit
+}
+async function loadEvents(name: string): Promise<void> {
+  const all = await apiProps(rootTag(name) ?? name)
   apiPropsBy.set({ ...apiPropsBy.peek(), [name]: all })
   eventsBy.set({ ...eventsBy.peek(), [name]: all.filter((p) => /^on[A-Z]/.test(p.name)).sort((a, b) => a.name.localeCompare(b.name)) })
 }
@@ -639,7 +950,7 @@ const json = (v: unknown): string => { try { return JSON.stringify(v) ?? String(
 const parse = (text: string): { ok: true; value: unknown } | { ok: false } => { try { return { ok: true, value: JSON.parse(text) } } catch { return { ok: false } } }
 const KIND_TONE: Record<string, "info" | "success" | "neutral" | "warn"> = { signal: "info", computed: "success", const: "neutral", let: "warn" }
 /** A constant's new value, written into the code in place of the old one (the preview is built again). */
-const writeConst = (d: DataItem, text: string): void => { const f = files.get(active()); if (!f) return; const src = f.peek(); if (src.slice(d.from, d.to) === d.init) f.set(src.slice(0, d.from) + text + src.slice(d.to)) }
+const writeConst = (d: DataItem, text: string): void => { const f = files.get(active()); if (!f) return; const src = f.peek(); if (src.slice(d.from, d.to) === d.init) { f.set(src.slice(0, d.from) + text + src.slice(d.to)); saveFiles(active()) } }
 const setLive = (name: string, value: unknown): void => { void runtime?.then((r) => r.setData(name, value)); print(`[${stamp()}] ⇢ ${name} = ${short(value)}`, "info") }
 const dataRow = (d: DataItem) => {
   let draft = d.kind === "signal" ? json(untrack(liveData)[d.name]) : d.init, more = ""
@@ -699,7 +1010,8 @@ const consolePanel = () => <div class="sc-console-box">
 /** Build the file in front now (its kept result is not used); the steps go to the Console. */
 const buildNow = async () => {
   const path = untrack(active)
-  let src = untrack(() => forBuild(files.get(path)?.() ?? ""))
+  // the saved text: what is typed and not saved yet is not built
+  let src = untrack(() => forBuild(saved.get(path)?.() ?? files.get(path)?.() ?? ""))
   // debugging: the file with the debugger's calls written in (the session starts for it); its line numbers stay
   const dbg = untrack(debugSvc)
   if (dbg && untrack(dbg.active)) {
@@ -789,7 +1101,7 @@ const COMMANDS: Record<string, TerminalCommand> = {
     const id = Object.entries(FILE_OF).find(([, f]) => f === a.args["dosya"])?.[0]
     if (id && dock) { dock.open(id); io.success(`${String(a.args["dosya"])} önde`) }
   } },
-  select: { desc: "Bağımlılık ağacından bir bileşen seç", args: [{ name: "bileşen", get choices() { return inTree() } }], run: (a, io) => {
+  select: { desc: "Hiyerarşiden bir bileşen seç", args: [{ name: "bileşen", get choices() { return inTree() } }], run: (a, io) => {
     if (a.args["bileşen"]) selected.set(String(a.args["bileşen"]))
     io.print(`Seçili: ${selected()}`, { color: 2 })
   } },
@@ -953,15 +1265,18 @@ const langPanel = () => <div class="sc-lang">
 let previewEl: HTMLElement | null = null
 type Parts = Record<string, Record<string, unknown>>
 let tsSvc: TypeScriptService | null = null
-type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void }
+type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void; onTree(cb: () => void): void; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void }
 let runtime: Promise<Runtime> | null = null, runtimeNow: Runtime | null = null
 const loadRuntime = () => (runtime ??= (async () => {
   // its components' stylesheet, once
   const link = document.createElement("link")
   link.rel = "stylesheet"; link.href = appUrl("playground/preview.css")
   document.head.append(link)
+  // a big module: fetched and run in a free moment, not in the middle of the page's first paints
+  await idle(800)
   const r = await import(/* @vite-ignore */ appUrl("playground/preview.js")) as Runtime
   r.onData((values) => liveData.set(values))
+  r.onTree(() => liveTree.set(r.componentTree()))
   // import { instrument, run } from "march/playground": the code's own debugging, with the page's TypeScript worker
   r.setHost({ instrument: (files) => (tsSvc ? tsSvc.instrument(files) : Promise.reject(new Error("TypeScript yok"))) })
   runtimeNow = r
@@ -982,6 +1297,14 @@ let lastCode = ""
 let pendingCode = ""
 const previewReady = (el: HTMLElement): void => {
   previewEl = el
+  // what takes focus in the preview is chosen in the Hierarchy (and its Properties show)
+  el.addEventListener("focusin", (e) => {
+    const r = runtimeNow, id = r?.instanceAt(e.target as Node)
+    if (!r || !id) return
+    readTree()
+    const it = untrack(liveTree).find((x) => x.id === id)
+    if (it) { chooseInst(it); revealRow() }
+  })
   const code = pendingCode
   pendingCode = ""
   if (code) queueMicrotask(() => void render(code))
@@ -999,8 +1322,7 @@ async function render(code: string): Promise<void> {
     print(`[${stamp()}] ✖ Çalışma hatası: ${String((e as Error)?.message ?? e)}`, "error")
   }
 }
-const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: true, language: true, fullscreen: true }} theme={previewTheme} mode={previewMode} language={previewLang} languages={languageList}
-  footer={() => (usage() ? <CodeView code={usage} lang="tsx" copy wrap buttons="icon" label="Bileşenin kodu" /> : null)}>
+const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: true, language: true, fullscreen: true }} theme={previewTheme} mode={previewMode} language={previewLang} languages={languageList}>
   <div class="sc-pv-root" m:no-select ref={previewReady}>
     <div class="sc-playground-empty"><b>Önizleme</b><span>Derleniyor…</span></div>
   </div>
@@ -1008,29 +1330,55 @@ const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: tr
 
 const PANELS: AppPanel[] = [
   { id: "preview", title: "Önizleme", icon: monitor, content: preview },
+  // Canlı kod: the file in front, whole, with what Properties changed written in; the chosen component marked
+  { id: "livecode", title: "Canlı kod", icon: braces, content: () => <div class="sc-livecode"><CodeView class="sc-pv-code" code={tsxCode} lang="tsx" copy wrap buttons="icon" label="Canlı kod" /></div> },
   { id: "props", title: "Özellikler", icon: sliders, disabled: () => !options().length, content: propsPanel },
   { id: "events", title: "Olaylar", icon: zap, content: eventsPanel },
   { id: "data", title: "Veriler", icon: database, content: dataPanel },
-  { id: "deps", title: "Bağımlılıklar", icon: packageBox, disabled: () => !depTree().length, content: depsPanel },
+  { id: "deps", title: "Hiyerarşi", icon: layers, disabled: () => !depTree().length && !liveTree().length, content: depsPanel },
   { id: "a11y", title: "Erişilebilirlik", icon: users, content: a11yPanel },
   { id: "ext", title: "Askılar", icon: plug, content: () => <ExtensionsPanel info={extInfo} selected={selected} ownProps={(n) => exportedProps(n).map((p) => p.name)} refresh={readExtensions} /> },
-  fileTab("c1", "Button.tsx"),
-  fileTab("c2", "Component2.tsx"),
-  fileTab("c3", "Component3.tsx"),
   { id: "console", title: "Konsol", icon: code, content: consolePanel },
   { id: "terminal", title: "Terminal", icon: terminal, content: terminalPanel, onShow: focusTerminal },
   { id: "i18n", title: "lang.json", icon: globe, content: langPanel },
 ]
+// the files' tabs: a live list. The layout stays on screen while MarchIDE moves between pages: the next ide.json's
+// files replace the tabs (and MarchIDE loads nothing else)
+const filePanels = signal<AppPanel[]>([])
+const allPanels = computed((): AppPanel[] => { const at = PANELS.findIndex((p) => p.id === "console"); return [...PANELS.slice(0, at), ...filePanels(), ...PANELS.slice(at)] })
+// each ide.json's tabs get new ids (f1-0, f1-1, then f2-0…): a file of the same name in the next one is a new tab with
+// its own text, not the old one
+let gen = 0
+/** Takes an ide.json's files as the workspace's: one tab each, the first one in work. The old tabs leave in the same
+ * step (none of them stays); the new ones open above the Console, where the files' group stands by default. */
+const useSources = (sources: readonly IdeSource[]): void => {
+  const ids = sources.map((_, i) => `f${++gen}-${i}`)
+  for (const name of [...files.keys()]) if (!sources.some((s) => s.name === name)) { files.delete(name); saved.delete(name) }
+  for (const s of sources) { files.set(s.name, signal(s.code)); saved.set(s.name, signal(s.code)) }
+  for (const k of Object.keys(FILE_OF)) delete FILE_OF[k]
+  sources.forEach((s, i) => { FILE_OF[ids[i]!] = s.name })
+  filePanels.set(sources.map((s, i): AppPanel => ({ ...fileTab(ids[i]!, s.name),
+    place: i === 0 ? { near: "console", zone: "top", size: 0.7 } : { near: ids[0]! } })))
+  active.set(sources[0]?.name ?? "")
+  if (ids[0]) dock?.open(ids[0])
+}
 const PRESETS: Record<string, Preset> = {
   main: {
-    title: "Playground",
+    title: "MarchIDE",
     tree: () => row(
-      [0.6, col([0.7, tabs("preview")], [0.3, row([0.8, tabs(["props", "a11y", "events", "data"])], [0.2, tabs(["deps"])])])],
-      [0.4, col([0.7, tabs(["c1", "c2", "c3"])], [0.3, tabs(["console", "debug", "terminal", "i18n", "ext"])])],
+      [0.6, col([0.5, tabs("preview")], [0.2, tabs("livecode")], [0.3, row([0.8, tabs(["props", "a11y", "events", "data"])], [0.2, tabs(["deps"])])])],
+      [0.4, col([0.7, tabs(Object.keys(FILE_OF))], [0.3, tabs(["console", "debug", "terminal", "i18n", "ext"])])],
     ),
   },
 }
 // March's exports for the suggestions: the API reference's index (one JSON file, fetched when the playground opens)
+/** The export names of March's icons (the icon gallery's march pack), for the editor's list inside `icon={…}`. */
+const marchIcons = (): Promise<string[]> => loadPack("march").then((p) => p.icons.map((r) => r[1]))
+/** March's components (march/ui's, by name), for the editor's list inside `m:parts={{ … }}`. */
+const marchComponents = (): Promise<string[]> => apiIndex().then((idx) => {
+  const subs = (idx as unknown as { subpaths: { subpath: string; items: [string, string][] }[] }).subpaths
+  return [...new Set(subs.filter((s) => s.subpath === "march/ui").flatMap((s) => s.items.filter((it) => it[1] === "component").map((it) => it[0])))].sort()
+})
 const catalog = (): Promise<MarchCatalog> => apiIndex()
 // the TypeScript language service in a worker (the build copies it, the compiler and the lib files to playground/)
 // TypeScript reads the file as it is built (its top-level elements as exports): no "one parent element" error for them
@@ -1048,18 +1396,50 @@ const debug = debuggerPlugin({
   evaluate: async (expr, scope) => (await loadRuntime()).evaluate(expr, scope),
   untrack: (fn) => (runtimeNow ? runtimeNow.untrack(fn) : fn()),
 })
-const PLUGINS = [typescript, debug, codeEditorPlugin({ save: (f) => { print(`[${stamp()}] 💾 ${f.path} kaydedildi, derleniyor`, "success"); scheduleBuild(0) } }), withExtensionSuggestions(marchLanguagePlugin({ catalog }), extInfo)]
+/** Ctrl + S in a file, the bar's Save button: saved files build (the build effect follows the saved text); saving with
+ * nothing changed builds again. */
+const saveAndBuild = (path?: string): void => {
+  const changed = saveFiles(path)
+  print(`[${stamp()}] 💾 ${path ?? "tüm dosyalar"} kaydedildi, derleniyor`, "success")
+  if (!changed) scheduleBuild(0)
+}
+const PLUGINS = [typescript, debug, codeEditorPlugin({ save: (f) => saveAndBuild(f.path) }), withExtensionSuggestions(marchLanguagePlugin({ catalog }), extInfo, editorProps, editorComponent, { icons: marchIcons, components: marchComponents, sx: SX_SPEC })]
 
 // the next build (one at a time: a newer request replaces a waiting one)
 let timer: ReturnType<typeof setTimeout> | undefined
 const scheduleBuild = (ms: number): void => { clearTimeout(timer); timer = setTimeout(() => { void buildNow() }, ms) }
 
-export default function PlaygroundPage(props: { name?: string }) {
-  // every change is built a moment after typing stops
+/** The "component" layout: its ide.json's files in the code tabs; `id` (the path it came from) keeps its own layout. */
+/** The "component" layout: its ide.json's files in the code tabs. It stays while MarchIDE moves between its pages:
+ * the next ide.json's files replace the tabs, the rest of the workspace (preview, console, layout) stays. */
+/** The page an ide.json belongs to, as the menu names it: its Turkish title and its March name ("Düğme", "Button"). The
+ * page that opens it (IDE_PAGES), else a topic whose slug is the ide.json's last part (/ide/components/x). */
+function topicOfIde(id: string): { title: string; name?: string } | null {
+  const page = Object.keys(IDE_PAGES).find((p) => IDE_PAGES[p] === id)
+  if (page) {
+    const base = page.slice(0, page.lastIndexOf("/")), slug = page.slice(page.lastIndexOf("/") + 1)
+    const t = HUBS[base]?.find((x) => x.slug === slug)
+    if (t) return t
+  }
+  const slug = id.split("/").pop()
+  return (slug && Object.values(HUBS).flat().find((x) => x.slug === slug)) || null
+}
+/** The bar's title: "MarchIDE · Düğme (Button)", the March name in brackets when it differs from the title. */
+const ideTitle = (id: string): string => {
+  const t = topicOfIde(id)
+  return t ? `MarchIDE · ${t.title}${t.name && t.name !== t.title ? ` (${t.name})` : ""}` : "MarchIDE"
+}
+
+export default function ComponentLayout(props: { ide: () => IdeJson; id: () => string }) {
+  // the first files before the workspace is drawn (the layout's preset names their tabs), the next ones as they come
+  let shown = untrack(props.ide)
+  useSources(shown.sources)
+  effect(() => { const ide = props.ide(); if (ide !== shown) { shown = ide; untrack(() => useSources(ide.sources)) } })
+  // every save is built (and the file in front when it changes): the typing builds nothing
   effect(() => {
     // only the file in front (and the entry that renders it)
     const path = active()
-    const now = { [path]: withData(forBuild(files.get(path)?.() ?? "")), [ENTRY]: entrySource() }
+    const now = { [path]: withData(forBuild(saved.get(path)?.() ?? "")), [ENTRY]: entrySource() }
     clearTimeout(timer)
     // debugging: every build writes the debugger's calls in (buildNow), nothing kept is used
     if (debugSvc()?.active()) { scheduleBuild(350); return }
@@ -1070,6 +1450,11 @@ export default function PlaygroundPage(props: { name?: string }) {
   })
   // the preview's language: its file, or the code's own texts
   effect(() => { const code = previewLang(), file = code ? langFile(code) : null; void runtime?.then((r) => r.setLanguage(file)) })
+  // an instance's own values: given to that instance only (the runtime draws again)
+  effect(() => {
+    const map = Object.fromEntries(Object.entries(valuesByInst()).map(([k, v]) => [k, propsOf(optsOf(nameOfKey(k)), v, true)]).filter(([, p]) => Object.keys(p as object).length))
+    void runtime?.then((r) => r.setInstanceProps(map))
+  })
   // a property changes: the rendered component takes it at once (no build)
   effect(() => { const p = rootProps(), parts = partsNow(); void runtime?.then((r) => { r.setProps(p, parts); readTag(); readExtensions() }) })
   // HTML events chosen in Events: listened to on the preview, for the element each exported component draws
@@ -1095,8 +1480,8 @@ export default function PlaygroundPage(props: { name?: string }) {
   })
   onCleanup(() => { clearTimeout(timer); consoleApi = null; previewEl = null; void runtime?.then((r) => r.stop()) })
   return <div class="sc-playground">
-    <AppUI title={props.name ?? "Test Bileşen"} description="bileşeni yaz, özelliklerini ayarla, önizlemede canlı dene" tools={<PaletteButton label="Komut ara…" class="sc-playground-pal" />}
-      panels={PANELS} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.playground.v7" label="Playground" api={followTabs}
+    <AppUI title={() => ideTitle(props.id())} description={() => (props.ide().description ? t(props.ide().description!) : "") || props.id() || "bileşeni yaz, özelliklerini ayarla, önizlemede canlı dene"} tools={<><IconButton icon={save} size="sm" variant={() => (anyDirty() ? "solid" : undefined)} disabled={() => !anyDirty()} class="sc-ide-save" label="Kaydet ve derle (Ctrl + S)" onClick={() => saveAndBuild()} /><PaletteButton label="Komut ara…" class="sc-playground-pal" /></>}
+      panels={allPanels} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.march-ide.v3" label="MarchIDE" narrowTabs="bottom" api={followTabs}
       kit={(k: AppKit) => { debugSvc.set(k.service<DebuggerService>("debugger") ?? null); tsSvc = k.service<TypeScriptService>("typescript") ?? null }} />
   </div>
 }

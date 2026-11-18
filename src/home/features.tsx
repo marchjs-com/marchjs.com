@@ -20,11 +20,21 @@ import { Head } from "./head.tsx";
 
 /** How often the live panel ticks by itself while it is on screen (ms), and how long a changed node glows. */
 const TICK_MS = 1200, GLOW_MS = 650
+// the code of the panel beside it (Panel and its button), as it is
 const SIGNAL_CODE = `let $n = 0
 
-<Button on:click={() => $n++}>Artır</Button>
-<b>{$n}</b>          // yalnız bu metin güncellenir
-<Progress value={$n * 10} />`
+// yalnız rakam güncellenir
+<div>Sayaç <b>{$n}</b></div>
+// yalnız çubuk güncellenir
+<Progress value={($n % 10) * 10} label="İlerleme" />
+// beş adımda bir: yalnız rozet güncellenir
+<div>Tur <Badge tone={$n % 10 < 5 ? "success" : "info"}>
+  {$n % 10 < 5 ? "ilk yarı" : "ikinci yarı"}
+</Badge></div>
+<div>Bu satır hiç değişmez</div>
+<div>Bu da yerinde durur</div>
+
+<Button on:click={() => $n++}>Artır</Button>`
 
 function Signals() {
   let $n = 0
@@ -35,32 +45,37 @@ function Signals() {
   const Panel = () => {
     $runs++
     return <div class="sc-live-panel" ref={watch}>
-      <div class="sc-live-row" data-node><span class="sc-live-k">Sayaç</span><b class="sc-live-n">{$n}</b></div>
-      <div class="sc-live-row" data-node><Progress value={($n % 10) * 10} label="İlerleme" /></div>
+      <div class="sc-live-row"><span class="sc-live-k">Sayaç</span><b class="sc-live-n" data-glow>{$n}</b></div>
+      <div class="sc-live-row"><Progress value={($n % 10) * 10} label="İlerleme" /></div>
       {/* changes only every fifth step: most steps it stays as it is, and does not glow */}
-      <div class="sc-live-row" data-node><span class="sc-live-k">Tur</span><Badge tone={Math.floor($n / 5) % 2 ? "info" : "success"}>{Math.floor($n / 5) % 2 ? "ikinci yarı" : "ilk yarı"}</Badge></div>
+      <div class="sc-live-row"><span class="sc-live-k">Tur</span><span class="sc-live-badge" data-glow><Badge tone={$n % 10 < 5 ? "success" : "info"}>
+        {$n % 10 < 5 ? "ilk yarı" : "ikinci yarı"}
+      </Badge></span></div>
       <div class="sc-live-row is-still"><span class="sc-live-k">Bu satır</span><span>hiç değişmez</span></div>
       <div class="sc-live-row is-still"><span class="sc-live-k">Bu da</span><span>yerinde durur</span></div>
     </div>
   }
-  // every DOM node that changes glows for a moment: only those, the rest of the panel stays as it is
+  // every DOM node that changes glows for a moment: only that node (the number, the progress track, the badge), not its
+  // row, and only when its value really changed (a class or text written again with the same value is no change)
   function watch(panel: Element): void {
     const glows = new WeakMap<Element, ReturnType<typeof setTimeout>>()
     const mo = new MutationObserver((list) => {
       for (const m of list) {
+        if (m.type === "attributes" && (m.target as Element).getAttribute(m.attributeName!) === m.oldValue) continue
+        if (m.type === "characterData" && m.target.nodeValue === m.oldValue) continue
         const at = (m.type === "characterData" ? m.target.parentElement : m.target) as Element | null
-        const row = at?.closest<HTMLElement>("[data-node]")
-        // the glow itself is a class change of the row: not a change of the panel (it would glow forever)
-        if (!row || (m.type === "attributes" && m.target === row)) continue
+        const node = at?.closest<HTMLElement>("[data-glow]") ?? at?.closest<HTMLElement>('[role="progressbar"]')
+        // the glow itself is a class change of the node: not a change of the panel (it would glow forever)
+        if (!node || (m.type === "attributes" && m.attributeName === "class" && m.target === node)) continue
         $changes++
-        // a row already glowing keeps glowing a while longer (no restart: reading a size to restart it would force a
+        // a node already glowing keeps glowing a while longer (no restart: reading a size to restart it would force a
         // layout of the page)
-        row.classList.add("is-glow")
-        clearTimeout(glows.get(row))
-        glows.set(row, setTimeout(() => row.classList.remove("is-glow"), GLOW_MS))
+        node.classList.add("is-glow")
+        clearTimeout(glows.get(node))
+        glows.set(node, setTimeout(() => node.classList.remove("is-glow"), GLOW_MS))
       }
     })
-    mo.observe(panel, { subtree: true, characterData: true, childList: true, attributes: true, attributeFilter: ["aria-valuenow", "class"] })
+    mo.observe(panel, { subtree: true, characterData: true, characterDataOldValue: true, childList: true, attributes: true, attributeOldValue: true, attributeFilter: ["aria-valuenow", "class"] })
     onCleanup(() => mo.disconnect())
   }
   // it ticks by itself while on screen, until someone presses the button
@@ -178,7 +193,7 @@ function Ide() {
   }
   return <section class="sc-sec" aria-labelledby="sc-try-h">
     <Head id="sc-try-h" kicker="Tarayıcıda IDE" color="brand-green" title="Tarayıcıda çalışan bir IDE" example="Yaz, gör, dışa aktar"
-      lead="Kurulum yok, npm yok. Playground'da bileşenini yaz, önizlemede harf harf gör; son derlemeyi zip olarak indir ya da cdn.marchjs.com'dan yükle." />
+      lead="Kurulum yok, npm yok. MarchIDE'de bileşenini yaz, önizlemede harf harf gör; son derlemeyi zip olarak indir ya da cdn.marchjs.com'dan yükle." />
     <Reveal class="sc-try" effect="up" stagger={120}>
       <div class="sc-try-win sc-card" ref={run}>
         <div class="sc-try-bar" aria-hidden="true"><i /><i /><i /><span>Button.tsx</span></div>
@@ -196,11 +211,11 @@ function Ide() {
               : <Button variant={k} icon={k === "secondary" ? sparkles : undefined}>{text || " "}</Button>
           }}
         </div>
-        <Link href="/playground" class="sc-try-go">Playground'u aç <span aria-hidden="true">→</span></Link>
+        <Link href="/ide" class="sc-try-go">MarchIDE'yi aç <span aria-hidden="true">→</span></Link>
       </div>
     </Reveal>
     <div class="sc-try-cta">
-      <Button variant="primary" href="/playground" iconEnd={arrowRight}>Hemen dene</Button>
+      <Button variant="primary" href="/ide" iconEnd={arrowRight}>Hemen dene</Button>
     </div>
   </section>
 }

@@ -8,6 +8,8 @@ import type { PlaygroundOption } from "march/components/meta.ts";
 import "./extensions-tab.css";
 
 import type { ExtInfo, Spec } from "./extensions-info.ts";
+import { tagPlace, codeRows, type HelperData } from "./prop-helpers.ts";
+import { importedFrom, tagAt, valueAt, writtenProps, insertOf, propAt, componentAt, shortType, firstSentence, docOf, GROUP_ORDER, type OwnProp } from "./prop-suggest.ts";
 export type { ExtInfo } from "./extensions-info.ts";
 export const NO_EXT: ExtInfo = { list: [], props: {}, traces: [] };
 
@@ -103,28 +105,96 @@ export function extensionSpec(info: ExtInfo, name: string, key: string): { group
   return spec ? { group: `Askı: ${ext}`, spec } : null
 }
 
+export type { OwnProp }
+/** A prop whose place has helpers (its values, icons, sx / m:parts' objects, a handler): picking it asks again. */
+const helps = (p: OwnProp): boolean => !!(p.values?.length || p.icon || p.insert || /^on[A-Z]|^on:|^ref$/.test(p.name))
 /**
  * Wrap a plugin that provides the "language" service (marchLanguagePlugin) so that inside a component's tag the
- * props extensions add to it (and m:extend) come first.
+ * props extensions add to it (and m:extend) come first, then the component's own props with their types and texts
+ * (`own`: the API reference's props of a component, by its name). Resting the pointer on a prop's name shows the same.
  */
-export function withExtensionSuggestions(plugin: AppPlugin, info: () => ExtInfo): AppPlugin {
-  const attrs = (before: string): { comp: string; word: string } | null => {
-    const lt = before.lastIndexOf("<")
-    if (lt < 0) return null
-    const m = /^<([A-Z][\w$.]*)\s(?:[^<>{}]|\{[^{}]*\})*?([\w:$-]*)$/.exec(before.slice(lt))
-    return m ? { comp: m[1]!, word: m[2] ?? "" } : null
-  }
+export function withExtensionSuggestions(plugin: AppPlugin, info: () => ExtInfo, own?: (comp: string) => Promise<readonly OwnProp[]>,
+  component?: (name: string) => Promise<{ sub?: string; summary?: string } | null>,
+  more: Omit<HelperData, "own"> = {}): AppPlugin {
+  const icons = more.icons
+  type CodeRow = { label: string; group: string; hint: string; insert?: string; back?: number; head?: string; doc: { kind: string; signature: string; doc?: string } }
+  const attrs = tagAt
   const wrap = (svc: LanguageService): LanguageService => ({
     complete: async (path, ctx) => {
-      const at = attrs(ctx.before)
+      // inside a prop's quotes (`variant="|"`): the words it takes, narrowing as they are typed
+      const v = valueAt(ctx.before)
+      if (v) {
+        const p = own ? (await own(v.comp).catch(() => [] as readonly OwnProp[])).find((x) => x.name === v.prop) : undefined
+        const items = (p?.values ?? []).filter((w) => w.toLowerCase().startsWith(v.typed.toLowerCase()))
+          .map((w) => ({ label: w, hint: v.prop, doc: { kind: "değer", signature: `${v.prop}="${w}"`, ...(p?.doc ? { doc: firstSentence(p.doc) } : {}) } }))
+        return { from: ctx.caret - v.typed.length, to: ctx.caret, items, all: true, open: true }
+      }
+      // inside an icon prop's braces (`icon={|`): the icons the file imports first, then every March icon (picking one
+      // adds it to the import line), then an icon of one's own (defineIcon)
+      const place = tagPlace(ctx.before)
+      const c = place?.at === "code" && place.frames.length === 1 && !place.quoted ? place : null
+      const ip = c && own ? (await own(c.comp).catch(() => [] as readonly OwnProp[])).find((x) => x.name === c.prop) : undefined
+      if (c && ip?.icon) {
+        const all = icons ? await icons().catch(() => [] as readonly string[]) : []
+        const mine = importedFrom(ctx.value, "march/icons").filter((n) => n !== "defineIcon" && n !== "Icon")
+        const fits = (n: string): boolean => n.toLowerCase().includes(c.typed.toLowerCase())
+        const rows: CodeRow[] = [
+          ...mine.filter(fits).map((n) => ({ label: n, group: "Bu dosyada", hint: "içe aktarıldı", doc: { kind: "simge", signature: `${c.prop}={${n}}` } })),
+          ...all.filter((n) => !mine.includes(n) && fits(n)).map((n) => ({ label: n, group: "March ikonları", hint: "march/icons", head: `import { ${n} } from "march/icons"`,
+            doc: { kind: "simge", signature: `import { ${n} } from "march/icons"`, doc: "Seçince içe aktarma satırına eklenir." } })),
+        ]
+        if (fits("defineIcon")) rows.push({ label: "defineIcon", group: "Kendi ikonun", hint: "(ad, yollar)", insert: `defineIcon("ikon", ["M4 12h16"])`, back: 3, head: `import { defineIcon } from "march/icons"`,
+          doc: { kind: "işlev", signature: "defineIcon(name: string, d: string[], fill?: boolean): IconDef", doc: "24×24 ızgarada SVG yollarından bir simge tanımlar." } })
+        return { from: ctx.caret - c.typed.length, to: ctx.caret, items: rows as never, all: true, open: true }
+      }
+      // inside any other prop's braces: sx's keys and values, m:parts' components, props and values, a handler for an
+      // event, true / false, the file's signals (prop-helpers.ts); nothing to offer: the language service answers
+      if (place?.at === "code" && own) {
+        const rows = await codeRows(place, ctx.value, { ...more, own })
+        if (rows) return { from: ctx.caret - place.typed.length, to: ctx.caret, items: rows as never, all: true, open: true }
+        return svc.complete ? svc.complete(path, ctx) : null
+      }
+      // inside a component's tag (after its name and a space): its props not written yet, March's first, then the common
+      // ones (m:…, sx), then the HTML attributes; open at once, narrowing as the name is typed
+      const at = attrs(ctx.before) ?? (place?.at === "attr" ? { comp: place.comp, word: place.word, tag: place.tag } : null)
       if (at) {
-        const rows = (info().props[at.comp] ?? []).flatMap((x) => Object.entries(x.props).map(([p, spec]) => ({ p, spec, ext: x.extension })))
-          .filter((r) => r.p.toLowerCase().startsWith(at.word.toLowerCase()))
-          .map((r) => ({ label: r.p, hint: `askı · ${r.ext}`, ...(r.spec.type === "boolean" ? {} : { insert: `${r.p}=""`, back: 1 }), doc: { kind: "property", signature: `${r.p}${r.spec.type ? `: ${r.spec.type}` : ""}`, ...(r.spec.doc ? { doc: r.spec.doc } : {}) } }))
-        if ("m:extend".startsWith(at.word) && at.word.length >= 2) rows.push({ label: "m:extend", hint: "askılar", insert: "m:extend={false}", back: 0, doc: { kind: "property", signature: "m:extend: false | string[]", doc: "Bu örnek askı almaz (false) ya da yalnız adı verilenleri alır." } } as never)
-        if (rows.length) return { from: ctx.caret - at.word.length, to: ctx.caret, items: rows }
+        const written = new Set([...writtenProps(at.tag, ctx.value, ctx.caret), ...(place?.at === "attr" ? place.props : [])])
+        // the word being typed is no written prop (`<Button sx|`: sx is still offered, Tab takes it)
+        if (at.word) written.delete(at.word)
+        const list = own ? await own(at.comp).catch(() => [] as readonly OwnProp[]) : []
+        const fits = (name: string): boolean => !written.has(name) && name.toLowerCase().startsWith(at.word.toLowerCase())
+        const rows = list.filter((p) => fits(p.name)).map((p) => ({
+          label: p.name, group: p.group ?? "March", hint: p.values?.length ? p.values.slice(0, 4).join(" · ") : shortType(p.type, 28),
+          ...insertOf(p), ...(helps(p) ? { again: true } : {}), doc: docOf(p),
+        }))
+        if (fits("m:extend")) rows.push({ label: "m:extend", group: "Ortak", hint: "askılar", insert: "m:extend={false}", back: 0, doc: { kind: "property", signature: "m:extend: false | string[]", doc: "Bu örnek askı almaz (false) ya da yalnız adı verilenleri alır." } } as never)
+        const order = (g: string): number => { const i = GROUP_ORDER.indexOf(g); return i < 0 ? GROUP_ORDER.length : i }
+        rows.sort((a, b) => order(a.group) - order(b.group))
+        return { from: ctx.caret - at.word.length, to: ctx.caret, items: rows as never, all: true, open: true }
       }
       return svc.complete ? svc.complete(path, ctx) : null
+    },
+    hover: async (path, q) => {
+      // the word under the pointer, inside a component's tag: an extension's prop or the component's own
+      const at = propAt(q.value, q.at)
+      if (at) {
+        for (const x of info().props[at.comp] ?? []) { const spec = x.props[at.name]; if (spec) return { kind: `askı · ${x.extension}`, signature: `${at.name}${spec.type ? `: ${spec.type}` : ""}`, ...(spec.doc ? { doc: spec.doc } : {}) } }
+        const p = own ? (await own(at.comp).catch(() => [] as readonly OwnProp[])).find((x) => x.name === at.name) : undefined
+        if (p) return { ...docOf(p), kind: `${at.comp} · özellik` }
+      }
+      // a component's name (its tag, its import): what it is, where it comes from, what it does and its props
+      const name = !at ? componentAt(q.value, q.at) : null
+      const c = name && component ? await component(name).catch(() => null) : null
+      if (name && c) {
+        const props = own ? await own(name).catch(() => [] as readonly OwnProp[]) : []
+        return {
+          kind: c.sub ? `bileşen · ${c.sub}` : "bileşen",
+          signature: c.sub ? `import { ${name} } from "${c.sub}"` : `<${name} />`,
+          ...(c.summary ? { doc: c.summary } : {}),
+          ...(props.length ? { list: props.filter((x) => x.name !== "children").map((x) => ({ label: `${x.name}${x.type ? `: ${shortType(x.type)}` : ""}`, ...(x.doc ? { doc: firstSentence(x.doc) } : {}) })) } : {}),
+        }
+      }
+      return svc.hover ? svc.hover(path, q) : null
     },
   })
   return {

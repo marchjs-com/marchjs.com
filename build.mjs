@@ -62,7 +62,7 @@ if (!serve || !existsSync(dist) || watching) {
     console.log(`✔ icon packs: ${packs.length} (dist/icon-packs)`);
     // the spray theme wave's paint worklet: a plain script the page loads from its own origin (CSP script-src 'self')
     writeFileSync(join(dist, "spray-worklet.js"), readFileSync(join(here, "..", "..", "src", "motion", "spray-worklet.js")));
-    // the playground's build tools, loaded only by /playground: esbuild-wasm (its ESM browser build and the wasm; CSP
+    // the playground's build tools, loaded only by MarchIDE (/ide): esbuild-wasm (its ESM browser build and the wasm; CSP
     // allows 'wasm-unsafe-eval') and the March compiler bundled for the browser (its node-only loader replaced by the
     // runtime's own sx module)
     await writePlaygroundTools(join(dist, "playground"));
@@ -110,7 +110,7 @@ async function writePlaygroundTools(out) {
       b.onLoad({ filter: /.*/, namespace: "march-browser" }, () => ({ contents: `import * as sx from ${JSON.stringify(sx)}; export const importTs = async () => sx;`, loader: "js", resolveDir: root }));
     } }],
   });
-  // the preview runtime (loaded by /playground only): March and its components bundled once, and run(code, el), which
+  // the preview runtime (loaded by MarchIDE only): March and its components bundled once, and run(code, el), which
   // imports the playground's build from a blob: URL (CSP script-src blob:) and renders it in the preview's stage
   const { march } = await import(pathToFileURL(join(root, "compiler", "esbuild.js")).href);
   await esbuild.build({
@@ -123,9 +123,20 @@ async function writePlaygroundTools(out) {
 if (serve) {
   const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".json": "application/json" };
   createServer((req, res) => {
-    let p = resolve(dist, "." + decodeURIComponent(new URL(req.url, "http://x").pathname));
-    if (!p.startsWith(dist) || !existsSync(p) || statSync(p).isDirectory()) p = join(dist, "index.html");
+    const url = new URL(req.url, "http://x");
+    let p = resolve(dist, "." + decodeURIComponent(url.pathname));
+    if (!p.startsWith(dist) || !existsSync(p) || statSync(p).isDirectory()) {
+      // an address of the app (/buttons/button): to the start page with ?m-path=, which the router puts back, as the
+      // published 404.html does (index.html's files are relative: from a deeper address they would not load)
+      if (url.pathname !== "/" && !extname(url.pathname)) { res.writeHead(302, { location: `/?m-path=${encodeURIComponent(url.pathname + url.search)}` }); res.end(); return; }
+      // a missing file is a 404 (not the page, which would load as the wrong kind of file)
+      if (url.pathname !== "/") { res.writeHead(404, { "content-type": "text/plain; charset=utf-8" }); res.end("not found"); return; }
+      p = join(dist, "index.html");
+    }
+    // a build running beside the server rewrites dist/: a file gone for that moment is a 503, not a crash of the server
+    let body;
+    try { body = readFileSync(p); } catch { res.writeHead(503, { "content-type": "text/plain; charset=utf-8", "retry-after": "1" }); res.end("building"); return; }
     res.writeHead(200, { "content-type": TYPES[extname(p)] ?? "application/octet-stream", "content-security-policy": CSP });
-    res.end(readFileSync(p));
+    res.end(body);
   }).listen(5181, "127.0.0.1", () => console.log("showcase: http://127.0.0.1:5181/"));
 }

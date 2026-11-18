@@ -256,7 +256,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "seo-check", title: "march seo check", desc: "Derlenen her sayfa için: eksik başlık, açıklama, canonical, alt metni, h1 ve geçersiz JSON-LD.", group: "SEO" },
     { slug: "prerender", title: "Ön işleme (prerender) ve hidrasyon", desc: "march build, rotaları derleme sırasında HTML'e çevirir (head dahil) ve sitemap.xml ile robots.txt yazar;…", group: "SEO" },
   ],
-  "/ide": [
+  "/ide-shell": [
     { slug: "live", title: "Canlı demo", desc: "Bu sayfadaki bileşenlerin hepsiyle kurulu küçük bir editör: dosya ağacı, sekmeli editörler, ayarlar…", group: "Kabuk" },
     { slug: "app-ui", title: "march-app-ui", name: "AppUI", desc: "March IDE çekirdeği: üst çubuk, Yerleşim menüsü, yan ve alt yuvalar, çalışma alanı", group: "Karmaşık bileşenler" },
     { slug: "dock-layout", title: "Kenetlenen paneller", name: "DockLayout", desc: "Sekmeyi bir grubun kenarına, ortasına ya da alanın kenarına bırak; kapatınca şeride daralır, açınca eski boyutuyla döner", group: "Karmaşık bileşenler" },

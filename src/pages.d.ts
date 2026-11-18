@@ -15,6 +15,7 @@ export interface PageParams {
   "/home": {  };
   "/icons": {  };
   "/ide-live": {  };
+  "/ide-shell": {  };
   "/ide": {  };
   "/language": {  };
   "/layout": {  };
@@ -35,7 +36,6 @@ export interface PageParams {
   "/network": {  };
   "/overlay": {  };
   "/overlays": {  };
-  "/playground": {  };
   "/seo": {  };
   "/sites": {  };
   "/social": {  };
@@ -48,5 +48,5 @@ export interface PageParams {
   "/web": {  };
 }
 declare module "march/router" {
-  interface Register { routes: "/animation" | "/api" | "/app-ui" | "/bench" | "/big-data" | "/buttons" | "/charts" | "/data" | "/editors" | "/feedback" | "/flow" | "/forms" | "/home" | "/icons" | "/ide-live" | "/ide" | "/language" | "/layout" | "/managers-a11y" | "/managers-data" | "/managers-env" | "/managers-ops" | "/managers" | "/messaging" | "/motion" | "/motion/lists" | "/motion/micro" | "/motion/morph" | "/motion/pages" | "/motion/scroll" | "/motion/svg" | "/navigation" | "/network" | "/overlay" | "/overlays" | "/playground" | "/seo" | "/sites" | "/social" | "/speed" | "/start" | "/test-bilesen" | "/text-motion" | "/themes" | "/transitions" | "/web" }
+  interface Register { routes: "/animation" | "/api" | "/app-ui" | "/bench" | "/big-data" | "/buttons" | "/charts" | "/data" | "/editors" | "/feedback" | "/flow" | "/forms" | "/home" | "/icons" | "/ide-live" | "/ide-shell" | "/ide" | "/language" | "/layout" | "/managers-a11y" | "/managers-data" | "/managers-env" | "/managers-ops" | "/managers" | "/messaging" | "/motion" | "/motion/lists" | "/motion/micro" | "/motion/morph" | "/motion/pages" | "/motion/scroll" | "/motion/svg" | "/navigation" | "/network" | "/overlay" | "/overlays" | "/seo" | "/sites" | "/social" | "/speed" | "/start" | "/test-bilesen" | "/text-motion" | "/themes" | "/transitions" | "/web" }
 }

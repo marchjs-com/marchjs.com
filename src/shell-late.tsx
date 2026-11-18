@@ -1,6 +1,7 @@
 // What the first paint does not need: command palette, toasts, commands, motion extras, the Speed page's network log.
 // Loaded right after the shell (when idle).
 import { t, signal, effect } from "march";
+import { ideOpen } from "./playground/ide-open.ts";
 import { CommandPalette, ToastHost, Dialog, MadeWithMarch, registerCommands, toast, setColorTheme, colorThemes, setTheme } from "march/ui";
 import { PortalTarget } from "march";
 import { Outlet, navigate, path, navigating } from "march/router";
@@ -71,7 +72,7 @@ export default function ShellLate() {
     // shell places that pages can fill: a side panel and the center action of a bottom bar
     <PortalTarget name="aside" as="aside" class="sc-target-aside" label="Yan panel" />,
     <PortalTarget name="bottom-action" class="sc-target-bottom" />,
-    // the page footer (the start page has its own, with the same line)
-    () => path() !== "/" && <footer class="sc-page-foot"><span>MIT · sıfır bağımlılık · CSP uyumlu</span><MadeWithMarch variant="small" /></footer>,
+    // the page footer (the start page has its own, with the same line; MarchIDE too, fixed under it)
+    () => path() !== "/" && !ideOpen() && <footer class="sc-page-foot"><span>MIT · sıfır bağımlılık · CSP uyumlu</span><MadeWithMarch variant="small" /></footer>,
   ]
 }

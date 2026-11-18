@@ -313,8 +313,12 @@
   .sc-rail { flex-direction: row; inline-size: 100%; block-size: auto; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
   .sc-rail-bar.m-ab { border: 0; }
   .sc-shell.m-shell-has-header .m-shell-header { gap: var(--m-space-2); padding-inline: var(--m-space-3); }
-  .sc-shell { --sc-bottom-bar: calc(3.875rem + env(safe-area-inset-bottom, 0px)); }
+  /* on the root: the page corners (back to top) open in a layer outside the shell and sit above the bar too */
+  :root { --sc-bottom-bar: calc(3.875rem + env(safe-area-inset-bottom, 0px)); }
   .sc-shell .m-shell-main { padding-block-end: var(--sc-bottom-bar); }
+  :root .m-corner-bottom-start, :root .m-corner-bottom-end { inset-block-end: calc(var(--sc-bottom-bar) + var(--m-space-3)); }
+  /* the page's toasts too (a preview's own stack stays at the bottom of its preview) */
+  :root .m-toasts:not(.m-toasts-top-end, .m-toasts-top-start, .m-toasts-top-center):not(.m-overlay-scope .m-toasts) { inset-block-end: calc(var(--sc-bottom-bar) + var(--m-space-3)); }
   .sc-top-crumbs { flex: 1 1 0; }
   .sc-search.m-pal-trigger { flex: none; inline-size: 2.375rem; padding: 0; justify-content: center; }
   .sc-tools-end { flex: none; }

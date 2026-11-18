@@ -10,7 +10,7 @@ const SETS: Record<string, () => Promise<{ art: ArtSet }>> = {
   "/buttons": () => import("./hub-art/buttons.ts"), "/charts": () => import("./hub-art/charts.ts"),
   "/data": () => import("./hub-art/data.ts"), "/editors": () => import("./hub-art/editors.ts"),
   "/feedback": () => import("./hub-art/feedback.ts"), "/forms": () => import("./hub-art/forms.ts"),
-  "/ide": () => import("./hub-art/ide.ts"), "/language": () => import("./hub-art/language.ts"),
+  "/ide-shell": () => import("./hub-art/ide.ts"), "/language": () => import("./hub-art/language.ts"),
   "/layout": () => import("./hub-art/layout.ts"), "/managers": () => import("./hub-art/managers.ts"),
   "/managers-a11y": () => import("./hub-art/managers-a11y.ts"), "/managers-data": () => import("./hub-art/managers-data.ts"),
   "/managers-env": () => import("./hub-art/managers-env.ts"), "/managers-ops": () => import("./hub-art/managers-ops.ts"),

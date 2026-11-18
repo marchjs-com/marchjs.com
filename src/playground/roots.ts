@@ -66,6 +66,53 @@ function element(s: string, i: number): { tag: string; end: number; spreadAt: nu
   return null;
 }
 
+/** An element of the written JSX: its tag ("" for a fragment), where it stands in the text (from its `<` to after its
+ * end) and the elements written inside it, in order. */
+export interface JsxNode { tag: string; from: number; to: number; kids: JsxNode[] }
+/** An element at `i` with the elements inside it: in its children and in their `{…}` expressions (a `.map(… => <X/>)`). */
+function elementTree(s: string, i: number): { node: JsxNode; end: number } | null {
+  if (s[i] !== "<") return null;
+  ident.lastIndex = i + 1;
+  const tag = ident.exec(s)?.[0] ?? "";
+  if (!tag && s[i + 1] !== ">") return null;
+  let j = i + 1 + tag.length;
+  for (; j < s.length; j++) {
+    const c = s[j];
+    if (c === "{") { j = skipBraces(s, j) - 1; continue; }
+    if (c === '"' || c === "'") { j = skipQuoted(s, j) - 1; continue; }
+    if (c === "/" && s[j + 1] === ">") return { node: { tag, from: i, to: j + 2, kids: [] }, end: j + 2 };
+    if (c === ">") break;
+  }
+  const kids: JsxNode[] = [];
+  for (j = j + 1; j < s.length; j++) {
+    const c = s[j];
+    if (c === "{") { const e = skipBraces(s, j); kids.push(...jsxTree(s, j + 1, e - 1)); j = e - 1; continue; }
+    if (c === "<" && s[j + 1] === "/") { const close = s.indexOf(">", j); return close < 0 ? null : { node: { tag, from: i, to: close + 1, kids }, end: close + 1 }; }
+    if (c === "<") { const kid = elementTree(s, j); if (!kid) return null; kids.push(kid.node); j = kid.end - 1; }
+  }
+  return null;
+}
+/**
+ * The elements written in `s` (from `from` to `to`), as a tree: each where it is written, nested as in the code. An
+ * element counts where a value can stand (after `=>`, `=`, `(`, `?`, `:`, `,`, `&&`, `return`, or at the start of the
+ * part read): a `<` of a comparison or a type is not one.
+ */
+export function jsxTree(s: string, from = 0, to = s.length): JsxNode[] {
+  const out: JsxNode[] = [];
+  for (let i = from; i < to; i++) {
+    const k = skipQuoted(s, i);
+    if (k !== i) { i = k - 1; continue; }
+    if (s[i] !== "<") continue;
+    const before = s.slice(from, i).replace(/(\/\/[^\n]*|\s)+$/, "");
+    if (before && !/(=>|[=(,?:&|{]|\breturn|\byield|\bdefault)$/.test(before)) continue;
+    const el = elementTree(s, i);
+    if (!el || el.end > to) continue;
+    out.push(el.node);
+    i = el.end - 1;
+  }
+  return out;
+}
+
 /** The top-level elements of `src` (outside every function, object and call; at the start of a line, not a value). */
 export function findRoots(src: string): JsxRoot[] {
   const out: JsxRoot[] = [], count = new Map<string, number>();
@@ -77,11 +124,12 @@ export function findRoots(src: string): JsxRoot[] {
     if (c === "{" || c === "(" || c === "[") { depth++; continue; }
     if (c === "}" || c === ")" || c === "]") { depth = Math.max(0, depth - 1); continue; }
     if (c !== "<" || depth) continue;
-    // at a line's start, and not the value of what comes before (=, =>, (, ?, :, ,, &&, ||, return)
+    // at a line's start, and not the value of what comes before (=, =>, (, ?, :, ,, &&, ||, return). A value is skipped
+    // whole: its children on lines of their own (`() => <div>` then `<Button …/>` lines) are not roots
+    const before = src.slice(0, i).replace(/(\/\/[^\n]*|\s)+$/, "");
+    if (/(=>|[=(,?:&|+\-*]|\breturn|\byield|\bdefault)$/.test(before)) { const v = element(src, i); if (v) i = v.end - 1; continue; }
     const line = src.lastIndexOf("\n", i - 1) + 1;
     if (src.slice(line, i).trim()) continue;
-    const before = src.slice(0, line).replace(/(\/\/[^\n]*|\s)+$/, "");
-    if (/(=>|[=(,?:&|+\-*]|\breturn|\byield|\bdefault)$/.test(before)) continue;
     const el = element(src, i);
     if (!el || !el.tag) continue;
     const base = el.tag.charAt(0).toUpperCase() + el.tag.slice(1).replace(/[.-](\w)/g, (_, x: string) => x.toUpperCase());

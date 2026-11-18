@@ -1,0 +1,26 @@
+{
+	"layout": "component",
+	"description": "Beş varyant, üç boyut; yükleniyor düğmeyi kilitler ve ikonun yerinde çark döner.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "ButtonDemo.tsx",
+			"code": "export { Button } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "MoodPicker.tsx",
+			"code": "import { Button } from \"march/ui\"\nimport { sun, cloud, moon } from \"march/icons\"\n\n// bugünün havası: üç hap düğme, seçili olan basılı durur\nconst moods = [\n  { id: \"sun\", label: \"Enerjik\", icon: sun },\n  { id: \"cloud\", label: \"Sakin\", icon: cloud },\n  { id: \"moon\", label: \"Uykulu\", icon: moon },\n]\n\nexport function MoodPicker() {\n  let $mood = \"sun\"\n  return <div sx={{ flex: \"row\", gap: 2 }}>\n    {moods.map((m) => <Button shape=\"pill\" icon={m.icon} pressed={$mood === m.id} on:click={() => $mood = m.id}>{m.label}</Button>)}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "SaveBar.tsx",
+			"code": "import { Button, toast } from \"march/ui\"\nimport { check, x } from \"march/icons\"\n\n// bir ayarlar formunun alt çubuğu: kaydederken Kaydet kilitlenip döner, Vazgeç bekler\nexport function SaveBar() {\n  let $saving = false\n  const save = () => {\n    $saving = true\n    setTimeout(() => { $saving = false; toast(\"Değişiklikler kaydedildi\") }, 1200)\n  }\n  return <div sx={{ flex: [\"row\", \"end\"], gap: 2 }}>\n    <Button variant=\"ghost\" icon={x} disabled={$saving}>Vazgeç</Button>\n    <Button variant=\"primary\" icon={check} loading={$saving} on:click={save}>Kaydet</Button>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ButtonLab.tsx",
+			"code": "import { Button } from \"march/ui\"\nimport { plus, heart, download, refresh, arrowRight, send, trash } from \"march/icons\"\n\n// Button'un bütün özellikleri bir arada: varyant, boyut, kalınlık, hap biçim, iki ikon, aç / kapa,\n// yükleniyor (halka, kendi işaretin, ikon kalır), devre dışı, bağlantı, form içinde submit ve tam genişlik\nconst variants = [\"primary\", \"secondary\", \"ghost\", \"danger\", \"dark\", \"link\"] as const\nconst sizes = [\"sm\", \"md\", \"lg\"] as const\nconst weights = [\"light\", \"regular\", \"medium\", \"strong\"] as const\n\n// bir sıra düğme: yan yana, sığmazsa alt satıra\nconst Row = (props: { children?: unknown }) => <div sx={{ flex: [\"row\", \"wrap\"], gap: 2 }}>{props.children}</div>\n\nexport function ButtonLab() {\n  let $liked = false\n  let $busy = false\n  let $sent = 0\n  const run = () => { $busy = true; setTimeout(() => { $busy = false }, 1500) }\n  return <div sx={{ flex: \"col\", gap: 4 }}>\n    <Row>{variants.map((v) => <Button variant={v} icon={plus}>{v}</Button>)}</Row>\n    <Row>{sizes.map((s) => <Button size={s} shape=\"pill\" iconEnd={arrowRight}>{s}</Button>)}</Row>\n    <Row>{weights.map((w) => <Button weight={w}>{w}</Button>)}</Row>\n    <Row>\n      <Button icon={heart} pressed={$liked} on:click={() => $liked = !$liked}>{$liked ? \"Beğenildi\" : \"Beğen\"}</Button>\n      <Button variant=\"primary\" icon={download} loading={$busy} on:click={run}>İndir</Button>\n      <Button icon={send} loading={$busy} spinner={refresh}>Kendi işaretim</Button>\n      <Button icon={send} loading={$busy} spinner={false}>İkon kalır</Button>\n      <Button variant=\"danger\" icon={trash} disabled>Silinemez</Button>\n    </Row>\n    <Row>\n      <Button href=\"https://github.com\" variant=\"ghost\" iconEnd={arrowRight}>Dış bağlantı</Button>\n      <Button href=\"mailto:merhaba@example.com\" variant=\"link\">E-posta gönder</Button>\n    </Row>\n    <form on:submit={(e: Event) => { e.preventDefault(); $sent++ }}>\n      <Button type=\"submit\" variant=\"dark\" block>Gönder ({$sent})</Button>\n    </form>\n  </div>\n}\n"
+		}
+	]
+}

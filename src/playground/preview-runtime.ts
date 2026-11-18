@@ -9,6 +9,8 @@ import * as icons from "../../../../src/icons/index.ts";
 import * as theme from "../../../../src/theme/index.ts";
 import * as motion from "../../../../src/motion/index.ts";
 import { withParts, mProps } from "../../../../src/props/index.ts";
+// layers opened by the preview's code (dialogs, drawers, menus) find the scope around it (OverlayScope's lookup)
+import "../../../../src/components/layout/overlay-scope/index.ts";
 
 // the playground's helpers for a quick try (import { instrument, run } from "march/playground"): debug a piece of
 // code in the preview with your own Debugger. `instrument` writes the debugger's calls in (the page's TypeScript worker,
@@ -60,7 +62,7 @@ const resolve = (props: Record<string, unknown>): Record<string, unknown> => Obj
 type Parts = Record<string, Record<string, unknown>>;
 type Props = Record<string, unknown>;
 type Comp = (p: object) => unknown;
-const draw = (C: Comp, el: HTMLElement, props: Props, parts: Parts): (() => void) => {
+const draw = (C: Comp, el: HTMLElement, props: Props, parts: Parts, cell = ""): (() => void) => {
   el.replaceChildren();
   const { children, ...rest } = props;
   // m:color, m:theme… (the common props) go on what the component draws, as the compiler writes them
@@ -74,7 +76,8 @@ const draw = (C: Comp, el: HTMLElement, props: Props, parts: Parts): (() => void
   for (const [name, p] of Object.entries(parts)) { const comp = (ui as Record<string, unknown>)[name]; if (typeof comp === "function" && Object.keys(p).length) map.set(comp, resolve(p)); }
   const bare = (): unknown => (children === undefined || children === "" ? core.h(C, own) : core.h(C, own, children));
   const make = (): unknown => (Object.keys(common).length ? mProps(bare(), common) : bare());
-  return core.render(() => (map.size ? withParts(map as never, make) : make()), el);
+  // the cell is the root of its instances' keys (Hierarchy): counted afresh on every draw, so a key stays the same
+  return core.render(() => { core.provide(PARENT, { id: 0, key: cell, counts: new Map() }); return map.size ? withParts(map as never, make) : make() }, el);
 };
 // every component the module exports has a cell of its own: the preview is split into as many cells
 interface Cell { C: Comp; el: HTMLElement; dispose: () => void }
@@ -98,9 +101,51 @@ const watchData = (): void => {
 // dictionary are written in it; what is drawn later is translated as it comes; the default draws the code's own texts
 let dict: Record<string, string> | null = null;
 const ATTRS = ["title", "placeholder", "aria-label", "alt", "label"];
+// a text with placeholders (`Gönder ({0})`, written by the compiler from `Gönder ({$sent})`): its words and the values
+// between them stand in several text nodes side by side (and comment anchors); the run that reads like it is written
+// again as the translation says (`{0} kez gönderildi`): the words as new text, the values' own nodes moved to their
+// places (they stay the ones the code updates, so a value that changes later shows in the translated sentence)
+interface Pattern { re: RegExp; words: string[]; order: number[]; to: string }
+let patterns: Pattern[] = [];
+const escapeRe = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const patternsOf = (d: Record<string, string>): Pattern[] => Object.entries(d).filter(([k, v]) => /\{\d+\}/.test(k) && v !== k).map(([k, to]) => {
+  const words = k.split(/\{\d+\}/);
+  return { re: new RegExp(`^${words.map(escapeRe).join("([\\s\\S]*?)")}$`), words, order: [...k.matchAll(/\{(\d+)\}/g)].map((m) => Number(m[1])), to };
+});
+const translateRun = (run: Node[]): void => {
+  const texts = run.filter((n) => n.nodeType === 3), all = texts.map((n) => n.nodeValue ?? "").join("");
+  const said = all.trim();
+  if (!said) return;
+  const p = patterns.find((x) => x.re.test(said));
+  if (!p) return;
+  // which text nodes are the key's words (in order) and which are the values (the rest, in the key's order)
+  const values: Node[] = [];
+  let w = 0;
+  for (const n of texts) { const v = (n.nodeValue ?? "").trim(); if (w < p.words.length && v && p.words[w]!.trim() === v) w++; else if (v) values.push(n); }
+  const slot = new Map<number, Node>(); p.order.forEach((i, at) => { const n = values[at]; if (n) slot.set(i, n); });
+  const first = run[0]!, parent = first.parentNode;
+  if (!parent) return;
+  const out: Node[] = [];
+  for (const piece of p.to.split(/(\{\d+\})/)) {
+    const m = /^\{(\d+)\}$/.exec(piece);
+    if (m) { const n = slot.get(Number(m[1])); if (n) out.push(n); } else if (piece) out.push(document.createTextNode(piece));
+  }
+  for (const n of out) parent.insertBefore(n, first);
+  for (const n of texts) if (!out.includes(n)) n.parentNode?.removeChild(n);
+};
 const translate = (root: Node): void => {
   if (!dict) return;
   const d = dict;
+  // the runs of text (with their comment anchors) under each element, read as one sentence
+  if (patterns.length) {
+    const els = root.nodeType === 1 ? [root as Element, ...(root as Element).querySelectorAll("*")] : root.parentElement ? [root.parentElement] : [];
+    for (const el of els) {
+      let run: Node[] = [];
+      const end = (): void => { if (run.some((n) => n.nodeType === 3)) translateRun(run); run = []; };
+      for (const n of [...el.childNodes]) { if (n.nodeType === 3 || n.nodeType === 8) run.push(n); else end(); }
+      end();
+    }
+  }
   const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
   for (let n: Node | null = root; n; n = walk.nextNode()) {
     if (n.nodeType === 3) {
@@ -123,13 +168,14 @@ let lastProps: Record<string, Props> = {}, lastParts: Record<string, Parts> = {}
 /** The preview's language: its dictionary (text → text), or null for the code's own texts. Everything is drawn again. */
 export function setLanguage(next: Record<string, string> | null): void {
   dict = next && Object.keys(next).length ? next : null;
+  patterns = dict ? patternsOf(dict) : [];
   setProps(lastProps, lastParts);
 }
 /** Send new props (and parts) to the rendered components, by name (the Properties panel calls it on every change). */
 export function setProps(props: Record<string, Props>, parts: Record<string, Parts> = {}): void {
   lastProps = props; lastParts = parts;
   if (!last) return;
-  for (const [name, cell] of last.cells) { cell.dispose(); cell.dispose = draw(cell.C, cell.el, props[name] ?? {}, parts[name] ?? {}); if (dict) follow(cell.el); else watchers.get(cell.el)?.disconnect(); }
+  for (const [name, cell] of last.cells) { cell.dispose(); cell.dispose = draw(cell.C, cell.el, props[name] ?? {}, parts[name] ?? {}, name); if (dict) follow(cell.el); else watchers.get(cell.el)?.disconnect(); }
 }
 /**
  * Run `code` (an ES module) and render every component it exports (a name with a capital letter) into a cell of
@@ -139,6 +185,7 @@ export async function run(code: string, el: HTMLElement, props: Record<string, P
   const url = URL.createObjectURL(new Blob([link(code)], { type: "text/javascript" }));
   // the extensions the previous run registered (extend / intercept at the module's top) go with it
   core.extensions.clear();
+  watchTree();
   let mod: Record<string, unknown>;
   try { mod = await import(/* @vite-ignore */ url) as Record<string, unknown>; }
   catch (e) { URL.revokeObjectURL(url); throw e; }
@@ -162,9 +209,19 @@ export async function run(code: string, el: HTMLElement, props: Record<string, P
     stage.className = "sc-pv-stage";
     box.append(tag, stage);
     el.append(box);
-    cells.set(name, { C, el: stage, dispose: draw(C, stage, props[name] ?? {}, parts[name] ?? {}) });
+    cells.set(name, { C, el: stage, dispose: draw(C, stage, props[name] ?? {}, parts[name] ?? {}, name) });
     if (dict) follow(stage);
   }
+  // what the code puts on "the page" stays in the preview: the preview is an overlay scope (its fixed layers cover it,
+  // not the page) and has a toast stack of its own (toast() then opens none on the page)
+  el.classList.add("m-overlay-scope");
+  el.style.setProperty("position", "relative");
+  el.style.setProperty("contain", "layout");
+  const toasts = document.createElement("div");
+  toasts.className = "sc-pv-toasts";
+  toasts.style.setProperty("display", "contents");
+  el.append(toasts);
+  toastStop = core.render(() => core.h(ui.ToastHost as never, {}), toasts);
   last = { url, cells };
   data = (mod["__marchData"] as Record<string, unknown> | undefined) ?? {};
   watchData();
@@ -221,13 +278,116 @@ export function extensionInfo(names: readonly string[]): ExtensionInfo {
   for (const n of names) { const c = comp(n); if (typeof c === "function") props[n] = ext.propsOf(c as never); }
   const traces: ExtensionInfo["traces"] = [];
   for (const [cell, c] of last?.cells ?? []) for (const t of ext.within(c.el)) traces.push({ cell, ...t });
-  return { list: core.untrack(() => ext.list()), props, traces };
+  // MarchIDE's own recorder (the Hierarchy) is not one of the code's extensions
+  const mine = (x: { name?: unknown }): boolean => x.name === "march-ide-hierarchy";
+  return { list: core.untrack(() => ext.list()).filter((x) => !mine(x as { name?: unknown })), props, traces: traces.map((t) => ({ ...t, steps: t.steps.filter((x) => !mine(x)) })).filter((t) => t.steps.length) };
 }
+// MarchIDE's Hierarchy: every component instance the preview draws, with the instance that drew it. A path test makes
+// March run each instance under an owner of its own (dom/extend.ts), so an instance provides its id to what it creates,
+// now or later (a list's new row, an If's branch). Control flow (If, For…) is plumbing, not a component of the page.
+export interface TreeItem { id: number; parent: number; name: string; key: string; elId: string; text: string }
+// where an instance stands: its id, its key (the cell, then each instance down to it with its place among the ones of
+// the same name: "SaveBar/SaveBar:0/Button:1") and how many of each name it has made so far
+interface Place { id: number; key: string; counts: Map<string, number> }
+const PARENT: { id: symbol; defaultValue: Place } = { id: Symbol("ide.parent"), defaultValue: { id: 0, key: "", counts: new Map() } };
+const HIDDEN: Place = { id: -1, key: "", counts: new Map() }, OWN = new Set(["ToastHost"]);
+const PLUMBING = new Set(["If", "Else", "For", "Switch", "Match", "Await", "Dynamic", "Portal", "Try", "Fragment", "Show"]);
+const instances = new Map<number, { id: number; parent: number; name: string; key: string; roots: () => Element[] }>();
+let instSeq = 0, treeCb: (() => void) | null = null, treeQueued = false;
+const treeChanged = (): void => { if (treeQueued || !treeCb) return; treeQueued = true; queueMicrotask(() => { treeQueued = false; treeCb?.() }) };
+// props given to one instance (by its key) in MarchIDE's Properties: over its own, on that instance only
+let instProps: Record<string, Props> = {};
+const over = (p: Props, extra: Props): Props => {
+  const o = Object.defineProperties({}, Object.getOwnPropertyDescriptors(p)) as Props;
+  for (const [k, v] of Object.entries(resolve(extra))) Object.defineProperty(o, k, { value: v, enumerable: true, configurable: true, writable: true });
+  return o;
+};
+const HIERARCHY = core.defineExtension({
+  name: "march-ide-hierarchy", order: -1000,
+  render: (next, p, ctx) => {
+    const name = ctx.info.name, parent = core.useContext(PARENT);
+    if (!name || PLUMBING.has(name)) return next(p);
+    // the preview's own parts (its toast stack and the toasts in it) are not the page's: neither they nor what they
+    // draw are listed (HIDDEN is passed down)
+    if (parent === HIDDEN || OWN.has(name)) { core.provide(PARENT, HIDDEN); return next(p); }
+    const n = parent.counts.get(name) ?? 0;
+    parent.counts.set(name, n + 1);
+    const id = ++instSeq, key = `${parent.key}/${name}:${n}`;
+    core.provide(PARENT, { id, key, counts: new Map() });
+    instances.set(id, { id, parent: parent.id, name, key, roots: () => [] });
+    core.onCleanup(() => { instances.delete(id); treeChanged() });
+    treeChanged();
+    const extra = instProps[key];
+    return next(extra ? over(p, extra) : p);
+  },
+  setup: (ctx) => { const inst = instances.get(core.useContext(PARENT).id); if (inst && inst.name === ctx.info.name) inst.roots = ctx.roots; },
+});
+/** Registers the recorder (again after a run clears the code's extensions), with March's components named: the
+ * bundle's function names are shortened. A test that reads the path turns on an owner per instance. */
+const watchTree = (): void => {
+  core.extensions.name(ui as Record<string, unknown>);
+  core.extend({ test: (_c: unknown, _i: unknown, path: readonly unknown[]) => path.length >= 0 }, HIERARCHY);
+};
+watchTree();
+/** Called when instances come or go (once per change, after it). */
+export function onTree(cb: () => void): void { treeCb = cb; }
+/** The instances on screen now, in the order they were made: name, the root element's id and its text. */
+export function componentTree(): TreeItem[] {
+  const all = [...instances.values()];
+  // every instance's root: a parent's text leaves out what its child instances show (a Row of Buttons has no text of
+  // its own; the Buttons' words are on their own rows)
+  const roots = new Set<Node>(all.map((x) => x.roots()[0]).filter((el): el is Element => !!el));
+  const ownText = (el: Element): string => {
+    let out = "";
+    const walk = (n: Node): void => {
+      for (let c = n.firstChild; c; c = c.nextSibling) {
+        if (c.nodeType === 3) out += ` ${c.nodeValue ?? ""}`;
+        else if (c.nodeType === 1 && !roots.has(c)) walk(c);
+        if (out.length > 200) return;
+      }
+    };
+    walk(el);
+    return out.replace(/\s+/g, " ").trim().slice(0, 60);
+  };
+  // two instances on one root (a Row whose first box is its first Button's): the text is the inner one's (made later)
+  const inner = new Map<Node, number>();
+  for (const x of all) { const el = x.roots()[0]; if (el && (inner.get(el) ?? -1) < x.id) inner.set(el, x.id); }
+  return all.map((x) => {
+    const el = x.roots()[0];
+    return { id: x.id, parent: x.parent, name: x.name, key: x.key, elId: el?.id ?? "", text: el && inner.get(el) === x.id ? ownText(el) : "" };
+  });
+}
+/** The instance an element of the preview belongs to: the nearest one whose root holds it (of two with the same root,
+ * the inner one, made later); 0 for none. */
+export function instanceAt(node: Node | null): number {
+  const byRoot = new Map<Element, number>();
+  for (const x of instances.values()) { const el = x.roots()[0]; if (el) byRoot.set(el, x.id); }
+  for (let n: Node | null = node; n; n = n.parentNode) { const id = n instanceof Element ? byRoot.get(n) : undefined; if (id) return id; }
+  return 0;
+}
+/** Props for single instances, by key (the Hierarchy's choice in Properties): the preview is drawn again with them. */
+export function setInstanceProps(map: Record<string, Props>): void {
+  if (JSON.stringify(map) === JSON.stringify(instProps)) return;
+  instProps = map;
+  setProps(lastProps, lastParts);
+}
+/** Points at an instance in the preview: its root element flashes and comes into view. */
+export function highlight(id: number): void {
+  const el = instances.get(id)?.roots()[0] as HTMLElement | undefined;
+  if (!el) return;
+  el.scrollIntoView({ block: "nearest", inline: "nearest" });
+  el.setAttribute("data-ide-hl", "");
+  setTimeout(() => el.removeAttribute("data-ide-hl"), 900);
+}
+
 /** The untrack of this runtime's March (the debugger reads the code's values without subscribing to them). */
 export const untrack = core.untrack;
 /** Remove what the last run rendered. */
+let toastStop: (() => void) | null = null;
 export function stop(): void {
   dataStop?.(); dataStop = null;
+  // the preview's toasts go with it
+  ui.toast.clear(); toastStop?.(); toastStop = null;
   for (const mo of watchers.values()) mo.disconnect();
   watchers.clear();
   if (!last) return;

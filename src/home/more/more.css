@@ -134,7 +134,8 @@
 /* ── design your own theme: the editor in a card */
 .sc-design { max-block-size: 46rem; overflow: auto; overscroll-behavior: contain; padding: var(--m-space-3); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-4); background: var(--m-surface); min-inline-size: 0; }
 
-@media (prefers-reduced-motion: reduce) { .sc-pal-key, @media (max-width: 1000px) { .sc-layers, .sc-cta-ways { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (prefers-reduced-motion: reduce) { .sc-pal-key, .sc-ai-caret { animation: none; } .sc-ai-app { transition: none; } }
+@media (max-width: 1000px) { .sc-layers, .sc-cta-ways { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 760px) {
   /* narrow: the table scrolls sideways inside its card */
   .sc-cmp { overflow-x: auto; }

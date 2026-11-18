@@ -74,8 +74,8 @@ export const HOME_STATS = {
     }
   ],
   "icons": {
-    "total": 22593,
-    "builtIn": 160,
+    "total": 22594,
+    "builtIn": 161,
     "packs": 9
   },
   "animations": {
@@ -85,8 +85,8 @@ export const HOME_STATS = {
   },
   "managers": 30,
   "themes": 16,
-  "tests": 1359,
-  "testFiles": 312,
+  "tests": 1384,
+  "testFiles": 315,
   "budget": {
     "entry": 15360,
     "boot": 53248,

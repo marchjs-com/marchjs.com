@@ -9,7 +9,7 @@ import { Icon, arrowLeft, arrowRight } from "march/icons";
 export interface ComponentPageInfo { title: string; prev?: { href: string; title: string }; next?: { href: string; title: string } }
 /** The pages drawn in the template: path → title and neighbours. */
 export const COMPONENT_PAGES: Record<string, ComponentPageInfo> = {
-  "/test-bilesen": { title: "Test Bileşen", prev: { href: "/app-ui", title: "march-app-ui" }, next: { href: "/ide", title: "IDE kabuğu" } },
+  "/test-bilesen": { title: "Test Bileşen", prev: { href: "/app-ui", title: "march-app-ui" }, next: { href: "/ide-shell", title: "IDE kabuğu" } },
 }
 
 export default function ComponentPageLayout() {

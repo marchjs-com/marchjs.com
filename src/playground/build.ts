@@ -22,6 +22,11 @@ interface Esbuild {
  * (TypeScript still: `js` makes it a module) and when it was built. */
 export interface BuildResult { ok: boolean; code: string; texts: string[]; modules: Record<string, string>; at: number }
 
+/** A free moment of the page (at the latest after 600 ms). */
+const free = (): Promise<void> => new Promise((r) => {
+  const g = globalThis as typeof globalThis & { requestIdleCallback?: (f: () => void, o?: { timeout: number }) => number };
+  if (g.requestIdleCallback) g.requestIdleCallback(() => r(), { timeout: 600 }); else setTimeout(r, 50);
+});
 const stamp = (): string => new Date().toLocaleTimeString("tr-TR", { hour12: false });
 const ms = (t0: number): string => `${Math.round(performance.now() - t0)} ms`;
 const where = (m: Message): string => (m.location ? `${m.location.file}:${m.location.line}:${m.location.column + 1} ` : "");
@@ -32,7 +37,13 @@ export function createBuilder(log: BuildLog) {
   const load = () => (tools ??= (async () => {
     const t0 = performance.now();
     say("esbuild-wasm ve March derleyicisi yükleniyor…", "muted");
-    const [m, e] = await Promise.all([import(/* @vite-ignore */ appUrl("playground/march-compiler.js")), import(/* @vite-ignore */ appUrl("playground/esbuild.js"))]) as [{ compile: MarchCompile }, Esbuild];
+    // step by step, each in a free moment of the page: the tools are big and run on the page's thread
+    // (esbuild's worker would need a blob: worker the page's Trusted Types do not allow)
+    await free()
+    const m = await import(/* @vite-ignore */ appUrl("playground/march-compiler.js")) as { compile: MarchCompile };
+    await free()
+    const e = await import(/* @vite-ignore */ appUrl("playground/esbuild.js")) as Esbuild;
+    await free()
     await e.initialize({ wasmURL: appUrl("playground/esbuild.wasm"), worker: false });
     say(`Derleme araçları hazır (${ms(t0)})`, "muted");
     return { compile: m.compile, esbuild: e };

@@ -6,11 +6,15 @@ import { PAGES, SUB_PAGES } from "./nav.ts";
 import { HUBS } from "./topics.ts";
 import { SHELL, setPages } from "./app.tsx";
 import GEN from "./routes.gen.js";
+import { IDE_PAGES } from "./playground/ide-pages.ts";
 export { restoreFrameRoute } from "./frame-reload.ts";
 
 const ROUTER_DEMO = () => import("./router-demo/_layout.tsx");
 // the component page template: a title, the page in its Outlet, Previous / Next (component-page/_layout.tsx)
 const COMPONENT_PAGE = () => import("./component-page/_layout.tsx");
+// MarchIDE: a layout shared by every page that is the IDE (IDE_PAGES, /ide…): kept while moving between them,
+// so only the next page's ide.json loads (playground/march-ide.tsx); the page under it is empty (pages/ide.tsx)
+const MARCH_IDE = () => import("./playground/march-ide.tsx");
 /** Lazy page loaders (path → module): generated from src/pages/ by `march gen routes` (a page file is the only line a
  * new page adds); the start page is pages/home.tsx. */
 export const LOADERS: Record<string, () => Promise<unknown>> = { ...GEN, "/": GEN["/home"] };
@@ -20,6 +24,11 @@ export const ROUTES = {
   ...Object.fromEntries(PAGES.map((p) => [p.path, { load: LOADERS[p.path], layouts: [SHELL], title: p.title }])),
   // page transitions demo: its tabs and tile pages (the page module picks each one's transition)
   "/transitions/*": { load: LOADERS["/transitions"], layouts: [SHELL], title: PAGES.find((p) => p.path === "/transitions")?.title },
+  // MarchIDE: /ide (its built-in files), /ide/<path> (<path>/ide.json) and the pages that are MarchIDE (exact routes:
+  // they win over their section's wildcard)
+  "/ide": { load: LOADERS["/ide"], layouts: [SHELL, MARCH_IDE], title: "MarchIDE" },
+  "/ide/*": { load: LOADERS["/ide"], layouts: [SHELL, MARCH_IDE], title: "MarchIDE" },
+  ...Object.fromEntries(Object.keys(IDE_PAGES).map((p) => [p, { load: LOADERS["/ide"], layouts: [SHELL, MARCH_IDE] }])),
   // API page: /api/<subpath>/<name> opens one export (the same page module)
   "/api/*": { load: LOADERS["/api"], layouts: [SHELL], title: "API", keep: true },
   // sections with one page per topic (topics.ts): the section's page module draws the overview and each topic
@@ -31,8 +40,8 @@ export const ROUTES = {
   "/navigation/router": { load: () => import("./router-demo/list.tsx"), layouts: [SHELL, ROUTER_DEMO], title: ROUTER_TITLE },
   "/navigation/router/about": { load: () => import("./router-demo/about.tsx"), layouts: [SHELL, ROUTER_DEMO], title: ROUTER_TITLE },
   "/navigation/router/item/:id": { load: () => import("./router-demo/item.tsx"), layouts: [SHELL], title: ROUTER_TITLE },
-  // the component page template, showing /playground in its middle
-  "/test-bilesen": { load: LOADERS["/test-bilesen"], layouts: [SHELL, COMPONENT_PAGE], title: "Test Bileşen" },
+  // the component page template, showing MarchIDE (/ide) in its middle
+  "/test-bilesen": { load: LOADERS["/test-bilesen"], layouts: [SHELL, COMPONENT_PAGE, MARCH_IDE], title: "Test Bileşen" },
 };
 export const OUTLETS = { aside: { "/item/:id": () => import("./router-demo/item.tsx") } };
 

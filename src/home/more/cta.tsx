@@ -16,8 +16,8 @@ export default function Cta() {
     <p class="sc-cta-lead">Tarayıcıda yaz, CDN'den yükle ya da depodan kur: üç yoldan biri yeter.</p>
     <Reveal class="sc-cta-ways" effect="up" stagger={100}>
       <div class="sc-cta-way sc-card">
-        <b>Tarayıcıda</b><span>Kurulum yok: Playground'u aç, yaz, dışa aktar.</span>
-        <Button variant="primary" href="/playground" iconEnd={arrowRight}>Playground</Button>
+        <b>Tarayıcıda</b><span>Kurulum yok: MarchIDE'yi aç, yaz, dışa aktar.</span>
+        <Button variant="primary" href="/ide" iconEnd={arrowRight}>MarchIDE</Button>
       </div>
       <div class="sc-cta-way sc-card">
         <b>CDN</b><span>{`Tek satır, hep en yeni sürüm. Sabitlemek için latest yerine ${version} yaz.`}</span>

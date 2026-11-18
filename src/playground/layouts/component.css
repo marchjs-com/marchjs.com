@@ -1,0 +1,97 @@
+/* MarchIDE takes the room from its top to the window's bottom (--sc-ide-h, march-ide.tsx), the page under it does not
+   scroll; the workspace fills it above its footer (previous / next, the credit line); a message sits over the workspace */
+:root.sc-ide-lock, :root.sc-ide-lock body { overflow: hidden; }
+/* one column as wide as the room: never as wide as its content (the workspace would open wider than a phone's screen
+   and the dock would never know it is narrow) */
+.sc-march-ide { display: grid; grid-template-rows: minmax(0, 1fr) auto; grid-template-columns: minmax(0, 1fr); block-size: var(--sc-ide-h, calc(100dvh - var(--m-topbar-h, 3.5rem))); min-block-size: 20rem; }
+.sc-march-ide-work { position: relative; min-block-size: 0; min-inline-size: 0; }
+.sc-march-ide-foot { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--m-space-3); padding: var(--m-space-1) var(--m-space-2);
+  border-block-start: 1px solid var(--m-border-subtle); }
+.sc-march-ide-credit { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--m-space-1) var(--m-space-4); color: var(--m-muted); font-size: var(--m-text-xs); }
+/* a phone: previous and next share the bar, the credit line leaves it (it is on every other page's footer) */
+@media (max-width: 640px) { .sc-march-ide-foot { grid-template-columns: 1fr 1fr; } .sc-march-ide-credit { display: none; } }
+.sc-playground { block-size: 100%; }
+.sc-march-ide-msg { position: absolute; inset-block-start: var(--m-space-3); inset-inline: var(--m-space-3); z-index: 5; }
+/* while MarchIDE gets ready: its panels' places, quiet (nothing heavy is drawn before the page has come in) */
+.sc-ide-skel { display: grid; grid-template-columns: 3fr 2fr; grid-template-rows: 3fr 2fr; gap: var(--m-space-2); block-size: 100%; padding: var(--m-space-2); box-sizing: border-box; }
+.sc-ide-skel > span { border: 1px solid var(--m-border-subtle); border-radius: var(--m-radius-3); background: var(--m-surface); }
+.sc-playground-empty { block-size: 100%; display: grid; place-content: center; justify-items: center; gap: var(--m-space-1); color: var(--m-muted); font-size: var(--m-text-sm); text-align: center; }
+.sc-playground-empty b { color: var(--m-text); font: 800 var(--m-text-md) var(--m-font-display); }
+.sc-playground-pal { min-inline-size: 0; max-inline-size: 15rem; }
+/* a phone: the command search is its icon (as the site's search in the top bar), the title and its note keep the room */
+@media (max-width: 640px) { .sc-playground-pal.m-pal-trigger { flex: none; inline-size: 2.125rem; padding: 0; justify-content: center; } .sc-playground-pal .m-pal-trigger-label, .sc-playground-pal .m-pal-trigger-kbd { display: none; } }
+.sc-lang { block-size: 100%; overflow: auto; padding: var(--m-space-2) var(--m-space-3); }
+.sc-lang-note { margin-block-end: var(--m-space-2); font-size: var(--m-text-sm); }
+.sc-chips { display: flex; flex-wrap: wrap; gap: 4px; padding-block: 2px; }
+.sc-chip-dot { display: inline-block; inline-size: .625em; block-size: .625em; margin-inline-end: 4px; border-radius: 50%; background: var(--m-accent, var(--m-primary)); vertical-align: middle; }
+.sc-chip-sep { inline-size: 1px; align-self: stretch; margin-inline: 2px; background: var(--m-border); }
+.sc-console { block-size: 100%; border-radius: 0; }
+/* the Console's button at its top right: the last build's files in a dialog */
+.sc-console-box { position: relative; block-size: 100%; }
+.m-btn.sc-console-out { position: absolute; inset-block-start: var(--m-space-2); inset-inline-end: var(--m-space-3); z-index: 1; }
+.sc-props { block-size: 100%; overflow: auto; }
+/* the preview is split into a cell per exported component (its name in the corner when there are several) */
+.sc-pv-root { display: grid; align-self: stretch; inline-size: 100%; grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr)); }
+.sc-pv-cell { position: relative; display: grid; place-items: center; min-block-size: 8rem; padding: var(--m-space-6) var(--m-space-4) var(--m-space-4); }
+.sc-pv-cell + .sc-pv-cell { border-inline-start: 1px dashed var(--m-border); }
+.sc-pv-name { position: absolute; inset-block-start: var(--m-space-2); inset-inline-start: var(--m-space-3); font: var(--m-text-xs) var(--m-font-mono); color: var(--m-muted); }
+.sc-pv-root[data-cells="1"] .sc-pv-name { display: none; }
+.sc-pv-stage { display: grid; place-items: center; inline-size: 100%; }
+/* Canlı kod (its own panel, under the preview): the code fills the panel and scrolls; the chosen component's lines marked */
+.sc-livecode { block-size: 100%; }
+.sc-livecode > .m-code { display: flex; flex-direction: column; block-size: 100%; border-radius: 0; }
+.sc-livecode .m-code-pre { flex: 1 1 0; min-block-size: 0; overflow: auto; }
+.sc-pv-code .m-code-line { transition: background-color var(--m-dur) var(--m-ease); }
+.sc-pv-code .m-code-line.is-hl { background: color-mix(in srgb, var(--m-accent, var(--m-primary-solid)) 14%, transparent);
+  box-shadow: inset 3px 0 0 var(--m-accent, var(--m-primary-solid)); }
+/* Properties' bar: what a change goes to (one instance, or all of its kind) and the toggle that chooses */
+.sc-props-bar { position: sticky; inset-block-start: 0; z-index: 2; background: var(--m-surface); display: flex; align-items: center; gap: .5rem; padding: .375rem .5rem; border-block-end: 1px solid var(--m-border-subtle); font-size: var(--m-text-xs); }
+.sc-props-target { flex: 1 1 0; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--m-muted); }
+.sc-props-bar .m-chip2 { flex: none; min-block-size: 0; block-size: 1.375rem; padding-inline: .5rem; font-size: var(--m-text-xs); }
+/* the Hierarchy: a slim filter bar stays on top (search and the component list on one row, then the small toggles: the
+   fields searched, March's or the file's own, a flat list, the count), the tree scrolls under it */
+.sc-deps { display: flex; flex-direction: column; block-size: 100%; overflow: auto; }
+.sc-deps-bar { position: sticky; inset-block-start: 0; z-index: 1; display: grid; gap: .375rem; padding: .375rem .5rem;
+  border-block-end: 1px solid var(--m-border-subtle); background: var(--m-surface); font-size: var(--m-text-xs); }
+.sc-deps-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 7rem); gap: .375rem; }
+.sc-deps-bar .m-input, .sc-deps-bar .m-combo input { min-block-size: 0; block-size: 1.75rem; padding-block: 0; padding-inline: .5rem; font-size: var(--m-text-xs); }
+.sc-deps-opts { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem; }
+.sc-deps-opts .m-chip2 { min-block-size: 0; block-size: 1.375rem; padding-inline: .5rem; font-size: var(--m-text-xs); }
+.sc-deps-sep { inline-size: 1px; block-size: .875rem; margin-inline: .125rem; background: var(--m-border); }
+.sc-deps-count { margin-inline-start: auto; color: var(--m-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sc-deps > .m-tree { padding: var(--m-space-2); }
+/* a row: the component's name always whole, its id and text after it in full when there is room, else cut with "…" */
+.sc-deps .m-tree-row > .m-listrow-text { flex: 0 0 auto; max-inline-size: 70%; }
+.sc-deps .m-tree-row > .m-listrow-trail { flex: 1 1 0; min-inline-size: 0; overflow: hidden; justify-content: flex-end; }
+.sc-deps .m-tree-meta { display: block; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--m-text-xs); }
+/* the Hierarchy points at an instance: its root flashes in the preview */
+.sc-pv-root [data-ide-hl] { outline: 2px solid var(--m-accent, var(--m-primary-solid)); outline-offset: 3px; }
+.sc-events { block-size: 100%; overflow: auto; }
+.sc-events-list { list-style: none; margin: 0; padding: var(--m-space-1) 0; }
+.sc-events-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: var(--m-space-2); padding: var(--m-space-1) var(--m-space-3); }
+.sc-events-row + .sc-events-row { border-block-start: 1px solid var(--m-border); }
+.sc-events-name { display: grid; min-inline-size: 0; }
+.sc-events-name > small { color: var(--m-muted); font-size: var(--m-text-xs); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sc-events-head { margin: 0; padding: var(--m-space-2) var(--m-space-3) var(--m-space-1); font-size: var(--m-text-xs); font-weight: var(--m-weight-semibold); color: var(--m-muted); text-transform: uppercase; letter-spacing: .04em; }
+.sc-events-none { margin: 0; padding: var(--m-space-1) var(--m-space-3) var(--m-space-2); color: var(--m-muted); font-size: var(--m-text-sm); }
+.sc-props-in { display: contents; }
+.sc-data { block-size: 100%; overflow: auto; }
+.sc-data-list { list-style: none; margin: 0; padding: var(--m-space-1) 0; }
+.sc-data-row { display: grid; grid-template-columns: minmax(7rem, auto) minmax(0, 1fr); align-items: center; gap: var(--m-space-1) var(--m-space-2); padding: var(--m-space-2) var(--m-space-3); }
+.sc-data-row + .sc-data-row { border-block-start: 1px solid var(--m-border); }
+.sc-data-name { display: inline-flex; align-items: center; gap: var(--m-space-1); }
+.sc-data-value { overflow-wrap: anywhere; color: var(--m-text-2); }
+.sc-data-push { grid-column: 2; display: flex; gap: var(--m-space-1); }
+/* lang.json: a slim strip of the languages (the one shown underlined in the accent; its × on hover or when shown) and + at its end */
+.sc-lang-bar { position: sticky; inset-block-start: 0; z-index: 1; display: flex; align-items: center; gap: var(--m-space-1); margin: calc(-1 * var(--m-space-2)) calc(-1 * var(--m-space-3)) var(--m-space-2); padding-inline: var(--m-space-2); background: var(--m-surface); border-block-end: 1px solid var(--m-border); }
+.sc-lang-tabs { display: flex; flex: 1; min-inline-size: 0; overflow-x: auto; scrollbar-width: none; }
+.sc-lang-tab { display: inline-flex; align-items: center; border-block-end: 2px solid transparent; margin-block-end: -1px; }
+.sc-lang-tab[aria-current="true"] { border-block-end-color: var(--m-accent, var(--m-primary)); }
+.sc-lang-tab-name { padding: var(--m-space-2) var(--m-space-2); border: 0; background: none; font: var(--m-weight-medium) var(--m-text-sm) var(--m-font-mono); color: var(--m-muted); cursor: pointer; white-space: nowrap; }
+.sc-lang-tab[aria-current="true"] .sc-lang-tab-name, .sc-lang-tab-name:hover { color: var(--m-text); }
+.sc-lang-tab-name:focus-visible { outline: 2px solid var(--m-accent, var(--m-focus)); outline-offset: -2px; border-radius: var(--m-radius-1); }
+.sc-lang-tab-x { margin-inline-start: calc(-1 * var(--m-space-1)); opacity: 0; transition: opacity var(--m-dur) var(--m-ease); }
+.sc-lang-tab:hover .sc-lang-tab-x, .sc-lang-tab:focus-within .sc-lang-tab-x, .sc-lang-tab[aria-current="true"] .sc-lang-tab-x { opacity: 1; }
+.sc-lang-new-body { display: grid; gap: var(--m-space-2); padding: var(--m-space-3); min-inline-size: 15rem; }
+.sc-lang-new-hint { color: var(--m-muted); font-size: var(--m-text-xs); }
+.sc-lang-new-row { display: flex; gap: var(--m-space-2); }

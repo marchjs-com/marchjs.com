@@ -10,15 +10,18 @@
 .sc-live-meter span { font-size: var(--m-text-sm); color: var(--m-muted); }
 .sc-live-panel { display: grid; gap: var(--m-space-2); }
 .sc-live-row { display: flex; align-items: center; justify-content: space-between; gap: var(--m-space-3); min-block-size: 2.75rem; padding: var(--m-space-2) var(--m-space-3);
-  border: var(--m-border-w, 1px) solid var(--m-border-subtle); border-radius: var(--m-radius-3); background: var(--m-surface);
-  transition: box-shadow var(--m-dur-slow) var(--m-ease), border-color var(--m-dur-slow) var(--m-ease), background-color var(--m-dur-slow) var(--m-ease); }
+  border: var(--m-border-w, 1px) solid var(--m-border-subtle); border-radius: var(--m-radius-3); background: var(--m-surface); }
 .sc-live-row > .m-progress { flex: 1; }
 .sc-live-row.is-still { color: var(--m-muted); border-style: dashed; }
-/* a node that just changed glows in the accent colour */
-.sc-live-row.is-glow { border-color: var(--m-accent, var(--m-primary-solid)); background: color-mix(in srgb, var(--m-accent, var(--m-primary-solid)) 9%, var(--m-surface));
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--m-accent, var(--m-primary-solid)) 22%, transparent); transition-duration: 0s; }
+/* a node that just changed glows in the accent colour: the node only (the number, the progress track, the badge), its
+   row and label stay as they are */
+.sc-live-n, .sc-live-badge, .sc-live-row [role="progressbar"] { border-radius: var(--m-radius-2);
+  transition: box-shadow var(--m-dur-slow) var(--m-ease), background-color var(--m-dur-slow) var(--m-ease); }
+.sc-live-badge { display: inline-flex; border-radius: var(--m-radius-full, 999px); }
+.sc-live-panel .is-glow { background-color: color-mix(in srgb, var(--m-accent, var(--m-primary-solid)) 14%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--m-accent, var(--m-primary-solid)) 30%, transparent); transition-duration: 0s; }
 .sc-live-k { font-size: var(--m-text-sm); color: var(--m-muted); }
-.sc-live-n { font: 800 1.5rem / 1 var(--m-font-display); font-variant-numeric: tabular-nums; }
+.sc-live-n { padding: .125em .3em; margin-inline-end: -.3em; font: 800 1.5rem / 1 var(--m-font-display); font-variant-numeric: tabular-nums; }
 .sc-live-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--m-space-3); margin-block-start: auto; }
 .sc-live-hint { font-size: var(--m-text-sm); color: var(--m-muted); }
 
