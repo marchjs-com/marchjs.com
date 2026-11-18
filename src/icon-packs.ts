@@ -29,6 +29,8 @@ function json<T>(file: string): Promise<T> {
 export const loadIndex = (): Promise<PackInfo[]> => json<PackInfo[]>("index.json");
 /** Icon names of every pack, for search across packs: { id: "name name …" }. */
 export const loadNames = (): Promise<Record<string, string>> => json<Record<string, string>>("names.json");
+/** The export names of every pack (what code imports: `aArrowDown`), in names.json's order: { id: "exp exp …" }. */
+export const loadExports = (): Promise<Record<string, string>> => json<Record<string, string>>("exports.json");
 /** One pack's icons. */
 export const loadPack = (id: string): Promise<PackData> => json<PackData>(`${id}.json`);
 

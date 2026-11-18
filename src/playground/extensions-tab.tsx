@@ -8,8 +8,8 @@ import type { PlaygroundOption } from "march/components/meta.ts";
 import "./extensions-tab.css";
 
 import type { ExtInfo, Spec } from "./extensions-info.ts";
-import { tagPlace, codeRows, type HelperData } from "./prop-helpers.ts";
-import { importedFrom, tagAt, valueAt, writtenProps, insertOf, propAt, componentAt, shortType, firstSentence, docOf, GROUP_ORDER, type OwnProp } from "./prop-suggest.ts";
+import { tagPlace, codeRows, iconRows, type HelperData } from "./prop-helpers.ts";
+import { tagAt, valueAt, writtenProps, insertOf, propAt, componentAt, shortType, firstSentence, docOf, GROUP_ORDER, type OwnProp } from "./prop-suggest.ts";
 export type { ExtInfo } from "./extensions-info.ts";
 export const NO_EXT: ExtInfo = { list: [], props: {}, traces: [] };
 
@@ -117,7 +117,6 @@ export function withExtensionSuggestions(plugin: AppPlugin, info: () => ExtInfo,
   component?: (name: string) => Promise<{ sub?: string; summary?: string } | null>,
   more: Omit<HelperData, "own"> = {}): AppPlugin {
   const icons = more.icons
-  type CodeRow = { label: string; group: string; hint: string; insert?: string; back?: number; head?: string; doc: { kind: string; signature: string; doc?: string } }
   const attrs = tagAt
   const wrap = (svc: LanguageService): LanguageService => ({
     complete: async (path, ctx) => {
@@ -129,23 +128,13 @@ export function withExtensionSuggestions(plugin: AppPlugin, info: () => ExtInfo,
           .map((w) => ({ label: w, hint: v.prop, doc: { kind: "değer", signature: `${v.prop}="${w}"`, ...(p?.doc ? { doc: firstSentence(p.doc) } : {}) } }))
         return { from: ctx.caret - v.typed.length, to: ctx.caret, items, all: true, open: true }
       }
-      // inside an icon prop's braces (`icon={|`): the icons the file imports first, then every March icon (picking one
-      // adds it to the import line), then an icon of one's own (defineIcon)
+      // inside an icon prop's braces (`icon={|`): the file's icons, March's, every pack's (Lucide, Tabler…), defineIcon
       const place = tagPlace(ctx.before)
       const c = place?.at === "code" && place.frames.length === 1 && !place.quoted ? place : null
       const ip = c && own ? (await own(c.comp).catch(() => [] as readonly OwnProp[])).find((x) => x.name === c.prop) : undefined
       if (c && ip?.icon) {
-        const all = icons ? await icons().catch(() => [] as readonly string[]) : []
-        const mine = importedFrom(ctx.value, "march/icons").filter((n) => n !== "defineIcon" && n !== "Icon")
-        const fits = (n: string): boolean => n.toLowerCase().includes(c.typed.toLowerCase())
-        const rows: CodeRow[] = [
-          ...mine.filter(fits).map((n) => ({ label: n, group: "Bu dosyada", hint: "içe aktarıldı", doc: { kind: "simge", signature: `${c.prop}={${n}}` } })),
-          ...all.filter((n) => !mine.includes(n) && fits(n)).map((n) => ({ label: n, group: "March ikonları", hint: "march/icons", head: `import { ${n} } from "march/icons"`,
-            doc: { kind: "simge", signature: `import { ${n} } from "march/icons"`, doc: "Seçince içe aktarma satırına eklenir." } })),
-        ]
-        if (fits("defineIcon")) rows.push({ label: "defineIcon", group: "Kendi ikonun", hint: "(ad, yollar)", insert: `defineIcon("ikon", ["M4 12h16"])`, back: 3, head: `import { defineIcon } from "march/icons"`,
-          doc: { kind: "işlev", signature: "defineIcon(name: string, d: string[], fill?: boolean): IconDef", doc: "24×24 ızgarada SVG yollarından bir simge tanımlar." } })
-        return { from: ctx.caret - c.typed.length, to: ctx.caret, items: rows as never, all: true, open: true }
+        const [march, packs] = await Promise.all([icons ? icons().catch(() => [] as readonly string[]) : [], more.packs ? more.packs().catch(() => []) : []])
+        return { from: ctx.caret - c.typed.length, to: ctx.caret, items: iconRows(c.prop, c.typed, ctx.value, march, packs) as never, all: true, open: true }
       }
       // inside any other prop's braces: sx's keys and values, m:parts' components, props and values, a handler for an
       // event, true / false, the file's signals (prop-helpers.ts); nothing to offer: the language service answers

@@ -83,10 +83,50 @@ export function tagPlace(before: string): TagPlace | null {
 
 /** A row the editor lists (CodeSuggestion's shape, as extensions-tab returns it). */
 export interface HelperRow { label: string; group?: string; hint?: string; insert?: string; back?: number; head?: string; again?: boolean; doc?: { kind: string; signature: string; doc?: string } }
+/** An icon pack as the icon list offers it. */
+export interface IconPack { id: string; label: string; icons: readonly string[] }
+/** How many icons of a pack the list shows (typing narrows it; the whole pack is thousands). */
+export const PACK_ROWS = 60
+
+/**
+ * The rows inside an icon prop's braces (`icon={|`): the icons the file imports (from march/icons and its packs) first,
+ * then March's own, then each pack's (up to PACK_ROWS each, narrowing as the name is typed), then defineIcon. Picking an
+ * icon adds it to its module's import line; a pack icon whose name is taken (March's `heart`) comes in renamed
+ * (`heart as lucideHeart`).
+ */
+export function iconRows(prop: string, typed: string, value: string, march: readonly string[], packs: readonly IconPack[]): HelperRow[] {
+  const ok = fit(typed)
+  const mine = importedFrom(value, (m) => m === "march/icons" || m.startsWith("march/icons/")).filter((n) => n !== "defineIcon" && n !== "Icon")
+  const taken = new Set([...mine, ...march])
+  const rows: HelperRow[] = [
+    ...mine.filter(ok).map((n): HelperRow => ({ label: n, group: "Bu dosyada", hint: "içe aktarıldı", doc: { kind: "simge", signature: `${prop}={${n}}` } })),
+    ...march.filter((n) => !mine.includes(n) && ok(n)).map((n): HelperRow => ({ label: n, group: "March", hint: "march/icons", head: `import { ${n} } from "march/icons"`,
+      doc: { kind: "simge", signature: `import { ${n} } from "march/icons"`, doc: "Seçince içe aktarma satırına eklenir." } })),
+  ]
+  for (const pk of packs) {
+    const from = `march/icons/${pk.id}`, prefix = pk.id.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())
+    let n = 0
+    for (const exp of pk.icons) {
+      if (!ok(exp)) continue
+      const local = taken.has(exp) ? `${prefix}${exp[0]!.toUpperCase()}${exp.slice(1)}` : exp
+      if (mine.includes(local)) continue
+      const spec = local === exp ? exp : `${exp} as ${local}`
+      rows.push({ label: exp, group: pk.label, hint: from, ...(local !== exp ? { insert: local } : {}), head: `import { ${spec} } from "${from}"`,
+        doc: { kind: `simge · ${pk.label}`, signature: `import { ${spec} } from "${from}"`, doc: "Seçince içe aktarma satırına eklenir." } })
+      if (++n >= PACK_ROWS) break
+    }
+  }
+  if (ok("defineIcon")) rows.push({ label: "defineIcon", group: "Kendi ikonun", hint: "(ad, yollar)", insert: `defineIcon("ikon", ["M4 12h16"])`, back: 3, head: `import { defineIcon } from "march/icons"`,
+    doc: { kind: "işlev", signature: "defineIcon(name: string, d: string[], fill?: boolean): IconDef", doc: "24×24 ızgarada SVG yollarından bir simge tanımlar." } })
+  return rows
+}
+
 /** What the helpers read: a component's props, March's icons and components, the sx table. */
 export interface HelperData {
   own: (comp: string) => Promise<readonly OwnProp[]>;
   icons?: () => Promise<readonly string[]>;
+  /** The icon packs (Lucide, Tabler…): id, name and export names; imported from `march/icons/<id>`. */
+  packs?: () => Promise<readonly IconPack[]>;
   components?: () => Promise<readonly string[]>;
   sx?: Readonly<Record<string, readonly (string | number)[]>>;
 }

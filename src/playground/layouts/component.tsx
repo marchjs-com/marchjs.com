@@ -18,7 +18,8 @@ import { COLOR_TOKENS } from "march/theme"
 import { createBuilder, type BuildResult } from "../build.ts";
 import { openBuildOutput } from "../output.tsx";
 import { findRoots, exportRoots, viewRoots, jsxTree, type JsxRoot, type JsxNode } from "../roots.ts";
-import { iconPickerPacks, packRef, loadPack } from "../../icon-packs.ts";
+import { iconPickerPacks, packRef, loadPack, loadIndex, loadExports } from "../../icon-packs.ts";
+import type { IconPack } from "../prop-helpers.ts";
 import type { IdeJson, IdeSource } from "../ide.ts";
 // the ide.json texts as t`…` (tools/gen-ide-texts.js): imported so the build collects them for translation
 import "../ide-texts.gen.tsx";
@@ -1379,6 +1380,10 @@ const marchComponents = (): Promise<string[]> => apiIndex().then((idx) => {
   const subs = (idx as unknown as { subpaths: { subpath: string; items: [string, string][] }[] }).subpaths
   return [...new Set(subs.filter((s) => s.subpath === "march/ui").flatMap((s) => s.items.filter((it) => it[1] === "component").map((it) => it[0])))].sort()
 })
+/** The icon packs (not March's own) with their export names, for the editor's list inside `icon={…}`: loaded once. */
+let packsP: Promise<IconPack[]> | null = null
+const iconPacks = (): Promise<IconPack[]> => (packsP ??= Promise.all([loadIndex(), loadExports()]).then(([idx, exps]) =>
+  idx.filter((p) => p.id !== "march" && exps[p.id]).map((p) => ({ id: p.id, label: p.name, icons: exps[p.id]!.split(" ") }))).catch((e) => { packsP = null; throw e }))
 const catalog = (): Promise<MarchCatalog> => apiIndex()
 // the TypeScript language service in a worker (the build copies it, the compiler and the lib files to playground/)
 // TypeScript reads the file as it is built (its top-level elements as exports): no "one parent element" error for them
@@ -1403,7 +1408,7 @@ const saveAndBuild = (path?: string): void => {
   print(`[${stamp()}] 💾 ${path ?? "tüm dosyalar"} kaydedildi, derleniyor`, "success")
   if (!changed) scheduleBuild(0)
 }
-const PLUGINS = [typescript, debug, codeEditorPlugin({ save: (f) => saveAndBuild(f.path) }), withExtensionSuggestions(marchLanguagePlugin({ catalog }), extInfo, editorProps, editorComponent, { icons: marchIcons, components: marchComponents, sx: SX_SPEC })]
+const PLUGINS = [typescript, debug, codeEditorPlugin({ save: (f) => saveAndBuild(f.path) }), withExtensionSuggestions(marchLanguagePlugin({ catalog }), extInfo, editorProps, editorComponent, { icons: marchIcons, packs: iconPacks, components: marchComponents, sx: SX_SPEC })]
 
 // the next build (one at a time: a newer request replaces a waiting one)
 let timer: ReturnType<typeof setTimeout> | undefined
