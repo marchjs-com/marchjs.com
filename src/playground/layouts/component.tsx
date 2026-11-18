@@ -12,7 +12,7 @@ import type { PlaygroundOption } from "march/components/meta.ts";
 import { appUrl } from "march/base";
 import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "march/ui";
 import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog, type CodeProblem } from "march/app-ui";
-import { x as xIcon, alertTriangle, packageBox, activity, save, history, plus, database, zap, monitor, sliders, layers, braces, users, code, terminal, fileText, globe, plug } from "march/icons";
+import { x as xIcon, alertTriangle, packageBox, activity, checkCircle, save, history, plus, database, zap, monitor, sliders, layers, braces, users, code, terminal, fileText, globe, plug } from "march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "march/forms"
 import { COLOR_TOKENS } from "march/theme"
 import { createBuilder, type BuildResult } from "../build.ts";
@@ -34,7 +34,8 @@ import { QuickPick, type PickItem } from "../quick-pick.tsx";
 import { parseSourceMap, originalAt, blobFrames, type SourceMap } from "../source-map.ts";
 import { BundlePanel, marchImports, type ExportSizes, type MarchImport } from "../bundle-panel.tsx";
 import { ReactivityPanel, parseProbeName, type ReactRow } from "../reactivity-panel.tsx";
-import type { Probe } from "../preview-runtime.ts";
+import type { Probe, TestResult } from "../preview-runtime.ts";
+import { TestsPanel, isTestFile, type TestRun } from "../tests-panel.tsx";
 import { hotkeys } from "march/managers";
 
 
@@ -1067,8 +1068,42 @@ const consolePanel = () => <div class="sc-console-box">
 // a build, an accessibility check, the size of the build); a line that names no command is JavaScript, run in the
 // running preview with the file's signals in scope (count.set(3)), $el (the chosen component's element) and $props.
 /** Build the file in front now (its kept result is not used); the steps go to the Console. */
+// the Tests tab: each test file built with the workspace's other files (its imports: "./ButtonLab.tsx") and run in the
+// preview's runtime; after every save (when there is one) and on its button
+const testRuns = signal<TestRun[] | null>(null)
+const testsRunning = signal(false)
+let testsAgain = false
+const runAllTests = async (): Promise<void> => {
+  if (testsRunning.peek()) { testsAgain = true; return }
+  const names = [...files.keys()].filter(isTestFile)
+  if (!names.length) { testRuns.set([]); return }
+  testsRunning.set(true)
+  try {
+    const rt = await loadRuntime(), runs: TestRun[] = []
+    const all = Object.fromEntries([...files.keys()].map((n) => [n, forBuild(saved.get(n)?.peek() ?? files.get(n)?.peek() ?? "")]))
+    for (const file of names) {
+      const b = await builder.build(all, file)
+      if (!b?.ok) { runs.push({ file, error: "Derlenemedi: ayrıntı Konsol'da.", results: [] }); continue }
+      const sm = b.map ? parseSourceMap(b.map) : null
+      const results = await rt.runTests(b.code).catch((e: unknown) => { runs.push({ file, error: String((e as Error)?.message ?? e), results: [] }); return null })
+      if (!results) continue
+      runs.push({ file, results: results.map((t) => {
+        const f = t.error ? blobFrames(t.error.stack).map((x) => (sm ? originalAt(sm, x.line, x.column) : null)).find((o) => o && files.has(o.source.replace(/^files:/, ""))) : null
+        return { name: t.name, ok: t.ok, ms: t.ms, ...(t.error ? { message: t.error.message } : {}), ...(f ? { at: { file: f.source.replace(/^files:/, ""), line: f.line } } : {}) }
+      }) })
+    }
+    testRuns.set(runs)
+    const bad = runs.reduce((n, r) => n + r.results.filter((t) => !t.ok).length + (r.error ? 1 : 0), 0), count = runs.reduce((n, r) => n + r.results.length, 0)
+    print(`[${stamp()}] 🧪 Testler: ${count - runs.reduce((n, r) => n + r.results.filter((t) => !t.ok).length, 0)} geçti${bad ? `, ${bad} kaldı` : ""}`, bad ? "error" : "success")
+  } finally {
+    testsRunning.set(false)
+    if (testsAgain) { testsAgain = false; void runAllTests() }
+  }
+}
 const buildNow = async () => {
   const path = untrack(active)
+  // a test file in front: its tests run (the preview keeps what it shows)
+  if (isTestFile(path)) { await runAllTests(); dock?.open("tests"); return null }
   // the saved text: what is typed and not saved yet is not built
   let src = untrack(() => forBuild(saved.get(path)?.() ?? files.get(path)?.() ?? ""))
   // debugging: the file with the debugger's calls written in (the session starts for it); its line numbers stay
@@ -1080,6 +1115,7 @@ const buildNow = async () => {
   const now = untrack(() => ({ [path]: withData(src), [ENTRY]: entrySource() }))
   const r = await builder.build(now, ENTRY)
   if (r?.ok) { lastBuild.set(r); void measureBundle(r); await render(r.code) }
+  if ([...files.keys()].some(isTestFile)) void runAllTests()
   return r
 }
 const previewTheme = signal(""), previewMode = signal<"system" | "light" | "dark">("system")
@@ -1324,7 +1360,7 @@ const langPanel = () => <div class="sc-lang">
 let previewEl: HTMLElement | null = null
 type Parts = Record<string, Record<string, unknown>>
 let tsSvc: TypeScriptService | null = null
-type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void; onTree(cb: () => void): void; onConsole(cb: (e: ConsoleEvent) => void): void; sourceAt(node: Node | null): { file: string; line: number } | null; onProbes(cb: (p: Probe[], dom: [string, number][]) => void, root: Element): void; resetProbes(): void; elementsAt(root: Element, file: string, line: number): Element[]; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void }
+type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void; onTree(cb: () => void): void; onConsole(cb: (e: ConsoleEvent) => void): void; sourceAt(node: Node | null): { file: string; line: number } | null; onProbes(cb: (p: Probe[], dom: [string, number][]) => void, root: Element): void; resetProbes(): void; runTests(code: string): Promise<TestResult[]>; elementsAt(root: Element, file: string, line: number): Element[]; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void }
 let runtime: Promise<Runtime> | null = null, runtimeNow: Runtime | null = null
 const loadRuntime = () => (runtime ??= (async () => {
   // its components' stylesheet, once
@@ -1483,6 +1519,7 @@ const PANELS: AppPanel[] = [
   { id: "a11y", title: "Erişilebilirlik", icon: users, content: a11yPanel },
   { id: "ext", title: "Askılar", icon: plug, content: () => <ExtensionsPanel info={extInfo} selected={selected} ownProps={(n) => exportedProps(n).map((p) => p.name)} refresh={readExtensions} /> },
   { id: "console", title: "Konsol", icon: code, content: consolePanel },
+  { id: "tests", title: "Testler", icon: checkCircle, content: () => <TestsPanel runs={() => testRuns()} running={() => testsRunning()} run={() => void runAllTests()} go={goToLine} /> },
   { id: "react", title: "Tepki", icon: activity, content: () => <ReactivityPanel rows={() => reactRows()} dom={() => reactDom()} reset={() => runtimeNow?.resetProbes()} go={goToLine} /> },
   { id: "bundle", title: "Paket", icon: packageBox, onShow: loadSizes, content: () => { loadSizes(); return <BundlePanel own={() => bundleOwn()} imports={() => bundleImports()} sizes={() => exportSizes()} /> } },
   { id: "terminal", title: "Terminal", icon: terminal, content: terminalPanel, onShow: focusTerminal },
@@ -1545,7 +1582,7 @@ const PRESETS: Record<string, Preset> = {
     title: "MarchIDE",
     tree: () => row(
       [0.6, col([0.5, tabs("preview")], [0.2, tabs("livecode")], [0.3, row([0.8, tabs(["props", "a11y", "events", "data"])], [0.2, tabs(["deps"])])])],
-      [0.4, col([0.7, tabs(Object.keys(FILE_OF))], [0.3, tabs(["console", "debug", "terminal", "react", "bundle", "i18n", "ext"])])],
+      [0.4, col([0.7, tabs(Object.keys(FILE_OF))], [0.3, tabs(["console", "debug", "terminal", "tests", "react", "bundle", "i18n", "ext"])])],
     ),
   },
 }

@@ -13,6 +13,7 @@ const { withParts, mProps, registerMProp } = props;
 import { packIcon } from "../../../../src/icons/pack-paint.ts";
 // layers opened by the preview's code (dialogs, drawers, menus) find the scope around it (OverlayScope's lookup)
 import "../../../../src/components/layout/overlay-scope/index.ts";
+import * as testing from "../../../../src/testing/index.ts";
 
 // the playground's helpers for a quick try (import { instrument, run } from "march/playground"): debug a piece of
 // code in the preview with your own Debugger. `instrument` writes the debugger's calls in (the page's TypeScript worker,
@@ -107,7 +108,67 @@ export function resetProbes(): void { for (const p of probes.values()) p.count =
 /** A new run: its own signals and effects. */
 const newRun = (): void => { probes.clear(); domCounts.clear(); };
 
-const MODULES: Record<string, unknown> = { "march": traced, "march/ui": ui, "march/icons": icons, "march/theme": theme, "march/motion": motion, "march/props": props, "march/playground": playground };
+// ---- the Tests tab: a test file's `test("…", fn)` cases run here, one after the other, each in a hidden box (its
+// renderTest screens are disposed after it); `expect` is a small assertion set. "march/testing" is March's testing
+// module with these added.
+export interface TestResult { name: string; ok: boolean; ms: number; error?: { message: string; stack: string } }
+type Case = { name: string; fn: () => unknown };
+let cases: Case[] = [], screens: { dispose(): void }[] = [], testHost: HTMLElement | null = null;
+const show = (v: unknown): string => { try { return typeof v === "string" ? JSON.stringify(v) : JSON.stringify(v) ?? String(v) } catch { return String(v) } };
+const same = (a: unknown, b: unknown): boolean => { try { return JSON.stringify(a) === JSON.stringify(b) } catch { return a === b } };
+/** `expect(value)`: toBe, toEqual, toBeTruthy, toBeFalsy, toContain, toBeGreaterThan, toThrow; `.not` turns each one. */
+function expect(actual: unknown) {
+  const make = (not: boolean) => {
+    const check = (pass: boolean, what: string): void => { if (pass === not) throw new Error(`Beklenen: ${not ? "değil " : ""}${what} · gelen: ${show(actual)}`); };
+    return {
+      toBe: (x: unknown) => check(Object.is(actual, x), show(x)),
+      toEqual: (x: unknown) => check(same(actual, x), show(x)),
+      toBeTruthy: () => check(!!actual, "doğru (truthy)"),
+      toBeFalsy: () => check(!actual, "yanlış (falsy)"),
+      toContain: (x: unknown) => check(typeof actual === "string" ? actual.includes(String(x)) : Array.isArray(actual) && actual.some((y) => same(y, x)), `${show(x)} içeren`),
+      toBeGreaterThan: (x: number) => check(typeof actual === "number" && actual > x, `${x}'den büyük`),
+      toThrow: () => { let threw = false; try { (actual as () => unknown)(); } catch { threw = true; } check(threw, "hata atan bir işlev"); },
+    };
+  };
+  return { ...make(false), not: make(true) };
+}
+const testApi = {
+  ...testing,
+  test: (name: string, fn: () => unknown) => { cases.push({ name, fn }); },
+  it: (name: string, fn: () => unknown) => { cases.push({ name, fn }); },
+  expect,
+  /** renderTest in the tests' hidden box; disposed after the test. */
+  renderTest: (fn: () => unknown, o: testing.RenderTestOptions = {}) => {
+    const box = document.createElement("div");
+    testHost!.append(box);
+    // the screen looks only in the test's box (the preview on the page has the same texts); the box is an overlay
+    // scope, so the dialogs and toasts the test opens stay in it
+    box.classList.add("m-overlay-scope");
+    const s = testing.renderTest(fn, { container: box, root: box, ...o });
+    screens.push({ dispose: () => { s.dispose(); box.remove(); } });
+    return s;
+  },
+};
+/** Runs a test file's bundle: every case, in order; what each did. */
+export async function runTests(code: string): Promise<TestResult[]> {
+  await loadPacks(code);
+  cases = [];
+  testHost ??= Object.assign(document.body.appendChild(document.createElement("div")), { className: "sc-test-host" });
+  testHost.setAttribute("aria-hidden", "true");
+  testHost.style.setProperty("position", "fixed"); testHost.style.setProperty("inset-inline-start", "-10000px"); testHost.style.setProperty("inline-size", "800px");
+  const url = URL.createObjectURL(new Blob([link(code)], { type: "text/javascript" }));
+  try { await import(/* @vite-ignore */ url); } finally { URL.revokeObjectURL(url); }
+  const out: TestResult[] = [];
+  for (const c of cases) {
+    const t0 = performance.now();
+    try { await c.fn(); out.push({ name: c.name, ok: true, ms: performance.now() - t0 }); }
+    catch (e) { out.push({ name: c.name, ok: false, ms: performance.now() - t0, error: { message: String((e as Error)?.message ?? e), stack: String((e as Error)?.stack ?? "") } }); }
+    finally { for (const s of screens) { try { s.dispose(); } catch { /* gone */ } } screens = []; }
+  }
+  return out;
+}
+
+const MODULES: Record<string, unknown> = { "march": traced, "march/testing": testApi, "march/ui": ui, "march/icons": icons, "march/theme": theme, "march/motion": motion, "march/props": props, "march/playground": playground };
 // any other subpath of the components (march/actions…) is in the ui barrel too
 (globalThis as Record<string, unknown>)["__marchPreview"] = new Proxy(MODULES, { get: (m, k: string) => m[k] ?? (k.startsWith("march/") ? ui : undefined) });
 
