@@ -15,12 +15,13 @@ interface MarchCompile { (source: string, opts: { filename: string }): { code: s
 interface Message { text: string; location?: { file: string; line: number; column: number } | null }
 interface Esbuild {
   initialize(o: { wasmURL: string; worker: boolean }): Promise<void>;
-  build(o: Record<string, unknown>): Promise<{ outputFiles?: { text: string }[]; warnings: Message[] }>;
+  build(o: Record<string, unknown>): Promise<{ outputFiles?: { path: string; text: string }[]; warnings: Message[] }>;
   transform(code: string, o: Record<string, unknown>): Promise<{ code: string }>;
 }
 /** What one build gives: the bundled module of the entry, the texts to translate, each file the March compiler wrote
  * (TypeScript still: `js` makes it a module) and when it was built. */
-export interface BuildResult { ok: boolean; code: string; texts: string[]; modules: Record<string, string>; at: number }
+/** A build: the bundle, its source map (an error's stack mapped back to the files), the texts and modules it found. */
+export interface BuildResult { ok: boolean; code: string; map?: string; texts: string[]; modules: Record<string, string>; at: number }
 
 /** A free moment of the page (at the latest after 600 ms). */
 const free = (): Promise<void> => new Promise((r) => {
@@ -98,9 +99,9 @@ export function createBuilder(log: BuildLog) {
       },
     };
     try {
-      const out = await t.esbuild.build({ entryPoints: [entry], bundle: true, write: false, format: "esm", target: "es2022", plugins: [memory], logLevel: "silent" });
-      const code = out.outputFiles?.[0]?.text ?? "";
-      const r = { ok: true, code, texts: [...found].sort((a, b) => a.localeCompare(b, "tr")), modules, at: Date.now() };
+      const out = await t.esbuild.build({ entryPoints: [entry], bundle: true, write: false, format: "esm", target: "es2022", plugins: [memory], logLevel: "silent", sourcemap: "external", outfile: "preview.js" });
+      const files = out.outputFiles ?? [], code = files.find((f) => !f.path.endsWith(".map"))?.text ?? "", map = files.find((f) => f.path.endsWith(".map"))?.text;
+      const r = { ok: true, code, ...(map ? { map } : {}), texts: [...found].sort((a, b) => a.localeCompare(b, "tr")), modules, at: Date.now() };
       // kept even when another tab came to the front meanwhile: showing this one again needs no build
       memo.set(keyOf(files, entry), r);
       if (n !== run) return null;

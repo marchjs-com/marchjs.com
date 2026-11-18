@@ -70,7 +70,7 @@ async function loadPacks(code: string): Promise<void> {
 // URLs: their stack says so); the page's own calls stay where they were. The browser's console still gets every call.
 type ConsoleLevel = "log" | "info" | "warn" | "error" | "debug";
 /** What the Console is told: a line (its level and arguments), a table (its data and columns), or "clear". */
-export type ConsoleEvent = { kind: ConsoleLevel; args: unknown[]; depth: number } | { kind: "table"; data: unknown; columns?: string[]; depth: number } | { kind: "clear" };
+export type ConsoleEvent = { kind: ConsoleLevel; args: unknown[]; depth: number; uncaught?: boolean } | { kind: "table"; data: unknown; columns?: string[]; depth: number } | { kind: "clear" };
 let consoleCb: ((e: ConsoleEvent) => void) | null = null;
 let consoleHooked = false, depth = 0;
 const counts = new Map<string, number>(), timers = new Map<string, number>();
@@ -106,8 +106,9 @@ const hookConsole = (): void => {
   wrap("groupEnd", () => { depth = Math.max(0, depth - 1); });
   wrap("clear", () => { depth = 0; say({ kind: "clear" }); });
   // what the code throws and does not catch (and promises it leaves rejected) is an error line too
-  globalThis.addEventListener?.("error", (e: ErrorEvent) => { if (consoleCb && /^blob:/.test(e.filename ?? "")) line("error", [e.error ?? e.message]); });
-  globalThis.addEventListener?.("unhandledrejection", (e: PromiseRejectionEvent) => { const st = String((e.reason as Error)?.stack ?? ""); if (consoleCb && /\bblob:/.test(st)) line("error", [e.reason]); });
+  // (March re-throws what no <Try> caught from its own module: the error's stack, not the event's file, says it is the code's)
+  globalThis.addEventListener?.("error", (e: ErrorEvent) => { if (consoleCb && (/^blob:/.test(e.filename ?? "") || /blob:/.test(String((e.error as Error)?.stack ?? "")))) say({ kind: "error", args: [e.error ?? e.message], depth, uncaught: true }); });
+  globalThis.addEventListener?.("unhandledrejection", (e: PromiseRejectionEvent) => { const st = String((e.reason as Error)?.stack ?? ""); if (consoleCb && /\bblob:/.test(st)) say({ kind: "error", args: [e.reason], depth, uncaught: true }); });
 };
 /** Called with each console event of the preview's code (a line, a table, a clear). */
 export function onConsole(cb: (e: ConsoleEvent) => void): void { consoleCb = cb; hookConsole(); }

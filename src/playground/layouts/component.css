@@ -100,3 +100,12 @@
 .sc-console-table :is(th, td) { padding: 1px 10px; border: 1px solid color-mix(in srgb, currentColor 22%, transparent); text-align: start; white-space: pre; }
 .sc-console-table thead th { font-weight: 600; background: color-mix(in srgb, currentColor 8%, transparent); }
 .sc-console-table tbody th { font-weight: 500; opacity: .75; }
+/* a run error over the preview: the message and the code's places it came through (a place opens its line) */
+.sc-pv-error { position: absolute; z-index: 30; inset-inline: var(--m-space-3); inset-block-end: var(--m-space-3); max-block-size: 60%; overflow: auto; display: grid; gap: var(--m-space-2); padding: var(--m-space-3); border: 1px solid color-mix(in srgb, var(--m-danger) 45%, var(--m-border)); border-radius: var(--m-radius-3); background: color-mix(in srgb, var(--m-danger) 8%, var(--m-surface)); box-shadow: var(--m-shadow-3, 0 10px 30px rgb(0 0 0 / .18)); font-size: var(--m-text-sm); }
+.sc-pv-error-head { display: flex; align-items: center; justify-content: space-between; color: var(--m-danger-text, var(--m-danger)); }
+.sc-pv-error-msg { margin: 0; font: var(--m-text-sm) / 1.5 var(--m-font-mono); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--m-text); }
+.sc-pv-error-frames { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.sc-pv-error-frames button { all: unset; display: flex; gap: var(--m-space-2); align-items: baseline; padding: 2px 6px; border-radius: var(--m-radius-2, 6px); cursor: pointer; font-family: var(--m-font-mono); font-size: var(--m-text-xs); }
+.sc-pv-error-frames button:hover { background: color-mix(in srgb, var(--m-danger) 12%, transparent); }
+.sc-pv-error-frames button:focus-visible { outline: 2px solid var(--m-focus, var(--m-primary)); }
+.sc-pv-error-at { color: var(--m-danger-text, var(--m-danger)); text-decoration: underline; text-underline-offset: 2px; }

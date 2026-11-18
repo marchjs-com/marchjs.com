@@ -31,6 +31,7 @@ import { CORE_PROPS } from "../prop-suggest.ts";
 import { ProblemsPanel, lineColOf, type IdeProblem } from "../problems-panel.tsx";
 import type { ConsoleEvent } from "../preview-runtime.ts";
 import { QuickPick, type PickItem } from "../quick-pick.tsx";
+import { parseSourceMap, originalAt, blobFrames, type SourceMap } from "../source-map.ts";
 import { hotkeys } from "march/managers";
 
 
@@ -1002,6 +1003,7 @@ const CONSOLE_TONE: Record<string, Tone | undefined> = { log: undefined, debug: 
 /** One console event of the preview's code in the Console: a line (indented by its group), a table, a clear. */
 const showConsole = (e: ConsoleEvent): void => {
   if (e.kind === "clear") { consoleApi?.clear(); print(`[${stamp()}] Konsol temizlendi (console.clear)`, "muted"); return }
+  if (e.kind === "error" && e.uncaught) showRunError(e.args[0])
   const pad = "  ".repeat(e.depth)
   if (e.kind === "table") { print(`${pad}[${stamp()}] console.table`, "muted"); printNode(consoleTable(e.data, e.columns)); return }
   print(`${pad}[${stamp()}] ${e.args.map(consoleText).join(" ")}`.replace(/\n/g, `\n${pad}`), CONSOLE_TONE[e.kind])
@@ -1349,10 +1351,46 @@ const previewReady = (el: HTMLElement): void => {
   pendingCode = ""
   if (code) queueMicrotask(() => void render(code))
 }
+// an error the preview's code throws (as it runs, or later: an event handler, a promise): a box over the preview with
+// the message and the code's places it came through (the bundle's stack mapped back by the build's source map); a place
+// opens its file at that line. The next good run takes the box away.
+const pvError = signal<{ title: string; frames: { file: string; line: number; fn: string }[] } | null>(null)
+let mapFor: { build: unknown; map: SourceMap | null } | null = null
+const showRunError = (err: unknown): void => {
+  const e = err as Error | undefined, b = untrack(lastBuild)
+  if (b && mapFor?.build !== b) mapFor = { build: b, map: b.map ? parseSourceMap(b.map) : null }
+  const sm = mapFor?.map ?? null, seen = new Set<string>()
+  const frames = blobFrames(String(e?.stack ?? "")).flatMap((f) => {
+    const o = sm ? originalAt(sm, f.line, f.column) : null
+    const file = o?.source.replace(/^files:/, "")
+    if (!o || !file || !files.has(file) || seen.has(`${file}:${o.line}`)) return []
+    seen.add(`${file}:${o.line}`)
+    return [{ file, line: o.line, fn: f.fn }]
+  }).slice(0, 6)
+  pvError.set({ title: e instanceof Error ? `${e.name}: ${e.message}` : String(err), frames })
+}
+/** A place of the error: its file in front, the caret at the line's start. */
+const goToLine = (file: string, line: number): void => {
+  const text = files.get(file)?.peek() ?? "", lines = text.split("\n")
+  let at = 0; for (let i = 0; i < line - 1 && i < lines.length; i++) at += lines[i]!.length + 1
+  debugTab(file); goTo.set({ ...goTo.peek(), [file]: { from: at, to: at + (lines[line - 1]?.length ?? 0) } })
+}
+const errorBox = () => (pvError()
+  ? <div class="sc-pv-error" role="alert">
+      <div class="sc-pv-error-head"><b>Çalışma hatası</b><IconButton icon={xIcon} size="sm" variant="ghost" label="Kapat" onClick={() => pvError.set(null)} /></div>
+      <pre class="sc-pv-error-msg">{pvError()!.title}</pre>
+      {pvError()!.frames.length
+        ? <ul class="sc-pv-error-frames">{pvError()!.frames.map((f) => <li><button type="button" on:click={() => goToLine(f.file, f.line)}>
+            <span class="sc-pv-error-at">{`${f.file}:${f.line}`}</span>{f.fn ? <span class="m-muted">{f.fn}</span> : null}
+          </button></li>)}</ul>
+        : <p class="m-muted">Hatanın kodda geçtiği yer bulunamadı; ayrıntı Konsol'da.</p>}
+    </div>
+  : null)
 async function render(code: string): Promise<void> {
   if (!previewEl) { pendingCode = code; return }
   lastCode = code
   const t0 = performance.now()
+  pvError.set(null)
   try {
     await (await loadRuntime()).run(code, previewEl, untrack(rootProps), untrack(partsNow))
     readTag()
@@ -1360,12 +1398,14 @@ async function render(code: string): Promise<void> {
     print(`[${stamp()}] Önizleme çizildi · ${Math.round(performance.now() - t0)} ms`, "success")
   } catch (e) {
     print(`[${stamp()}] ✖ Çalışma hatası: ${String((e as Error)?.message ?? e)}`, "error")
+    showRunError(e)
   }
 }
 const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: true, language: true, fullscreen: true }} theme={previewTheme} mode={previewMode} language={previewLang} languages={languageList}>
   <div class="sc-pv-root" m:no-select ref={previewReady}>
     <div class="sc-playground-empty"><b>Önizleme</b><span>Derleniyor…</span></div>
   </div>
+  {errorBox}
 </AppPreview>
 
 const PANELS: AppPanel[] = [
