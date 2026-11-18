@@ -29,6 +29,9 @@ import { IDE_PAGES } from "../ide-pages.ts";
 import { ExtensionsPanel, extensionOptions, extensionSpec, withExtensionSuggestions, NO_EXT, type ExtInfo, type OwnProp } from "../extensions-tab.tsx";
 import { CORE_PROPS } from "../prop-suggest.ts";
 import { ProblemsPanel, lineColOf, type IdeProblem } from "../problems-panel.tsx";
+import { QuickPick, type PickItem } from "../quick-pick.tsx";
+import { HistoryPanel, type Snapshot } from "../history-panel.tsx";
+import { hotkeys } from "march/managers";
 
 
 // the workspace's files (from its ide.json, kept for this visit): every file's text, made before anything reads them
@@ -40,11 +43,18 @@ const saved = new Map<string, ReturnType<typeof signal<string>>>()
 const isDirty = (path: string): boolean => { const t = files.get(path), s = saved.get(path); return !!t && !!s && t() !== s() }
 const anyDirty = (): boolean => [...files.keys()].some(isDirty)
 /** Saves a file (else every file): its text becomes the saved one, which builds it. Returns whether anything changed. */
+// the History tab: each file's versions for the visit (its text when it opened, then every save; newest first, 30 kept)
+const snapshots = signal<Record<string, readonly Snapshot[]>>({})
+const snapshot = (path: string, text: string): void => {
+  const cur = snapshots.peek()[path] ?? []
+  if (cur[0]?.text === text) return
+  snapshots.set({ ...snapshots.peek(), [path]: [{ at: Date.now(), text }, ...cur].slice(0, 30) })
+}
 const saveFiles = (path?: string): boolean => {
   let changed = false
   for (const p of path ? [path] : [...files.keys()]) {
     const t = files.get(p), s = saved.get(p)
-    if (t && s && s.peek() !== t.peek()) { s.set(t.peek()); changed = true }
+    if (t && s && s.peek() !== t.peek()) { s.set(t.peek()); changed = true; snapshot(p, t.peek()) }
   }
   return changed
 }
@@ -1341,6 +1351,8 @@ const PANELS: AppPanel[] = [
   { id: "a11y", title: "Erişilebilirlik", icon: users, content: a11yPanel },
   { id: "ext", title: "Askılar", icon: plug, content: () => <ExtensionsPanel info={extInfo} selected={selected} ownProps={(n) => exportedProps(n).map((p) => p.name)} refresh={readExtensions} /> },
   { id: "console", title: "Konsol", icon: code, content: consolePanel },
+  { id: "history", title: "Geçmiş", icon: history, content: () => <HistoryPanel file={() => active()} snapshots={(f) => snapshots()[f] ?? []} current={(f) => files.get(f)?.() ?? ""}
+    restore={(f, text) => { files.get(f)?.set(text); debugTab(f) }} /> },
   { id: "terminal", title: "Terminal", icon: terminal, content: terminalPanel, onShow: focusTerminal },
   { id: "i18n", title: "lang.json", icon: globe, content: langPanel },
 ]
@@ -1360,6 +1372,17 @@ const setProblems = (path: string, list: readonly CodeProblem[], text: string): 
   problemsBy.set(next)
 }
 const allProblems = computed((): IdeProblem[] => Object.values(problemsBy()).flat())
+// the quick picks (Ctrl+P, Ctrl+Shift+O)
+const pickFiles = signal(false)
+const fileItems = (): PickItem<string>[] => Object.values(FILE_OF).map((name) => ({ label: name, hint: isDirty(name) ? "kaydedilmedi" : name === active() ? "önde" : "", value: name }))
+// the kinds TypeScript names, as the list says them (a Map: "class" is a kind here, not a CSS class)
+const SYMBOL_KIND = new Map<string, string>([["function", "işlev"], ["local function", "işlev"], ["const", "sabit"], ["let", "değişken"], ["var", "değişken"], ["class", "sınıf"], ["method", "metot"], ["property", "özellik"], ["interface", "arayüz"], ["type", "tür"], ["alias", "tür"], ["enum", "enum"], ["module", "modül"]])
+const symbolItems = signal<PickItem<{ from: number; to: number }>[] | null>(null)
+const openSymbols = async (): Promise<void> => {
+  const f = active(), text = files.get(f)?.peek() ?? ""
+  const list = tsSvc ? await tsSvc.symbols(f, text).catch(() => []) : []
+  symbolItems.set(list.map((x) => ({ label: `${"  ".repeat(x.depth)}${x.name}`, hint: `${SYMBOL_KIND.get(x.kind) ?? x.kind} · ${lineColOf(text, x.from).line}`, value: { from: x.from, to: x.from + x.name.length } })))
+}
 const problemCount = computed(() => allProblems().length)
 const goTo = signal<Record<string, { from: number; to?: number }>>({})
 const pickProblem = (p: IdeProblem): void => { debugTab(p.file); goTo.set({ ...goTo.peek(), [p.file]: { from: p.from, to: p.to } }) }
@@ -1378,6 +1401,7 @@ const useSources = (sources: readonly IdeSource[]): void => {
   const ids = sources.map((_, i) => `f${++gen}-${i}`)
   for (const name of [...files.keys()]) if (!sources.some((s) => s.name === name)) { files.delete(name); saved.delete(name) }
   for (const s of sources) { files.set(s.name, signal(s.code)); saved.set(s.name, signal(s.code)) }
+  snapshots.set(Object.fromEntries(sources.map((s) => [s.name, [{ at: Date.now(), text: s.code }]])))
   for (const k of Object.keys(FILE_OF)) delete FILE_OF[k]
   sources.forEach((s, i) => { FILE_OF[ids[i]!] = s.name })
   filePanels.set(sources.map((s, i): AppPanel => ({ ...fileTab(ids[i]!, s.name),
@@ -1390,7 +1414,7 @@ const PRESETS: Record<string, Preset> = {
     title: "MarchIDE",
     tree: () => row(
       [0.6, col([0.5, tabs("preview")], [0.2, tabs("livecode")], [0.3, row([0.8, tabs(["props", "a11y", "events", "data"])], [0.2, tabs(["deps"])])])],
-      [0.4, col([0.7, tabs(Object.keys(FILE_OF))], [0.3, tabs(["console", "debug", "terminal", "i18n", "ext"])])],
+      [0.4, col([0.7, tabs(Object.keys(FILE_OF))], [0.3, tabs(["console", "debug", "terminal", "history", "i18n", "ext"])])],
     ),
   },
 }
@@ -1434,7 +1458,7 @@ const saveAndBuild = (path?: string): void => {
   print(`[${stamp()}] 💾 ${path ?? "tüm dosyalar"} kaydedildi, derleniyor`, "success")
   if (!changed) scheduleBuild(0)
 }
-const PLUGINS = [typescript, debug, codeEditorPlugin({ save: (f) => saveAndBuild(f.path), problems: setProblems, openProblems: () => dock?.open("problems"), goTo: (path) => goTo()[path] }), withExtensionSuggestions(marchLanguagePlugin({ catalog }), extInfo, editorProps, editorComponent, { icons: marchIcons, packs: iconPacks, iconNames, components: marchComponents, sx: SX_SPEC })]
+const PLUGINS = [typescript, debug, codeEditorPlugin({ save: (f) => saveAndBuild(f.path), formatOnSave: true, problems: setProblems, openProblems: () => dock?.open("problems"), goTo: (path) => goTo()[path] }), withExtensionSuggestions(marchLanguagePlugin({ catalog }), extInfo, editorProps, editorComponent, { icons: marchIcons, packs: iconPacks, iconNames, components: marchComponents, sx: SX_SPEC })]
 
 // the next build (one at a time: a newer request replaces a waiting one)
 let timer: ReturnType<typeof setTimeout> | undefined
@@ -1510,7 +1534,13 @@ export default function ComponentLayout(props: { ide: () => IdeJson; id: () => s
     onCleanup(() => offs.forEach((off) => off()))
   })
   onCleanup(() => { clearTimeout(timer); consoleApi = null; previewEl = null; void runtime?.then((r) => r.stop()) })
+  // Ctrl+P: the files; Ctrl+Shift+O: the named things of the file in front (TypeScript's), the caret goes to the one picked
+  hotkeys.bind("mod+p", () => { pickFiles.set(true) }, { inInputs: true, description: "Dosyaya git", group: "MarchIDE" })
+  hotkeys.bind("mod+shift+o", () => { void openSymbols() }, { inInputs: true, description: "Dosyadaki sembole git", group: "MarchIDE" })
   return <div class="sc-playground">
+    <QuickPick open={() => pickFiles()} onClose={() => pickFiles.set(false)} title="Dosyaya git" placeholder="Dosya adı…" items={fileItems} onPick={(name: string) => debugTab(name)} />
+    <QuickPick open={() => !!symbolItems()} onClose={() => symbolItems.set(null)} title="Sembole git" placeholder="Bileşen, işlev, değişken…" items={() => symbolItems() ?? []}
+      empty="Bu dosyada adı olan bir şey yok." onPick={(r: { from: number; to: number }) => { const f = active(); debugTab(f); goTo.set({ ...goTo.peek(), [f]: r }) }} />
     <AppUI title={() => ideTitle(props.id())} description={() => (props.ide().description ? t(props.ide().description!) : "") || props.id() || "bileşeni yaz, özelliklerini ayarla, önizlemede canlı dene"} tools={<><IconButton icon={save} size="sm" variant={() => (anyDirty() ? "solid" : undefined)} disabled={() => !anyDirty()} class="sc-ide-save" label="Kaydet ve derle (Ctrl + S)" onClick={() => saveAndBuild()} /><PaletteButton label="Komut ara…" class="sc-playground-pal" /></>}
       panels={allPanels} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.march-ide.v3" label="MarchIDE" narrowTabs="bottom" api={followTabs}
       kit={(k: AppKit) => { debugSvc.set(k.service<DebuggerService>("debugger") ?? null); tsSvc = k.service<TypeScriptService>("typescript") ?? null }} />

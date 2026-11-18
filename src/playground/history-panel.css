@@ -1,0 +1,21 @@
+/* MarchIDE's History tab (history-panel.tsx) */
+.sc-history { box-sizing: border-box; block-size: 100%; min-block-size: 0; font-size: var(--m-text-sm); }
+.sc-history-none { margin: 0; padding: var(--m-space-3); color: var(--m-muted); }
+.sc-history-body { display: grid; grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr); block-size: 100%; min-block-size: 0; }
+.sc-history-list { list-style: none; margin: 0; padding: var(--m-space-1); overflow: auto; border-inline-end: var(--m-border-w, 1px) solid var(--m-border); }
+.sc-history-item { all: unset; box-sizing: border-box; display: grid; inline-size: 100%; padding: .35em .6em; border-radius: var(--m-radius-2, 6px); cursor: pointer; }
+.sc-history-item:hover { background: color-mix(in srgb, var(--m-text) 6%, transparent); }
+.sc-history-item.is-on { background: color-mix(in srgb, var(--m-primary) 14%, transparent); }
+.sc-history-item:focus-visible { outline: 2px solid var(--m-focus, var(--m-primary)); outline-offset: -2px; }
+.sc-history-item .m-muted { font-size: .85em; }
+.sc-history-diff { display: flex; flex-direction: column; min-inline-size: 0; min-block-size: 0; }
+.sc-history-bar { display: flex; align-items: center; gap: var(--m-space-2); padding: var(--m-space-1) var(--m-space-3); border-block-end: var(--m-border-w, 1px) solid var(--m-border); }
+.sc-history-gap { flex: 1; }
+.sc-history-bar .is-add { color: var(--m-success-text, var(--m-success)); }
+.sc-history-bar .is-del { color: var(--m-danger-text, var(--m-danger)); }
+.sc-history-lines { flex: 1; min-block-size: 0; overflow: auto; margin: 0; padding: var(--m-space-1) 0; font: var(--m-text-xs) / 1.6 var(--m-font-mono); }
+.sc-history-line { display: grid; grid-template-columns: 3ch 3ch 2ch minmax(0, 1fr); gap: 1ch; padding-inline: var(--m-space-2); white-space: pre-wrap; overflow-wrap: anywhere; }
+.sc-history-line.is-add { background: color-mix(in srgb, var(--m-success) 14%, transparent); }
+.sc-history-line.is-del { background: color-mix(in srgb, var(--m-danger) 14%, transparent); }
+.sc-history-line.is-gap { color: var(--m-muted); padding-inline-start: calc(var(--m-space-2) + 9ch); }
+.sc-history-n, .sc-history-op { color: var(--m-muted); text-align: end; user-select: none; }
