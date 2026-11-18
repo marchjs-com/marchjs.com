@@ -829,6 +829,8 @@ async function apiProps(api: string): Promise<ApiProp[]> {
 }
 /** The code editor's props of a tag (its list inside `<Button …>` and the pointer's rest on a prop): the file's own
  * component's, else March's, each with its type and its text in the page's language. */
+/** A prop typed as an icon (IconType, March's IconProp): the editor's icon list in its quotes, whatever its name. */
+const ICON_TYPE = /\bIcon(Type|Prop)\b/
 const editorProps = async (name: string): Promise<OwnProp[]> => {
   await ensureOptions(name)
   const tr = untrack(pageLang) === "tr"
@@ -850,11 +852,11 @@ const editorProps = async (name: string): Promise<OwnProp[]> => {
     const words = values.length ? values : [...(set?.list ?? [])]
     const write: OwnProp["write"] = isIcon(o) ? "code" : typeof o.default === "boolean" || BOOL_ATTRS.has(prop) || COMMON_BOOL.has(prop) ? "bare"
       : typeof o.default === "number" || o.default === null ? "code" : "text"
-    out.push({ name: prop, group, write, ...(isIcon(o) ? { icon: true } : {}), ...(a?.type ? { type: a.type } : {}), ...(words.length ? { values: words } : {}),
+    out.push({ name: prop, group, write, ...(isIcon(o) || ICON_TYPE.test(a?.type ?? "") ? { icon: true } : {}), ...(a?.type ? { type: a.type } : {}), ...(words.length ? { values: words } : {}),
       doc: untrack(() => describeProp(name, o)) || textOf(a) })
   }
   // the rest the component takes (events, children…): March's too, written as code
-  for (const a of api.values()) if (!seen.has(a.name) && a.name !== "children") { seen.add(a.name); out.push({ name: a.name, type: a.type, doc: textOf(a), group: "March", ...(/^on[A-Z]/.test(a.name) ? { write: "code" as const } : /icon/i.test(a.name) ? { write: "code" as const, icon: true } : {}) }) }
+  for (const a of api.values()) if (!seen.has(a.name) && a.name !== "children") { seen.add(a.name); out.push({ name: a.name, type: a.type, doc: textOf(a), group: "March", ...(/^on[A-Z]/.test(a.name) ? { write: "code" as const } : /icon/i.test(a.name) || ICON_TYPE.test(a.type ?? "") ? { write: "code" as const, icon: true } : {}) }) }
   // the directives every tag takes: sx, class, style, ref and the DOM events (on:click…)
   for (const p of CORE_PROPS) if (!seen.has(p.name)) out.push(p)
   return out

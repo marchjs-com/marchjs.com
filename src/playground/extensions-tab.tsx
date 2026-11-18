@@ -106,6 +106,8 @@ export function extensionSpec(info: ExtInfo, name: string, key: string): { group
 }
 
 export type { OwnProp }
+/** The keys that hold an icon (as the compiler reads them: icon, iconEnd, spinner, …Icon). */
+const ICON_KEY = /^(icon|spinner)$|^icon[A-Z]|[a-z]Icon$/
 /** A prop whose place has helpers (its values, icons, sx / m:parts' objects, a handler): picking it asks again. */
 const helps = (p: OwnProp): boolean => !!(p.values?.length || p.icon || p.insert || /^on[A-Z]|^on:|^ref$/.test(p.name))
 /**
@@ -132,6 +134,13 @@ export function withExtensionSuggestions(plugin: AppPlugin, info: () => ExtInfo,
         const items = (p?.values ?? []).filter((w) => w.toLowerCase().startsWith(v.typed.toLowerCase()))
           .map((w) => ({ label: w, hint: v.prop, doc: { kind: "değer", signature: `${v.prop}="${w}"`, ...(p?.doc ? { doc: firstSentence(p.doc) } : {}) } }))
         return { from: ctx.caret - v.typed.length, to: ctx.caret, items, all: true, open: true }
+      }
+      // an icon written by name outside a tag: an object's icon key (`{ icon: "|" }`, `closeIcon: "|"`) or icon("|") of
+      // march/icons/packs (the compiler makes a written name an import of that icon)
+      const named = /(?:[{,]\s*["']?([A-Za-z_$][\w$]*)["']?\s*:|\bicon\(\s*)\s*(["'])([\w:-]*)$/.exec(ctx.before)
+      if (named && (!named[1] || ICON_KEY.test(named[1])) && more.iconNames && !tagPlace(ctx.before)) {
+        const sets = await more.iconNames().catch(() => [])
+        return { from: ctx.caret - named[3]!.length, to: ctx.caret, items: iconNameRows(named[1] ?? "icon", named[3]!, sets) as never, all: true, open: true }
       }
       // inside an icon prop's braces (`icon={|`): the file's icons, March's, every pack's (Lucide, Tabler…), defineIcon
       const place = tagPlace(ctx.before)
