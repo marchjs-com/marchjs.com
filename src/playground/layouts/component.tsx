@@ -6,7 +6,7 @@
 // change is built in the page (playground/build.ts): the Console shows each step with its time and the errors,
 // lang.json the texts the build found. No tab has a close mark (groups still collapse to strips).
 import "./component.css";
-import { h, render as mount, createRoot, signal, computed, effect, untrack, onCleanup, SX, locale, t } from "march";
+import { h, render as mount, createRoot, signal, computed, effect, untrack, batch, onCleanup, SX, locale, t } from "march";
 import { registry } from "march/components/registry.gen.ts";
 import type { PlaygroundOption } from "march/components/meta.ts";
 import { appUrl } from "march/base";
@@ -1036,6 +1036,9 @@ const consoleText = (v: unknown): string => {
 }
 /** The build the preview drew last: its files open in a dialog (the Console's button, the Terminal's `output`). */
 const lastBuild = signal<BuildResult | null>(null)
+/** The file the last build was made from (its languages go with it); the workspace's id (the page it came from). */
+const builtFile = signal("")
+const workspaceId = signal("")
 // the Bundle tab: the last build minified and gzipped (each file's share from its metafile), the code's March imports
 // with each component's size alone (export-sizes.json, fetched once)
 const bundleOwn = signal<{ min: number; gzip: number; files: [string, number][] } | null>(null)
@@ -1055,15 +1058,22 @@ const bundleImports = computed((): MarchImport[] => marchImports((bundleOwn()?.f
 const showOutput = async (): Promise<boolean> => {
   const b = untrack(lastBuild)
   if (!b) return false
-  await openBuildOutput({ build: b, name: untrack(active).replace(/\.[jt]sx?$/, ""), entry: ENTRY, js: builder.js,
+  await openBuildOutput({ build: b, name: (untrack(builtFile) || untrack(active)).replace(/\.[jt]sx?$/, ""), entry: ENTRY, js: builder.js,
     // every language added in lang.json, as its file (the texts not translated yet keep the code's own)
     languages: untrack(() => Object.fromEntries(Object.keys(langs()).map((c) => [c, langFile(c)]))) })
   return true
 }
-const consolePanel = () => <div class="sc-console-box">
+// the Console shows one build: its output, and (the globe) its languages: the texts it found and their translations
+const consoleLangs = signal(false)
+const consolePanel = () => <div class="sc-console-box" class:is-langs={consoleLangs()}>
   <Terminal readonly scheme="dark" height="100%" label="Derleme çıktısı" class="sc-console"
     ref={(api: TerminalApi) => { consoleApi = api; for (const [t, o] of waiting.splice(0)) api.print(t, o) }} />
-  <Button size="xs" variant="secondary" icon={history} class="sc-console-out" disabled={() => !lastBuild()} onClick={() => void showOutput()}>Son derlemeyi göster</Button>
+  {() => (consoleLangs() ? <div class="sc-console-langs">{langPanel()}</div> : null)}
+  <div class="sc-console-tools">
+    <IconButton icon={globe} size="sm" variant="raised" pressed={consoleLangs()} disabled={!lastBuild()}
+      label={consoleLangs() ? "Derleme çıktısına dön" : "Son derlemenin dilleri"} onClick={() => consoleLangs.set(!consoleLangs())} />
+    <Button size="xs" variant="secondary" icon={history} class="sc-console-out" disabled={() => !lastBuild()} onClick={() => void showOutput()}>Son derlemeyi göster</Button>
+  </div>
 </div>
 // Terminal: the playground's command line (no shell: March is built here in the browser and exported, never
 // installed from npm). Its commands work on the component in work (props, events, the preview's language and theme,
@@ -1116,7 +1126,7 @@ const buildNow = async () => {
   }
   const now = untrack(() => ({ [path]: withData(src), [ENTRY]: entrySource() }))
   const r = await builder.build(now, ENTRY)
-  if (r?.ok) { lastBuild.set(r); void measureBundle(r); await render(r.code) }
+  if (r?.ok) { batch(() => { lastBuild.set(r); builtFile.set(path) }); void measureBundle(r); await render(r.code) }
   if ([...files.keys()].some(isTestFile)) void runAllTests()
   return r
 }
@@ -1297,11 +1307,25 @@ const terminalPanel = () => <Terminal ref={(api: TerminalApi) => { termApi = api
 // lang.json: the texts the last build found (JSX text, titles, labels…), as a locale file lists them
 // lang.json: the default language is the code's own texts (each key is its own text); a language added with + starts
 // as a copy of it under its code and is translated here; the preview's language tool lists them all
-const langJson = () => Object.fromEntries(builder.texts().map((k) => [k, k]))
-const LANGS_KEY = "sc.playground.langs"
-const readLangs = (): Record<string, Record<string, string>> => { try { return JSON.parse(localStorage.getItem(LANGS_KEY) ?? "{}") as Record<string, Record<string, string>> } catch { return {} } }
-const langs = signal<Record<string, Record<string, string>>>(readLangs())
-const saveLangs = (v: Record<string, Record<string, string>>): void => { langs.set(v); try { localStorage.setItem(LANGS_KEY, JSON.stringify(v)) } catch { /* private mode */ } }
+// the texts of the last build (not a test file's: those builds do not count), and the languages of that build: kept per
+// workspace and built file, so another tab's build shows its own (a file's languages follow it, not one shared list)
+const langJson = () => Object.fromEntries((lastBuild()?.texts ?? []).map((k) => [k, k]))
+const LANGS_KEY = "sc.playground.langs.v2"
+type LangSet = Record<string, Record<string, string>>
+const readLangStore = (): Record<string, LangSet> => { try { return JSON.parse(localStorage.getItem(LANGS_KEY) ?? "{}") as Record<string, LangSet> } catch { return {} } }
+const langStore = signal<Record<string, LangSet>>(readLangStore())
+/** The build the languages belong to: "<workspace>|<file>". */
+const buildKey = (): string => `${workspaceId()}|${builtFile()}`
+const langs = computed((): LangSet => langStore()[buildKey()] ?? {})
+/** A language's translations with `next` laid over them: a text no longer in the code keeps its translation (it comes
+ *  back with the text), so editing or a new build never loses one. */
+const mergeLang = (code: string, next: Record<string, string>): LangSet => ({ ...untrack(langs), [code]: { ...(untrack(langs)[code] ?? {}), ...next } })
+const saveLangs = (v: LangSet): void => {
+  const all = { ...untrack(langStore) }, k = untrack(buildKey)
+  if (Object.keys(v).length) all[k] = v; else delete all[k]
+  langStore.set(all)
+  try { localStorage.setItem(LANGS_KEY, JSON.stringify(all)) } catch { /* private mode */ }
+}
 /** A language's file: every key of the code, its own translations kept (a new text starts as itself). */
 const langFile = (code: string): Record<string, string> => { const own = langs()[code] ?? {}; return Object.fromEntries(Object.entries(langJson()).map(([k, v]) => [k, own[k] ?? v])) }
 const langShown = signal("")
@@ -1356,7 +1380,7 @@ ${JSON.stringify(source, null, 1)}` }],
       // every key of the code: a text the AI left out keeps the default
       const file = Object.fromEntries(keys.map((k) => [k, typeof out.texts![k] === "string" && (out.texts![k] as string).trim() ? out.texts![k] as string : source[k]!]))
       const missing = keys.filter((k) => file[k] === source[k] && typeof out.texts![k] !== "string").length
-      saveLangs({ ...langs(), [code]: file })
+      saveLangs(mergeLang(code, file))
       langShown.set(code)
       made++
       print(`[${stamp()}] ✨ ${langName(code)}: ${code} AI ile oluşturuldu (${keys.length - missing}/${keys.length} metin · ↑${r.usage.input} ↓${r.usage.output} token)`, "success")
@@ -1380,6 +1404,7 @@ const LANG_NOTE_KEY = "sc.playground.langNote"
 const langNote = signal((() => { try { return localStorage.getItem(LANG_NOTE_KEY) !== "off" } catch { return true } })())
 const closeLangNote = (): void => { langNote.set(false); try { localStorage.setItem(LANG_NOTE_KEY, "off") } catch { /* private mode */ } }
 const langPanel = () => <div class="sc-lang">
+  <p class="sc-lang-of">{() => (builtFile() ? <><b>{builtFile()}</b> derlemesinin dilleri · {Object.keys(langJson()).length} metin</> : "Henüz derleme yok")}</p>
   {() => (langNote() ? <Alert tone="info" class="sc-lang-note" dismissable onDismiss={closeLangNote} dismissLabel="Bilgiyi kapat">
     March, koddaki bütün metinleri kendisi bulur ve dil dosyasına çıkarır. Yeni bir dil eklemek için <b>+</b> düğmesine basın; çeviriyi denemek için önizlemedeki dil kutusundan dili değiştirin.
   </Alert> : null)}
@@ -1409,7 +1434,7 @@ const langPanel = () => <div class="sc-lang">
   </div>
   {() => (aiLangBusy() ? <p class="sc-lang-busy" role="status"><Spinner size="sm" /> AI çeviriyor: {aiLangBusy()}</p> : null)}
   {() => { const code = langShown(); return untrack(() => (code
-    ? <JsonEditor value={langFile(code)} onChange={(v: unknown) => { if (v && typeof v === "object") saveLangs({ ...langs(), [code]: v as Record<string, string> }) }} aria-label={`${code}.json`} />
+    ? <JsonEditor value={langFile(code)} onChange={(v: unknown) => { if (v && typeof v === "object") saveLangs(mergeLang(code, v as Record<string, string>)) }} aria-label={`${code}.json`} />
     : <JsonView value={langJson} open={2} label="Varsayılan metinler" />)) }}
 </div>
 
@@ -1600,7 +1625,6 @@ const PANELS: AppPanel[] = [
   { id: "react", title: "Tepki", icon: activity, content: () => <ReactivityPanel rows={() => reactRows()} dom={() => reactDom()} reset={() => runtimeNow?.resetProbes()} go={goToLine} /> },
   { id: "bundle", title: "Paket", icon: packageBox, onShow: loadSizes, content: () => { loadSizes(); return <BundlePanel own={() => bundleOwn()} imports={() => bundleImports()} sizes={() => exportSizes()} /> } },
   { id: "terminal", title: "Terminal", icon: terminal, content: terminalPanel, onShow: focusTerminal },
-  { id: "i18n", title: "lang.json", icon: globe, content: langPanel },
 ]
 // the files' tabs: a live list. The layout stays on screen while MarchIDE moves between pages: the next ide.json's
 // files replace the tabs (and MarchIDE loads nothing else)
@@ -1659,7 +1683,7 @@ const PRESETS: Record<string, Preset> = {
     title: "MarchIDE",
     tree: () => row(
       [0.6, col([0.5, tabs("preview")], [0.2, tabs("livecode")], [0.3, row([0.8, tabs(["props", "a11y", "events", "data"])], [0.2, tabs(["deps"])])])],
-      [0.4, col([0.7, tabs(Object.keys(FILE_OF))], [0.3, tabs(["console", "ai", "debug", "terminal", "tests", "react", "bundle", "i18n", "ext", "ai-keys"])])],
+      [0.4, col([0.7, tabs(Object.keys(FILE_OF))], [0.3, tabs(["console", "ai", "debug", "terminal", "tests", "react", "bundle", "ext", "ai-keys"])])],
     ),
   },
 }
@@ -1792,6 +1816,7 @@ const ideTitle = (id: string): string => {
 
 export default function ComponentLayout(props: { ide: () => IdeJson; id: () => string }) {
   // the first files before the workspace is drawn (the layout's preset names their tabs), the next ones as they come
+  effect(() => workspaceId.set(props.id()))
   let shown = untrack(props.ide)
   useSources(shown.sources)
   effect(() => { const ide = props.ide(); if (ide !== shown) { shown = ide; untrack(() => useSources(ide.sources)) } })

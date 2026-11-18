@@ -28,7 +28,12 @@
 .sc-console { block-size: 100%; border-radius: 0; }
 /* the Console's button at its top right: the last build's files in a dialog */
 .sc-console-box { position: relative; block-size: 100%; }
-.m-btn.sc-console-out { position: absolute; inset-block-start: var(--m-space-2); inset-inline-end: var(--m-space-3); z-index: 1; }
+/* the Console's tools over its corner: its languages (the globe) and the last build's output */
+.sc-console-tools { position: absolute; inset-block-start: var(--m-space-2); inset-inline-end: var(--m-space-3); z-index: 2; display: flex; align-items: center; gap: var(--m-space-1); }
+/* the languages of the build over the output (the output keeps running beneath) */
+.sc-console-langs { position: absolute; inset: 0; z-index: 1; overflow: auto; background: var(--m-bg); }
+.sc-console-langs > .sc-lang { min-block-size: 100%; padding-block-start: var(--m-space-6); }
+.sc-lang-of { margin: 0; padding: var(--m-space-2) var(--m-space-3) 0; color: var(--m-muted); font-size: var(--m-text-xs); }
 .sc-props { block-size: 100%; overflow: auto; }
 /* the preview is split into a cell per exported component (its name in the corner when there are several) */
 .sc-pv-root { display: grid; align-self: stretch; inline-size: 100%; grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr)); }
