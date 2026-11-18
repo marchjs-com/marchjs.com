@@ -11,7 +11,7 @@ import { registry } from "march/components/registry.gen.ts";
 import type { PlaygroundOption } from "march/components/meta.ts";
 import { appUrl } from "march/base";
 import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "march/ui";
-import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog, type CodeProblem } from "march/app-ui";
+import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, vaultPlugin, aiPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog, type CodeProblem } from "march/app-ui";
 import { x as xIcon, alertTriangle, packageBox, activity, checkCircle, image, video, save, history, plus, database, zap, monitor, sliders, layers, braces, users, code, terminal, fileText, globe, plug } from "march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "march/forms"
 import { COLOR_TOKENS } from "march/theme"
@@ -1602,7 +1602,7 @@ const PRESETS: Record<string, Preset> = {
     title: "MarchIDE",
     tree: () => row(
       [0.6, col([0.5, tabs("preview")], [0.2, tabs("livecode")], [0.3, row([0.8, tabs(["props", "a11y", "events", "data"])], [0.2, tabs(["deps"])])])],
-      [0.4, col([0.7, tabs(Object.keys(FILE_OF))], [0.3, tabs(["console", "debug", "terminal", "tests", "react", "bundle", "i18n", "ext"])])],
+      [0.4, col([0.7, tabs(Object.keys(FILE_OF))], [0.3, tabs(["console", "ai", "debug", "terminal", "tests", "react", "bundle", "i18n", "ext", "ai-keys"])])],
     ),
   },
 }
@@ -1666,7 +1666,41 @@ const saveAndBuild = (path?: string): void => {
   print(`[${stamp()}] 💾 ${path ?? "tüm dosyalar"} kaydedildi, derleniyor`, "success")
   if (!changed) scheduleBuild(0)
 }
-const PLUGINS = [typescript, debug, codeEditorPlugin({ save: (f) => saveAndBuild(f.path), formatOnSave: true, problems: setProblems, openProblems: () => dock?.open("problems"), goTo: (path) => goTo()[path] }), withExtensionSuggestions(marchLanguagePlugin({ catalog }), extInfo, editorProps, editorComponent, { icons: marchIcons, packs: iconPacks, iconNames, components: marchComponents, sx: SX_SPEC })]
+// the user's own AI (march-app-ui's vault and AI plugins): keys encrypted in this browser's vault, requests straight from
+// here to the provider with the user's key; the chat knows the open file, its problems and the last run error
+const AI_SYSTEM = `You are the assistant inside MarchIDE, the browser IDE of March (MarchJS). Answer in the user's language (Turkish when they write Turkish), short and concrete.
+March in brief: components are functions that run once and return DOM (no re-render, no hooks). In .tsx, \`let $x = 0\` is a signal: read $x, write $x = 1; \`const $y = $x * 2\` is computed. Plain API: signal(), computed(), effect(), onCleanup() from "march".
+JSX: on:click / onClick, class:active={$on}, bind:value={$name}, sx={{ p: 2, gap: 1 }}, m: common props (m:tip, m:color, m:parts). Control flow: <If when>…<Else/>, <For each key>{(item, i) => …}</For> (item and i are accessors), <Switch>/<Match>, <Try>, <Await>.
+Props are getters: never destructure props; read props.x where it is used. Components from "march/ui" (Button, IconButton, TextInput, Select, Card…), icons by name: icon="lucide:heart" or icon={heart} from "march/icons".
+Tests: import { test, expect, renderTest } from "march/testing"; renderTest(() => <X />) gives click(text), sees(text), find(text), text().
+When you change a file, reply with the WHOLE file in one fenced code block (\`\`\`tsx), then a short list of what changed.`
+const aiContext = () => {
+  const file = active(), code = files.get(file)?.peek()
+  const ta = document.activeElement
+  const selection = ta instanceof HTMLTextAreaElement && ta.classList.contains("m-ced-input") && ta.selectionEnd > ta.selectionStart ? ta.value.slice(ta.selectionStart, ta.selectionEnd) : undefined
+  const problems = allProblems().filter((p) => p.file === file).map((p) => `${p.file}:${p.line}:${p.col} ${p.error ? "error" : "warning"} ${p.message}`)
+  const e = pvError()
+  return { file, code, selection, problems, error: e ? [e.title, ...e.frames.map((f) => `  at ${f.fn} (${f.file}:${f.line})`)].join("\n") : undefined }
+}
+/** A code block of the AI into a file: tests go into the open file's test file when there is one. */
+const aiApply = (file: string, code: string): void => {
+  let target = file
+  if (/from ["']march\/testing["']/.test(code) && !isTestFile(file)) {
+    const t = file.replace(/\.tsx?$/, ".test.tsx")
+    if (!files.has(t)) { toast("Bu kod bir test dosyası: kopyalayıp yeni bir .test.tsx dosyasına yapıştır."); return }
+    target = t
+  }
+  const f = files.get(target)
+  if (!f) return
+  debugTab(target)
+  // through the editor's own input when its tab is open (one undoable step: Ctrl+Z takes it back), else the file's text
+  const id = Object.entries(FILE_OF).find(([, n]) => n === target)?.[0]
+  const ta = id ? document.querySelector<HTMLTextAreaElement>(`[id$="-p-${id}"] textarea.m-ced-input`) : null
+  if (ta) { ta.focus(); ta.select(); if (!document.execCommand("insertText", false, code)) f.set(code) } else f.set(code)
+  print(`[${stamp()}] ✨ AI önerisi ${target} dosyasına yazıldı (kaydedince derlenir; Ctrl+Z geri alır)`, "success")
+}
+const ai = aiPlugin({ context: aiContext, apply: aiApply, open: (id) => dock?.open(id), system: AI_SYSTEM, panel: { place: { near: "console" } } })
+const PLUGINS = [typescript, debug, vaultPlugin({ panel: { place: { near: "console" } } }), ai, codeEditorPlugin({ save: (f) => saveAndBuild(f.path), formatOnSave: true, problems: setProblems, openProblems: () => dock?.open("problems"), goTo: (path) => goTo()[path] }), withExtensionSuggestions(marchLanguagePlugin({ catalog }), extInfo, editorProps, editorComponent, { icons: marchIcons, packs: iconPacks, iconNames, components: marchComponents, sx: SX_SPEC })]
 
 // the next build (one at a time: a newer request replaces a waiting one)
 let timer: ReturnType<typeof setTimeout> | undefined
