@@ -12,7 +12,7 @@ import type { PlaygroundOption } from "march/components/meta.ts";
 import { appUrl } from "march/base";
 import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "march/ui";
 import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog, type CodeProblem } from "march/app-ui";
-import { x as xIcon, alertTriangle, packageBox, activity, checkCircle, save, history, plus, database, zap, monitor, sliders, layers, braces, users, code, terminal, fileText, globe, plug } from "march/icons";
+import { x as xIcon, alertTriangle, packageBox, activity, checkCircle, image, video, save, history, plus, database, zap, monitor, sliders, layers, braces, users, code, terminal, fileText, globe, plug } from "march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "march/forms"
 import { COLOR_TOKENS } from "march/theme"
 import { createBuilder, type BuildResult } from "../build.ts";
@@ -36,6 +36,7 @@ import { BundlePanel, marchImports, type ExportSizes, type MarchImport } from ".
 import { ReactivityPanel, parseProbeName, type ReactRow } from "../reactivity-panel.tsx";
 import type { Probe, TestResult } from "../preview-runtime.ts";
 import { TestsPanel, isTestFile, type TestRun } from "../tests-panel.tsx";
+import { capturePicture, startRecording } from "../capture.ts";
 import { hotkeys } from "march/managers";
 
 
@@ -1501,7 +1502,26 @@ async function render(code: string): Promise<void> {
     showRunError(e)
   }
 }
-const preview = () => <AppPreview toolbar={{ theme: true, accent: true, mode: true, language: true, fullscreen: true, device: true }} theme={previewTheme} mode={previewMode} language={previewLang} languages={languageList}>
+// the preview's picture and recording (the browser asks to share the tab first; the file is saved, nothing is sent)
+const recording = signal<{ stop(): void } | null>(null)
+const pvBox = (): Element | null => previewEl?.closest(".m-app-pv-stage") ?? previewEl
+const snap = async (): Promise<void> => {
+  const el = pvBox(); if (!el) return
+  if (!(await capturePicture(el, `${active().replace(/\.[^.]+$/, "")}-onizleme`))) print(`[${stamp()}] Ekran görüntüsü alınamadı (sekmeyi paylaşmaya izin verilmedi ya da tarayıcı desteklemiyor)`, "warn")
+}
+const toggleRecord = async (): Promise<void> => {
+  const cur = recording.peek()
+  if (cur) { cur.stop(); return }
+  const el = pvBox(); if (!el) return
+  const r = await startRecording(el, `${active().replace(/\.[^.]+$/, "")}-kayit`, () => recording.set(null))
+  if (r) { recording.set(r); print(`[${stamp()}] ⏺ Önizleme kaydediliyor: durdurmak için kayıt düğmesine bas`, "info") }
+  else print(`[${stamp()}] Kayıt başlatılamadı (sekmeyi paylaşmaya izin verilmedi ya da tarayıcı desteklemiyor)`, "warn")
+}
+const captureTools = () => <>
+  <IconButton icon={image} size="sm" variant="ghost" label="Önizlemenin ekran görüntüsü (PNG)" onClick={() => void snap()} />
+  <IconButton icon={video} size="sm" variant={() => (recording() ? "solid" : "ghost")} pressed={() => !!recording()} label={() => (recording() ? "Kaydı durdur ve kaydet (WebM)" : "Önizlemeyi kaydet (WebM)")} onClick={() => void toggleRecord()} />
+</>
+const preview = () => <AppPreview tools={captureTools()} toolbar={{ theme: true, accent: true, mode: true, language: true, fullscreen: true, device: true }} theme={previewTheme} mode={previewMode} language={previewLang} languages={languageList}>
   <div class="sc-pv-root" m:no-select ref={previewReady}>
     <div class="sc-playground-empty"><b>Önizleme</b><span>Derleniyor…</span></div>
   </div>
