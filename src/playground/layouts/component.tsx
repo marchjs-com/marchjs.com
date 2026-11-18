@@ -37,6 +37,7 @@ import { ReactivityPanel, parseProbeName, type ReactRow } from "../reactivity-pa
 import type { Probe, TestResult } from "../preview-runtime.ts";
 import { TestsPanel, isTestFile, type TestRun } from "../tests-panel.tsx";
 import { capturePicture, startRecording } from "../capture.ts";
+import { aiIndex, aiDetails, marchNamesIn } from "../ai-reference.ts";
 import { hotkeys } from "march/managers";
 
 
@@ -1670,13 +1671,18 @@ const saveAndBuild = (path?: string): void => {
 // here to the provider with the user's key; the chat knows the open file, its problems and the last run error
 // the model reads March's own guide for AI assistants (AI_INSTRUCTIONS.md, ~25k tokens; the providers cache it, so a
 // later message pays about a tenth for it) and then the IDE's rules
-const AI_IDE = `You are the assistant inside MarchIDE, the browser IDE of March (MarchJS). The guide above is the contract: write March code exactly as it says (no React, no hooks, no useState / useEffect, no className; signals, March JSX, march/ui components), and prefer what it lists under Do / Don't and Common mistakes.
+const AI_IDE = `You are the assistant inside MarchIDE, the browser IDE of March (MarchJS). The guide and the API index above are the contract (a message brings the full entries of the March names it uses): write March code exactly as it says (no React, no hooks, no useState / useEffect, no className; signals, March JSX, march/ui components), and prefer what it lists under Do / Don't and Common mistakes.
 The files of the workspace are .tsx; the preview runs them with March. Tests use march/testing (test, expect, renderTest).
 When you change a file, reply with the WHOLE file in one fenced code block (\`\`\`tsx), then a short list of what changed. Keep answers short and concrete.`
 const AI_SYSTEM = async (): Promise<string> => {
-  const guide = await fetch(appUrl("playground/ai-instructions.md")).then((r) => (r.ok ? r.text() : "")).catch(() => "")
-  return guide ? `${guide}\n\n---\n\n${AI_IDE}` : AI_IDE
+  const [guide, idx] = await Promise.all([
+    fetch(appUrl("playground/ai-instructions.md")).then((r) => (r.ok ? r.text() : "")).catch(() => ""),
+    aiIndex().catch(() => ""),
+  ])
+  return [guide, idx, AI_IDE].filter(Boolean).join("\n\n---\n\n")
 }
+/** The full docs of the March names a message uses (the open file's, the selection's, the question's). */
+const aiReference = async (text: string): Promise<string> => aiDetails(await marchNamesIn(text))
 const aiContext = () => {
   const file = active(), code = files.get(file)?.peek()
   const ta = document.activeElement
@@ -1696,13 +1702,11 @@ const aiApply = (file: string, code: string): void => {
   const f = files.get(target)
   if (!f) return
   debugTab(target)
-  // through the editor's own input when its tab is open (one undoable step: Ctrl+Z takes it back), else the file's text
-  const id = Object.entries(FILE_OF).find(([, n]) => n === target)?.[0]
-  const ta = id ? document.querySelector<HTMLTextAreaElement>(`[id$="-p-${id}"] textarea.m-ced-input`) : null
-  if (ta) { ta.focus(); ta.select(); if (!document.execCommand("insertText", false, code)) f.set(code) } else f.set(code)
+  // the file's text: its editor follows it, and keeps the change as one step (Ctrl+Z takes it back)
+  f.set(code)
   print(`[${stamp()}] ✨ AI önerisi ${target} dosyasına yazıldı (kaydedince derlenir; Ctrl+Z geri alır)`, "success")
 }
-const ai = aiPlugin({ context: aiContext, apply: aiApply, open: (id) => dock?.open(id), system: AI_SYSTEM, panel: { place: { near: "console" } } })
+const ai = aiPlugin({ context: aiContext, apply: aiApply, open: (id) => dock?.open(id), system: AI_SYSTEM, reference: aiReference, panel: { place: { near: "console" } } })
 const PLUGINS = [typescript, debug, vaultPlugin({ panel: { place: { near: "console" } } }), ai, codeEditorPlugin({ save: (f) => saveAndBuild(f.path), formatOnSave: true, problems: setProblems, openProblems: () => dock?.open("problems"), goTo: (path) => goTo()[path] }), withExtensionSuggestions(marchLanguagePlugin({ catalog }), extInfo, editorProps, editorComponent, { icons: marchIcons, packs: iconPacks, iconNames, components: marchComponents, sx: SX_SPEC })]
 
 // the next build (one at a time: a newer request replaces a waiting one)
