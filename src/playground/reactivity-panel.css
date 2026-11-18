@@ -1,0 +1,14 @@
+/* MarchIDE's Tepki tab (reactivity-panel.tsx) */
+.sc-react { box-sizing: border-box; block-size: 100%; overflow: auto; font-size: var(--m-text-sm); }
+.sc-react-bar { position: sticky; inset-block-start: 0; z-index: 1; display: flex; align-items: center; gap: var(--m-space-2); padding: var(--m-space-2) var(--m-space-3); border-block-end: var(--m-border-w, 1px) solid var(--m-border); background: var(--m-surface); }
+.sc-react-bar > .m-muted { flex: 1; font-size: var(--m-text-xs); }
+.sc-react-body { display: grid; gap: var(--m-space-1); padding: var(--m-space-2) var(--m-space-3) var(--m-space-3); }
+.sc-react-head { display: flex; align-items: center; gap: var(--m-space-2); margin: var(--m-space-2) 0 0; font-size: inherit; }
+.sc-react-table { inline-size: 100%; border-collapse: collapse; }
+.sc-react-table :is(th, td) { padding: 3px 6px; text-align: start; border-block-end: 1px solid color-mix(in srgb, var(--m-border) 60%, transparent); }
+.sc-react-table th { color: var(--m-muted); font-weight: 500; font-size: var(--m-text-xs); }
+.sc-react-val { max-inline-size: 16rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--m-font-mono); font-size: var(--m-text-xs); }
+.sc-react-n { font-variant-numeric: tabular-nums; text-align: end; }
+.sc-react-table tr.is-recent { background: color-mix(in srgb, var(--m-primary) 12%, transparent); transition: background var(--m-dur-slow, .6s) var(--m-ease); }
+.sc-react-at { all: unset; cursor: pointer; font-family: var(--m-font-mono); font-size: var(--m-text-xs); color: var(--m-primary); text-decoration: underline; text-underline-offset: 2px; }
+.sc-react-at:focus-visible { outline: 2px solid var(--m-focus, var(--m-primary)); outline-offset: 2px; }

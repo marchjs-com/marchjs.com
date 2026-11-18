@@ -12,7 +12,7 @@ import type { PlaygroundOption } from "march/components/meta.ts";
 import { appUrl } from "march/base";
 import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "march/ui";
 import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog, type CodeProblem } from "march/app-ui";
-import { x as xIcon, alertTriangle, packageBox, save, history, plus, database, zap, monitor, sliders, layers, braces, users, code, terminal, fileText, globe, plug } from "march/icons";
+import { x as xIcon, alertTriangle, packageBox, activity, save, history, plus, database, zap, monitor, sliders, layers, braces, users, code, terminal, fileText, globe, plug } from "march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "march/forms"
 import { COLOR_TOKENS } from "march/theme"
 import { createBuilder, type BuildResult } from "../build.ts";
@@ -33,6 +33,8 @@ import type { ConsoleEvent } from "../preview-runtime.ts";
 import { QuickPick, type PickItem } from "../quick-pick.tsx";
 import { parseSourceMap, originalAt, blobFrames, type SourceMap } from "../source-map.ts";
 import { BundlePanel, marchImports, type ExportSizes, type MarchImport } from "../bundle-panel.tsx";
+import { ReactivityPanel, parseProbeName, type ReactRow } from "../reactivity-panel.tsx";
+import type { Probe } from "../preview-runtime.ts";
 import { hotkeys } from "march/managers";
 
 
@@ -1322,7 +1324,7 @@ const langPanel = () => <div class="sc-lang">
 let previewEl: HTMLElement | null = null
 type Parts = Record<string, Record<string, unknown>>
 let tsSvc: TypeScriptService | null = null
-type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void; onTree(cb: () => void): void; onConsole(cb: (e: ConsoleEvent) => void): void; sourceAt(node: Node | null): { file: string; line: number } | null; elementsAt(root: Element, file: string, line: number): Element[]; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void }
+type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void; onTree(cb: () => void): void; onConsole(cb: (e: ConsoleEvent) => void): void; sourceAt(node: Node | null): { file: string; line: number } | null; onProbes(cb: (p: Probe[], dom: [string, number][]) => void, root: Element): void; resetProbes(): void; elementsAt(root: Element, file: string, line: number): Element[]; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void }
 let runtime: Promise<Runtime> | null = null, runtimeNow: Runtime | null = null
 const loadRuntime = () => (runtime ??= (async () => {
   // its components' stylesheet, once
@@ -1426,13 +1428,35 @@ const errorBox = () => (pvError()
         : <p class="m-muted">Hatanın kodda geçtiği yer bulunamadı; ayrıntı Konsol'da.</p>}
     </div>
   : null)
+// the Tepki tab: the code's signals, effects and computeds counted, the DOM updates by line (the preview runtime's probes)
+const reactRows = signal<ReactRow[]>([])
+const reactDom = signal<[string, number][]>([])
+let probing: HTMLElement | null = null
+const watchReactivity = (r: Runtime, root: HTMLElement): void => {
+  if (probing === root) return
+  probing = root
+  r.onProbes((list, dom) => {
+    const b = untrack(lastBuild)
+    if (b && mapFor?.build !== b) mapFor = { build: b, map: b.map ? parseSourceMap(b.map) : null }
+    const now = performance.now()
+    reactRows.set(list.map((p): ReactRow => {
+      const named = p.kind === "signal" ? parseProbeName(p.name) : null
+      const o = !named && p.at && mapFor?.map ? originalAt(mapFor.map, p.at.line, p.at.column) : null
+      const file = named?.file ?? o?.source.replace(/^files:/, ""), line = named?.line ?? o?.line
+      return { kind: p.kind, name: named?.name ?? p.kind, ...(file ? { file } : {}), ...(line ? { line } : {}), count: p.count, ...(p.value !== undefined || p.kind === "signal" ? { value: consoleText(p.value) } : {}), recent: now - p.last < 900 }
+    }))
+    reactDom.set(dom)
+  }, root)
+}
 async function render(code: string): Promise<void> {
   if (!previewEl) { pendingCode = code; return }
   lastCode = code
   const t0 = performance.now()
   pvError.set(null)
   try {
-    await (await loadRuntime()).run(code, previewEl, untrack(rootProps), untrack(partsNow))
+    const rt = await loadRuntime()
+    watchReactivity(rt, previewEl)
+    await rt.run(code, previewEl, untrack(rootProps), untrack(partsNow))
     readTag()
     readExtensions()
     print(`[${stamp()}] Önizleme çizildi · ${Math.round(performance.now() - t0)} ms`, "success")
@@ -1459,6 +1483,7 @@ const PANELS: AppPanel[] = [
   { id: "a11y", title: "Erişilebilirlik", icon: users, content: a11yPanel },
   { id: "ext", title: "Askılar", icon: plug, content: () => <ExtensionsPanel info={extInfo} selected={selected} ownProps={(n) => exportedProps(n).map((p) => p.name)} refresh={readExtensions} /> },
   { id: "console", title: "Konsol", icon: code, content: consolePanel },
+  { id: "react", title: "Tepki", icon: activity, content: () => <ReactivityPanel rows={() => reactRows()} dom={() => reactDom()} reset={() => runtimeNow?.resetProbes()} go={goToLine} /> },
   { id: "bundle", title: "Paket", icon: packageBox, onShow: loadSizes, content: () => { loadSizes(); return <BundlePanel own={() => bundleOwn()} imports={() => bundleImports()} sizes={() => exportSizes()} /> } },
   { id: "terminal", title: "Terminal", icon: terminal, content: terminalPanel, onShow: focusTerminal },
   { id: "i18n", title: "lang.json", icon: globe, content: langPanel },
@@ -1520,7 +1545,7 @@ const PRESETS: Record<string, Preset> = {
     title: "MarchIDE",
     tree: () => row(
       [0.6, col([0.5, tabs("preview")], [0.2, tabs("livecode")], [0.3, row([0.8, tabs(["props", "a11y", "events", "data"])], [0.2, tabs(["deps"])])])],
-      [0.4, col([0.7, tabs(Object.keys(FILE_OF))], [0.3, tabs(["console", "debug", "terminal", "bundle", "i18n", "ext"])])],
+      [0.4, col([0.7, tabs(Object.keys(FILE_OF))], [0.3, tabs(["console", "debug", "terminal", "react", "bundle", "i18n", "ext"])])],
     ),
   },
 }

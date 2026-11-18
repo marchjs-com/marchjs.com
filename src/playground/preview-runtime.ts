@@ -39,7 +39,75 @@ const playground = {
     }
   },
 };
-const MODULES: Record<string, unknown> = { "march": core, "march/ui": ui, "march/icons": icons, "march/theme": theme, "march/motion": motion, "march/props": props, "march/playground": playground };
+// ---- the reactivity inspector (MarchIDE's Tepki tab): the code's signals (named by the IDE's build: "count@App.tsx:4"),
+// its effects and computeds, and the preview's DOM updates, counted. The code's `march` is March with signal, effect and
+// computed wrapped to count (the core is not touched: nothing of this is in an app).
+export interface Probe { id: number; kind: "signal" | "computed" | "effect"; name: string; at: { line: number; column: number } | null; count: number; value?: unknown; last: number }
+const probes = new Map<number, Probe>();
+let probeSeq = 0, probeCb: ((p: Probe[], dom: [string, number][]) => void) | null = null, probeQueued = false;
+const domCounts = new Map<string, number>();
+const notifyProbes = (): void => {
+  if (!probeCb || probeQueued) return;
+  probeQueued = true;
+  setTimeout(() => { probeQueued = false; probeCb?.([...probes.values()].map((p) => ({ ...p })), [...domCounts].sort((a, b) => b[1] - a[1])); }, 60); // the tab at most ~16 times a second
+};
+/** Where in the code (its blob module) a signal, an effect or a computed was made: the bundle's line and column. */
+const madeAt = (): { line: number; column: number } | null => {
+  const l = (new Error().stack ?? "").split("\n").find((x) => /blob:/.test(x));
+  const m = l ? /:(\d+):(\d+)\)?\s*$/.exec(l) : null;
+  return m ? { line: Number(m[1]), column: Number(m[2]) - 1 } : null;
+};
+/** A probe leaves the list with what owns it (a component drawn again makes new signals). */
+const leave = (p: Probe): void => { if (core.getOwner()) core.onCleanup(() => { probes.delete(p.id); notifyProbes(); }); };
+const traced = {
+  ...core,
+  signal: <T,>(v: T, o?: { name?: string }) => {
+    const s = core.signal(v, o as never) as ReturnType<typeof core.signal<T>>;
+    if (!o?.name || !probeCb) return s;
+    const p: Probe = { id: ++probeSeq, kind: "signal", name: o.name, at: null, count: 0, value: v, last: 0 };
+    probes.set(p.id, p);
+    leave(p);
+    const set = s.set;
+    (s as { set: (x: T) => T }).set = (x: T) => { const r = set(x); p.count++; p.value = s.peek(); p.last = performance.now(); notifyProbes(); return r; };
+    notifyProbes();
+    return s;
+  },
+  effect: (fn: () => void) => {
+    if (!probeCb || !/blob:/.test(new Error().stack ?? "")) return core.effect(fn);
+    const p: Probe = { id: ++probeSeq, kind: "effect", name: "effect", at: madeAt(), count: 0, last: 0 };
+    probes.set(p.id, p);
+    leave(p);
+    return core.effect(() => { p.count++; p.last = performance.now(); notifyProbes(); fn(); });
+  },
+  computed: <T,>(fn: (prev: T | undefined) => T, o?: object) => {
+    if (!probeCb || !/blob:/.test(new Error().stack ?? "")) return core.computed(fn, o as never);
+    const p: Probe = { id: ++probeSeq, kind: "computed", name: "computed", at: madeAt(), count: 0, last: 0 };
+    probes.set(p.id, p);
+    leave(p);
+    return core.computed((prev: T | undefined) => { p.count++; p.last = performance.now(); const v = fn(prev); p.value = v; notifyProbes(); return v; }, o as never);
+  },
+};
+let domWatch: MutationObserver | null = null;
+/** Starts counting: `cb` gets the probes and the DOM updates per written place ("App.tsx:12"), at most ~16 times a second. */
+export function onProbes(cb: (p: Probe[], dom: [string, number][]) => void, root: Element): void {
+  probeCb = cb;
+  domWatch?.disconnect();
+  domWatch = new MutationObserver((list) => {
+    for (const m of list) {
+      const el = (m.target instanceof Element ? m.target : m.target.parentElement)?.closest?.("[data-m-src]");
+      const key = el?.getAttribute("data-m-src");
+      if (key) domCounts.set(key, (domCounts.get(key) ?? 0) + 1);
+    }
+    notifyProbes();
+  });
+  domWatch.observe(root, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ["class", "style", "value", "checked", "disabled", "aria-pressed", "aria-busy", "hidden"] });
+}
+/** The counters back to zero (the probes stay). */
+export function resetProbes(): void { for (const p of probes.values()) p.count = 0; domCounts.clear(); notifyProbes(); }
+/** A new run: its own signals and effects. */
+const newRun = (): void => { probes.clear(); domCounts.clear(); };
+
+const MODULES: Record<string, unknown> = { "march": traced, "march/ui": ui, "march/icons": icons, "march/theme": theme, "march/motion": motion, "march/props": props, "march/playground": playground };
 // any other subpath of the components (march/actions…) is in the ui barrel too
 (globalThis as Record<string, unknown>)["__marchPreview"] = new Proxy(MODULES, { get: (m, k: string) => m[k] ?? (k.startsWith("march/") ? ui : undefined) });
 
@@ -167,7 +235,10 @@ const draw = (C: Comp, el: HTMLElement, props: Props, parts: Parts, cell = ""): 
   const bare = (): unknown => (children === undefined || children === "" ? core.h(C, own) : core.h(C, own, children));
   const make = (): unknown => (Object.keys(common).length ? mProps(bare(), common) : bare());
   // the cell is the root of its instances' keys (Hierarchy): counted afresh on every draw, so a key stays the same
-  return core.render(() => { core.provide(PARENT, { id: 0, key: cell, counts: new Map() }); return map.size ? withParts(map as never, make) : make() }, el);
+  const stopDraw = core.render(() => { core.provide(PARENT, { id: 0, key: cell, counts: new Map() }); return map.size ? withParts(map as never, make) : make() }, el);
+  // a drawing (the first, or again with new props) is no update of the reactivity: the inspector does not count it
+  domWatch?.takeRecords();
+  return stopDraw;
 };
 // every component the module exports has a cell of its own: the preview is split into as many cells
 interface Cell { C: Comp; el: HTMLElement; dispose: () => void }
@@ -274,6 +345,7 @@ export function setProps(props: Record<string, Props>, parts: Record<string, Par
 export async function run(code: string, el: HTMLElement, props: Record<string, Props> = {}, parts: Record<string, Parts> = {}): Promise<string[]> {
   await loadPacks(code);
   resetConsole();
+  newRun();
   const url = URL.createObjectURL(new Blob([link(code)], { type: "text/javascript" }));
   // the extensions the previous run registered (extend / intercept at the module's top) go with it
   core.extensions.clear();
@@ -317,6 +389,8 @@ export async function run(code: string, el: HTMLElement, props: Record<string, P
   last = { url, cells };
   data = (mod["__marchData"] as Record<string, unknown> | undefined) ?? {};
   watchData();
+  // the first drawing is no update: what the observer holds of it goes
+  domWatch?.takeRecords(); domCounts.clear(); notifyProbes();
   return [...cells.keys()];
 }
 /**
