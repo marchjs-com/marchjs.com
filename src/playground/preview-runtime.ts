@@ -64,6 +64,31 @@ async function loadPacks(code: string): Promise<void> {
   }));
 }
 
+// the preview code's console (console.log / info / warn / error / debug): its calls go to MarchIDE's Console too.
+// A call is the code's when it comes from one of its modules (they run from blob: URLs: their stack says so); the
+// page's own calls stay where they were. The browser's console still gets every call.
+type ConsoleLevel = "log" | "info" | "warn" | "error" | "debug";
+let consoleCb: ((level: ConsoleLevel, args: unknown[]) => void) | null = null;
+const CONSOLE_LEVELS: ConsoleLevel[] = ["log", "info", "warn", "error", "debug"];
+let consoleHooked = false;
+const hookConsole = (): void => {
+  if (consoleHooked) return;
+  consoleHooked = true;
+  const c = console as unknown as Record<ConsoleLevel, (...a: unknown[]) => void>;
+  for (const level of CONSOLE_LEVELS) {
+    const own = c[level].bind(console);
+    c[level] = (...args: unknown[]) => {
+      own(...args);
+      if (consoleCb && /\bblob:/.test(new Error().stack ?? "")) { try { consoleCb(level, args); } catch { /* the Console's own trouble */ } }
+    };
+  }
+  // what the code throws and does not catch (and promises it leaves rejected) is an error line too
+  globalThis.addEventListener?.("error", (e: ErrorEvent) => { if (consoleCb && /^blob:/.test(e.filename ?? "")) consoleCb("error", [e.error ?? e.message]); });
+  globalThis.addEventListener?.("unhandledrejection", (e: PromiseRejectionEvent) => { const st = String((e.reason as Error)?.stack ?? ""); if (consoleCb && /\bblob:/.test(st)) consoleCb("error", [e.reason]); });
+};
+/** Called with each console call of the preview's code: its level and its arguments. */
+export function onConsole(cb: (level: ConsoleLevel, args: unknown[]) => void): void { consoleCb = cb; hookConsole(); }
+
 /** `import { a as b, c } from "march/x";` → `const { a: b, c } = __marchPreview["march/x"];` (and `* as x`). */
 export function link(code: string): string {
   const mod = (path: string): string => `globalThis.__marchPreview[${JSON.stringify(path)}]`;

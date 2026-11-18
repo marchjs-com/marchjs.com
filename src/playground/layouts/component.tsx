@@ -30,7 +30,6 @@ import { ExtensionsPanel, extensionOptions, extensionSpec, withExtensionSuggesti
 import { CORE_PROPS } from "../prop-suggest.ts";
 import { ProblemsPanel, lineColOf, type IdeProblem } from "../problems-panel.tsx";
 import { QuickPick, type PickItem } from "../quick-pick.tsx";
-import { HistoryPanel, type Snapshot } from "../history-panel.tsx";
 import { hotkeys } from "march/managers";
 
 
@@ -43,18 +42,11 @@ const saved = new Map<string, ReturnType<typeof signal<string>>>()
 const isDirty = (path: string): boolean => { const t = files.get(path), s = saved.get(path); return !!t && !!s && t() !== s() }
 const anyDirty = (): boolean => [...files.keys()].some(isDirty)
 /** Saves a file (else every file): its text becomes the saved one, which builds it. Returns whether anything changed. */
-// the History tab: each file's versions for the visit (its text when it opened, then every save; newest first, 30 kept)
-const snapshots = signal<Record<string, readonly Snapshot[]>>({})
-const snapshot = (path: string, text: string): void => {
-  const cur = snapshots.peek()[path] ?? []
-  if (cur[0]?.text === text) return
-  snapshots.set({ ...snapshots.peek(), [path]: [{ at: Date.now(), text }, ...cur].slice(0, 30) })
-}
 const saveFiles = (path?: string): boolean => {
   let changed = false
   for (const p of path ? [path] : [...files.keys()]) {
     const t = files.get(p), s = saved.get(p)
-    if (t && s && s.peek() !== t.peek()) { s.set(t.peek()); changed = true; snapshot(p, t.peek()) }
+    if (t && s && s.peek() !== t.peek()) { s.set(t.peek()); changed = true }
   }
   return changed
 }
@@ -1000,6 +992,15 @@ type Tone = "success" | "warn" | "error" | "info" | "muted"
 const print = (text: string, tone?: Tone) => { if (consoleApi) consoleApi.print(text, { tone }); else waiting.push([text, { tone }]) }
 const builder = createBuilder(print)
 const stamp = () => new Date().toLocaleTimeString("tr-TR", { hour12: false })
+// a console call's arguments as the Console writes them: a text as it is, an error with its message, the rest as JSON
+const CONSOLE_TONE: Record<string, Tone | undefined> = { log: undefined, debug: "muted", info: "info", warn: "warn", error: "error" }
+const consoleText = (v: unknown): string => {
+  if (typeof v === "string") return v
+  if (v instanceof Error) return `${v.name}: ${v.message}`
+  if (typeof v === "function") return `ƒ ${v.name || "anonim"}()`
+  if (v instanceof Node) return `<${(v as Element).tagName?.toLowerCase() ?? v.nodeName}>`
+  try { const j = JSON.stringify(v, (_k, x) => (typeof x === "bigint" ? `${x}n` : x)); return j === undefined ? String(v) : j.length > 500 ? `${j.slice(0, 499)}…` : j } catch { return String(v) }
+}
 /** The build the preview drew last: its files open in a dialog (the Console's button, the Terminal's `output`). */
 const lastBuild = signal<BuildResult | null>(null)
 const showOutput = async (): Promise<boolean> => {
@@ -1277,7 +1278,7 @@ const langPanel = () => <div class="sc-lang">
 let previewEl: HTMLElement | null = null
 type Parts = Record<string, Record<string, unknown>>
 let tsSvc: TypeScriptService | null = null
-type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void; onTree(cb: () => void): void; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void }
+type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void; onTree(cb: () => void): void; onConsole(cb: (level: "log" | "info" | "warn" | "error" | "debug", args: unknown[]) => void): void; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void }
 let runtime: Promise<Runtime> | null = null, runtimeNow: Runtime | null = null
 const loadRuntime = () => (runtime ??= (async () => {
   // its components' stylesheet, once
@@ -1289,6 +1290,8 @@ const loadRuntime = () => (runtime ??= (async () => {
   const r = await import(/* @vite-ignore */ appUrl("playground/preview.js")) as Runtime
   r.onData((values) => liveData.set(values))
   r.onTree(() => liveTree.set(r.componentTree()))
+  // the code's console.log / warn / error… in the Console, each with its time
+  r.onConsole((level, args) => print(`[${stamp()}] ${args.map(consoleText).join(" ")}`, CONSOLE_TONE[level]))
   // import { instrument, run } from "march/playground": the code's own debugging, with the page's TypeScript worker
   r.setHost({ instrument: (files) => (tsSvc ? tsSvc.instrument(files) : Promise.reject(new Error("TypeScript yok"))) })
   runtimeNow = r
@@ -1351,8 +1354,6 @@ const PANELS: AppPanel[] = [
   { id: "a11y", title: "Erişilebilirlik", icon: users, content: a11yPanel },
   { id: "ext", title: "Askılar", icon: plug, content: () => <ExtensionsPanel info={extInfo} selected={selected} ownProps={(n) => exportedProps(n).map((p) => p.name)} refresh={readExtensions} /> },
   { id: "console", title: "Konsol", icon: code, content: consolePanel },
-  { id: "history", title: "Geçmiş", icon: history, content: () => <HistoryPanel file={() => active()} snapshots={(f) => snapshots()[f] ?? []} current={(f) => files.get(f)?.() ?? ""}
-    restore={(f, text) => { files.get(f)?.set(text); debugTab(f) }} /> },
   { id: "terminal", title: "Terminal", icon: terminal, content: terminalPanel, onShow: focusTerminal },
   { id: "i18n", title: "lang.json", icon: globe, content: langPanel },
 ]
@@ -1401,7 +1402,6 @@ const useSources = (sources: readonly IdeSource[]): void => {
   const ids = sources.map((_, i) => `f${++gen}-${i}`)
   for (const name of [...files.keys()]) if (!sources.some((s) => s.name === name)) { files.delete(name); saved.delete(name) }
   for (const s of sources) { files.set(s.name, signal(s.code)); saved.set(s.name, signal(s.code)) }
-  snapshots.set(Object.fromEntries(sources.map((s) => [s.name, [{ at: Date.now(), text: s.code }]])))
   for (const k of Object.keys(FILE_OF)) delete FILE_OF[k]
   sources.forEach((s, i) => { FILE_OF[ids[i]!] = s.name })
   filePanels.set(sources.map((s, i): AppPanel => ({ ...fileTab(ids[i]!, s.name),
@@ -1414,7 +1414,7 @@ const PRESETS: Record<string, Preset> = {
     title: "MarchIDE",
     tree: () => row(
       [0.6, col([0.5, tabs("preview")], [0.2, tabs("livecode")], [0.3, row([0.8, tabs(["props", "a11y", "events", "data"])], [0.2, tabs(["deps"])])])],
-      [0.4, col([0.7, tabs(Object.keys(FILE_OF))], [0.3, tabs(["console", "debug", "terminal", "history", "i18n", "ext"])])],
+      [0.4, col([0.7, tabs(Object.keys(FILE_OF))], [0.3, tabs(["console", "debug", "terminal", "i18n", "ext"])])],
     ),
   },
 }

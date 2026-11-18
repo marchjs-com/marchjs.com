@@ -51,34 +51,55 @@ export const diffCount = (lines: readonly DiffLine[]): { added: number; removed:
 /** The difference as unified text (`- old` / `+ new`), for the clipboard. */
 export const diffText = (lines: readonly (DiffLine | null)[]): string => lines.map((l) => (l ? `${l.op} ${l.text}` : "…")).join("\n")
 
+/** A row of the History list: the unsaved changes (`k` -1) or a save (`k` its place, 0 the newest), what it compares. */
+export interface HistoryRow { k: number; title: string; before: string; after: string; at?: number }
+/**
+ * The rows of a file's history: its unsaved changes first (the text now against the last save, when they differ),
+ * then each save with what it changed against the one before it; the oldest is the text the file opened with.
+ */
+export function historyRows(list: readonly Snapshot[], now: string): HistoryRow[] {
+  const time = (at: number): string => new Date(at).toLocaleTimeString("tr", { hour: "2-digit", minute: "2-digit", second: "2-digit" })
+  const rows: HistoryRow[] = []
+  if (list[0] && list[0].text !== now) rows.push({ k: -1, title: "Kaydedilmemiş değişiklikler", before: list[0].text, after: now })
+  list.forEach((x, k) => {
+    const prev = list[k + 1]
+    rows.push(prev ? { k, title: `${time(x.at)} kaydı`, before: prev.text, after: x.text, at: x.at } : { k, title: `${time(x.at)} · açılış`, before: x.text, after: x.text, at: x.at })
+  })
+  return rows
+}
+
 /** The panel: `file` the file in front, `snapshots(file)` its saves (newest first), `current(file)` its text now. */
 export function HistoryPanel(props: { file: () => string; snapshots: (file: string) => readonly Snapshot[]; current: (file: string) => string; restore: (file: string, text: string) => void }) {
   const chosen = signal(0)
-  const time = (at: number): string => new Date(at).toLocaleTimeString("tr", { hour: "2-digit", minute: "2-digit", second: "2-digit" })
   return <div class="sc-history">
     {() => {
-      const f = props.file(), list = props.snapshots(f)
-      if (!list.length) return <p class="sc-history-none">{`${f || "Dosya"} henüz kaydedilmedi. Her Ctrl+S burada bir sürüm bırakır; sürümün şimdiki metinle farkı görünür, istersen geri getirilir.`}</p>
-      const i = Math.min(chosen(), list.length - 1), snap = list[i]!
-      const diff = lineDiff(snap.text, props.current(f)), folded = foldDiff(diff), c = diffCount(diff)
+      const f = props.file(), rows = historyRows(props.snapshots(f), props.current(f))
+      if (rows.length < 2 && rows[0]?.k !== -1) return <p class="sc-history-none">{`${f || "Dosya"} henüz değişmedi. Yazdıkların burada "Kaydedilmemiş değişiklikler" olarak, her Ctrl+S da bir kayıt olarak görünür; bir kaydın neyi değiştirdiği yeşil / kırmızı satırlarla gösterilir, istersen o sürüm geri getirilir.`}</p>
+      const i = Math.min(chosen(), rows.length - 1), row = rows[i]!
+      const diff = lineDiff(row.before, row.after), folded = foldDiff(diff), c = diffCount(diff)
       return <div class="sc-history-body">
-        <ul class="sc-history-list">{list.map((x, k) => <li>
-          <button type="button" class={`sc-history-item${k === i ? " is-on" : ""}`} on:click={() => chosen.set(k)}>
-            <span>{time(x.at)}</span><span class="m-muted">{k === 0 ? "son kayıt" : `${k + 1}. kayıt önce`}</span>
-          </button>
-        </li>)}</ul>
+        <ul class="sc-history-list">{rows.map((r, k) => {
+          const n = diffCount(lineDiff(r.before, r.after))
+          return <li>
+            <button type="button" class={`sc-history-item${k === i ? " is-on" : ""}${r.k === -1 ? " is-unsaved" : ""}`} on:click={() => chosen.set(k)}>
+              <span>{r.title}</span><span class="sc-history-count">{n.added || n.removed ? <><b class="is-add">{`+${n.added}`}</b> <b class="is-del">{`−${n.removed}`}</b></> : <span class="m-muted">değişiklik yok</span>}</span>
+            </button>
+          </li>
+        })}</ul>
         <div class="sc-history-diff">
           <div class="sc-history-bar">
-            <span><b class="is-add">{`+${c.added}`}</b> <b class="is-del">{`−${c.removed}`}</b> <span class="m-muted">{`${time(snap.at)} kaydı → şimdiki metin`}</span></span>
+            <span><b class="is-add">{`+${c.added}`}</b> <b class="is-del">{`−${c.removed}`}</b> <span class="m-muted">{row.k === -1 ? "son kayıttan bu yana" : "bir önceki kayda göre"}</span></span>
             <span class="sc-history-gap" />
             <CopyButton text={() => diffText(folded)} label="Farkı kopyala" iconOnly size="sm" variant="ghost" />
-            <Button size="sm" variant="ghost" disabled={!c.added && !c.removed} onClick={() => props.restore(f, snap.text)}>Bu sürümü geri getir</Button>
+            {row.k === -1
+              ? <Button size="sm" variant="ghost" onClick={() => props.restore(f, row.before)}>Değişiklikleri at</Button>
+              : <Button size="sm" variant="ghost" disabled={row.after === props.current(f)} onClick={() => props.restore(f, row.after)}>Bu sürüme dön</Button>}
           </div>
           {c.added || c.removed
             ? <pre class="sc-history-lines">{folded.map((l) => (l
               ? <div class={`sc-history-line is-${l.op === "+" ? "add" : l.op === "-" ? "del" : "same"}`}><span class="sc-history-n">{l.a ?? ""}</span><span class="sc-history-n">{l.b ?? ""}</span><span class="sc-history-op">{l.op}</span><span>{l.text || " "}</span></div>
               : <div class="sc-history-line is-gap"><span>…</span></div>))}</pre>
-            : <p class="sc-history-none">Bu kayıt şimdiki metinle aynı.</p>}
+            : <p class="sc-history-none">{row.k === -1 ? "Değişiklik yok." : "Dosyanın açıldığı hali; sonraki kayıtlar bunun üzerine."}</p>}
         </div>
       </div>
     }}

@@ -1,5 +1,5 @@
 /* MarchIDE's History tab (history-panel.tsx) */
-.sc-history { box-sizing: border-box; block-size: 100%; min-block-size: 0; font-size: var(--m-text-sm); }
+.sc-history { box-sizing: border-box; block-size: 100%; min-block-size: 0; font-size: var(--m-text-sm); container-type: inline-size; }
 .sc-history-none { margin: 0; padding: var(--m-space-3); color: var(--m-muted); }
 .sc-history-body { display: grid; grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr); block-size: 100%; min-block-size: 0; }
 .sc-history-list { list-style: none; margin: 0; padding: var(--m-space-1); overflow: auto; border-inline-end: var(--m-border-w, 1px) solid var(--m-border); }
@@ -19,3 +19,13 @@
 .sc-history-line.is-del { background: color-mix(in srgb, var(--m-danger) 14%, transparent); }
 .sc-history-line.is-gap { color: var(--m-muted); padding-inline-start: calc(var(--m-space-2) + 9ch); }
 .sc-history-n, .sc-history-op { color: var(--m-muted); text-align: end; user-select: none; }
+.sc-history-count { font-size: .85em; }
+.sc-history-item.is-unsaved > span:first-child { font-weight: 600; }
+.sc-history-bar .is-add, .sc-history-count .is-add { color: var(--m-success-text, var(--m-success)); }
+.sc-history-bar .is-del, .sc-history-count .is-del { color: var(--m-danger-text, var(--m-danger)); }
+/* a narrow panel: the list over the difference, side by side as chips */
+@container (max-width: 32rem) {
+  .sc-history-body { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+  .sc-history-list { display: flex; gap: var(--m-space-1); overflow-x: auto; border-inline-end: 0; border-block-end: var(--m-border-w, 1px) solid var(--m-border); }
+  .sc-history-item { inline-size: auto; white-space: nowrap; }
+}
