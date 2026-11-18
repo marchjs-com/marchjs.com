@@ -12,7 +12,7 @@ import type { PlaygroundOption } from "march/components/meta.ts";
 import { appUrl } from "march/base";
 import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "march/ui";
 import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog, type CodeProblem } from "march/app-ui";
-import { x as xIcon, alertTriangle, save, history, plus, database, zap, monitor, sliders, layers, braces, users, code, terminal, fileText, globe, plug } from "march/icons";
+import { x as xIcon, alertTriangle, packageBox, save, history, plus, database, zap, monitor, sliders, layers, braces, users, code, terminal, fileText, globe, plug } from "march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "march/forms"
 import { COLOR_TOKENS } from "march/theme"
 import { createBuilder, type BuildResult } from "../build.ts";
@@ -32,6 +32,7 @@ import { ProblemsPanel, lineColOf, type IdeProblem } from "../problems-panel.tsx
 import type { ConsoleEvent } from "../preview-runtime.ts";
 import { QuickPick, type PickItem } from "../quick-pick.tsx";
 import { parseSourceMap, originalAt, blobFrames, type SourceMap } from "../source-map.ts";
+import { BundlePanel, marchImports, type ExportSizes, type MarchImport } from "../bundle-panel.tsx";
 import { hotkeys } from "march/managers";
 
 
@@ -1030,6 +1031,22 @@ const consoleText = (v: unknown): string => {
 }
 /** The build the preview drew last: its files open in a dialog (the Console's button, the Terminal's `output`). */
 const lastBuild = signal<BuildResult | null>(null)
+// the Bundle tab: the last build minified and gzipped (each file's share from its metafile), the code's March imports
+// with each component's size alone (export-sizes.json, fetched once)
+const bundleOwn = signal<{ min: number; gzip: number; files: [string, number][] } | null>(null)
+const measureBundle = async (r: BuildResult): Promise<void> => {
+  try {
+    const min = await builder.minify(r.code)
+    const gz = typeof CompressionStream === "function" ? (await new Response(new Blob([min]).stream().pipeThrough(new CompressionStream("gzip"))).arrayBuffer()).byteLength : Math.round(min.length / 3)
+    const own = Object.entries(r.inputs ?? {}).filter(([f]) => files.has(f)).sort((a, b) => b[1] - a[1])
+    bundleOwn.set({ min: new Blob([min]).size, gzip: gz, files: own })
+  } catch { /* the size is only shown */ }
+}
+let sizesP: Promise<ExportSizes | null> | null = null
+const exportSizes = signal<ExportSizes | null>(null)
+const loadSizes = (): void => { sizesP ??= fetch(appUrl("export-sizes.json")).then((x) => (x.ok ? x.json() as Promise<ExportSizes> : null)).catch(() => null).then((s) => { exportSizes.set(s); return s }) }
+// the March imports of the files the last build bundled (not every tab)
+const bundleImports = computed((): MarchImport[] => marchImports((bundleOwn()?.files ?? []).map(([f]) => saved.get(f)?.() ?? "")))
 const showOutput = async (): Promise<boolean> => {
   const b = untrack(lastBuild)
   if (!b) return false
@@ -1060,7 +1077,7 @@ const buildNow = async () => {
   }
   const now = untrack(() => ({ [path]: withData(src), [ENTRY]: entrySource() }))
   const r = await builder.build(now, ENTRY)
-  if (r?.ok) { lastBuild.set(r); await render(r.code) }
+  if (r?.ok) { lastBuild.set(r); void measureBundle(r); await render(r.code) }
   return r
 }
 const previewTheme = signal(""), previewMode = signal<"system" | "light" | "dark">("system")
@@ -1442,6 +1459,7 @@ const PANELS: AppPanel[] = [
   { id: "a11y", title: "Erişilebilirlik", icon: users, content: a11yPanel },
   { id: "ext", title: "Askılar", icon: plug, content: () => <ExtensionsPanel info={extInfo} selected={selected} ownProps={(n) => exportedProps(n).map((p) => p.name)} refresh={readExtensions} /> },
   { id: "console", title: "Konsol", icon: code, content: consolePanel },
+  { id: "bundle", title: "Paket", icon: packageBox, onShow: loadSizes, content: () => { loadSizes(); return <BundlePanel own={() => bundleOwn()} imports={() => bundleImports()} sizes={() => exportSizes()} /> } },
   { id: "terminal", title: "Terminal", icon: terminal, content: terminalPanel, onShow: focusTerminal },
   { id: "i18n", title: "lang.json", icon: globe, content: langPanel },
 ]
@@ -1502,7 +1520,7 @@ const PRESETS: Record<string, Preset> = {
     title: "MarchIDE",
     tree: () => row(
       [0.6, col([0.5, tabs("preview")], [0.2, tabs("livecode")], [0.3, row([0.8, tabs(["props", "a11y", "events", "data"])], [0.2, tabs(["deps"])])])],
-      [0.4, col([0.7, tabs(Object.keys(FILE_OF))], [0.3, tabs(["console", "debug", "terminal", "i18n", "ext"])])],
+      [0.4, col([0.7, tabs(Object.keys(FILE_OF))], [0.3, tabs(["console", "debug", "terminal", "bundle", "i18n", "ext"])])],
     ),
   },
 }

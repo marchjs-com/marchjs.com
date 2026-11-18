@@ -15,13 +15,15 @@ interface MarchCompile { (source: string, opts: { filename: string }): { code: s
 interface Message { text: string; location?: { file: string; line: number; column: number } | null }
 interface Esbuild {
   initialize(o: { wasmURL: string; worker: boolean }): Promise<void>;
-  build(o: Record<string, unknown>): Promise<{ outputFiles?: { path: string; text: string }[]; warnings: Message[] }>;
+  build(o: Record<string, unknown>): Promise<{ outputFiles?: { path: string; text: string }[]; warnings: Message[]; metafile?: { outputs: Record<string, { inputs: Record<string, { bytesInOutput: number }> }> } }>;
   transform(code: string, o: Record<string, unknown>): Promise<{ code: string }>;
 }
 /** What one build gives: the bundled module of the entry, the texts to translate, each file the March compiler wrote
  * (TypeScript still: `js` makes it a module) and when it was built. */
 /** A build: the bundle, its source map (an error's stack mapped back to the files), the texts and modules it found. */
-export interface BuildResult { ok: boolean; code: string; map?: string; texts: string[]; modules: Record<string, string>; at: number }
+export interface BuildResult { ok: boolean; code: string; map?: string; texts: string[]; modules: Record<string, string>; at: number;
+  /** The bytes each file puts in the bundle (esbuild's metafile; before minifying). */
+  inputs?: Record<string, number> }
 
 /** A free moment of the page (at the latest after 600 ms). */
 const free = (): Promise<void> => new Promise((r) => {
@@ -99,9 +101,11 @@ export function createBuilder(log: BuildLog) {
       },
     };
     try {
-      const out = await t.esbuild.build({ entryPoints: [entry], bundle: true, write: false, format: "esm", target: "es2022", plugins: [memory], logLevel: "silent", sourcemap: "external", outfile: "preview.js" });
+      const out = await t.esbuild.build({ entryPoints: [entry], bundle: true, write: false, format: "esm", target: "es2022", plugins: [memory], logLevel: "silent", sourcemap: "external", outfile: "preview.js", metafile: true });
       const files = out.outputFiles ?? [], code = files.find((f) => !f.path.endsWith(".map"))?.text ?? "", map = files.find((f) => f.path.endsWith(".map"))?.text;
-      const r = { ok: true, code, ...(map ? { map } : {}), texts: [...found].sort((a, b) => a.localeCompare(b, "tr")), modules, at: Date.now() };
+      const inputs: Record<string, number> = {};
+      for (const o of Object.values(out.metafile?.outputs ?? {})) for (const [k, v] of Object.entries(o.inputs)) inputs[k.replace(/^files:/, "")] = (inputs[k.replace(/^files:/, "")] ?? 0) + v.bytesInOutput;
+      const r = { ok: true, code, ...(map ? { map } : {}), inputs, texts: [...found].sort((a, b) => a.localeCompare(b, "tr")), modules, at: Date.now() };
       // kept even when another tab came to the front meanwhile: showing this one again needs no build
       memo.set(keyOf(files, entry), r);
       if (n !== run) return null;
@@ -122,5 +126,10 @@ export function createBuilder(log: BuildLog) {
     const t = await load();
     return (await t.esbuild.transform(code, { loader: /\.jsx?$/.test(path) ? "js" : "ts", format: "esm", target: "es2022", sourcefile: path })).code;
   }
-  return { build, cached, texts, js };
+  /** A bundle minified (the Bundle tab's size: what an app built from it would ship before gzip). */
+  async function minify(code: string): Promise<string> {
+    const t = await load();
+    return (await t.esbuild.transform(code, { loader: "js", format: "esm", target: "es2022", minify: true, legalComments: "none" })).code;
+  }
+  return { build, cached, texts, js, minify };
 }

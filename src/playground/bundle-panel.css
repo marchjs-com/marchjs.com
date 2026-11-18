@@ -1,0 +1,15 @@
+/* MarchIDE's Bundle tab (bundle-panel.tsx) */
+.sc-bundle { box-sizing: border-box; block-size: 100%; overflow: auto; padding: var(--m-space-3); font-size: var(--m-text-sm); }
+.sc-bundle-none { margin: 0; }
+.sc-bundle-body { display: grid; gap: var(--m-space-2); }
+.sc-bundle-sum { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: var(--m-space-2); }
+.sc-bundle-sum > div { display: grid; gap: 2px; padding: var(--m-space-2) var(--m-space-3); border: var(--m-border-w, 1px) solid var(--m-border); border-radius: var(--m-radius-3); }
+.sc-bundle-sum b { font-size: var(--m-text-lg); font-variant-numeric: tabular-nums; }
+.sc-bundle-head { display: flex; align-items: center; gap: var(--m-space-2); margin: var(--m-space-2) 0 0; font-size: inherit; }
+.sc-bundle-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.sc-bundle-list > li { display: grid; grid-template-columns: minmax(0, 14rem) minmax(0, 1fr) auto; align-items: center; gap: var(--m-space-2); padding: 2px 0; }
+.sc-bundle-list > li > :first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sc-bundle-list .m-muted { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sc-bundle-bar { block-size: 6px; border-radius: 3px; background: color-mix(in srgb, var(--m-text) 8%, transparent); overflow: hidden; }
+.sc-bundle-bar > i { display: block; block-size: 100%; background: var(--m-primary); }
+.sc-bundle-note { margin: var(--m-space-2) 0 0; font-size: var(--m-text-xs); }
