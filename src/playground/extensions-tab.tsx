@@ -8,7 +8,7 @@ import type { PlaygroundOption } from "march/components/meta.ts";
 import "./extensions-tab.css";
 
 import type { ExtInfo, Spec } from "./extensions-info.ts";
-import { tagPlace, codeRows, iconRows, type HelperData } from "./prop-helpers.ts";
+import { tagPlace, codeRows, iconRows, iconNameRows, type HelperData } from "./prop-helpers.ts";
 import { tagAt, valueAt, writtenProps, insertOf, propAt, componentAt, shortType, firstSentence, docOf, GROUP_ORDER, type OwnProp } from "./prop-suggest.ts";
 export type { ExtInfo } from "./extensions-info.ts";
 export const NO_EXT: ExtInfo = { list: [], props: {}, traces: [] };
@@ -124,6 +124,11 @@ export function withExtensionSuggestions(plugin: AppPlugin, info: () => ExtInfo,
       const v = valueAt(ctx.before)
       if (v) {
         const p = own ? (await own(v.comp).catch(() => [] as readonly OwnProp[])).find((x) => x.name === v.prop) : undefined
+        // an icon by its name: March's ("heart") and every pack's ("lucide:heart")
+        if (p?.icon && more.iconNames) {
+          const sets = await more.iconNames().catch(() => [])
+          return { from: ctx.caret - v.typed.length, to: ctx.caret, items: iconNameRows(v.prop, v.typed, sets) as never, all: true, open: true }
+        }
         const items = (p?.values ?? []).filter((w) => w.toLowerCase().startsWith(v.typed.toLowerCase()))
           .map((w) => ({ label: w, hint: v.prop, doc: { kind: "değer", signature: `${v.prop}="${w}"`, ...(p?.doc ? { doc: firstSentence(p.doc) } : {}) } }))
         return { from: ctx.caret - v.typed.length, to: ctx.caret, items, all: true, open: true }

@@ -9,6 +9,7 @@ import * as icons from "../../../../src/icons/index.ts";
 import * as theme from "../../../../src/theme/index.ts";
 import * as motion from "../../../../src/motion/index.ts";
 import { withParts, mProps } from "../../../../src/props/index.ts";
+import { packIcon } from "../../../../src/icons/pack-paint.ts";
 // layers opened by the preview's code (dialogs, drawers, menus) find the scope around it (OverlayScope's lookup)
 import "../../../../src/components/layout/overlay-scope/index.ts";
 
@@ -29,6 +30,7 @@ const playground = {
   /** Run the files (instrumented or not) as modules, one after the other; an error is written to the console and stops the rest. */
   async run(files: Record<string, string>): Promise<void> {
     for (const [path, code] of Object.entries(files)) {
+      await loadPacks(code);
       const url = URL.createObjectURL(new Blob([link(code)], { type: "text/javascript" }));
       try { await import(/* @vite-ignore */ url); }
       catch (e) { console.error(`${path}: ${(e as Error)?.message ?? e}`); return; }
@@ -39,6 +41,28 @@ const playground = {
 const MODULES: Record<string, unknown> = { "march": core, "march/ui": ui, "march/icons": icons, "march/theme": theme, "march/motion": motion, "march/playground": playground };
 // any other subpath of the components (march/actions…) is in the ui barrel too
 (globalThis as Record<string, unknown>)["__marchPreview"] = new Proxy(MODULES, { get: (m, k: string) => m[k] ?? (k.startsWith("march/") ? ui : undefined) });
+
+// an icon pack the code imports (march/icons/lucide…, also what icon="lucide:heart" compiles to): its icons from the
+// gallery's JSON (icon-packs/<id>.json beside playground/, the same data the Icons page draws), loaded once before the
+// code runs
+type PackJson = { vb: string; sw?: number; fill?: boolean; icons: [name: string, exp: string, d: string[], flags?: number, eo?: number[]][] };
+const packLoads = new Map<string, Promise<void>>();
+async function loadPacks(code: string): Promise<void> {
+  const ids = [...new Set([...code.matchAll(/from\s*["']march\/icons\/([a-z][a-z0-9-]*)["']/g)].map((m) => m[1]!))]
+    .filter((id) => !(`march/icons/${id}` in MODULES) && !["packs", "catalog", "pack-paint"].includes(id));
+  await Promise.all(ids.map((id) => {
+    let p = packLoads.get(id);
+    if (!p) {
+      p = fetch(new URL(`../icon-packs/${id}.json`, import.meta.url)).then((r) => { if (!r.ok) throw new Error(`march/icons/${id}: ${r.status}`); return r.json() as Promise<PackJson> })
+        .then((pk) => { MODULES[`march/icons/${id}`] = Object.fromEntries(pk.icons.map(([name, exp, d, flags = 0, eo]) => [exp, packIcon(name, d, {
+          vb: pk.vb, ...(pk.sw ? { sw: pk.sw } : {}), ...(pk.fill || flags & 2 ? { fill: true } : {}), ...(flags & 1 ? { rtl: true } : {}), ...(eo ? { eo } : {}),
+        })])) })
+      p.catch(() => packLoads.delete(id))
+      packLoads.set(id, p)
+    }
+    return p
+  }));
+}
 
 /** `import { a as b, c } from "march/x";` → `const { a: b, c } = __marchPreview["march/x"];` (and `* as x`). */
 export function link(code: string): string {
@@ -182,6 +206,7 @@ export function setProps(props: Record<string, Props>, parts: Record<string, Par
  * `el`, each with its `props` and `parts` by name (then setProps); the previous run is removed. Returns the names.
  */
 export async function run(code: string, el: HTMLElement, props: Record<string, Props> = {}, parts: Record<string, Parts> = {}): Promise<string[]> {
+  await loadPacks(code);
   const url = URL.createObjectURL(new Blob([link(code)], { type: "text/javascript" }));
   // the extensions the previous run registered (extend / intercept at the module's top) go with it
   core.extensions.clear();

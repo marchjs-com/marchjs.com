@@ -108,6 +108,8 @@ export const CORE_PROPS: readonly OwnProp[] = [
 /** How a prop is written when picked: a boolean bare, a text in quotes, anything else (a function, an icon) in braces. */
 export function insertOf(p: OwnProp): { insert?: string; back?: number } {
   if (p.insert) return { insert: p.insert, back: p.back ?? 0 }
+  // an icon by its name (`icon="lucide:heart"`): the compiler makes it an import of that icon
+  if (p.icon) return { insert: `${p.name}=""`, back: 1 }
   if (p.write === "bare") return {}
   if (p.write === "text") return { insert: `${p.name}=""`, back: 1 }
   if (p.write === "code") return { insert: `${p.name}={}`, back: 1 }

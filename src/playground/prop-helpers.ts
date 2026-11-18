@@ -121,12 +121,40 @@ export function iconRows(prop: string, typed: string, value: string, march: read
   return rows
 }
 
+/** An icon set's names as written in an icon prop: March's ("heart", no prefix) or a pack's ("lucide:heart"). */
+export interface IconNames { id: string; label: string; names: readonly string[] }
+/**
+ * The rows inside an icon prop's quotes (`icon="|"`): March's names, then each pack's `pack:name` (up to PACK_ROWS each,
+ * narrowing as it is typed; "lucide:" narrows to Lucide). The compiler turns the name into an import of that one icon.
+ */
+export function iconNameRows(prop: string, typed: string, sets: readonly IconNames[]): HelperRow[] {
+  const t = typed.toLowerCase(), colon = t.indexOf(":")
+  const rows: HelperRow[] = []
+  for (const s of sets) {
+    const march = s.id === "march"
+    if (colon >= 0 && !march && !s.id.startsWith(t.slice(0, colon))) continue
+    if (colon >= 0 && march && t.slice(0, colon) !== "march") continue
+    const want = colon >= 0 ? t.slice(colon + 1) : t
+    let n = 0
+    for (const name of s.names) {
+      if (!name.includes(want)) continue
+      const label = march ? name : `${s.id}:${name}`
+      rows.push({ label, group: s.label, hint: march ? "march/icons" : `march/icons/${s.id}`,
+        doc: { kind: `simge · ${s.label}`, signature: `${prop}="${label}"`, doc: "Derleyici bu adı yalnız bu ikonun içe aktarımına çevirir: pakete yalnız kullanılan ikon girer." } })
+      if (!march && ++n >= PACK_ROWS) break
+    }
+  }
+  return rows
+}
+
 /** What the helpers read: a component's props, March's icons and components, the sx table. */
 export interface HelperData {
   own: (comp: string) => Promise<readonly OwnProp[]>;
   icons?: () => Promise<readonly string[]>;
   /** The icon packs (Lucide, Tabler…): id, name and export names; imported from `march/icons/<id>`. */
   packs?: () => Promise<readonly IconPack[]>;
+  /** Every set's icon names (March's first), for `icon="…"`. */
+  iconNames?: () => Promise<readonly IconNames[]>;
   components?: () => Promise<readonly string[]>;
   sx?: Readonly<Record<string, readonly (string | number)[]>>;
 }
