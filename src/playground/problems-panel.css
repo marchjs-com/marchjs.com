@@ -1,0 +1,18 @@
+/* MarchIDE's Problems tab (problems-panel.tsx) */
+.sc-problems { box-sizing: border-box; block-size: 100%; display: flex; flex-direction: column; min-block-size: 0; font-size: var(--m-text-sm); }
+.sc-problems-bar { display: flex; align-items: center; gap: var(--m-space-2); padding: var(--m-space-2) var(--m-space-3); border-block-end: var(--m-border-w, 1px) solid var(--m-border); }
+.sc-problems-gap { flex: 1; }
+.sc-problems-none { margin: 0; padding: var(--m-space-3); color: var(--m-muted); }
+.sc-problems-list { flex: 1; min-block-size: 0; overflow: auto; padding-block: var(--m-space-1); }
+.sc-problems-file > ul { list-style: none; margin: 0; padding: 0; }
+.sc-problems-head { display: flex; align-items: center; gap: var(--m-space-2); margin: 0; padding: var(--m-space-1) var(--m-space-3); font-size: inherit; font-weight: 600; }
+.sc-problems-count { min-inline-size: 1.4em; padding-inline: .4em; border-radius: 999px; background: color-mix(in srgb, var(--m-text) 8%, transparent); color: var(--m-muted); font-size: .85em; font-weight: 500; text-align: center; }
+.sc-problems-row { all: unset; box-sizing: border-box; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: var(--m-space-2); inline-size: 100%; padding: .3em var(--m-space-3) .3em calc(var(--m-space-3) + .6em); cursor: pointer; }
+.sc-problems-row:hover { background: color-mix(in srgb, var(--m-text) 6%, transparent); }
+.sc-problems-row:focus-visible { outline: 2px solid var(--m-focus, var(--m-primary)); outline-offset: -2px; }
+.sc-problems-ic { display: inline-flex; inline-size: 1.1em; block-size: 1.1em; margin-block-start: .15em; }
+.sc-problems-ic svg { inline-size: 100%; block-size: 100%; }
+.sc-problems-row.is-error .sc-problems-ic { color: var(--m-danger); }
+.sc-problems-row.is-warning .sc-problems-ic { color: var(--m-warn); }
+.sc-problems-msg { overflow-wrap: anywhere; }
+.sc-problems-at { color: var(--m-muted); font-family: var(--m-font-mono, ui-monospace, monospace); font-size: .9em; white-space: nowrap; }

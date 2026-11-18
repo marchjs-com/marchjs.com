@@ -11,8 +11,8 @@ import { registry } from "march/components/registry.gen.ts";
 import type { PlaygroundOption } from "march/components/meta.ts";
 import { appUrl } from "march/base";
 import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "march/ui";
-import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog } from "march/app-ui";
-import { x as xIcon, save, history, plus, database, zap, monitor, sliders, layers, braces, users, code, terminal, fileText, globe, plug } from "march/icons";
+import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog, type CodeProblem } from "march/app-ui";
+import { x as xIcon, alertTriangle, save, history, plus, database, zap, monitor, sliders, layers, braces, users, code, terminal, fileText, globe, plug } from "march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "march/forms"
 import { COLOR_TOKENS } from "march/theme"
 import { createBuilder, type BuildResult } from "../build.ts";
@@ -28,6 +28,7 @@ import { HUBS } from "../../topics.ts";
 import { IDE_PAGES } from "../ide-pages.ts";
 import { ExtensionsPanel, extensionOptions, extensionSpec, withExtensionSuggestions, NO_EXT, type ExtInfo, type OwnProp } from "../extensions-tab.tsx";
 import { CORE_PROPS } from "../prop-suggest.ts";
+import { ProblemsPanel, lineColOf, type IdeProblem } from "../problems-panel.tsx";
 
 
 // the workspace's files (from its ide.json, kept for this visit): every file's text, made before anything reads them
@@ -1346,7 +1347,28 @@ const PANELS: AppPanel[] = [
 // the files' tabs: a live list. The layout stays on screen while MarchIDE moves between pages: the next ide.json's
 // files replace the tabs (and MarchIDE loads nothing else)
 const filePanels = signal<AppPanel[]>([])
-const allPanels = computed((): AppPanel[] => { const at = PANELS.findIndex((p) => p.id === "console"); return [...PANELS.slice(0, at), ...filePanels(), ...PANELS.slice(at)] })
+// Problems: every open file's errors and warnings (the code editors report them); the tab is there only while there is
+// one, beside the Console; a row opens its file and puts the caret on it
+const problemsBy = signal<Record<string, readonly IdeProblem[]>>({})
+const setProblems = (path: string, list: readonly CodeProblem[], text: string): void => {
+  const rows = list.map((p): IdeProblem => ({ file: path, from: p.from, to: p.to, ...lineColOf(text, p.from), message: p.message, error: p.error, code: p.code }))
+    .sort((a, b) => Number(b.error) - Number(a.error) || a.from - b.from)
+  const cur = problemsBy.peek()
+  if (!rows.length && !cur[path]) return
+  const next = { ...cur }
+  if (rows.length) next[path] = rows; else delete next[path]
+  problemsBy.set(next)
+}
+const allProblems = computed((): IdeProblem[] => Object.values(problemsBy()).flat())
+const problemCount = computed(() => allProblems().length)
+const goTo = signal<Record<string, { from: number; to?: number }>>({})
+const pickProblem = (p: IdeProblem): void => { debugTab(p.file); goTo.set({ ...goTo.peek(), [p.file]: { from: p.from, to: p.to } }) }
+const PROBLEMS: AppPanel = { id: "problems", title: "Problemler", icon: alertTriangle, badge: () => problemCount() || null, place: { near: "console" },
+  content: () => <ProblemsPanel problems={() => allProblems()} onPick={pickProblem} /> }
+const allPanels = computed((): AppPanel[] => {
+  const at = PANELS.findIndex((p) => p.id === "console")
+  return [...PANELS.slice(0, at), ...filePanels(), ...(problemCount() ? [PROBLEMS] : []), ...PANELS.slice(at)]
+})
 // each ide.json's tabs get new ids (f1-0, f1-1, then f2-0…): a file of the same name in the next one is a new tab with
 // its own text, not the old one
 let gen = 0
@@ -1412,7 +1434,7 @@ const saveAndBuild = (path?: string): void => {
   print(`[${stamp()}] 💾 ${path ?? "tüm dosyalar"} kaydedildi, derleniyor`, "success")
   if (!changed) scheduleBuild(0)
 }
-const PLUGINS = [typescript, debug, codeEditorPlugin({ save: (f) => saveAndBuild(f.path) }), withExtensionSuggestions(marchLanguagePlugin({ catalog }), extInfo, editorProps, editorComponent, { icons: marchIcons, packs: iconPacks, iconNames, components: marchComponents, sx: SX_SPEC })]
+const PLUGINS = [typescript, debug, codeEditorPlugin({ save: (f) => saveAndBuild(f.path), problems: setProblems, openProblems: () => dock?.open("problems"), goTo: (path) => goTo()[path] }), withExtensionSuggestions(marchLanguagePlugin({ catalog }), extInfo, editorProps, editorComponent, { icons: marchIcons, packs: iconPacks, iconNames, components: marchComponents, sx: SX_SPEC })]
 
 // the next build (one at a time: a newer request replaces a waiting one)
 let timer: ReturnType<typeof setTimeout> | undefined
