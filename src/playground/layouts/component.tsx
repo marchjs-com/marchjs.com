@@ -29,6 +29,7 @@ import { IDE_PAGES } from "../ide-pages.ts";
 import { ExtensionsPanel, extensionOptions, extensionSpec, withExtensionSuggestions, NO_EXT, type ExtInfo, type OwnProp } from "../extensions-tab.tsx";
 import { CORE_PROPS } from "../prop-suggest.ts";
 import { ProblemsPanel, lineColOf, type IdeProblem } from "../problems-panel.tsx";
+import type { ConsoleEvent } from "../preview-runtime.ts";
 import { QuickPick, type PickItem } from "../quick-pick.tsx";
 import { hotkeys } from "march/managers";
 
@@ -990,10 +991,32 @@ let consoleApi: TerminalApi | null = null
 const waiting: [string, Parameters<TerminalApi["print"]>[1]][] = []
 type Tone = "success" | "warn" | "error" | "info" | "muted"
 const print = (text: string, tone?: Tone) => { if (consoleApi) consoleApi.print(text, { tone }); else waiting.push([text, { tone }]) }
+/** A node in the Console (a table). */
+const printNode = (node: unknown) => { if (consoleApi) consoleApi.print(node); else waiting.push([node as string, {}]) }
 const builder = createBuilder(print)
 const stamp = () => new Date().toLocaleTimeString("tr-TR", { hour12: false })
 // a console call's arguments as the Console writes them: a text as it is, an error with its message, the rest as JSON
 const CONSOLE_TONE: Record<string, Tone | undefined> = { log: undefined, debug: "muted", info: "info", warn: "warn", error: "error" }
+/** One console event of the preview's code in the Console: a line (indented by its group), a table, a clear. */
+const showConsole = (e: ConsoleEvent): void => {
+  if (e.kind === "clear") { consoleApi?.clear(); print(`[${stamp()}] Konsol temizlendi (console.clear)`, "muted"); return }
+  const pad = "  ".repeat(e.depth)
+  if (e.kind === "table") { print(`${pad}[${stamp()}] console.table`, "muted"); printNode(consoleTable(e.data, e.columns)); return }
+  print(`${pad}[${stamp()}] ${e.args.map(consoleText).join(" ")}`.replace(/\n/g, `\n${pad}`), CONSOLE_TONE[e.kind])
+}
+/** console.table's data as a table: a row per item (an array's index, an object's key), a column per key (or "Değer"). */
+const consoleTable = (data: unknown, only?: readonly string[]): HTMLElement => {
+  const rows: [string, unknown][] = Array.isArray(data) ? data.map((v, i) => [String(i), v]) : data && typeof data === "object" ? Object.entries(data as Record<string, unknown>) : [["0", data]]
+  const isObj = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v)
+  const keys = only ?? [...new Set(rows.flatMap(([, v]) => (isObj(v) ? Object.keys(v) : Array.isArray(v) ? v.map((_, i) => String(i)) : [])))]
+  const plain = rows.some(([, v]) => !isObj(v) && !Array.isArray(v))
+  const cell = (v: unknown, k: string): string => (isObj(v) || Array.isArray(v) ? (k in (v as object) ? consoleText((v as Record<string, unknown>)[k]) : "") : "")
+  const table = <table class="sc-console-table">
+    <thead><tr><th>(indeks)</th>{keys.map((k) => <th>{k}</th>)}{plain ? <th>Değer</th> : null}</tr></thead>
+    <tbody>{rows.slice(0, 200).map(([i, v]) => <tr><th>{i}</th>{keys.map((k) => <td>{cell(v, k)}</td>)}{plain ? <td>{isObj(v) || Array.isArray(v) ? "" : consoleText(v)}</td> : null}</tr>)}</tbody>
+  </table>
+  return table as HTMLElement
+}
 const consoleText = (v: unknown): string => {
   if (typeof v === "string") return v
   if (v instanceof Error) return `${v.name}: ${v.message}`
@@ -1278,7 +1301,7 @@ const langPanel = () => <div class="sc-lang">
 let previewEl: HTMLElement | null = null
 type Parts = Record<string, Record<string, unknown>>
 let tsSvc: TypeScriptService | null = null
-type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void; onTree(cb: () => void): void; onConsole(cb: (level: "log" | "info" | "warn" | "error" | "debug", args: unknown[]) => void): void; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void }
+type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void; onTree(cb: () => void): void; onConsole(cb: (e: ConsoleEvent) => void): void; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void }
 let runtime: Promise<Runtime> | null = null, runtimeNow: Runtime | null = null
 const loadRuntime = () => (runtime ??= (async () => {
   // its components' stylesheet, once
@@ -1291,7 +1314,7 @@ const loadRuntime = () => (runtime ??= (async () => {
   r.onData((values) => liveData.set(values))
   r.onTree(() => liveTree.set(r.componentTree()))
   // the code's console.log / warn / error… in the Console, each with its time
-  r.onConsole((level, args) => print(`[${stamp()}] ${args.map(consoleText).join(" ")}`, CONSOLE_TONE[level]))
+  r.onConsole(showConsole)
   // import { instrument, run } from "march/playground": the code's own debugging, with the page's TypeScript worker
   r.setHost({ instrument: (files) => (tsSvc ? tsSvc.instrument(files) : Promise.reject(new Error("TypeScript yok"))) })
   runtimeNow = r

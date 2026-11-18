@@ -95,3 +95,8 @@
 .sc-lang-new-body { display: grid; gap: var(--m-space-2); padding: var(--m-space-3); min-inline-size: 15rem; }
 .sc-lang-new-hint { color: var(--m-muted); font-size: var(--m-text-xs); }
 .sc-lang-new-row { display: flex; gap: var(--m-space-2); }
+/* console.table in the Console: a small grid in the log's font */
+.sc-console-table { border-collapse: collapse; margin: 2px 0 6px; font: inherit; font-size: .95em; }
+.sc-console-table :is(th, td) { padding: 1px 10px; border: 1px solid color-mix(in srgb, currentColor 22%, transparent); text-align: start; white-space: pre; }
+.sc-console-table thead th { font-weight: 600; background: color-mix(in srgb, currentColor 8%, transparent); }
+.sc-console-table tbody th { font-weight: 500; opacity: .75; }

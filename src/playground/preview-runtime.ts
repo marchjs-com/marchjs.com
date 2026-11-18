@@ -64,30 +64,55 @@ async function loadPacks(code: string): Promise<void> {
   }));
 }
 
-// the preview code's console (console.log / info / warn / error / debug): its calls go to MarchIDE's Console too.
-// A call is the code's when it comes from one of its modules (they run from blob: URLs: their stack says so); the
-// page's own calls stay where they were. The browser's console still gets every call.
+// the preview code's console: every method (log, info, warn, error, debug, assert, table, dir, trace, count, time,
+// group, clear) goes to MarchIDE's Console too, as an event it draws (a table as a table, a group indented, a count with
+// its number, a timer with its time). A call is the code's when it comes from one of its modules (they run from blob:
+// URLs: their stack says so); the page's own calls stay where they were. The browser's console still gets every call.
 type ConsoleLevel = "log" | "info" | "warn" | "error" | "debug";
-let consoleCb: ((level: ConsoleLevel, args: unknown[]) => void) | null = null;
-const CONSOLE_LEVELS: ConsoleLevel[] = ["log", "info", "warn", "error", "debug"];
-let consoleHooked = false;
+/** What the Console is told: a line (its level and arguments), a table (its data and columns), or "clear". */
+export type ConsoleEvent = { kind: ConsoleLevel; args: unknown[]; depth: number } | { kind: "table"; data: unknown; columns?: string[]; depth: number } | { kind: "clear" };
+let consoleCb: ((e: ConsoleEvent) => void) | null = null;
+let consoleHooked = false, depth = 0;
+const counts = new Map<string, number>(), timers = new Map<string, number>();
+const fromCode = (): boolean => /\bblob:/.test(new Error().stack ?? "");
 const hookConsole = (): void => {
   if (consoleHooked) return;
   consoleHooked = true;
-  const c = console as unknown as Record<ConsoleLevel, (...a: unknown[]) => void>;
-  for (const level of CONSOLE_LEVELS) {
-    const own = c[level].bind(console);
-    c[level] = (...args: unknown[]) => {
-      own(...args);
-      if (consoleCb && /\bblob:/.test(new Error().stack ?? "")) { try { consoleCb(level, args); } catch { /* the Console's own trouble */ } }
-    };
-  }
+  const c = console as unknown as Record<string, (...a: unknown[]) => void>;
+  const say = (e: ConsoleEvent): void => { try { consoleCb?.(e) } catch { /* the Console's own trouble */ } };
+  const line = (kind: ConsoleLevel, args: unknown[]): void => say({ kind, args, depth });
+  const ms = (t: number): string => `${(performance.now() - t).toFixed(1)} ms`;
+  const wrap = (name: string, mine: (...a: unknown[]) => void): void => {
+    const own = c[name]?.bind(console);
+    if (!own) return;
+    c[name] = (...args: unknown[]) => { own(...args); if (consoleCb && fromCode()) mine(...args); };
+  };
+  for (const level of ["log", "info", "warn", "error", "debug"] as const) wrap(level, (...a) => line(level, a));
+  wrap("assert", (cond, ...a) => { if (!cond) line("error", ["Doğrulama başarısız:", ...(a.length ? a : ["console.assert"])]); });
+  wrap("table", (data, columns) => say({ kind: "table", data, ...(Array.isArray(columns) ? { columns: columns.map(String) } : {}), depth }));
+  wrap("dir", (v) => line("log", [v]));
+  wrap("dirxml", (...a) => line("log", a));
+  wrap("trace", (...a) => {
+    const where = (new Error().stack ?? "").split("\n").filter((l) => /blob:/.test(l)).slice(1, 4).map((l) => l.trim().replace(/blob:[^\s)]+\//, "").replace(/^at /, ""));
+    line("log", ["Trace:", ...a, ...(where.length ? [`\n  ${where.join("\n  ")}`] : [])]);
+  });
+  wrap("count", (label = "default") => { const k = String(label), n = (counts.get(k) ?? 0) + 1; counts.set(k, n); line("log", [`${k}: ${n}`]); });
+  wrap("countReset", (label = "default") => { counts.set(String(label), 0); });
+  wrap("time", (label = "default") => { timers.set(String(label), performance.now()); });
+  wrap("timeLog", (label = "default", ...a) => { const t = timers.get(String(label)); line("log", t === undefined ? [`Zamanlayıcı yok: ${String(label)}`] : [`${String(label)}: ${ms(t)}`, ...a]); });
+  wrap("timeEnd", (label = "default") => { const k = String(label), t = timers.get(k); timers.delete(k); line("log", [t === undefined ? `Zamanlayıcı yok: ${k}` : `${k}: ${ms(t)} (bitti)`]); });
+  wrap("group", (...a) => { line("log", a.length ? a : ["grup"]); depth++; });
+  wrap("groupCollapsed", (...a) => { line("log", a.length ? a : ["grup"]); depth++; });
+  wrap("groupEnd", () => { depth = Math.max(0, depth - 1); });
+  wrap("clear", () => { depth = 0; say({ kind: "clear" }); });
   // what the code throws and does not catch (and promises it leaves rejected) is an error line too
-  globalThis.addEventListener?.("error", (e: ErrorEvent) => { if (consoleCb && /^blob:/.test(e.filename ?? "")) consoleCb("error", [e.error ?? e.message]); });
-  globalThis.addEventListener?.("unhandledrejection", (e: PromiseRejectionEvent) => { const st = String((e.reason as Error)?.stack ?? ""); if (consoleCb && /\bblob:/.test(st)) consoleCb("error", [e.reason]); });
+  globalThis.addEventListener?.("error", (e: ErrorEvent) => { if (consoleCb && /^blob:/.test(e.filename ?? "")) line("error", [e.error ?? e.message]); });
+  globalThis.addEventListener?.("unhandledrejection", (e: PromiseRejectionEvent) => { const st = String((e.reason as Error)?.stack ?? ""); if (consoleCb && /\bblob:/.test(st)) line("error", [e.reason]); });
 };
-/** Called with each console call of the preview's code: its level and its arguments. */
-export function onConsole(cb: (level: ConsoleLevel, args: unknown[]) => void): void { consoleCb = cb; hookConsole(); }
+/** Called with each console event of the preview's code (a line, a table, a clear). */
+export function onConsole(cb: (e: ConsoleEvent) => void): void { consoleCb = cb; hookConsole(); }
+/** A new run: counters, timers and groups start again. */
+export function resetConsole(): void { counts.clear(); timers.clear(); depth = 0; }
 
 /** `import { a as b, c } from "march/x";` → `const { a: b, c } = __marchPreview["march/x"];` (and `* as x`). */
 export function link(code: string): string {
@@ -232,6 +257,7 @@ export function setProps(props: Record<string, Props>, parts: Record<string, Par
  */
 export async function run(code: string, el: HTMLElement, props: Record<string, Props> = {}, parts: Record<string, Parts> = {}): Promise<string[]> {
   await loadPacks(code);
+  resetConsole();
   const url = URL.createObjectURL(new Blob([link(code)], { type: "text/javascript" }));
   // the extensions the previous run registered (extend / intercept at the module's top) go with it
   core.extensions.clear();
