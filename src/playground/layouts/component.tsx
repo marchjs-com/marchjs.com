@@ -1305,7 +1305,7 @@ const langPanel = () => <div class="sc-lang">
 let previewEl: HTMLElement | null = null
 type Parts = Record<string, Record<string, unknown>>
 let tsSvc: TypeScriptService | null = null
-type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void; onTree(cb: () => void): void; onConsole(cb: (e: ConsoleEvent) => void): void; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void }
+type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void; onTree(cb: () => void): void; onConsole(cb: (e: ConsoleEvent) => void): void; sourceAt(node: Node | null): { file: string; line: number } | null; elementsAt(root: Element, file: string, line: number): Element[]; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void }
 let runtime: Promise<Runtime> | null = null, runtimeNow: Runtime | null = null
 const loadRuntime = () => (runtime ??= (async () => {
   // its components' stylesheet, once
@@ -1347,10 +1347,33 @@ const previewReady = (el: HTMLElement): void => {
     const it = untrack(liveTree).find((x) => x.id === id)
     if (it) { chooseInst(it); revealRow() }
   })
+  // Alt+click on what the preview draws: the line of the code that wrote it, in its file
+  el.addEventListener("click", (e) => {
+    if (!e.altKey) return
+    const at = runtimeNow?.sourceAt(e.target as Node)
+    if (!at || !files.has(at.file)) return
+    e.preventDefault(); e.stopPropagation()
+    goToLine(at.file, at.line)
+  }, true)
   const code = pendingCode
   pendingCode = ""
   if (code) queueMicrotask(() => void render(code))
 }
+// the other way: the caret's line in the file in front outlines what that line draws in the preview
+let litNow: Element[] = []
+const outlineCaretLine = (): void => {
+  const ta = document.activeElement
+  const off = (): void => { for (const x of litNow) x.classList.remove("sc-src-lit"); litNow = [] }
+  if (!(ta instanceof HTMLTextAreaElement) || !ta.classList.contains("m-ced-input") || !previewEl || !runtimeNow) return off()
+  const file = active(), text = files.get(file)?.peek()
+  if (text === undefined || ta.value !== text) return off()
+  const line = ta.value.slice(0, ta.selectionStart ?? 0).split("\n").length
+  const next = runtimeNow.elementsAt(previewEl, file, line)
+  if (next.length === litNow.length && next.every((x, i) => x === litNow[i])) return
+  off(); litNow = next
+  for (const x of next) x.classList.add("sc-src-lit")
+}
+document.addEventListener("selectionchange", outlineCaretLine)
 // an error the preview's code throws (as it runs, or later: an event handler, a promise): a box over the preview with
 // the message and the code's places it came through (the bundle's stack mapped back by the build's source map); a place
 // opens its file at that line. The next good run takes the box away.

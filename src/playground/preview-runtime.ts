@@ -8,7 +8,8 @@ import * as ui from "../../../../src/ui/index.ts";
 import * as icons from "../../../../src/icons/index.ts";
 import * as theme from "../../../../src/theme/index.ts";
 import * as motion from "../../../../src/motion/index.ts";
-import { withParts, mProps } from "../../../../src/props/index.ts";
+import * as props from "../../../../src/props/index.ts";
+const { withParts, mProps, registerMProp } = props;
 import { packIcon } from "../../../../src/icons/pack-paint.ts";
 // layers opened by the preview's code (dialogs, drawers, menus) find the scope around it (OverlayScope's lookup)
 import "../../../../src/components/layout/overlay-scope/index.ts";
@@ -38,7 +39,7 @@ const playground = {
     }
   },
 };
-const MODULES: Record<string, unknown> = { "march": core, "march/ui": ui, "march/icons": icons, "march/theme": theme, "march/motion": motion, "march/playground": playground };
+const MODULES: Record<string, unknown> = { "march": core, "march/ui": ui, "march/icons": icons, "march/theme": theme, "march/motion": motion, "march/props": props, "march/playground": playground };
 // any other subpath of the components (march/actions…) is in the ui barrel too
 (globalThis as Record<string, unknown>)["__marchPreview"] = new Proxy(MODULES, { get: (m, k: string) => m[k] ?? (k.startsWith("march/") ? ui : undefined) });
 
@@ -114,6 +115,20 @@ const hookConsole = (): void => {
 export function onConsole(cb: (e: ConsoleEvent) => void): void { consoleCb = cb; hookConsole(); }
 /** A new run: counters, timers and groups start again. */
 export function resetConsole(): void { counts.clear(); timers.clear(); depth = 0; }
+
+// where each element is written (MarchIDE's build marks them: the compiler's sourceMarks): a component's usage line on
+// its root elements (m:src), over the line of its definition
+registerMProp("src", (el, v) => { if (v) el.setAttribute("data-m-src", String(v)); });
+/** The element the code wrote at a place of the preview (Alt+click): its file and line. */
+export function sourceAt(node: Node | null): { file: string; line: number } | null {
+  const el = (node instanceof Element ? node : node?.parentElement)?.closest?.("[data-m-src]");
+  const m = el ? /^(.*):(\d+)$/.exec(el.getAttribute("data-m-src") ?? "") : null;
+  return m ? { file: m[1]!, line: Number(m[2]) } : null;
+}
+/** The elements the code wrote on a line of a file (the editor's caret line): to outline them. */
+export function elementsAt(root: Element, file: string, line: number): Element[] {
+  return [...root.querySelectorAll(`[data-m-src="${CSS.escape(`${file}:${line}`)}"]`)];
+}
 
 /** `import { a as b, c } from "march/x";` → `const { a: b, c } = __marchPreview["march/x"];` (and `* as x`). */
 export function link(code: string): string {

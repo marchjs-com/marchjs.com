@@ -86,7 +86,7 @@ export function createBuilder(log: BuildLog) {
           if (source === undefined) return { errors: [{ text: `Dosya yok: ${a.path}` }] };
           const t1 = performance.now();
           try {
-            const r = compile(source, { filename: a.path });
+            const r = compile(source, { filename: a.path, sourceMarks: true });
             for (const x of [...r.texts, ...r.keys]) found.add(x);
             modules[a.path] = r.code;
             say(`✓ ${a.path} · ${ms(t1)}`, "success");
