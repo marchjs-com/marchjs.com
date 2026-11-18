@@ -10,9 +10,9 @@ import { h, render as mount, createRoot, signal, computed, effect, untrack, onCl
 import { registry } from "march/components/registry.gen.ts";
 import type { PlaygroundOption } from "march/components/meta.ts";
 import { appUrl } from "march/base";
-import { PaletteButton, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "march/ui";
-import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, vaultPlugin, aiPlugin, groups, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog, type CodeProblem } from "march/app-ui";
-import { x as xIcon, alertTriangle, packageBox, activity, checkCircle, image, video, save, history, plus, database, zap, monitor, sliders, layers, braces, users, code, terminal, fileText, globe, plug } from "march/icons";
+import { PaletteButton, Spinner, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "march/ui";
+import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, vaultPlugin, aiPlugin, groups, type AiService, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog, type CodeProblem } from "march/app-ui";
+import { x as xIcon, sparkles, alertTriangle, packageBox, activity, checkCircle, image, video, save, history, plus, database, zap, monitor, sliders, layers, braces, users, code, terminal, fileText, globe, plug } from "march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "march/forms"
 import { COLOR_TOKENS } from "march/theme"
 import { createBuilder, type BuildResult } from "../build.ts";
@@ -1319,6 +1319,54 @@ const addLang = (given = addCode): void => {
   langShown.set(code)
   print(`[${stamp()}] + ${langName(code)}: ${code} eklendi (kopyalanan: ${langShown() ? langShown() : "Varsayılan Dil"})`, "success")
 }
+// languages made by the AI: the user lists them ("en, de, Japonca…"), each one is the default texts translated by the
+// user's own AI (its default provider and model), one request per language; the keys and {0} placeholders are kept
+let aiSvc: AiService | null = null
+let aiLangText = ""
+const aiLangBusy = signal("")
+const parseJsonReply = (text: string): unknown => {
+  const m = /```(?:json)?\s*([\s\S]*?)```/.exec(text), body = (m ? m[1]! : text).trim()
+  const a = body.indexOf("{"), b = body.lastIndexOf("}")
+  return JSON.parse(a >= 0 && b > a ? body.slice(a, b + 1) : body)
+}
+const addLangsWithAi = async (given = aiLangText): Promise<void> => {
+  const asked = given.split(/[,;\n]+/).map((s) => s.trim()).filter(Boolean)
+  if (!asked.length) { toast("Hangi diller? Kodlarını ya da adlarını yaz: en, de, Japonca…"); return }
+  if (!aiSvc) { toast("AI eklentisi yok"); return }
+  const cur = await aiSvc.current().catch(() => "locked" as const)
+  if (cur === "locked" || cur === "none") { toast(cur === "locked" ? "Önce AI anahtarları sekmesinde kasayı aç" : "Önce bir AI anahtarı ekle"); aiSvc.openKeys(); return }
+  const source = langJson(), keys = Object.keys(source)
+  if (!keys.length) { toast("Çevrilecek metin yok: önce kodu derle"); return }
+  let made = 0
+  for (const [i, want] of asked.entries()) {
+    aiLangBusy.set(`${want} (${i + 1}/${asked.length}) · ${cur.name}`)
+    try {
+      const r = await aiSvc.chat({
+        maxTokens: 16_000, temperature: 0.2,
+        system: "You translate the user interface texts of an app. Reply with only one JSON object, nothing else.",
+        messages: [{ role: "user", content: `Translate the values of this JSON (the texts of an app's interface) into: ${want}.
+Reply with only a JSON object: {"code": "<the BCP 47 code of that language, lowercase, e.g. en, de, pt-br>", "texts": {<the same keys>: <the translated text>}}.
+Keep every key exactly as it is. Keep {0}, {1}… placeholders, HTML-like tags and emoji as they are. Short, natural interface wording.
+
+${JSON.stringify(source, null, 1)}` }],
+      })
+      const out = parseJsonReply(r.text) as { code?: string; texts?: Record<string, unknown> }
+      const code = String(out.code ?? "").trim().toLowerCase()
+      if (!LANG_CODE.test(code) || !out.texts || typeof out.texts !== "object") throw new Error("yanıt beklenen biçimde değil")
+      // every key of the code: a text the AI left out keeps the default
+      const file = Object.fromEntries(keys.map((k) => [k, typeof out.texts![k] === "string" && (out.texts![k] as string).trim() ? out.texts![k] as string : source[k]!]))
+      const missing = keys.filter((k) => file[k] === source[k] && typeof out.texts![k] !== "string").length
+      saveLangs({ ...langs(), [code]: file })
+      langShown.set(code)
+      made++
+      print(`[${stamp()}] ✨ ${langName(code)}: ${code} AI ile oluşturuldu (${keys.length - missing}/${keys.length} metin · ↑${r.usage.input} ↓${r.usage.output} token)`, "success")
+    } catch (e) {
+      print(`[${stamp()}] ✖ ${want}: AI ile oluşturulamadı: ${String((e as Error)?.message ?? e)}`, "error")
+    }
+  }
+  aiLangBusy.set("")
+  toast(made ? `${made} dil AI ile oluşturuldu` : "Dil oluşturulamadı: ayrıntı Konsol'da")
+}
 /** Remove an added language (the default stays); the preview falls back to the default when it showed it. */
 const removeLang = (code: string): void => {
   const { [code]: _gone, ...rest } = langs()
@@ -1349,9 +1397,17 @@ const langPanel = () => <div class="sc-lang">
           <TextInput aria-label="Yeni dilin kodu" placeholder="tr, en, de…" onChange={(v: string) => { addCode = v }} onKeyDown={(e: KeyboardEvent) => { if (e.key === "Enter") { addLang(); close() } }} />
           <Button size="sm" variant="primary" on:click={() => { addLang(); close() }}>Ekle</Button>
         </div>
+        <div class="sc-lang-new-ai">
+          <span class="sc-lang-new-hint">AI ile dil ekle: istediğin dilleri yaz, her biri varsayılan metinlerden çevrilir (kendi AI anahtarınla)</span>
+          <div class="sc-lang-new-row">
+            <TextInput aria-label="AI ile oluşturulacak diller" placeholder="en, de, fr, Japonca…" onChange={(v: string) => { aiLangText = v }} onKeyDown={(e: KeyboardEvent) => { if (e.key === "Enter") { close(); void addLangsWithAi() } }} />
+            <Button size="sm" variant="primary" icon={sparkles} disabled={() => !!aiLangBusy()} on:click={() => { close(); void addLangsWithAi() }}>Oluştur</Button>
+          </div>
+        </div>
       </div>}
     </Dropdown>
   </div>
+  {() => (aiLangBusy() ? <p class="sc-lang-busy" role="status"><Spinner size="sm" /> AI çeviriyor: {aiLangBusy()}</p> : null)}
   {() => { const code = langShown(); return untrack(() => (code
     ? <JsonEditor value={langFile(code)} onChange={(v: unknown) => { if (v && typeof v === "object") saveLangs({ ...langs(), [code]: v as Record<string, string> }) }} aria-label={`${code}.json`} />
     : <JsonView value={langJson} open={2} label="Varsayılan metinler" />)) }}
@@ -1792,6 +1848,6 @@ export default function ComponentLayout(props: { ide: () => IdeJson; id: () => s
       empty="Bu dosyada adı olan bir şey yok." onPick={(r: { from: number; to: number }) => { const f = active(); debugTab(f); goTo.set({ ...goTo.peek(), [f]: r }) }} />
     <AppUI title={() => ideTitle(props.id())} description={() => (props.ide().description ? t(props.ide().description!) : "") || props.id() || "bileşeni yaz, özelliklerini ayarla, önizlemede canlı dene"} tools={<><IconButton icon={save} size="sm" variant={() => (anyDirty() ? "solid" : undefined)} disabled={() => !anyDirty()} class="sc-ide-save" label="Kaydet ve derle (Ctrl + S)" onClick={() => saveAndBuild()} /><PaletteButton label="Komut ara…" class="sc-playground-pal" /></>}
       panels={allPanels} presets={PRESETS} plugins={PLUGINS} commands="playground" persist="sc.march-ide.v3" label="MarchIDE" narrowTabs="bottom" api={followTabs}
-      kit={(k: AppKit) => { debugSvc.set(k.service<DebuggerService>("debugger") ?? null); tsSvc = k.service<TypeScriptService>("typescript") ?? null }} />
+      kit={(k: AppKit) => { debugSvc.set(k.service<DebuggerService>("debugger") ?? null); tsSvc = k.service<TypeScriptService>("typescript") ?? null; aiSvc = k.service<AiService>("ai") ?? null }} />
   </div>
 }
