@@ -16,79 +16,79 @@ import e11 from "./core/main---s-x.x.tsx";
 import e12 from "./core/main--switch.x.tsx";
 import e13 from "./core/main--try.x.tsx";
 import e14 from "./core/main--_enter.x.tsx";
-import e15 from "./core/main--_leave.x.tsx";
-import e16 from "./core/main--_prop.x.tsx";
-import e17 from "./core/main--_tpl.x.tsx";
-import e18 from "./core/main--apply-pipe.x.tsx";
-import e19 from "./core/main--batch.x.tsx";
-import e20 from "./core/main--catch-error.x.tsx";
-import e21 from "./core/main--computed.x.tsx";
-import e22 from "./core/main--context.x.tsx";
-import e23 from "./core/main--create-root.x.tsx";
-import e24 from "./core/main--define.x.tsx";
-import e25 from "./core/main--define-extension.x.tsx";
-import e26 from "./core/main--effect.x.tsx";
-import e27 from "./core/main--extend.x.tsx";
-import e28 from "./core/main--extensions.x.tsx";
-import e29 from "./core/main--get-owner.x.tsx";
-import e30 from "./core/main--h.x.tsx";
-import e31 from "./core/main--insert.x.tsx";
-import e32 from "./core/main--inside.x.tsx";
-import e33 from "./core/main--intercept.x.tsx";
-import e34 from "./core/main--is-reactive.x.tsx";
-import e35 from "./core/main--layers.x.tsx";
-import e36 from "./core/main--lazy-children.x.tsx";
-import e37 from "./core/main--locale.x.tsx";
-import e38 from "./core/main--messages.x.tsx";
-import e39 from "./core/main--missing.x.tsx";
-import e40 from "./core/main--on-cleanup.x.tsx";
-import e41 from "./core/main--open-layer.x.tsx";
-import e42 from "./core/main--part-of.x.tsx";
-import e43 from "./core/main--patch.x.tsx";
-import e44 from "./core/main--pipe.x.tsx";
-import e45 from "./core/main--portal-target.x.tsx";
-import e46 from "./core/main--provide.x.tsx";
-import e47 from "./core/main--reactive.x.tsx";
-import e48 from "./core/main--read.x.tsx";
-import e49 from "./core/main--register-transition.x.tsx";
-import e50 from "./core/main--render.x.tsx";
-import e51 from "./core/main--run-with-owner.x.tsx";
-import e52 from "./core/main--safe-url.x.tsx";
-import e53 from "./core/main--selector.x.tsx";
-import e54 from "./core/main--set-fallback-locale.x.tsx";
-import e55 from "./core/main--set-flip-hook.x.tsx";
-import e56 from "./core/main--set-locale.x.tsx";
-import e57 from "./core/main--signal.x.tsx";
-import e58 from "./core/main--store.x.tsx";
-import e59 from "./core/main--sx.x.tsx";
-import e60 from "./core/main--sx-value.x.tsx";
-import e61 from "./core/main--t.x.tsx";
-import e62 from "./core/main--to-date.x.tsx";
-import e63 from "./core/main--untrack.x.tsx";
-import e64 from "./core/main--unwrap.x.tsx";
-import e65 from "./core/main--use-context.x.tsx";
-import e66 from "./core/main--version.x.tsx";
-import e67 from "./core/main--with-extensions.x.tsx";
-import e68 from "./platform/behaviors.dismiss--dismiss.x.tsx";
-import e69 from "./platform/behaviors.drag--arrow-step.x.tsx";
-import e70 from "./platform/behaviors.drag--draggable.x.tsx";
-import e71 from "./platform/behaviors.drag--track.x.tsx";
-import e72 from "./platform/behaviors.dropzone--dropzone.x.tsx";
-import e73 from "./platform/behaviors.list-nav--list-nav.x.tsx";
-import e74 from "./platform/behaviors.list-nav--move-cursor.x.tsx";
-import e75 from "./platform/behaviors.resize-handle--resize-handle.x.tsx";
-import e76 from "./platform/behaviors.roving-focus--roving-focus.x.tsx";
-import e77 from "./platform/behaviors.swipe--fling.x.tsx";
-import e78 from "./platform/behaviors.swipe--nearest.x.tsx";
-import e79 from "./platform/behaviors.swipe--rubber-band.x.tsx";
-import e80 from "./platform/behaviors.swipe--swipeable.x.tsx";
-import e81 from "./platform/channel---channel-scope.x.tsx";
-import e82 from "./platform/channel--channel.x.tsx";
-import e83 from "./platform/channel--channel-devtools.x.tsx";
-import e84 from "./platform/channel--channel-scope.x.tsx";
-import e85 from "./platform/channel--define-channels.x.tsx";
-import e86 from "./platform/channel--of.x.tsx";
-import e87 from "./platform/channel--on-channels.x.tsx";
+import e15 from "./core/main--_gen.x.tsx";
+import e16 from "./core/main--_leave.x.tsx";
+import e17 from "./core/main--_prop.x.tsx";
+import e18 from "./core/main--_tpl.x.tsx";
+import e19 from "./core/main--apply-pipe.x.tsx";
+import e20 from "./core/main--batch.x.tsx";
+import e21 from "./core/main--catch-error.x.tsx";
+import e22 from "./core/main--computed.x.tsx";
+import e23 from "./core/main--context.x.tsx";
+import e24 from "./core/main--create-root.x.tsx";
+import e25 from "./core/main--define.x.tsx";
+import e26 from "./core/main--define-extension.x.tsx";
+import e27 from "./core/main--effect.x.tsx";
+import e28 from "./core/main--extend.x.tsx";
+import e29 from "./core/main--extensions.x.tsx";
+import e30 from "./core/main--generator.x.tsx";
+import e31 from "./core/main--get-owner.x.tsx";
+import e32 from "./core/main--h.x.tsx";
+import e33 from "./core/main--insert.x.tsx";
+import e34 from "./core/main--inside.x.tsx";
+import e35 from "./core/main--intercept.x.tsx";
+import e36 from "./core/main--is-reactive.x.tsx";
+import e37 from "./core/main--layers.x.tsx";
+import e38 from "./core/main--lazy-children.x.tsx";
+import e39 from "./core/main--locale.x.tsx";
+import e40 from "./core/main--messages.x.tsx";
+import e41 from "./core/main--missing.x.tsx";
+import e42 from "./core/main--on-cleanup.x.tsx";
+import e43 from "./core/main--open-layer.x.tsx";
+import e44 from "./core/main--part-of.x.tsx";
+import e45 from "./core/main--patch.x.tsx";
+import e46 from "./core/main--pipe.x.tsx";
+import e47 from "./core/main--portal-target.x.tsx";
+import e48 from "./core/main--provide.x.tsx";
+import e49 from "./core/main--reactive.x.tsx";
+import e50 from "./core/main--read.x.tsx";
+import e51 from "./core/main--register-transition.x.tsx";
+import e52 from "./core/main--render.x.tsx";
+import e53 from "./core/main--run-with-owner.x.tsx";
+import e54 from "./core/main--safe-url.x.tsx";
+import e55 from "./core/main--selector.x.tsx";
+import e56 from "./core/main--set-fallback-locale.x.tsx";
+import e57 from "./core/main--set-flip-hook.x.tsx";
+import e58 from "./core/main--set-locale.x.tsx";
+import e59 from "./core/main--signal.x.tsx";
+import e60 from "./core/main--store.x.tsx";
+import e61 from "./core/main--sx.x.tsx";
+import e62 from "./core/main--sx-value.x.tsx";
+import e63 from "./core/main--t.x.tsx";
+import e64 from "./core/main--to-date.x.tsx";
+import e65 from "./core/main--untrack.x.tsx";
+import e66 from "./core/main--unwrap.x.tsx";
+import e67 from "./core/main--use-context.x.tsx";
+import e68 from "./core/main--version.x.tsx";
+import e69 from "./core/main--with-extensions.x.tsx";
+import e70 from "./platform/behaviors.dismiss--dismiss.x.tsx";
+import e71 from "./platform/behaviors.drag--arrow-step.x.tsx";
+import e72 from "./platform/behaviors.drag--draggable.x.tsx";
+import e73 from "./platform/behaviors.drag--track.x.tsx";
+import e74 from "./platform/behaviors.dropzone--dropzone.x.tsx";
+import e75 from "./platform/behaviors.list-nav--list-nav.x.tsx";
+import e76 from "./platform/behaviors.list-nav--move-cursor.x.tsx";
+import e77 from "./platform/behaviors.resize-handle--resize-handle.x.tsx";
+import e78 from "./platform/behaviors.roving-focus--roving-focus.x.tsx";
+import e79 from "./platform/behaviors.swipe--fling.x.tsx";
+import e80 from "./platform/behaviors.swipe--nearest.x.tsx";
+import e81 from "./platform/behaviors.swipe--rubber-band.x.tsx";
+import e82 from "./platform/behaviors.swipe--swipeable.x.tsx";
+import e83 from "./platform/channel---channel-scope.x.tsx";
+import e84 from "./platform/channel--channel.x.tsx";
+import e85 from "./platform/channel--channel-devtools.x.tsx";
+import e86 from "./platform/channel--channel-scope.x.tsx";
+import e87 from "./platform/channel--define-channels.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "march#Await": e0,
   "march#DEV": e1,
@@ -105,78 +105,78 @@ const examples: Record<string, ApiExample<any>> = {
   "march#Switch": e12,
   "march#Try": e13,
   "march#_enter": e14,
-  "march#_leave": e15,
-  "march#_prop": e16,
-  "march#_tpl": e17,
-  "march#applyPipe": e18,
-  "march#batch": e19,
-  "march#catchError": e20,
-  "march#computed": e21,
-  "march#context": e22,
-  "march#createRoot": e23,
-  "march#define": e24,
-  "march#defineExtension": e25,
-  "march#effect": e26,
-  "march#extend": e27,
-  "march#extensions": e28,
-  "march#getOwner": e29,
-  "march#h": e30,
-  "march#insert": e31,
-  "march#inside": e32,
-  "march#intercept": e33,
-  "march#isReactive": e34,
-  "march#layers": e35,
-  "march#lazyChildren": e36,
-  "march#locale": e37,
-  "march#messages": e38,
-  "march#missing": e39,
-  "march#onCleanup": e40,
-  "march#openLayer": e41,
-  "march#partOf": e42,
-  "march#patch": e43,
-  "march#pipe": e44,
-  "march#portalTarget": e45,
-  "march#provide": e46,
-  "march#reactive": e47,
-  "march#read": e48,
-  "march#registerTransition": e49,
-  "march#render": e50,
-  "march#runWithOwner": e51,
-  "march#safeUrl": e52,
-  "march#selector": e53,
-  "march#setFallbackLocale": e54,
-  "march#setFlipHook": e55,
-  "march#setLocale": e56,
-  "march#signal": e57,
-  "march#store": e58,
-  "march#sx": e59,
-  "march#sxValue": e60,
-  "march#t": e61,
-  "march#toDate": e62,
-  "march#untrack": e63,
-  "march#unwrap": e64,
-  "march#useContext": e65,
-  "march#version": e66,
-  "march#withExtensions": e67,
-  "march/behaviors/dismiss#dismiss": e68,
-  "march/behaviors/drag#arrowStep": e69,
-  "march/behaviors/drag#draggable": e70,
-  "march/behaviors/drag#track": e71,
-  "march/behaviors/dropzone#dropzone": e72,
-  "march/behaviors/list-nav#listNav": e73,
-  "march/behaviors/list-nav#moveCursor": e74,
-  "march/behaviors/resize-handle#resizeHandle": e75,
-  "march/behaviors/roving-focus#rovingFocus": e76,
-  "march/behaviors/swipe#fling": e77,
-  "march/behaviors/swipe#nearest": e78,
-  "march/behaviors/swipe#rubberBand": e79,
-  "march/behaviors/swipe#swipeable": e80,
-  "march/channel#ChannelScope": e81,
-  "march/channel#channel": e82,
-  "march/channel#channelDevtools": e83,
-  "march/channel#channelScope": e84,
-  "march/channel#defineChannels": e85,
-  "march/channel#of": e86,
-  "march/channel#onChannels": e87,
+  "march#_gen": e15,
+  "march#_leave": e16,
+  "march#_prop": e17,
+  "march#_tpl": e18,
+  "march#applyPipe": e19,
+  "march#batch": e20,
+  "march#catchError": e21,
+  "march#computed": e22,
+  "march#context": e23,
+  "march#createRoot": e24,
+  "march#define": e25,
+  "march#defineExtension": e26,
+  "march#effect": e27,
+  "march#extend": e28,
+  "march#extensions": e29,
+  "march#generator": e30,
+  "march#getOwner": e31,
+  "march#h": e32,
+  "march#insert": e33,
+  "march#inside": e34,
+  "march#intercept": e35,
+  "march#isReactive": e36,
+  "march#layers": e37,
+  "march#lazyChildren": e38,
+  "march#locale": e39,
+  "march#messages": e40,
+  "march#missing": e41,
+  "march#onCleanup": e42,
+  "march#openLayer": e43,
+  "march#partOf": e44,
+  "march#patch": e45,
+  "march#pipe": e46,
+  "march#portalTarget": e47,
+  "march#provide": e48,
+  "march#reactive": e49,
+  "march#read": e50,
+  "march#registerTransition": e51,
+  "march#render": e52,
+  "march#runWithOwner": e53,
+  "march#safeUrl": e54,
+  "march#selector": e55,
+  "march#setFallbackLocale": e56,
+  "march#setFlipHook": e57,
+  "march#setLocale": e58,
+  "march#signal": e59,
+  "march#store": e60,
+  "march#sx": e61,
+  "march#sxValue": e62,
+  "march#t": e63,
+  "march#toDate": e64,
+  "march#untrack": e65,
+  "march#unwrap": e66,
+  "march#useContext": e67,
+  "march#version": e68,
+  "march#withExtensions": e69,
+  "march/behaviors/dismiss#dismiss": e70,
+  "march/behaviors/drag#arrowStep": e71,
+  "march/behaviors/drag#draggable": e72,
+  "march/behaviors/drag#track": e73,
+  "march/behaviors/dropzone#dropzone": e74,
+  "march/behaviors/list-nav#listNav": e75,
+  "march/behaviors/list-nav#moveCursor": e76,
+  "march/behaviors/resize-handle#resizeHandle": e77,
+  "march/behaviors/roving-focus#rovingFocus": e78,
+  "march/behaviors/swipe#fling": e79,
+  "march/behaviors/swipe#nearest": e80,
+  "march/behaviors/swipe#rubberBand": e81,
+  "march/behaviors/swipe#swipeable": e82,
+  "march/channel#ChannelScope": e83,
+  "march/channel#channel": e84,
+  "march/channel#channelDevtools": e85,
+  "march/channel#channelScope": e86,
+  "march/channel#defineChannels": e87,
 };
 export default examples;

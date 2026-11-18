@@ -58,7 +58,6 @@ import e53 from "./motion-a/motion--playback.x.tsx";
 import e54 from "./motion-a/motion--track.x.tsx";
 import e55 from "./motion-a/motion--animate.x.tsx";
 import e56 from "./motion-a/motion--animate-el.x.tsx";
-import e57 from "./motion-a/motion--animate-value.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "march/managers#perfManager": e0,
   "march/managers#permissionManager": e1,
@@ -117,6 +116,5 @@ const examples: Record<string, ApiExample<any>> = {
   "march/motion#Track": e54,
   "march/motion#animate": e55,
   "march/motion#animateEl": e56,
-  "march/motion#animateValue": e57,
 };
 export default examples;

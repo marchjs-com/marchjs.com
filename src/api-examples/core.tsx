@@ -6,6 +6,7 @@ import {
   safeUrl, registerTransition, If, Else, For, Switch, Match, Try, Await, Dynamic, setFlipHook, Portal, PortalTarget,
   portalTarget, openLayer, layers, render, define, pipe, applyPipe, toDate, t, locale, messages, missing,
   setFallbackLocale, sx, sxValue, SX, version, extend, intercept, inside, partOf, defineExtension, withExtensions, Extensions, extensions,
+  generator, _gen,
 } from "march";
 import { Button, Badge, Segmented } from "march/ui";
 import { examples } from "./types.ts";
@@ -26,6 +27,13 @@ function Panel(props: { title: string }) {
 /** A small local component the extension examples change (so nothing else on the page is touched). */
 function Chip(props: { label: string; tone?: "neutral" | "danger"; onClick?: () => void }) {
   return <Button variant={props.tone === "danger" ? "danger" : "secondary"} onClick={() => props.onClick?.()}>{() => props.label}</Button>
+}
+/** A long list drawn a few rows per frame: a generator component, each yield is added after the last. */
+const Rows = generator(function* Rows(props: { n: number }) { for (let i = 1; i <= props.n; i++) yield <li>Satır {i}</li> }, { chunk: 25 })
+/** An async generator component: each yield replaces the last; removing it stops the countdown. */
+async function* Countdown(props: { from: number }) {
+  for (let i = props.from; i > 0; i--) { yield <b>{i}</b>; await new Promise((r) => setTimeout(r, 700)) }
+  yield <b>Hadi!</b>
 }
 type Lines = (() => string[]) & { update(fn: (l: string[]) => string[]): unknown }
 const logLine = (s: Lines, line: string) => s.update((l) => [...l.slice(-4), `${now()} ${line}`])
@@ -76,6 +84,14 @@ _$t1((r) => { insert(r.firstChild, () => row().id, null) })`,
         const out = signal("—")
         const go = async () => { out.set("bekleniyor…"); out.set(await _leave(new Promise<string>((r) => setTimeout(() => r("geldi"), 400)))) }
         return <Row><Button onClick={go}>_leave ile bekle</Button><Out label="Sonuç" value={out} /></Row>
+      },
+    },
+    _gen: {
+      code: `// written by the compiler, not by hand:
+function* List(p) { … }   // → function List(p) { return _gen(_$gList(p), List) }   function* _$gList(p) { … }`,
+      run: () => {
+        const it = (function* () { yield "bir · "; yield "iki · "; yield "üç" })()
+        return <p>{_gen(it, { yields: "append" })}</p>
       },
     },
     extend: {
@@ -373,6 +389,25 @@ stop()   // dispose`,
       run: (p: { values: { n: number } }) => {
         const rows = [["Ad", "Ada"], ["Şehir", "İzmir"], ["Rol", "Yönetici"]]
         return <dl class="sc-row">{() => rows.slice(0, p.values.n).map(([k, v]) => <Fragment><dt>{k}</dt><dd>{v}</dd></Fragment>)}</dl>
+      },
+    },
+    generator: {
+      code: `function* Rows(props) { for (let i = 1; i <= props.n; i++) yield <li>Satır {i}</li> }
+Rows.chunk = 25        // 25 rows per frame (the first 25 at once): a long list never blocks the page
+async function* Countdown(props) {   // each yield replaces the last; removal stops it
+  for (let i = props.from; i > 0; i--) { yield <b>{i}</b>; await sleep(700) }
+  yield <b>Hadi!</b>
+}
+// a generator written as an expression (or used with h() by hand):
+const Steps = generator(function* () { yield "Bağlanıyor…"; yield "Hazır" }, { yields: "replace" })`,
+      play: { options: [{ key: "n", label: "Satır", default: 500, options: [{ value: 100, label: "100" }, { value: 500, label: "500" }, { value: 5000, label: "5000" }] }] },
+      run: (p: { values: { n: number } }) => {
+        const round = signal(0)
+        const Steps = generator(function* () { yield "Bağlanıyor…"; yield "Hazır" }, { yields: "replace" })
+        return <div class="sc-ex-stack">
+          <Row><Button onClick={() => round.update((x) => x + 1)}>Yeniden çiz</Button>{() => { round(); return <Countdown from={3} /> }}<Steps /></Row>
+          {() => { round(); const n = p.values.n; return <ul style={{ "max-height": "220px", overflow: "auto" }}><Rows n={n} /></ul> }}
+        </div>
       },
     },
     getOwner: {
