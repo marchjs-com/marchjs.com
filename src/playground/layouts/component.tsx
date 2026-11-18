@@ -1668,12 +1668,15 @@ const saveAndBuild = (path?: string): void => {
 }
 // the user's own AI (march-app-ui's vault and AI plugins): keys encrypted in this browser's vault, requests straight from
 // here to the provider with the user's key; the chat knows the open file, its problems and the last run error
-const AI_SYSTEM = `You are the assistant inside MarchIDE, the browser IDE of March (MarchJS). Answer in the user's language (Turkish when they write Turkish), short and concrete.
-March in brief: components are functions that run once and return DOM (no re-render, no hooks). In .tsx, \`let $x = 0\` is a signal: read $x, write $x = 1; \`const $y = $x * 2\` is computed. Plain API: signal(), computed(), effect(), onCleanup() from "march".
-JSX: on:click / onClick, class:active={$on}, bind:value={$name}, sx={{ p: 2, gap: 1 }}, m: common props (m:tip, m:color, m:parts). Control flow: <If when>…<Else/>, <For each key>{(item, i) => …}</For> (item and i are accessors), <Switch>/<Match>, <Try>, <Await>.
-Props are getters: never destructure props; read props.x where it is used. Components from "march/ui" (Button, IconButton, TextInput, Select, Card…), icons by name: icon="lucide:heart" or icon={heart} from "march/icons".
-Tests: import { test, expect, renderTest } from "march/testing"; renderTest(() => <X />) gives click(text), sees(text), find(text), text().
-When you change a file, reply with the WHOLE file in one fenced code block (\`\`\`tsx), then a short list of what changed.`
+// the model reads March's own guide for AI assistants (AI_INSTRUCTIONS.md, ~25k tokens; the providers cache it, so a
+// later message pays about a tenth for it) and then the IDE's rules
+const AI_IDE = `You are the assistant inside MarchIDE, the browser IDE of March (MarchJS). The guide above is the contract: write March code exactly as it says (no React, no hooks, no useState / useEffect, no className; signals, March JSX, march/ui components), and prefer what it lists under Do / Don't and Common mistakes.
+The files of the workspace are .tsx; the preview runs them with March. Tests use march/testing (test, expect, renderTest).
+When you change a file, reply with the WHOLE file in one fenced code block (\`\`\`tsx), then a short list of what changed. Keep answers short and concrete.`
+const AI_SYSTEM = async (): Promise<string> => {
+  const guide = await fetch(appUrl("playground/ai-instructions.md")).then((r) => (r.ok ? r.text() : "")).catch(() => "")
+  return guide ? `${guide}\n\n---\n\n${AI_IDE}` : AI_IDE
+}
 const aiContext = () => {
   const file = active(), code = files.get(file)?.peek()
   const ta = document.activeElement

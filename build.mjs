@@ -83,6 +83,8 @@ async function writePlaygroundTools(out) {
   // the TypeScript language service: its worker (march-app-ui), the compiler and the lib .d.ts files it reads on demand
   copyFileSync(join(root, "src", "components", "composite", "app-ui", "ts-worker.js"), join(out, "ts-worker.js"));
   copyFileSync(join(root, "src", "components", "composite", "app-ui", "instrument.js"), join(out, "instrument.js"));
+  // March's guide for AI assistants: MarchIDE's AI reads it as its instructions (fetched on the first message)
+  copyFileSync(join(root, "AI_INSTRUCTIONS.md"), join(out, "ai-instructions.md"));
   const tsLib = join(root, "node_modules", "typescript", "lib");
   mkdirSync(join(out, "ts"), { recursive: true });
   copyFileSync(join(tsLib, "typescript.js"), join(out, "ts", "typescript.js"));
