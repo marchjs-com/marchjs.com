@@ -10,7 +10,7 @@
 		{
 			"type": "code",
 			"name": "MoodPicker.tsx",
-			"code": "import { Button } from \"march/ui\"\nimport { sun, cloud, moon } from \"march/icons\"\n\n// bugünün havası: üç hap düğme, seçili olan basılı durur\nconst moods = [\n  { id: \"sun\", label: \"Enerjik\", icon: sun },\n  { id: \"cloud\", label: \"Sakin\", icon: cloud },\n  { id: \"moon\", label: \"Uykulu\", icon: moon },\n]\n\nexport function MoodPicker() {\n  let $mood = \"sun\"\n  return <div sx={{ flex: \"row\", gap: 2 }}>\n    {moods.map((m) => <Button shape=\"pill\" icon={m.icon} pressed={$mood === m.id} on:click={() => $mood = m.id}>{m.label}</Button>)}\n  </div>\n}\n"
+			"code": "import { Button } from \"march/ui\"\nimport type { IconType } from \"march/icons\"\n\n// bugünün havası: üç hap düğme, seçili olan basılı durur\n// Mood'un icon'u IconType: tırnak içinde editör ikon listesini açar (March'ın adları ve paketler);\n// derleyici her adı o tek ikonun import'una çevirir, pakete yalnız kullanılanlar girer\ninterface Mood {\n  id: string\n  label: string\n  icon: IconType\n}\n\nconst moods: Mood[] = [\n  { id: \"sun\", label: \"Enerjik\", icon: \"sun\" },\n  { id: \"cloud\", label: \"Sakin\", icon: \"lucide:cloud-sun\" },\n  { id: \"moon\", label: \"Uykulu\", icon: \"tabler:moon-stars\" },\n]\n\nexport function MoodPicker() {\n  let $mood = \"sun\"\n  return <div sx={{ flex: \"row\", gap: 2 }}>\n    {moods.map((m) => <Button shape=\"pill\" icon={m.icon} pressed={$mood === m.id} on:click={() => $mood = m.id}>{m.label}</Button>)}\n  </div>\n}\n"
 		},
 		{
 			"type": "code",

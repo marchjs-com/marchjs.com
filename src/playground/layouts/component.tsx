@@ -1462,7 +1462,27 @@ const iconNames = (): Promise<IconNames[]> => (namesP ??= Promise.all([loadIndex
 const catalog = (): Promise<MarchCatalog> => apiIndex()
 // the TypeScript language service in a worker (the build copies it, the compiler and the lib files to playground/)
 // TypeScript reads the file as it is built (its top-level elements as exports): no "one parent element" error for them
-const typescript = typeScriptPlugin({ worker: appUrl("playground/ts-worker.js"), typescript: appUrl("playground/ts/typescript.js"), lib: appUrl("playground/ts/"),
+// march/icons as it is (its exports, every March icon, IconType with the sets' names) instead of `any`: a type imported
+// from it is a type (`import type { IconType } from "march/icons"`), and a March icon's name is checked
+const marchEnv = async (): Promise<Record<string, string>> => {
+  const [idx, names, exps, packs] = await Promise.all([apiIndex(), loadNames(), loadExports(), loadIndex()])
+  const items = (idx as unknown as { subpaths: { subpath: string; items: [string, string][] }[] }).subpaths.find((s) => s.subpath === "march/icons")?.items ?? []
+  const J = JSON.stringify
+  const icons = (exps["march"] ?? "").split(" ").filter(Boolean), marchNames = (names["march"] ?? "").split(" ").filter(Boolean)
+  const ids = packs.map((p) => p.id).filter((id) => id !== "march")
+  const values = [...new Set([...items.filter(([, k]) => k !== "type" && k !== "interface").map(([n]) => n), ...icons])]
+  return { "/march-icons.d.ts": `declare module "march/icons" {
+  export interface IconDef { readonly name: string; readonly d: readonly string[]; readonly fill?: boolean; [more: string]: unknown }
+  export type MarchIconName = ${marchNames.map((n) => J(n)).join(" | ") || "string"};
+  export type IconPackId = ${ids.map((n) => J(n)).join(" | ") || "string"};
+  export type IconType = IconDef | MarchIconName | \`march:\${MarchIconName}\` | \`\${IconPackId}:\${string}\`;
+  export type IconProp = any;
+  export type IconProps = any;
+${values.map((n) => `  export const ${n}: ${icons.includes(n) ? "IconDef" : "any"};`).join("\n")}
+}
+` }
+}
+const typescript = typeScriptPlugin({ worker: appUrl("playground/ts-worker.js"), typescript: appUrl("playground/ts/typescript.js"), lib: appUrl("playground/ts/"), env: marchEnv,
   view: (path, text) => viewRoots(text, /\.tsx?$/.test(path)) })
 // the debugger (march-app-ui): the panel, the editor's gutter (click a line number: a breakpoint) and F5 / F8 / F10 / F11;
 // while it is on, every build writes its calls into the file (buildNow); watches, conditions and the Terminal evaluate in
