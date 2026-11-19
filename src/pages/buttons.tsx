@@ -29,6 +29,7 @@ export default function Buttons(props: { params?: { rest?: string } }) {
     "made-with-march": () => <ComponentDemo folder="actions/made-with-march" title="MadeWithMarch: kredi satırı" desc="İsteğe bağlı: &quot;March ve 💗 ile geliştirildi&quot;. Lisans MIT olarak kalır; kullanmak rica, zorunluluk değil. Bağlantı adresi tek bir sabittedir (MARCH_URL)." />,
     "chevron": () => <ComponentDemo folder="actions/chevron" title="Chevron: açılınca dönen ok" desc="Dört yön, RTL'de aynalanır; open verilmezse içinde durduğu düğmenin aria-expanded değerini kendisi izler." />,
     "kbd": () => <ComponentDemo folder="typography/kbd"title="Kbd: klavye kısayolu" desc="mod macOS'ta ⌘, ötekilerde Ctrl yazılır; kısayol dizisi key() ve kısayol listesiyle aynı biçimde okunur." />,
+    "secret": () => <ComponentDemo folder="typography/secret" title="Secret: gizli değer" desc="Göz düğmesi değerin tamamını gösterir; gizliyken gizli karakterler DOM'da yoktur. Aralıkları ve maskeyi Seçenekler'den değiştir." />,
     "section-label": () => <ComponentDemo folder="typography/section-label" title="SectionLabel: panel içi grup başlığı" desc="Menü, palet, kenar çubuğu ve özellik ızgarasındaki küçük grup başlığı: ikon, sayı ve sonda eylem yuvası." />,
     "cards-tabs": () => <Demo wide title="Kartlar ve sekmeler" desc="Card, LinkCard, IconTile; Tabs (alt çizgi kayar, panel yükselerek gelir).">
     <div class="sc-grid3">

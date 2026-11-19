@@ -5,7 +5,7 @@
 		{
 			"type": "code",
 			"name": "TeamRoll.tsx",
-			"code": "import { Avatar } from \"march/ui\"\n\n// takım yoklaması: kim geldiyse avatarına basın; gelenlerin rengi koyulaşır\nconst team = [\"Elif Arslan\", \"Can Demir\", \"Deniz Kaya\", \"Ada Yıldız\", \"Mert Öz\"]\n\nexport function TeamRoll() {\n  let $here: string[] = []\n  const toggle = (n: string) => $here = $here.includes(n) ? $here.filter((x) => x !== n) : [...$here, n]\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: \"row\", gap: 2 }}>\n      {team.map((n) => <button class=\"m-btn m-btn-ghost\" aria-pressed={$here.includes(n)} on:click={() => toggle(n)}>\n        <Avatar name={n} size=\"lg\" color={$here.includes(n) ? undefined : \"neutral\"} />\n      </button>)}\n    </div>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>{$here.length} / {team.length} kişi geldi</span>\n  </div>\n}\n"
+			"code": "import { Avatar, Button } from \"march/ui\"\n\n// takım yoklaması: kim geldiyse avatarına basın; gelenlerin rengi koyulaşır\nconst team = [\"Elif Arslan\", \"Can Demir\", \"Deniz Kaya\", \"Ada Yıldız\", \"Mert Öz\"]\n\nexport function TeamRoll() {\n  let $here: string[] = []\n  const toggle = (n: string) => $here = $here.includes(n) ? $here.filter((x) => x !== n) : [...$here, n]\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: \"row\", gap: 2 }}>\n      {team.map((n) => <Button variant=\"ghost\" pressed={$here.includes(n)} on:click={() => toggle(n)} aria-label={n} sx={{ p: 1 }}>\n        <Avatar name={n} size=\"lg\" color={$here.includes(n) ? undefined : \"neutral\"} />\n      </Button>)}\n    </div>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>{$here.length} / {team.length} kişi geldi</span>\n  </div>\n}\n"
 		},
 		{
 			"type": "code",

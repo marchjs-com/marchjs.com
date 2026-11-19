@@ -289,6 +289,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Sayfa aşağı kayınca belirir, basınca yumuşakça başa döner; varsayılan olarak sayfa köşesine yerleşir.`,
   // examples/showcase/public/components/search-box/ide.json
   t`İkon, gecikmeli değer, temizle düğmesi, kısayol ipucu; küçük boy, kenarsız görünüm ve liste süren combobox kipi.`,
+  // examples/showcase/public/components/secret/ide.json
+  t`API anahtarı, kart numarası: dizinle gizli aralıklar, göz düğmesi ve kopyala; gizli karakterler sayfada hiç yer almaz.`,
   // examples/showcase/public/components/section-head/ide.json
   t`Üst etiket, başlık, açıklama, eylemler ve not tek blokta; hizalama, başlık düzeyi ve ölçek, isteğe bağlı giriş hareketi.`,
   // examples/showcase/public/components/section-label/ide.json

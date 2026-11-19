@@ -166,6 +166,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "made-with-march", title: "March ile yapıldı", name: "MadeWithMarch", desc: "İsteğe bağlı küçük \"March ile yapıldı\" yazısı ya da rozeti.", group: "Eylemler" },
     { slug: "chevron", title: "Dönen ok", name: "Chevron", desc: "Açılınca döner; dört yön, RTL'de aynalanır, en yakın aria-expanded'ı kendisi izler.", group: "Eylemler" },
     { slug: "kbd", title: "Klavye tuşu", name: "Kbd", desc: "mod macOS'ta ⌘, ötekilerde Ctrl yazılır; kısayol dizisi key() ve kısayol listesiyle aynı biçimde okunur.", group: "Tipografi" },
+    { slug: "secret", title: "Gizli değer", name: "Secret", desc: "API anahtarı, kart numarası: dizinle gizli aralıklar, göz düğmesi ve kopyala; gizli karakterler sayfada hiç yer almaz.", group: "Tipografi" },
     { slug: "section-label", title: "Bölüm etiketi", name: "SectionLabel", desc: "Panel içindeki grubun küçük başlığı: büyük harf, soluk; ikon, sayı ve sonda eylem yuvası.", group: "Tipografi" },
     { slug: "cards-tabs", title: "Kartlar ve sekmeler", desc: "Card, LinkCard, IconTile; Tabs (alt çizgi kayar, panel yükselerek gelir).", group: "Örnekler" },
     { slug: "clamp-text", title: "Katlanan metin", name: "ClampText", desc: "N satıra katlanır; sığmıyorsa \"devamı\", açılınca \"daha az\".", group: "Tipografi" },
