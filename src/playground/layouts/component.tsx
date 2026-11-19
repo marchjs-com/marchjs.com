@@ -527,6 +527,7 @@ function fromCode(o: PlaygroundOption, x: unknown, v: Record<string, unknown>): 
   if (inner.startsWith("<")) return "•••"
   return OMIT
 }
+const jsonOf = (x: unknown): unknown => { if (typeof x !== "string") return x; try { return JSON.parse(x) } catch { return OMIT } }
 /** A component's values as its props: the shown options only, empty / off left out; \`changed\`: only what differs from the default. */
 function propsOf(opts: readonly PlaygroundOption[], v: Record<string, unknown>, changed = false): Record<string, unknown> {
   const out: Record<string, unknown> = {}
@@ -541,7 +542,8 @@ function propsOf(opts: readonly PlaygroundOption[], v: Record<string, unknown>, 
     if (changed && JSON.stringify(cur) === JSON.stringify(defaultOf(o)) && (!o.visibleWhen || o.visibleWhen(defs as never))) continue
     // an icon given to a prop that is not named so (spinner): "icon:name", which the runtime turns into the icon
     // an icon of a pack ("lucide:arrow-left"): the icon itself (its pack was loaded by the picker that chose it)
-    const x = isIcon(o) ? (typeof cur === "string" && cur.includes(":") ? packRef(cur) : typeof cur === "string" && cur && !/icon/i.test(prop) ? `icon:${cur}` : cur) : o.toCode ? fromCode(o, cur, v) : cur
+    // a data prop written as JSON (kind "json": Tree's nodes, Timeline's items): its parsed value; text that does not parse is left out
+    const x = o.kind === "json" ? jsonOf(cur) : isIcon(o) ? (typeof cur === "string" && cur.includes(":") ? packRef(cur) : typeof cur === "string" && cur && !/icon/i.test(prop) ? `icon:${cur}` : cur) : o.toCode ? fromCode(o, cur, v) : cur
     if (x === undefined) continue
     if (o.key === "html:data") { delete out[prop]; for (const [k, d] of Object.entries(x as Record<string, unknown>)) out[`data-${k}`] = d; continue }
     if (x === OMIT || x === "" || x === null || (x === false && !o.toCode && !isTri(o))) { if (changed && x === false) out[prop] = false; continue }

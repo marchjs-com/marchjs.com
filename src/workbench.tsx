@@ -50,7 +50,7 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
   const defaults = (): Record<string, unknown> => Object.fromEntries(spec.options.map((o: PlaygroundOption) => [o.key, o.default]))
   const values = signal<Record<string, unknown>>(defaults())
   const opts: PlayOption[] = spec.options.map((o: PlaygroundOption) => ({
-    label: o.label, options: o.options, kind: o.kind === "text" ? undefined : o.kind, text: o.kind === "text", min: o.min, max: o.max, step: o.step, unit: o.unit,
+    label: o.label, options: o.options, kind: o.kind === "text" || o.kind === "json" ? undefined : o.kind, text: o.kind === "text" || o.kind === "json", min: o.min, max: o.max, step: o.step, unit: o.unit,
     get: () => values()[o.key], set: ((v: unknown) => values.set({ ...values.peek(), [o.key]: v })) as (v: never) => void,
     visibleWhen: o.visibleWhen ? () => o.visibleWhen!(values() as never) : undefined,
   }))
@@ -203,7 +203,7 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
       const o = po.option, all = choices(o)
       const now = (): unknown => partVals()[name]?.[po.prop]
       return {
-        label: o.label, options: o.options, kind: o.kind === "text" ? undefined : o.kind, min: o.min, max: o.max, step: o.step, unit: o.unit,
+        label: o.label, options: o.options, kind: o.kind === "text" || o.kind === "json" ? undefined : o.kind, min: o.min, max: o.max, step: o.step, unit: o.unit,
         // a choice shows as chosen when the part has exactly what it writes; nothing set: the choice that writes nothing
         get: () => { const v = now(); return all ? all.find((c) => po.value(c) === v) : v ?? o.default },
         set: ((c: unknown) => setPart(name, po.prop, all ? po.value(c) : c)) as (v: never) => void,
