@@ -1,0 +1,31 @@
+{
+  "layout": "component",
+  "description": "Küçük bekleme göstergesi.",
+  "sources": [
+    {
+      "type": "code",
+      "name": "SpinnerDemo.tsx",
+      "code": "export { Spinner } from \"march/ui\";\n"
+    },
+    {
+      "type": "code",
+      "name": "MagicEightBall.tsx",
+      "code": "import { Spinner, Button, Card } from \"march/ui\"\n\n// sihirli küre: soru sorunca küre bir an \"düşünür\" (dönen halka), sonra bir cevap verir\nconst ANSWERS = [\"Kesinlikle evet ✨\", \"Pek sanmam 🤔\", \"Yıldızlar öyle diyor 🌟\", \"Sonra tekrar sor 🔮\"]\n\nexport function MagicEightBall() {\n  let $thinking = false\n  let $answer = \"Bir soru düşünün ve sorun.\"\n  const ask = () => {\n    $thinking = true\n    setTimeout(() => { $answer = ANSWERS[Math.floor(Math.random() * ANSWERS.length)]!; $thinking = false }, 1200)\n  }\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: [\"col\", \"center\"], gap: 3, p: 3 }}>\n      {() => $thinking ? <Spinner size=\"lg\" colors=\"brand\" label=\"Küre düşünüyor\" /> : <span sx={{ text: \"lg\" }}>{$answer}</span>}\n      <Button variant=\"primary\" disabled={() => $thinking} on:click={ask}>Küreye sor</Button>\n    </div>\n  </Card>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "SaveButton.tsx",
+      "code": "import { Spinner, Button, Card } from \"march/ui\"\nimport { save } from \"march/icons\"\n\n// kaydet düğmesi: kaydederken düğmenin içinde metin boyunda (em), süs olarak dönen halka; metin durumu kendisi söyler\nexport function SaveButton() {\n  let $saving = false\n  let $saved = 0\n  const run = () => { $saving = true; setTimeout(() => { $saving = false; $saved++ }, 1000) }\n  return <Card title=\"Profil\">\n    <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n      <Button variant=\"primary\" icon={save} disabled={() => $saving} on:click={run}>\n        {() => $saving ? <span sx={{ flex: [\"row\", \"center\"], gap: 1 }}><Spinner size=\"em\" decorative /> Kaydediliyor…</span> : \"Kaydet\"}\n      </Button>\n      <span sx={{ color: \"muted\" }}>{() => ($saved ? `${$saved} kez kaydedildi` : \"\")}</span>\n    </div>\n  </Card>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "SpinnerLab.tsx",
+      "code": "import { Spinner, Card, Button } from \"march/ui\"\n\n// Spinner'ın bütün özellikleri bir arada: size (sm, md, lg, em), label (metin ya da erişimci), decorative,\n// colors (brand, renk listesi, single), color (tek tema rengi) ve class\nconst sizes = [\"sm\", \"md\", \"lg\"] as const\n\n// bir sıra halka ve üstünde adı\nconst Row = (props: { title: string; children?: unknown }) => <div sx={{ flex: \"col\", gap: 1 }}>\n  <span sx={{ text: \"xs\", color: \"muted\" }}>{props.title}</span>\n  <div sx={{ flex: [\"row\", \"wrap\", \"center\"], gap: 3 }}>{props.children}</div>\n</div>\n\nexport function SpinnerLab() {\n  let $n = 3\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Row title=\"Boyut\">{sizes.map((s) => <Spinner size={s} label={`Boyut ${s}`} />)}</Row>\n    <Row title=\"Renkler\">\n      <Spinner colors=\"brand\" label=\"Marka renkleri\" />\n      <Spinner colors={[\"brand-blue\", \"brand-green\"]} label=\"İki renk\" class=\"lab-pair\" />\n      <Spinner colors=\"single\" label=\"Tek renk\" />\n      <Spinner color=\"brand-orange\" label=\"Turuncu\" class=\"lab-orange\" />\n    </Row>\n    <Row title=\"Metin içinde (em) ve süs\">\n      <span sx={{ text: \"lg\", color: \"brand-purple\" }}><Spinner size=\"em\" decorative class=\"lab-em\" /> Yükleniyor…</span>\n    </Row>\n    <Row title=\"Ad erişimcisi\">\n      <Spinner label={() => `${$n} dosya kaldı`} class=\"lab-count\" />\n      <Button size=\"sm\" on:click={() => $n = Math.max(0, $n - 1)}>Bir dosya bitti</Button>\n    </Row>\n    <Card m:theme=\"night\">\n      <Row title=\"Koyu zemin\">{sizes.map((s) => <Spinner size={s} colors=\"brand\" />)}</Row>\n    </Card>\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "SpinnerLab.test.tsx",
+      "code": "import { test, expect, renderTest } from \"march/testing\"\nimport { SpinnerLab } from \"./SpinnerLab.tsx\"\n\n// SpinnerLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"halka role=status ve adıyla okunur\", () => {\n  const s = renderTest(() => <SpinnerLab />)\n  const sp = s.find(\"Boyut lg\")\n  expect(sp?.getAttribute(\"role\")).toBe(\"status\")\n})\n\ntest(\"decorative halka yardımcı teknolojiden gizli, rolü yok\", () => {\n  const s = renderTest(() => <SpinnerLab />)\n  const em = s.get(\".lab-em\")\n  expect(em?.getAttribute(\"aria-hidden\")).toBe(\"true\")\n  expect(em?.hasAttribute(\"role\")).toBe(false)\n})\n\ntest(\"renk listesi custom, color tek renk\", () => {\n  const s = renderTest(() => <SpinnerLab />)\n  expect(s.get(\".lab-pair\")?.getAttribute(\"data-m-colors\")).toBe(\"custom\")\n  expect(s.get(\".lab-orange\")?.getAttribute(\"data-m-color\")).toBe(\"brand-orange\")\n})\n\ntest(\"label erişimcisi canlı\", async () => {\n  const s = renderTest(() => <SpinnerLab />)\n  expect(s.get(\".lab-count\")?.getAttribute(\"aria-label\")).toBe(\"3 dosya kaldı\")\n  await s.click(\"Bir dosya bitti\")\n  expect(s.get(\".lab-count\")?.getAttribute(\"aria-label\")).toBe(\"2 dosya kaldı\")\n})\n"
+    }
+  ]
+}

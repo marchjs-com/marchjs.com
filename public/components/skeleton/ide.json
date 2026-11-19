@@ -1,0 +1,31 @@
+{
+  "layout": "component",
+  "description": "İçerik gelmeden düzen.",
+  "sources": [
+    {
+      "type": "code",
+      "name": "SkeletonDemo.tsx",
+      "code": "export { Skeleton } from \"march/ui\";\n"
+    },
+    {
+      "type": "code",
+      "name": "PhotoFrame.tsx",
+      "code": "import { Skeleton, Button, Card } from \"march/ui\"\n\n// fotoğraf çerçevesi: \"Çek\" düğmesi iskeleti bir anlığına gösterir, sonra rastgele bir manzara emojisi gelir\nconst VIEWS = [\"🏔️\", \"🌅\", \"🏝️\", \"🌌\", \"🏜️\"]\n\nexport function PhotoFrame() {\n  let $busy = false\n  let $view = \"🏔️\"\n  const shoot = () => { $busy = true; setTimeout(() => { $view = VIEWS[Math.floor(Math.random() * VIEWS.length)]!; $busy = false }, 900) }\n  return <Card title=\"Fotoğraf\">\n    {() => $busy ? <Skeleton block height=\"lg\" colors=\"brand\" /> : <div sx={{ text: \"2xl\", p: 4 }}>{$view}</div>}\n    <Button size=\"sm\" disabled={() => $busy} on:click={shoot}>Çek</Button>\n  </Card>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "ProfileCard.tsx",
+      "code": "import { Skeleton, Card, Avatar } from \"march/ui\"\n\n// bir profil kartı yüklenirken: avatarın yerinde daire, adın ve biyografinin yerinde satırlar; veri gelince düzen zıplamaz\nexport function ProfileCard() {\n  let $user: { name: string; bio: string } | null = null\n  setTimeout(() => { $user = { name: \"Ayşe Yılmaz\", bio: \"Ürün tasarımcısı · İstanbul · kahve ve bisiklet\" } }, 1500)\n  return <Card>\n    {() => $user\n      ? <div sx={{ flex: [\"row\", \"center\"], gap: 3 }}>\n          <Avatar name={$user.name} size=\"lg\" />\n          <div sx={{ flex: \"col\", gap: 1 }}><b>{$user.name}</b><span sx={{ color: \"muted\" }}>{$user.bio}</span></div>\n        </div>\n      : <div sx={{ flex: [\"row\", \"center\"], gap: 3 }}>\n          <Skeleton shape=\"circle\" height=\"lg\" />\n          <div sx={{ flex: \"col\", gap: 1, w: \"full\" }}><Skeleton lines={2} label=\"Profil yükleniyor\" /></div>\n        </div>}\n  </Card>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "SkeletonLab.tsx",
+      "code": "import { Skeleton, Card } from \"march/ui\"\n\n// Skeleton'un bütün özellikleri bir arada: lines, shortLast, block + height, shape=\"circle\" + height, colors\n// (tema, single, brand), shimmer, label ve class\nconst heights = [\"sm\", \"md\", \"lg\"] as const\n\n// bir başlık ve altında içerik\nconst Box = (props: { title: string; children?: unknown }) => <div sx={{ flex: \"col\", gap: 1 }}>\n  <span sx={{ text: \"xs\", color: \"muted\" }}>{props.title}</span>\n  {props.children}\n</div>\n\nexport function SkeletonLab() {\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Box title=\"Satırlar\"><Skeleton /></Box>\n    <Box title=\"5 satır, son satır tam, kendi adı\"><Skeleton lines={5} shortLast={false} label=\"Makale yükleniyor\" class=\"lab-lines\" /></Box>\n    <Box title=\"Bloklar\">{heights.map((h) => <Skeleton block height={h} />)}</Box>\n    <Box title=\"Daireler\">\n      <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>{heights.map((h) => <Skeleton shape=\"circle\" height={h} />)}</div>\n    </Box>\n    <Box title=\"Renk ve hareket\">\n      <Skeleton lines={2} colors=\"brand\" />\n      <Skeleton lines={2} colors=\"single\" shimmer={false} class=\"lab-still\" />\n    </Box>\n    <Card m:theme=\"night\">\n      <Box title=\"Koyu zemin\"><Skeleton lines={3} /></Box>\n    </Card>\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "SkeletonLab.test.tsx",
+      "code": "import { test, expect, renderTest } from \"march/testing\"\nimport { SkeletonLab } from \"./SkeletonLab.tsx\"\n\n// SkeletonLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"satırlar aria-busy ve adıyla; lines sayısı kadar satır\", () => {\n  const s = renderTest(() => <SkeletonLab />)\n  const lines = s.get(\".lab-lines\")\n  expect(lines?.getAttribute(\"aria-busy\")).toBe(\"true\")\n  expect(lines?.getAttribute(\"aria-label\")).toBe(\"Makale yükleniyor\")\n  expect(lines?.querySelectorAll(\".m-skel-line\").length).toBe(5)\n})\n\ntest(\"shortLast={false} son satırı kısaltmaz; varsayılan kısaltır\", () => {\n  const s = renderTest(() => <SkeletonLab />)\n  expect(s.get(\".lab-lines .m-skel-short\")).toBe(null)\n  expect(s.all(\".m-skel-short\").length).toBeGreaterThan(0)\n})\n\ntest(\"blok ve daire boyutları, süs olarak gizli\", () => {\n  const s = renderTest(() => <SkeletonLab />)\n  expect(s.all(\".m-skel-block\").length).toBe(3)\n  expect(s.all(\".m-skel-circle\").length).toBe(3)\n  expect(s.get(\".m-skel-circle-lg\")?.getAttribute(\"aria-hidden\")).toBe(\"true\")\n})\n\ntest(\"shimmer={false} durgun, colors sınıfı\", () => {\n  const s = renderTest(() => <SkeletonLab />)\n  const still = s.get(\".lab-still\")\n  expect(still?.classList.contains(\"is-still\")).toBe(true)\n  expect(still?.classList.contains(\"m-skel-single\")).toBe(true)\n  expect(s.all(\".m-skel-brand\").length).toBe(1)\n})\n"
+    }
+  ]
+}

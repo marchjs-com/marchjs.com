@@ -1,0 +1,31 @@
+{
+  "layout": "component",
+  "description": "Hata ve yeniden dene.",
+  "sources": [
+    {
+      "type": "code",
+      "name": "ErrorBoxDemo.tsx",
+      "code": "export { ErrorBox } from \"march/ui\";\n"
+    },
+    {
+      "type": "code",
+      "name": "LostCat.tsx",
+      "code": "import { ErrorBox, Card } from \"march/ui\"\n\n// kayıp kedi: her denemede başka bir yere bakılır, üçüncüsünde kedi bulunur\nconst PLACES = [\"Koltuğun altında yok.\", \"Dolabın içinde de yok.\", \"Balkonda da yok.\"]\n\nexport function LostCat() {\n  let $tries = 0\n  return <Card title=\"Pamuk nerede?\">\n    {() => $tries >= 3\n      ? <p sx={{ text: \"lg\" }}>🐈 Pamuk kutunun içinde uyuyormuş!</p>\n      : <ErrorBox title=\"Kedi bulunamadı\" message={PLACES[$tries]} retry={() => $tries++} retryLabel=\"Başka yere bak\" />}\n  </Card>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "OrdersPanel.tsx",
+      "code": "import { ErrorBox, Card, Skeleton, Button } from \"march/ui\"\n\n// sipariş paneli: yükleme bir hata nesnesiyle düşer; yeniden dene isteği tekrarlar, ikinci deneme başarılı olur\nexport function OrdersPanel() {\n  let $state: \"loading\" | \"error\" | \"done\" = \"loading\"\n  let $err: Error | null = null\n  let $attempt = 0\n  const load = () => {\n    $state = \"loading\"\n    $attempt++\n    setTimeout(() => {\n      if ($attempt < 2) { $err = new Error(`Zaman aşımı: /api/orders (${$attempt}. deneme)`); $state = \"error\" }\n      else $state = \"done\"\n    }, 600)\n  }\n  load()\n  return <Card title=\"Son siparişler\">\n    {() => $state === \"loading\" ? <Skeleton lines={3} />\n      : $state === \"error\" ? <ErrorBox title=\"Siparişler yüklenemedi\" error={() => $err} retry={load} />\n      : <div sx={{ flex: \"col\", gap: 1 }}>\n          <span>#1042 · 3 ürün · 412 ₺</span>\n          <span>#1041 · 1 ürün · 89 ₺</span>\n          <Button size=\"sm\" variant=\"ghost\" on:click={() => { $attempt = 0; load() }}>Baştan dene</Button>\n        </div>}\n  </Card>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "ErrorBoxLab.tsx",
+      "code": "import { ErrorBox, Card } from \"march/ui\"\nimport { Icon, refresh } from \"march/icons\"\n\n// ErrorBox'ın bütün özellikleri bir arada: error (Error nesnesi, metin, erişimci), message (error yokken),\n// title, retry, retryLabel (metin ya da düğüm), class; hiçbiri yoksa hazır metin\nexport function ErrorBoxLab() {\n  let $count = 0\n  let $code = 500\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <p>Yeniden deneme: <b>{() => $count}</b></p>\n    <ErrorBox title=\"Error nesnesi\" error={new Error(\"Bağlantı reddedildi\")} retry={() => $count++} />\n    <ErrorBox title=\"Metin hatası\" error=\"Dosya bulunamadı (404)\" />\n    <ErrorBox title=\"Erişimci\" error={() => `Sunucu hatası (${$code})`} retry={() => { $count++; $code++ }} retryLabel=\"Kodu artır\" />\n    <ErrorBox message=\"Yalnız message: error verilmedi.\" retry={() => $count++}\n      retryLabel={<span sx={{ flex: [\"row\", \"center\"], gap: 1 }}><Icon of={refresh} /> Yenile</span>} class=\"lab-error\" />\n    <Card m:theme=\"night\">\n      <ErrorBox />\n    </Card>\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "ErrorBoxLab.test.tsx",
+      "code": "import { test, expect, renderTest } from \"march/testing\"\nimport { ErrorBoxLab } from \"./ErrorBoxLab.tsx\"\n\n// ErrorBoxLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"Error nesnesinin message'ı, metin hatası ve message gösterilir\", () => {\n  const s = renderTest(() => <ErrorBoxLab />)\n  expect(s.sees(\"Bağlantı reddedildi\")).toBe(true)\n  expect(s.sees(\"Dosya bulunamadı (404)\")).toBe(true)\n  expect(s.sees(\"Yalnız message: error verilmedi.\")).toBe(true)\n})\n\ntest(\"retry düğmesi çağırır; erişimci hatası güncellenir\", async () => {\n  const s = renderTest(() => <ErrorBoxLab />)\n  await s.click(\"Kodu artır\")\n  expect(s.sees(\"Yeniden deneme: 1\")).toBe(true)\n  expect(s.sees(\"Sunucu hatası (501)\")).toBe(true)\n})\n\ntest(\"hata kutusu role=alert ve class köke eklenir\", () => {\n  const s = renderTest(() => <ErrorBoxLab />)\n  const box = s.get(\".lab-error\")\n  expect(box?.getAttribute(\"role\")).toBe(\"alert\")\n  expect(box?.querySelector(\".m-errorbox-retry\")?.textContent).toContain(\"Yenile\")\n})\n\ntest(\"retry verilmezse düğme yok\", () => {\n  const s = renderTest(() => <ErrorBoxLab />)\n  const text = s.find(\"Dosya bulunamadı (404)\")?.closest(\".m-errorbox\")\n  expect(text?.querySelector(\"button\")).toBe(null)\n})\n"
+    }
+  ]
+}

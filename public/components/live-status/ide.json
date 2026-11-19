@@ -1,0 +1,31 @@
+{
+  "layout": "component",
+  "description": "Değişeni kibarca okutan satır: sayaç, aralık; görünür ya da yalnız okunur, yardım satırıyla.",
+  "sources": [
+    {
+      "type": "code",
+      "name": "LiveStatusDemo.tsx",
+      "code": "export { LiveStatus } from \"march/ui\";\n"
+    },
+    {
+      "type": "code",
+      "name": "CookieJar.tsx",
+      "code": "import { LiveStatus, Button, Card } from \"march/ui\"\n\n// kurabiye kavanozu: her alışta durum satırı kalanı söyler; biterse araya girerek (assertive) uyarır\nexport function CookieJar() {\n  let $left = 5\n  return <Card title=\"Kurabiye kavanozu 🍪\">\n    <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n      <Button size=\"sm\" disabled={() => $left === 0} on:click={() => $left--}>Bir tane al</Button>\n      <Button size=\"sm\" variant=\"ghost\" on:click={() => $left = 5}>Doldur</Button>\n    </div>\n    {() => <LiveStatus politeness={$left === 0 ? \"assertive\" : \"polite\"} text={() => ($left ? `${\"🍪\".repeat($left)} ${$left} kurabiye kaldı` : \"Kavanoz boş!\")} />}\n  </Card>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "MailSelection.tsx",
+      "code": "import { LiveStatus, Checkbox, Card } from \"march/ui\"\n\n// e-posta listesi: kutular işaretlendikçe altta \"N ileti seçildi\" okunur; yardım satırı listeye aria-describedby ile bağlı\nconst MAILS = [\"Fatura hazır\", \"Toplantı daveti\", \"Haftalık bülten\", \"Şifre değişti\"]\n\nexport function MailSelection() {\n  let $picked: string[] = []\n  const flip = (m: string, on: boolean) => { $picked = on ? [...$picked, m] : $picked.filter((x) => x !== m) }\n  return <Card title=\"Gelen kutusu\">\n    <div aria-describedby=\"mail-help\" sx={{ flex: \"col\", gap: 1 }}>\n      {MAILS.map((m) => <Checkbox label={m} onChange={(on: boolean) => flip(m, on)} />)}\n    </div>\n    <LiveStatus as=\"p\" help=\"Toplu işlem için iletileri işaretleyin.\" helpId=\"mail-help\"\n      text={() => ($picked.length ? `${$picked.length} ileti seçildi` : \"Seçili ileti yok\")} />\n  </Card>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "LiveStatusLab.tsx",
+      "code": "import { LiveStatus, Button, Card, Kbd } from \"march/ui\"\n\n// LiveStatus'un bütün özellikleri bir arada: text (metin ya da erişimci), children, visible (görünür / yalnız\n// okunur), politeness, as (span / div / p), help (metin ya da düğüm) + helpId + helpClass, class ve diğer öznitelikler\nexport function LiveStatusLab() {\n  let $n = 0\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 2 }}>\n      <Button size=\"sm\" on:click={() => $n++}>Bir tane ekle</Button>\n      <Button size=\"sm\" variant=\"ghost\" on:click={() => $n = 0}>Sıfırla</Button>\n    </div>\n    <LiveStatus text={() => `${$n} öğe eklendi`} class=\"lab-count\" id=\"lab-count\" data-kind=\"sayaç\" />\n    <LiveStatus as=\"div\" politeness=\"assertive\">Children ile söylenen, araya giren durum</LiveStatus>\n    <LiveStatus as=\"p\" visible={false} text={() => `Gizli: ${$n}`} class=\"lab-hidden\" />\n    <LiveStatus help={<span>Taşımak için <Kbd keys=\"space\" /> tuşuna basın</span>} helpId=\"lab-help\" helpClass=\"lab-help\"\n      text=\"Yardım satırı önce gelir\" />\n    <Card m:theme=\"night\">\n      <LiveStatus help=\"Koyu zeminde yardım\" text={() => ($n > 2 ? \"Çok eklendi!\" : \"Az eklendi\")} />\n    </Card>\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "LiveStatusLab.test.tsx",
+      "code": "import { test, expect, renderTest } from \"march/testing\"\nimport { LiveStatusLab } from \"./LiveStatusLab.tsx\"\n\n// LiveStatusLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"durum satırı role=status, kibar; class ve öznitelikler köke gider\", () => {\n  const s = renderTest(() => <LiveStatusLab />)\n  const st = s.get(\".lab-count\")\n  expect(st?.getAttribute(\"role\")).toBe(\"status\")\n  expect(st?.getAttribute(\"aria-live\")).toBe(\"polite\")\n  expect(st?.getAttribute(\"data-kind\")).toBe(\"sayaç\")\n})\n\ntest(\"text erişimcisi düğmeyle güncellenir\", async () => {\n  const s = renderTest(() => <LiveStatusLab />)\n  await s.click(\"Bir tane ekle\")\n  await s.click(\"Bir tane ekle\")\n  expect(s.get(\".lab-count\")?.textContent).toBe(\"2 öğe eklendi\")\n})\n\ntest(\"visible={false} görsel olarak gizler, as öğeyi seçer\", () => {\n  const s = renderTest(() => <LiveStatusLab />)\n  const hidden = s.get(\".lab-hidden\")\n  expect(hidden?.tagName).toBe(\"P\")\n  expect(hidden?.classList.contains(\"m-sr-only\")).toBe(true)\n  expect(s.find(\"Children ile söylenen, araya giren durum\")?.getAttribute(\"aria-live\")).toBe(\"assertive\")\n})\n\ntest(\"help satırı helpId ve helpClass ile durumdan önce gelir\", () => {\n  const s = renderTest(() => <LiveStatusLab />)\n  const help = s.get(\"#lab-help\")\n  expect(help?.classList.contains(\"lab-help\")).toBe(true)\n  expect(help?.nextElementSibling?.textContent).toBe(\"Yardım satırı önce gelir\")\n})\n"
+    }
+  ]
+}

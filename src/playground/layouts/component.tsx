@@ -525,6 +525,8 @@ function fromCode(o: PlaygroundOption, x: unknown, v: Record<string, unknown>): 
   const code = codeOf(o, x, v)
   if (code === undefined) return x
   if (code === null) return OMIT
+  // a bare prop (Alert's dismissable: true → ""): on
+  if (code === "") return true
   const inner = /^\{([\s\S]*)\}$/.exec(String(code))?.[1]?.trim() ?? String(code)
   if (/^(true|false|null|-?\d+(\.\d+)?|"[^"]*")$/.test(inner)) return JSON.parse(inner)
   // a JSON list or object (ListEditor's sample items {["a", "b"]}): its value
@@ -1752,6 +1754,8 @@ const useSources = (sources: readonly IdeSource[], page = ""): void => {
   // another component: the Console starts empty (the last one's builds and logs are not this one's)
   waiting.length = 0
   consoleApi?.clear()
+  // another component: Properties are not on an instance picked on the last page (the exportKey effect chooses its exported one)
+  selectedInst.set(null); pickedId.set("")
   const ids = sources.map((_, i) => `f${++gen}-${i}`)
   for (const name of [...files.keys()]) if (!sources.some((s) => s.name === name)) { files.delete(name); saved.delete(name) }
   for (const s of sources) { files.set(s.name, signal(s.code)); saved.set(s.name, signal(s.code)) }

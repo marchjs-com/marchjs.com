@@ -1,0 +1,31 @@
+{
+  "layout": "component",
+  "description": "Kabına sığar, türü uzantıdan anlar; yüklenemezse yedek metin gösterir.",
+  "sources": [
+    {
+      "type": "code",
+      "name": "MediaDemo.tsx",
+      "code": "export { Media } from \"march/ui\";\n"
+    },
+    {
+      "type": "code",
+      "name": "MoodBoard.tsx",
+      "code": "import { Media, Card, Segmented } from \"march/ui\"\n\n// ruh hâli panosu: aynı yuvada resim ya da video; tür uzantıdan anlaşılır (kind=\"auto\")\nconst moods = [\n  { value: \"calm\", label: \"Sakin\", src: \"/media/dusk.jpg\" },\n  { value: \"flow\", label: \"Akış\", src: \"/media/hadi-waves.webm\" },\n  { value: \"lost\", label: \"Kayıp\", src: \"/media/yok.jpg\" },\n]\n\nexport function MoodBoard() {\n  let $mood = \"calm\"\n  const now = () => moods.find((m) => m.value === $mood) ?? moods[0]!\n  return <Card title=\"Bugünün havası\">\n    <div sx={{ flex: \"col\", gap: 3 }}>\n      <Segmented aria-label=\"Hava\" options={moods.map((m) => ({ value: m.value, label: m.label }))} bind:value={$mood} />\n      <Media src={() => now().src} kind=\"auto\" alt={() => now().label} poster=\"/media/hadi-waves.jpg\" muted loop fallback=\"Bu hava kaybolmuş, başka birini seçin\" />\n    </div>\n  </Card>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "ChatAttachments.tsx",
+      "code": "import { Media, Button, openMedia } from \"march/ui\"\n\n// bir sohbetteki ekler: kare küçük resimler; basınca büyük önizleme pencerede açılır\nconst files = [\n  { name: \"gun-batimi.jpg\", src: \"/media/dusk.jpg\" },\n  { name: \"dalga.webm\", src: \"/media/hadi-waves.webm\" },\n  { name: \"silinen.jpg\", src: \"/media/silinen.jpg\" },\n]\n\n// bir ek: küçük resim ve adı, altında aç düğmesi\nconst Attachment = (props: { name: string; src: string }) => <div sx={{ flex: \"col\", gap: 1 }}>\n  <Media src={props.src} kind=\"auto\" size=\"sm\" alt={props.name} poster=\"/media/hadi-waves.jpg\" fallback=\"Ek yok\" />\n  <Button size=\"sm\" variant=\"ghost\" on:click={() => openMedia(props.src, { title: props.name, poster: \"/media/hadi-waves.jpg\" })}>{props.name}</Button>\n</div>\n\nexport function ChatAttachments() {\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <span sx={{ color: \"muted\", text: \"sm\" }}>Ayşe 3 dosya gönderdi</span>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>{files.map((f) => <Attachment name={f.name} src={f.src} />)}</div>\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "MediaLab.tsx",
+      "code": "import { Media, Card } from \"march/ui\"\n\n// Media'nın bütün özellikleri bir arada: src, kind (image / video / audio / auto), alt, poster, controls, autoplay,\n// loop, muted, size (sm / md), fallback (metin ya da düğüm), class\nconst Cell = (props: { title: string; children?: unknown }) => <div sx={{ flex: \"col\", gap: 1 }}>\n  <span sx={{ text: \"xs\", color: \"muted\" }}>{props.title}</span>\n  {props.children}\n</div>\n\nexport function MediaLab() {\n  let $src = \"/media/dusk.jpg\"\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n      <Cell title=\"Resim, orta boy\"><Media src=\"/media/dusk.jpg\" alt=\"Gün batımında tepeler\" size=\"md\" class=\"lab-image\" /></Cell>\n      <Cell title=\"Küçük resim (sm)\"><Media src=\"/media/dusk.jpg\" alt=\"Tepeler\" size=\"sm\" /></Cell>\n      <Cell title=\"Video: afiş, denetimsiz, kendiliğinden, döngü, sessiz\">\n        <Media src=\"/media/hadi-waves.webm\" kind=\"video\" poster=\"/media/hadi-waves.jpg\" controls={false} autoplay loop muted size=\"md\" class=\"lab-video\" />\n      </Cell>\n      <Cell title=\"Ses (audio)\"><Media src=\"/media/sesli-not.mp3\" kind=\"audio\" fallback=\"Ses dosyası bulunamadı\" /></Cell>\n    </div>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n      <Cell title=\"Yedek metin\"><Media src=\"/media/yok.jpg\" alt=\"Kayıp\" fallback=\"Medya yüklenemedi\" class=\"lab-broken\" /></Cell>\n      <Cell title=\"Yedek düğüm\">\n        <Media src=\"/media/yok.jpg\" fallback={<Card m:theme=\"night\"><span sx={{ text: \"bold\" }}>Resim yok</span></Card>} />\n      </Cell>\n      <Cell title=\"Boş adres\"><Media src={null} /></Cell>\n      <Cell title=\"Tür uzantıdan (auto)\">\n        <Media src={() => $src} kind=\"auto\" poster=\"/media/hadi-waves.jpg\" muted class=\"lab-auto\" />\n        <button type=\"button\" on:click={() => $src = $src.endsWith(\".jpg\") ? \"/media/hadi-waves.webm\" : \"/media/dusk.jpg\"}>Resim / video</button>\n      </Cell>\n    </div>\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "MediaLab.test.tsx",
+      "code": "import { test, expect, renderTest } from \"march/testing\"\nimport { MediaLab } from \"./MediaLab.tsx\"\n\n// MediaLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"resim bir img: adresi, alt metni ve boyut sınıfı\", () => {\n  const s = renderTest(() => <MediaLab />)\n  const img = s.get(\".lab-image\")\n  expect(img?.tagName).toBe(\"IMG\")\n  expect(img?.getAttribute(\"alt\")).toBe(\"Gün batımında tepeler\")\n  expect(img?.classList.contains(\"m-media-md\")).toBe(true)\n})\n\ntest(\"video: afiş, döngü ve sessiz; controls={false} denetimleri kaldırır\", () => {\n  const s = renderTest(() => <MediaLab />)\n  const v = s.get(\".lab-video\")\n  expect(v?.tagName).toBe(\"VIDEO\")\n  expect(v?.getAttribute(\"poster\")).toContain(\"hadi-waves.jpg\")\n  expect(v?.hasAttribute(\"controls\")).toBe(false)\n})\n\ntest(\"auto tür uzantıyı izler: düğme resmi videoya çevirir\", async () => {\n  const s = renderTest(() => <MediaLab />)\n  expect(s.get(\".lab-auto\")?.tagName).toBe(\"IMG\")\n  await s.click(\"Resim / video\")\n  expect(s.get(\".lab-auto\")?.tagName).toBe(\"VIDEO\")\n})\n\ntest(\"yüklenemeyen resim yerine yedek metin\", async () => {\n  const s = renderTest(() => <MediaLab />)\n  s.get(\".lab-broken\")?.dispatchEvent(new Event(\"error\"))\n  await s.flush()\n  expect(s.sees(\"Medya yüklenemedi\")).toBe(true)\n})\n"
+    }
+  ]
+}

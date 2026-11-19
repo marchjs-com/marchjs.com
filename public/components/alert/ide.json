@@ -1,0 +1,31 @@
+{
+  "layout": "component",
+  "description": "Beş ton, eylem ve kapatma.",
+  "sources": [
+    {
+      "type": "code",
+      "name": "AlertDemo.tsx",
+      "code": "export { Alert } from \"march/ui\";\n"
+    },
+    {
+      "type": "code",
+      "name": "MoodAlert.tsx",
+      "code": "import { Alert, Button } from \"march/ui\"\nimport { sun, cloud, zap } from \"march/icons\"\n\n// havanın ruh hâli: düğmeye her basışta uyarının tonu, ikonu ve mesajı birlikte değişir\nconst MOODS = [\n  { tone: \"success\", icon: sun, title: \"Güneşli\", text: \"Bugün yürüyüş için harika bir gün.\" },\n  { tone: \"info\", icon: cloud, title: \"Bulutlu\", text: \"Hafif bir hırka yanınızda olsun.\" },\n  { tone: \"warn\", icon: zap, title: \"Fırtına\", text: \"Akşamüstü gök gürültülü sağanak bekleniyor.\" },\n] as const\n\nexport function MoodAlert() {\n  let $i = 0\n  const mood = () => MOODS[$i % MOODS.length]!\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    {() => <Alert tone={mood().tone} icon={mood().icon} title={mood().title}\n      action={<Button size=\"sm\" on:click={() => $i++}>Yarın?</Button>}>{mood().text}</Alert>}\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "CookieNotice.tsx",
+      "code": "import { Alert, Button, toast } from \"march/ui\"\nimport { shield } from \"march/icons\"\n\n// bir sitenin çerez bildirimi: yüzen (raised) bildirim, eylemler metnin altında; kapatınca bir daha görünmez\nexport function CookieNotice() {\n  let $choice = \"\"\n  const pick = (c: string) => { $choice = c; toast(c === \"all\" ? \"Tüm çerezler kabul edildi\" : \"Yalnız gerekli çerezler\") }\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    {() => $choice ? <span sx={{ color: \"muted\" }}>Seçiminiz kaydedildi: {$choice === \"all\" ? \"tümü\" : \"gerekli olanlar\"}</span>\n      : <Alert variant=\"raised\" tone=\"neutral\" icon={shield} title=\"Çerezler\" actionPlacement=\"below\"\n          dismissable dismissLabel=\"Bildirimi kapat\" onDismiss={() => pick(\"needed\")}\n          action={[<Button size=\"sm\" variant=\"primary\" on:click={() => pick(\"all\")}>Tümünü kabul et</Button>,\n            <Button size=\"sm\" variant=\"ghost\" on:click={() => pick(\"needed\")}>Yalnız gerekli</Button>]}>\n          Deneyiminizi iyileştirmek için çerez kullanıyoruz.\n        </Alert>}\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "AlertLab.tsx",
+      "code": "import { Alert, Notice, Button, Card, action } from \"march/ui\"\nimport { sparkles, check } from \"march/icons\"\n\n// Alert'in bütün özellikleri bir arada: tone, title, icon (kendi / yok), body ve children, action (düğüm ya da\n// action() nesnesi) + actionPlacement, dismissable + dismissLabel + dismissIcon + onDismiss, variant, role,\n// partClass, class ve m:color; Notice aynı bileşenin diğer adı\nconst tones = [\"info\", \"success\", \"warn\", \"danger\", \"neutral\"] as const\n\nexport function AlertLab() {\n  let $closed = 0\n  let $saved = 0\n  const save = action(\"Kaydet\", () => { $saved++ })\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <p>Kapatılan: <b>{() => $closed}</b> · kaydedilen: <b>{() => $saved}</b></p>\n    {tones.map((t) => <Alert tone={t} title={`Ton: ${t}`}>{`${t} tonunda bir mesaj.`}</Alert>)}\n    <Alert tone=\"info\" icon={sparkles} m:color=\"brand-purple\" title=\"Kendi ikonum ve rengim\" body=\"Gövde body prop'u ile geldi.\" />\n    <Alert tone=\"warn\" icon={null} title=\"İkonsuz\" action={save}>Eylem bir action() nesnesi: küçük düğme olur.</Alert>\n    <Alert tone=\"danger\" title=\"Altta eylem\" actionPlacement=\"below\" action={<Button size=\"sm\">Yeniden dene</Button>}>Sunucu yanıt vermedi.</Alert>\n    <Alert tone=\"success\" dismissable dismissLabel=\"Başarı mesajını kapat\" dismissIcon={check} onDismiss={() => $closed++}>Kapatınca sayaç artar.</Alert>\n    <Alert variant=\"raised\" tone=\"success\" role=\"note\" class=\"lab-alert\" partClass={{ icon: \"lab-icon\", body: \"lab-body\", dismiss: \"lab-x\" }} dismissable\n      onDismiss={() => $closed++}>Yüzen bildirim; rolü \"note\", parçalarda kendi sınıflarım.</Alert>\n    <Card m:theme=\"night\">\n      <Notice tone=\"info\" title=\"Notice\">Alert'in diğer adı, koyu zeminde.</Notice>\n    </Card>\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "AlertLab.test.tsx",
+      "code": "import { test, expect, renderTest } from \"march/testing\"\nimport { AlertLab } from \"./AlertLab.tsx\"\n\n// AlertLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"warn ve danger role=alert, diğerleri role=status; role prop'u üstün gelir\", () => {\n  const s = renderTest(() => <AlertLab />)\n  expect(s.find(\"Ton: danger\")?.closest(\".m-alert\")?.getAttribute(\"role\")).toBe(\"alert\")\n  expect(s.find(\"Ton: info\")?.closest(\".m-alert\")?.getAttribute(\"role\")).toBe(\"status\")\n  expect(s.get(\".lab-alert\")?.getAttribute(\"role\")).toBe(\"note\")\n})\n\ntest(\"kapat düğmesi uyarıyı gizler ve onDismiss çağrılır\", async () => {\n  const s = renderTest(() => <AlertLab />)\n  await s.click(\"Başarı mesajını kapat\")\n  expect(s.sees(\"Kapatınca sayaç artar.\")).toBe(false)\n  expect(s.sees(\"Kapatılan: 1\")).toBe(true)\n})\n\ntest(\"action() nesnesi düğme olur ve çalışır\", async () => {\n  const s = renderTest(() => <AlertLab />)\n  await s.click(\"Kaydet\")\n  await s.flush()\n  expect(s.sees(\"kaydedilen: 1\")).toBe(true)\n})\n\ntest(\"partClass parçalara, class köke eklenir; icon={null} ikonu kaldırır\", () => {\n  const s = renderTest(() => <AlertLab />)\n  const lab = s.get(\".lab-alert\")\n  expect(lab?.querySelector(\".lab-body\")).not.toBe(null)\n  expect(lab?.querySelector(\".lab-x\")).not.toBe(null)\n  expect(s.find(\"İkonsuz\")?.closest(\".m-alert\")?.querySelector(\".m-alert-icon\")).toBe(null)\n})\n"
+    }
+  ]
+}

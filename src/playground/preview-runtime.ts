@@ -179,9 +179,23 @@ const MODULES: Record<string, unknown> = { "march": traced, "march/testing": tes
 // code runs
 type PackJson = { vb: string; sw?: number; fill?: boolean; icons: [name: string, exp: string, d: string[], flags?: number, eo?: number[]][] };
 const packLoads = new Map<string, Promise<void>>();
+// the components kept out of the ui barrel (meta.barrel === false: DataGrid, Scheduler…): the code imports them from
+// march/components/<folder>; each is read on its first import, like an icon pack
+const OWN_PARTS: Record<string, () => Promise<unknown>> = {
+  "data-grid": () => import("../../../../src/components/data/data-grid/index.ts"),
+  "tree-view": () => import("../../../../src/components/data/tree-view/index.ts"),
+  "scheduler": () => import("../../../../src/components/data/scheduler/index.ts"),
+  "gantt": () => import("../../../../src/components/data/gantt/index.ts"),
+  "wizard": () => import("../../../../src/components/composite/wizard/index.ts"),
+  "consent-banner": () => import("../../../../src/components/composite/consent-banner/index.ts"),
+  "theme-editor": () => import("../../../../src/components/composite/theme-editor/index.ts"),
+};
+const loadOwn = (code: string): Promise<unknown> => Promise.all([...new Set([...code.matchAll(/from\s*["']march\/components\/([a-z][a-z0-9-]*)["']/g)].map((m) => m[1]!))]
+  .filter((f) => OWN_PARTS[f] && !(`march/components/${f}` in MODULES)).map((f) => OWN_PARTS[f]!().then((m) => { MODULES[`march/components/${f}`] = m })));
 async function loadPacks(code: string): Promise<void> {
   // march/landing is not in the ui barrel (its own lazy chunk): loaded once, when the code imports it
   if (!MODULES["march/landing"] && /["']march\/landing["']/.test(code)) MODULES["march/landing"] = await import("../../../../src/components/landing/index.ts");
+  await loadOwn(code);
   const ids = [...new Set([...code.matchAll(/from\s*["']march\/icons\/([a-z][a-z0-9-]*)["']/g)].map((m) => m[1]!))]
     .filter((id) => !(`march/icons/${id}` in MODULES) && !["packs", "catalog", "pack-paint"].includes(id));
   await Promise.all(ids.map((id) => {

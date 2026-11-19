@@ -1,0 +1,31 @@
+{
+  "layout": "component",
+  "description": "Ayrıntı özeti; bir ile dört sütun.",
+  "sources": [
+    {
+      "type": "code",
+      "name": "KeyValueDemo.tsx",
+      "code": "export { KeyValue } from \"march/ui\";\n"
+    },
+    {
+      "type": "code",
+      "name": "PlanetCard.tsx",
+      "code": "import { KeyValue, Card, Segmented } from \"march/ui\"\n\n// bir gezegen kartı: seçilen gezegenin bilgileri; nesne verince anahtarlar etiket olur\nconst PLANETS: Record<string, Record<string, string>> = {\n  Mars: { \"Güneşe uzaklık\": \"228 milyon km\", \"Bir gün\": \"24 sa 37 dk\", \"Uydu\": \"2\", \"Renk\": \"Kızıl\" },\n  Jüpiter: { \"Güneşe uzaklık\": \"778 milyon km\", \"Bir gün\": \"9 sa 56 dk\", \"Uydu\": \"95\", \"Renk\": \"Çizgili\" },\n  Satürn: { \"Güneşe uzaklık\": \"1,4 milyar km\", \"Bir gün\": \"10 sa 33 dk\", \"Uydu\": \"146\", \"Renk\": \"Altın\" },\n}\n\nexport function PlanetCard() {\n  let $p = \"Mars\"\n  return <Card title={() => `🪐 ${$p}`}>\n    <Segmented options={Object.keys(PLANETS)} bind:value={$p} />\n    <KeyValue items={() => PLANETS[$p]} columns={2} />\n  </Card>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "CustomerDetail.tsx",
+      "code": "import { KeyValue, Card, Badge, Button } from \"march/ui\"\n\n// bir müşteri ayrıntısı: iki sütun, ipucu satırları; telefon gizlenebilir, boş adres \"eklenmedi\" yazar\nexport function CustomerDetail() {\n  let $showPhone = false\n  return <Card title=\"Ada Yılmaz\" subtitle=\"Müşteri #1024\" actions={<Badge tone=\"success\">Aktif</Badge>}>\n    <KeyValue columns={2} empty=\"eklenmedi\" items={[\n      { label: \"E-posta\", value: \"ada@ornek.com\" },\n      { label: \"Telefon\", value: () => $showPhone ? \"+90 532 000 00 00\" : \"•••• •• ••\", hint: \"Görmek için düğmeye basın\" },\n      { label: \"Toplam sipariş\", value: \"18\", hint: \"Son 12 ay\" },\n      { label: \"Harcama\", value: \"24.180 ₺\" },\n      { label: \"Adres\", value: \"\" },\n      { label: \"Üyelik\", value: \"2024'ten beri\" },\n    ]} />\n    <Button size=\"sm\" on:click={() => $showPhone = !$showPhone}>{() => $showPhone ? \"Telefonu gizle\" : \"Telefonu göster\"}</Button>\n  </Card>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "KeyValueLab.tsx",
+      "code": "import { KeyValue, Card, Segmented } from \"march/ui\"\n\n// KeyValue'nun bütün özellikleri bir arada: items (dizi: label, value, hint, hidden — ya da nesne), columns (1–4),\n// empty ve class; sütun sayısı ve gizli satır canlı değişir\nexport function KeyValueLab() {\n  let $cols = \"2\"\n  let $secret = true\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Segmented label=\"Sütun\" options={[\"1\", \"2\", \"3\", \"4\"]} bind:value={$cols} />\n    <KeyValue class=\"lab-kv\" columns={Number($cols)} empty=\"(boş)\" items={[\n      { label: \"Sürüm\", value: \"0.2.0\", hint: \"kararlı\" },\n      { label: \"Lisans\", value: \"MIT\" },\n      { label: \"Bağımlılık\", value: 0 },\n      { label: \"Not\", value: null },\n      { label: \"Gizli anahtar\", value: \"abc-123\", hidden: () => $secret },\n      { label: () => `Sütun: ${$cols}`, value: () => `${$cols} sütun` },\n    ]} />\n    <button type=\"button\" on:click={() => $secret = !$secret}>Gizli satırı aç / kapa</button>\n    <Card m:theme=\"night\">\n      <KeyValue items={{ Çerçeve: \"March\", Dil: \"TSX\", Boyut: \"küçük\" }} />\n    </Card>\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "KeyValueLab.test.tsx",
+      "code": "import { test, expect, renderTest } from \"march/testing\"\nimport { KeyValueLab } from \"./KeyValueLab.tsx\"\n\n// KeyValueLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"bir dl; columns sınıfı yazılır, gizli satır görünmez\", () => {\n  const s = renderTest(() => <KeyValueLab />)\n  const kv = s.get(\".lab-kv\")!\n  expect(kv.tagName).toBe(\"DL\")\n  expect(kv.classList.contains(\"m-kv-cols-2\")).toBe(true)\n  expect(s.sees(\"abc-123\")).toBe(false)\n})\n\ntest(\"null değer empty metnini, 0 kendisini gösterir\", () => {\n  const s = renderTest(() => <KeyValueLab />)\n  expect(s.get(\".lab-kv\")!.textContent).toContain(\"(boş)\")\n  expect(s.get(\".lab-kv\")!.textContent).toContain(\"0\")\n})\n\ntest(\"gizli satır düğmeyle açılır\", async () => {\n  const s = renderTest(() => <KeyValueLab />)\n  await s.click(\"Gizli satırı aç / kapa\")\n  expect(s.sees(\"abc-123\")).toBe(true)\n})\n\ntest(\"nesne verince anahtarlar etiket olur\", () => {\n  const s = renderTest(() => <KeyValueLab />)\n  expect(s.sees(\"Çerçeve\")).toBe(true)\n  expect(s.sees(\"March\")).toBe(true)\n})\n"
+    }
+  ]
+}

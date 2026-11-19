@@ -1,0 +1,31 @@
+{
+  "layout": "component",
+  "description": "Değer ve etiket; tıklanabilir, sayaçlı.",
+  "sources": [
+    {
+      "type": "code",
+      "name": "StatTileDemo.tsx",
+      "code": "export { StatTile } from \"march/ui\";\n"
+    },
+    {
+      "type": "code",
+      "name": "StepCounter.tsx",
+      "code": "import { StatTile, CountRoll } from \"march/ui\"\n\n// adım sayar: karoya her basış 500 adım ekler, sayı döner; 10.000'e varınca renk yeşile döner\nexport function StepCounter() {\n  let $steps = 8500\n  return <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n    <StatTile variant=\"card\" size=\"xl\" label=\"Bugünkü adım\" hint={() => $steps >= 10000 ? \"Hedef tamam! 🎉\" : `Hedefe ${10000 - $steps} adım`}\n      value={<CountRoll value={() => $steps} format=\"full\" />} m:color={() => $steps >= 10000 ? \"success\" : \"brand-orange\"}\n      onClick={() => $steps += 500} />\n    <StatTile variant=\"tile\" label=\"Kalori\" value={() => Math.round($steps * 0.04)} hint=\"kcal\" />\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "SalesKpis.tsx",
+      "code": "import { StatTile, Card } from \"march/ui\"\n\n// bir satış panelinin göstergeleri: önce etiket, sola hizalı kart karolar; biri rapora bağlantı, biri pasif\nconst KPIS = [\n  { label: \"Ciro\", value: \"₺248.300\", hint: \"geçen aya göre %12 ↑\", color: \"success\" as const },\n  { label: \"Sipariş\", value: \"1.284\", hint: \"günde ortalama 41\" },\n  { label: \"İade oranı\", value: \"%2,1\", hint: \"hedef %3'ün altında\", color: \"brand-blue\" as const },\n]\n\nexport function SalesKpis() {\n  return <Card title=\"Kasım özeti\">\n    <div sx={{ grid: \"fit\", gap: 3 }}>\n      {KPIS.map((k) => <StatTile variant=\"card\" align=\"start\" order=\"label\" size=\"lg\" label={k.label} value={k.value} hint={k.hint} m:color={k.color} />)}\n      <StatTile variant=\"tile\" align=\"start\" order=\"label\" label=\"Ayrıntılı rapor\" value=\"Aç →\" href=\"#rapor\" />\n      <StatTile variant=\"tile\" align=\"start\" order=\"label\" label=\"Tahmin\" value=\"Yakında\" href=\"#tahmin\" disabled />\n    </div>\n  </Card>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "StatTileLab.tsx",
+      "code": "import { StatTile, Card } from \"march/ui\"\r\n\r\n// StatTile'ın bütün özellikleri bir arada: value (metin, sayı, düğüm, erişimci), label, hint, align, size, variant, order,\r\n// onClick, href, disabled, term (dl içinde dt + dd), hintIn, emphasis, partClass, class ve öznitelikler (id, data-*)\r\nconst sizes = [\"sm\", \"md\", \"lg\", \"xl\"] as const\r\n\r\n// bir sıra karo ve üstünde adı\r\nconst Row = (props: { title: string; children?: unknown }) => <div sx={{ flex: \"col\", gap: 1 }}>\r\n  <span sx={{ text: \"xs\", color: \"muted\" }}>{props.title}</span>\r\n  <div sx={{ flex: [\"row\", \"wrap\"], gap: 2 }}>{props.children}</div>\r\n</div>\r\n\r\nexport function StatTileLab() {\r\n  let $n = 7\r\n  return <div sx={{ flex: \"col\", gap: 3 }}>\r\n    <Row title=\"Boyut ve görünüm\">\r\n      {sizes.map((s) => <StatTile size={s} variant=\"tile\" value={s} label=\"boyut\" />)}\r\n      <StatTile variant=\"plain\" value=\"yalın\" label=\"plain\" />\r\n      <StatTile variant=\"card\" value=\"kart\" label=\"card\" />\r\n    </Row>\r\n    <Row title=\"Hizalama, sıra, ipucu\">\r\n      <StatTile align=\"start\" order=\"label\" value=\"başta\" label=\"önce etiket\" hint=\"ipucu kendi satırında\" variant=\"card\" />\r\n      <StatTile align=\"end\" value=\"sonda\" label=\"sona hizalı\" hint=\"ipucu değerin içinde\" hintIn=\"value\" variant=\"card\" />\r\n    </Row>\r\n    <Row title=\"Düğme, bağlantı, kapalı\">\r\n      <StatTile class=\"lab-btn\" value={() => $n} label=\"Bas, artsın\" onClick={() => $n++} variant=\"tile\" m:color=\"brand-orange\" />\r\n      <StatTile value=\"Rapor\" label=\"bağlantı\" href=\"#rapor\" variant=\"tile\" />\r\n      <StatTile value=\"Kapalı\" label=\"kullanılamaz\" onClick={() => $n += 100} disabled variant=\"tile\" />\r\n    </Row>\r\n    <dl class=\"lab-dl\">\r\n      <StatTile term value=\"Uzun bir değer metni: ayrıntı listesinde gövde metni gibi alt satıra geçer\" label=\"Açıklama\" emphasis=\"text\" align=\"start\"\r\n        partClass={{ value: \"lab-value\", label: \"lab-label\" }} id=\"lab-term\" data-kind=\"ayrıntı\" />\r\n    </dl>\r\n    <Card m:theme=\"night\">\r\n      <StatTile value={() => $n * 10} label=\"Koyu zeminde\" hint=\"erişimci değer\" />\r\n    </Card>\r\n  </div>\r\n}\r\n"
+    },
+    {
+      "type": "code",
+      "name": "StatTileLab.test.tsx",
+      "code": "import { test, expect, renderTest } from \"march/testing\"\nimport { StatTileLab } from \"./StatTileLab.tsx\"\n\n// StatTileLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"onClick düğme yapar; basınca sayaç ve erişimci değer artar\", async () => {\n  const s = renderTest(() => <StatTileLab />)\n  const b = s.get(\".lab-btn\")!\n  expect(b.tagName).toBe(\"BUTTON\")\n  await s.click(b)\n  await s.wait(400)\n  expect(s.sees(\"80\")).toBe(true)\n})\n\ntest(\"href bağlantı yapar; disabled düğme basılamaz\", () => {\n  const s = renderTest(() => <StatTileLab />)\n  expect(s.find(\"Rapor\")!.closest(\"a\")!.getAttribute(\"href\")).toBe(\"#rapor\")\n  expect((s.find(\"Kapalı\")!.closest(\"button\") as HTMLButtonElement).disabled).toBe(true)\n})\n\ntest(\"term dl içinde dt + dd çizer; partClass ve öznitelikler yazılır\", () => {\n  const s = renderTest(() => <StatTileLab />)\n  const dl = s.get(\".lab-dl\")!\n  expect(dl.querySelector(\"dt\")!.classList.contains(\"lab-label\")).toBe(true)\n  expect(dl.querySelector(\"dd\")!.classList.contains(\"lab-value\")).toBe(true)\n  expect(s.get(\"[data-kind=ayrıntı]\")).not.toBe(null)\n})\n"
+    }
+  ]
+}

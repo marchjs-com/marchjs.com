@@ -1,0 +1,31 @@
+{
+  "layout": "component",
+  "description": "Durum ve sayı.",
+  "sources": [
+    {
+      "type": "code",
+      "name": "BadgeDemo.tsx",
+      "code": "export { Badge } from \"march/ui\";\n"
+    },
+    {
+      "type": "code",
+      "name": "MoodTags.tsx",
+      "code": "import { Badge } from \"march/ui\"\n\n// ruh hâli etiketleri: rozetlere basınca seçilir (basılı görünür); seçilenler alttaki cümlede toplanır\nconst MOODS = [\n  { text: \"Neşeli\", tone: \"success\" }, { text: \"Meraklı\", tone: \"info\" },\n  { text: \"Uykulu\", tone: \"neutral\" }, { text: \"Heyecanlı\", tone: \"warn\" }, { text: \"Aceleci\", tone: \"danger\" },\n] as const\n\nexport function MoodTags() {\n  let $picked: string[] = [\"Meraklı\"]\n  const flip = (m: string) => $picked = $picked.includes(m) ? $picked.filter((x) => x !== m) : [...$picked, m]\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 2 }}>\n      {MOODS.map((m) => <Badge tone={m.tone} pressed={() => $picked.includes(m.text)} onClick={() => flip(m.text)}>{m.text}</Badge>)}\n    </div>\n    <span sx={{ color: \"muted\" }}>{() => $picked.length ? `Bugün: ${$picked.join(\", \")}` : \"Bir ruh hâli seçin\"}</span>\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "InboxNav.tsx",
+      "code": "import { Badge, IconButton, Button } from \"march/ui\"\nimport { mail, bell, inbox } from \"march/icons\"\n\n// bir uygulama menüsü: okunmamış sayılar, köşede mini rozet, 99'u aşınca 99+, 0'da gizlenir; durum rozeti canlı\nexport function InboxNav() {\n  let $mail = 12\n  let $alerts = 120\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div sx={{ flex: [\"row\", \"center\"], gap: 3 }}>\n      <span sx={{ flex: [\"row\", \"center\"], gap: 1 }}>Gelen kutusu <Badge count={() => $mail} label=\"okunmamış\" /></span>\n      <IconButton icon={bell} label=\"Bildirimler\" on:click={() => $alerts = 0}>\n        <Badge size=\"xs\" variant=\"solid\" count={() => $alerts} />\n      </IconButton>\n      <Badge tone=\"success\" dot pulse>Çevrim içi</Badge>\n    </div>\n    <div sx={{ flex: \"row\", gap: 2 }}>\n      <Button size=\"sm\" icon={inbox} on:click={() => $mail = 0}>Hepsini okundu say</Button>\n      <Button size=\"sm\" icon={mail} on:click={() => $mail++}>Yeni e-posta</Button>\n    </div>\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "BadgeLab.tsx",
+      "code": "import { Badge, Card } from \"march/ui\"\nimport { heart, Icon } from \"march/icons\"\n\n// Badge'in bütün özellikleri bir arada: tone, variant, size, count (max, showZero, label, format), dot (hazır / kendi),\n// dotColor, pulse, onClick + pressed + disabled, ariaLabel, class ve içerik (children)\nconst tones = [\"neutral\", \"info\", \"success\", \"warn\", \"danger\"] as const\n\n// bir sıra rozet ve üstünde adı\nconst Row = (props: { title: string; children?: unknown }) => <div sx={{ flex: \"col\", gap: 1 }}>\n  <span sx={{ text: \"xs\", color: \"muted\" }}>{props.title}</span>\n  <div sx={{ flex: [\"row\", \"wrap\", \"center\"], gap: 2 }}>{props.children}</div>\n</div>\n\nexport function BadgeLab() {\n  let $n = 0\n  let $on = false\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Row title=\"Ton (hafif / tam renk)\">\n      {tones.map((t) => <Badge tone={t}>{t}</Badge>)}\n      {tones.map((t) => <Badge tone={t} variant=\"solid\">{t}</Badge>)}\n    </Row>\n    <Row title=\"Sayı\">\n      <Badge count={() => $n} label=\"yeni\" class=\"lab-count\" />\n      <Badge count={0} showZero />\n      <Badge count={120} />\n      <Badge count={12} max={9} size=\"xs\" />\n      <Badge count={5} format={(n: number) => `${n} yeni`} tone=\"info\" />\n    </Row>\n    <Row title=\"Nokta\">\n      <Badge tone=\"warn\" dot>Bekliyor</Badge>\n      <Badge dot dotColor=\"brand-purple\">Mor nokta</Badge>\n      <Badge tone=\"danger\" pulse>Canlı</Badge>\n      <Badge tone=\"success\" pulse=\"blink\">Kayıt</Badge>\n      <Badge dot={<Icon of={heart} /> as Node}>Favori</Badge>\n    </Row>\n    <Row title=\"Basılabilir\">\n      <Badge tone=\"info\" onClick={() => $n++}>+1 ekle</Badge>\n      <Badge tone=\"primary\" pressed={() => $on} onClick={() => $on = !$on} ariaLabel=\"Sürüm iki filtresi\">v2</Badge>\n      <Badge disabled onClick={() => $n++}>kapalı</Badge>\n    </Row>\n    <Card m:theme=\"night\">\n      <Row title=\"Koyu zemin\">{tones.map((t) => <Badge tone={t} dot>{t}</Badge>)}</Row>\n    </Card>\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "BadgeLab.test.tsx",
+      "code": "import { test, expect, renderTest } from \"march/testing\"\nimport { BadgeLab } from \"./BadgeLab.tsx\"\n\n// BadgeLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"sayı 0'da gizli; basınca görünür ve okunan adı label'la yazılır\", async () => {\n  const s = renderTest(() => <BadgeLab />)\n  expect(s.get(\".lab-count\")).toBe(null)\n  await s.click(\"+1 ekle\")\n  expect(s.get(\".lab-count\")!.getAttribute(\"aria-label\")).toBe(\"1 yeni\")\n})\n\ntest(\"max aşılınca N+, format kendi metnini yazar, showZero 0'ı gösterir\", () => {\n  const s = renderTest(() => <BadgeLab />)\n  expect(s.sees(\"99+\")).toBe(true)\n  expect(s.sees(\"9+\")).toBe(true)\n  expect(s.sees(\"5 yeni\")).toBe(true)\n  expect(s.all(\".m-badge-count\").some((b: Element) => b.textContent === \"0\")).toBe(true)\n})\n\ntest(\"pressed rozeti aç / kapa düğmesidir; ariaLabel adı verir\", async () => {\n  const s = renderTest(() => <BadgeLab />)\n  const v2 = s.find(\"Sürüm iki filtresi\")!\n  expect(v2.tagName).toBe(\"BUTTON\")\n  expect(v2.getAttribute(\"aria-pressed\")).toBe(\"false\")\n  await s.click(v2)\n  expect(v2.getAttribute(\"aria-pressed\")).toBe(\"true\")\n})\n\ntest(\"disabled rozet basılamaz\", () => {\n  const s = renderTest(() => <BadgeLab />)\n  expect((s.find(\"kapalı\") as HTMLButtonElement).disabled).toBe(true)\n})\n"
+    }
+  ]
+}

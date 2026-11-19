@@ -1,0 +1,31 @@
+{
+  "layout": "component",
+  "description": "Bir alanı dolduran yükleme.",
+  "sources": [
+    {
+      "type": "code",
+      "name": "LoaderDemo.tsx",
+      "code": "export { Loader } from \"march/ui\";\n"
+    },
+    {
+      "type": "code",
+      "name": "KettleLoader.tsx",
+      "code": "import { Loader, Button, Card } from \"march/ui\"\n\n// çaydanlık: \"Demle\" yükleyiciyi kendi işaretiyle (☕) gösterir; metin geri sayar, bitince çay hazır\nexport function KettleLoader() {\n  let $left = 0\n  const brew = () => {\n    $left = 3\n    const t = setInterval(() => { $left--; if ($left <= 0) clearInterval(t) }, 700)\n  }\n  return <Card title=\"Çay ocağı\">\n    {() => $left > 0\n      ? <Loader spinner={<span sx={{ text: \"2xl\" }}>☕</span> as Node} fade={false} text={() => `Demleniyor… ${$left}`} />\n      : <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}><span>Çay hazır 🫖</span><Button size=\"sm\" on:click={brew}>Demle</Button></div>}\n  </Card>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "DashboardOverlay.tsx",
+      "code": "import { Loader, Button, Card } from \"march/ui\"\n\n// bir satış panosu yenilenirken: içerik yerinde kalır, üstüne perde (overlay) iner; veri gelince kalkar\nexport function DashboardOverlay() {\n  let $busy = false\n  let $orders = 1284\n  const refresh = () => { $busy = true; setTimeout(() => { $orders += Math.floor(Math.random() * 40); $busy = false }, 1200) }\n  return <Card title=\"Satış panosu\" sx={{ p: 3 }}>\n    <div style={{ position: \"relative\", \"min-height\": \"6rem\" }}>\n      <p sx={{ text: [\"xl\", \"bold\"] }}>{() => `${$orders.toLocaleString(\"tr-TR\")} sipariş`}</p>\n      <p sx={{ color: \"muted\" }}>Bu çeyrekte ortalama sepet 412 ₺.</p>\n      {() => $busy ? <Loader overlay color=\"brand-orange\" text=\"Veriler yenileniyor…\" /> : null}\n    </div>\n    <Button size=\"sm\" disabled={() => $busy} on:click={refresh}>Yenile</Button>\n  </Card>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "LoaderLab.tsx",
+      "code": "import { Loader, Card, Button } from \"march/ui\"\nimport { Icon, hourglass } from \"march/icons\"\n\n// Loader'ın bütün özellikleri bir arada: text (metin ya da erişimci), label (yalnız okunan ad), spinner (hazır,\n// kendi düğümün, yok), color, fade, overlay ve class\n// bir başlık ve altında içerik\nconst Box = (props: { title: string; children?: unknown }) => <div sx={{ flex: \"col\", gap: 1 }}>\n  <span sx={{ text: \"xs\", color: \"muted\" }}>{props.title}</span>\n  {props.children}\n</div>\n\nexport function LoaderLab() {\n  let $pct = 30\n  return <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n    <Box title=\"Görünür metin\"><Loader text=\"Panolar hazırlanıyor…\" class=\"lab-text\" /></Box>\n    <Box title=\"Yalnız okunan ad\"><Loader label=\"Kullanıcılar açılıyor\" class=\"lab-label\" fade={false} /></Box>\n    <Box title=\"Metin erişimcisi, renk\">\n      <Loader text={() => `%${$pct} tamam`} color=\"success\" class=\"lab-pct\" />\n      <Button size=\"sm\" on:click={() => $pct = $pct >= 100 ? 0 : $pct + 10}>İlerlet</Button>\n    </Box>\n    <Box title=\"Kendi işaretim\"><Loader spinner={<Icon of={hourglass} size=\"xl\" /> as Node} text=\"Kum saati\" /></Box>\n    <Box title=\"Halkasız\"><Loader spinner={false} text=\"Bir saniye…\" class=\"lab-bare\" /></Box>\n    <Box title=\"Perde (overlay)\">\n      <div style={{ position: \"relative\", width: \"12rem\", height: \"6rem\" }}>\n        <p>Altta kalan içerik</p>\n        <Loader overlay text=\"Kaydediliyor\" class=\"lab-overlay\" />\n      </div>\n    </Box>\n    <Card m:theme=\"night\"><Loader text=\"Koyu zeminde\" color=\"brand-purple\" /></Card>\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "LoaderLab.test.tsx",
+      "code": "import { test, expect, renderTest } from \"march/testing\"\r\nimport { LoaderLab } from \"./LoaderLab.tsx\"\r\n\r\n// LoaderLab'in testleri: kaydedince Testler sekmesinde çalışır\r\ntest(\"yükleyici role=status, metin görünür\", () => {\r\n  const s = renderTest(() => <LoaderLab />)\r\n  const l = s.get(\".lab-text\")\r\n  expect(l?.getAttribute(\"role\")).toBe(\"status\")\r\n  expect(l?.querySelector(\".m-loader-text\")?.textContent).toBe(\"Panolar hazırlanıyor…\")\r\n})\r\n\r\ntest(\"text yoksa label yalnız ekran okuyucuya; fade={false} hemen görünür\", () => {\r\n  const s = renderTest(() => <LoaderLab />)\r\n  const l = s.get(\".lab-label\")\r\n  expect(l?.querySelector(\".m-sr-only\")?.textContent).toBe(\"Kullanıcılar açılıyor\")\r\n  expect(l?.classList.contains(\"is-still\")).toBe(true)\r\n})\r\n\r\ntest(\"spinner={false} halkayı kaldırır, overlay perde olur\", async () => {\r\n  const s = renderTest(() => <LoaderLab />)\r\n  await s.flush()\r\n  expect(s.get(\".lab-bare\")?.querySelector(\".m-loading\")).toBe(null)\r\n  expect(s.get(\".lab-text\")?.querySelector(\".m-loading\")).not.toBe(null)\r\n  expect(s.get(\".lab-overlay\")?.classList.contains(\"m-loader-overlay\")).toBe(true)\r\n})\r\n\r\ntest(\"text erişimcisi düğmeyle güncellenir\", async () => {\r\n  const s = renderTest(() => <LoaderLab />)\r\n  await s.click(\"İlerlet\")\r\n  expect(s.get(\".lab-pct .m-loader-text\")?.textContent).toBe(\"%40 tamam\")\r\n})\r\n"
+    }
+  ]
+}

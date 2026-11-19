@@ -1,0 +1,31 @@
+{
+  "layout": "component",
+  "description": "İkon, başlık, alt metin, son yuva; bağlantı, düğme ya da düz.",
+  "sources": [
+    {
+      "type": "code",
+      "name": "ListRowDemo.tsx",
+      "code": "export { ListRow } from \"march/ui\";\n"
+    },
+    {
+      "type": "code",
+      "name": "Playlist.tsx",
+      "code": "import { ListRow } from \"march/ui\"\nimport { music, play, pause } from \"march/icons\"\n\n// bir çalma listesi: satıra basınca şarkı çalar (etkin satır ve çubuk); çalan şarkının ikonu duraklat olur\nconst SONGS = [\n  { id: \"s1\", name: \"Gün Ortası\", who: \"Mavi Dalga\", time: \"3:41\" },\n  { id: \"s2\", name: \"Uzun ve sığmayan bir şarkı adı: gece yarısı İstanbul'da yağmur\", who: \"Kuzey\", time: \"5:02\" },\n  { id: \"s3\", name: \"Sabah Kahvesi\", who: \"Lo-fi Kedi\", time: \"2:58\" },\n]\n\nexport function Playlist() {\n  let $now = \"\"\n  return <div sx={{ flex: \"col\", w: \"full\" }}>\n    {SONGS.map((s) => <ListRow lead={() => $now === s.id ? pause : music} title={s.name} sub={s.who} trail={s.time}\n      active={() => $now === s.id} indicator m:color=\"brand-purple\" onClick={() => $now = $now === s.id ? \"\" : s.id} />)}\n    <ListRow lead={play} title=\"Karışık çal\" sub=\"3 şarkı\" size=\"sm\" onClick={() => $now = SONGS[Math.floor(Math.random() * 3)].id} />\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "SettingsMenu.tsx",
+      "code": "import { ListRow, Badge, Chevron, Kbd, IconButton, toast } from \"march/ui\"\nimport { user, bell, lock, trash } from \"march/icons\"\n\n// bir ayarlar menüsü: bağlantı satırları (href), rozetli bildirim, kısayollu satır, yanında silme eylemi olan satır,\n// ve devre dışı bir bölüm\nexport function SettingsMenu() {\n  let $unread = 4\n  return <nav aria-label=\"Ayarlar\" sx={{ flex: \"col\" }}>\n    <ListRow lead={user} title=\"Profil\" sub=\"Ad, fotoğraf, biyografi\" href=\"#profil\" trail={<Chevron />} />\n    <ListRow lead={bell} title=\"Bildirimler\" trail={<Badge count={() => $unread} />} onClick={() => { $unread = 0; toast(\"Hepsi okundu\") }} />\n    <ListRow lead={lock} title=\"Gizlilik\" sub=\"Kimler görebilir\" trail={<Kbd keys=\"mod+p\" />} onClick={() => toast(\"Gizlilik açıldı\")} />\n    <ListRow lead=\"🗂️\" title=\"Eski oturumlar\" sub=\"3 cihaz\" actions={<IconButton icon={trash} label=\"Oturumları kapat\" size=\"sm\" variant=\"danger\" on:click={() => toast(\"Oturumlar kapatıldı\")} />} />\n    <ListRow lead=\"💳\" title=\"Ödeme yöntemleri\" sub=\"Yakında\" disabled onClick={() => toast(\"açılmamalı\")} />\n  </nav>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "ListRowLab.tsx",
+      "code": "import { ListRow, Badge, Card, StatusDot } from \"march/ui\"\nimport { home, zap, star } from \"march/icons\"\n\n// ListRow'un bütün özellikleri bir arada: lead, title, sub, trail, actions, href, onClick, as, titleAs, subAs, direction,\n// active, selected, disabled, interactive, size, color, align, overflow, marquee, indicator, tooltip, class ve children\nexport function ListRowLab() {\n  let $sel = \"a\"\n  let $clicks = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div>\n      <ListRow class=\"lab-link\" lead={home} title=\"Bağlantı satırı\" sub=\"href + active\" href=\"#ana\" active indicator tooltip=\"Ana sayfaya git\" />\n      <ListRow class=\"lab-btn\" lead={star} title={() => `Düğme satırı (${$clicks})`} trail={<Badge tone=\"info\">yeni</Badge>} size=\"lg\" color=\"brand-orange\"\n        selected={() => $clicks % 2 === 1} onClick={() => $clicks++} />\n      <ListRow lead={<StatusDot tone=\"success\" />} title=\"Çok uzun, sığmayan, üç noktayla biten bir satır başlığı burada\" overflow=\"ellipsis\" size=\"sm\" />\n      <ListRow title=\"Sürekli kayan uzun başlık: döngüde, hızlı, gözünüz yorulmasın diye yavaşlatılabilir\" marquee={{ mode: \"loop\", speed: 40 }} size=\"xs\" />\n      <ListRow title=\"Kullanılamaz\" disabled onClick={() => $clicks += 100} />\n    </div>\n    <ul role=\"listbox\" aria-label=\"Seçenekler\" sx={{ m: 0, p: 0 }}>\n      {[\"a\", \"b\"].map((id) => <ListRow as=\"li\" role=\"option\" interactive aria-selected={() => String($sel === id)} active={() => $sel === id}\n        on:click={() => $sel = id}>{`Seçenek ${id.toUpperCase()}`}</ListRow>)}\n    </ul>\n    <Card m:theme=\"night\">\n      <ListRow as=\"article\" direction=\"column\" align=\"center\" overflow=\"wrap\" lead={zap} titleAs=\"h3\" subAs=\"p\" title=\"Karo\"\n        sub=\"Uzun açıklama alt satıra geçer, karo ortalıdır.\" actions={<Badge>eylem</Badge>} />\n    </Card>\n  </div>\n}\n"
+    },
+    {
+      "type": "code",
+      "name": "ListRowLab.test.tsx",
+      "code": "import { test, expect, renderTest } from \"march/testing\"\r\nimport { ListRowLab } from \"./ListRowLab.tsx\"\r\n\r\n// ListRowLab'in testleri: kaydedince Testler sekmesinde çalışır\r\ntest(\"href bağlantı yapar; active aria-current verir; tooltip title olur\", async () => {\r\n  const s = renderTest(() => <ListRowLab />)\r\n  await s.flush()\r\n  const a = s.get(\".lab-link\")!\r\n  expect(a.tagName).toBe(\"A\")\r\n  expect(a.getAttribute(\"aria-current\")).toBe(\"page\")\r\n  expect(a.getAttribute(\"title\")).toBe(\"Ana sayfaya git\")\r\n})\r\n\r\ntest(\"onClick düğme yapar; basınca başlık ve selected (aria-pressed) değişir\", async () => {\r\n  const s = renderTest(() => <ListRowLab />)\r\n  const b = s.get(\".lab-btn\")!\r\n  expect(b.tagName).toBe(\"BUTTON\")\r\n  await s.click(b)\r\n  expect(b.textContent).toContain(\"Düğme satırı (1)\")\r\n  expect(b.getAttribute(\"aria-pressed\")).toBe(\"true\")\r\n})\r\n\r\ntest(\"disabled satır basılamaz\", async () => {\r\n  const s = renderTest(() => <ListRowLab />)\r\n  const off = s.all(\"button\").find((x: Element) => x.textContent!.includes(\"Kullanılamaz\")) as HTMLButtonElement\r\n  expect(off.disabled).toBe(true)\r\n})\r\n\r\ntest(\"as=li seçenekler; tıklayınca aria-selected değişir; titleAs=h3\", async () => {\r\n  const s = renderTest(() => <ListRowLab />)\r\n  const opts = s.all(\"[role=option]\")\r\n  expect(opts[0].tagName).toBe(\"LI\")\r\n  await s.click(opts[1])\r\n  expect(opts[1].getAttribute(\"aria-selected\")).toBe(\"true\")\r\n  expect(s.get(\"article h3\")!.textContent).toBe(\"Karo\")\r\n})\r\n"
+    }
+  ]
+}
