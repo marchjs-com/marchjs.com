@@ -122,6 +122,8 @@ async function writePlaygroundTools(out) {
   });
   console.log("✔ playground tools (esbuild-wasm, March compiler, TypeScript, preview runtime)");
 }
+// the port: 5181, or PORT (several checkouts serving side by side, each from its own .claude/launch.json)
+const port = Number(process.env.PORT) || 5181;
 if (serve) {
   const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".json": "application/json" };
   createServer((req, res) => {
@@ -140,5 +142,5 @@ if (serve) {
     try { body = readFileSync(p); } catch { res.writeHead(503, { "content-type": "text/plain; charset=utf-8", "retry-after": "1" }); res.end("building"); return; }
     res.writeHead(200, { "content-type": TYPES[extname(p)] ?? "application/octet-stream", "content-security-policy": CSP });
     res.end(body);
-  }).listen(5181, "127.0.0.1", () => console.log("showcase: http://127.0.0.1:5181/"));
+  }).listen(port, "127.0.0.1", () => console.log(`showcase: http://127.0.0.1:${port}/`));
 }
