@@ -9,7 +9,7 @@ import "../hub.css";
 import { h, signal, computed, effect, untrack, onCleanup, createRoot } from "march";
 import { Link, path, type Href } from "march/router";
 import { appUrl } from "march/base";
-import { Alert, MadeWithMarch } from "march/ui";
+import { Alert, MadeWithMarch, Spinner } from "march/ui";
 import { Icon, arrowLeft, arrowRight } from "march/icons";
 import { HUBS } from "../topics.ts";
 import { LAYOUTS, DEFAULT_IDE, parseIde, type IdeJson, type IdeLayout } from "./ide.ts";
@@ -72,37 +72,50 @@ const wanted = signal<string | null>(null);
 let workspace: Element | null = null;
 function Workspace(): unknown {
   // what is shown: the workspace (its kind and component) and its ide.json; while the next one loads the current stays
+  // under a loading layer, until the workspace has taken the next one's files (the layout's `ready`)
   const kind = signal(""), Layout = signal<IdeLayout | null>(null);
   const ide = signal<IdeJson>(DEFAULT_IDE), shownId = signal("");
   const status = signal<{ loading: true } | { error: string } | null>({ loading: true });
+  // the ide.json being opened (its path) until the workspace says it is ready with it
+  const opening = signal<string | null>(null);
+  let readyAt: ReturnType<typeof setTimeout> | undefined;
+  const ready = (id: string): void => { if (opening.peek() === id) { clearTimeout(readyAt); opening.set(null); } };
   effect(() => {
     const at = wanted();
     if (at === null || (Layout.peek() && at === shownId.peek())) return;
     let live = true;
     onCleanup(() => { live = false });
-    untrack(() => status.set(Layout() ? null : { loading: true }));
+    untrack(() => { status.set(Layout() ? null : { loading: true }); opening.set(at); });
     void (async () => {
       const next = await fetchIde(at);
       if (!live) return;
-      if (typeof next === "string") { status.set({ error: next }); return; }
+      if (typeof next === "string") { opening.set(null); status.set({ error: next }); return; }
+      // the loading layer is painted before the workspace takes the files (that step is not async itself)
+      await idle(100);
+      if (!live) return;
       // a workspace of another kind: its chunk, then it replaces the one on screen
       if (next.layout !== kind.peek()) {
         const mod = await LAYOUTS[next.layout]!();
         // the first time, the workspace is drawn in a free moment: the page's transition runs on undisturbed
         if (!Layout.peek()) await idle(700);
         if (!live) return;
-        ide.set(next); shownId.set(at); kind.set(next.layout); Layout.set(mod.default);
-      } else { ide.set(next); shownId.set(at); }
+        shownId.set(at); ide.set(next); kind.set(next.layout); Layout.set(mod.default);
+      } else { shownId.set(at); ide.set(next); }
       status.set(null);
-    })().catch((e: unknown) => { if (live) status.set({ error: String(e) }) });
+      // a workspace that never says it is ready does not keep the layer for ever
+      clearTimeout(readyAt);
+      readyAt = setTimeout(() => ready(at), 10000);
+    })().catch((e: unknown) => { if (live) { opening.set(null); status.set({ error: String(e) }); } });
   });
-  return <div class="sc-march-ide-work">
-    {() => { const L = Layout(); return L ? untrack(() => h(L as never, { ide, id: shownId })) : null }}
+  onCleanup(() => clearTimeout(readyAt));
+  return <div class="sc-march-ide-work" aria-busy={() => (opening() !== null ? "true" : null)}>
+    {() => { const L = Layout(); return L ? untrack(() => h(L as never, { ide, id: shownId, ready })) : null }}
     {() => {
       const s = status();
-      if (!s) return null;
-      if ("error" in s) return <div class="sc-march-ide-msg"><Alert tone="danger" title="MarchIDE açılamadı">{s.error}</Alert></div>;
-      return untrack(Layout) ? null : <div class="sc-ide-skel" role="status" aria-label="MarchIDE hazırlanıyor"><span /><span /><span /><span /></div>;
+      if (s && "error" in s) return <div class="sc-march-ide-msg"><Alert tone="danger" title="MarchIDE açılamadı">{s.error}</Alert></div>;
+      if (!untrack(Layout)) return s ? <div class="sc-ide-skel" role="status" aria-label="MarchIDE hazırlanıyor"><span /><span /><span /><span /></div> : null;
+      // a page opened from another: the workspace on screen stays under a layer until the next one is ready
+      return opening() !== null ? <div class="sc-ide-loading" role="status"><Spinner decorative /><span>Hazırlanıyor…</span></div> : null;
     }}
   </div>;
 }

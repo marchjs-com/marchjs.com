@@ -13,6 +13,10 @@
 .sc-playground { block-size: 100%; }
 .sc-march-ide-msg { position: absolute; inset-block-start: var(--m-space-3); inset-inline: var(--m-space-3); z-index: 5; }
 /* while MarchIDE gets ready: its panels' places, quiet (nothing heavy is drawn before the page has come in) */
+/* the layer over the workspace while the next page's ide.json opens (its files, its first preview) */
+.sc-ide-loading { position: absolute; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center; gap: var(--m-space-2); color: var(--m-muted); background: color-mix(in srgb, var(--m-bg) 55%, transparent); backdrop-filter: blur(2px); border-radius: var(--m-radius-3); animation: sc-ide-loading-in .2s ease-out both; }
+@keyframes sc-ide-loading-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .sc-ide-loading { animation: none; } }
 .sc-ide-skel { display: grid; grid-template-columns: 3fr 2fr; grid-template-rows: 3fr 2fr; gap: var(--m-space-2); block-size: 100%; padding: var(--m-space-2); box-sizing: border-box; }
 .sc-ide-skel > span { border: 1px solid var(--m-border-subtle); border-radius: var(--m-radius-3); background: var(--m-surface); }
 .sc-playground-empty { block-size: 100%; display: grid; place-content: center; justify-items: center; gap: var(--m-space-1); color: var(--m-muted); font-size: var(--m-text-sm); text-align: center; }

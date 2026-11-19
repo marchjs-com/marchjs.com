@@ -81,7 +81,8 @@ const followTabs = (api: DockApi) => {
     // the files' group: the group that holds a file tab; its front tab is the file in work
     const g = groups(L.root).find((x) => x.panels.some((id) => id in FILE_OF))
     const file = g?.active ? FILE_OF[g.active] : undefined
-    if (file && file !== untrack(active)) { active.set(file); print(`[${stamp()}] ${file} sekmesi etkin`, "info") }
+    // while a page's tabs come in the tab in front changes on its way: not a line of the Console
+    if (file && file !== untrack(active)) { active.set(file); if (!switching) print(`[${stamp()}] ${file} sekmesi etkin`, "info") }
   })
 }
 /** The text of the file in front as saved: the editor draws every key at once, the analyses below (its roots, exports,
@@ -201,20 +202,21 @@ const isTri = (o: PlaygroundOption): boolean => o.default === false && (!isHtml(
 const defaultOf = (o: PlaygroundOption): unknown => (isIcon(o) ? iconDefault(o) : isTri(o) ? null : o.default)
 // the first exported component is chosen at first, and again when the chosen one is no longer in the tree
 effect(() => { const names = inTree(); if (!names.includes(untrack(selected))) selected.set(exportedNames()[0] ?? "") })
+/** A component's options and default values, loaded once (its card's playground.ts; none for the file's own). */
+const loadOptions = (name: string): Promise<void> => {
+  if (optionsBy.peek()[name]) return Promise.resolve()
+  const entry = metaOf(name)
+  // the file's own component: no card; its props come from its type (exportedProps)
+  if (!entry || localComps.peek()[name]) { optionsBy.set({ ...optionsBy.peek(), [name]: [] }); return Promise.resolve() }
+  return entry.playground().then((m) => {
+    if (optionsBy.peek()[name]) return
+    const list = (m.default as { options: readonly PlaygroundOption[] }).options.filter((o) => o.prop !== false)
+    optionsBy.set({ ...optionsBy.peek(), [name]: list })
+    if (!valuesBy.peek()[name]) valuesBy.set({ ...valuesBy.peek(), [name]: Object.fromEntries(list.map((o) => [o.key, defaultOf(o)])) })
+  }, () => undefined)
+}
 // every component of the tree gets its options and default values once
-effect(() => {
-  for (const name of inTree()) {
-    if (untrack(optionsBy)[name]) continue
-    const entry = metaOf(name)
-    // the file's own component: no card; its props come from its type (exportedProps)
-    if (!entry || untrack(localComps)[name]) { optionsBy.set({ ...optionsBy.peek(), [name]: [] }); continue }
-    void entry.playground().then((m) => {
-      const list = (m.default as { options: readonly PlaygroundOption[] }).options.filter((o) => o.prop !== false)
-      optionsBy.set({ ...optionsBy.peek(), [name]: list })
-      if (!valuesBy.peek()[name]) valuesBy.set({ ...valuesBy.peek(), [name]: Object.fromEntries(list.map((o) => [o.key, defaultOf(o)])) })
-    })
-  }
-})
+effect(() => { for (const name of inTree()) void untrack(() => loadOptions(name)) })
 // besides its card's options (March's, on top), a component takes HTML attributes: class (March's own classes to
 // choose, or any typed one), the global attributes and those of the element it draws (the root's tag, read from the
 // preview). What the component sets itself (its own props: disabled, type…) is not listed again.
@@ -1602,6 +1604,10 @@ const watchReactivity = (r: Runtime, root: HTMLElement): void => {
     reactDom.set(dom)
   }, root)
 }
+// MarchIDE's loading layer: the page whose files were just taken is ready once its tabs are in the workspace (the
+// preview is drawn after, on its own)
+let readyCb: ((id: string) => void) | undefined, readyFor: string | null = null
+const markReady = (): void => { const id = readyFor; if (id === null) return; readyFor = null; readyCb?.(id) }
 async function render(code: string): Promise<void> {
   if (!previewEl) { pendingCode = code; return }
   lastCode = code
@@ -1610,6 +1616,9 @@ async function render(code: string): Promise<void> {
   try {
     const rt = await loadRuntime()
     watchReactivity(rt, previewEl)
+    // a March component exported as it is (export { IconButton }) is drawn with its options' values: they are there
+    // first, or a required prop (IconButton's label) is missing on the first draw of a page
+    await Promise.all(untrack(exportedNames).map(loadOptions))
     await rt.run(code, previewEl, untrack(rootProps), untrack(partsNow))
     readTag()
     readExtensions()
@@ -1702,7 +1711,25 @@ const allPanels = computed((): AppPanel[] => {
 let gen = 0
 /** Takes an ide.json's files as the workspace's: one tab each, the first one in work. The old tabs leave in the same
  * step (none of them stays); the new ones open above the Console, where the files' group stands by default. */
-const useSources = (sources: readonly IdeSource[]): void => {
+// each page's code tab in front when it was left (page → file name): coming back opens that one, not the first
+const TAB_KEY = "sc.playground.tabs"
+const readTabs = (): Record<string, string> => { try { return JSON.parse(localStorage.getItem(TAB_KEY) ?? "{}") as Record<string, string> } catch { return {} } }
+let switching = false // a page's tabs are coming in
+let tabsOf = "" // the page whose files are the workspace's (its tab is remembered once they are shown)
+effect(() => {
+  const file = active(), page = tabsOf
+  // a test file is not a page's code: coming back never opens it (nor the Tests tab it builds into)
+  if (!page || !file || !files.has(file) || isTestFile(file)) return
+  const all = readTabs()
+  if (all[page] === file) return
+  try { localStorage.setItem(TAB_KEY, JSON.stringify({ ...all, [page]: file })) } catch { /* private mode */ }
+})
+const useSources = (sources: readonly IdeSource[], page = ""): void => {
+  // while the tabs change, nothing is remembered (the new files' tabs are not the old page's)
+  tabsOf = ""; switching = true
+  // another component: the Console starts empty (the last one's builds and logs are not this one's)
+  waiting.length = 0
+  consoleApi?.clear()
   const ids = sources.map((_, i) => `f${++gen}-${i}`)
   for (const name of [...files.keys()]) if (!sources.some((s) => s.name === name)) { files.delete(name); saved.delete(name) }
   for (const s of sources) { files.set(s.name, signal(s.code)); saved.set(s.name, signal(s.code)) }
@@ -1710,8 +1737,16 @@ const useSources = (sources: readonly IdeSource[]): void => {
   sources.forEach((s, i) => { FILE_OF[ids[i]!] = s.name })
   filePanels.set(sources.map((s, i): AppPanel => ({ ...fileTab(ids[i]!, s.name),
     place: i === 0 ? { near: "console", zone: "top", size: 0.7 } : { near: ids[0]! } })))
-  active.set(sources[0]?.name ?? "")
-  if (ids[0]) dock?.open(ids[0])
+  // the page's last tab (if it still has that file), else its first
+  const last = page ? readTabs()[page] : undefined
+  const at = Math.max(0, sources.findIndex((s) => s.name === last))
+  active.set(sources[at]?.name ?? "")
+  // the dock takes the new tabs after this step: the remembered one comes in front then, and from then on the tab in
+  // front is this page's
+  const id = ids[at]
+  dock?.open(id ?? "")
+  const g = gen
+  setTimeout(() => { if (g !== gen) return; if (id && FILE_OF[id]) dock?.open(id); tabsOf = page; switching = false; print(`[${stamp()}] ${untrack(active)} sekmesi etkin`, "info"); markReady() }, 0)
 }
 const PRESETS: Record<string, Preset> = {
   main: {
@@ -1849,12 +1884,14 @@ const ideTitle = (id: string): string => {
   return t ? `MarchIDE · ${t.title}${t.name && t.name !== t.title ? ` (${t.name})` : ""}` : "MarchIDE"
 }
 
-export default function ComponentLayout(props: { ide: () => IdeJson; id: () => string }) {
+export default function ComponentLayout(props: { ide: () => IdeJson; id: () => string; ready?: (id: string) => void }) {
+  readyCb = props.ready
   // the first files before the workspace is drawn (the layout's preset names their tabs), the next ones as they come
   effect(() => workspaceId.set(props.id()))
   let shown = untrack(props.ide)
-  useSources(shown.sources)
-  effect(() => { const ide = props.ide(); if (ide !== shown) { shown = ide; untrack(() => useSources(ide.sources)) } })
+  readyFor = untrack(props.id)
+  useSources(shown.sources, untrack(props.id))
+  effect(() => { const ide = props.ide(); if (ide !== shown) { shown = ide; untrack(() => { readyFor = props.id(); useSources(ide.sources, props.id()) }) } })
   // every save is built (and the file in front when it changes): the typing builds nothing
   effect(() => {
     // only the file in front (and the entry that renders it)

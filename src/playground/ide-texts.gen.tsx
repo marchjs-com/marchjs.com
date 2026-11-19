@@ -7,4 +7,6 @@ import { t } from "march";
 export const IDE_TEXTS = (): string[] => [
   // examples/showcase/public/components/button/ide.json
   t`Beş varyant, üç boyut; yükleniyor düğmeyi kilitler ve ikonun yerinde çark döner.`,
+  // examples/showcase/public/components/icon-button/ide.json
+  t`Erişilebilir ad zorunlu; aynı ad ipucu olarak da görünür.`,
 ];

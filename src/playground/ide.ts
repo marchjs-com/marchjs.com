@@ -17,7 +17,8 @@ export interface IdeJson {
 
 /** A layout: the workspace drawn for an ide.json. It stays on screen while MarchIDE moves between pages of the same
  * layout: `ide` changes to the next ide.json and `id` to the path it came from ("" for the built-in files). */
-export type IdeLayout = (props: { ide: () => IdeJson; id: () => string }) => unknown;
+/** A workspace: it takes an ide.json's files and calls `ready(id)` once it is ready with them (its tabs in place). */
+export type IdeLayout = (props: { ide: () => IdeJson; id: () => string; ready?: (id: string) => void }) => unknown;
 
 /** The layouts MarchIDE knows, by ide.json's `layout`: each its own chunk, loaded when one is asked for. */
 export const LAYOUTS: Record<string, () => Promise<{ default: IdeLayout }>> = {
