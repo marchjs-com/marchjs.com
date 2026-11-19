@@ -85,7 +85,7 @@ export const HOME_STATS = {
   },
   "managers": 30,
   "themes": 16,
-  "tests": 1448,
+  "tests": 1449,
   "testFiles": 327,
   "budget": {
     "entry": 15360,

@@ -25,10 +25,13 @@ const sig: Record<string, Record<string, string>> = {
   "unused": "function unused(loc: string, used: Iterable<string>): string[]"
  },
  "march/lazy": {
+  "beginLoad": "function beginLoad({ kind = \"fetch\", key = \"\", background = false }: LoadOptions = {}): (ok?: boolean, error?: unknown) => void",
   "chunksOf": "function chunksOf(key: string): readonly string[] | null",
   "lazy": "function lazy<P = Record<string, unknown>>(load: () => Promise<Loaded<P>>, opts: LazyOptions<P> = {}): LazyComponent<P>",
   "loadDelay": "const loadDelay = (): number =>",
   "loaderKey": "const loaderKey = (fn: unknown): string | undefined =>",
+  "loadsActive": "const loadsActive = (): number =>",
+  "onLoad": "function onLoad(fn: (e: LoadEvent) => void): () => void",
   "prefetchCommon": "function prefetchCommon(): boolean",
   "preloadChunks": "function preloadChunks(key: string | undefined | null, low = false): boolean",
   "preloadFiles": "function preloadFiles(files: readonly string[], low = false): void",
@@ -38,6 +41,7 @@ const sig: Record<string, Record<string, string>> = {
   "setLoadRunner": "function setLoadRunner(r: LoadRunner | null): void",
   "setPreloadManifest": "function setPreloadManifest(m: Manifest | null, base?: string): void",
   "skeleton": "const skeleton = (kind: LazyPlaceholder = \"block\"): Element =>",
+  "trackLoad": "function trackLoad<T>(p: Promise<T>, info?: LoadOptions): Promise<T>",
   "whenIdle": "function whenIdle(fn: () => void, timeout = 2000): () => void"
  }
 };

@@ -62,8 +62,9 @@ import e57 from "./platform/icons--define-icon.x.tsx";
 import e58 from "./platform/icons--is-icon-def.x.tsx";
 import e59 from "./platform/icons--svg-icon.x.tsx";
 import e60 from "./platform/icons.catalog--icons.x.tsx";
-import e61 from "./app/lazy--chunks-of.x.tsx";
-import e62 from "./app/lazy--lazy.x.tsx";
+import e61 from "./app/lazy--begin-load.x.tsx";
+import e62 from "./app/lazy--chunks-of.x.tsx";
+import e63 from "./app/lazy--lazy.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "march/data#hasMethod": e0,
   "march/data#hasRole": e1,
@@ -126,7 +127,8 @@ const examples: Record<string, ApiExample<any>> = {
   "march/icons#isIconDef": e58,
   "march/icons#svgIcon": e59,
   "march/icons/catalog#ICONS": e60,
-  "march/lazy#chunksOf": e61,
-  "march/lazy#lazy": e62,
+  "march/lazy#beginLoad": e61,
+  "march/lazy#chunksOf": e62,
+  "march/lazy#lazy": e63,
 };
 export default examples;

@@ -6,7 +6,7 @@ import { mProps, registerMProp, withParts } from "march/props";
 import { dir, format, loadLocale, tKey, typed, unused } from "march/i18n";
 import {
   lazy, skeleton, chunksOf, loadDelay, loaderKey, prefetchCommon, preloadChunks, preloadFiles, runLoad, saveData,
-  setLoadDelay, setLoadRunner, setPreloadManifest, whenIdle, type LazyPlaceholder, type LazyWhen,
+  setLoadDelay, setLoadRunner, setPreloadManifest, whenIdle, beginLoad, loadsActive, onLoad, trackLoad, type LazyPlaceholder, type LazyWhen,
 } from "march/lazy";
 import { Button, Badge, Card, Segmented, TextInput, Checkbox } from "march/ui";
 import { examples } from "./types.ts";
@@ -277,6 +277,16 @@ tt("cart.items", { n: 2 })   // tt("cart.items") or tt("cart.item", …) do not 
     },
   },
   "march/lazy": {
+    beginLoad: {
+      code: `const end = beginLoad({ kind: "upload", key: file.name })   // onLoad hears "start"
+try { await upload(file); end(true) } catch (e) { end(false, e) }   // and then "end"`,
+      run: () => {
+        const log = signal<string[]>([])
+        onCleanup(onLoad((e) => { if (e.kind === "upload") push(log, `${e.type} ${e.key}${e.type === "end" ? ` · ${e.ok ? "tamam" : "hata"} · ${e.ms} ms` : ""}`) }))
+        const go = (ok: boolean) => { const end = beginLoad({ kind: "upload", key: "rapor.pdf" }); setTimeout(() => end(ok, ok ? undefined : new Error("ağ")), 600) }
+        return <div class="sc-ex-app-stack"><Row><Button onClick={() => go(true)}>Yükle</Button><Button variant="ghost" onClick={() => go(false)}>Hatalı yükle</Button></Row><Log lines={log} /></div>
+      },
+    },
     chunksOf: {
       code: `chunksOf("src/pages/users.tsx")   // ["assets/chunks/users-H.js", "assets/chunks/table-H.css", …] | null`,
       run: () => {
@@ -314,6 +324,26 @@ loaderKey(load)   // "src/pages/users.tsx" (the compiler tags dynamic imports)`,
         const tagged = () => import("./_kit.tsx")
         const plain = () => Promise.resolve({})
         return <Row><Out label='loaderKey(() => import("./_kit.tsx"))' value={String(loaderKey(tagged) ?? "undefined")} /><Out label="loaderKey(plain)" value={String(loaderKey(plain) ?? "undefined")} /></Row>
+      },
+    },
+    loadsActive: {
+      code: `onLoad(() => spinner.hidden = loadsActive() === 0)   // running loads, background ones left out`,
+      run: () => {
+        const n = signal(loadsActive())
+        onCleanup(onLoad(() => n.set(loadsActive())))
+        const go = () => { void trackLoad(wait(900, 1), { kind: "fetch", key: "api-ex-active" }) }
+        return <Row><Button onClick={go}>900 ms'lik bir yükleme başlat</Button><Out label="loadsActive()" value={() => String(n())} /></Row>
+      },
+    },
+    onLoad: {
+      code: `const off = onLoad((e) => console.log(e.type, e.kind, e.key, e.active))
+addEventListener("march:load", (ev) => console.log(ev.detail))   // the same event, on window`,
+      run: () => {
+        const log = signal<string[]>([])
+        onCleanup(onLoad((e) => push(log, `${e.type} ${e.kind} ${e.key || "—"} · active ${e.active}${e.background ? " · arka plan" : ""}`)))
+        const part = () => { void runLoad(() => wait(400, { ok: 1 }), { kind: "part", key: "api-ex-part" }) }
+        const poll = () => { void trackLoad(wait(300, 1), { kind: "file", key: "/build.txt", background: true }) }
+        return <div class="sc-ex-app-stack"><Row><Button onClick={part}>Parça yükle</Button><Button variant="ghost" onClick={poll}>Arka planda yokla</Button></Row><Log lines={log} /></div>
       },
     },
     prefetchCommon: {
@@ -424,6 +454,15 @@ setLoadDelay(0)`,
         <Out label="skeleton" value={() => `skeleton("${p.values.kind}")`} />
         <div class="sc-ex-app-skel">{() => skeleton(p.values.kind)}</div>
       </div>,
+    },
+    trackLoad: {
+      code: `const csv = await trackLoad(fetch("/report.csv"), { kind: "file", key: "report" })`,
+      run: () => {
+        const out = signal("—"), log = signal<string[]>([])
+        onCleanup(onLoad((e) => { if (e.key === "api-ex-report") push(log, `${e.type}${e.type === "end" ? ` · ${e.ms} ms` : ""}`) }))
+        const go = async () => { out.set("yükleniyor…"); out.set(json(await trackLoad(wait(500, { rows: 12 }), { kind: "file", key: "api-ex-report" }))) }
+        return <div class="sc-ex-app-stack"><Row><Button onClick={go}>trackLoad(…)</Button><Out label="sonuç" value={out} /></Row><Log lines={log} /></div>
+      },
     },
     whenIdle: {
       code: `const cancel = whenIdle(() => warmCache(), 2000)   // requestIdleCallback, at most 2 s later

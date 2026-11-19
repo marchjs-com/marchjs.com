@@ -57,7 +57,6 @@ import e52 from "./ui-d2/ui--theme-picker.x.tsx";
 import e53 from "./ui-d2/ui--theme-swatch.x.tsx";
 import e54 from "./ui-d2/ui--theme-toggle.x.tsx";
 import e55 from "./ui-d2/ui--time-input.x.tsx";
-import e56 from "./ui-d3/ui--toast-host.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "march/ui#Menu": e0,
   "march/ui#MoneyInput": e1,
@@ -115,6 +114,5 @@ const examples: Record<string, ApiExample<any>> = {
   "march/ui#ThemeSwatch": e53,
   "march/ui#ThemeToggle": e54,
   "march/ui#TimeInput": e55,
-  "march/ui#ToastHost": e56,
 };
 export default examples;
