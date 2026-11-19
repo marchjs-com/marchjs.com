@@ -9,6 +9,7 @@ import "../hub.css";
 import { h, signal, computed, effect, untrack, onCleanup, createRoot } from "march";
 import { Link, path, type Href } from "march/router";
 import { appUrl } from "march/base";
+import { beginLoad } from "march/lazy";
 import { Alert, MadeWithMarch, Spinner } from "march/ui";
 import { Icon, arrowLeft, arrowRight } from "march/icons";
 import { HUBS } from "../topics.ts";
@@ -80,6 +81,15 @@ function Workspace(): unknown {
   const opening = signal<string | null>(null);
   let readyAt: ReturnType<typeof setTimeout> | undefined;
   const ready = (id: string): void => { if (opening.peek() === id) { clearTimeout(readyAt); opening.set(null); } };
+  // opening a page is one load for the global load listener (the corner mark turns): from the ide.json fetch until
+  // the workspace is ready with it, or fails
+  let endLoad: ((ok?: boolean) => void) | null = null
+  effect(() => {
+    const at = opening()
+    if (at !== null && !endLoad) endLoad = untrack(() => beginLoad({ kind: "file", key: `${at || "ide"}/ide.json` }))
+    else if (at === null && endLoad) { const st = untrack(status); endLoad(!(st && "error" in st)); endLoad = null }
+  })
+  onCleanup(() => { endLoad?.(); endLoad = null })
   effect(() => {
     const at = wanted();
     if (at === null || (Layout.peek() && at === shownId.peek())) return;
