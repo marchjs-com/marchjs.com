@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Sessiz döngü, önce poster; görünmüyorken durur, veri tasarrufu ve azaltılmış harekette yalnız poster.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "VideoBackgroundDemo.tsx",
+			"code": "export { VideoBackground } from \"march/landing\";\n"
+		},
+		{
+			"type": "code",
+			"name": "MoodSwitch.tsx",
+			"code": "import { VideoBackground } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// ruh hâli düğmesi: her basışta videonun üstündeki renk katmanı ve yazı değişir\nconst MOODS = [\n  { tint: \"dark\", text: \"Gece modu 🌙\" },\n  { tint: \"light\", text: \"Sabah serinliği ☀️\" },\n  { tint: \"brand\", text: \"Parti zamanı 🎉\" },\n] as const\n\nexport function MoodSwitch() {\n  let $mood = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button variant=\"secondary\" on:click={() => $mood = ($mood + 1) % MOODS.length}>Ruh hâlini değiştir</Button>\n    {() => {\n      const m = MOODS[$mood]!\n      return <VideoBackground src=\"/media/hadi-waves.webm\" poster=\"/media/hadi-waves.jpg\" tint={m.tint} tintOpacity={0.55}>\n        <div sx={{ p: 6, text: \"2xl\" }}><strong>{m.text}</strong></div>\n      </VideoBackground>\n    }}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "HotelHero.tsx",
+			"code": "import { VideoBackground } from \"march/landing\"\nimport { Button, toast } from \"march/ui\"\nimport { calendar } from \"march/icons\"\n\n// bir butik otelin açılış bölümü: arkada sessiz deniz videosu, önde başlık ve rezervasyon düğmesi;\n// veri tasarrufunda yalnız afiş görünür, köşedeki düğme videoyu durdurur\nexport function HotelHero() {\n  return <VideoBackground src=\"/media/hadi-waves.webm\" poster=\"/media/hadi-waves.jpg\" tint=\"dark\" tintOpacity={0.5} position=\"50% 40%\"\n    labels={{ play: \"Videoyu oynat\", pause: \"Videoyu durdur\" }}>\n    <div sx={{ flex: \"col\", gap: 3, p: 8 }} style={{ color: \"#fff\" }}>\n      <span sx={{ text: \"sm\" }}>BOZCAADA · 12 ODA</span>\n      <strong sx={{ text: \"2xl\" }}>Denize sıfır, kalabalıktan uzak</strong>\n      <span>Kahvaltı bağdan, akşam yemeği iskelede.</span>\n      <Button icon={calendar} on:click={() => toast(\"Uygun tarihler gösteriliyor\")}>Tarih seç</Button>\n    </div>\n  </VideoBackground>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "VideoBackgroundLab.tsx",
+			"code": "import { VideoBackground } from \"march/landing\"\nimport { Segmented, Toggle, Card, Button } from \"march/ui\"\nimport { play, pause } from \"march/icons\"\n\n// VideoBackground'un bütün özellikleri bir arada: video (src), afiş (poster), renk katmanı ve gücü, videonun konumu,\n// durdur düğmesi, onun ikonları ve adları, sınıf ve üstteki içerik (children)\nconst TINTS = [{ value: \"dark\", label: \"koyu\" }, { value: \"light\", label: \"açık\" }, { value: \"brand\", label: \"marka\" }, { value: \"none\", label: \"yok\" }]\n\nexport function VideoBackgroundLab() {\n  let $tint = \"dark\"\n  let $strong = false\n  let $controls = true\n  let $top = false\n  let $likes = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Card>\n      <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n        <Segmented aria-label=\"Renk katmanı\" options={TINTS} bind:value={$tint} />\n        <Toggle label=\"Güçlü katman\" bind:value={$strong} />\n        <Toggle label=\"Durdur düğmesi\" bind:value={$controls} />\n        <Toggle label=\"Üstü göster\" bind:value={$top} />\n      </div>\n    </Card>\n    {() => {\n      // sinyaller burada okunur: değişince video katmanı yeniden çizilir\n      const tint = $tint, strong = $strong, controls = $controls, top = $top\n      return <VideoBackground class=\"lab-vbg\" src=\"/media/hadi-waves.webm\" poster=\"/media/hadi-waves.jpg\"\n        tint={tint as \"dark\"} tintOpacity={strong ? 0.85 : 0.4} position={top ? \"50% 0%\" : \"center\"}\n        controls={controls} icons={{ play, pause }} labels={{ play: \"Oynat\", pause: \"Durdur\" }}>\n        <div sx={{ flex: \"col\", gap: 2, p: 6 }}>\n          <strong sx={{ text: \"xl\" }}>Dalgaların üstünde</strong>\n          <Button size=\"sm\" on:click={() => $likes++}>Beğen ({$likes})</Button>\n        </div>\n      </VideoBackground>\n    }}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "VideoBackgroundLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { VideoBackgroundLab } from \"./VideoBackgroundLab.tsx\"\n\n// VideoBackgroundLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"kök sınıfı, koyu katman ve üstteki içerik\", () => {\n  const s = renderTest(() => <VideoBackgroundLab />)\n  const root = s.get(\".lab-vbg\")\n  expect(root?.classList.contains(\"m-vbg-tint-dark\")).toBeTruthy()\n  expect(s.get(\".lab-vbg .m-vbg-tint\")).not.toBe(null)\n  expect(s.find(\"Dalgaların üstünde\")).not.toBe(null)\n})\n\ntest(\"afiş hemen görünür\", () => {\n  const s = renderTest(() => <VideoBackgroundLab />)\n  expect(s.get(\".lab-vbg img\")?.getAttribute(\"src\")).toContain(\"hadi-waves.jpg\")\n})\n\ntest(\"katman yok: renk katmanı kalkar\", async () => {\n  const s = renderTest(() => <VideoBackgroundLab />)\n  await s.click(\"yok\")\n  expect(s.get(\".lab-vbg\")?.classList.contains(\"m-vbg-tint-none\")).toBeTruthy()\n  expect(s.get(\".lab-vbg .m-vbg-tint\")).toBe(null)\n})\n\ntest(\"içerik videonun üstünde tıklanır; durdur düğmesi kapanınca gider\", async () => {\n  const s = renderTest(() => <VideoBackgroundLab />)\n  await s.click(\"Beğen (0)\")\n  expect(s.find(\"Beğen (1)\")).not.toBe(null)\n  await s.click(\"Durdur düğmesi\")\n  expect(s.get(\".m-vbg-toggle\")).toBe(null)\n})\n"
+		}
+	]
+}

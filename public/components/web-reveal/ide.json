@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Solma, yükselme, baştan ya da sondan kayma (RTL'de aynalı), ölçek, bulanıklık, çevirme; sırayla ya da…",
+	"sources": [
+		{
+			"type": "code",
+			"name": "RevealDemo.tsx",
+			"code": "export { Reveal } from \"march/landing\";\n"
+		},
+		{
+			"type": "code",
+			"name": "EmojiParade.tsx",
+			"code": "import { Reveal } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\ntype RevealEffect = \"fade\" | \"up\" | \"down\" | \"start\" | \"end\" | \"scale\" | \"blur\" | \"flip\"\n\n// emoji geçidi: her basışta sıradaki efektle emojiler yeniden girer\nconst EFFECTS: RevealEffect[] = [\"up\", \"scale\", \"flip\", \"blur\", \"start\", \"down\"]\nconst EMOJI = [\"🍕\", \"🎈\", \"🚲\", \"🌵\", \"🎧\", \"🐙\"]\n\nexport function EmojiParade() {\n  let $round = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button variant=\"secondary\" on:click={() => $round = $round + 1}>Bir daha ({EFFECTS[$round % EFFECTS.length]})</Button>\n    {() => {\n      const effect = EFFECTS[$round % EFFECTS.length]\n      return <Reveal effect={effect} stagger={90} sx={{ flex: \"row\", gap: 3, text: \"2xl\" }}>\n        {EMOJI.map((e) => <span role=\"img\" aria-label=\"emoji\">{e}</span>)}\n      </Reveal>\n    }}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "WhyUs.tsx",
+			"code": "import { Reveal } from \"march/landing\"\nimport { Card } from \"march/ui\"\nimport { truck, shieldCheck, refresh, Icon } from \"march/icons\"\n\n// bir e-ticaret sitesinin \"neden biz\" bölümü: başlık önce, kartlar ardından aşağıdan birer birer gelir\nconst REASONS = [\n  { icon: truck, title: \"Ertesi gün kargo\", text: \"Saat 16.00'ya kadar verilen siparişler aynı gün yola çıkar.\" },\n  { icon: shieldCheck, title: \"Güvenli ödeme\", text: \"Kart bilgilerin bizde saklanmaz; 3D Secure ile öde.\" },\n  { icon: refresh, title: \"30 gün iade\", text: \"Beğenmezsen kargo ücreti ödemeden geri gönder.\" },\n]\n\nexport function WhyUs() {\n  return <section sx={{ flex: \"col\", gap: 4 }}>\n    <Reveal effect=\"fade\" self as=\"h2\" sx={{ text: \"xl\" }}>Neden bizden alışveriş?</Reveal>\n    <Reveal effect=\"up\" stagger={120} delay={150} sx={{ grid: \"fit\", gap: 3 }}>\n      {REASONS.map((r) => <Card>\n        <div sx={{ flex: \"col\", gap: 2 }}>\n          <Icon of={r.icon} />\n          <strong>{r.title}</strong>\n          <span sx={{ color: \"muted\" }}>{r.text}</span>\n        </div>\n      </Card>)}\n    </Reveal>\n  </section>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "RevealLab.tsx",
+			"code": "import { Reveal } from \"march/landing\"\nimport { Segmented, Toggle, Card, Button } from \"march/ui\"\n\n// Reveal'in bütün özellikleri bir arada: efekt (hazır, kendi kareleriniz ya da \"none\"), yumuşatma, ardışık gecikme,\n// gecikme, süre, uzaklık, kaydırmaya bağlılık (scrub), kendisi (self), seçici (select), etiket (as), sınıf,\n// ek nitelikler (aria-label…) ve içerik (children)\ntype RevealEffect = \"fade\" | \"up\" | \"down\" | \"start\" | \"end\" | \"scale\" | \"blur\" | \"flip\"\nconst EFFECTS = [\n  { value: \"up\", label: \"yukarı\" }, { value: \"start\", label: \"baştan\" }, { value: \"flip\", label: \"çevirme\" },\n  { value: \"own\", label: \"dönerek\" }, { value: \"none\", label: \"yok\" },\n]\n// kendi başlangıç ve bitiş karelerimiz\nconst SPIN = { from: { opacity: 0, transform: \"rotate(-12deg) scale(.7)\" }, to: { opacity: 1, transform: \"rotate(0deg) scale(1)\" } }\n\nconst Tile = (p: { n: number }) => <Card class=\"lab-card\">\n  <div sx={{ flex: \"col\", gap: 1 }}><strong>Kart {p.n}</strong><span sx={{ color: \"muted\" }}>sırayla girer</span></div>\n</Card>\n\nexport function RevealLab() {\n  let $effect = \"up\"\n  let $scrub = false\n  let $self = false\n  let $count = 3\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Card>\n      <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n        <Segmented aria-label=\"Efekt\" options={EFFECTS} bind:value={$effect} />\n        <Toggle label=\"Kaydırmaya bağlı\" bind:value={$scrub} />\n        <Toggle label=\"Bütün blok birden\" bind:value={$self} />\n        <Button size=\"sm\" variant=\"secondary\" on:click={() => $count = $count + 1}>Kart ekle</Button>\n      </div>\n    </Card>\n    {() => {\n      // sinyaller burada okunur: değişince blok yeniden çizilir ve girişi yeniden oynar\n      const effect = $effect, scrub = $scrub, self = $self, n = $count\n      return <Reveal as=\"section\" class=\"lab-reveal\" aria-label=\"Açılan kartlar\"\n        effect={effect === \"own\" ? SPIN : effect as RevealEffect | \"none\"} easing=\"spring\" stagger={90} delay={60}\n        duration={640} distance={40} scrub={scrub} self={self} select=\".lab-card\">\n        <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n          {Array.from({ length: n }, (_, i) => <Tile n={i + 1} />)}\n        </div>\n      </Reveal>\n    }}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "RevealLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { RevealLab } from \"./RevealLab.tsx\"\n\n// RevealLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"sarmalayıcı bir section: sınıfı ve adı yerinde\", () => {\n  const s = renderTest(() => <RevealLab />)\n  const box = s.get(\"section.lab-reveal\")\n  expect(box).not.toBe(null)\n  expect(box?.getAttribute(\"aria-label\")).toBe(\"Açılan kartlar\")\n  expect(box?.classList.contains(\"m-reveal\")).toBeTruthy()\n})\n\ntest(\"seçiciye uyan kartlar sıraya girer (m-reveal-item)\", () => {\n  const s = renderTest(() => <RevealLab />)\n  expect(s.all(\".lab-card.m-reveal-item\").length).toBe(3)\n})\n\ntest(\"Kart ekle: dördüncü kart gelir\", async () => {\n  const s = renderTest(() => <RevealLab />)\n  await s.click(\"Kart ekle\")\n  expect(s.all(\".lab-card\").length).toBe(4)\n})\n\ntest(\"efekt yok: içerik hemen görünür, bekleyen bir şey kalmaz\", async () => {\n  const s = renderTest(() => <RevealLab />)\n  await s.click(\"yok\")\n  const box = s.get(\".lab-reveal\")\n  expect(box?.classList.contains(\"is-revealed\")).toBeTruthy()\n  expect(box?.classList.contains(\"is-pending\")).toBeFalsy()\n})\n"
+		}
+	]
+}

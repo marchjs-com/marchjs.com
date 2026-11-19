@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Sayfanın ya da bir makalenin ne kadarının okunduğunu gösteren ince çubuk.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "ScrollProgressDemo.tsx",
+			"code": "export { ScrollProgress } from \"march/landing\";\n"
+		},
+		{
+			"type": "code",
+			"name": "ThickBar.tsx",
+			"code": "import { ScrollProgress } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// kalınlık oyunu: her basışta çubuk kalınlaşır ve rengi değişir; 12 px'ten sonra başa döner\nconst COLORS = [\"brand-orange\", \"brand-purple\", \"brand-blue\", \"brand-green\"] as const\n\nexport function ThickBar() {\n  let $size = 3\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button variant=\"secondary\" on:click={() => $size = $size >= 12 ? 3 : $size + 3}>Kalınlaştır ({$size} px)</Button>\n    {() => {\n      const size = $size\n      return <ScrollProgress position=\"inline\" size={size} color={COLORS[(size / 3 - 1) % COLORS.length]} label={`${size} piksellik çubuk`} />\n    }}\n    <p sx={{ color: \"muted\" }}>Sayfayı kaydır: çubuk okunan kısmı gösterir.</p>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ArticleProgress.tsx",
+			"code": "import { ScrollProgress } from \"march/landing\"\nimport { Card } from \"march/ui\"\n\n// bir blog yazısı: başlığın altındaki çubuk yalnız bu yazının ne kadarının okunduğunu ölçer\nconst PARAGRAPHS = [\n  \"Kahveyi demlemeden önce suyu 92 dereceye getir; kaynar su çekirdeği yakar.\",\n  \"Öğütme boyu demleme süresini belirler: filtre için orta, espresso için ince.\",\n  \"Oran: 15 gram kahveye 250 mililitre su. Terazi, göz kararından iyidir.\",\n  \"İlk 30 saniye kahveyi az suyla ıslat; gaz çıkınca tadı daha temiz olur.\",\n]\n\nexport function ArticleProgress() {\n  let article: Element | null = null\n  return <Card>\n    <article ref={(el: Element) => { article = el }} sx={{ flex: \"col\", gap: 3 }}>\n      <h2 sx={{ text: \"xl\" }}>Evde iyi filtre kahve</h2>\n      <ScrollProgress target={() => article} position=\"inline\" paint=\"accent\" label=\"Yazının okunan kısmı\" />\n      {PARAGRAPHS.map((t) => <p>{t}</p>)}\n      <p sx={{ color: \"muted\", text: \"sm\" }}>Okuma süresi: 2 dakika</p>\n    </article>\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ScrollProgressLab.tsx",
+			"code": "import { ScrollProgress } from \"march/landing\"\nimport { Segmented, Toggle, Card } from \"march/ui\"\n\n// ScrollProgress'in bütün özellikleri bir arada: ölçülen öğe (target), yer (fixed / inline), boya (gradient / accent),\n// kalınlık, renk, erişilebilir ad ve sınıf\nconst PAINTS = [{ value: \"gradient\", label: \"gradyan\" }, { value: \"accent\", label: \"vurgu\" }]\nconst COLORS = [{ value: \"none\", label: \"boyaya göre\" }, { value: \"brand-orange\", label: \"turuncu\" }, { value: \"success\", label: \"yeşil\" }]\n\nexport function ScrollProgressLab() {\n  let $paint = \"gradient\"\n  let $color = \"none\"\n  let $fixed = false\n  let $thick = false\n  let $own = false\n  let box: Element | null = null\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Card>\n      <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n        <Segmented aria-label=\"Boya\" options={PAINTS} bind:value={$paint} />\n        <Segmented aria-label=\"Renk\" options={COLORS} bind:value={$color} />\n        <Toggle label=\"Sayfanın üstüne sabitle\" bind:value={$fixed} />\n        <Toggle label=\"Kalın\" bind:value={$thick} />\n        <Toggle label=\"Yalnız bu kutuyu ölç\" bind:value={$own} />\n      </div>\n    </Card>\n    <Card>\n      <div ref={(el: Element) => { box = el }} sx={{ flex: \"col\", gap: 2 }}>\n        {() => {\n          // sinyaller burada okunur: değişince çubuk yeniden çizilir\n          const fixed = $fixed, paint = $paint, thick = $thick, color = $color, own = $own\n          return <ScrollProgress class=\"lab-progress\" position={fixed ? \"fixed\" : \"inline\"} paint={paint as \"gradient\"}\n            size={thick ? 10 : 4} color={color === \"none\" ? undefined : color as \"success\"}\n            target={own ? () => box : undefined} label={own ? \"Kutunun okunan kısmı\" : \"Sayfanın okunan kısmı\"} />\n        }}\n        <p>Çubuk, sayfa (ya da bu kutu) kaydıkça dolar.</p>\n        <p sx={{ color: \"muted\" }}>Yardımcı teknolojiler yüzdeyi değer olarak okur.</p>\n      </div>\n    </Card>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ScrollProgressLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { ScrollProgressLab } from \"./ScrollProgressLab.tsx\"\n\n// ScrollProgressLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"bir ilerleme çubuğu: adı ve 0–100 aralığı var\", () => {\n  const s = renderTest(() => <ScrollProgressLab />)\n  const bar = s.get('.lab-progress [role=\"progressbar\"]')\n  expect(bar?.getAttribute(\"aria-label\")).toBe(\"Sayfanın okunan kısmı\")\n  expect(bar?.getAttribute(\"aria-valuemin\")).toBe(\"0\")\n})\n\ntest(\"satır içinde ve gradyan boyayla başlar; vurguya geçer\", async () => {\n  const s = renderTest(() => <ScrollProgressLab />)\n  expect(s.get(\".m-scroll-progress-inline.m-scroll-progress-gradient\")).not.toBe(null)\n  await s.click(\"vurgu\")\n  expect(s.get(\".m-scroll-progress-accent\")).not.toBe(null)\n})\n\ntest(\"sabitleme anahtarı çubuğu sayfanın üstüne taşır\", async () => {\n  const s = renderTest(() => <ScrollProgressLab />)\n  await s.click(s.all('[role=\"switch\"]')[0]!)\n  expect(s.get(\".m-scroll-progress-fixed\")).not.toBe(null)\n  expect(s.get(\".m-scroll-progress-inline\")).toBe(null)\n})\n\ntest(\"kutuyu ölçerken adı değişir\", async () => {\n  const s = renderTest(() => <ScrollProgressLab />)\n  await s.click(s.all('[role=\"switch\"]')[2]!)\n  expect(s.get('.lab-progress [role=\"progressbar\"]')?.getAttribute(\"aria-label\")).toBe(\"Kutunun okunan kısmı\")\n})\n"
+		}
+	]
+}

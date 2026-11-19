@@ -553,7 +553,9 @@ function propsOf(opts: readonly PlaygroundOption[], v: Record<string, unknown>, 
     // an icon given to a prop that is not named so (spinner): "icon:name", which the runtime turns into the icon
     // an icon of a pack ("lucide:arrow-left"): the icon itself (its pack was loaded by the picker that chose it)
     // a data prop written as JSON (kind "json": Tree's nodes, Timeline's items): its parsed value; text that does not parse is left out
-    const x = o.toProp ? o.toProp(cur, v as never) : o.kind === "json" ? jsonOf(cur) : isIcon(o) ? (typeof cur === "string" && cur.includes(":") ? packRef(cur) : typeof cur === "string" && cur && !/icon/i.test(prop) ? `icon:${cur}` : cur) : o.toCode ? fromCode(o, cur, v) : cur
+    // an icon-named option whose card writes "no icon" / "default" as code (Pricing's featureIcon off → {false}): that value
+    const noIcon = isIcon(o) && !!o.toCode && /^(null|\{(true|false)\})$/.test(String(codeOf(o, cur, v)))
+    const x = o.toProp ? o.toProp(cur, v as never) : o.kind === "json" ? jsonOf(cur) : isIcon(o) && !noIcon ? (typeof cur === "string" && cur.includes(":") ? packRef(cur) : typeof cur === "string" && cur && !/icon/i.test(prop) ? `icon:${cur}` : cur) : o.toCode ? fromCode(o, cur, v) : cur
     // a yes / no that is on by default and turned off: false is the choice (animated, dividers…), not "unset"
     if (x === undefined) continue
     if (o.key === "html:data") { delete out[prop]; for (const [k, d] of Object.entries(x as Record<string, unknown>)) out[`data-${k}`] = d; continue }

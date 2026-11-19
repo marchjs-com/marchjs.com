@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Eşit hücreli ızgara ya da sonsuz kayan şerit.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "LogoCloudDemo.tsx",
+			"code": "export { LogoCloud } from \"march/landing\";\n"
+		},
+		{
+			"type": "code",
+			"name": "EmojiParade.tsx",
+			"code": "import { LogoCloud } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// emoji geçit töreni: kayan şeritte meyveler; düğmeler hızı değiştirir\nconst FRUITS = [\"🍎\", \"🍌\", \"🍇\", \"🍉\", \"🍓\", \"🥝\", \"🍍\", \"🥥\"]\nconst NAMES = [\"Elma\", \"Muz\", \"Üzüm\", \"Karpuz\", \"Çilek\", \"Kivi\", \"Ananas\", \"Hindistan cevizi\"]\n\nexport function EmojiParade() {\n  let $speed = 40\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n      <Button variant=\"secondary\" on:click={() => $speed = Math.max(10, $speed - 20)}>Yavaşla</Button>\n      <strong>{`${$speed} px/sn`}</strong>\n      <Button variant=\"secondary\" on:click={() => $speed = Math.min(160, $speed + 20)}>Hızlan</Button>\n    </div>\n    {() => {\n      const speed = $speed\n      return <LogoCloud variant=\"marquee\" mono={false} speed={speed} title=\"Meyve geçidi\"\n      logos={FRUITS.map((f, i) => ({ name: NAMES[i]!, node: <span sx={{ text: \"2xl\" }}>{f}</span> }))} />\n    }}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "CafePartners.tsx",
+			"code": "import { LogoCloud } from \"march/landing\"\n\n// bir kahve markasının \"bizi tercih edenler\" şeridi: yazı logoları ızgarada, üzerine gelince renklenir\nconst Wordmark = (p: { name: string; color: \"brand-orange\" | \"brand-blue\" | \"brand-green\" | \"brand-purple\" | \"brand-gold\" | \"brand-pink\" }) =>\n  <span sx={{ text: [\"lg\", \"bold\"], color: p.color }}>{p.name}</span>\n\nexport function CafePartners() {\n  return <LogoCloud title=\"Çekirdeklerimiz bu kafelerde demleniyor\" reveal=\"up\" logos={[\n    { name: \"Moda Kahve\", node: <Wordmark name=\"Moda Kahve\" color=\"brand-orange\" /> },\n    { name: \"Kuzguncuk Fırın\", node: <Wordmark name=\"Kuzguncuk Fırın\" color=\"brand-gold\" /> },\n    { name: \"Üç Çatal\", node: <Wordmark name=\"Üç Çatal\" color=\"brand-green\" /> },\n    { name: \"Mavi Kapı\", node: <Wordmark name=\"Mavi Kapı\" color=\"brand-blue\" /> },\n    { name: \"Lale Büfe\", node: <Wordmark name=\"Lale Büfe\" color=\"brand-pink\" /> },\n    { name: \"Gece Kuşu\", node: <Wordmark name=\"Gece Kuşu\" color=\"brand-purple\" /> },\n  ]} />\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "LogoCloudLab.tsx",
+			"code": "import { LogoCloud } from \"march/landing\"\nimport { Card, Segmented, Toggle } from \"march/ui\"\n\n// LogoCloud'un bütün özellikleri bir arada: logolar (name, src, width, height, node, href), görünüm (variant),\n// başlık (title), tek ton (mono), hız (speed), giriş hareketi (reveal) ve sınıf (class)\nconst Dot = (p: { fill: string; label: string }) => <svg width=\"96\" height=\"28\" viewBox=\"0 0 96 28\" aria-hidden=\"true\">\n  <circle cx=\"14\" cy=\"14\" r=\"10\" fill={p.fill} /><text x=\"30\" y=\"19\" font-size=\"13\" fill=\"currentColor\">{p.label}</text>\n</svg>\n\nexport function LogoCloudLab() {\n  let $variant: \"grid\" | \"marquee\" = \"grid\"\n  let $mono = true\n  let $count = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Card>\n      <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n        <Segmented aria-label=\"Görünüm\" options={[{ value: \"grid\", label: \"grid\" }, { value: \"marquee\", label: \"marquee\" }]} bind:value={$variant} />\n        <Toggle label=\"Tek ton\" bind:value={$mono} />\n      </div>\n    </Card>\n    {() => {\n      // bu satırda okunan durumlar değişince bulut yeniden çizilir; başlık bir işlev, kendisi güncellenir\n      const variant = $variant, mono = $mono\n      return <LogoCloud variant={variant} mono={mono} speed={30} reveal=\"none\" class=\"lab-logos\"\n      title={() => `Bize güvenen ${4 + $count} ekip`}\n      logos={[\n        { name: \"Dalga\", src: \"/media/hadi-waves.jpg\", width: 96, height: 28 },\n        { name: \"Turuncu\", node: <Dot fill=\"#ff7a59\" label=\"Turuncu\" />, href: \"#turuncu\" },\n        { name: \"Mor\", node: <Dot fill=\"#7c5cff\" label=\"Mor\" /> },\n        { name: \"Mavi\", node: <Dot fill=\"#2bb8ff\" label=\"Mavi\" /> },\n      ]} />\n    }}\n    <button type=\"button\" on:click={() => $count++}>Ekip ekle</button>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "LogoCloudLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { LogoCloudLab } from \"./LogoCloudLab.tsx\"\n\n// LogoCloudLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"ızgarada dört hücre, başlık ve tek ton\", () => {\n  const s = renderTest(() => <LogoCloudLab />)\n  expect(s.all(\".lab-logos .m-logos-cell\").length).toBe(4)\n  expect(s.get(\".m-logos-title\")?.textContent).toBe(\"Bize güvenen 4 ekip\")\n  expect(s.get(\".lab-logos\")?.classList.contains(\"is-mono\")).toBe(true)\n})\n\ntest(\"resimli logonun alt metni, bağlantılı logonun adı var\", () => {\n  const s = renderTest(() => <LogoCloudLab />)\n  expect(s.get('.lab-logos img[alt=\"Dalga\"]')).not.toBe(null)\n  expect(s.get('.lab-logos a[href=\"#turuncu\"]')?.getAttribute(\"aria-label\")).toBe(\"Turuncu\")\n})\n\ntest(\"başlık bir işlev: düğmeyle değişir\", async () => {\n  const s = renderTest(() => <LogoCloudLab />)\n  await s.click(\"Ekip ekle\")\n  expect(s.get(\".m-logos-title\")?.textContent).toBe(\"Bize güvenen 5 ekip\")\n})\n\ntest(\"marquee'ye geçince şerit gelir; tek ton kapanır\", async () => {\n  const s = renderTest(() => <LogoCloudLab />)\n  await s.click(\"marquee\")\n  await s.click(\"Tek ton\")\n  expect(s.get(\".lab-logos .m-logos-marquee\")).not.toBe(null)\n  expect(s.get(\".lab-logos\")?.classList.contains(\"is-mono\")).toBe(false)\n})\n"
+		}
+	]
+}

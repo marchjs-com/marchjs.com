@@ -180,6 +180,8 @@ const MODULES: Record<string, unknown> = { "march": traced, "march/testing": tes
 type PackJson = { vb: string; sw?: number; fill?: boolean; icons: [name: string, exp: string, d: string[], flags?: number, eo?: number[]][] };
 const packLoads = new Map<string, Promise<void>>();
 async function loadPacks(code: string): Promise<void> {
+  // march/landing is not in the ui barrel (its own lazy chunk): loaded once, when the code imports it
+  if (!MODULES["march/landing"] && /["']march\/landing["']/.test(code)) MODULES["march/landing"] = await import("../../../../src/components/landing/index.ts");
   const ids = [...new Set([...code.matchAll(/from\s*["']march\/icons\/([a-z][a-z0-9-]*)["']/g)].map((m) => m[1]!))]
     .filter((id) => !(`march/icons/${id}` in MODULES) && !["packs", "catalog", "pack-paint"].includes(id));
   await Promise.all(ids.map((id) => {
@@ -294,7 +296,7 @@ const draw = (C: Comp, el: HTMLElement, props: Props, parts: Parts, cell = ""): 
   const own = resolve(rest);
   // m:parts: the components by themselves (this runtime's ui), each with its props
   const map = new Map<unknown, Record<string, unknown>>();
-  for (const [name, p] of Object.entries(parts)) { const comp = (ui as Record<string, unknown>)[name]; if (typeof comp === "function" && Object.keys(p).length) map.set(comp, resolve(p)); }
+  for (const [name, p] of Object.entries(parts)) { const comp = (ui as Record<string, unknown>)[name] ?? (MODULES["march/landing"] as Record<string, unknown> | undefined)?.[name]; if (typeof comp === "function" && Object.keys(p).length) map.set(comp, resolve(p)); }
   const bare = (): unknown => (children === undefined || children === "" ? core.h(C, own) : core.h(C, own, children));
   const make = (): unknown => (Object.keys(common).length ? mProps(bare(), common) : bare());
   // the cell is the root of its instances' keys (Hierarchy): counted afresh on every draw, so a key stays the same

@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Sayfa aşağı kayarken paneller yana akar; dokunmatikte ve azaltılmış harekette yerel yatay kaydırıcı.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "HorizontalScrollDemo.tsx",
+			"code": "export { HorizontalScroll } from \"march/landing\";\n"
+		},
+		{
+			"type": "code",
+			"name": "ColorStrip.tsx",
+			"code": "import { HorizontalScroll } from \"march/landing\"\nimport { Button } from \"march/ui\"\nimport { plus } from \"march/icons\"\n\n// renk şeridi: her basışta yeni bir renk paneli eklenir, şerit yana kayarak uzar (sabitlenmeden, yerel kaydırma)\nconst COLORS = [\"#ff7a59\", \"#ffb347\", \"#7c5cff\", \"#2bb8ff\", \"#3ecf8e\", \"#ff5fa2\"]\n\nconst Swatch = (p: { color: string; n: number }) =>\n  <div style={{ background: p.color, color: \"#fff\", \"min-height\": \"9rem\", \"border-radius\": \"1rem\", padding: \"1rem\" }}>\n    <strong sx={{ text: \"xl\" }}>{String(p.n).padStart(2, \"0\")}</strong>\n    <p>{p.color}</p>\n  </div>\n\nexport function ColorStrip() {\n  let $count = 3\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button icon={plus} on:click={() => $count = $count + 1}>Renk ekle ({$count})</Button>\n    {() => {\n      const n = $count\n      return <HorizontalScroll pinned={false} panel=\"10rem\" label=\"Renk şeridi\">\n        {Array.from({ length: n }, (_, i) => <Swatch color={COLORS[i % COLORS.length]!} n={i + 1} />)}\n      </HorizontalScroll>\n    }}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "CaseStudies.tsx",
+			"code": "import { HorizontalScroll } from \"march/landing\"\nimport { Card, Badge } from \"march/ui\"\n\n// bir ajansın vaka çalışmaları: sayfa aşağı kayarken işler yana akar, altta ilerleme çizgisi\nconst CASES = [\n  { tag: \"Marka\", title: \"Kadıköy Fırını\", text: \"Yeni logo, ambalaj ve vitrin. Satışlar ilk ayda %18 arttı.\" },\n  { tag: \"Uygulama\", title: \"Bisiklet Paylaş\", text: \"Kiralama süresi 90 saniyeden 20 saniyeye indi.\" },\n  { tag: \"Web\", title: \"Ege Zeytinyağı\", text: \"Yeni mağaza: mobilde sepet terk oranı yarıya düştü.\" },\n  { tag: \"Kampanya\", title: \"Kitap Haftası\", text: \"Üç günde 40 bin ziyaret, 6 bin yeni üye.\" },\n]\n\nconst CaseCard = (p: { tag: string; title: string; text: string }) => <Card>\n  <div sx={{ flex: \"col\", gap: 2 }}>\n    <Badge>{p.tag}</Badge>\n    <h3 sx={{ text: \"xl\" }}>{p.title}</h3>\n    <p sx={{ color: \"muted\" }}>{p.text}</p>\n  </div>\n</Card>\n\nexport function CaseStudies() {\n  return <HorizontalScroll label=\"Vaka çalışmaları\" panel=\"22rem\">\n    {CASES.map((c) => <CaseCard {...c} />)}\n  </HorizontalScroll>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "HorizontalScrollLab.tsx",
+			"code": "import { HorizontalScroll } from \"march/landing\"\nimport { Segmented, Toggle, Card, Button } from \"march/ui\"\n\n// HorizontalScroll'un bütün özellikleri bir arada: panel genişliği, bölge adı, ilerleme çizgisi, sabitleme,\n// sınıf ve içerik (children: paneller)\nconst WIDTHS = [{ value: \"14rem\", label: \"dar\" }, { value: \"22rem\", label: \"orta\" }, { value: \"34rem\", label: \"geniş\" }]\n\nconst Panel = (p: { n: number }) => <Card m:theme={p.n % 2 ? \"night\" : undefined}>\n  <div sx={{ flex: \"col\", gap: 1 }} style={{ \"min-height\": \"8rem\" }}>\n    <strong sx={{ text: \"2xl\" }}>{String(p.n).padStart(2, \"0\")}</strong>\n    <span sx={{ color: \"muted\" }}>Panel {p.n}</span>\n  </div>\n</Card>\n\nexport function HorizontalScrollLab() {\n  let $panel = \"22rem\"\n  let $pinned = true\n  let $progress = true\n  let $count = 5\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Card>\n      <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n        <Segmented aria-label=\"Panel genişliği\" options={WIDTHS} bind:value={$panel} />\n        <Toggle label=\"Sabitle\" bind:value={$pinned} />\n        <Toggle label=\"İlerleme çizgisi\" bind:value={$progress} />\n        <Button size=\"sm\" variant=\"secondary\" on:click={() => $count = $count + 1}>Panel ekle</Button>\n      </div>\n    </Card>\n    {() => {\n      // sinyaller burada okunur: değişince şerit yeniden çizilir\n      const panel = $panel, pinned = $pinned, progress = $progress, n = $count\n      return <HorizontalScroll class=\"lab-hs\" label={`${n} panelli şerit`} panel={panel} pinned={pinned} progress={progress}>\n        {Array.from({ length: n }, (_, i) => <Panel n={i + 1} />)}\n      </HorizontalScroll>\n    }}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "HorizontalScrollLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { HorizontalScrollLab } from \"./HorizontalScrollLab.tsx\"\n\n// HorizontalScrollLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"bölge adını taşır, beş panel ve kendi sınıfı var\", () => {\n  const s = renderTest(() => <HorizontalScrollLab />)\n  const region = s.get(\".m-hs\")\n  expect(region?.getAttribute(\"aria-label\")).toBe(\"5 panelli şerit\")\n  expect(region?.classList.contains(\"lab-hs\")).toBeTruthy()\n  expect(s.all(\".m-hs-track > *\").length).toBe(5)\n})\n\ntest(\"Panel ekle: altıncı panel gelir, ad da güncellenir\", async () => {\n  const s = renderTest(() => <HorizontalScrollLab />)\n  await s.click(\"Panel ekle\")\n  expect(s.all(\".m-hs-track > *\").length).toBe(6)\n  expect(s.get(\".m-hs\")?.getAttribute(\"aria-label\")).toBe(\"6 panelli şerit\")\n})\n\ntest(\"ilerleme çizgisi anahtarla kapanır\", async () => {\n  const s = renderTest(() => <HorizontalScrollLab />)\n  expect(s.get(\".m-hs-bar\")).not.toBe(null)\n  await s.click(s.all('[role=\"switch\"]')[1]!)\n  expect(s.get(\".m-hs-bar\")).toBe(null)\n})\n\ntest(\"sabitleme kapanınca yerel kaydırıcı olur; panel genişliği bir değişkende\", async () => {\n  const s = renderTest(() => <HorizontalScrollLab />)\n  await s.click(s.all('[role=\"switch\"]')[0]!)\n  await s.flush()\n  expect(s.get(\".m-hs\")?.classList.contains(\"is-native\")).toBeTruthy()\n  expect((s.get(\".m-hs\") as HTMLElement).style.getPropertyValue(\"--m-hs-panel\")).toBe(\"22rem\")\n})\n"
+		}
+	]
+}

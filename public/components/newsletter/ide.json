@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Doğrulama, bekleme düğmesi, başarıda beliren onay, hatada sallanan alan ve okunan ileti.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "NewsletterDemo.tsx",
+			"code": "export { Newsletter } from \"march/landing\";\n"
+		},
+		{
+			"type": "code",
+			"name": "SecretClub.tsx",
+			"code": "import { Newsletter } from \"march/landing\"\nimport { Card } from \"march/ui\"\n\n// gizli kulüp: e-postanı bırakınca üye sayısı artar, onayda tik yerine bir anahtar emojisi belirir\nconst Key = () => <span aria-hidden=\"true\">🗝️</span>\n\nexport function SecretClub() {\n  let $members = 41\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: \"col\", gap: 2 }}>\n      <span sx={{ color: \"muted\", text: \"sm\" }}>{$members} üye</span>\n      <Newsletter layout=\"stacked\" title=\"Gizli kulüp\" lead=\"Şifreyi yalnız e-postayla söylüyoruz.\"\n        button=\"Kapıyı çal\" done=\"İçeridesin. Şifre gelen kutunda.\" doneIcon={<Key /> as Node}\n        onSubmit={() => { $members++ }} />\n    </div>\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "BookstoreBulletin.tsx",
+			"code": "import { Newsletter } from \"march/landing\"\n\n// bir kitapçının bülteni: sunucu 600 ms sonra yanıt verir (bu sırada düğme dönen simgesini gösterir);\n// zaten kayıtlı adres hata olarak okunur\nconst kayitli = new Set([\"okur@ornek.com\"])\nconst kaydet = (email: string) => new Promise((ok, no) => setTimeout(() => {\n  if (kayitli.has(email)) no(new Error(\"Bu adres zaten bültende.\"))\n  else { kayitli.add(email); ok(true) }\n}, 600))\n\nexport function BookstoreBulletin() {\n  return <Newsletter title=\"Haftanın kitapları\" lead=\"Her cuma beş yeni kitap, bir de söyleşi daveti.\"\n    placeholder=\"okur@ornek.com\" button=\"Abone ol\" note=\"Ayrılmak tek tık. Adresini kimseyle paylaşmayız.\"\n    done=\"Teşekkürler! İlk bülten cuma sabahı gelecek.\" onSubmit={kaydet} />\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "NewsletterLab.tsx",
+			"code": "import { Newsletter } from \"march/landing\"\nimport { Toggle, Card } from \"march/ui\"\nimport { heart, Icon } from \"march/icons\"\n\n// Newsletter'ın bütün özellikleri bir arada: gönderme (onSubmit: başarı ya da hata), başlık, açıklama, yer tutucu,\n// düğme metni, not, teşekkür satırı, düzen, kendi metinler (labels), onay simgesi, hareket ve sınıf\nexport function NewsletterLab() {\n  let $stacked = false\n  let $fail = false\n  let $motion = false\n  let $ownIcon = false\n  let $count = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Card>\n      <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n        <Toggle label=\"Alt alta\" bind:value={$stacked} />\n        <Toggle label=\"Sunucu hatası\" bind:value={$fail} />\n        <Toggle label=\"Hareket\" bind:value={$motion} />\n        <Toggle label=\"Kalp simgesi\" bind:value={$ownIcon} />\n      </div>\n      <p sx={{ color: \"muted\" }}>{$count} abone</p>\n    </Card>\n    {() => {\n      // sinyaller burada okunur: değişince form yeniden çizilir\n      const stacked = $stacked, fail = $fail, motion = $motion, ownIcon = $ownIcon\n      return <Newsletter class=\"lab-nl\" layout={stacked ? \"stacked\" : \"inline\"} motion={motion}\n        title=\"Haberdar ol\" lead=\"Ayda bir e-posta.\" placeholder=\"adın@ornek.com\" button=\"Kaydol\"\n        note=\"İstediğin an ayrılabilirsin.\" done=\"Görüşmek üzere!\"\n        doneIcon={ownIcon ? <Icon of={heart} /> as Node : true}\n        labels={{ email: \"E-posta adresin\", invalid: \"Geçerli bir adres yaz.\", error: \"Bir sorun çıktı.\" }}\n        onSubmit={() => { if (fail) throw new Error(\"\"); $count++ }} />\n    }}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "NewsletterLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { NewsletterLab } from \"./NewsletterLab.tsx\"\n\n// NewsletterLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"başlık, açıklama, not, yer tutucu ve düğme metni\", () => {\n  const s = renderTest(() => <NewsletterLab />)\n  expect(s.find(\"Haberdar ol\")).not.toBe(null)\n  expect(s.find(\"İstediğin an ayrılabilirsin.\")).not.toBe(null)\n  expect(s.get('.lab-nl input[type=\"email\"]')?.getAttribute(\"placeholder\")).toBe(\"adın@ornek.com\")\n  expect(s.find(\"Kaydol\")).not.toBe(null)\n})\n\ntest(\"geçersiz adres: kendi hata metni okunur\", async () => {\n  const s = renderTest(() => <NewsletterLab />)\n  await s.type(\"E-posta adresin\", \"abc\")\n  await s.click(\"Kaydol\")\n  await s.wait(() => s.sees(\"Geçerli bir adres yaz.\"))\n  expect(s.sees(\"Geçerli bir adres yaz.\")).toBeTruthy()\n})\n\ntest(\"geçerli adres: teşekkür satırı ve sayaç\", async () => {\n  const s = renderTest(() => <NewsletterLab />)\n  await s.type(\"E-posta adresin\", \"ali@ornek.com\")\n  await s.click(\"Kaydol\")\n  await s.wait(() => s.sees(\"Görüşmek üzere!\"))\n  expect(s.get('.lab-nl [role=\"status\"]')?.textContent).toContain(\"Görüşmek üzere!\")\n  expect(s.find(\"1 abone\")).not.toBe(null)\n})\n\ntest(\"sunucu hatası: genel hata metni, form yerinde kalır\", async () => {\n  const s = renderTest(() => <NewsletterLab />)\n  await s.click(\"Sunucu hatası\")\n  await s.type(\"E-posta adresin\", \"ali@ornek.com\")\n  await s.click(\"Kaydol\")\n  await s.wait(() => s.sees(\"Bir sorun çıktı.\"))\n  expect(s.get(\".lab-nl form\")).not.toBe(null)\n})\n"
+		}
+	]
+}

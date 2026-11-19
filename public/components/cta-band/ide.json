@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Sayfa sonundaki çağrı paneli: gradyan, ağ, cam, sade ya da video arka plan; imleç ışığı.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "CtaBandDemo.tsx",
+			"code": "export { CtaBand } from \"march/landing\";\n"
+		},
+		{
+			"type": "code",
+			"name": "HighFive.tsx",
+			"code": "import { CtaBand } from \"march/landing\"\n\n// beşlik bandı: her basışta sayaç artar, başlık ve not kendiliğinden güncellenir (title ve note işlev olabilir)\nexport function HighFive() {\n  let $fives = 0\n  return <CtaBand variant=\"mesh\" reveal=\"none\"\n    title={() => ($fives ? `${$fives} beşlik çakıldı ✋` : \"Bir beşlik çak!\")}\n    lead=\"Gün boyu iyi iş çıkardın.\"\n    actions={[{ label: \"✋ Çak\", onClick: () => $fives++ }]}\n    note={() => ($fives >= 5 ? \"Efsane oldun 🏆\" : `Efsaneye ${5 - $fives} kaldı`)} />\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "GymTrial.tsx",
+			"code": "import { CtaBand } from \"march/landing\"\nimport { toast } from \"march/ui\"\nimport { arrowRight, phone } from \"march/icons\"\n\n// bir spor salonunun sayfa sonu çağrısı: ilk ay ücretsiz deneme ve telefonla bilgi\nexport function GymTrial() {\n  return <CtaBand variant=\"gradient\" title=\"İlk ay bizden\"\n    lead=\"Ekipman, grup dersleri ve havuz dahil. Sözleşme yok, istediğin an bırak.\"\n    actions={[\n      { label: \"Ücretsiz dene\", iconEnd: arrowRight, onClick: () => toast(\"Deneme üyeliğin oluşturuldu\") },\n      { label: \"Bizi ara\", icon: phone, href: \"tel:+902120000000\", variant: \"secondary\" },\n    ]}\n    note=\"Kart bilgisi istemiyoruz · Kadıköy ve Beşiktaş şubeleri\" />\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "CtaBandLab.tsx",
+			"code": "import { CtaBand } from \"march/landing\"\nimport { Segmented, Toggle, Card } from \"march/ui\"\nimport { arrowRight, play } from \"march/icons\"\n\n// CtaBand'in bütün özellikleri bir arada: başlık, açıklama, eylemler (nesne ya da düğüm), not, beş arka plan, video,\n// hiza, süs katmanları, giriş hareketi ve sınıf\nconst VARIANTS = [{ value: \"gradient\", label: \"gradyan\" }, { value: \"mesh\", label: \"ağ\" }, { value: \"glass\", label: \"cam\" }, { value: \"plain\", label: \"sade\" }, { value: \"video\", label: \"video\" }]\n\nexport function CtaBandLab() {\n  let $variant = \"gradient\"\n  let $start = false\n  let $backdrop = true\n  let $motion = false\n  let $joined = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Card>\n      <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n        <Segmented aria-label=\"Arka plan\" options={VARIANTS} bind:value={$variant} />\n        <Toggle label=\"Başa hizala\" bind:value={$start} />\n        <Toggle label=\"Süs katmanları\" bind:value={$backdrop} />\n        <Toggle label=\"Giriş hareketi\" bind:value={$motion} />\n      </div>\n    </Card>\n    {() => {\n      // sinyaller burada okunur: değişince bant yeniden çizilir (başlık ve not işlev: kendiliğinden güncellenir)\n      const variant = $variant, start = $start, backdrop = $backdrop, motion = $motion\n      return <CtaBand class=\"lab-cta\" variant={variant as \"gradient\"} align={start ? \"start\" : \"center\"} backdrop={backdrop}\n        reveal={motion ? \"blur\" : \"none\"} video={{ src: \"/media/hadi-waves.webm\", poster: \"/media/hadi-waves.jpg\" }}\n        title={() => `Bugün ${$joined} kişi katıldı`} lead=\"Sen de aramıza katıl, ilk hafta ücretsiz.\"\n        actions={[\n          { label: \"Katıl\", iconEnd: arrowRight, onClick: () => $joined++ },\n          { label: \"Tanıtım\", icon: play, variant: \"secondary\" },\n          <a href=\"#sss\" class=\"lab-faq\">Sık sorulanlar</a> as Node,\n        ]}\n        note={() => ($joined ? \"Teşekkürler!\" : \"Kart gerekmez\")} />\n    }}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "CtaBandLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { CtaBandLab } from \"./CtaBandLab.tsx\"\n\n// CtaBandLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"gradyan bant: başlık, açıklama, not ve düğüm eylem\", () => {\n  const s = renderTest(() => <CtaBandLab />)\n  expect(s.get(\".lab-cta\")?.classList.contains(\"m-cta-gradient\")).toBeTruthy()\n  expect(s.find(\"Bugün 0 kişi katıldı\")).not.toBe(null)\n  expect(s.find(\"Sen de aramıza katıl, ilk hafta ücretsiz.\")).not.toBe(null)\n  expect(s.find(\"Kart gerekmez\")).not.toBe(null)\n  expect(s.get('.lab-cta a.lab-faq[href=\"#sss\"]')).not.toBe(null)\n})\n\ntest(\"Katıl: başlık ve not kendiliğinden güncellenir\", async () => {\n  const s = renderTest(() => <CtaBandLab />)\n  await s.click(\"Katıl\")\n  expect(s.find(\"Bugün 1 kişi katıldı\")).not.toBe(null)\n  expect(s.find(\"Teşekkürler!\")).not.toBe(null)\n})\n\ntest(\"ağ görünümüne geçer\", async () => {\n  const s = renderTest(() => <CtaBandLab />)\n  await s.click(\"ağ\")\n  expect(s.get(\".lab-cta\")?.classList.contains(\"m-cta-mesh\")).toBeTruthy()\n})\n\ntest(\"süs katmanları kapanınca panelde katman kalmaz\", async () => {\n  const s = renderTest(() => <CtaBandLab />)\n  expect(s.all(\".lab-cta .m-cta-panel > .m-ov\").length).toBeGreaterThan(0)\n  await s.click(\"Süs katmanları\")\n  expect(s.all(\".lab-cta .m-cta-panel > .m-ov\").length).toBe(0)\n})\n"
+		}
+	]
+}

@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Üst etiket, başlık, açıklama, eylemler ve not tek blokta; hizalama, başlık düzeyi ve ölçek, isteğe bağlı giriş hareketi.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "SectionHeadDemo.tsx",
+			"code": "export { SectionHead } from \"march/landing\";\n"
+		},
+		{
+			"type": "code",
+			"name": "HeadlineDice.tsx",
+			"code": "import { SectionHead } from \"march/landing\"\n\n// başlık zarı: \"Zar at\" her basışta başka bir başlık, ölçek ve hiza getirir\nconst ROLLS = [\n  { eyebrow: \"🎲 1\", title: \"Pazartesi sendromuna son\", size: \"sm\", align: \"start\" },\n  { eyebrow: \"🎲 2\", title: \"Kahve bitti, panik yok\", size: \"md\", align: \"center\" },\n  { eyebrow: \"🎲 3\", title: \"Kediler ofisi devraldı\", size: \"lg\", align: \"end\" },\n  { eyebrow: \"🎲 4\", title: \"Bugün her şey mümkün\", size: \"xl\", align: \"center\" },\n] as const\n\nexport function HeadlineDice() {\n  let $roll = 0\n  return <div>\n    {() => {\n      const r = ROLLS[$roll]!\n      return <SectionHead eyebrow={r.eyebrow} title={r.title} size={r.size} align={r.align}\n        actions={[{ label: \"Zar at\", onClick: () => $roll = ($roll + 1) % ROLLS.length }]} note={`${r.size} ölçek · ${r.align} hiza`} />\n    }}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "BakeryIntro.tsx",
+			"code": "import { SectionHead } from \"march/landing\"\nimport { arrowRight, mapPin } from \"march/icons\"\n\n// bir mahalle fırınının sitesinde sipariş bölümünün açılışı: üst etiket bağlantısı, başlık, açıklama, iki eylem ve not\nexport function BakeryIntro() {\n  return <SectionHead eyebrow=\"Yeni: ekşi mayalı çavdar\" eyebrowHref=\"#cavdar\"\n    title=\"Ekmeğin sabah 7'de kapında\" lead=\"Gece yoğrulur, şafakta pişer. Siparişini akşam 10'a kadar ver, sabah sıcak sıcak gelsin.\"\n    actions={[{ label: \"Sipariş ver\", href: \"#siparis\", iconEnd: arrowRight }, { label: \"Fırını bul\", href: \"#harita\", icon: mapPin }]}\n    note=\"Cihangir, Firuzağa ve Çukurcuma'ya ücretsiz teslimat\" />\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "SectionHeadLab.tsx",
+			"code": "import { SectionHead } from \"march/landing\"\nimport { Segmented, Toggle, Badge, Card } from \"march/ui\"\nimport { arrowRight, play } from \"march/icons\"\n\n// SectionHead'in bütün özellikleri bir arada: üst etiket (kendi düğümün) ve bağlantısı, başlık, başlık öğesi ve kimliği,\n// açıklama, eylemler (nesne ve kendi düğümün; ikon, varyant, tıklama, bağlantı), not, hiza, ölçek, genişlik, giriş\n// hareketi, sınıf ve içerik (children)\nexport function SectionHeadLab() {\n  let $size: \"sm\" | \"md\" | \"lg\" | \"xl\" = \"md\"\n  let $align: \"start\" | \"center\" | \"end\" = \"center\"\n  let $full = false\n  let $h1 = false\n  let $likes = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Card>\n      <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n        <Segmented aria-label=\"Ölçek\" options={[\"sm\", \"md\", \"lg\", \"xl\"]} bind:value={$size} />\n        <Segmented aria-label=\"Hiza\" options={[{ value: \"start\", label: \"baş\" }, { value: \"center\", label: \"orta\" }, { value: \"end\", label: \"son\" }]} bind:value={$align} />\n        <Toggle label=\"Tam genişlik\" bind:value={$full} />\n        <Toggle label=\"Sayfa başlığı (h1)\" bind:value={$h1} />\n      </div>\n    </Card>\n    {() => {\n      // Reveal yazdığı sınıfları bir kez okur: değerler burada okunur, değişince baş yeniden çizilir\n      const h1 = $h1, size = $size, align = $align, full = $full\n      return <SectionHead class=\"lab-head\" eyebrow={<Badge tone=\"primary\">Yeni</Badge>} eyebrowHref=\"#yenilikler\"\n        title={() => `Ekibinle birlikte üret (${$likes})`} as={h1 ? \"h1\" : \"h3\"} titleId=\"lab-head-title\"\n        lead=\"Planla, yaz, yayınla: hepsi aynı yerde.\"\n        actions={[\n          { label: \"Beğen\", icon: play, onClick: () => $likes++ },\n          { label: \"Belgeler\", href: \"#belgeler\", iconEnd: arrowRight, variant: \"ghost\" },\n          <a href=\"#iletisim\" class=\"lab-own-action\">Bize yaz</a> as Node,\n        ]}\n        note=\"14 gün ücretsiz · kart gerekmez\"\n        align={align} size={size} width={full ? \"full\" : \"text\"}\n        reveal={{ effect: \"up\", stagger: 60 }}>\n        <small class=\"lab-extra\">2.400 ekip kullanıyor</small>\n      </SectionHead>\n    }}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "SectionHeadLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { SectionHeadLab } from \"./SectionHeadLab.tsx\"\n\n// SectionHeadLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"üst etiket bir bağlantı; başlık kendi öğesi ve kimliğiyle\", () => {\n  const s = renderTest(() => <SectionHeadLab />)\n  expect(s.get('.lab-head a.m-section-head-eyebrow')?.getAttribute(\"href\")).toBe(\"#yenilikler\")\n  const h = s.get(\".lab-head h3\")!\n  expect(h.id).toBe(\"lab-head-title\")\n  expect(h.textContent).toBe(\"Ekibinle birlikte üret (0)\")\n})\n\ntest(\"ilk eylem sayar; kendi düğümü ve not görünür\", async () => {\n  const s = renderTest(() => <SectionHeadLab />)\n  await s.click(\"Beğen\")\n  expect(s.find(\"Ekibinle birlikte üret (1)\")).not.toBe(null)\n  expect(s.get(\".lab-head .lab-own-action\")?.getAttribute(\"href\")).toBe(\"#iletisim\")\n  expect(s.text()).toContain(\"14 gün ücretsiz · kart gerekmez\")\n  expect(s.find(\"2.400 ekip kullanıyor\")).not.toBe(null)\n})\n\ntest(\"ölçek ve hiza sınıfları izler\", async () => {\n  const s = renderTest(() => <SectionHeadLab />)\n  await s.click(\"xl\")\n  expect(s.get(\".lab-head\")?.classList.contains(\"m-section-head-xl\")).toBe(true)\n  await s.click(\"son\")\n  expect(s.get(\".lab-head\")?.classList.contains(\"m-section-head-end\")).toBe(true)\n})\n\ntest(\"tam genişlik ve h1\", async () => {\n  const s = renderTest(() => <SectionHeadLab />)\n  await s.click(\"Tam genişlik\")\n  expect(s.get(\".lab-head\")?.classList.contains(\"m-section-head-full\")).toBe(true)\n  await s.click(\"Sayfa başlığı (h1)\")\n  expect(s.get(\".lab-head h1\")).not.toBe(null)\n})\n"
+		}
+	]
+}

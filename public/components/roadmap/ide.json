@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Kaydırdıkça dolan çizgi; geçilen noktalar yanar, süren adım parlar.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "RoadmapDemo.tsx",
+			"code": "export { Roadmap } from \"march/landing\";\n"
+		},
+		{
+			"type": "code",
+			"name": "PizzaTracker.tsx",
+			"code": "import { Roadmap } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// pizza takibi: her basışta sipariş bir adım ilerler; geçen adımlar biter, sıradaki yanıp söner\nconst STEPS = [\n  { title: \"Sipariş alındı\", body: \"Margarita, bol peynir 🧀\" },\n  { title: \"Fırında\", body: \"Taş fırın, 3 dakika 🔥\" },\n  { title: \"Yolda\", body: \"Kurye köşeyi döndü 🛵\" },\n  { title: \"Afiyet olsun\", body: \"Kapıdayız 🍕\" },\n]\n\nexport function PizzaTracker() {\n  let $stage = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button on:click={() => $stage = $stage >= STEPS.length - 1 ? 0 : $stage + 1}>{$stage >= STEPS.length - 1 ? \"Yeni sipariş\" : \"Sonraki adım\"}</Button>\n    {() => {\n      const stage = $stage\n      return <Roadmap scroll={false} labels={{ done: \"Tamam\", now: \"Şimdi\", next: \"Bekliyor\" }}\n        items={STEPS.map((s, i) => ({ ...s, status: (i < stage ? \"done\" : i === stage ? \"now\" : \"next\") as \"done\" | \"now\" | \"next\" }))} />\n    }}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ProductRoadmap.tsx",
+			"code": "import { Roadmap } from \"march/landing\"\n\n// bir not uygulamasının yol haritası: sayfa kaydıkça çizgi dolar, geçilen noktalar yanar\nexport function ProductRoadmap() {\n  return <Roadmap labels={{ done: \"Yayında\", now: \"Yapılıyor\", next: \"Planlandı\" }} items={[\n    { time: \"Ocak 2026\", title: \"Çevrimdışı notlar\", body: \"İnternet yokken yaz, gelince eşitlensin.\", status: \"done\" },\n    { time: \"Nisan 2026\", title: \"Paylaşılan defterler\", body: \"Ailen ya da ekibinle aynı defterde.\", status: \"done\" },\n    { time: \"Eylül 2026\", title: \"Sesli not → yazı\", body: \"Konuş, Türkçe metne dönsün.\", status: \"now\" },\n    { time: \"2027\", title: \"El yazısı tanıma\", body: \"Tablette kalemle yaz, aranabilir olsun.\", status: \"next\" },\n    { time: \"2027\", title: \"Masaüstü uygulaması\", body: \"Windows ve macOS için.\", status: \"next\" },\n  ]} />\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "RoadmapLab.tsx",
+			"code": "import { Roadmap } from \"march/landing\"\nimport { Card, Segmented, Toggle } from \"march/ui\"\nimport { flag, sparkles, star } from \"march/icons\"\n\n// Roadmap'in bütün özellikleri bir arada: girdiler (time, title, body, status, icon), rozetler (badges: açık, kendi\n// rozetin ya da yok), kaydırdıkça dolma (scroll), çizgi (rail), durum metinleri (labels), giriş (reveal) ve sınıf (class)\ntype RoadmapStatus = \"done\" | \"now\" | \"next\"\nconst EMOJI: Record<RoadmapStatus, string> = { done: \"✅\", now: \"⏳\", next: \"🗓️\" }\n\nexport function RoadmapLab() {\n  let $badges: string = \"on\"\n  let $rail = true\n  let $scroll = false\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Card>\n      <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n        <Segmented aria-label=\"Rozetler\" options={[{ value: \"on\", label: \"rozet\" }, { value: \"own\", label: \"kendi rozetim\" }, { value: \"off\", label: \"rozetsiz\" }]} bind:value={$badges} />\n        <Toggle label=\"Çizgi\" bind:value={$rail} />\n        <Toggle label=\"Kaydırdıkça dolsun\" bind:value={$scroll} />\n      </div>\n    </Card>\n    {() => {\n      // bu satırda okunan durumlar değişince yol haritası yeniden çizilir\n      const badges = $badges, rail = $rail, scroll = $scroll\n      return <Roadmap class=\"lab-rm\" rail={rail} scroll={scroll} reveal={false}\n        badges={badges === \"off\" ? false : badges === \"own\" ? (s: RoadmapStatus, text: unknown) => <span class=\"lab-badge\">{EMOJI[s]} {text}</span> : true}\n        labels={{ done: \"Yayında\", now: \"Yapılıyor\", next: \"Sırada\" }}\n        items={[\n          { time: \"Bahar\", title: \"Tanışma yemekleri\", body: \"Aynı masada yeni insanlar.\", status: \"done\", icon: flag },\n          { time: \"Yaz\", title: \"Bilet satışı\", body: \"Kontenjan ve ödeme tek yerde.\", status: \"done\" },\n          { time: \"Sonbahar\", title: \"Yeni şehirler\", body: \"Her ilde etkinlik.\", status: \"now\", icon: sparkles },\n          { time: \"Kış\", title: \"Topluluk ödülleri\", status: \"next\", icon: star },\n        ]} />\n    }}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "RoadmapLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { RoadmapLab } from \"./RoadmapLab.tsx\"\n\n// RoadmapLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"dört girdi; durum rozetleri kendi metinleriyle\", () => {\n  const s = renderTest(() => <RoadmapLab />)\n  expect(s.all(\".lab-rm .m-rm-tl > li\").length).toBe(4)\n  const badges = s.all(\".lab-rm .m-rm-badge\").map((b: Element) => b.textContent)\n  expect(badges).toEqual([\"Yayında\", \"Yayında\", \"Yapılıyor\", \"Sırada\"])\n})\n\ntest(\"kaydırma kapalıyken çizgi dolu; çizgi kapanınca gider\", async () => {\n  const s = renderTest(() => <RoadmapLab />)\n  expect(s.get(\".lab-rm\")?.classList.contains(\"is-scroll\")).toBe(false)\n  expect(s.get(\".lab-rm .m-rm-rail\")).not.toBe(null)\n  await s.click(\"Çizgi\")\n  expect(s.get(\".lab-rm .m-rm-rail\")).toBe(null)\n})\n\ntest(\"kendi rozetim: durum ve metin bir arada\", async () => {\n  const s = renderTest(() => <RoadmapLab />)\n  await s.click(\"kendi rozetim\")\n  expect(s.get(\".lab-rm .m-rm-badge\")).toBe(null)\n  expect(s.get(\".lab-rm .lab-badge\")?.textContent).toContain(\"Yayında\")\n})\n\ntest(\"rozetsiz: başlıklar yalın\", async () => {\n  const s = renderTest(() => <RoadmapLab />)\n  await s.click(\"rozetsiz\")\n  expect(s.get(\".lab-rm .m-rm-badge\")).toBe(null)\n  expect(s.get(\".lab-rm .lab-badge\")).toBe(null)\n  expect(s.sees(\"Topluluk ödülleri\")).toBe(true)\n})\n"
+		}
+	]
+}
