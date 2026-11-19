@@ -3,6 +3,7 @@
 // only loads the next ide.json. /ide/<path> opens <path>/ide.json the same way.
 export const IDE_PAGES: Record<string, string> = {
   "/buttons/button": "components/button",
+  "/buttons/icon-button": "components/icon-button",
 };
 
 /** Whether a path is a MarchIDE page (/ide, /ide/<path>, a page of IDE_PAGES, /test-bilesen). */

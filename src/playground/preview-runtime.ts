@@ -493,7 +493,9 @@ const HIERARCHY = core.defineExtension({
     core.onCleanup(() => { instances.delete(id); treeChanged() });
     treeChanged();
     const extra = instProps[key];
-    return next(extra ? over(p, extra) : p);
+    // an instance that throws while drawing (IconButton without its label, before the Properties' values arrive) is
+    // not on screen and its cleanup never runs: it leaves the Hierarchy here, or every such draw would stay listed
+    try { return next(extra ? over(p, extra) : p); } catch (e) { instances.delete(id); treeChanged(); throw e; }
   },
   setup: (ctx) => { const inst = instances.get(core.useContext(PARENT).id); if (inst && inst.name === ctx.info.name) inst.roots = ctx.roots; },
 });
