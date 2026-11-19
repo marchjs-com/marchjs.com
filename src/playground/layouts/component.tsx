@@ -531,6 +531,8 @@ function fromCode(o: PlaygroundOption, x: unknown, v: Record<string, unknown>): 
   if (/^[[{]/.test(inner)) { try { return JSON.parse(inner) } catch { /* not JSON: left out below */ } }
   if (/^[A-Za-z_$][\w$]*$/.test(inner)) return `icon:${inner}`
   if (inner.startsWith("<")) return "•••"
+  // a literal array or object of plain values ({["undo"]}, {{ more: "devamı" }}): JSON once its keys are quoted
+  if (/^[[{]/.test(inner)) { try { return JSON.parse(inner.replace(/([{,]\s*)([A-Za-z_$][\w$]*)\s*:/g, '$1"$2":')) } catch { /* code, not data */ } }
   return OMIT
 }
 const jsonOf = (x: unknown): unknown => { if (typeof x !== "string") return x; try { return JSON.parse(x) } catch { return OMIT } }

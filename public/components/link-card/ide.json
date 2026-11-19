@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Tamamı bağlantı olan kart: ikon karosu, başlık, açıklama, sondaki metin ve üstüne gelince ok.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "LinkCardDemo.tsx",
+			"code": "export { LinkCard } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "LearnPath.tsx",
+			"code": "import { LinkCard } from \"march/ui\"\n\n// March'ı öğrenme yolu: her durak bir kart; baş kısmı kocaman bir emoji (lead), sonda okuma süresi (meta)\n// bağlantılar vitrinin gerçek sayfalarına gider\nconst path = [\n  { emoji: \"🔘\", title: \"1. Düğme\", description: \"Beş varyant, yükleniyor durumu\", meta: \"2 dk\", href: \"/buttons/button\" },\n  { emoji: \"🎯\", title: \"2. İkon düğmesi\", description: \"Erişilebilir ad zorunlu, ipucu bedava\", meta: \"3 dk\", href: \"/buttons/icon-button\" },\n  { emoji: \"🃏\", title: \"3. Kart\", description: \"Başlık, eylemler, alt bilgi\", meta: \"4 dk\", href: \"/data/card\" },\n]\n\nexport function LearnPath() {\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    {path.map((p) => <LinkCard href={p.href} lead={<span sx={{ text: \"2xl\" }}>{p.emoji}</span>} title={p.title} description={p.description} meta={p.meta} />)}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "AdminHome.tsx",
+			"code": "import { LinkCard, Grid, SectionLabel } from \"march/ui\"\nimport { users, calendar, layers, folder } from \"march/icons\"\n\n// bir topluluk yönetim panelinin ana sayfası: her bölüm bir kart (ikon karosu, ton, açıklama, sondaki sayı)\n// bağlantılar vitrinde o bölümü gösteren bileşen sayfalarına gider\nconst sections = [\n  { icon: users, tone: \"primary\", title: \"Üyeler\", description: \"Ara, davet et, rolleri yönet\", meta: \"128\", href: \"/data/table\" },\n  { icon: calendar, tone: \"success\", title: \"Etkinlikler\", description: \"Bu haftanın buluşmaları\", meta: \"12\", href: \"/data/timeline\" },\n  { icon: layers, tone: \"warn\", title: \"Görevler\", description: \"Gönüllülerin panosu\", meta: \"7 açık\", href: \"/data/kanban\" },\n  { icon: folder, tone: \"violet\", title: \"Belgeler\", description: \"Tüzük, tutanaklar, afişler\", href: \"/data/tree\" },\n] as const\n\nexport function AdminHome() {\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <SectionLabel count={sections.length}>Yönetim</SectionLabel>\n    <Grid cols={2}>\n      {sections.map((s) => <LinkCard href={s.href} icon={s.icon} tone={s.tone} title={s.title} description={s.description} meta={\"meta\" in s ? s.meta : undefined} />)}\n    </Grid>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "LinkCardLab.tsx",
+			"code": "import { LinkCard, Avatar, Button, Card } from \"march/ui\"\nimport { Icon, star, gitBranch, sparkles, chevronRight } from \"march/icons\"\n\n// LinkCard'ın bütün özellikleri bir arada: href (kartın tamamı bağlantı), title (canlı), description, icon, tone, color\n// (tona baskın), lead (karo yerine kendi düğümün), meta (canlı), arrow (true, false ya da kendi işaretin), class ve\n// öteki öznitelikler (id, data-*); bağlantılar vitrinin gerçek sayfalarına gider\nexport function LinkCardLab() {\n  let $stars = 41\n  let $renamed = false\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: \"row\", gap: 2 }}>\n      <Button size=\"sm\" variant=\"secondary\" on:click={() => $stars++}>Yıldız ver</Button>\n      <Button size=\"sm\" variant=\"ghost\" on:click={() => $renamed = !$renamed}>Başlığı değiştir</Button>\n    </div>\n    <LinkCard href=\"/data/table\" icon={star} tone=\"warn\" title=\"Tablo\" description=\"10.000 satır, sıralama, seçim\"\n      meta={`★ ${$stars}`} class=\"lab-table\" data-kind=\"veri\" />\n    <LinkCard href=\"/data/tree\" icon={gitBranch} color=\"brand-purple\" title={$renamed ? \"Ağaç görünümü\" : \"Ağaç\"}\n      description=\"Ok tuşlarıyla gezinme\" arrow={false} class=\"lab-noarrow\" id=\"agac\" />\n    <LinkCard href=\"/buttons/button\" lead={<Avatar name=\"March Düğme\" size=\"md\" decorative />} title=\"Düğme\"\n      description=\"Kendi baş düğümü (lead) ve kendi ok işareti\" arrow={<Icon of={chevronRight} /> as Node} class=\"lab-lead\" />\n    <Card m:theme=\"night\">\n      <LinkCard href=\"/buttons/icon-button\" icon={sparkles} tone=\"pink\" title=\"İkon düğmesi\" meta=\"yeni\" class=\"lab-night\" />\n    </Card>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "LinkCardLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { LinkCardLab } from \"./LinkCardLab.tsx\"\n\n// LinkCardLab'in testleri: kaydedince Testler sekmesinde çalışır (kartlara basılmaz: bağlantılar sayfadan çıkar)\ntest(\"kartın tamamı bir bağlantı; class ve data-* bağlantıya gider\", () => {\n  const s = renderTest(() => <LinkCardLab />)\n  const a = s.find(\"Tablo\")?.closest(\"a\")\n  expect(a?.classList.contains(\"lab-table\")).toBe(true)\n  expect(a?.classList.contains(\"m-link-card\")).toBe(true)\n  expect(a?.getAttribute(\"href\")).toContain(\"table\")\n  expect(a?.getAttribute(\"data-kind\")).toBe(\"veri\")\n})\n\ntest(\"meta ve title canlı\", async () => {\n  const s = renderTest(() => <LinkCardLab />)\n  expect(s.get(\".lab-table .m-link-card-meta\")?.textContent).toBe(\"★ 41\")\n  await s.click(\"Yıldız ver\")\n  expect(s.get(\".lab-table .m-link-card-meta\")?.textContent).toBe(\"★ 42\")\n  await s.click(\"Başlığı değiştir\")\n  expect(s.sees(\"Ağaç görünümü\")).toBe(true)\n})\n\ntest(\"arrow={false} oku çizmez; varsayılan ok süs olarak gizli\", () => {\n  const s = renderTest(() => <LinkCardLab />)\n  expect(s.get(\".lab-noarrow .m-link-card-arrow\")).toBe(null)\n  expect(s.get(\".lab-table .m-link-card-arrow\")?.getAttribute(\"aria-hidden\")).toBe(\"true\")\n  expect(s.get(\"#agac\")?.tagName).toBe(\"A\")\n})\n\ntest(\"lead ikon karosunun yerine geçer\", () => {\n  const s = renderTest(() => <LinkCardLab />)\n  expect(s.get(\".lab-lead .m-link-card-lead\")).not.toBe(null)\n  expect(s.get(\".lab-lead .m-icon-tile\")).toBe(null)\n  expect(s.get(\".lab-table .m-icon-tile\")).not.toBe(null)\n})\n"
+		}
+	]
+}

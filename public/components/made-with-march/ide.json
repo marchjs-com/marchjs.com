@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "İsteğe bağlı küçük \"March ile yapıldı\" yazısı ya da rozeti.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "MadeWithMarchDemo.tsx",
+			"code": "export { MadeWithMarch } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "HeartSwap.tsx",
+			"code": "import { MadeWithMarch, Card, Button } from \"march/ui\"\n\n// imzanın kalbi senin: her basışta sıradaki işaret gelir; adı (heartLabel) da onunla değişir, cümle yerinde kalır\nconst marks = [[\"💗\", \"Sevgi\"], [\"☕\", \"Kahve\"], [\"🚀\", \"Roket\"], [\"✨\", \"Pırıltı\"], [\"🎵\", \"Müzik\"]] as const\nconst markAt = (i: number) => marks[i % marks.length]!\n\nexport function HeartSwap() {\n  let $i = 0\n  const $mark = markAt($i)\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: [\"col\", \"center\"], gap: 3 }}>\n      <MadeWithMarch variant=\"badge\" heart={$mark[0]} heartLabel={$mark[1]} />\n      <Button variant=\"secondary\" size=\"sm\" on:click={() => $i = ($i + 1) % marks.length}>{`Kalbi değiştir (${$mark[1]})`}</Button>\n    </div>\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "SiteFooter.tsx",
+			"code": "import { MadeWithMarch, Card, Divider } from \"march/ui\"\n\n// bir sitenin alt bilgisi: bağlantı sütunları, telif satırı ve sağ altta küçük, sessiz bir imza\nconst columns = [\n  { title: \"Ürün\", links: [\"Özellikler\", \"Fiyatlar\", \"Sürüm notları\"] },\n  { title: \"Şirket\", links: [\"Hakkımızda\", \"Kariyer\", \"İletişim\"] },\n  { title: \"Destek\", links: [\"Yardım merkezi\", \"Durum\", \"Gizlilik\"] },\n]\n\nexport function SiteFooter() {\n  return <Card>\n    <footer sx={{ flex: \"col\", gap: 3 }}>\n      <div sx={{ cols: 3, gap: 3 }}>\n        {columns.map((c) => <div sx={{ flex: \"col\", gap: 1 }}>\n          <strong sx={{ text: \"sm\" }}>{c.title}</strong>\n          {c.links.map((l) => <a href={`#${l}`} sx={{ text: \"sm\", color: \"muted\" }}>{l}</a>)}\n        </div>)}\n      </div>\n      <Divider />\n      <div sx={{ flex: [\"row\", \"between\", \"center\", \"wrap\"], gap: 2 }}>\n        <span sx={{ text: \"xs\", color: \"muted\" }}>© 2026 Kuzey Kahve A.Ş.</span>\n        <MadeWithMarch variant=\"small\" />\n      </div>\n    </footer>\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "MadeWithMarchLab.tsx",
+			"code": "import { MadeWithMarch, Card } from \"march/ui\"\n\n// MadeWithMarch'ın bütün özellikleri: variant (text, badge, small), heart (true, false, kendi işaretin), heartLabel,\n// link (bağlantının kendi metni), href (kendi adresin), text ((link, heart) => kendi cümlen), class ve ortak m:color, m:theme\nconst Row = (props: { title: string; children?: unknown }) => <div sx={{ flex: \"col\", gap: 1 }}>\n  <span sx={{ text: \"xs\", color: \"muted\" }}>{props.title}</span>\n  {props.children}\n</div>\n\nexport function MadeWithMarchLab() {\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Row title=\"Görünüm: text, badge, small\">\n      <div sx={{ flex: [\"row\", \"wrap\", \"center\"], gap: 3 }}>\n        <MadeWithMarch class=\"lab-text\" />\n        <MadeWithMarch variant=\"badge\" class=\"lab-badge\" />\n        <MadeWithMarch variant=\"small\" />\n      </div>\n    </Row>\n    <Row title=\"Kalp: kendi işaretin ve adı, ya da hiç\">\n      <MadeWithMarch heart=\"☕\" heartLabel=\"Kahve\" class=\"lab-coffee\" />\n      <MadeWithMarch heart={false} class=\"lab-noheart\" />\n    </Row>\n    <Row title=\"Kendi bağlantın ve cümlen\">\n      <MadeWithMarch link=\"March çatısı\" href=\"https://marchjs.com\" class=\"lab-link\" m:color=\"brand-purple\" />\n      <MadeWithMarch text={(link: unknown, heart: unknown) => <span>Bu sayfa {link} üzerine kuruldu {heart}</span>} heart=\"🚀\" heartLabel=\"Roket\" class=\"lab-own\" />\n    </Row>\n    <Card m:theme=\"night\">\n      <Row title=\"Koyu zemin\">\n        <MadeWithMarch variant=\"badge\" m:color=\"brand-orange\" />\n      </Row>\n    </Card>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "MadeWithMarchLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { MadeWithMarchLab } from \"./MadeWithMarchLab.tsx\"\n\n// MadeWithMarchLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"varsayılan: MarchJS bağlantısı yeni sekmede, 💗 adıyla; variant sınıf olur\", () => {\n  const s = renderTest(() => <MadeWithMarchLab />)\n  const a = s.get(\".lab-text a\")\n  expect(a?.textContent).toBe(\"MarchJS\")\n  expect(a?.getAttribute(\"href\")).toBe(\"https://github.com/marchjs-com/march\")\n  expect(a?.getAttribute(\"target\")).toBe(\"_blank\")\n  expect(s.get(\".lab-text .m-madewith-heart\")?.getAttribute(\"role\")).toBe(\"img\")\n  expect(s.get(\".lab-badge\")?.className.includes(\"m-madewith-badge\")).toBe(true)\n})\n\ntest(\"kendi kalbin ve adı; heart={false} kalbi kaldırır\", () => {\n  const s = renderTest(() => <MadeWithMarchLab />)\n  const coffee = s.get(\".lab-coffee .m-madewith-heart\")\n  expect(coffee?.textContent).toBe(\"☕\")\n  expect(coffee?.getAttribute(\"aria-label\")).toBe(\"Kahve\")\n  expect(s.get(\".lab-noheart .m-madewith-heart\")).toBe(null)\n  expect(s.get(\".lab-noheart a\")).not.toBe(null)\n})\n\ntest(\"link ve href bağlantıyı değiştirir; m:color satıra gider\", () => {\n  const s = renderTest(() => <MadeWithMarchLab />)\n  const a = s.get(\".lab-link a\")\n  expect(a?.textContent).toBe(\"March çatısı\")\n  expect(a?.getAttribute(\"href\")).toBe(\"https://marchjs.com\")\n  expect(s.get(\".lab-link\")?.getAttribute(\"data-m-color\")).toBe(\"brand-purple\")\n})\n\ntest(\"text kendi cümleni kurar: bağlantı ve kalp içine yerleşir\", () => {\n  const s = renderTest(() => <MadeWithMarchLab />)\n  const own = s.get(\".lab-own\")\n  expect(own?.textContent).toContain(\"üzerine kuruldu\")\n  expect(own?.querySelector(\"a\")?.textContent).toBe(\"MarchJS\")\n  expect(own?.querySelector(\".m-madewith-heart\")?.textContent).toBe(\"🚀\")\n})\n"
+		}
+	]
+}
