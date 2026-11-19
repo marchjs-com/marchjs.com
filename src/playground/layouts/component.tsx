@@ -1635,7 +1635,7 @@ const markReady = (): void => { const id = readyFor; if (id === null) return; re
 async function render(code: string): Promise<void> {
   if (!previewEl) { pendingCode = code; return }
   lastCode = code
-  const t0 = performance.now()
+  const t0 = performance.now(), g = gen
   pvError.set(null)
   try {
     const rt = await loadRuntime()
@@ -1643,7 +1643,10 @@ async function render(code: string): Promise<void> {
     // a March component exported as it is (export { IconButton }) is drawn with its options' values: they are there
     // first, or a required prop (IconButton's label) is missing on the first draw of a page
     await Promise.all(untrack(exportedNames).map(loadOptions))
+    // a page left meanwhile (its files gone): what was being drawn for it is not drawn
+    if (g !== gen || !previewEl) return
     await rt.run(code, previewEl, untrack(rootProps), untrack(partsNow))
+    if (g !== gen) { rt.stop(); previewEl?.replaceChildren(); return }
     readTag()
     readExtensions()
     print(`[${stamp()}] Önizleme çizildi · ${Math.round(performance.now() - t0)} ms`, "success")
@@ -1756,6 +1759,12 @@ const useSources = (sources: readonly IdeSource[], page = ""): void => {
   consoleApi?.clear()
   // another component: Properties are not on an instance picked on the last page (the exportKey effect chooses its exported one)
   selectedInst.set(null); pickedId.set("")
+  // no files (a page being left): the last preview goes too, its components disposed and the stage emptied
+  if (!sources.length) {
+    lastCode = ""; pendingCode = ""; pvError.set(null)
+    if (runtime) void runtime.then((rt) => rt.stop())
+    previewEl?.replaceChildren()
+  }
   const ids = sources.map((_, i) => `f${++gen}-${i}`)
   for (const name of [...files.keys()]) if (!sources.some((s) => s.name === name)) { files.delete(name); saved.delete(name) }
   for (const s of sources) { files.set(s.name, signal(s.code)); saved.set(s.name, signal(s.code)) }

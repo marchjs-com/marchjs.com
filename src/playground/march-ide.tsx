@@ -71,6 +71,8 @@ function fill(el: HTMLElement): void {
 /** The ide.json the open MarchIDE asks for (its path; null before the first one). */
 const wanted = signal<string | null>(null);
 let workspace: Element | null = null;
+/** Empties the workspace on screen (set while it exists): leaving MarchIDE, or before the next page loads. */
+let clearWorkspace: (() => void) | null = null;
 function Workspace(): unknown {
   // what is shown: the workspace (its kind and component) and its ide.json; while the next one loads the current stays
   // under a loading layer, until the workspace has taken the next one's files (the layout's `ready`)
@@ -90,12 +92,17 @@ function Workspace(): unknown {
     else if (at === null && endLoad) { const st = untrack(status); endLoad(!(st && "error" in st)); endLoad = null }
   })
   onCleanup(() => { endLoad?.(); endLoad = null })
+  // a page left is emptied at once: no file, no tab, no preview, no properties, an empty Console (the workspace takes
+  // an ide.json without files), so the next page is seen to arrive and nothing of the last one is left over
+  const clear = (): void => { if (!Layout.peek() || !shownId.peek()) return; shownId.set(""); ide.set({ layout: kind.peek(), sources: [] }) };
+  clearWorkspace = clear;
+  onCleanup(() => { clearWorkspace = null });
   effect(() => {
     const at = wanted();
     if (at === null || (Layout.peek() && at === shownId.peek())) return;
     let live = true;
     onCleanup(() => { live = false });
-    untrack(() => { status.set(Layout() ? null : { loading: true }); opening.set(at); });
+    untrack(() => { status.set(Layout() ? null : { loading: true }); opening.set(at); clear(); });
     void (async () => {
       const next = await fetchIde(at);
       if (!live) return;
@@ -124,7 +131,7 @@ function Workspace(): unknown {
       const s = status();
       if (s && "error" in s) return <div class="sc-march-ide-msg"><Alert tone="danger" title="MarchIDE açılamadı">{s.error}</Alert></div>;
       if (!untrack(Layout)) return s ? <div class="sc-ide-skel" role="status" aria-label="MarchIDE hazırlanıyor"><span /><span /><span /><span /></div> : null;
-      // a page opened from another: the workspace on screen stays under a layer until the next one is ready
+      // a page opened from another: the emptied workspace waits under a layer until the next one is ready
       return opening() !== null ? <div class="sc-ide-loading" role="status"><Spinner decorative /><span>Hazırlanıyor…</span></div> : null;
     }}
   </div>;
@@ -132,7 +139,8 @@ function Workspace(): unknown {
 
 export default function MarchIDE() {
   ideOpen.set(true);
-  onCleanup(() => ideOpen.set(false));
+  // leaving MarchIDE empties it; coming back loads the page again from the start
+  onCleanup(() => { ideOpen.set(false); clearWorkspace?.(); wanted.set(null); });
   const pager = computed(() => neighbours(path()));
   // while this page is MarchIDE, the workspace follows its address (the address of the page being left for one that
   // is not MarchIDE changes nothing: the workspace waits as it is)
