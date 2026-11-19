@@ -21,6 +21,10 @@ export interface OutputSource {
   js: (path: string, code: string) => Promise<string>;
   /** The languages added in the playground: code → its file (every text, translated or not). */
   languages?: Readonly<Record<string, Record<string, string>>>;
+  /** A release output: only what the page needs (no per-file modules, no lang.json), every file minified. */
+  release?: boolean;
+  /** Minifies a script (the release's start). */
+  minify?: (code: string) => Promise<string>;
 }
 
 const base = (path: string): string => path.replace(/\.[jt]sx?$/, "");
@@ -96,14 +100,15 @@ const cssFree = (js: string): string => js.replace(/^\s*import\s*["'][^"']+\.css
 /** The files of the output, path → text: the page, its start, the bundle, each compiled module, the texts and every
  * added language (lang/<code>.json). The page loads MarchJS from cdn.marchjs.com. */
 export async function outputFiles(o: OutputSource): Promise<Record<string, string>> {
-  const { build: b, name } = o;
+  const { build: b, name } = o, release = !!o.release;
   const langs = o.languages ?? {}, codes = Object.keys(langs).sort();
-  const modules = await Promise.all(Object.entries(b.modules).filter(([p]) => p !== o.entry).map(async ([p, code]): Promise<[string, string]> => {
+  // a release has the bundle only: the per-file modules (and their names) are the debug output's
+  const modules = release ? [] : await Promise.all(Object.entries(b.modules).filter(([p]) => p !== o.entry).map(async ([p, code]): Promise<[string, string]> => {
     // the modules import each other as .js
     const js = (await o.js(p, code)).replace(/(from\s+["']\.\/[^"']+?)\.[jt]sx?(["'])/g, "$1.js$2");
     return [`src/${base(p)}.js`, cssFree(js)];
   }));
-  const start = startFile(codes), bundle = cssFree(b.code);
+  const start = release && o.minify ? await o.minify(startFile(codes)) : startFile(codes), bundle = cssFree(b.code);
   // every march module the page imports, from cdn.marchjs.com at this version
   const specs = [...new Set([start, bundle, ...modules.map(([, js]) => js)].flatMap((js) => [...js.matchAll(/from\s*["'](march(?:\/[\w./-]+)?)["']/g)].map((m) => m[1] as string)))].sort();
   const imports = Object.fromEntries(specs.map((s) => [s, `${CDN}/${s === "march" ? "march" : s.slice("march/".length)}.js`]));
@@ -130,6 +135,13 @@ ${JSON.stringify({ imports }, null, 2).replace(/^/gm, "      ")}
     "assets/app.js": bundle,
     ...Object.fromEntries(modules),
   };
+  if (release) {
+    // the page without comments, indentation or the line breaks between tags; the import map in one line
+    out["index.html"] = out["index.html"]!.replace(/<!--[\s\S]*?-->/g, "").replace(JSON.stringify({ imports }, null, 2).replace(/^/gm, "      "), JSON.stringify({ imports }))
+      .replace(/>\s+</g, "><").replace(/>\s+\{/g, ">{").replace(/\}\s+</g, "}<").trim();
+    for (const c of codes) out[`lang/${c}.json`] = JSON.stringify(langs[c]);
+    return out;
+  }
   if (b.texts.length) out["lang.json"] = json(Object.fromEntries(b.texts.map((k) => [k, k])));
   for (const c of codes) out[`lang/${c}.json`] = json(langs[c]);
   return out;

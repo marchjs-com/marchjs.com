@@ -10,7 +10,7 @@ import { h, render as mount, createRoot, signal, computed, effect, untrack, batc
 import { registry } from "march/components/registry.gen.ts";
 import type { PlaygroundOption } from "march/components/meta.ts";
 import { appUrl } from "march/base";
-import { PaletteButton, Spinner, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "march/ui";
+import { PaletteButton, Spinner, Segmented, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "march/ui";
 import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, vaultPlugin, aiPlugin, groups, type AiService, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog, type CodeProblem } from "march/app-ui";
 import { x as xIcon, sparkles, alertTriangle, packageBox, activity, checkCircle, image, video, save, history, plus, database, zap, monitor, sliders, layers, braces, users, code, terminal, fileText, globe, plug } from "march/icons";
 import { KeyValueEditor, TextInput, JsonEditor } from "march/forms"
@@ -1039,6 +1039,17 @@ const lastBuild = signal<BuildResult | null>(null)
 /** The file the last build was made from (its languages go with it); the workspace's id (the page it came from). */
 const builtFile = signal("")
 const workspaceId = signal("")
+// Debug (the default): the build says where each thing is written (data-m-src, signal names, a source map) for the
+// tools: Alt+click, the inspector, error places. Release: nothing of the files' names or places, minified, no debugger
+const BUILD_MODE_KEY = "sc.playground.buildMode"
+const buildMode = signal<"debug" | "release">((() => { try { return localStorage.getItem(BUILD_MODE_KEY) === "release" ? "release" : "debug" } catch { return "debug" } })())
+const setBuildMode = (m: "debug" | "release"): void => {
+  if (m === untrack(buildMode)) return
+  buildMode.set(m)
+  try { localStorage.setItem(BUILD_MODE_KEY, m) } catch { /* private mode */ }
+  print(`[${stamp()}] ${m === "release" ? "📦 Release: dosya adı, kaynak yeri ve hata ayıklama bilgisi yok; küçültülmüş. Alt+tık, Tepki adları ve hata satırları çalışmaz." : "🐞 Debug: kaynak yerleri ve adlar derlemede (araçlar için)."}`, "info")
+  scheduleBuild(0)
+}
 // the Bundle tab: the last build minified and gzipped (each file's share from its metafile), the code's March imports
 // with each component's size alone (export-sizes.json, fetched once)
 const bundleOwn = signal<{ min: number; gzip: number; files: [string, number][] } | null>(null)
@@ -1061,9 +1072,10 @@ const showOutput = async (): Promise<boolean> => {
   if (!untrack(lastBuild) || !lastInputs) return false
   // the exported page loads March from cdn.marchjs.com, which may not have _tr yet: its build shows the code's own
   // texts and its languages are put in by the page (lang/<code>.json)
-  const b = await builder.build(lastInputs, ENTRY, { i18n: false })
+  const b = await builder.build(lastInputs, ENTRY, { i18n: false, release: untrack(buildMode) === "release" })
   if (!b?.ok) return false
   await openBuildOutput({ build: b, name: (untrack(builtFile) || untrack(active)).replace(/\.[jt]sx?$/, ""), entry: ENTRY, js: builder.js,
+    release: untrack(buildMode) === "release", minify: builder.minify,
     // every language added in lang.json, as its file (the texts not translated yet keep the code's own)
     languages: untrack(() => Object.fromEntries(Object.keys(langs()).map((c) => [c, langFile(c)]))) })
   return true
@@ -1075,6 +1087,8 @@ const consolePanel = () => <div class="sc-console-box" class:is-langs={consoleLa
     ref={(api: TerminalApi) => { consoleApi = api; for (const [t, o] of waiting.splice(0)) api.print(t, o) }} />
   {() => (consoleLangs() ? <div class="sc-console-langs">{langPanel()}</div> : null)}
   <div class="sc-console-tools">
+    <Segmented size="sm" class="sc-build-mode" aria-label="Derleme türü" value={buildMode()} onChange={(v: unknown) => setBuildMode(v === "release" ? "release" : "debug")}
+      options={[{ value: "debug", label: "Debug", hint: "Kaynak yerleri ve adlar derlemede: Alt+tık, Tepki, hata satırları" }, { value: "release", label: "Release", hint: "Dosya adı, kaynak yeri, hata ayıklama bilgisi yok; küçültülmüş" }]} />
     <IconButton icon={globe} size="sm" variant="raised" pressed={consoleLangs()} disabled={!lastBuild()}
       label={consoleLangs() ? "Derleme çıktısına dön" : "Son derlemenin dilleri"} onClick={() => consoleLangs.set(!consoleLangs())} />
     <Button size="xs" variant="secondary" icon={history} class="sc-console-out" disabled={() => !lastBuild()} onClick={() => void showOutput()}>Son derlemeyi göster</Button>
@@ -1124,14 +1138,14 @@ const buildNow = async () => {
   // the saved text: what is typed and not saved yet is not built
   let src = untrack(() => forBuild(saved.get(path)?.() ?? files.get(path)?.() ?? ""))
   // debugging: the file with the debugger's calls written in (the session starts for it); its line numbers stay
-  const dbg = untrack(debugSvc)
-  if (dbg && untrack(dbg.active)) {
+  const dbg = untrack(debugSvc), release = untrack(buildMode) === "release"
+  if (dbg && untrack(dbg.active) && !release) {
     try { src = (await dbg.prepare({ [path]: src }))[path] ?? src; print(`[${stamp()}] 🐞 ${path} hata ayıklama için hazırlandı`, "info") }
     catch (e) { print(`[${stamp()}] ✖ Hata ayıklama hazırlanamadı: ${String((e as Error)?.message ?? e)}`, "error") }
   }
   const now = untrack(() => ({ [path]: withData(src), [ENTRY]: entrySource() }))
   lastInputs = now
-  const r = await builder.build(now, ENTRY)
+  const r = await builder.build(now, ENTRY, { release })
   if (r?.ok) { batch(() => { lastBuild.set(r); builtFile.set(path) }); void measureBundle(r); await render(r.code) }
   if ([...files.keys()].some(isTestFile)) void runAllTests()
   return r
@@ -1336,6 +1350,20 @@ const saveLangs = (v: LangSet): void => {
 const langFile = (code: string): Record<string, string> => { const own = langs()[code] ?? {}; return Object.fromEntries(Object.entries(langJson()).map(([k, v]) => [k, own[k] ?? v])) }
 const langShown = signal("")
 const previewLang = signal("")
+// the first language shown: the browser's when this build has a file for it ("de-at" → de-at, else de), else the code's
+// own. A language picked by hand stays while the build is the same; another build (another tab) starts over.
+const BROWSER_LANG = (globalThis.navigator?.language ?? "").toLowerCase()
+let autoLang = "", langFor = ""
+effect(() => {
+  const l = langs(), key = buildKey()
+  untrack(() => {
+    if (key === langFor && previewLang() !== autoLang) return
+    langFor = key
+    const base = BROWSER_LANG.split("-")[0] ?? ""
+    autoLang = l[BROWSER_LANG] ? BROWSER_LANG : base && l[base] ? base : ""
+    previewLang.set(autoLang)
+  })
+})
 /** A language's name in itself ("English", "Türkçe"); the code when the browser does not know it. */
 const langName = (code: string): string => { try { const n = new Intl.DisplayNames([code], { type: "language" }).of(code); return n && n !== code ? n.charAt(0).toLocaleUpperCase(code) + n.slice(1) : code } catch { return code } }
 const languageList = () => [{ value: "", label: "Varsayılan Dil" }, ...Object.keys(langs()).sort().map((c) => ({ value: c, label: `${langName(c)}: ${c}` }))]
@@ -1466,6 +1494,8 @@ const loadRuntime = () => (runtime ??= (async () => {
   // import { instrument, run } from "march/playground": the code's own debugging, with the page's TypeScript worker
   r.setHost({ instrument: (files) => (tsSvc ? tsSvc.instrument(files) : Promise.reject(new Error("TypeScript yok"))) })
   runtimeNow = r
+  // the language already chosen (the browser's, picked before the runtime was there)
+  untrack(() => { const code = previewLang(); r.setLanguage(code || null, code ? langFile(code) : null) })
   return r
 })())
 /** What the code's extensions are and did (the Extensions tab, Properties, suggestions): read from the preview's March. */
@@ -1835,8 +1865,8 @@ export default function ComponentLayout(props: { ide: () => IdeJson; id: () => s
     // debugging: every build writes the debugger's calls in (buildNow), nothing kept is used
     if (debugSvc()?.active()) { scheduleBuild(350); return }
     // built before with this very code (a tab shown again): the kept result, at once
-    const kept = builder.cached(now, ENTRY)
-    if (kept) { lastBuild.set(kept); print(`[${stamp()}] ↺ ${path}: bu kod daha önce derlendi, bellekteki sonuç kullanılıyor`, "muted"); void render(kept.code); return }
+    const kept = builder.cached(now, ENTRY, untrack(buildMode) === "release")
+    if (kept) { batch(() => { lastBuild.set(kept); builtFile.set(path) }); lastInputs = now; print(`[${stamp()}] ↺ ${path}: bu kod daha önce derlendi, bellekteki sonuç kullanılıyor`, "muted"); void render(kept.code); return }
     scheduleBuild(350)
   })
   // the preview's language: its file, or the code's own texts

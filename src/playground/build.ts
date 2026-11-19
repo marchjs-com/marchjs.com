@@ -57,10 +57,10 @@ export function createBuilder(log: BuildLog) {
   // every build kept by what went in (the entry and the files' texts): a tab shown again with the same code is not
   // built again, its last result comes back at once
   const memo = new Map<string, BuildResult>();
-  const keyOf = (files: Record<string, string>, entry: string): string => JSON.stringify([entry, Object.entries(files).sort(([a], [b]) => a.localeCompare(b))]);
+  const keyOf = (files: Record<string, string>, entry: string, release = false): string => JSON.stringify([entry, release, Object.entries(files).sort(([a], [b]) => a.localeCompare(b))]);
   /** The kept result of these files, if they were built before (its texts become lang.json's). */
-  function cached(files: Record<string, string>, entry: string): BuildResult | null {
-    const r = memo.get(keyOf(files, entry));
+  function cached(files: Record<string, string>, entry: string, release = false): BuildResult | null {
+    const r = memo.get(keyOf(files, entry, release));
     if (!r) return null;
     run++; // a build still on its way is no longer wanted
     texts.set(r.texts);
@@ -68,9 +68,13 @@ export function createBuilder(log: BuildLog) {
   }
 
   /** Bundle `entry` (a path in `files`) with the files it imports. */
-  /** `i18n: false`: what is shown is not passed through _tr (an exported page whose March may not have it yet). */
-  async function build(files: Record<string, string>, entry: string, opts: { i18n?: boolean } = {}): Promise<BuildResult | null> {
-    const i18n = opts.i18n !== false;
+  /**
+   * `i18n: false`: what is shown is not passed through _tr (an exported page whose March may not have it yet).
+   * `release: true`: nothing of the files' names or places in it (no data-m-src, no signal names, no source map, no
+   * comments), minified; the default (debug) keeps them for the tools (Alt+click, the inspector, error places).
+   */
+  async function build(files: Record<string, string>, entry: string, opts: { i18n?: boolean; release?: boolean } = {}): Promise<BuildResult | null> {
+    const i18n = opts.i18n !== false, release = !!opts.release, key = keyOf(files, entry, release);
     const n = ++run;
     let t: { compile: MarchCompile; esbuild: Esbuild };
     try { t = await load(); } catch (err) { tools = null; say(`Derleme araçları yüklenemedi: ${String((err as Error)?.message ?? err)}`, "error"); return null; }
@@ -90,7 +94,7 @@ export function createBuilder(log: BuildLog) {
           if (source === undefined) return { errors: [{ text: `Dosya yok: ${a.path}` }] };
           const t1 = performance.now();
           try {
-            const r = compile(source, { filename: a.path, sourceMarks: true, i18n });
+            const r = compile(source, { filename: a.path, sourceMarks: !release, i18n });
             for (const x of [...r.texts, ...r.keys]) found.add(x);
             modules[a.path] = r.code;
             say(`✓ ${a.path} · ${ms(t1)}`, "success");
@@ -103,17 +107,18 @@ export function createBuilder(log: BuildLog) {
       },
     };
     try {
-      const out = await t.esbuild.build({ entryPoints: [entry], bundle: true, write: false, format: "esm", target: "es2022", plugins: [memory], logLevel: "silent", sourcemap: "external", outfile: "preview.js", metafile: true });
+      const out = await t.esbuild.build({ entryPoints: [entry], bundle: true, write: false, format: "esm", target: "es2022", plugins: [memory], logLevel: "silent", outfile: "preview.js", metafile: true,
+        ...(release ? { minify: true, legalComments: "none", sourcemap: false } : { sourcemap: "external" }) });
       const files = out.outputFiles ?? [], code = files.find((f) => !f.path.endsWith(".map"))?.text ?? "", map = files.find((f) => f.path.endsWith(".map"))?.text;
       const inputs: Record<string, number> = {};
       for (const o of Object.values(out.metafile?.outputs ?? {})) for (const [k, v] of Object.entries(o.inputs)) inputs[k.replace(/^files:/, "")] = (inputs[k.replace(/^files:/, "")] ?? 0) + v.bytesInOutput;
       const r = { ok: true, code, ...(map ? { map } : {}), inputs, texts: [...found].sort((a, b) => a.localeCompare(b, "tr")), modules, at: Date.now() };
       // kept even when another tab came to the front meanwhile: showing this one again needs no build
-      if (i18n) memo.set(keyOf(files, entry), r);
+      if (i18n) memo.set(key, r);
       if (n !== run) return null;
       for (const w of out.warnings) say(`⚠ ${where(w)}${w.text}`, "warn");
       texts.set(r.texts);
-      say(`Bitti: ${(code.length / 1024).toFixed(1)} KB paket · ${ms(t0)}`, "success");
+      say(`Bitti${release ? " (release)" : ""}: ${(code.length / 1024).toFixed(1)} KB paket · ${ms(t0)}`, "success");
       return r;
     } catch (err) {
       if (n !== run) return null;
