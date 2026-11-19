@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Yerel details / summary üzerinde: klavye ve ekran okuyucu desteği hazır, açılıp kapanma animasyonlu.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "DisclosureDemo.tsx",
+			"code": "export { Disclosure } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "Spoiler.tsx",
+			"code": "import { Disclosure, Card } from \"march/ui\"\n\n// sürprizbozan: film yorumunda sonu gizli; açan okur sayılır\nexport function Spoiler() {\n  let $peeks = 0\n  return <Card m:theme=\"night\">\n    <p sx={{ text: \"sm\" }}>Film harika başlıyor, ikinci yarı ise bambaşka bir şeye dönüşüyor.</p>\n    <Disclosure title={<span sx={{ color: \"brand-orange\", text: \"bold\" }}>Sonu göster (sürprizbozan!)</span>} onToggle={(o: boolean) => { if (o) $peeks++ }}>\n      <p sx={{ text: \"sm\" }}>Kahraman baştan beri kendi rüyasındaymış.</p>\n    </Disclosure>\n    <span sx={{ text: \"xs\", color: \"muted\" }}>{$peeks} kez bakıldı</span>\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "AdvancedSettings.tsx",
+			"code": "import { Disclosure, Toggle, NumberInput } from \"march/ui\"\n\n// form altında gelişmiş ayarlar: kapalı başlar; açıkken ayarların özeti başlıkta görünür\nexport function AdvancedSettings() {\n  let $open = false\n  let $cache = true\n  let $days = 30\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Disclosure open={$open} onToggle={(o: boolean) => $open = o}\n      title={$open ? \"Gelişmiş ayarlar\" : `Gelişmiş ayarlar · önbellek ${$cache ? \"açık\" : \"kapalı\"}, ${$days} gün`}>\n      <div sx={{ flex: \"col\", gap: 2 }}>\n        <Toggle label=\"Önbellek\" checked={$cache} onChange={(v: boolean) => $cache = v} />\n        <NumberInput label=\"Kayıt saklama (gün)\" value={$days} min={1} max={365} onChange={(v: number) => $days = v} />\n      </div>\n    </Disclosure>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "DisclosureLab.tsx",
+			"code": "import { Disclosure } from \"march/ui\"\nimport { Icon, settings } from \"march/icons\"\n\n// Disclosure'un bütün özellikleri: title (metin ya da öğe), open (sabit ya da canlı), onToggle, marker (hazır ok,\n// kendi işaretin ya da yok), class ve içerik\nexport function DisclosureLab() {\n  let $open = true\n  let $last = \"—\"\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Disclosure class=\"lab-live\" title=\"Canlı (open bir sinyal)\" open={$open} onToggle={(o: boolean) => { $open = o; $last = o ? \"açıldı\" : \"kapandı\" }}>\n      <p>open, sinyalin değerini izler.</p>\n    </Disclosure>\n    <button class=\"lab-flip\" on:click={() => $open = !$open}>{$open ? \"Kapat\" : \"Aç\"}</button>\n    <span class=\"lab-last\">Son değişiklik: {$last}</span>\n    <Disclosure class=\"lab-own\" title={<b>Kendi işaretim</b>} marker={<Icon of={settings} />}>\n      <p>Ok yerine dişli.</p>\n    </Disclosure>\n    <Disclosure class=\"lab-plain\" title=\"İşaretsiz\" marker={false} open>\n      <p>Başlıkta ok yok.</p>\n    </Disclosure>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "DisclosureLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { DisclosureLab } from \"./DisclosureLab.tsx\"\n\n// DisclosureLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"open sinyali details'in açık durumunu sürer\", async () => {\n  const s = renderTest(() => <DisclosureLab />)\n  const d = s.get(\".lab-live\") as HTMLDetailsElement\n  expect(d.open).toBe(true)\n  await s.click(\".lab-flip\")\n  expect(d.open).toBe(false)\n})\n\ntest(\"marker={false} oku kaldırır\", () => {\n  const s = renderTest(() => <DisclosureLab />)\n  expect(s.get(\".lab-plain\")?.classList.contains(\"m-disclosure-no-marker\")).toBe(true)\n  expect(s.get(\".lab-plain .m-disclosure-chev\")).toBe(null)\n})\n\ntest(\"kendi işaretin ok yerine çizilir\", () => {\n  const s = renderTest(() => <DisclosureLab />)\n  expect(s.get(\".lab-own .m-disclosure-marker\")).not.toBe(null)\n})\n"
+		}
+	]
+}

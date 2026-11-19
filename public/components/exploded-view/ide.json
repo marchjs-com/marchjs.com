@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Aynı öğeler eğilir, plaka plaka yükselir ve geri birleşir: bir kartın parçaları ya da bir öğenin katmanları.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "ExplodedViewDemo.tsx",
+			"code": "export { ExplodedView } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "LayerCake.tsx",
+			"code": "import { ExplodedView, Button, Card } from \"march/ui\"\nimport { sparkles } from \"march/icons\"\n\n// katman pastası: bir düğmenin katmanları yaylanarak ayrılır; düğmeye basınca birleşir\nexport function LayerCake() {\n  let $apart = true\n  return <Card m:theme=\"night\">\n    <ExplodedView open={$apart} motion=\"spring\" gap={34} m:color=\"brand-pink\">\n      <Button variant=\"primary\" icon={sparkles}>Sihir</Button>\n    </ExplodedView>\n    <Button size=\"sm\" on:click={() => $apart = !$apart}>{$apart ? \"Birleştir\" : \"Ayır\"}</Button>\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ProfileAnatomy.tsx",
+			"code": "import { ExplodedView, Card, Avatar, Badge, Button } from \"march/ui\"\n\n// profil kartının anatomisi: avatar, rozet ve düğme ayrı plakalar; bir plakaya tıklayınca adı yazılır\nconst parts = [{ selector: \".m-avatar\", label: \"Avatar\" }, { selector: \".m-badge\", label: \"Badge\" }, { selector: \".m-btn\", label: \"Button\" }]\n\nexport function ProfileAnatomy() {\n  let $picked = \"\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <ExplodedView open parts={parts} onPick={(id: string) => $picked = id} active={$picked}>\n      <Card>\n        <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}><Avatar name=\"Elif Arslan\" /><strong>Elif Arslan</strong><Badge tone=\"success\">Etkin</Badge></div>\n        <Button size=\"sm\">Takip et</Button>\n      </Card>\n    </ExplodedView>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>{$picked ? `Seçilen: ${$picked}` : \"Bir plakaya tıkla\"}</span>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ExplodedViewLab.tsx",
+			"code": "import { ExplodedView, Button, Badge } from \"march/ui\"\n\n// ExplodedView'un özellikleri: open / setOpen, parts, layers, tags, gap, tilt, fit, motion, onPick, active, label, class\nexport function ExplodedViewLab() {\n  let $open = false\n  let $picked = \"\"\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button size=\"sm\" class=\"lab-flip\" on:click={() => $open = !$open}>{$open ? \"Kapat\" : \"Ayır\"}</Button>\n    <ExplodedView class=\"lab-ev\" open={$open} setOpen={(v: boolean) => $open = v} label=\"Düğmenin katmanları\" tags={false} gap={20}\n      tilt={{ x: 46, z: -24 }} fit={false} motion=\"none\" layers={{ ring: false, surface: \"Zemin\" }} onPick={(id: string) => $picked = id} active={$picked}>\n      <Button icon={undefined}>Kaydet <Badge>2</Badge></Button>\n    </ExplodedView>\n    <span class=\"lab-state\">{$open ? \"ayrık\" : \"birleşik\"}</span>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ExplodedViewLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { ExplodedViewLab } from \"./ExplodedViewLab.tsx\"\n\n// ExplodedViewLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"içerik çizilir\", () => {\n  const s = renderTest(() => <ExplodedViewLab />)\n  expect(s.sees(\"Kaydet\")).toBe(true)\n})\n\ntest(\"Ayır düğmesi open'ı değiştirir\", async () => {\n  const s = renderTest(() => <ExplodedViewLab />)\n  await s.click(\".lab-flip\")\n  expect(s.get(\".lab-state\")?.textContent).toBe(\"ayrık\")\n})\n"
+		}
+	]
+}

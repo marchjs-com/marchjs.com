@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Resim yoksa ya da yüklenemezse baş harfler; renk addan gelir. Hazır metin, ikon, sabit renk ve biçim.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "AvatarDemo.tsx",
+			"code": "export { Avatar } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "TeamRoll.tsx",
+			"code": "import { Avatar } from \"march/ui\"\n\n// takım yoklaması: kim geldiyse avatarına basın; gelenlerin rengi koyulaşır\nconst team = [\"Elif Arslan\", \"Can Demir\", \"Deniz Kaya\", \"Ada Yıldız\", \"Mert Öz\"]\n\nexport function TeamRoll() {\n  let $here: string[] = []\n  const toggle = (n: string) => $here = $here.includes(n) ? $here.filter((x) => x !== n) : [...$here, n]\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: \"row\", gap: 2 }}>\n      {team.map((n) => <button class=\"m-btn m-btn-ghost\" aria-pressed={$here.includes(n)} on:click={() => toggle(n)}>\n        <Avatar name={n} size=\"lg\" color={$here.includes(n) ? undefined : \"neutral\"} />\n      </button>)}\n    </div>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>{$here.length} / {team.length} kişi geldi</span>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "CommentHeader.tsx",
+			"code": "import { Avatar } from \"march/ui\"\n\n// yorum başlığı: resimli kullanıcı, resmi yüklenemeyen (baş harfler) ve misafir (ikon)\nimport { user } from \"march/icons\"\n\nconst Row = (props: { avatar: unknown; name: string; text: string }) => <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n  {props.avatar}<div><strong>{props.name}</strong><p sx={{ text: \"sm\", color: \"muted\" }}>{props.text}</p></div>\n</div>\n\nexport function CommentHeader() {\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Row avatar={<Avatar name=\"Fotoğraf Atölyesi\" src=\"/media/social/sunset.svg\" />} name=\"Fotoğraf Atölyesi\" text=\"Harika bir kare!\" />\n    <Row avatar={<Avatar name=\"Kitap Kulübü\" src=\"/olmayan.jpg\" />} name=\"Kitap Kulübü\" text=\"Resim yüklenemedi: baş harfler görünür\" />\n    <Row avatar={<Avatar icon={user} label=\"Misafir\" color=\"neutral\" />} name=\"Misafir\" text=\"Giriş yapmadan yorum\" />\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "AvatarLab.tsx",
+			"code": "import { Avatar, Badge } from \"march/ui\"\nimport { user } from \"march/icons\"\n\n// Avatar'ın özellikleri: name, src, size, text, icon, color, shape, label, decorative, loading, class ve içerik\nexport function AvatarLab() {\n  return <div sx={{ flex: [\"row\", \"wrap\", \"center\"], gap: 3 }}>\n    <Avatar class=\"lab-initials\" name=\"Elif Arslan\" size=\"xl\" />\n    <Avatar class=\"lab-text\" text=\"?\" color=\"brand-orange\" shape=\"square\" size=\"lg\" />\n    <Avatar class=\"lab-icon\" icon={user} label=\"Bilinmeyen kişi\" color=\"neutral\" />\n    <Avatar class=\"lab-src\" name=\"Deniz\" src=\"/media/social/sea.svg\" loading=\"lazy\" size=\"sm\" />\n    <Avatar class=\"lab-deco\" name=\"Süs\" decorative size=\"xs\" />\n    <Avatar class=\"lab-kids\" name=\"Can Demir\"><Badge>3</Badge></Avatar>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "AvatarLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { AvatarLab } from \"./AvatarLab.tsx\"\n\n// AvatarLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"resim yoksa baş harfler görünür, ad erişilebilir ad olur\", () => {\n  const s = renderTest(() => <AvatarLab />)\n  const a = s.get(\".lab-initials\")!\n  expect(a.textContent).toContain(\"EA\")\n  expect(a.getAttribute(\"aria-label\")).toBe(\"Elif Arslan\")\n})\n\ntest(\"label adı geçersiz kılar, decorative ekran okuyucudan gizler\", () => {\n  const s = renderTest(() => <AvatarLab />)\n  expect(s.get(\".lab-icon\")?.getAttribute(\"aria-label\")).toBe(\"Bilinmeyen kişi\")\n  expect(s.get(\".lab-deco\")?.getAttribute(\"aria-hidden\")).toBe(\"true\")\n})\n\ntest(\"hazır metin baş harflerin yerine geçer\", () => {\n  const s = renderTest(() => <AvatarLab />)\n  expect(s.get(\".lab-text\")?.textContent).toContain(\"?\")\n})\n"
+		}
+	]
+}

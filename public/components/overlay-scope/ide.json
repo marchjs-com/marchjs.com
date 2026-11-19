@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "İçinde açılan çekmece, pencere, menü ve bildirim bu kutuda kalır; kipli pencere yalnız kutuyu kilitler.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "OverlayScopeDemo.tsx",
+			"code": "export { OverlayScope } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "PhoneMock.tsx",
+			"code": "import { OverlayScope, Button, openDrawer } from \"march/ui\"\n\n// telefon taslağı: çekmece ekranın içinde açılır, sayfayı örtmez\nexport function PhoneMock() {\n  return <OverlayScope class=\"m-card\" sx={{ p: 3, w: \"sm\" }}>\n    <div sx={{ flex: \"col\", gap: 2 }}>\n      <strong>HADİ</strong>\n      <Button size=\"sm\" on:click={() => openDrawer(() => <p sx={{ p: 3 }}>Telefonun içindeki menü</p>, { title: \"Menü\", side: \"bottom\" })}>Menüyü aç</Button>\n    </div>\n  </OverlayScope>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "TwoApps.tsx",
+			"code": "import { OverlayScope, Button, openDialog, toast } from \"march/ui\"\n\n// yan yana iki uygulama: her birinin penceresi ve bildirimi kendi kutusunda kalır\nconst App = (props: { name: string }) => <OverlayScope class=\"m-card\" sx={{ p: 3 }}>\n  <strong>{props.name}</strong>\n  <div sx={{ flex: \"row\", gap: 2 }}>\n    <Button size=\"sm\" on:click={() => openDialog(() => <p>{props.name} penceresi</p>, { title: props.name })}>Pencere</Button>\n    <Button size=\"sm\" on:click={() => toast(`${props.name}: kaydedildi`)}>Bildirim</Button>\n  </div>\n</OverlayScope>\n\nexport function TwoApps() {\n  return <div sx={{ flex: \"row\", gap: 3 }}><App name=\"Notlar\" /><App name=\"Takvim\" /></div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "OverlayScopeLab.tsx",
+			"code": "import { OverlayScope, Button, openDrawer, openDialog } from \"march/ui\"\n\n// OverlayScope'un özellikleri: class (sabit ya da canlı), içerik; içinde açılan katman kutuda kalır, target: \"page\"\n// sayfaya çıkarır\nexport function OverlayScopeLab() {\n  let $dark = false\n  return <OverlayScope class={() => ($dark ? \"lab-scope lab-dark\" : \"lab-scope\")}>\n    <Button size=\"sm\" on:click={() => $dark = !$dark}>Sınıfı değiştir</Button>\n    <Button size=\"sm\" on:click={() => openDrawer(() => <p>Kutudaki çekmece</p>, { title: \"Çekmece\" })}>Kutuda aç</Button>\n    <Button size=\"sm\" on:click={() => openDialog(() => <p>Bütün sayfa</p>, { title: \"Sayfa\", target: \"page\" })}>Sayfada aç</Button>\n  </OverlayScope>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "OverlayScopeLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { OverlayScopeLab } from \"./OverlayScopeLab.tsx\"\n\n// OverlayScopeLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"kutu bir katman kapsamı\", () => {\n  const s = renderTest(() => <OverlayScopeLab />)\n  expect(s.get(\".lab-scope\")?.classList.contains(\"m-overlay-scope\")).toBe(true)\n})\n\ntest(\"class canlı\", async () => {\n  const s = renderTest(() => <OverlayScopeLab />)\n  await s.click(\"Sınıfı değiştir\")\n  expect(s.get(\".lab-scope\")?.classList.contains(\"lab-dark\")).toBe(true)\n})\n\ntest(\"içinde açılan çekmece kutunun içinde\", async () => {\n  const s = renderTest(() => <OverlayScopeLab />)\n  await s.click(\"Kutuda aç\")\n  await s.flush(2)\n  expect(s.get(\".lab-scope\")?.textContent).toContain(\"Kutudaki çekmece\")\n})\n"
+		}
+	]
+}

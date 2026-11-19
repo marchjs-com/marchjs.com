@@ -12,8 +12,9 @@ import * as motion from "../../../../src/motion/index.ts";
 import * as props from "../../../../src/props/index.ts";
 const { withParts, mProps, registerMProp } = props;
 import { packIcon } from "../../../../src/icons/pack-paint.ts";
-// layers opened by the preview's code (dialogs, drawers, menus) find the scope around it (OverlayScope's lookup)
-import "../../../../src/components/layout/overlay-scope/index.ts";
+// layers opened by the preview's code (dialogs, drawers, menus) find the scope around it (OverlayScope's lookup); a
+// component drawn open (a bare <Dialog open>) gets that scope as its context: it opens in the preview, not on the page
+import { OverlayScopeContext } from "../../../../src/components/layout/overlay-scope/index.ts";
 import * as testing from "../../../../src/testing/index.ts";
 
 // the playground's helpers for a quick try (import { instrument, run } from "march/playground"): debug a piece of
@@ -297,7 +298,8 @@ const draw = (C: Comp, el: HTMLElement, props: Props, parts: Parts, cell = ""): 
   const bare = (): unknown => (children === undefined || children === "" ? core.h(C, own) : core.h(C, own, children));
   const make = (): unknown => (Object.keys(common).length ? mProps(bare(), common) : bare());
   // the cell is the root of its instances' keys (Hierarchy): counted afresh on every draw, so a key stays the same
-  const stopDraw = core.render(() => { core.provide(PARENT, { id: 0, key: cell, counts: new Map() }); return map.size ? withParts(map as never, make) : make() }, el);
+  const scope = el.closest<HTMLElement>(".m-overlay-scope");
+  const stopDraw = core.render(() => { core.provide(PARENT, { id: 0, key: cell, counts: new Map() }); if (scope) core.provide(OverlayScopeContext, scope); return map.size ? withParts(map as never, make) : make() }, el);
   // a drawing (the first, or again with new props) is no update of the reactivity: the inspector does not count it
   domWatch?.takeRecords();
   return stopDraw;

@@ -187,9 +187,9 @@ const apiPropsBy = signal<Record<string, ApiProp[]>>({})
 /** The common props' texts (`m:color`, `m:tip`…) in the page's language, by name: from the API index (src/props CommonProps). */
 const commonText = signal<Record<string, string>>({})
 const pageLang = (): "tr" | "en" => (locale().split("-")[0] === "tr" ? "tr" : "en")
-// an option that takes an icon (icon, iconEnd…): chosen with an IconPicker, kept as the icon's name. A yes / no icon
+// an option that takes an icon (icon, iconEnd…; not one whose toProp makes its value): chosen with an IconPicker, kept as the icon's name. A yes / no icon
 // option of the card (Button's "İkon" with toCode {plus}) starts at the icon its code names.
-const isIcon = (o: PlaygroundOption): boolean => /icon/i.test(o.key) || /icon/i.test(String(o.prop || ""))
+const isIcon = (o: PlaygroundOption): boolean => !o.toProp && !o.toProps && (/icon/i.test(o.key) || /icon/i.test(String(o.prop || "")))
 const iconDefault = (o: PlaygroundOption): string | null => {
   if (typeof o.default === "string") return o.default || null
   if (o.default !== true) return null
@@ -202,6 +202,10 @@ const isTri = (o: PlaygroundOption): boolean => o.default === false && (!isHtml(
 const defaultOf = (o: PlaygroundOption): unknown => (isIcon(o) ? iconDefault(o) : isTri(o) ? null : o.default)
 // the first exported component is chosen at first, and again when the chosen one is no longer in the tree
 effect(() => { const names = inTree(); if (!names.includes(untrack(selected))) selected.set(exportedNames()[0] ?? "") })
+// another file in front (another page, another tab) exports other components: its first one is chosen, even while the
+// live tree still holds the instances of the preview before it (the line above keeps such a stale choice)
+const exportKey = computed(() => exportedNames().join(","))
+effect(() => { exportKey(); untrack(() => selected.set(exportedNames()[0] ?? "")) })
 /** A component's options and default values, loaded once (its card's playground.ts; none for the file's own). */
 const loadOptions = (name: string): Promise<void> => {
   if (optionsBy.peek()[name]) return Promise.resolve()
@@ -540,15 +544,18 @@ function propsOf(opts: readonly PlaygroundOption[], v: Record<string, unknown>, 
     if (!changed && !(prop in out)) out[prop] = undefined
     if (o.visibleWhen && !o.visibleWhen(v as never)) continue
     const cur = v[o.key] ?? defaultOf(o)
+    // an option that writes several props (toProps): each one, as given (undefined: left out)
+    if (o.toProps) { if (!(changed && JSON.stringify(cur) === JSON.stringify(defaultOf(o)))) for (const [k, x] of Object.entries(o.toProps(cur, v as never))) if (x !== undefined) out[k] = x; continue }
     // an option hidden at the defaults (Button's own spinner mark) is a change once it shows, even at its default
     if (changed && JSON.stringify(cur) === JSON.stringify(defaultOf(o)) && (!o.visibleWhen || o.visibleWhen(defs as never))) continue
     // an icon given to a prop that is not named so (spinner): "icon:name", which the runtime turns into the icon
     // an icon of a pack ("lucide:arrow-left"): the icon itself (its pack was loaded by the picker that chose it)
     // a data prop written as JSON (kind "json": Tree's nodes, Timeline's items): its parsed value; text that does not parse is left out
-    const x = o.kind === "json" ? jsonOf(cur) : isIcon(o) ? (typeof cur === "string" && cur.includes(":") ? packRef(cur) : typeof cur === "string" && cur && !/icon/i.test(prop) ? `icon:${cur}` : cur) : o.toCode ? fromCode(o, cur, v) : cur
+    const x = o.toProp ? o.toProp(cur, v as never) : o.kind === "json" ? jsonOf(cur) : isIcon(o) ? (typeof cur === "string" && cur.includes(":") ? packRef(cur) : typeof cur === "string" && cur && !/icon/i.test(prop) ? `icon:${cur}` : cur) : o.toCode ? fromCode(o, cur, v) : cur
+    // a yes / no that is on by default and turned off: false is the choice (animated, dividers…), not "unset"
     if (x === undefined) continue
     if (o.key === "html:data") { delete out[prop]; for (const [k, d] of Object.entries(x as Record<string, unknown>)) out[`data-${k}`] = d; continue }
-    if (x === OMIT || x === "" || x === null || (x === false && !o.toCode && !isTri(o))) { if (changed && x === false) out[prop] = false; continue }
+    if (x === OMIT || x === "" || x === null || (x === false && !o.toCode && !o.toProp && !isTri(o) && o.default !== true)) { if (changed && x === false) out[prop] = false; continue }
     out[prop] = x
   }
   // the sx keys (sx.p, sx.text…) become one sx object; a number scale's value is a number
@@ -567,7 +574,10 @@ const below = (root: string): string[] => { const out = new Set<string>(); const
 const partsFor = (root: string): Record<string, Record<string, unknown>> => {
   const out: Record<string, Record<string, unknown>> = {}
   for (const name of below(root)) {
-    const p = { ...propsOf(optsOf(name), valuesBy()[name] ?? {}, true), ...handlerFns(name) }
+    const p: Record<string, unknown> = { ...propsOf(optsOf(name), valuesBy()[name] ?? {}, true), ...handlerFns(name) }
+    // a part's content is what the component around it gives (DevicePreview's screen in its OverlayScope): a text
+    // typed on the part's own page must not replace it
+    delete p["children"]
     if (Object.keys(p).length) out[name] = p
   }
   return out
@@ -584,7 +594,7 @@ const objValue = (o: PlaygroundOption | undefined, x: unknown, v: Record<string,
 /** What was changed in a component's values, as JSX attributes: [prop, its code] (`["size", 'size="lg"']`). */
 const attrsOf = (name: string, v: Record<string, unknown>): [string, string][] => {
   const opts = optsOf(name), byProp = (prop: string) => opts.find((o) => (o.prop || o.key) === prop)
-  return Object.entries(propsOf(opts, v, true)).filter(([k]) => k !== "children").map(([k, x]): [string, string] =>
+  return Object.entries(propsOf(opts, v, true)).filter(([k, x]) => k !== "children" && typeof x !== "function" && !(x instanceof Node)).map(([k, x]): [string, string] =>
     [k, k === "sx" ? `sx={{ ${Object.entries(x as Record<string, unknown>).map(([a, b]) => `${a}: ${JSON.stringify(b)}`).join(", ")} }}` : x === true ? k : `${k}=${jsxValue(byProp(k), x, v)}`])
 }
 const usageOf = (name: string): string => {
@@ -600,6 +610,10 @@ const usageOf = (name: string): string => {
   const kids = propsFor(name)["children"]
   const tag = (rootTag(name) ?? name).replace(/^<(.*)>$/, "$1")
   const open = [tag, ...attrs].join(" ")
+  // sample children of a toProp (elements): the option's code, when it writes one
+  const kidsOpt = optsOf(name).find((o) => (o.prop || o.key) === "children" && o.toProp)
+  const kidsCode = kidsOpt?.toCode ? codeOf(kidsOpt, (valuesBy()[name] ?? {})[kidsOpt.key] ?? kidsOpt.default, valuesBy()[name] ?? {}) : undefined
+  if (kidsOpt) return typeof kidsCode === "string" && kidsCode ? `<${open}>${kidsCode}</${tag}>` : `<${open} />`
   return kids !== undefined && kids !== "" ? `<${open}>${String(kids)}</${tag}>` : `<${open} />`
 }
 /** The code of every exported component, one under the other. */

@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Dört kenar, sürükle, durma noktaları",
+	"sources": [
+		{
+			"type": "code",
+			"name": "DrawerDemo.tsx",
+			"code": "export { Drawer } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "MusicQueue.tsx",
+			"code": "import { Drawer, Button, Card } from \"march/ui\"\n\n// sıradaki şarkılar: alttan açılan, iki durma noktalı çekmece; koyu tema\nconst queue = [\"Gece Yolu\", \"Sahil\", \"Kuzey Rüzgârı\", \"Şafak\", \"Son Vapur\"]\n\nexport function MusicQueue() {\n  let $open = false\n  return <Card m:theme=\"night\">\n    <Button on:click={() => $open = true}>Sıradakiler ({queue.length})</Button>\n    <Drawer open={$open} onClose={() => $open = false} side=\"bottom\" snapPoints={[0.4, 0.9]} title=\"Sıradakiler\">\n      <ol>{queue.map((s) => <li>{s}</li>)}</ol>\n    </Drawer>\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "FilterSheet.tsx",
+			"code": "import { Drawer, Button, Checkbox } from \"march/ui\"\n\n// mağaza süzgeçleri: sağdan açılan çekmece; seçilen süzgeç sayısı düğmede\nexport function FilterSheet() {\n  let $open = false\n  let $stock = false\n  let $sale = false\n  const count = () => Number($stock) + Number($sale)\n  return <div>\n    <Button on:click={() => $open = true}>Süzgeçler{count() ? ` (${count()})` : \"\"}</Button>\n    <Drawer open={$open} onClose={() => $open = false} side=\"end\" size=\"sm\" title=\"Süzgeçler\">\n      <Checkbox label=\"Stokta olanlar\" checked={$stock} onChange={(v: boolean) => $stock = v} />\n      <Checkbox label=\"İndirimdekiler\" checked={$sale} onChange={(v: boolean) => $sale = v} />\n      <Button variant=\"primary\" on:click={() => $open = false}>Uygula</Button>\n    </Drawer>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "DrawerLab.tsx",
+			"code": "import { Drawer, Button } from \"march/ui\"\n\n// Drawer'ın özellikleri: open, onClose, side, size, modal, dragToClose, snapPoints, snap, onSnap, handle, handleLabel,\n// closeButton, motion, title, target\nexport function DrawerLab() {\n  let $open = false\n  let $snap = 0\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Button on:click={() => $open = true}>Çekmeceyi aç</Button>\n    <span class=\"lab-snap\">Durma noktası {$snap}</span>\n    <Drawer open={$open} onClose={() => $open = false} side=\"top\" size=\"md\" modal={false} dragToClose={false}\n      snapPoints={[0.3, 0.6]} onSnap={(i: number) => $snap = i} handle handleLabel=\"Çekmeceyi sürükle\" closeButton\n      motion={{ duration: 200 }} title=\"Duyurular\">\n      <p>Bugün iki yeni özellik yayında.</p>\n    </Drawer>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "DrawerLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { DrawerLab } from \"./DrawerLab.tsx\"\n\n// DrawerLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"açılınca başlık ve içerik görünür\", async () => {\n  const s = renderTest(() => <DrawerLab />)\n  await s.click(\"Çekmeceyi aç\")\n  await s.flush(2)\n  expect(s.sees(\"Duyurular\")).toBe(true)\n  expect(s.sees(\"Bugün iki yeni özellik yayında.\")).toBe(true)\n})\n\ntest(\"tutamaç handleLabel adını alır\", async () => {\n  const s = renderTest(() => <DrawerLab />)\n  await s.click(\"Çekmeceyi aç\")\n  await s.flush(2)\n  expect(s.find(\"Çekmeceyi sürükle\")).not.toBe(null)\n})\n"
+		}
+	]
+}

@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Tetikleyici ve yanında yüzen panel: dışarı tıkla ya da Esc ile kapanır, odak içeri girer ve geri döner.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "PopoverDemo.tsx",
+			"code": "export { Popover } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "EmojiNote.tsx",
+			"code": "import { Popover, Button } from \"march/ui\"\n\n// not için ruh hali: düğmeye basınca emoji paneli açılır, seçince kapanır\nconst moods = [\"😀\", \"😌\", \"😴\", \"🤩\", \"😤\", \"🥳\"]\n\nexport function EmojiNote() {\n  let $mood = \"😀\"\n  return <Popover trigger={<Button variant=\"secondary\">Ruh hali: {$mood}</Button>} title=\"Bugün nasılsın?\" placement=\"bottom-start\">\n    {(close: () => void) => <div sx={{ flex: \"row\", gap: 1 }}>\n      {moods.map((m) => <Button variant=\"ghost\" on:click={() => { $mood = m; close() }}>{m}</Button>)}\n    </div>}\n  </Popover>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ShareLink.tsx",
+			"code": "import { Popover, Button, TextInput, toast } from \"march/ui\"\nimport { link } from \"march/icons\"\n\n// paylaşım bağlantısı: açılır panelde bağlantı ve kopyala; alt çubukta kapat\nexport function ShareLink() {\n  const url = \"https://marchjs.com/p/42\"\n  return <Popover trigger={<Button icon={link}>Paylaş</Button>} title=\"Bağlantıyı paylaş\" width=\"md\" closable\n    footer={<span sx={{ text: \"xs\", color: \"muted\" }}>Bağlantısı olan herkes görebilir</span>}>\n    {(close: () => void) => <div sx={{ flex: \"row\", gap: 2 }}>\n      <TextInput aria-label=\"Bağlantı\" value={url} readOnly />\n      <Button variant=\"primary\" on:click={() => { toast(\"Kopyalandı\"); close() }}>Kopyala</Button>\n    </div>}\n  </Popover>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "PopoverLab.tsx",
+			"code": "import { Popover, Button } from \"march/ui\"\n\n// Popover'ın özellikleri: trigger, open / setOpen (denetimli), defaultOpen, onOpenChange, placement, title, closable,\n// closeLabel, label, role, motion, width, flush, footer, closeOnOutside, closeOnEscape, autoFocus, color, class,\n// panelClass ve işlev çocuk (close)\nexport function PopoverLab() {\n  let $open = false\n  let $why = \"—\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Popover class=\"lab-pop\" panelClass=\"lab-panel\" trigger={<Button>Ayrıntı</Button>} open={$open} setOpen={(v: boolean) => $open = v}\n      onOpenChange={(o: boolean, why: string) => $why = `${o ? \"açıldı\" : \"kapandı\"} (${why})`} placement=\"bottom\" title=\"Ayrıntı\" closable\n      closeLabel=\"Paneli kapat\" label=\"Ayrıntı paneli\" motion=\"fade\" width=\"sm\" footer={<span>Alt bilgi</span>} closeOnOutside={false}\n      closeOnEscape autoFocus={false} color=\"brand-purple\">\n      {(close: () => void) => <Button size=\"sm\" on:click={() => close()}>Tamam</Button>}\n    </Popover>\n    <span class=\"lab-why\">{$why}</span>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "PopoverLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { PopoverLab } from \"./PopoverLab.tsx\"\n\n// PopoverLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"tetikleyiciye basınca panel açılır ve nedeni yazılır\", async () => {\n  const s = renderTest(() => <PopoverLab />)\n  await s.click(\"Ayrıntı\")\n  await s.flush(2)\n  expect(s.get(\".lab-why\")?.textContent).toContain(\"açıldı\")\n  expect(s.sees(\"Alt bilgi\")).toBe(true)\n})\n\ntest(\"işlev çocuğun close'u paneli kapatır\", async () => {\n  const s = renderTest(() => <PopoverLab />)\n  await s.click(\"Ayrıntı\")\n  await s.flush(2)\n  await s.click(\"Tamam\")\n  await s.flush(2)\n  expect(s.get(\".lab-why\")?.textContent).toContain(\"kapandı\")\n})\n"
+		}
+	]
+}

@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Kenardaki ya da köşedeki tutamaç: sürükle, ok tuşları, Home / End, Enter başa döndürür; tek görünüm.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "ResizeHandleDemo.tsx",
+			"code": "export { ResizeHandle } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "StretchyNote.tsx",
+			"code": "import { ResizeHandle } from \"march/ui\"\n\n// esnek not kâğıdı: sağ kenardan genişler; genişlik yazının boyunu da büyütür\nexport function StretchyNote() {\n  let $w = 220\n  return <div class=\"m-card\" style={{ position: \"relative\", \"inline-size\": `${$w}px` }} sx={{ p: 3 }}>\n    <p style={{ \"font-size\": `${Math.round($w / 14)}px` }}>Merhaba!</p>\n    <ResizeHandle value={() => $w} set={(w: number) => $w = w} min={160} max={420} reset={() => $w = 220} label=\"Not genişliği\" m:color=\"brand-orange\" />\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "SidebarPanel.tsx",
+			"code": "import { ResizeHandle } from \"march/ui\"\n\n// kenar çubuğu: genişliği sürükle ya da ok tuşlarıyla değiştir; Enter başa döndürür\nexport function SidebarPanel() {\n  let $w = 240\n  return <div sx={{ flex: \"row\" }}>\n    <aside class=\"m-card\" style={{ position: \"relative\", \"inline-size\": `${$w}px` }} sx={{ p: 3 }}>\n      <strong>Dosyalar</strong>\n      <p sx={{ text: \"sm\", color: \"muted\" }}>{Math.round($w)} px</p>\n      <ResizeHandle value={() => $w} set={(w: number) => $w = w} min={160} max={400} reset={() => $w = 240} label=\"Kenar çubuğu genişliği\" line=\"hover\" />\n    </aside>\n    <main sx={{ p: 3 }}>Düzenleyici</main>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ResizeHandleLab.tsx",
+			"code": "import { ResizeHandle } from \"march/ui\"\n\n// ResizeHandle'ın özellikleri: value + set (tam ayırıcı), min, max, step, reset, edge, label, line, grip, disabled,\n// onStep (köşe ve yalnız gösterge kipi), class\nexport function ResizeHandleLab() {\n  let $w = 200\n  let $steps = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div class=\"m-card\" style={{ position: \"relative\", \"inline-size\": `${$w}px`, \"block-size\": \"80px\" }}>\n      <ResizeHandle class=\"lab-full\" value={() => $w} set={(w: number) => $w = w} min={150} max={300} step={10} reset={() => $w = 200} label=\"Genişlik\" grip />\n    </div>\n    <span class=\"lab-w\">{$w} px</span>\n    <div class=\"m-card\" style={{ position: \"relative\", \"inline-size\": \"200px\", \"block-size\": \"80px\" }}>\n      <ResizeHandle class=\"lab-corner\" edge=\"bottom-end\" label=\"Köşe\" onStep={() => $steps++} line=\"always\" />\n      <ResizeHandle class=\"lab-off\" edge=\"bottom\" label=\"Kapalı\" disabled grip={false} />\n    </div>\n    <span class=\"lab-steps\">{$steps} adım</span>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ResizeHandleLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { ResizeHandleLab } from \"./ResizeHandleLab.tsx\"\n\n// ResizeHandleLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"value + set ile tam ayırıcı\", () => {\n  const s = renderTest(() => <ResizeHandleLab />)\n  const h = s.get(\".lab-full\")\n  expect(h?.getAttribute(\"role\")).toBe(\"separator\")\n  expect(h?.getAttribute(\"aria-label\")).toBe(\"Genişlik\")\n})\n\ntest(\"ok tuşu bir adım büyütür\", async () => {\n  const s = renderTest(() => <ResizeHandleLab />)\n  const h = s.get(\".lab-full\") as HTMLElement\n  h.focus()\n  await s.press(\"ArrowRight\", h)\n  expect(s.get(\".lab-w\")?.textContent).toBe(\"210 px\")\n})\n\ntest(\"köşede ok tuşu onStep'i çağırır\", async () => {\n  const s = renderTest(() => <ResizeHandleLab />)\n  await s.press(\"ArrowDown\", s.get(\".lab-corner\"))\n  expect(s.get(\".lab-steps\")?.textContent).toBe(\"1 adım\")\n})\n"
+		}
+	]
+}

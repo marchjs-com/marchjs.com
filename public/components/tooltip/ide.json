@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Üstüne gelince kısa bir gecikmeyle, klavye odağında hemen görünür; aria-describedby ile bağlanır, Esc gizler.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "TooltipDemo.tsx",
+			"code": "export { Tooltip } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "PeriodicTable.tsx",
+			"code": "import { Tooltip } from \"march/ui\"\n\n// periyodik tablodan bir sıra: her elementin adı ipucunda, renkli balonla\nconst elements = [[\"H\", \"Hidrojen\"], [\"He\", \"Helyum\"], [\"Li\", \"Lityum\"], [\"C\", \"Karbon\"], [\"O\", \"Oksijen\"]]\n\nexport function PeriodicTable() {\n  return <div sx={{ flex: \"row\", gap: 2 }}>\n    {elements.map(([sym, name]) => <Tooltip text={name!} color=\"brand-purple\" delay={0}>\n      <button class=\"m-card\" sx={{ p: 3, text: [\"lg\", \"bold\"] }}>{sym}</button>\n    </Tooltip>)}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "EditorTools.tsx",
+			"code": "import { Tooltip, IconButton } from \"march/ui\"\nimport { bold, italic, link } from \"march/icons\"\n\n// düzenleyici araçları: IconButton adını zaten ipucu yapar; Tooltip uzun açıklama ve kısayol için\nexport function EditorTools() {\n  return <div sx={{ flex: \"row\", gap: 1 }}>\n    <Tooltip text=\"Kalın (Ctrl + B)\" placement=\"bottom\"><IconButton icon={bold} label=\"Kalın\" title={false} /></Tooltip>\n    <Tooltip text=\"İtalik (Ctrl + I)\" placement=\"bottom\"><IconButton icon={italic} label=\"İtalik\" title={false} /></Tooltip>\n    <Tooltip text=\"Bağlantı ekle (Ctrl + K)\" placement=\"bottom\" motion=\"fade\"><IconButton icon={link} label=\"Bağlantı\" title={false} /></Tooltip>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "TooltipLab.tsx",
+			"code": "import { Tooltip, Button } from \"march/ui\"\n\n// Tooltip'in özellikleri: text (sabit ya da canlı), placement, delay, disabled, motion, color, class ve hedef (çocuk)\nexport function TooltipLab() {\n  let $n = 0\n  let $off = false\n  return <div sx={{ flex: \"row\", gap: 2 }}>\n    <Tooltip class=\"lab-tip\" text={() => `${$n} kez basıldı`} placement=\"bottom-end\" delay={0} motion=\"none\" color=\"success\" disabled={$off}>\n      <Button class=\"lab-target\" on:click={() => $n++}>Bas</Button>\n    </Tooltip>\n    <Button on:click={() => $off = !$off}>{$off ? \"İpucunu aç\" : \"İpucunu kapat\"}</Button>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "TooltipLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { TooltipLab } from \"./TooltipLab.tsx\"\n\n// TooltipLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"odakta ipucu açılır ve hedefe aria-describedby ile bağlanır\", async () => {\n  const s = renderTest(() => <TooltipLab />)\n  s.get(\".m-tip-anchor\")!.dispatchEvent(new Event(\"focusin\", { bubbles: true }))\n  await s.flush(2)\n  expect(s.get(\".lab-target\")?.hasAttribute(\"aria-describedby\")).toBe(true)\n})\n\ntest(\"disabled iken ipucu açılmaz\", async () => {\n  const s = renderTest(() => <TooltipLab />)\n  await s.click(\"İpucunu kapat\")\n  s.get(\".m-tip-anchor\")!.dispatchEvent(new Event(\"focusin\", { bubbles: true }))\n  await s.flush(2)\n  expect(s.get(\".lab-target\")?.hasAttribute(\"aria-describedby\")).toBe(false)\n})\n"
+		}
+	]
+}

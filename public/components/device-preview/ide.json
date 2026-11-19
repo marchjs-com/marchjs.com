@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Telefon ve tablet kasası, çentik, durum çubuğu, gerçek ekran boyu, döndürme; fare parmak gibi:…",
+	"sources": [
+		{
+			"type": "code",
+			"name": "DevicePreviewDemo.tsx",
+			"code": "export { DevicePreview } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "LockScreen.tsx",
+			"code": "import { DevicePreview } from \"march/ui\"\n\n// kilit ekranı: Pixel kasası, sabit saat; ekranın içinde büyük saat ve bildirim\nexport function LockScreen() {\n  return <DevicePreview device=\"pixel-8\" time=\"9:41\" fitHeight={460}>\n    <div sx={{ flex: [\"col\", \"center\"], gap: 2, p: 6 }}>\n      <span sx={{ text: [\"2xl\", \"bold\"] }}>9:41</span>\n      <span sx={{ text: \"sm\", color: \"muted\" }}>Salı, 19 Kasım</span>\n      <div class=\"m-card\" sx={{ p: 2, text: \"sm\" }}>HADİ: Elif seni etiketledi</div>\n    </div>\n  </DevicePreview>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ResponsiveCheck.tsx",
+			"code": "import { DevicePreview, Segmented, Toggle } from \"march/ui\"\n\n// duyarlı tasarım denetimi: cihaz ve yön seçilir, aynı sayfa içinde çizilir\nexport function ResponsiveCheck() {\n  let $device = \"iphone-15\"\n  let $landscape = false\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Segmented label=\"Cihaz\" value={$device} options={[\"iphone-15\", \"pixel-8\", \"iphone-se\", \"ipad\"]} onChange={(v: string) => $device = v} />\n    <Toggle label=\"Yatay\" checked={$landscape} onChange={(v: boolean) => $landscape = v} />\n    <DevicePreview device={() => $device} landscape={() => $landscape} fitHeight={420}>\n      <div sx={{ p: 3 }}><h3 sx={{ text: [\"lg\", \"bold\"] }}>HADİ</h3><p sx={{ text: \"sm\" }}>Bu sayfa {$device} ekranında.</p></div>\n    </DevicePreview>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "DevicePreviewLab.tsx",
+			"code": "import { DevicePreview } from \"march/ui\"\n\n// DevicePreview'un özellikleri: device (hazır ad ya da kendi DeviceSpec'in), landscape, touch, fit, fitHeight, label,\n// statusBar, time, homeIndicator, camera, class ve içerik (src ile bir adres de gösterilebilir)\nconst watch = { name: \"Saat\", width: 198, height: 242, radius: 48, kind: \"screen\" as const, camera: \"none\" as const }\n\nexport function DevicePreviewLab() {\n  return <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n    <DevicePreview class=\"lab-phone\" device=\"iphone-se\" label=\"Küçük telefon\" touch={false} statusBar={false} homeIndicator={false} camera={false} fitHeight={360}>\n      <p sx={{ p: 2 }}>Çubuksuz ekran</p>\n    </DevicePreview>\n    <DevicePreview class=\"lab-own\" device={watch} fit={false} time=\"10:10\">\n      <p sx={{ p: 2, text: \"sm\" }}>Kendi cihazım</p>\n    </DevicePreview>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "DevicePreviewLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { DevicePreviewLab } from \"./DevicePreviewLab.tsx\"\n\n// DevicePreviewLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"içerik cihazın ekranında\", () => {\n  const s = renderTest(() => <DevicePreviewLab />)\n  expect(s.get(\".lab-phone\")?.textContent).toContain(\"Çubuksuz ekran\")\n  expect(s.get(\".lab-own\")?.textContent).toContain(\"Kendi cihazım\")\n})\n\ntest(\"label erişilebilir ad olur\", () => {\n  const s = renderTest(() => <DevicePreviewLab />)\n  expect(s.get(\".lab-phone\")?.outerHTML).toContain(\"Küçük telefon\")\n})\n"
+		}
+	]
+}

@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Yalnız değişen basamak döner: artınca yukarı, azalınca aşağı.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "CountRollDemo.tsx",
+			"code": "export { CountRoll } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "Scoreboard.tsx",
+			"code": "import { CountRoll, Button, Card } from \"march/ui\"\n\n// skor tabelası: iki takım, her gol yalnız değişen basamağı döndürür\nexport function Scoreboard() {\n  let $home = 9\n  let $away = 19\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: [\"row\", \"center\"], gap: 4, text: [\"2xl\", \"bold\"] }}>\n      <CountRoll value={$home} /> <span>:</span> <CountRoll value={$away} />\n    </div>\n    <div sx={{ flex: \"row\", gap: 2 }}>\n      <Button size=\"sm\" on:click={() => $home++}>Ev sahibi gol</Button>\n      <Button size=\"sm\" on:click={() => $away++}>Konuk gol</Button>\n    </div>\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "FollowerCount.tsx",
+			"code": "import { CountRoll, Button } from \"march/ui\"\n\n// takipçi sayısı: kısa biçim (12,4 B); takip et düğmesi bir artırır\nexport function FollowerCount() {\n  let $n = 12480\n  let $on = false\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 3 }}>\n    <span><strong><CountRoll value={$n} format=\"compact\" /></strong> takipçi</span>\n    <Button size=\"sm\" variant={$on ? \"secondary\" : \"primary\"} on:click={() => { $on = !$on; $n += $on ? 1 : -1 }}>{$on ? \"Takip ediliyor\" : \"Takip et\"}</Button>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "CountRollLab.tsx",
+			"code": "import { CountRoll, Button } from \"march/ui\"\n\n// CountRoll'un özellikleri: value, format (compact / full / kendi Intl ayarın), hideZero, duration, formatter, spoken,\n// roll, stagger, class\nexport function CountRollLab() {\n  let $n = 0\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <CountRoll class=\"lab-zero\" value={$n} hideZero />\n    <CountRoll class=\"lab-own\" value={$n} formatter={(n: number) => `${n} beğeni`} spoken={(n: number) => `${n} kişi beğendi`} roll={false} />\n    <CountRoll class=\"lab-slow\" value={1234567} format=\"compact\" duration={900} stagger={60} />\n    <Button size=\"sm\" on:click={() => $n += 5}>+5</Button>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "CountRollLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { CountRollLab } from \"./CountRollLab.tsx\"\n\n// CountRollLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"formatter kendi metnini yazar ve değer değişince güncellenir\", async () => {\n  const s = renderTest(() => <CountRollLab />)\n  expect(s.get(\".lab-own\")?.textContent).toContain(\"0 beğeni\")\n  await s.click(\"+5\")\n  await s.flush(2)\n  expect(s.get(\".lab-own\")?.textContent).toContain(\"5 beğeni\")\n})\n\ntest(\"hideZero sıfırı göstermez\", () => {\n  const s = renderTest(() => <CountRollLab />)\n  expect(s.get(\".lab-zero\")?.textContent?.trim()).toBe(\"\")\n})\n"
+		}
+	]
+}

@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Satır ya da sütun, boşluk belirteçleri (0–8), hizalama ve satır kaydırma; etiketli araç çubuğu ve ayraçlar.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "StackDemo.tsx",
+			"code": "export { Stack } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "TagCloud.tsx",
+			"code": "import { Stack, Chip } from \"march/ui\"\n\n// etiket bulutu: satır, sarmalı; seçilen etiketler sayılır\nconst tags = [\"sinyal\", \"TSX\", \"derleyici\", \"erişilebilirlik\", \"tema\", \"hareket\", \"test\", \"i18n\"]\n\nexport function TagCloud() {\n  let $picked: string[] = []\n  const toggle = (t: string) => $picked = $picked.includes(t) ? $picked.filter((x) => x !== t) : [...$picked, t]\n  return <Stack gap={4}>\n    <Stack direction=\"row\" gap={2} wrap>\n      {tags.map((t) => <Chip selected={$picked.includes(t)} on:click={() => toggle(t)}>{t}</Chip>)}\n    </Stack>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>{$picked.length} etiket seçildi</span>\n  </Stack>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "EditorToolbar.tsx",
+			"code": "import { Toolbar, Divider, Button, IconButton } from \"march/ui\"\nimport { bold, italic, underline, alignLeft, alignCenter } from \"march/icons\"\n\n// düzenleyici araç çubuğu: gruplar dikey ayraçla ayrılır, sonda dışa aktar; altta \"ya da\" ayracı\nexport function EditorToolbar() {\n  let $b = false\n  let $align = \"left\"\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Toolbar label=\"Biçim\" end={<Button size=\"sm\" variant=\"primary\">Dışa aktar</Button>}>\n      <IconButton icon={bold} label=\"Kalın\" pressed={$b} on:click={() => $b = !$b} />\n      <IconButton icon={italic} label=\"İtalik\" />\n      <IconButton icon={underline} label=\"Altı çizili\" />\n      <Divider vertical />\n      <IconButton icon={alignLeft} label=\"Sola hizala\" pressed={$align === \"left\"} on:click={() => $align = \"left\"} />\n      <IconButton icon={alignCenter} label=\"Ortala\" pressed={$align === \"center\"} on:click={() => $align = \"center\"} />\n    </Toolbar>\n    <Divider label=\"ya da\" />\n    <Button>Şablondan başla</Button>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "StackLab.tsx",
+			"code": "import { Stack, Toolbar, Divider, Button } from \"march/ui\"\n\n// Stack'in bütün özellikleri: direction, gap (0–8), align, justify, wrap, as, class; yanında Toolbar (label, end) ve\n// Divider (label, vertical)\nconst Box = (props: { n: number }) => <span class=\"sc-stack-item sc-stack-item-0\">Öğe {props.n}</span>\n\nexport function StackLab() {\n  let $gap = 2\n  return <Stack gap={4}>\n    {() => <Stack class=\"lab-row\" as=\"ul\" direction=\"row\" gap={$gap} align=\"center\" justify=\"between\" wrap>\n      {[1, 2, 3].map((n) => <li><Box n={n} /></li>)}\n    </Stack>}\n    <Toolbar label=\"Boşluk\" end={<span class=\"lab-gap\">gap {$gap}</span>}>\n      <Button size=\"sm\" on:click={() => $gap = Math.max(0, $gap - 1)}>Daralt</Button>\n      <Divider vertical />\n      <Button size=\"sm\" on:click={() => $gap = Math.min(8, $gap + 1)}>Genişlet</Button>\n    </Toolbar>\n    <Divider label=\"sütun\" />\n    <Stack class=\"lab-col\" direction=\"column\" gap={1} align=\"end\"><Box n={4} /><Box n={5} /></Stack>\n  </Stack>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "StackLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { StackLab } from \"./StackLab.tsx\"\n\n// StackLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"as=ul listeyi ul olarak çizer, wrap sınıfı var\", () => {\n  const s = renderTest(() => <StackLab />)\n  const row = s.get(\".lab-row\")!\n  expect(row.tagName).toBe(\"UL\")\n  expect(row.className).toContain(\"m-stack-wrap\")\n})\n\ntest(\"Genişlet boşluğu bir adım artırır\", async () => {\n  const s = renderTest(() => <StackLab />)\n  await s.click(\"Genişlet\")\n  expect(s.get(\".lab-gap\")?.textContent).toBe(\"gap 3\")\n  expect(s.get(\".lab-row\")!.className).toContain(\"m-gap-3\")\n})\n\ntest(\"Toolbar erişilebilir adını alır, Divider etiketini gösterir\", () => {\n  const s = renderTest(() => <StackLab />)\n  expect(s.get(\"[role=toolbar]\")?.getAttribute(\"aria-label\")).toBe(\"Boşluk\")\n  expect(s.sees(\"sütun\")).toBe(true)\n})\n"
+		}
+	]
+}

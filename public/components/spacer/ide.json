@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Kendinden sonrakileri satırın mantıksal sonuna iter; RTL'de aynalanır.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "SpacerDemo.tsx",
+			"code": "export { Spacer } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "PlayerBar.tsx",
+			"code": "import { Spacer, IconButton } from \"march/ui\"\nimport { play, pause, volume2 } from \"march/icons\"\n\n// müzik çubuğu: şarkı adı başta, Spacer ses düğmesini sona iter (sağdan sola yazımda aynalanır)\nexport function PlayerBar() {\n  let $playing = false\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 2, p: 2, radius: 2 }} class=\"m-card\">\n    <IconButton icon={$playing ? pause : play} label={$playing ? \"Duraklat\" : \"Çal\"} variant=\"solid\" shape=\"round\" on:click={() => $playing = !$playing} />\n    <span sx={{ text: \"bold\" }}>Gece Yolu</span>\n    <Spacer />\n    <IconButton icon={volume2} label=\"Ses\" />\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "TopBar.tsx",
+			"code": "import { Spacer, Button, Badge } from \"march/ui\"\n\n// uygulama üst çubuğu: logo ve taslak rozeti başta, eylemler sonda; düğme yazı yönünü çevirir\nexport function TopBar() {\n  let $rtl = false\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div dir={$rtl ? \"rtl\" : \"ltr\"} sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n      <strong>HADİ</strong>\n      <Badge>Taslak</Badge>\n      <Spacer />\n      <Button size=\"sm\">Paylaş</Button>\n      <Button size=\"sm\" variant=\"primary\">Yayınla</Button>\n    </div>\n    <Button size=\"sm\" variant=\"ghost\" on:click={() => $rtl = !$rtl}>{$rtl ? \"Soldan sağa\" : \"Sağdan sola\"}</Button>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "SpacerLab.tsx",
+			"code": "import { Spacer, Button } from \"march/ui\"\n\n// Spacer prop almaz: kendinden sonrakileri satırın mantıksal sonuna iter; iki Spacer kalan yeri eşit böler\nexport function SpacerLab() {\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div class=\"lab-one\" sx={{ flex: [\"row\", \"center\"], gap: 2 }}><Button>Baş</Button><Spacer /><Button>Son</Button></div>\n    <div class=\"lab-two\" sx={{ flex: [\"row\", \"center\"], gap: 2 }}><Button>Sol</Button><Spacer /><Button>Orta</Button><Spacer /><Button>Sağ</Button></div>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "SpacerLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { SpacerLab } from \"./SpacerLab.tsx\"\n\n// SpacerLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"Spacer bir m-spacer öğesi çizer\", () => {\n  const s = renderTest(() => <SpacerLab />)\n  expect(s.all(\".lab-one .m-spacer\").length).toBe(1)\n  expect(s.all(\".lab-two .m-spacer\").length).toBe(2)\n})\n\ntest(\"iki Spacer üç düğmeyi ayırır\", () => {\n  const s = renderTest(() => <SpacerLab />)\n  expect(s.all(\".lab-two button\").length).toBe(3)\n})\n"
+		}
+	]
+}

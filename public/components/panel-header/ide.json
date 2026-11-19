@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Panelin üst (ya da alt) çubuğu: ikon, başlık, alt başlık, sayı, eylemler ve kapat düğmesi; sürükleme tutamacı da olur.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "PanelHeaderDemo.tsx",
+			"code": "export { PanelHeader } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "MusicPanel.tsx",
+			"code": "import { PanelHeader, IconButton, Card } from \"march/ui\"\nimport { music, shuffle } from \"march/icons\"\n\n// çalma listesi paneli: koyu zeminde ikonlu başlık, şarkı sayısı, karıştır düğmesi\nexport function MusicPanel() {\n  let $shuffle = false\n  return <Card m:theme=\"night\">\n    <PanelHeader icon={music} m:color=\"brand-pink\" title=\"Gece Yolu\" subtitle=\"Çalma listesi\" meta={<span>12 şarkı</span>}\n      actions={<IconButton icon={shuffle} label=\"Karıştır\" pressed={$shuffle} on:click={() => $shuffle = !$shuffle} />} close={false} />\n    <p sx={{ p: 2, text: \"sm\" }}>{$shuffle ? \"Karışık çalıyor\" : \"Sırayla çalıyor\"}</p>\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "FilterPanel.tsx",
+			"code": "import { PanelHeader, Button, Checkbox } from \"march/ui\"\nimport { filter } from \"march/icons\"\n\n// süzgeç paneli: üstte başlık ve kapat, altta alt çubuk (as=\"footer\") ile uygula\nexport function FilterPanel() {\n  let $open = true\n  let $stock = false\n  return <div class=\"m-card\">\n    {() => ($open ? <>\n      <PanelHeader icon={filter} title=\"Süzgeçler\" divider onClose={() => $open = false} />\n      <div sx={{ p: 3 }}><Checkbox label=\"Yalnız stoktakiler\" checked={$stock} onChange={(v: boolean) => $stock = v} /></div>\n      <PanelHeader as=\"footer\" title={$stock ? \"1 süzgeç\" : \"Süzgeç yok\"} divider actions={<Button size=\"sm\" variant=\"primary\">Uygula</Button>} close={false} />\n    </> : <Button size=\"sm\" on:click={() => $open = true}>Süzgeçleri aç</Button>)}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "PanelHeaderLab.tsx",
+			"code": "import { PanelHeader, Badge, Button } from \"march/ui\"\nimport { settings, minus } from \"march/icons\"\n\n// PanelHeader'ın özellikleri: as, lead, icon, title, titleAs, titleId, subtitle, meta, actions, onClose, close,\n// closeLabel, size, sticky, divider, tone, drag, align, class\nexport function PanelHeaderLab() {\n  let $closed = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <PanelHeader class=\"lab-head\" icon={settings} title=\"Ayarlar\" titleAs=\"h2\" titleId=\"lab-title\" subtitle=\"Çalışma alanı\" meta={<Badge>3</Badge>}\n      actions={<Button size=\"sm\">Kaydet</Button>} onClose={() => $closed++} closeLabel=\"Paneli kapat\" size=\"lg\" divider tone=\"muted\" sticky align=\"center\" />\n    <PanelHeader class=\"lab-own\" lead={<span>☰</span>} title=\"Kendi kapat ikonum\" close={minus} closeLabel=\"Küçült\" onClose={() => $closed++} drag size=\"sm\" />\n    <PanelHeader class=\"lab-foot\" as=\"footer\" title=\"Alt çubuk\" close={false} />\n    <span class=\"lab-closed\">{$closed} kez kapatıldı</span>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "PanelHeaderLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { PanelHeaderLab } from \"./PanelHeaderLab.tsx\"\n\n// PanelHeaderLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"titleAs ve titleId başlık öğesini belirler\", () => {\n  const s = renderTest(() => <PanelHeaderLab />)\n  const t = s.get(\"#lab-title\")\n  expect(t?.tagName).toBe(\"H2\")\n  expect(t?.textContent).toBe(\"Ayarlar\")\n})\n\ntest(\"kapat düğmesi closeLabel adıyla onClose'u çağırır\", async () => {\n  const s = renderTest(() => <PanelHeaderLab />)\n  await s.click(\"Paneli kapat\")\n  await s.click(\"Küçült\")\n  expect(s.get(\".lab-closed\")?.textContent).toBe(\"2 kez kapatıldı\")\n})\n\ntest(\"as=footer bir footer çizer\", () => {\n  const s = renderTest(() => <PanelHeaderLab />)\n  expect(s.get(\".lab-foot\")?.tagName).toBe(\"FOOTER\")\n})\n"
+		}
+	]
+}

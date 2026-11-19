@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Geçmişler dolu, sıradaki boş, şimdiki hareket motoruyla dolar.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "StoryProgressDemo.tsx",
+			"code": "export { StoryProgress } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "Countdown.tsx",
+			"code": "import { StoryProgress, Card } from \"march/ui\"\n\n// beş saniyelik geri sayım: beş parça, biri bitince sıradaki başlar\nexport function Countdown() {\n  let $i = 0\n  return <Card m:theme=\"night\">\n    <StoryProgress count={5} index={$i} duration={1000} color=\"brand-orange\" onDone={() => { if ($i < 4) $i++ }} />\n    <span sx={{ text: [\"2xl\", \"bold\"] }}>{5 - $i}</span>\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "Onboarding.tsx",
+			"code": "import { StoryProgress, Button } from \"march/ui\"\n\n// tanıtım ekranları: üç adım; basılı tutunca duraklar, İleri atlar\nconst steps = [\"Hoş geldin!\", \"Arkadaşlarını bul\", \"İlk hikâyeni paylaş\"]\n\nexport function Onboarding() {\n  let $i = 0\n  let $hold = false\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <StoryProgress count={steps.length} index={$i} run={$i} duration={4000} paused={$hold} onDone={() => $i = ($i + 1) % steps.length} />\n    <h3 sx={{ text: [\"lg\", \"bold\"] }}>{steps[$i]}</h3>\n    <div sx={{ flex: \"row\", gap: 2 }}>\n      <Button size=\"sm\" on:click={() => $hold = !$hold}>{$hold ? \"Sürdür\" : \"Duraklat\"}</Button>\n      <Button size=\"sm\" variant=\"primary\" on:click={() => $i = ($i + 1) % steps.length}>İleri</Button>\n    </div>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "StoryProgressLab.tsx",
+			"code": "import { StoryProgress } from \"march/ui\"\n\n// StoryProgress'in özellikleri: count, index, duration, paused, run, onDone, label, color, class\nexport function StoryProgressLab() {\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <StoryProgress class=\"lab-sp\" count={4} index={2} duration={3000} paused run=\"a\" onDone={() => {}}\n      label={(i: number, n: number) => `Hikâye ${i + 1} / ${n}`} color=\"brand-green\" />\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "StoryProgressLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { StoryProgressLab } from \"./StoryProgressLab.tsx\"\n\n// StoryProgressLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"ince bölümlü çubuk, class köke eklenir\", () => {\n  const s = renderTest(() => <StoryProgressLab />)\n  expect(s.get(\".lab-sp\")?.classList.contains(\"m-story-progress\")).toBe(true)\n})\n\ntest(\"label şimdiki hikâyeyi okur\", () => {\n  const s = renderTest(() => <StoryProgressLab />)\n  expect(s.get(\".lab-sp\")?.outerHTML).toContain(\"Hikâye 3 / 4\")\n})\n"
+		}
+	]
+}

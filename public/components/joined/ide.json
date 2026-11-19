@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "İçine ne konursa kendi çerçevesini, köşesini, gölgesini bırakır; bütünün tek çerçevesi ve köşesi, aralarda çizgi; dikey ya da yatay.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "JoinedDemo.tsx",
+			"code": "export { Joined } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "SearchPill.tsx",
+			"code": "import { Joined, TextInput, Button } from \"march/ui\"\n\n// hap biçiminde arama: alan ve düğme tek bir bütün; köşeler yalnız dışta yuvarlak\nexport function SearchPill() {\n  let $q = \"\"\n  let $sent = \"\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Joined direction=\"horizontal\" radius=\"full\">\n      <TextInput placeholder=\"Şehir ara…\" aria-label=\"Şehir\" value={$q} onInput={(v: string) => $q = v} />\n      <Button variant=\"primary\" on:click={() => $sent = $q}>Ara</Button>\n    </Joined>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>{$sent ? `“${$sent}” aranıyor` : \"Bir şehir yazın\"}</span>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "SettingsGroup.tsx",
+			"code": "import { Joined, ListRow, Toggle } from \"march/ui\"\nimport { bell, moon, globe } from \"march/icons\"\n\n// ayarlar grubu: satırlar alt alta, aralarında ince çizgi, bütünün tek çerçevesi\nexport function SettingsGroup() {\n  let $notify = true\n  let $dark = false\n  return <Joined radius={3}>\n    <ListRow icon={bell} title=\"Bildirimler\" trail={<Toggle label=\"Bildirimler\" checked={$notify} onChange={(v: boolean) => $notify = v} />} />\n    <ListRow icon={moon} title=\"Koyu tema\" trail={<Toggle label=\"Koyu tema\" checked={$dark} onChange={(v: boolean) => $dark = v} />} />\n    <ListRow icon={globe} title=\"Dil\" subtitle=\"Türkçe\" />\n  </Joined>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "JoinedLab.tsx",
+			"code": "import { Joined, Card, Button } from \"march/ui\"\n\n// Joined'in bütün özellikleri: direction (dikey / yatay, canlı), radius (0–4 ya da full), border, dividers, class ve\n// öteki öznitelikler (role, aria-label)\nexport function JoinedLab() {\n  let $horizontal = false\n  return <div sx={{ flex: \"col\", gap: 4 }}>\n    <Button size=\"sm\" on:click={() => $horizontal = !$horizontal}>{$horizontal ? \"Dikey yap\" : \"Yatay yap\"}</Button>\n    <Joined class=\"lab-live\" direction={() => ($horizontal ? \"horizontal\" : \"vertical\")} radius={4} role=\"group\" aria-label=\"Kartlar\">\n      <Card title=\"Bir\">İlk parça</Card>\n      <Card title=\"İki\">İkinci parça</Card>\n    </Joined>\n    <Joined class=\"lab-bare\" direction=\"horizontal\" radius={0} border={false} dividers={false}>\n      <Button>Sol</Button>\n      <Button>Sağ</Button>\n    </Joined>\n    <Joined class=\"lab-full\" direction=\"horizontal\" radius=\"full\">\n      <Button>Önceki</Button>\n      <Button variant=\"primary\">Sonraki</Button>\n    </Joined>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "JoinedLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { JoinedLab } from \"./JoinedLab.tsx\"\n\n// JoinedLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"öteki öznitelikler köke gider\", () => {\n  const s = renderTest(() => <JoinedLab />)\n  const live = s.get(\".lab-live\")\n  expect(live?.getAttribute(\"role\")).toBe(\"group\")\n  expect(live?.getAttribute(\"aria-label\")).toBe(\"Kartlar\")\n})\n\ntest(\"direction canlı: düğmeye basınca sınıf değişir\", async () => {\n  const s = renderTest(() => <JoinedLab />)\n  const before = s.get(\".lab-live\")!.className\n  await s.click(\"Yatay yap\")\n  expect(s.get(\".lab-live\")!.className).not.toBe(before)\n})\n\ntest(\"border ve dividers kapatılınca sınıflar farklı\", () => {\n  const s = renderTest(() => <JoinedLab />)\n  expect(s.get(\".lab-bare\")!.className).not.toBe(s.get(\".lab-full\")!.className)\n})\n"
+		}
+	]
+}

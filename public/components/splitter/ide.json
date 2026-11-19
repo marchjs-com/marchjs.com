@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Tutamacı sürükleyin ya da odaklayıp ← → (RTL'de aynalı), Home / End; Enter başlangıç payına döndürür.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "SplitterDemo.tsx",
+			"code": "export { Splitter } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "BeforeAfter.tsx",
+			"code": "import { Splitter, Card } from \"march/ui\"\n\n// önce / sonra: iki renk alanı arasında tutamaç; pay yüzde olarak yazılır\nexport function BeforeAfter() {\n  let $share = 0.5\n  return <Card m:theme=\"night\">\n    <div style={{ \"block-size\": \"14rem\" }}>\n      <Splitter initial={0.5} min={0.1} label=\"Karşılaştırma\" m:color=\"brand-orange\" onChange={(s: number) => $share = s}\n        start={<div sx={{ p: 4, flex: \"center\", text: [\"lg\", \"bold\"], color: \"brand-blue\" }}>Önce</div>}\n        end={<div sx={{ p: 4, flex: \"center\", text: [\"lg\", \"bold\"], color: \"brand-orange\" }}>Sonra</div>} />\n    </div>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>Önce: %{Math.round($share * 100)}</span>\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "MailClient.tsx",
+			"code": "import { Splitter, ListRow } from \"march/ui\"\nimport { mail } from \"march/icons\"\n\n// e-posta istemcisi: solda gelen kutusu, sağda seçilen ileti; liste payı kaydırılabilir\nconst inbox = [\n  { from: \"Elif\", subject: \"Toplantı notları\", body: \"Yarınki toplantının notlarını ekte bulabilirsin.\" },\n  { from: \"Can\", subject: \"Tasarım taslağı\", body: \"Yeni ana sayfa taslağına bakar mısın?\" },\n  { from: \"Deniz\", subject: \"Fatura\", body: \"Kasım faturası hazır.\" },\n]\n\nexport function MailClient() {\n  let $open = 0\n  return <div style={{ \"block-size\": \"14rem\" }} class=\"m-card\">\n    <Splitter initial={0.4} min={0.25} label=\"Gelen kutusu genişliği\"\n      start={<div>{inbox.map((m, i) => <ListRow icon={mail} title={m.from} subtitle={m.subject} on:click={() => $open = i} />)}</div>}\n      end={<div sx={{ p: 4 }}><h4 sx={{ text: \"bold\" }}>{inbox[$open]!.subject}</h4><p>{inbox[$open]!.body}</p></div>} />\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "SplitterLab.tsx",
+			"code": "import { Splitter, Button } from \"march/ui\"\n\n// Splitter'ın bütün özellikleri: start, end, initial, value (denetimli), onChange, orientation, min, label, handle\n// (hazır, kendi işaretin ya da false: sabit), class\nexport function SplitterLab() {\n  let $share = 0.3\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div style={{ \"block-size\": \"8rem\" }}>\n      <Splitter class=\"lab-live\" value={$share} onChange={(s: number) => $share = s} min={0.2} label=\"Denetimli pay\"\n        start={<div sx={{ p: 2 }}>Baş</div>} end={<div sx={{ p: 2 }}>Son</div>} />\n    </div>\n    <Button size=\"sm\" on:click={() => $share = 0.7}>Payı %70 yap</Button>\n    <span class=\"lab-share\">%{Math.round($share * 100)}</span>\n    <div style={{ \"block-size\": \"8rem\" }}>\n      <Splitter class=\"lab-vert\" orientation=\"vertical\" initial={0.5} handle={<span>⋯</span>} label=\"Dikey pay\"\n        start={<div sx={{ p: 2 }}>Üst</div>} end={<div sx={{ p: 2 }}>Alt</div>} />\n    </div>\n    <div style={{ \"block-size\": \"8rem\" }}>\n      <Splitter class=\"lab-fixed\" initial={0.5} handle={false} start={<div sx={{ p: 2 }}>Sabit</div>} end={<div sx={{ p: 2 }}>Bölme</div>} />\n    </div>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "SplitterLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { SplitterLab } from \"./SplitterLab.tsx\"\n\n// SplitterLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"tutamaç bir ayırıcı: adı ve değeri var\", () => {\n  const s = renderTest(() => <SplitterLab />)\n  const sep = s.get(\".lab-live [role=separator]\")\n  expect(sep?.getAttribute(\"aria-label\")).toBe(\"Denetimli pay\")\n  expect(sep?.getAttribute(\"aria-valuenow\")).toBe(\"30\")\n})\n\ntest(\"value denetimli: düğme payı değiştirir\", async () => {\n  const s = renderTest(() => <SplitterLab />)\n  await s.click(\"Payı %70 yap\")\n  expect(s.get(\".lab-share\")?.textContent).toBe(\"%70\")\n})\n\ntest(\"handle={false} sürüklenmeyen düz bir ayraç bırakır\", () => {\n  const s = renderTest(() => <SplitterLab />)\n  expect(s.get(\".lab-fixed .m-split-handle\")?.classList.contains(\"is-fixed\")).toBe(true)\n  expect(s.get(\".lab-fixed [role=separator]\")?.hasAttribute(\"aria-valuenow\")).toBe(false)\n})\n"
+		}
+	]
+}

@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Engellemeyen kısa ileti; en fazla beş üst üste.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "ToastDemo.tsx",
+			"code": "export { ToastHost as Toast } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "Achievements.tsx",
+			"code": "import { Button, toast } from \"march/ui\"\nimport { star } from \"march/icons\"\n\n// başarımlar: her basışta mor yıldızlı, kapat düğmesiz, belirerek gelen bir bildirim\nconst badges = [\"İlk adım\", \"Hızlı koşucu\", \"Gece kuşu\", \"Takım oyuncusu\"]\n\nexport function Achievements() {\n  let $i = 0\n  return <Button variant=\"primary\" on:click={() => { toast(`Başarım: ${badges[$i % badges.length]}`, { icon: star, color: \"brand-purple\", closable: false, motion: \"fade\" }); $i++ }}>\n    Başarım kazan ({$i})\n  </Button>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ArchiveUndo.tsx",
+			"code": "import { Button, toast } from \"march/ui\"\n\n// e-postayı arşivle: bildirimde \"Geri al\"; geri alınınca ileti listeye döner\nexport function ArchiveUndo() {\n  let $mails = [\"Toplantı notları\", \"Fatura\", \"Bülten\"]\n  const archive = (m: string) => {\n    $mails = $mails.filter((x) => x !== m)\n    toast(`\"${m}\" arşivlendi`, { kind: \"success\", action: { label: \"Geri al\", run: () => { $mails = [...$mails, m] } } })\n  }\n  return <ul>{$mails.map((m) => <li>{m} <Button size=\"sm\" variant=\"ghost\" on:click={() => archive(m)}>Arşivle</Button></li>)}</ul>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ToastLab.tsx",
+			"code": "import { Button, ToastHost, toast } from \"march/ui\"\nimport { star } from \"march/icons\"\n\n// toast()'un bütün seçenekleri: kind, action (label, run, error), timeout (0: kalıcı), icon (kendi ikonun, emoji ya da\n// false), color, closable, closeLabel, motion, class; toast.dismiss, toast.clear, toast.list; ToastHost (position, class)\nexport function ToastLab() {\n  let $last = 0\n  return <div sx={{ flex: [\"row\", \"wrap\"], gap: 2 }}>\n    <ToastHost position=\"top-center\" class=\"lab-host\" />\n    <Button on:click={() => $last = toast(\"Bilgi\", { kind: \"info\", timeout: 0, closeLabel: \"Bilgiyi kapat\" })}>Bilgi</Button>\n    <Button on:click={() => toast(\"Kaydedildi\", { kind: \"success\", icon: star, color: \"brand-gold\", class: \"lab-ok\" })}>Başarı</Button>\n    <Button on:click={() => toast(\"Dikkat\", { kind: \"warn\", icon: \"⚠️\", motion: \"none\", closable: false })}>Uyarı</Button>\n    <Button on:click={() => toast(\"Bağlantı koptu\", { kind: \"danger\", icon: false, action: { label: \"Yeniden dene\", run: () => { throw new Error(\"Yine olmadı\") }, error: \"Olmadı\" } })}>Hata</Button>\n    <Button on:click={() => toast.dismiss($last)}>Bilgiyi kaldır</Button>\n    <Button on:click={() => toast.clear()}>Hepsini temizle</Button>\n    <span class=\"lab-count\">{toast.list().length} bildirim</span>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ToastLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { ToastLab } from \"./ToastLab.tsx\"\n\n// ToastLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"toast() bir bildirim ekler, clear() hepsini kaldırır\", async () => {\n  const s = renderTest(() => <ToastLab />)\n  await s.click(\"Hepsini temizle\")\n  await s.click(\"Bilgi\")\n  await s.click(\"Başarı\")\n  expect(s.get(\".lab-count\")?.textContent).toBe(\"2 bildirim\")\n  await s.click(\"Hepsini temizle\")\n  expect(s.get(\".lab-count\")?.textContent).toBe(\"0 bildirim\")\n})\n\ntest(\"ToastHost bildirimi metniyle çizer\", async () => {\n  const s = renderTest(() => <ToastLab />)\n  await s.click(\"Hepsini temizle\")\n  await s.click(\"Uyarı\")\n  expect(s.get(\".lab-host\")?.textContent).toContain(\"Dikkat\")\n})\n"
+		}
+	]
+}

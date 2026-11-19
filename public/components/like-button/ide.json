@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Kalp yayla zıplar, halka büyür, parçacıklar HADİ renkleriyle saçılır.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "LikeButtonDemo.tsx",
+			"code": "export { LikeButton } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "StarRating.tsx",
+			"code": "import { LikeButton, Card } from \"march/ui\"\nimport { star } from \"march/icons\"\n\n// favori yıldızı: kalp yerine yıldız, altın renk, tek renkli parçacıklar\nexport function StarRating() {\n  let $on = false\n  let $n = 41\n  return <Card m:theme=\"night\">\n    <LikeButton liked={$on} count={$n} onToggle={(v: boolean) => { $on = v; $n += v ? 1 : -1 }}\n      icon={star} m:color=\"brand-gold\" colors=\"single\" size=\"lg\" label=\"Favorilere ekle\" />\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "PhotoLikes.tsx",
+			"code": "import { LikeButton } from \"march/ui\"\n\n// fotoğraf beğenileri: üç fotoğraf, her birinin kendi sayacı; toplam altta\nconst photos = [{ name: \"Gün batımı\", n: 120 }, { name: \"Deniz\", n: 87 }, { name: \"Orman\", n: 9 }]\n\nexport function PhotoLikes() {\n  let $liked: string[] = []\n  const total = () => photos.reduce((s, p) => s + p.n, 0) + $liked.length\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    {photos.map((p) => <div sx={{ flex: [\"row\", \"center\", \"between\"] }}>\n      <span>{p.name}</span>\n      <LikeButton liked={$liked.includes(p.name)} count={p.n + ($liked.includes(p.name) ? 1 : 0)} size=\"sm\" label={`${p.name}: beğen`}\n        onToggle={(v: boolean) => $liked = v ? [...$liked, p.name] : $liked.filter((x) => x !== p.name)} />\n    </div>)}\n    <span sx={{ text: \"sm\", color: \"muted\" }}>Toplam {total()} beğeni</span>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "LikeButtonLab.tsx",
+			"code": "import { LikeButton } from \"march/ui\"\nimport { star } from \"march/icons\"\n\n// LikeButton'ın özellikleri: liked, onToggle, count, size, burst, colors, label, icon (öğe ya da işlev), pop,\n// burstOptions, countFormat, class\nexport function LikeButtonLab() {\n  let $on = false\n  let $n = 1999\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <LikeButton class=\"lab-like\" liked={$on} count={$n} countFormat=\"compact\" onToggle={(v: boolean) => { $on = v; $n += v ? 1 : -1 }}\n      label=\"Beğen\" pop={false} burst={false} burstOptions={{ ring: false }} />\n    <LikeButton class=\"lab-own\" liked={true} onToggle={() => {}} size=\"sm\" colors=\"single\" icon={(on: boolean) => <span>{on ? \"★\" : \"☆\"}</span>} />\n    <span class=\"lab-n\">{$n}</span>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "LikeButtonLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { LikeButtonLab } from \"./LikeButtonLab.tsx\"\n\n// LikeButtonLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"basınca beğenilir ve sayaç artar\", async () => {\n  const s = renderTest(() => <LikeButtonLab />)\n  const b = s.get(\".lab-like\")!\n  expect(b.getAttribute(\"aria-pressed\")).toBe(\"false\")\n  await s.click(b)\n  expect(s.get(\".lab-like\")?.getAttribute(\"aria-pressed\")).toBe(\"true\")\n  expect(s.get(\".lab-n\")?.textContent).toBe(\"2000\")\n})\n\ntest(\"işlev ikonu duruma göre çizer\", () => {\n  const s = renderTest(() => <LikeButtonLab />)\n  expect(s.get(\".lab-own\")?.textContent).toContain(\"★\")\n})\n"
+		}
+	]
+}

@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Değiştirilebilir sayfa çerçevesi",
+	"sources": [
+		{
+			"type": "code",
+			"name": "LayoutDemo.tsx",
+			"code": "export { Layout } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "Magazine.tsx",
+			"code": "import { Layout } from \"march/ui\"\n\n// dergi sayfası: üst bilgi, yan alanda içindekiler, altta künye; köşe denetimleri kapalı (features={[]})\nconst Box = (props: { children?: unknown }) => <div sx={{ p: 2, radius: 2 }} class=\"sc-ld-box\">{props.children}</div>\n\nexport function Magazine() {\n  return <Layout features={[]} header={<Box>HADİ Dergi · Kasım</Box>} aside={<Box>İçindekiler</Box>} footer={<Box>© HADİ</Box>}>\n    <article sx={{ p: 2 }}>\n      <h3 sx={{ text: [\"lg\", \"bold\"] }}>Sinyallerle düşünmek</h3>\n      <p sx={{ text: \"sm\" }}>Bir değer değişince yalnız ona bağlı olan yer yeniden çizilir.</p>\n    </article>\n  </Layout>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "Dashboard.tsx",
+			"code": "import { Layout, Button } from \"march/ui\"\n\n// yönetim paneli: gezinme açılıp kapanır, yan alan isteğe bağlı; çerçeve framed ile her zaman çizilir\nexport function Dashboard() {\n  let $nav = true\n  let $aside = false\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: \"row\", gap: 2 }}>\n      <Button size=\"sm\" on:click={() => $nav = !$nav}>{$nav ? \"Gezinmeyi gizle\" : \"Gezinmeyi göster\"}</Button>\n      <Button size=\"sm\" on:click={() => $aside = !$aside}>{$aside ? \"Yan alanı kapat\" : \"Yan alanı aç\"}</Button>\n    </div>\n    {() => <Layout features={[]} framed\n      header={<div class=\"sc-ld-box\">Panel</div>}\n      nav={$nav ? <div class=\"sc-ld-box\">Özet · Raporlar · Ayarlar</div> : undefined}\n      aside={$aside ? <div class=\"sc-ld-box\">Bildirimler</div> : undefined}>\n      <div class=\"sc-ld-box sc-ld-main\">Bu ayın satışları: 1.240</div>\n    </Layout>}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "LayoutLab.tsx",
+			"code": "import { Layout } from \"march/ui\"\n\n// Layout'un bölgeleri ve seçenekleri: top, header, nav, aside, footer, corners, features, framed, mainId, labels,\n// class ve içerik\nconst Box = (props: { children?: unknown }) => <div class=\"sc-ld-box\">{props.children}</div>\n\nexport function LayoutLab() {\n  return <Layout class=\"lab-layout\" features={[]} framed mainId=\"lab-main\" labels={{ skip: \"İçeriğe atla\" }}\n    top={<Box>Duyuru</Box>} header={<Box>Üst bilgi</Box>} nav={<Box>Gezinme</Box>} aside={<Box>Yan alan</Box>} footer={<Box>Alt bilgi</Box>}>\n    <Box>Ana içerik</Box>\n  </Layout>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "LayoutLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { LayoutLab } from \"./LayoutLab.tsx\"\n\n// LayoutLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"bütün bölgeler çizilir\", () => {\n  const s = renderTest(() => <LayoutLab />)\n  for (const t of [\"Duyuru\", \"Üst bilgi\", \"Gezinme\", \"Yan alan\", \"Alt bilgi\", \"Ana içerik\"]) expect(s.sees(t)).toBe(true)\n})\n\ntest(\"ana bölgenin kimliği mainId\", () => {\n  const s = renderTest(() => <LayoutLab />)\n  expect(s.get(\"#lab-main\")).not.toBe(null)\n})\n\ntest(\"class köke eklenir\", () => {\n  const s = renderTest(() => <LayoutLab />)\n  expect(s.get(\".lab-layout\")).not.toBe(null)\n})\n"
+		}
+	]
+}

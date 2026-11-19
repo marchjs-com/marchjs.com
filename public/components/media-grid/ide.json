@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "1, 2, 3, 4 ve daha fazla fotoğraf için ayrı yerleşim; fazlası son karede +N.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "MediaGridDemo.tsx",
+			"code": "export { MediaGrid } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "TripAlbum.tsx",
+			"code": "import { MediaGrid, Card } from \"march/ui\"\n\n// gezi albümü: dört fotoğraf kare ızgarada; dokununca hangisi açıldı yazılır\nconst photos = [\"sunset\", \"sea\", \"forest\", \"city\"].map((n) => ({ src: `/media/social/${n}.svg`, alt: n }))\n\nexport function TripAlbum() {\n  let $open = \"—\"\n  return <Card m:theme=\"night\">\n    <MediaGrid items={photos} gap=\"gap\" onOpen={(i: number) => $open = photos[i]!.alt} />\n    <span sx={{ text: \"sm\", color: \"muted\" }}>Açılan: {$open}</span>\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "PostPhotos.tsx",
+			"code": "import { MediaGrid, Segmented } from \"march/ui\"\n\n// gönderi fotoğrafları: sayı seçilir, 1, 2, 3 ve 4+ için ayrı yerleşim; fazlası +N\nconst all = [\"sunset\", \"sea\", \"forest\", \"city\", \"coffee\", \"ride\"].map((n) => ({ src: `/media/social/${n}.svg`, alt: n }))\n\nexport function PostPhotos() {\n  let $n = \"3\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Segmented label=\"Fotoğraf\" value={$n} options={[\"1\", \"2\", \"3\", \"4\", \"6\"]} onChange={(v: string) => $n = v} />\n    {() => <MediaGrid items={all.slice(0, Number($n))} />}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "MediaGridLab.tsx",
+			"code": "import { MediaGrid } from \"march/ui\"\n\n// MediaGrid'in özellikleri: items (src, alt, kind, poster, width, height), max, shape, gap, onOpen, onDoubleTap, label,\n// tileLabel, skeleton, videoMark, more, class\nconst items = [\n  { src: \"/media/social/sunset.svg\", alt: \"Gün batımı\", width: 1200, height: 1500 },\n  { src: \"/media/social/sea.svg\", alt: \"Deniz\", kind: \"video\" as const, poster: \"/media/social/sea.svg\" },\n  { src: \"/media/social/forest.svg\", alt: \"Orman\" },\n  { src: \"/media/social/city.svg\", alt: \"Şehir\" },\n  { src: \"/media/social/coffee.svg\", alt: \"Kahve\" },\n]\n\nexport function MediaGridLab() {\n  let $log = \"—\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <MediaGrid class=\"lab-grid\" items={items} max={3} shape=\"square\" gap=\"thin\" label=\"Gezi\" skeleton={false}\n      tileLabel={(i: number, n: number) => `Fotoğraf ${i + 1} / ${n}`} videoMark more={(rest: number) => `+${rest} daha`}\n      onOpen={(i: number) => $log = `açıldı ${i}`} onDoubleTap={(i: number) => $log = `beğenildi ${i}`} />\n    <span class=\"lab-log\">{$log}</span>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "MediaGridLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { MediaGridLab } from \"./MediaGridLab.tsx\"\n\n// MediaGridLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"ızgara adını label'dan alır, fazlası kendi metniyle\", () => {\n  const s = renderTest(() => <MediaGridLab />)\n  expect(s.get(\".lab-grid\")?.getAttribute(\"aria-label\")).toBe(\"Gezi\")\n  expect(s.get(\".lab-grid\")?.textContent).toContain(\"daha\")\n})\n\ntest(\"tileLabel kutuların adını verir, basınca onOpen\", async () => {\n  const s = renderTest(() => <MediaGridLab />)\n  await s.click(\"Fotoğraf 1 / 5\")\n  await s.flush(3)\n  expect(s.get(\".lab-log\")?.textContent).toContain(\"0\")\n})\n"
+		}
+	]
+}
