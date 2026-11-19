@@ -7,8 +7,68 @@ import { t } from "march";
 export const IDE_TEXTS = (): string[] => [
   // examples/showcase/public/components/button/ide.json
   t`Beş varyant, üç boyut; yükleniyor düğmeyi kilitler ve ikonun yerinde çark döner.`,
+  // examples/showcase/public/components/calendar/ide.json
+  t`Ay görünümü, klavyeyle gün seçimi.`,
+  // examples/showcase/public/components/checkbox/ide.json
+  t`Tek kutu, kısmi durum.`,
+  // examples/showcase/public/components/checkbox-group/ide.json
+  t`Birden çok seçim.`,
+  // examples/showcase/public/components/choice-picker/ide.json
+  t`İkonlu, açıklamalı büyük seçenekler.`,
+  // examples/showcase/public/components/color-input/ide.json
+  t`Renk kutusu ve seçici.`,
+  // examples/showcase/public/components/combobox/ide.json
+  t`Yazdıkça süzülen seçenekler, eşzamansız arama.`,
   // examples/showcase/public/components/data-tree/ide.json
   t`Genişleyen ağaç; ok tuşlarıyla gezinme.`,
+  // examples/showcase/public/components/date/ide.json
+  t`Açılır takvimli tarih alanı.`,
+  // examples/showcase/public/components/date-range/ide.json
+  t`Başlangıç ve bitiş, hazır aralıklar.`,
+  // examples/showcase/public/components/date-time/ide.json
+  t`İkisi tek alanda.`,
+  // examples/showcase/public/components/file-upload/ide.json
+  t`Sürükle bırak, ilerleme, önizleme.`,
+  // examples/showcase/public/components/forms-code/ide.json
+  t`Doğrulama kodu kutuları, yapıştırma.`,
   // examples/showcase/public/components/icon-button/ide.json
   t`Erişilebilir ad zorunlu; aynı ad ipucu olarak da görünür.`,
+  // examples/showcase/public/components/icon-picker/ide.json
+  t`Arama, süzgeç çipleri ve bütün simgelerin ızgarası.`,
+  // examples/showcase/public/components/key-value-editor/ide.json
+  t`Ad ve değer çiftleri.`,
+  // examples/showcase/public/components/list-editor/ide.json
+  t`Satır ekle, sil, sırala.`,
+  // examples/showcase/public/components/multi-select/ide.json
+  t`Çipli çoklu seçim.`,
+  // examples/showcase/public/components/number/ide.json
+  t`Adım, sınır, para birimi ve yerel biçim.`,
+  // examples/showcase/public/components/password/ide.json
+  t`Göster/gizle, güç göstergesi.`,
+  // examples/showcase/public/components/phone/ide.json
+  t`Ülke seçimi ve biçimli numara.`,
+  // examples/showcase/public/components/radio-group/ide.json
+  t`Tek seçim; kart ve hap görünümleri.`,
+  // examples/showcase/public/components/rating/ide.json
+  t`Yıldızla puan; oklarla değişir.`,
+  // examples/showcase/public/components/row-tools/ide.json
+  t`Düzenlenebilir listede satır araçları: yukarı, aşağı, sil; uçlarda kapanır.`,
+  // examples/showcase/public/components/search-box/ide.json
+  t`İkon, gecikmeli değer, temizle düğmesi, kısayol ipucu; küçük boy, kenarsız görünüm ve liste süren combobox kipi.`,
+  // examples/showcase/public/components/segmented/ide.json
+  t`Yan yana düğmelerle tek seçim.`,
+  // examples/showcase/public/components/select/ide.json
+  t`Tek seçim, gruplar, klavye.`,
+  // examples/showcase/public/components/slider/ide.json
+  t`Değer ve aralık, adımlar.`,
+  // examples/showcase/public/components/swatch/ide.json
+  t`Tıklanır renk ya da gradyan örneği, dama zemini.`,
+  // examples/showcase/public/components/text-input/ide.json
+  t`Ön ek, son ek, temizle, karakter sayacı.`,
+  // examples/showcase/public/components/textarea/ide.json
+  t`İçeriğe göre büyüyen alan.`,
+  // examples/showcase/public/components/time/ide.json
+  t`Saat ve dakika.`,
+  // examples/showcase/public/components/toggle/ide.json
+  t`Açık / kapalı.`,
 ];

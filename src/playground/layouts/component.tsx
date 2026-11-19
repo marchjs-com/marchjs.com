@@ -511,7 +511,7 @@ const entrySource = computed(() => {
 })
 // an option whose card writes its value as code of its own (toCode: Button's spinner "off" → {false}, "own" →
 // {<MyDots />}): the code turned into a value the preview can take. null: the prop is left out; a literal: its value;
-// an icon's name: the icon (as "icon:name", the runtime takes it); a JSX part of the card's own: a stand-in "•••".
+// a JSON list or object: its value; an icon's name: the icon (as "icon:name", the runtime takes it); a JSX part of the card's own: a stand-in "•••".
 const OMIT = Symbol("omit")
 const codeOf = (o: PlaygroundOption, x: unknown, v: Record<string, unknown>): unknown => {
   const map = o.toCode
@@ -523,6 +523,8 @@ function fromCode(o: PlaygroundOption, x: unknown, v: Record<string, unknown>): 
   if (code === null) return OMIT
   const inner = /^\{([\s\S]*)\}$/.exec(String(code))?.[1]?.trim() ?? String(code)
   if (/^(true|false|null|-?\d+(\.\d+)?|"[^"]*")$/.test(inner)) return JSON.parse(inner)
+  // a JSON list or object (ListEditor's sample items {["a", "b"]}): its value
+  if (/^[[{]/.test(inner)) { try { return JSON.parse(inner) } catch { /* not JSON: left out below */ } }
   if (/^[A-Za-z_$][\w$]*$/.test(inner)) return `icon:${inner}`
   if (inner.startsWith("<")) return "•••"
   return OMIT
