@@ -173,6 +173,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Ürünün kimin için olmadığı (ve kimin için olduğu); ziyaretçi uyanları işaretler, dürüst bir sonuç görür.`,
   // examples/showcase/public/components/number/ide.json
   t`Adım, sınır, para birimi ve yerel biçim.`,
+  // examples/showcase/public/components/option-list/ide.json
+  t`Panel içinde seçenek satırları: tek ya da çoklu seçim, komut menüsü; ok tuşları ya da bir alanın tuşlarıyla.`,
   // examples/showcase/public/components/overflow-text/ide.json
   t`OverflowText ve Marquee.`,
   // examples/showcase/public/components/overflow-toolbar/ide.json
