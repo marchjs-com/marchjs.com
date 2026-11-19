@@ -178,6 +178,8 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "drawer", title: "Çekmece", name: "Drawer", desc: "Dört kenar, sürükle, durma noktaları", group: "Katmanlar" },
     { slug: "popover", title: "Açılır panel", name: "Popover", desc: "Tetikleyici ve yanında yüzen panel: dışarı tıkla ya da Esc ile kapanır, odak içeri girer ve geri döner.", group: "Katmanlar" },
     { slug: "option-list", title: "Seçenek listesi", name: "OptionList", desc: "Panel içinde seçenek satırları: tek ya da çoklu seçim, komut menüsü; ok tuşları ya da bir alanın tuşlarıyla.", group: "Katmanlar" },
+    { slug: "context-menu", title: "Sağ tık menüsü", name: "ContextMenu", desc: "Sağ tıklanan ya da Shift+F10 ile açılan menü: öğeler tıklanan hedefe göre değişir, klavye Menu ile aynı.", group: "Katmanlar" },
+    { slug: "consent-banner", title: "Çerez onayı", name: "ConsentBanner", desc: "Alt bant, tercihler paneli ve üçüncü taraf yer tutucu: reddetmek kabul etmek kadar kolay.", group: "Katmanlar" },
   ],
   "/themes": [
     { slug: "presets", title: "Hazır temalar", desc: "Her kart kendi temasıyla çizildi (data-m-theme kapsamı).", group: "Temalar" },

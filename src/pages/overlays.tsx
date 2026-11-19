@@ -6,6 +6,10 @@ import { trash, edit, sliders, command, bell, check, alertTriangle, info, xCircl
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
+import { lazy } from "march/lazy";
+// ContextMenu has its own entry (march/context-menu), so the card registry has no demo loader for it: its demo is a
+// lazy part here (the menu stays out of this route's chunk); the option spec comes from the registry
+const ContextMenuDemo = lazy(() => import("march/components/overlays/context-menu/demo.tsx"), { placeholder: "card" });
 
 export default function Overlays(props: { params?: { rest?: string } }) {
   let $last = "—"
@@ -32,6 +36,8 @@ export default function Overlays(props: { params?: { rest?: string } }) {
     "drawer": () => <ComponentDemo folder="overlays/drawer" title="Drawer: dört kenar, sürükle, durma noktaları" desc="Başlangıç / bitiş kenarı yazı yönüne uyar (RTL'de yer değiştirir). Tutamaçtan ya da başlıktan sürükleyin; bırakınca en yakın durma noktasına oturur, kenara atınca kapanır. Modal kapalıyken sayfa kullanılabilir kalır." />,
     "popover": () => <ComponentDemo folder="overlays/popover" title="Popover: tetikleyici ve yüzen panel" desc="Panel tetikleyicinin yanına yerleşir, kenarda yön değiştirir; dışarı tıklama ya da Esc kapatır, odak içeri girer ve tetikleyiciye döner." />,
     "option-list": () => <ComponentDemo folder="forms/option-list" title="OptionList: seçenek listesi" desc="Radyo grubu, liste kutusu ya da komut menüsü; satırda ikon, etiket, açıklama, sondaki parça ve tik. Ok tuşlarıyla ya da bir alanın tuşlarıyla (aria-activedescendant) gezilir." />,
+    "context-menu": () => <ComponentDemo folder="overlays/context-menu" title="ContextMenu: sağ tık menüsü" desc="Bir karta sağ tıklayın ya da odaklayıp Shift+F10'a (Menü tuşuna) basın. Öğeler tıklanan hedefe göre değişir; ok tuşları, Enter ve Esc Menu'deki gibi." view={ContextMenuDemo as never} />,
+    "consent-banner": () => <ComponentDemo folder="composite/consent-banner" title="ConsentBanner: çerez onayı" desc="Reddet, Özelleştir ve Kabul et yan yana; Özelleştir tercihler panelini açar. Üçüncü taraf içerik izin verilene dek yer tutucuda bekler. Seçim bandı kapatır; 'Şeridi yeniden göster' geri getirir." />,
   }
   return <Hub section="/overlays" kicker="Bileşenler" title="Pencereler ve bildirimler" lead="Odak tuzağı, Esc ile kapanma, arka plan kaydırma kilidi, ekran okuyucu rolleri; mobilde alttan açılan sayfa. Hepsi Promise döndürür." render={RENDER} params={props.params} />
 }

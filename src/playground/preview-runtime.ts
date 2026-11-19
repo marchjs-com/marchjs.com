@@ -187,6 +187,7 @@ const OWN_PARTS: Record<string, () => Promise<unknown>> = {
   "scheduler": () => import("../../../../src/components/data/scheduler/index.ts"),
   "gantt": () => import("../../../../src/components/data/gantt/index.ts"),
   "wizard": () => import("../../../../src/components/composite/wizard/index.ts"),
+  "context-menu": () => import("../../../../src/components/overlays/context-menu/index.ts"),
   "consent-banner": () => import("../../../../src/components/composite/consent-banner/index.ts"),
   "theme-editor": () => import("../../../../src/components/composite/theme-editor/index.ts"),
 };

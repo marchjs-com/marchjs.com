@@ -71,6 +71,10 @@ export const IDE_TEXTS = (): string[] => [
   t`Yazdıkça süzülen seçenekler, eşzamansız arama.`,
   // examples/showcase/public/components/command-palette/ide.json
   t`Karmaşık bileşen: uygulamanın tek paleti; bu kart ekranda olduğu sürece kendi komutlarını ekler, kart…`,
+  // examples/showcase/public/components/consent-banner/ide.json
+  t`Alt bant, tercihler paneli ve üçüncü taraf yer tutucu: reddetmek kabul etmek kadar kolay.`,
+  // examples/showcase/public/components/context-menu/ide.json
+  t`Sağ tıklanan ya da Shift+F10 ile açılan menü: öğeler tıklanan hedefe göre değişir, klavye Menu ile aynı.`,
   // examples/showcase/public/components/copy-button/ide.json
   t`Kopyalandı der ve bunu ekran okuyucuya duyurur; pano yoksa bildirimle söyler.`,
   // examples/showcase/public/components/corner-mark/ide.json
