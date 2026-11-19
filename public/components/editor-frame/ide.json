@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Kenar ve odak halkası, üst çubuk, yazma alanı, alt çubuk: kendi editörünüz için aynı görünüm.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "EditorFrameDemo.tsx",
+			"code": "export { EditorFrame } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "HaikuPad.tsx",
+			"code": "import { EditorFrame, Badge } from \"march/ui\"\n\n// haiku defteri: çerçevenin alt çubuğu satırları sayar; üç satır olunca çerçeve yeşile döner\nexport function HaikuPad() {\n  let $text = \"Sessiz göl kıyı\\nbir kurbağa atlıyor\"\n  const $lines = $text.split(\"\\n\").filter((l) => l.trim()).length\n  return <EditorFrame m:color={$lines === 3 ? \"success\" : \"brand-purple\"}\n    head={<span sx={{ text: \"bold\" }}>Haiku</span>}\n    actions={<Badge tone={$lines === 3 ? \"success\" : \"neutral\"}>{`${$lines} / 3 satır`}</Badge>}\n    foot={<span>{$lines === 3 ? \"Tamam, şiir hazır\" : \"Üç kısa satır yazın\"}</span>}>\n    <textarea class=\"m-editor-area\" rows={3} aria-label=\"Haiku\" value={$text}\n      on:input={(e: Event) => $text = (e.target as HTMLTextAreaElement).value} />\n  </EditorFrame>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "SupportReply.tsx",
+			"code": "import { EditorFrame, Badge, Button, toast } from \"march/ui\"\n\n// destek yanıtı: üstte talep ve öncelik, ortada yanıt, altta sayaç ve Gönder; gönderilince çerçeve salt okunur olur\nconst MAX = 500\n\nexport function SupportReply() {\n  let $text = \"Merhaba Ayşe Hanım, siparişiniz yarın kargoya veriliyor.\"\n  let $sent = false\n  const send = () => { $sent = true; toast(\"Yanıt müşteriye gönderildi\") }\n  return <EditorFrame readonly={$sent}\n    head={<span sx={{ text: \"bold\" }}>Talep #4821 · Kargo gecikmesi</span>}\n    actions={<Badge tone={$sent ? \"success\" : \"warn\"}>{$sent ? \"Yanıtlandı\" : \"Bekliyor\"}</Badge>}\n    foot={<span sx={{ color: $text.length > MAX ? \"danger\" : \"muted\" }}>{`${$text.length} / ${MAX}`}</span>}\n    footProps={{ actions: <Button size=\"sm\" disabled={$sent || !$text.trim() || $text.length > MAX} on:click={send}>Gönder</Button> }}>\n    <textarea class=\"m-editor-area\" rows={4} aria-label=\"Yanıt\" readonly={$sent} value={$text}\n      on:input={(e: Event) => $text = (e.target as HTMLTextAreaElement).value} />\n  </EditorFrame>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "EditorFrameLab.tsx",
+			"code": "import { EditorFrame, FormatToolbar, Badge, Button, Card } from \"march/ui\"\n\n// EditorFrame'in bütün özellikleri: üst çubuk içeriği ve eylemleri, gösterilip gizlenmesi (showHead / showFoot),\n// çubukların kendi özellikleri (headProps / footProps), alt çubuk, devre dışı ve salt okunur (erişimci), odak halkası,\n// sınıf, içerik (children) ve öteki öznitelikler (id, data-*)\nexport function EditorFrameLab() {\n  let $text = \"Bir not\"\n  let $tools = true\n  let $mode: \"edit\" | \"readonly\" | \"disabled\" = \"edit\"\n  let $last = \"\"\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 2 }}>\n      <Button size=\"sm\" variant=\"secondary\" on:click={() => $tools = !$tools}>{$tools ? \"Araçları gizle\" : \"Araçları göster\"}</Button>\n      <Button size=\"sm\" variant=\"secondary\" on:click={() => $mode = $mode === \"edit\" ? \"readonly\" : $mode === \"readonly\" ? \"disabled\" : \"edit\"}>{`Durum: ${$mode}`}</Button>\n    </div>\n    <EditorFrame id=\"lab-frame\" data-kind=\"note\" class=\"lab-frame\" m:color=\"brand-orange\"\n      head={<FormatToolbar tools={[\"bold\", \"italic\"]} onTool={(t) => $last = t} />}\n      actions={() => <Badge tone=\"neutral\">{`${$text.length} harf`}</Badge>}\n      showHead={() => $tools} headProps={{ sticky: true, class: \"lab-head\", \"aria-label\": \"Not araçları\" }}\n      foot={<span>{$last ? `Son araç: ${$last}` : \"Bir araca basın\"}</span>}\n      showFoot={() => $mode !== \"disabled\"} footProps={{ divider: true, class: \"lab-foot\", \"aria-live\": \"polite\" }}\n      readonly={() => $mode === \"readonly\"} disabled={() => $mode === \"disabled\"}>\n      <textarea class=\"m-editor-area\" rows={3} aria-label=\"Not\" value={$text} readonly={$mode === \"readonly\"} disabled={$mode === \"disabled\"}\n        on:input={(e: Event) => $text = (e.target as HTMLTextAreaElement).value} />\n    </EditorFrame>\n    <Card m:theme=\"night\">\n      <EditorFrame ring={false} showFoot={false} foot=\"görünmez\" class=\"lab-plain\">\n        <textarea class=\"m-editor-area\" rows={2} aria-label=\"Halkasız not\" />\n      </EditorFrame>\n    </Card>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "EditorFrameLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { EditorFrameLab } from \"./EditorFrameLab.tsx\"\n\n// EditorFrameLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"üst ve alt çubuk, kendi sınıfları ve öznitelikleriyle çizilir\", () => {\n  const s = renderTest(() => <EditorFrameLab />)\n  const frame = s.get(\"#lab-frame\")\n  expect(frame?.getAttribute(\"data-kind\")).toBe(\"note\")\n  expect(frame?.querySelector(\".lab-head\")).not.toBe(null)\n  expect(frame?.querySelector(\".lab-foot\")?.getAttribute(\"aria-live\")).toBe(\"polite\")\n  expect(s.sees(\"7 harf\")).toBe(true)\n})\n\ntest(\"showHead erişimcisi üst çubuğu gizler ve geri getirir\", async () => {\n  const s = renderTest(() => <EditorFrameLab />)\n  await s.click(\"Araçları gizle\")\n  expect(s.get(\"#lab-frame .lab-head\")).toBe(null)\n  await s.click(\"Araçları göster\")\n  expect(s.get(\"#lab-frame .lab-head\")).not.toBe(null)\n})\n\ntest(\"durum: salt okunur, sonra devre dışı (alt çubuk da gider)\", async () => {\n  const s = renderTest(() => <EditorFrameLab />)\n  await s.click(\"Durum: edit\")\n  expect(s.get(\"#lab-frame\")?.className).toContain(\"is-readonly\")\n  await s.click(\"Durum: readonly\")\n  expect(s.get(\"#lab-frame\")?.className).toContain(\"is-disabled\")\n  expect(s.get(\"#lab-frame .lab-foot\")).toBe(null)\n})\n\ntest(\"ring={false} halkasız, showFoot={false} foot'u gizler\", () => {\n  const s = renderTest(() => <EditorFrameLab />)\n  expect(s.get(\".lab-plain\")?.className).toContain(\"is-plain\")\n  expect(s.sees(\"görünmez\")).toBe(false)\n})\n"
+		}
+	]
+}

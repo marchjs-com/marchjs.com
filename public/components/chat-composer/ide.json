@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Boşken mikrofon (turuncu), yazınca gönder (mavi) düğmesine dönüşür.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "ChatComposerDemo.tsx",
+			"code": "export { ChatComposer } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "EmojiMirror.tsx",
+			"code": "import { ChatComposer } from \"march/ui\"\n\n// ayna: ne yazarsan büyük harflerle ve tersinden geri gelir; düğme mor, gönder ikonu bir yıldız\nexport function EmojiMirror() {\n  let $last = \"🪞 Bir şey yaz, ayna geri söylesin\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <p sx={{ text: [\"xl\", \"center\"], color: \"brand-purple\" }}>{$last}</p>\n    <ChatComposer placeholder=\"Aynaya yaz\" sendColor=\"brand-purple\" sendIcon=\"✨\"\n      onSend={(text) => $last = [...text.toLocaleUpperCase(\"tr-TR\")].reverse().join(\"\")} />\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "TeamMessage.tsx",
+			"code": "import { ChatComposer, toast } from \"march/ui\"\nimport { image, fileText, mapPin } from \"march/icons\"\n\n// bir ekip sohbetinin yazma kutusu: metin ya da sesli mesaj gönderir, ek menüsünden fotoğraf / dosya / konum seçilir,\n// yazarken \"yazıyor…\" sinyali gider; gönderilenler üstte listelenir\nexport function TeamMessage() {\n  let $sent: string[] = []\n  let $typing = \"\"\n  const add = (s: string) => { $sent = [...$sent.slice(-3), s]; $typing = \"\" }\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <ul sx={{ flex: \"col\", gap: 1 }}>{$sent.length ? $sent.map((s) => <li>{s}</li>) : <li sx={{ color: \"muted\" }}>Henüz mesaj yok</li>}</ul>\n    <span sx={{ text: \"xs\", color: \"muted\" }}>{$typing}</span>\n    <ChatComposer placeholder=\"#tasarım kanalına yaz\"\n      onSend={(text) => add(`💬 ${text}`)}\n      onVoice={(ms) => add(`🎤 Sesli mesaj · ${(ms / 1000).toFixed(1)} sn`)}\n      onTyping={() => $typing = \"Ekibe: yazıyor…\"}\n      attachments={[\n        { label: \"Fotoğraf\", icon: image, onSelect: () => add(\"🖼️ Fotoğraf eklendi\") },\n        { label: \"Dosya\", icon: fileText, onSelect: () => add(\"📄 Dosya eklendi\") },\n        { label: \"Konum\", icon: mapPin, onSelect: () => toast(\"Konum izni istenir\") },\n      ]} />\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ChatComposerLab.tsx",
+			"code": "import { ChatComposer, Button, Badge, Card } from \"march/ui\"\nimport { image, send, mic, heart, plus } from \"march/icons\"\n\n// ChatComposer'ın bütün özellikleri: gönder, sesli mesaj, ek menüsü, emoji düğmesi, yanıt satırı (kapatılabilir),\n// yazıyor sinyali, yer tutucu, kapalı durum, kendi metinler, kendi ikonlar, düğme renkleri, dalga ve kayıt noktası,\n// hareket ve sınıf; koyu zeminde\nexport function ChatComposerLab() {\n  let $log = \"-\"\n  let $typing = 0\n  let $reply: { name: string; text: string } | null = { name: \"Ece\", text: \"Yarın kaçta buluşuyoruz?\" }\n  let $off = false\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: [\"row\", \"wrap\", \"center\"], gap: 2 }}>\n      <Button size=\"sm\" variant=\"ghost\" on:click={() => $off = !$off}>{$off ? \"Aç\" : \"Kapat\"}</Button>\n      <Button size=\"sm\" variant=\"ghost\" on:click={() => $reply = { name: \"Can\", text: \"Ben de geliyorum\" }}>Can'a yanıt ver</Button>\n      <Badge tone=\"primary\">{$log}</Badge>\n      <span sx={{ text: \"xs\", color: \"muted\" }}>{`yazıyor sinyali: ${$typing}`}</span>\n    </div>\n    <Card m:theme=\"night\">\n      <ChatComposer class=\"lab-composer\" placeholder={() => ($off ? \"Sohbet kapalı\" : \"Bir mesaj yaz\")} disabled={() => $off}\n        onSend={(text) => { $log = `gönderildi: ${text}`; $reply = null }}\n        onVoice={(ms) => $log = `ses: ${ms} ms`} onTyping={() => $typing++}\n        attachments={[{ label: \"Fotoğraf\", icon: image, onSelect: () => $log = \"ek: fotoğraf\" }]}\n        emoji={true} replyTo={() => $reply} onCancelReply={() => $reply = null}\n        labels={{ message: \"Mesaj kutusu\", emoji: \"Emoji seç\", attach: \"Ekle\", send: \"Yolla\", record: \"Kaydet\", sendVoice: \"Sesi yolla\",\n          cancelRecording: \"Kaydı at\", cancelReply: \"Yanıtı kapat\", recording: \"Kaydediliyor\", replyingTo: (n) => `${n} kişisine yanıt` }}\n        attachIcon={plus} emojiIcon={heart} sendIcon={send} micIcon={mic} sendColor=\"brand-green\" micColor=\"brand-pink\"\n        wave={false} recordingDot={false} motion={false} />\n    </Card>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ChatComposerLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { ChatComposerLab } from \"./ChatComposerLab.tsx\"\n\n// ChatComposerLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"yazıp Enter'a basınca onSend metni alır, yanıt satırı kapanır\", async () => {\n  const s = renderTest(() => <ChatComposerLab />)\n  const box = await s.type(\"Mesaj kutusu\", \"Saat yedide\")\n  await s.press(\"Enter\", box)\n  await s.wait(() => s.sees(\"gönderildi: Saat yedide\"))\n  expect(s.sees(\"gönderildi: Saat yedide\")).toBe(true)\n  expect(s.sees(\"Ece kişisine yanıt\")).toBe(false)\n})\n\ntest(\"yazarken onTyping sinyali gider\", async () => {\n  const s = renderTest(() => <ChatComposerLab />)\n  await s.type(\"Mesaj kutusu\", \"m\")\n  expect(s.sees(\"yazıyor sinyali: 1\")).toBe(true)\n})\n\ntest(\"yanıt satırı kendi metniyle görünür; kapatma düğmesi onCancelReply'ı çalıştırır\", async () => {\n  const s = renderTest(() => <ChatComposerLab />)\n  expect(s.sees(\"Ece kişisine yanıt\")).toBe(true)\n  await s.click(\"Yanıtı kapat\")\n  expect(s.sees(\"Ece kişisine yanıt\")).toBe(false)\n})\n\ntest(\"disabled: kutu yazılamaz olur, yer tutucu değişir\", async () => {\n  const s = renderTest(() => <ChatComposerLab />)\n  await s.click(\"Kapat\")\n  const box = s.find(\"Mesaj kutusu\") as HTMLTextAreaElement | null\n  expect(box?.getAttribute(\"placeholder\")).toBe(\"Sohbet kapalı\")\n  expect(!!box?.disabled || box?.getAttribute(\"readonly\") != null || box?.getAttribute(\"disabled\") != null).toBe(true)\n})\n"
+		}
+	]
+}

@@ -13,6 +13,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Beş ton, eylem ve kapatma.`,
   // examples/showcase/public/components/app-shell/ide.json
   t`Kenar çubuğu sütunu, üst duyuru ve kayan ana alan; önce gelen 'İçeriğe geç' bağlantısı.`,
+  // examples/showcase/public/components/app-ui/ide.json
+  t`March IDE çekirdeği: üst çubuk, Yerleşim menüsü, yan ve alt yuvalar, çalışma alanı`,
   // examples/showcase/public/components/avatar/ide.json
   t`Resim yoksa ya da yüklenemezse baş harfler; renk addan gelir. Hazır metin, ikon, sabit renk ve biçim.`,
   // examples/showcase/public/components/avatar-group/ide.json
@@ -21,6 +23,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Durum ve sayı.`,
   // examples/showcase/public/components/before-after/ide.json
   t`Sürüklenen ayırıcıyla iki katmanı karşılaştırır; basınca oraya atlar, klavyeyle ve imleci izleyerek de çalışır; yatay ya da dikey.`,
+  // examples/showcase/public/components/bottom-nav/ide.json
+  t`Mobil sekmeler, orta eylem.`,
   // examples/showcase/public/components/bottom-right-controls/ide.json
   t`Sayfa çapı denetimler dört köşeden birine sırayla yerleşir, üst üste binmez; sağdan sola yazımda aynalanır.`,
   // examples/showcase/public/components/branching-story/ide.json
@@ -39,6 +43,10 @@ export const IDE_TEXTS = (): string[] => [
   t`Geniş ekranda 1–4 slayt, telefonda bir slayt ve sonrakinin ucu; oklar uçlarda gizlenir, noktalar konumu…`,
   // examples/showcase/public/components/chat-bubble/ide.json
   t`Benim balonum Aktivite mavisi, karşı taraf kart rengi; aynı göndericinin ardışık mesajlarında yalnız…`,
+  // examples/showcase/public/components/chat-composer/ide.json
+  t`Boşken mikrofon (turuncu), yazınca gönder (mavi) düğmesine dönüşür.`,
+  // examples/showcase/public/components/chat-thread/ide.json
+  t`Bir mesaj gönderin: balon yaylanarak yükselir, karşı taraf yazmaya başlar ve yanıtlar.`,
   // examples/showcase/public/components/check-mark/ide.json
   t`Evet, hayır, kısmen; okunur metniyle.`,
   // examples/showcase/public/components/checkbox/ide.json
@@ -55,10 +63,14 @@ export const IDE_TEXTS = (): string[] => [
   t`N satıra katlanır; sığmıyorsa "devamı", açılınca "daha az".`,
   // examples/showcase/public/components/code-view/ide.json
   t`Salt okunur kod, satır numarası, renkler.`,
+  // examples/showcase/public/components/color/ide.json
+  t`HSV alanı, saydamlık, göz damlası, paletler.`,
   // examples/showcase/public/components/color-input/ide.json
   t`Renk kutusu ve seçici.`,
   // examples/showcase/public/components/combobox/ide.json
   t`Yazdıkça süzülen seçenekler, eşzamansız arama.`,
+  // examples/showcase/public/components/command-palette/ide.json
+  t`Karmaşık bileşen: uygulamanın tek paleti; bu kart ekranda olduğu sürece kendi komutlarını ekler, kart…`,
   // examples/showcase/public/components/copy-button/ide.json
   t`Kopyalandı der ve bunu ekran okuyucuya duyurur; pano yoksa bildirimle söyler.`,
   // examples/showcase/public/components/corner-mark/ide.json
@@ -79,16 +91,26 @@ export const IDE_TEXTS = (): string[] => [
   t`Başlangıç ve bitiş, hazır aralıklar.`,
   // examples/showcase/public/components/date-time/ide.json
   t`İkisi tek alanda.`,
+  // examples/showcase/public/components/debugger/ide.json
+  t`Kesme noktası, adım adım, izlenenler, çağrı yığını; kayıtta zamanda geri.`,
   // examples/showcase/public/components/device-preview/ide.json
   t`Telefon ve tablet kasası, çentik, durum çubuğu, gerçek ekran boyu, döndürme; fare parmak gibi:…`,
   // examples/showcase/public/components/dialog/ide.json
   t`Odak pencerenin içinde döner, Escape en üsttekini kapatır, kapanınca odak açan düğmeye döner.`,
   // examples/showcase/public/components/disclosure/ide.json
   t`Yerel details / summary üzerinde: klavye ve ekran okuyucu desteği hazır, açılıp kapanma animasyonlu.`,
+  // examples/showcase/public/components/dock-layout/ide.json
+  t`Sekmeyi bir grubun kenarına, ortasına ya da alanın kenarına bırak; kapatınca şeride daralır, açınca eski boyutuyla döner`,
   // examples/showcase/public/components/drawer/ide.json
   t`Dört kenar, sürükle, durma noktaları`,
   // examples/showcase/public/components/easing/ide.json
   t`cubic-bezier tutamakları, hazır eğriler, canlı önizleme.`,
+  // examples/showcase/public/components/editor-frame/ide.json
+  t`Kenar ve odak halkası, üst çubuk, yazma alanı, alt çubuk: kendi editörünüz için aynı görünüm.`,
+  // examples/showcase/public/components/editors-code/ide.json
+  t`Yazdıkça renklenen kod, imleçte öneri listesi, parlayan ve altı çizilen aralıklar, durum satırı.`,
+  // examples/showcase/public/components/editors-tree/ide.json
+  t`Satır satır düzenleme, tür rozetleri, şema doğrulaması, geri al.`,
   // examples/showcase/public/components/empty/ide.json
   t`Ne yapılacağını söyleyen boş durum.`,
   // examples/showcase/public/components/error-box/ide.json
@@ -99,14 +121,22 @@ export const IDE_TEXTS = (): string[] => [
   t`Akordeon; iki sütunlu düzende yapışkan başlık; aramada aksan ve yazım hatasına dayanıklı sıralama.`,
   // examples/showcase/public/components/feature-grid/ide.json
   t`Kartlar (imleç ışığıyla), sade, liste ya da bento.`,
+  // examples/showcase/public/components/feed/ide.json
+  t`Sanal liste içinde gönderiler: yalnız ekrana yakın olanlar DOM'da.`,
   // examples/showcase/public/components/file-upload/ide.json
   t`Sürükle bırak, ilerleme, önizleme.`,
   // examples/showcase/public/components/follow-button/ide.json
   t`Takip et → Takip ediliyor: genişlik yaylanır, dolgu çerçeveye döner, + tike çevrilir, dört renk parlar.`,
+  // examples/showcase/public/components/font/ide.json
+  t`Sistem ve Google yazı tipleri tek listede; arama, canlı önizleme, favoriler.`,
+  // examples/showcase/public/components/format-toolbar/ide.json
+  t`Kalın, italik, başlık, liste, bağlantı, geri al: araçlar, adlar, ikonlar ve kısayol ipuçları sizin.`,
   // examples/showcase/public/components/forms-code/ide.json
   t`Doğrulama kodu kutuları, yapıştırma.`,
   // examples/showcase/public/components/gantt/ide.json
   t`Bağımlılıklar, ölçek, ilerleme.`,
+  // examples/showcase/public/components/gradient/ide.json
+  t`Duraklar ve açı; CSS çıktısı.`,
   // examples/showcase/public/components/grid/ide.json
   t`Sütun sayısı, son satırın davranışı ve dengeleme.`,
   // examples/showcase/public/components/hero/ide.json
@@ -121,8 +151,12 @@ export const IDE_TEXTS = (): string[] => [
   t`Arama, süzgeç çipleri ve bütün simgelerin ızgarası.`,
   // examples/showcase/public/components/icon-tile/ide.json
   t`Renkli zeminli yuvarlak köşeli karede ikon: dokuz ton ya da herhangi bir tema rengi.`,
+  // examples/showcase/public/components/image-cropper/ide.json
+  t`Döndürme, oran, yakınlaştırma, aynalama.`,
   // examples/showcase/public/components/joined/ide.json
   t`İçine ne konursa kendi çerçevesini, köşesini, gölgesini bırakır; bütünün tek çerçevesi ve köşesi, aralarda çizgi; dikey ya da yatay.`,
+  // examples/showcase/public/components/json/ide.json
+  t`Aynı JSON metinde ve ağaçta; satır/sütunlu hata, biçimlendir.`,
   // examples/showcase/public/components/json-view/ide.json
   t`Açılır JSON ağacı, türe göre renkler.`,
   // examples/showcase/public/components/kanban/ide.json
@@ -133,6 +167,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Ayrıntı özeti; bir ile dört sütun.`,
   // examples/showcase/public/components/key-value-editor/ide.json
   t`Ad ve değer çiftleri.`,
+  // examples/showcase/public/components/keyframes/ide.json
+  t`Anahtar kareler, sürükleyerek zamanlama, kare başına eğri.`,
   // examples/showcase/public/components/layout/ide.json
   t`Değiştirilebilir sayfa çerçevesi`,
   // examples/showcase/public/components/layout-window/ide.json
@@ -157,6 +193,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Eşit hücreli ızgara ya da sonsuz kayan şerit.`,
   // examples/showcase/public/components/made-with-march/ide.json
   t`İsteğe bağlı küçük "March ile yapıldı" yazısı ya da rozeti.`,
+  // examples/showcase/public/components/markdown/ide.json
+  t`Solda Markdown, sağda canlı önizleme; bölmeler birlikte kayar.`,
   // examples/showcase/public/components/media/ide.json
   t`Kabına sığar, türü uzantıdan anlar; yüklenemezse yedek metin gösterir.`,
   // examples/showcase/public/components/media-grid/ide.json
@@ -167,6 +205,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Çipli çoklu seçim.`,
   // examples/showcase/public/components/nav-menu/ide.json
   t`Sabitlenen ve son kullanılan sayfalar.`,
+  // examples/showcase/public/components/nav-sidebar/ide.json
+  t`Kategori sırası, daraltma, iç içe sayfalar.`,
   // examples/showcase/public/components/newsletter/ide.json
   t`Doğrulama, bekleme düğmesi, başarıda beliren onay, hatada sallanan alan ve okunan ileti.`,
   // examples/showcase/public/components/not-for-you/ide.json
@@ -201,16 +241,22 @@ export const IDE_TEXTS = (): string[] => [
   t`Resim nesnesi (src, alt, width, height…) ya da hazır düğüm: biri img olur, öteki olduğu gibi çizilir.`,
   // examples/showcase/public/components/popover/ide.json
   t`Tetikleyici ve yanında yüzen panel: dışarı tıkla ya da Esc ile kapanır, odak içeri girer ve geri döner.`,
+  // examples/showcase/public/components/post-card/ide.json
+  t`Fotoğraflara çift dokunun: büyük kalp belirir ve dört HADİ rengiyle patlar.`,
   // examples/showcase/public/components/presentation/ide.json
   t`Ok tuşları, boşluk, kaydırma, dokunma; adım adım maddeler; konuşmacı görünümü (sonraki slayt, notlar, süre).`,
   // examples/showcase/public/components/pricing/ide.json
   t`Aylık / yıllık anahtarı: rakamlar odometre gibi döner, anahtarın başparmağı kayar, öne çıkan plan parlar.`,
+  // examples/showcase/public/components/profile-header/ide.json
+  t`Kapak, hikâye halkalı avatar, ad ve biyografi, sayaçlı istatistikler.`,
   // examples/showcase/public/components/progress/ide.json
   t`Değer, belirsiz, renkler.`,
   // examples/showcase/public/components/project-detail/ide.json
   t`Bir projeye tıkla: kapak ayrıntı sayfasındaki yerine büyür (paylaşılan öğe geçişi); geri dönüşte küçülür.`,
   // examples/showcase/public/components/project-grid/ide.json
   t`Süzgeç çipleri; seçince kalanlar yeni yerlerine süzülür (FLIP).`,
+  // examples/showcase/public/components/property-grid/ide.json
+  t`Gruplu, aranabilir satırlar; her tür kendi form denetimiyle düzenlenir.`,
   // examples/showcase/public/components/pull-to-refresh/ide.json
   t`Dokunmatikte aşağı çek, yenile.`,
   // examples/showcase/public/components/radio-group/ide.json
@@ -223,6 +269,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Yanıtlanan mesaj: ad ve kısaltılmış metin renkli çubuğun arkasında; balonda alıntı, yazma alanında vazgeç düğmeli önizleme.`,
   // examples/showcase/public/components/resize-handle/ide.json
   t`Kenardaki ya da köşedeki tutamaç: sürükle, ok tuşları, Home / End, Enter başa döndürür; tek görünüm.`,
+  // examples/showcase/public/components/rich-text/ide.json
+  t`Biçimli metin, bağlantı, liste; Markdown giriş ve çıkış.`,
   // examples/showcase/public/components/roadmap/ide.json
   t`Kaydırdıkça dolan çizgi; geçilen noktalar yanar, süren adım parlar.`,
   // examples/showcase/public/components/row-tools/ide.json
@@ -281,16 +329,24 @@ export const IDE_TEXTS = (): string[] => [
   t`Geçmişler dolu, sıradaki boş, şimdiki hareket motoruyla dolar.`,
   // examples/showcase/public/components/story-ring/ide.json
   t`Yeni hikâyede dört HADİ rengi, görülünce sakin çizgi, yakın arkadaşta yeşil.`,
+  // examples/showcase/public/components/story-viewer/ide.json
+  t`Bir halkaya dokunun.`,
   // examples/showcase/public/components/swatch/ide.json
   t`Tıklanır renk ya da gradyan örneği, dama zemini.`,
   // examples/showcase/public/components/tabs/ide.json
   t`Sekmeli paneller.`,
+  // examples/showcase/public/components/terminal/ide.json
+  t`Komutlar, ANSI renkler, tablo ve JSON çıktısı; pencereli hâli.`,
   // examples/showcase/public/components/testimonials/ide.json
   t`Izgara, iki sıra kayan şerit, solarak biten duvar (Daha fazla göster) ya da kaydırmalı.`,
   // examples/showcase/public/components/text-input/ide.json
   t`Ön ek, son ek, temizle, karakter sayacı.`,
   // examples/showcase/public/components/textarea/ide.json
   t`İçeriğe göre büyüyen alan.`,
+  // examples/showcase/public/components/theme-editor/ide.json
+  t`Renkleri, yazı tiplerini ve yarıçapı seç; temanı dışa aktar.`,
+  // examples/showcase/public/components/theme-menu/ide.json
+  t`Karmaşık bileşen: açık / koyu / sistem, renk teması ve vurgu rengi tek açılır menüde; bölümler ThemePicker…`,
   // examples/showcase/public/components/thread-nav/ide.json
   t`Bölümler iplikte boncuk; kapsülde kategoriler, alt iplikte sayfalar, damla bulunduğun yerde.`,
   // examples/showcase/public/components/time/ide.json
@@ -319,4 +375,6 @@ export const IDE_TEXTS = (): string[] => [
   t`100.000 satır, her biri kendi yüksekliğinde: yalnız görünen pencere DOM'da.`,
   // examples/showcase/public/components/web-reveal/ide.json
   t`Solma, yükselme, baştan ya da sondan kayma (RTL'de aynalı), ölçek, bulanıklık, çevirme; sırayla ya da…`,
+  // examples/showcase/public/components/wizard/ide.json
+  t`Adım adım form; her adımın kendi şeması.`,
 ];

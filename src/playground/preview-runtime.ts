@@ -364,7 +364,9 @@ export function setLanguage(code: string | null, next: Record<string, string> | 
 export function setProps(props: Record<string, Props>, parts: Record<string, Parts> = {}): void {
   lastProps = props; lastParts = parts;
   if (!last) return;
-  for (const [name, cell] of last.cells) { cell.dispose(); cell.dispose = draw(cell.C, cell.el, props[name] ?? {}, parts[name] ?? {}, name); }
+  // a cell the props do not name is the previous file's (the tab changed, its build has not run yet): left as it is,
+  // not drawn again without its props (a component with a required prop would throw)
+  for (const [name, cell] of last.cells) { if (!(name in props)) continue; cell.dispose(); cell.dispose = draw(cell.C, cell.el, props[name] ?? {}, parts[name] ?? {}, name); }
 }
 /**
  * Run `code` (an ES module) and render every component it exports (a name with a capital letter) into a cell of
@@ -491,7 +493,10 @@ const treeChanged = (): void => { if (treeQueued || !treeCb) return; treeQueued 
 // props given to one instance (by its key) in MarchIDE's Properties: over its own, on that instance only
 let instProps: Record<string, Props> = {};
 const over = (p: Props, extra: Props): Props => {
-  const o = Object.defineProperties({}, Object.getOwnPropertyDescriptors(p)) as Props;
+  // copied as configurable (a prop the component froze, Textarea's disabled, would refuse the override otherwise)
+  const own = Object.getOwnPropertyDescriptors(p);
+  for (const d of Object.values(own)) d.configurable = true;
+  const o = Object.defineProperties({}, own) as Props;
   for (const [k, v] of Object.entries(resolve(extra))) Object.defineProperty(o, k, { value: v, enumerable: true, configurable: true, writable: true });
   return o;
 };

@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "HSV alanı, saydamlık, göz damlası, paletler.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "ColorPickerDemo.tsx",
+			"code": "export { ColorPicker } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "MoodRing.tsx",
+			"code": "import { ColorPicker, parse, rgbToHsv } from \"march/ui\"\n\n// ruh hâli yüzüğü: bir renk seç, yüzük o renge boyanır ve tonuna göre bir ruh hâli söyler\nconst MOODS = [[30, \"Heyecanlı\"], [70, \"Neşeli\"], [160, \"Huzurlu\"], [250, \"Düşünceli\"], [320, \"Romantik\"], [360, \"Heyecanlı\"]] as const\nconst moodOf = (color: string) => {\n  const rgb = parse(color)\n  const hue = rgb ? rgbToHsv(rgb).h : 0\n  return MOODS.find(([max]) => hue < max)?.[1] ?? \"Heyecanlı\"\n}\n\nexport function MoodRing() {\n  let $color = \"#f2801f\"\n  return <div sx={{ flex: [\"row\", \"wrap\", \"center\"], gap: 4 }}>\n    <ColorPicker bind:value={$color} alpha={false} palettes={false} contrast={false} formats={false} aria-label=\"Yüzüğün rengi\" />\n    <div sx={{ flex: [\"col\", \"center\"], gap: 2 }}>\n      <div style={{ width: \"6rem\", height: \"6rem\", borderRadius: \"50%\", border: `0.75rem solid ${$color}` }} />\n      <b sx={{ text: \"lg\" }}>{moodOf($color)}</b>\n    </div>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "BrandColorSettings.tsx",
+			"code": "import { ColorPicker, Card, Button, toast } from \"march/ui\"\n\n// mağaza ayarları: marka rengini seç, düğmenin nasıl görüneceğine bak, kaydet; paletler mağazanın kendi renkleri\nconst PALETTES = [{ label: \"Mağaza renkleri\", colors: [\"#e4572e\", \"#17bebb\", \"#ffc914\", \"#2e282a\", \"#76b041\"] }]\n\nexport function BrandColorSettings() {\n  let $brand = \"#17bebb\"\n  let $saved = \"#17bebb\"\n  return <Card>\n    <div sx={{ flex: \"col\", gap: 3 }}>\n      <b>Marka rengi</b>\n      <ColorPicker bind:value={$brand} alpha={false} palettes={PALETTES} recent={4} preview={false} aria-label=\"Marka rengi\" />\n      <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n        <span sx={{ text: \"sm\", color: \"muted\" }}>Önizleme:</span>\n        <span style={{ background: $brand, color: \"white\", padding: \"0.4rem 0.9rem\", borderRadius: \"0.5rem\" }}>Sepete ekle</span>\n      </div>\n      <Button disabled={$brand === $saved} on:click={() => { $saved = $brand; toast(`Marka rengi ${$brand} kaydedildi`) }}>Kaydet</Button>\n    </div>\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ColorPickerLab.tsx",
+			"code": "import { ColorPicker, Toggle } from \"march/ui\"\nimport { droplet } from \"march/icons\"\n\n// ColorPicker'ın bütün özellikleri: değer (bind:value) ve onChange, saydamlık, biçim, kendi paletin, son seçilenler,\n// göz damlası ve kendi ikonu, kontrast, eski / yeni önizleme, biçim seçici, değer alanı, kendi metinlerin, sınıf,\n// salt okunur / devre dışı, ad (name) ve erişilebilir ad\nconst LABELS = { picker: \"Renk laboratuvarı\", hue: \"Ton\", opacity: \"Saydamlık\", value: \"Renk değeri\", format: \"Biçim\", contrast: \"Okunurluk\", onWhite: \"beyazda\", onBlack: \"siyahta\", recent: \"Az önce\" }\n\nexport function ColorPickerLab() {\n  let $color = \"#a3338c\"\n  let $changes = 0\n  let $locked = false\n  let $off = false\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n      <Toggle label=\"Kilitle (salt okunur)\" bind:value={$locked} />\n      <Toggle label=\"Devre dışı\" bind:value={$off} />\n      <span sx={{ text: \"sm\" }}>Değer: <code>{$color}</code> · değişiklik: {$changes}</span>\n    </div>\n    <ColorPicker\n      bind:value={$color}\n      onChange={() => $changes++}\n      alpha\n      format=\"hsl\"\n      palettes={[{ label: \"Gün batımı\", colors: [\"#ff7e5f\", \"#feb47b\", \"#6a3093\"] }, { label: \"Tema\", colors: [\"primary\", \"success\", \"danger\"] }]}\n      recent={3}\n      eyedropper\n      eyedropperIcon={droplet}\n      contrast\n      preview\n      formats\n      input\n      labels={LABELS}\n      class=\"lab-cp\"\n      readonly={$locked}\n      disabled={$off}\n      name=\"accent\"\n      aria-label=\"Vurgu rengi\"\n    />\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ColorPickerLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { ColorPickerLab } from \"./ColorPickerLab.tsx\"\n\n// ColorPickerLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"değer alanına yazılan renk değeri ve sayacı günceller\", async () => {\n  const s = renderTest(() => <ColorPickerLab />)\n  await s.type(\"Vurgu rengi\", \"#ff0000\")\n  // biçim hsl: değer hsl olarak yazılır\n  expect(s.sees(\"hsl(0\")).toBe(true)\n  expect(s.sees(\"değişiklik: 1\")).toBe(true)\n})\n\ntest(\"kendi paletindeki bir renge basınca seçilir\", async () => {\n  const s = renderTest(() => <ColorPickerLab />)\n  await s.click(\"#6a3093\")\n  expect(s.sees(\"değişiklik: 1\")).toBe(true)\n  expect(s.sees(\"Gün batımı\")).toBe(true)\n})\n\ntest(\"kendi metinleri: ton kaydırıcısı ve kontrast satırı\", () => {\n  const s = renderTest(() => <ColorPickerLab />)\n  expect(s.find(\"Ton\")).not.toBe(null)\n  expect(s.sees(\"beyazda\")).toBe(true)\n  expect(s.get(\".lab-cp\")?.getAttribute(\"aria-label\")).toBe(\"Vurgu rengi\")\n})\n\ntest(\"salt okunurken palet seçimi değeri değiştirmez\", async () => {\n  const s = renderTest(() => <ColorPickerLab />)\n  await s.click(s.find(\"Kilitle (salt okunur)\")!.closest(\"label\")!.querySelector(\"[role=switch]\")!)\n  expect(s.get(\".lab-cp\")?.className).toContain(\"is-readonly\")\n  await s.click(\"#6a3093\")\n  expect(s.sees(\"değişiklik: 0\")).toBe(true)\n})\n"
+		}
+	]
+}

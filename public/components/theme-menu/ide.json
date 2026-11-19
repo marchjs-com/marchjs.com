@@ -1,0 +1,31 @@
+{
+	"layout": "component",
+	"description": "Karmaşık bileşen: açık / koyu / sistem, renk teması ve vurgu rengi tek açılır menüde; bölümler ThemePicker…",
+	"sources": [
+		{
+			"type": "code",
+			"name": "ThemeMenuDemo.tsx",
+			"code": "export { ThemeMenu } from \"march/ui\";\n"
+		},
+		{
+			"type": "code",
+			"name": "ThemePostcard.tsx",
+			"code": "import { ThemeMenu, Card } from \"march/ui\"\n\n// tema kartpostalı: kart kendi temasıyla çizilir (m:theme); menü yalnız bu kartın temasını seçer, sayfanınki yerinde kalır\nexport function ThemePostcard() {\n  let $theme = \"cream\"\n  return <Card m:theme={$theme}>\n    <div sx={{ flex: \"col\", gap: 2 }}>\n      <span sx={{ text: [\"xl\", \"bold\"] }}>Selam, March!</span>\n      <span sx={{ color: \"muted\" }}>Bu kartpostal \"{$theme}\" temasında yazıldı.</span>\n      <ThemeMenu value={$theme} onChange={(id) => $theme = id} view=\"cards\" current modes={false} accents={false} headings={false} />\n    </div>\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "AccountBar.tsx",
+			"code": "import { ThemeMenu, Toolbar, Avatar, Divider } from \"march/ui\"\n\n// bir uygulamanın üst çubuğu: sağda ince bir görünüm menüsü (açık / koyu, tema, üç vurgu rengi); seçim bütün sayfaya uygulanır ve hatırlanır\nexport function AccountBar() {\n  return <Toolbar label=\"Hesap\" m:no-select>\n    <span sx={{ text: \"bold\" }}>Panelim</span>\n    <div sx={{ flex: \"grow\" }} />\n    <ThemeMenu label=\"Görünüm\" size=\"sm\" accents={[\"primary\", \"brand-orange\", \"brand-blue\"]} labels={{ theme: \"Tema\", accent: \"Vurgu\" }} />\n    <Divider vertical />\n    <Avatar name=\"Ada Yılmaz\" size=\"sm\" />\n  </Toolbar>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ThemeMenuLab.tsx",
+			"code": "import { ThemeMenu, Card } from \"march/ui\"\nimport { sun } from \"march/icons\"\n\n// ThemeMenu'nün bütün özellikleri. Üstte: kendi teması olan bir önizleme (value + onChange + page + mode; düğmede geçerli\n// tema, kartlar, ince boyut, panel sınıfı). Altta: sayfanın menüsü (kendi ikonu, adı, yeri, vurgular, başlık metinleri)\n// ve yalnız metinli, sade bir menü (temalar / kipler / başlıklar kapalı).\nexport function ThemeMenuLab() {\n  let $theme = \"\"\n  let $dark = false\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Card m:theme={$theme || null}>\n      <div sx={{ flex: [\"row\", \"wrap\"], gap: 2 }}>\n        <span sx={{ text: \"bold\" }}>Önizleme: {$theme || \"sayfanın teması\"}</span>\n        <ThemeMenu value={$theme} onChange={(id) => $theme = id} page mode={$dark ? \"dark\" : \"light\"} current view=\"cards\" size=\"sm\" panelClass=\"lab-preview-panel\" />\n        <button type=\"button\" on:click={() => $dark = !$dark}>{$dark ? \"Örnekler koyu\" : \"Örnekler açık\"}</button>\n      </div>\n    </Card>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 2 }}>\n      <ThemeMenu label=\"Sayfa görünümü\" icon={sun} placement=\"bottom-start\" themes view=\"list\" modes headings\n        accents={[\"primary\", \"brand-green\", \"brand-purple\"]} labels={{ theme: \"Renk teması\", accent: () => \"Vurgu rengi\" }} class=\"lab-page-menu\" />\n      <ThemeMenu label=\"Yalnız vurgu\" icon={false} themes={false} modes={false} headings={false} placement=\"top-start\" class=\"lab-accent-menu\" />\n    </div>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ThemeMenuLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { ThemeMenuLab } from \"./ThemeMenuLab.tsx\"\n\n// ThemeMenuLab'in testleri: menüler açılır, bölümler özelliklere uyar; önizlemenin teması sayfanınkine dokunmaz\nconst last = (s: ReturnType<typeof renderTest>) => s.all(\".m-theme-menu\").pop()\n\ntest(\"sayfa menüsü: kendi başlık metinleri ve üç vurgu rengi\", async () => {\n  const s = renderTest(() => <ThemeMenuLab />)\n  await s.click(\".lab-page-menu\")\n  const p = last(s)\n  expect(p?.querySelectorAll(\".m-theme-menu-heading\").length).toBe(2)\n  expect(p?.textContent).toContain(\"Renk teması\")\n  expect(p?.textContent).toContain(\"Vurgu rengi\")\n  expect(p?.querySelectorAll(\".m-accent-list [role=radio]\").length).toBe(3)\n})\n\ntest(\"yalnız vurgu menüsü: tema listesi, kipler ve başlıklar yok; düğmede ikon yok\", async () => {\n  const s = renderTest(() => <ThemeMenuLab />)\n  expect(s.get(\".lab-accent-menu svg\")).toBe(null)\n  await s.click(\".lab-accent-menu\")\n  const p = last(s)\n  expect(p?.querySelector(\".m-theme-list\")).toBe(null)\n  expect(p?.querySelector(\".m-theme-modes\")).toBe(null)\n  expect(p?.querySelector(\".m-accent-list\")).toBeTruthy()\n})\n\ntest(\"önizleme menüsü: kartlar, ilk kart sayfanın teması; seçim yalnız önizlemeyi boyar\", async () => {\n  const s = renderTest(() => <ThemeMenuLab />)\n  await s.click(\".m-theme-menu-btn\")\n  const p = s.get(\".lab-preview-panel\")\n  expect(p?.classList.contains(\"m-theme-menu-cards\")).toBe(true)\n  const cards = Array.from(p?.querySelectorAll(\".m-theme-cards [role=radio]\") ?? [])\n  expect(cards[0]?.getAttribute(\"aria-checked\")).toBe(\"true\")\n  const page = document.documentElement.getAttribute(\"data-m-theme\")\n  ;(cards[2] as HTMLElement).click()\n  await s.flush()\n  expect(s.sees(\"Önizleme: sayfanın teması\")).toBe(false)\n  expect(document.documentElement.getAttribute(\"data-m-theme\")).toBe(page)\n})\n"
+		}
+	]
+}
