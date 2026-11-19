@@ -1,0 +1,26 @@
+{
+	"layout": "component",
+	"description": "Onlarca telefon, tablet ve masaüstü ekranı; silüet, boyut, piksel oranı; arama, gruplar, dikey / yatay ve kendi cihazın",
+	"sources": [
+		{
+			"type": "code",
+			"name": "PhoneShelf.tsx",
+			"code": "import { DevicePicker, deviceById, deviceSilhouette } from \"march/ui\"\n\n// telefon rafı: yalnız telefonlar, aramasız; seçilen telefonun silüeti ve ekranı büyük gösterilir\nexport function PhoneShelf() {\n  let $id = \"pixel-8\"\n  return <div sx={{ flex: [\"row\", \"wrap\"], gap: 4 }}>\n    <DevicePicker value={$id} onChange={(v: string) => ($id = v)} group=\"phone\" search={false} create={false} label=\"Telefonlar\" />\n    <div class=\"m-card\" sx={{ flex: [\"col\", \"center\"], gap: 2, p: 5 }}>\n      {() => { const d = deviceById($id); return d ? [deviceSilhouette(d), <span sx={{ text: [\"lg\", \"bold\"] }}>{d.name}</span>, <span sx={{ text: \"sm\", color: \"muted\" }}>{`${d.width} × ${d.height} CSS piksel · ${d.dpr}x`}</span>] : \"Bir telefon seç\" }}\n    </div>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ResponsiveReview.tsx",
+			"code": "import { signal } from \"march\"\nimport { DevicePicker, DevicePreview, Popover, Button, deviceById } from \"march/ui\"\n\n// gerçek hayattan: tasarım gözden geçirme; araç çubuğundaki düğme seçiciyi açar, sayfa seçilen cihazda (dikey ya da\n// yatay) çizilir; \"Panele sığdır\" cihazsız gösterir\nexport function ResponsiveReview() {\n  const device = signal(\"iphone-15\")\n  const land = signal(false)\n  const page = () => <div sx={{ flex: \"col\", gap: 2, p: 4 }}>\n    <span sx={{ text: [\"xl\", \"bold\"] }}>HADİ etkinlikleri</span>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>Bu hafta 12 buluşma var</span>\n  </div>\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Popover placement=\"bottom-start\" trigger={<Button size=\"sm\" variant=\"secondary\">{() => deviceById(device())?.name ?? \"Panele sığdır\"}</Button>}>\n      <DevicePicker value={device} landscape={land} fit />\n    </Popover>\n    {() => (deviceById(device()) ? <DevicePreview device={device} landscape={land} controls fitHeight={460}>{page()}</DevicePreview> : <div class=\"m-card\">{page()}</div>)}\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "DevicePickerLab.tsx",
+			"code": "import { signal } from \"march\"\nimport { DevicePicker, DEVICES } from \"march/ui\"\n\n// DevicePicker'ın bütün özellikleri: value (sinyal), onChange, landscape, fit (kendi metniyle), devices (kendi\n// listen), group, search, create, label, class\nconst kiosk = { id: \"lobby\", name: \"Lobi kiosku\", width: 1080, height: 1920, kind: \"screen\" as const, radius: 0, touch: true }\nconst LIST = [DEVICES[\"iphone-se\"], DEVICES[\"pixel-8\"], DEVICES[\"ipad\"], DEVICES[\"desktop-1920\"], kiosk]\n\nexport function DevicePickerLab() {\n  const device = signal(\"pixel-8\")\n  const land = signal(false)\n  let $picked = \"pixel-8\"\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <DevicePicker class=\"lab-picker\" value={device} onChange={(v: string) => ($picked = v || \"sığdır\")} landscape={land}\n      fit=\"Tam ekran\" devices={LIST} group=\"all\" search create={false} label=\"Test cihazları\" />\n    <span class=\"lab-picked\" sx={{ text: \"sm\", color: \"muted\" }}>{() => `Seçilen: ${$picked} · ${land() ? \"yatay\" : \"dikey\"}`}</span>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "DevicePickerLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { DevicePickerLab } from \"./DevicePickerLab.tsx\"\n\n// DevicePickerLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"kendi listesi: beş cihaz ve en başta kendi metniyle sığdır\", () => {\n  const s = renderTest(() => <DevicePickerLab />)\n  const rows = s.all(\".lab-picker .m-dpick-item\")\n  expect(rows.length).toBe(6)\n  expect(rows[0]?.textContent).toContain(\"Tam ekran\")\n  expect(s.sees(\"Lobi kiosku\")).toBe(true)\n})\n\ntest(\"bir cihaza basınca seçilir\", () => {\n  const s = renderTest(() => <DevicePickerLab />)\n  const ipad = s.all(\".lab-picker .m-dpick-item\").find((r: Element) => r.textContent?.startsWith(\"iPad\")) as HTMLElement | undefined\n  ipad?.click()\n  expect(s.get(\".lab-picked\")?.textContent).toContain(\"ipad\")\n})\n\ntest(\"Yatay seçilince boyutlar yer değiştirir\", () => {\n  const s = renderTest(() => <DevicePickerLab />)\n  expect(s.sees(\"820 × 1180\")).toBe(true)\n  // önizlemenin diline göre \"Yatay\" ya da \"Landscape\"\n  const land = s.all(\"button\").find((b: Element) => /^(Yatay|Landscape)$/.test(b.textContent?.trim() ?? \"\")) as HTMLElement | undefined\n  land?.click()\n  expect(s.sees(\"1180 × 820\")).toBe(true)\n  expect(s.get(\".lab-picked\")?.textContent).toContain(\"yatay\")\n})\n"
+		}
+	]
+}

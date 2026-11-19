@@ -16,6 +16,12 @@ import { packIcon } from "../../../../src/icons/pack-paint.ts";
 // component drawn open (a bare <Dialog open>) gets that scope as its context: it opens in the preview, not on the page
 import { OverlayScopeContext } from "../../../../src/components/layout/overlay-scope/index.ts";
 import * as testing from "../../../../src/testing/index.ts";
+// the network speed of MarchIDE's preview (NetworkThrottle, its state shared with the page): the code's dynamic imports
+// and this March's lazy chunks wait as on the chosen network; fetch / XHR are slowed by the page's wrapper (its scope is
+// this code's stack: blob: modules and this runtime)
+import { throttledImport, throttledLoad, throttleBypass } from "../../../../src/components/composite/network-throttle/engine.ts";
+import { setLoadRunner } from "../../../../src/dom/preload.ts";
+setLoadRunner((fn, info) => throttledLoad(fn, info));
 
 // the playground's helpers for a quick try (import { instrument, run } from "march/playground"): debug a piece of
 // code in the preview with your own Debugger. `instrument` writes the debugger's calls in (the page's TypeScript worker,
@@ -170,7 +176,9 @@ export async function runTests(code: string): Promise<TestResult[]> {
   return out;
 }
 
-const MODULES: Record<string, unknown> = { "march": traced, "march/testing": testApi, "march/ui": ui, "march/icons": icons, "march/theme": theme, "march/motion": motion, "march/props": props, "march/playground": playground };
+const MODULES: Record<string, unknown> = { "march": traced, "march/testing": testApi, "march/ui": ui, "march/icons": icons, "march/theme": theme, "march/motion": motion, "march/props": props, "march/playground": playground,
+  // import("…") in the code (link() writes it so): through the network speed
+  "__import": throttledImport };
 // any other subpath of the components (march/actions…) is in the ui barrel too
 (globalThis as Record<string, unknown>)["__marchPreview"] = new Proxy(MODULES, { get: (m, k: string) => m[k] ?? (k.startsWith("march/") ? ui : undefined) });
 
@@ -202,7 +210,7 @@ async function loadPacks(code: string): Promise<void> {
   await Promise.all(ids.map((id) => {
     let p = packLoads.get(id);
     if (!p) {
-      p = fetch(new URL(`../icon-packs/${id}.json`, import.meta.url)).then((r) => { if (!r.ok) throw new Error(`march/icons/${id}: ${r.status}`); return r.json() as Promise<PackJson> })
+      p = throttleBypass(() => fetch(new URL(`../icon-packs/${id}.json`, import.meta.url))).then((r) => { if (!r.ok) throw new Error(`march/icons/${id}: ${r.status}`); return r.json() as Promise<PackJson> })
         .then((pk) => { MODULES[`march/icons/${id}`] = Object.fromEntries(pk.icons.map(([name, exp, d, flags = 0, eo]) => [exp, packIcon(name, d, {
           vb: pk.vb, ...(pk.sw ? { sw: pk.sw } : {}), ...(pk.fill || flags & 2 ? { fill: true } : {}), ...(flags & 1 ? { rtl: true } : {}), ...(eo ? { eo } : {}),
         })])) })
@@ -284,7 +292,9 @@ export function link(code: string): string {
   return code
     .replace(/import\s*\{([^}]*)\}\s*from\s*["'](march(?:\/[^"']*)?)["'];?/g, (_, names: string, path: string) => `const {${names.replace(/\s+as\s+/g, ": ")}} = ${mod(path)};`)
     .replace(/import\s*\*\s*as\s+([\w$]+)\s*from\s*["'](march(?:\/[^"']*)?)["'];?/g, (_, name: string, path: string) => `const ${name} = ${mod(path)};`)
-    .replace(/import\s*["']march(?:\/[^"']*)?["'];?/g, "");
+    .replace(/import\s*["']march(?:\/[^"']*)?["'];?/g, "")
+    // a dynamic import goes through the preview's network speed
+    .replace(/(^|[^.\w$])import\s*\(/g, "$1globalThis.__marchPreview.__import(");
 }
 
 // the props of what is rendered: a channel. setProps draws the already loaded component again with the new props

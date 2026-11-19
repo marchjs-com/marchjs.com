@@ -1176,6 +1176,9 @@ const buildNow = async () => {
   return r
 }
 const previewTheme = signal(""), previewMode = signal<"system" | "light" | "dark">("system")
+// the preview's own code (its blob: modules and the preview runtime, playground/preview.js): the device values and the
+// network speed of the preview toolbar apply to its calls only, never to the page around it
+const previewScope = (stack: string): boolean => /blob:|\/playground\/preview\.js/.test(stack)
 /** The element the chosen component draws in the preview (an HTML tag of the tree: its first one). */
 const chosenEl = (): HTMLElement | null => {
   const name = selected.peek(), tag = /^<([\w-]+)>$/.exec(name)?.[1]
@@ -1674,7 +1677,7 @@ const captureTools = () => <>
   <IconButton icon={image} size="sm" variant="ghost" label="Önizlemenin ekran görüntüsü (PNG)" onClick={() => void snap()} />
   <IconButton icon={video} size="sm" variant={() => (recording() ? "solid" : "ghost")} pressed={() => !!recording()} label={() => (recording() ? "Kaydı durdur ve kaydet (WebM)" : "Önizlemeyi kaydet (WebM)")} onClick={() => void toggleRecord()} />
 </>
-const preview = () => <AppPreview tools={captureTools()} toolbar={{ theme: true, accent: true, mode: true, language: true, fullscreen: true, device: true }} theme={previewTheme} mode={previewMode} language={previewLang} languages={languageList}>
+const preview = () => <AppPreview tools={captureTools()} toolbar={{ theme: true, accent: true, mode: true, language: true, fullscreen: true, device: true, network: true }} scope={previewScope} theme={previewTheme} mode={previewMode} language={previewLang} languages={languageList}>
   <div class="sc-pv-root" m:no-select ref={previewReady}>
     <div class="sc-playground-empty"><b>Önizleme</b><span>Derleniyor…</span></div>
   </div>

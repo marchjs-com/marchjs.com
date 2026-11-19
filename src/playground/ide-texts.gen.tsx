@@ -97,8 +97,10 @@ export const IDE_TEXTS = (): string[] => [
   t`İkisi tek alanda.`,
   // examples/showcase/public/components/debugger/ide.json
   t`Kesme noktası, adım adım, izlenenler, çağrı yığını; kayıtta zamanda geri.`,
+  // examples/showcase/public/components/device-picker/ide.json
+  t`Onlarca telefon, tablet ve masaüstü ekranı; silüet, boyut, piksel oranı; arama, gruplar, dikey / yatay ve kendi cihazın`,
   // examples/showcase/public/components/device-preview/ide.json
-  t`Telefon ve tablet kasası, çentik, durum çubuğu, gerçek ekran boyu, döndürme; fare parmak gibi:…`,
+  t`Telefon, tablet ya da masaüstü penceresi, gerçek ekran boyu, dönme; fare 1–3 parmak: gerçek dokunma olayları, kıstırma, döndürme; kumandada salla, eğ, çevrimdışı, pil, klavye`,
   // examples/showcase/public/components/dialog/ide.json
   t`Odak pencerenin içinde döner, Escape en üsttekini kapatır, kapanınca odak açan düğmeye döner.`,
   // examples/showcase/public/components/disclosure/ide.json
@@ -211,6 +213,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Sabitlenen ve son kullanılan sayfalar.`,
   // examples/showcase/public/components/nav-sidebar/ide.json
   t`Kategori sırası, daraltma, iç içe sayfalar.`,
+  // examples/showcase/public/components/network-throttle/ide.json
+  t`Çevrimdışı, yavaş / hızlı 3G, 4G ya da kendi bant genişliğin ve gecikmen; hız göstergesi ve canlı istek şelalesi`,
   // examples/showcase/public/components/newsletter/ide.json
   t`Doğrulama, bekleme düğmesi, başarıda beliren onay, hatada sallanan alan ve okunan ileti.`,
   // examples/showcase/public/components/not-for-you/ide.json
