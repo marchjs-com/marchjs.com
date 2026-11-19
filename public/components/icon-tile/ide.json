@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "IconTileDemo.tsx",
-      "code": "export { IconTile } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "WeatherWeek.tsx",
       "code": "import { IconTile } from \"march/ui\"\nimport { sun, cloud, droplet, zap, moon } from \"march/icons\"\n\n// bir haftalık hava durumu şeridi: her gün renkli bir karo; seçilen gün dolu (solid) ve büyük görünür\nconst DAYS = [\n  { day: \"Pzt\", icon: sun, tone: \"warn\", text: \"Güneşli\" }, { day: \"Sal\", icon: cloud, tone: \"neutral\", text: \"Bulutlu\" },\n  { day: \"Çar\", icon: droplet, tone: \"info\", text: \"Yağmurlu\" }, { day: \"Per\", icon: zap, tone: \"violet\", text: \"Fırtınalı\" },\n  { day: \"Cum\", icon: moon, tone: \"teal\", text: \"Açık gece\" },\n] as const\n\nexport function WeatherWeek() {\n  let $pick = 0\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: \"row\", gap: 2 }}>\n      {DAYS.map((d, i) => <button type=\"button\" on:click={() => $pick = i} sx={{ flex: [\"col\", \"center\"], gap: 1 }} aria-label={`${d.day}: ${d.text}`}>\n        <IconTile icon={d.icon} tone={d.tone} shape=\"round\" variant={() => $pick === i ? \"solid\" : \"soft\"} size={() => $pick === i ? \"lg\" : \"md\"} />\n        <span sx={{ text: \"xs\" }}>{d.day}</span>\n      </button>)}\n    </div>\n    <span sx={{ text: \"bold\" }}>{() => `${DAYS[$pick].day}: ${DAYS[$pick].text}`}</span>\n  </div>\n}\n"
     },

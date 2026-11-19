@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ResizeHandleDemo.tsx",
-			"code": "export { ResizeHandle } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "StretchyNote.tsx",
 			"code": "import { ResizeHandle } from \"march/ui\"\n\n// esnek not kâğıdı: sağ kenardan genişler; genişlik yazının boyunu da büyütür\nexport function StretchyNote() {\n  let $w = 220\n  return <div class=\"m-card\" style={{ position: \"relative\", \"inline-size\": `${$w}px` }} sx={{ p: 3 }}>\n    <p style={{ \"font-size\": `${Math.round($w / 14)}px` }}>Merhaba!</p>\n    <ResizeHandle value={() => $w} set={(w: number) => $w = w} min={160} max={420} reset={() => $w = 220} label=\"Not genişliği\" m:color=\"brand-orange\" />\n  </div>\n}\n"
 		},

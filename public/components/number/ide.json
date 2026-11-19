@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "NumberInputDemo.tsx",
-			"code": "export { NumberInput } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "BillSplit.tsx",
 			"code": "import { NumberInput, Card } from \"march/ui\"\n\n// hesabı böl: tutar, bahşiş ve kişi sayısı; kişi başı tutar anında hesaplanır (alanlarda ↑ / ↓ da çalışır)\nexport function BillSplit() {\n  let $bill = 1240\n  let $tip = 10\n  let $people = 4\n  const $each = (($bill ?? 0) * (1 + ($tip ?? 0) / 100)) / Math.max(1, $people ?? 1)\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: \"col\", gap: 2 }}>\n      <NumberInput bind:value={$bill} prefix=\"₺\" decimals={2} minDecimals={2} grouping min={0} aria-label=\"Hesap\" />\n      <div sx={{ flex: \"row\", gap: 2 }}>\n        <NumberInput bind:value={$tip} suffix=\"%\" min={0} max={30} step={5} decimals={0} aria-label=\"Bahşiş\" />\n        <NumberInput bind:value={$people} suffix=\"kişi\" min={1} max={20} decimals={0} aria-label=\"Kişi sayısı\" />\n      </div>\n      <span sx={{ text: [\"xl\", \"bold\"], color: \"brand-gold\" }}>Kişi başı ₺{$each.toFixed(2)}</span>\n    </div>\n  </Card>\n}\n"
 		},

@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "CheckMarkDemo.tsx",
-      "code": "export { CheckMark } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "PackingList.tsx",
       "code": "import { CheckMark, Card, Button } from \"march/ui\"\n\n// tatil çantası: her satıra basınca işaret dönerek ✓ olur; hepsi bitince başlık kutlar\nconst ITEMS = [\"Pasaport\", \"Güneş kremi\", \"Mayo\", \"Şarj aleti\"]\n\n// bir satır: işaret ve adı, basınca hazır / değil\nconst Item = (p: { name: string; done: () => boolean; toggle: () => void }) =>\n  <Button variant=\"ghost\" on:click={p.toggle}>\n    <CheckMark value={p.done} motion=\"flip\" variant=\"soft\" labels={{ yes: \"Hazır\", no: \"Eksik\" }} />\n    <span>{p.name}</span>\n  </Button>\n\nexport function PackingList() {\n  let $packed: string[] = [\"Pasaport\"]\n  const toggle = (n: string) => { $packed = $packed.includes(n) ? $packed.filter((x) => x !== n) : [...$packed, n] }\n  return <Card title={() => ($packed.length === ITEMS.length ? \"Çanta hazır! 🏖️\" : `Çanta: ${$packed.length} / ${ITEMS.length}`)}>\n    <div sx={{ flex: \"col\", gap: 1 }}>\n      {ITEMS.map((n) => <Item name={n} done={() => $packed.includes(n)} toggle={() => toggle(n)} />)}\n    </div>\n  </Card>\n}\n"
     },

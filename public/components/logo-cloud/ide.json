@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "LogoCloudDemo.tsx",
-			"code": "export { LogoCloud } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "EmojiParade.tsx",
 			"code": "import { LogoCloud } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// emoji geçit töreni: kayan şeritte meyveler; düğmeler hızı değiştirir\nconst FRUITS = [\"🍎\", \"🍌\", \"🍇\", \"🍉\", \"🍓\", \"🥝\", \"🍍\", \"🥥\"]\nconst NAMES = [\"Elma\", \"Muz\", \"Üzüm\", \"Karpuz\", \"Çilek\", \"Kivi\", \"Ananas\", \"Hindistan cevizi\"]\n\nexport function EmojiParade() {\n  let $speed = 40\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n      <Button variant=\"secondary\" on:click={() => $speed = Math.max(10, $speed - 20)}>Yavaşla</Button>\n      <strong>{`${$speed} px/sn`}</strong>\n      <Button variant=\"secondary\" on:click={() => $speed = Math.min(160, $speed + 20)}>Hızlan</Button>\n    </div>\n    {() => {\n      const speed = $speed\n      return <LogoCloud variant=\"marquee\" mono={false} speed={speed} title=\"Meyve geçidi\"\n      logos={FRUITS.map((f, i) => ({ name: NAMES[i]!, node: <span sx={{ text: \"2xl\" }}>{f}</span> }))} />\n    }}\n  </div>\n}\n"
 		},

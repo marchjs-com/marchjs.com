@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "SectionHeadDemo.tsx",
-			"code": "export { SectionHead } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "HeadlineDice.tsx",
 			"code": "import { SectionHead } from \"march/landing\"\n\n// başlık zarı: \"Zar at\" her basışta başka bir başlık, ölçek ve hiza getirir\nconst ROLLS = [\n  { eyebrow: \"🎲 1\", title: \"Pazartesi sendromuna son\", size: \"sm\", align: \"start\" },\n  { eyebrow: \"🎲 2\", title: \"Kahve bitti, panik yok\", size: \"md\", align: \"center\" },\n  { eyebrow: \"🎲 3\", title: \"Kediler ofisi devraldı\", size: \"lg\", align: \"end\" },\n  { eyebrow: \"🎲 4\", title: \"Bugün her şey mümkün\", size: \"xl\", align: \"center\" },\n] as const\n\nexport function HeadlineDice() {\n  let $roll = 0\n  return <div>\n    {() => {\n      const r = ROLLS[$roll]!\n      return <SectionHead eyebrow={r.eyebrow} title={r.title} size={r.size} align={r.align}\n        actions={[{ label: \"Zar at\", onClick: () => $roll = ($roll + 1) % ROLLS.length }]} note={`${r.size} ölçek · ${r.align} hiza`} />\n    }}\n  </div>\n}\n"
 		},

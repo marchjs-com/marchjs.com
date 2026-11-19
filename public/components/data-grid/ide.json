@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "DataGridDemo.tsx",
-      "code": "export { DataGrid } from \"march/components/data-grid\";\n"
-    },
-    {
-      "type": "code",
       "name": "PlanetGrid.tsx",
       "code": "import { DataGrid } from \"march/components/data-grid\"\n\n// Güneş sistemi bir tabloda: başlığa basınca sıralanır, alttaki satır uydu sayılarını toplar\nconst planets = [\n  { id: 1, name: \"Merkür\", distance: 0.39, moons: 0, ring: \"yok\" },\n  { id: 2, name: \"Venüs\", distance: 0.72, moons: 0, ring: \"yok\" },\n  { id: 3, name: \"Dünya\", distance: 1, moons: 1, ring: \"yok\" },\n  { id: 4, name: \"Mars\", distance: 1.52, moons: 2, ring: \"yok\" },\n  { id: 5, name: \"Jüpiter\", distance: 5.2, moons: 95, ring: \"ince\" },\n  { id: 6, name: \"Satürn\", distance: 9.58, moons: 146, ring: \"parlak\" },\n  { id: 7, name: \"Uranüs\", distance: 19.2, moons: 28, ring: \"ince\" },\n  { id: 8, name: \"Neptün\", distance: 30.1, moons: 16, ring: \"ince\" },\n]\n\nexport function PlanetGrid() {\n  return <DataGrid label=\"Gezegenler\" rows={planets} height={320} toolbar={{ csv: false, groups: false }}\n    columns={[\n      { key: \"name\", label: \"Gezegen\", width: 140 },\n      { key: \"distance\", label: \"Uzaklık (AU)\", width: 140, type: \"number\", aggregate: \"max\" },\n      { key: \"moons\", label: \"Uydu\", width: 110, type: \"number\", aggregate: \"sum\" },\n      { key: \"ring\", label: \"Halka\", width: 120, filter: \"select\" },\n    ]} />\n}\n"
     },

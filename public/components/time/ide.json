@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "TimeInputDemo.tsx",
-			"code": "export { TimeInput } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "SleepCalc.tsx",
 			"code": "import { TimeInput, Field, Card } from \"march/ui\"\n\n// uyku hesabı: yatış ve kalkış saatini seç; kaç saat uyuyacağın ve yetip yetmediği anında görünür\nconst minutes = (t: string) => { const [h, m] = t.split(\":\").map(Number); return (h || 0) * 60 + (m || 0) }\n\nexport function SleepCalc() {\n  let $bed = \"23:30\"\n  let $wake = \"07:00\"\n  const $sleep = (minutes($wake) - minutes($bed) + 1440) % 1440\n  const $enough = $sleep >= 7 * 60\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n      <Field label=\"Yatış\"><TimeInput bind:value={$bed} /></Field>\n      <Field label=\"Kalkış\"><TimeInput bind:value={$wake} /></Field>\n    </div>\n    <p sx={{ text: \"lg\", color: $enough ? \"brand-green\" : \"brand-orange\" }}>\n      {Math.floor($sleep / 60)} sa {$sleep % 60} dk uyku · {$enough ? \"dinç uyanırsın\" : \"biraz erken yat\"}\n    </p>\n  </Card>\n}\n"
 		},

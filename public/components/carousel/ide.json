@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "CarouselDemo.tsx",
-      "code": "export { Carousel } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "EmojiReel.tsx",
       "code": "import { Carousel, Card } from \"march/ui\"\n\n// emoji makarası: slaytlar düz metin (her metin kendi slayt kutusunu alır), noktalar numaralı\nconst faces = [\"😀 Neşeli\", \"😎 Havalı\", \"🤔 Düşünceli\", \"😴 Uykulu\", \"🥳 Kutlamada\"]\n\nexport function EmojiReel() {\n  return <Card title=\"Bugün nasılsın?\">\n    <Carousel label=\"Ruh hâli\" perView={2} m:color=\"brand-orange\" dots={(i: number) => String(i + 1)}>\n      {faces}\n    </Carousel>\n  </Card>\n}\n"
     },

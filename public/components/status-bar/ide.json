@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "StatusBarDemo.tsx",
-			"code": "export { StatusBar } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "GameHud.tsx",
 			"code": "import { StatusBar, Card } from \"march/ui\"\nimport { heart, star, zap } from \"march/icons\"\n\n// oyun göstergesi: can, puan, enerji; puan düğmesi puanı artırır\nexport function GameHud() {\n  let $score = 120\n  let $lives = 3\n  return <Card m:theme=\"night\">\n    <StatusBar label=\"Oyun durumu\" items={[\n      { id: \"lives\", icon: heart, text: () => `${$lives}`, tone: () => ($lives > 1 ? \"success\" : \"danger\"), onSelect: () => $lives = Math.max(0, $lives - 1), title: \"Can kaybet\" },\n      { id: \"score\", icon: star, text: () => `${$score} puan`, onSelect: () => $score += 10, title: \"Puan kazan\" },\n      { id: \"energy\", side: \"end\", icon: zap, text: \"Enerji dolu\", tone: \"busy\" },\n    ]} />\n  </Card>\n}\n"
 		},

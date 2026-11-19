@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "FollowButtonDemo.tsx",
-			"code": "export { FollowButton } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "ClubJoin.tsx",
 			"code": "import { FollowButton, Card } from \"march/ui\"\n\n// kulübe katıl: kendi metinleri ve yeşil renk; koyu kartta\nexport function ClubJoin() {\n  let $state = \"follow\"\n  return <Card m:theme=\"night\">\n    <strong>HADİ Koşu Kulübü</strong>\n    <FollowButton state={$state as \"follow\"} onChange={(s: string) => $state = s} name=\"HADİ Koşu Kulübü\"\n      labels={{ follow: \"Katıl\", following: \"Üyesin\" }} m:color=\"brand-green\" />\n  </Card>\n}\n"
 		},

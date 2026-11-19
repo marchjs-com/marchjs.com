@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "DateRangePickerDemo.tsx",
-			"code": "export { DateRangePicker } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "TripNights.tsx",
 			"code": "import { DateRangePicker, Card } from \"march/ui\"\n\n// tatil planı: gidiş ve dönüş günlerini seç; kaç gece kaldığın ve otelin tutarı anında hesaplanır\ntype Maybe<T> = T | null | undefined\ntype DateRange = { from: string | null; to: string | null }\nconst TRIP: Maybe<DateRange> = { from: \"2026-07-10\", to: \"2026-07-17\" }\nconst NIGHT = 2_400\n\nexport function TripNights() {\n  let $trip = TRIP\n  const $nights = $trip?.from && $trip.to ? Math.round((Date.parse($trip.to) - Date.parse($trip.from)) / 86_400_000) : 0\n  return <Card m:theme=\"night\" title=\"Bodrum tatili\" subtitle=\"Deniz manzaralı oda · gecesi 2.400 ₺\">\n    <DateRangePicker bind:value={$trip} presets={false} separator=\"✈\" labels={{ from: \"Gidiş\", to: \"Dönüş\" }} />\n    <p sx={{ text: \"xl\", color: \"brand-blue\" }}>\n      {$nights} gece · {($nights * NIGHT).toLocaleString(\"tr-TR\")} ₺\n    </p>\n  </Card>\n}\n"
 		},

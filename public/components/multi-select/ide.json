@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "MultiSelectDemo.tsx",
-			"code": "export { MultiSelect } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PizzaBuilder.tsx",
 			"code": "import { MultiSelect, Field } from \"march/ui\"\n\n// kendi pizzanı yap: malzemeleri ekledikçe fiyat artar, her chip'in yanında fiyatı yazar\nconst toppings = [\n  { value: \"mantar\", label: \"Mantar\", hint: \"+15 ₺\" }, { value: \"sucuk\", label: \"Sucuk\", hint: \"+25 ₺\" },\n  { value: \"zeytin\", label: \"Zeytin\", hint: \"+10 ₺\" }, { value: \"biber\", label: \"Közlenmiş biber\", hint: \"+12 ₺\" },\n  { value: \"mozzarella\", label: \"Ekstra mozzarella\", hint: \"+20 ₺\" }, { value: \"ananas\", label: \"Ananas\", hint: \"+18 ₺\" },\n]\nconst price = (v: string) => Number(toppings.find((t) => t.value === v)?.hint.replace(/\\D/g, \"\") ?? 0)\n\nexport function PizzaBuilder() {\n  let $picked = [\"mozzarella\"]\n  const total = () => 180 + $picked.reduce((sum, v) => sum + price(v), 0)\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Field label=\"Malzemeler\"><MultiSelect bind:value={$picked} options={toppings} placeholder=\"Malzeme ekle\" /></Field>\n    <span sx={{ text: [\"xl\", \"bold\"], color: \"brand-orange\" }}>Toplam: {total()} ₺</span>\n  </div>\n}\n"
 		},

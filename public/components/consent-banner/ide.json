@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ConsentBannerDemo.tsx",
-			"code": "export { ConsentBanner } from \"march/components/consent-banner\";\n"
-		},
-		{
-			"type": "code",
 			"name": "CookieJar.tsx",
 			"code": "import { ConsentBanner } from \"march/components/consent-banner\"\n\n// kurabiye kavanozu: aynı bant, kendi sesiyle; üç seçenek yine eşit ağırlıkta\nexport function CookieJar() {\n  return <ConsentBanner inline always title=\"🍪 Kavanozda kurabiye var\"\n    text=\"Siteyi çalıştıranlar hep açık. Ölçüm ve öneri kurabiyelerini yalnız sen istersen pişiririz.\"\n    labels={{ reject: \"Hiç istemem\", customize: \"Tek tek seçeyim\", accept: \"Hepsini al\" }} />\n}\n"
 		},

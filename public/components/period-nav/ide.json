@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "PeriodNavDemo.tsx",
-			"code": "export { PeriodNav } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "MoonPhases.tsx",
 			"code": "import { PeriodNav, Card } from \"march/ui\"\n\n// ayın evreleri: oklar bir evre ilerler ya da geri gider, ortada evrenin kendisi (title bir işlev: canlı okunur);\n// \"Bu gece\" bugünkü evreye döner\nconst phases = [\"🌑 Yeni ay\", \"🌒 Hilal\", \"🌓 İlk dördün\", \"🌔 Şişkin ay\", \"🌕 Dolunay\", \"🌖 Azalan ay\", \"🌗 Son dördün\", \"🌘 Son hilal\"]\nconst tonight = 4\n\nexport function MoonPhases() {\n  let $phase = tonight\n  const step = (d: number) => $phase = ($phase + d + phases.length) % phases.length\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: [\"col\", \"center\"], gap: 3 }}>\n      <PeriodNav title={() => phases[$phase]} onPrev={() => step(-1)} onNext={() => step(1)} onToday={() => $phase = tonight}\n        today=\"Bu gece\" m:color=\"brand-purple\" labels={{ group: \"Ay evresi\", previous: \"Önceki evre\", next: \"Sonraki evre\" }} />\n      <span sx={{ text: \"sm\", color: \"muted\" }}>{$phase === tonight ? \"Bu gece gökyüzünde\" : `Bu geceden ${($phase - tonight + phases.length) % phases.length} evre sonra`}</span>\n    </div>\n  </Card>\n}\n"
 		},

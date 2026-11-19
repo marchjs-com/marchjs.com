@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "StackDemo.tsx",
-			"code": "export { Stack } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "TagCloud.tsx",
 			"code": "import { Stack, Chip } from \"march/ui\"\n\n// etiket bulutu: satır, sarmalı; seçilen etiketler sayılır\nconst tags = [\"sinyal\", \"TSX\", \"derleyici\", \"erişilebilirlik\", \"tema\", \"hareket\", \"test\", \"i18n\"]\n\nexport function TagCloud() {\n  let $picked: string[] = []\n  const toggle = (t: string) => $picked = $picked.includes(t) ? $picked.filter((x) => x !== t) : [...$picked, t]\n  return <Stack gap={4}>\n    <Stack direction=\"row\" gap={2} wrap>\n      {tags.map((t) => <Chip selected={$picked.includes(t)} on:click={() => toggle(t)}>{t}</Chip>)}\n    </Stack>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>{$picked.length} etiket seçildi</span>\n  </Stack>\n}\n"
 		},

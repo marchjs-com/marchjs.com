@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "DateTimeInputDemo.tsx",
-			"code": "export { DateTimeInput } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "Countdown.tsx",
 			"code": "import { DateTimeInput, Field, Card } from \"march/ui\"\n\n// yılbaşı geri sayımı: partinin tarihini ve saatini seç; kalan gün ve saat kocaman, altında yerel saatle an\nconst PARTY: string | null = \"2026-12-31T21:00:00.000Z\"\n\nexport function Countdown() {\n  let $at = PARTY\n  const $left = $at ? Math.max(0, Date.parse($at) - Date.now()) : 0\n  return <Card m:theme=\"night\">\n    <Field label=\"Parti ne zaman?\"><DateTimeInput bind:value={$at} defaultTime=\"22:00\" /></Field>\n    <p sx={{ text: \"2xl\", color: \"brand-gold\" }}>\n      {Math.floor($left / 86_400_000)} gün {Math.floor($left / 3_600_000) % 24} saat\n    </p>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>kaldı · {$at ? new Date($at).toLocaleString(\"tr-TR\") : \"tarih seç\"}</span>\n  </Card>\n}\n"
 		},

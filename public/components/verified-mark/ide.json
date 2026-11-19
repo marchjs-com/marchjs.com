@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "VerifiedMarkDemo.tsx",
-			"code": "export { VerifiedMark } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "ProfileName.tsx",
 			"code": "import { VerifiedMark, Card } from \"march/ui\"\n\n// profil adı: koyu kartta büyük ad ve altın rozet\nexport function ProfileName() {\n  return <Card m:theme=\"night\">\n    <span sx={{ text: [\"xl\", \"bold\"] }}>HADİ Koşu Kulübü <VerifiedMark size=\"lg\" m:color=\"brand-gold\" label=\"Onaylı kulüp\" /></span>\n  </Card>\n}\n"
 		},

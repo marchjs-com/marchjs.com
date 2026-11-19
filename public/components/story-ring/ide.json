@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "StoryRingDemo.tsx",
-			"code": "export { StoryRing } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "FriendsTray.tsx",
 			"code": "import { StoryRing } from \"march/ui\"\n\n// arkadaş hikâyeleri: basılan halka \"görüldü\" olur\nconst friends = [\"Elif Arslan\", \"Can Demir\", \"Deniz Kaya\", \"Ada Yıldız\"]\n\nexport function FriendsTray() {\n  let $seen: string[] = []\n  return <div sx={{ flex: \"row\", gap: 3 }}>\n    {friends.map((f, i) => <StoryRing name={f} state={$seen.includes(f) ? \"seen\" : i === 2 ? \"close\" : \"new\"} onClick={() => $seen = [...$seen, f]} />)}\n  </div>\n}\n"
 		},

@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "OverflowToolbarDemo.tsx",
-			"code": "export { OverflowToolbar } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PaintBox.tsx",
 			"code": "import { OverflowToolbar, Segmented } from \"march/ui\"\n\n// boya kutusu: her kalem bir emoji; kutuyu daralt, önceliği düşük renkler \"Daha fazla\" menüsüne saklanır\nconst PENS = [\n  { id: \"red\", label: \"Kırmızı\", icon: \"🔴\", priority: 6 },\n  { id: \"orange\", label: \"Turuncu\", icon: \"🟠\", priority: 2 },\n  { id: \"yellow\", label: \"Sarı\", icon: \"🟡\", priority: 4 },\n  { id: \"green\", label: \"Yeşil\", icon: \"🟢\", priority: 5 },\n  { id: \"blue\", label: \"Mavi\", icon: \"🔵\", priority: 3 },\n  { id: \"purple\", label: \"Mor\", icon: \"🟣\", priority: 1 },\n]\n\nexport function PaintBox() {\n  let $pen = \"red\"\n  let $span = 3\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Segmented aria-label=\"Kutu genişliği\" value={$span} onChange={(v: unknown) => $span = Number(v)}\n      options={[{ value: 1, label: \"dar\" }, { value: 2, label: \"orta\" }, { value: 3, label: \"geniş\" }]} />\n    <div sx={{ cols: 3 }}>\n      <div sx={{ span: $span }}>\n        <OverflowToolbar label=\"Boya kutusu\" size=\"md\" items={PENS.map((p) => ({ ...p, pressed: () => $pen === p.id, onSelect: () => $pen = p.id }))} />\n      </div>\n    </div>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>Elindeki kalem: {PENS.find((p) => p.id === $pen)?.label}</span>\n  </div>\n}\n"
 		},

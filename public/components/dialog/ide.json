@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "DialogDemo.tsx",
-			"code": "export { Dialog } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "LevelUp.tsx",
 			"code": "import { Dialog, Button, Card } from \"march/ui\"\n\n// seviye atladın: kutlama penceresi, yükselerek gelir; \"Devam\" kapatır\nexport function LevelUp() {\n  let $open = false\n  let $level = 1\n  return <Card m:theme=\"night\">\n    <Button variant=\"primary\" on:click={() => { $level++; $open = true }}>Görevi bitir</Button>\n    <span sx={{ text: \"sm\", color: \"muted\" }}> Seviye {$level}</span>\n    <Dialog open={$open} onClose={() => $open = false} title={`🎉 Seviye ${$level}!`} size=\"sm\" motion=\"rise\"\n      footer={<Button variant=\"primary\" on:click={() => $open = false}>Devam</Button>}>\n      <p>Yeni bir rozet kazandın.</p>\n    </Dialog>\n  </Card>\n}\n"
 		},

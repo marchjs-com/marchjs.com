@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "KanbanDemo.tsx",
-      "code": "export { Kanban } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "ReadingBoard.tsx",
       "code": "import { Kanban } from \"march/ui\"\n\n// bir okuma panosu: kitabı sürükle (ya da odaklayıp Alt+→), okundu sütununa varınca tebrik satırı çıkar\ntype Book = { id: string; title: string }\ntype Col = { id: string; title: string; tone: string; items: Book[] }\n\nexport function ReadingBoard() {\n  let $cols: Col[] = [\n    { id: \"next\", title: \"Okunacak\", tone: \"info\", items: [{ id: \"b1\", title: \"Dune\" }, { id: \"b2\", title: \"Kürk Mantolu Madonna\" }] },\n    { id: \"now\", title: \"Okunuyor\", tone: \"warn\", items: [{ id: \"b3\", title: \"Simyacı\" }] },\n    { id: \"done\", title: \"Okundu\", tone: \"success\", items: [] },\n  ]\n  const move = (b: Book, from: string, to: string) => {\n    $cols = $cols.map((c) => c.id === from ? { ...c, items: c.items.filter((x) => x.id !== b.id) } : c.id === to ? { ...c, items: [...c.items, b] } : c)\n  }\n  const read = () => $cols.find((c) => c.id === \"done\")!.items.length\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Kanban columns={() => $cols} onMove={move} />\n    <p sx={{ text: \"bold\", color: \"success\" }}>{() => read() ? `Tebrikler: ${read()} kitap bitti 📚` : \"Henüz bitmiş kitap yok\"}</p>\n  </div>\n}\n"
     },

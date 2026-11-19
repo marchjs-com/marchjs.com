@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "DockLayoutDemo.tsx",
-			"code": "export { DockLayout } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "MoodBoard.tsx",
 			"code": "import { DockLayout, Button, row, col, tabs } from \"march/ui\"\nimport { sun, moon, coffee } from \"march/icons\"\n\n// ruh hâli panosu: üç pano; her birinin beğeni sayısı sekmede rozet olur. Sekmeleri sürükleyip panoyu yeniden diz.\nconst Board = (props: { emoji: string; text: string; onLike: () => void }) => <div sx={{ p: 3, flex: \"col\", gap: 2 }}>\n  <span sx={{ text: \"2xl\" }}>{props.emoji}</span>\n  <span>{props.text}</span>\n  <Button size=\"sm\" variant=\"secondary\" on:click={props.onLike}>Beğen</Button>\n</div>\n\nexport function MoodBoard() {\n  let $sun = 0\n  let $moon = 0\n  let $coffee = 0\n  const panels = [\n    { id: \"sun\", title: \"Sabah\", icon: sun, badge: () => $sun || null, content: () => <Board emoji=\"🌅\" text=\"Güne erken başla\" onLike={() => $sun++} /> },\n    { id: \"coffee\", title: \"Öğle\", icon: coffee, badge: () => $coffee || null, content: () => <Board emoji=\"☕\" text=\"Bir mola ver\" onLike={() => $coffee++} /> },\n    { id: \"moon\", title: \"Gece\", icon: moon, badge: () => $moon || null, content: () => <Board emoji=\"🌙\" text=\"Yıldızları say\" onLike={() => $moon++} /> },\n  ]\n  return <div style={{ height: \"18rem\" }}>\n    <DockLayout panels={panels} layout={row([0.5, tabs(\"sun\")], [0.5, col([0.5, tabs(\"coffee\")], [0.5, tabs(\"moon\")])])} commands={false} label=\"Ruh hâli panosu\" />\n  </div>\n}\n"
 		},

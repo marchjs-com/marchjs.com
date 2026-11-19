@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "TimeRulerDemo.tsx",
-      "code": "export { TimeRuler } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "EggTimer.tsx",
       "code": "import { TimeRuler, Button } from \"march/ui\"\n\n// bir yumurta zamanlayıcısı: cetveli sürükleyerek pişme süresini seç (dakikaya yapışır), etiketler dakika yazar\nconst MIN = 60_000\n\nexport function EggTimer() {\n  let $at = 6 * MIN\n  const egg = () => $at <= 4 * MIN ? \"rafadan 🥚\" : $at <= 7 * MIN ? \"kayısı 🍳\" : \"katı 🥚\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <TimeRuler duration={12 * MIN} value={() => $at} onSeek={(ms: number) => $at = ms} major={2 * MIN} step={MIN}\n      format={(ms: number) => `${ms / MIN} dk`} valueText={(ms: number) => `${Math.round(ms / MIN)} dakika`}\n      snap={(ms: number) => Math.round(ms / MIN) * MIN} m:color=\"brand-orange\" labels={{ ruler: \"Pişme süresi\", playhead: \"Süre\" }} />\n    <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n      <span sx={{ text: \"bold\" }}>{() => `${$at / MIN} dakika: ${egg()}`}</span>\n      <Button size=\"sm\" on:click={() => $at = 6 * MIN}>Sıfırla</Button>\n    </div>\n  </div>\n}\n"
     },

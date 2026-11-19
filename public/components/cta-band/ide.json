@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "CtaBandDemo.tsx",
-			"code": "export { CtaBand } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "HighFive.tsx",
 			"code": "import { CtaBand } from \"march/landing\"\n\n// beşlik bandı: her basışta sayaç artar, başlık ve not kendiliğinden güncellenir (title ve note işlev olabilir)\nexport function HighFive() {\n  let $fives = 0\n  return <CtaBand variant=\"mesh\" reveal=\"none\"\n    title={() => ($fives ? `${$fives} beşlik çakıldı ✋` : \"Bir beşlik çak!\")}\n    lead=\"Gün boyu iyi iş çıkardın.\"\n    actions={[{ label: \"✋ Çak\", onClick: () => $fives++ }]}\n    note={() => ($fives >= 5 ? \"Efsane oldun 🏆\" : `Efsaneye ${5 - $fives} kaldı`)} />\n}\n"
 		},

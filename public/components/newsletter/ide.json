@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "NewsletterDemo.tsx",
-			"code": "export { Newsletter } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "SecretClub.tsx",
 			"code": "import { Newsletter } from \"march/landing\"\nimport { Card } from \"march/ui\"\n\n// gizli kulüp: e-postanı bırakınca üye sayısı artar, onayda tik yerine bir anahtar emojisi belirir\nconst Key = () => <span aria-hidden=\"true\">🗝️</span>\n\nexport function SecretClub() {\n  let $members = 41\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: \"col\", gap: 2 }}>\n      <span sx={{ color: \"muted\", text: \"sm\" }}>{$members} üye</span>\n      <Newsletter layout=\"stacked\" title=\"Gizli kulüp\" lead=\"Şifreyi yalnız e-postayla söylüyoruz.\"\n        button=\"Kapıyı çal\" done=\"İçeridesin. Şifre gelen kutunda.\" doneIcon={<Key /> as Node}\n        onSubmit={() => { $members++ }} />\n    </div>\n  </Card>\n}\n"
 		},

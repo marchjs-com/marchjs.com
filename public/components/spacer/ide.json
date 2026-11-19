@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "SpacerDemo.tsx",
-			"code": "export { Spacer } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PlayerBar.tsx",
 			"code": "import { Spacer, IconButton } from \"march/ui\"\nimport { play, pause, volume2 } from \"march/icons\"\n\n// müzik çubuğu: şarkı adı başta, Spacer ses düğmesini sona iter (sağdan sola yazımda aynalanır)\nexport function PlayerBar() {\n  let $playing = false\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 2, p: 2, radius: 2 }} class=\"m-card\">\n    <IconButton icon={$playing ? pause : play} label={$playing ? \"Duraklat\" : \"Çal\"} variant=\"solid\" shape=\"round\" on:click={() => $playing = !$playing} />\n    <span sx={{ text: \"bold\" }}>Gece Yolu</span>\n    <Spacer />\n    <IconButton icon={volume2} label=\"Ses\" />\n  </div>\n}\n"
 		},

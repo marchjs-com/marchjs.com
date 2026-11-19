@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "OverlayDemo.tsx",
-      "code": "export { Overlay } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "NightSky.tsx",
       "code": "import { Overlay, Button, Card } from \"march/ui\"\n\n// gece gökyüzü: noktalar yıldız, kenar karartma ufuk; düğme efekti değiştirir, katmanlar tıklamayı engellemez\nconst looks = [\"dots\", \"grid\", \"mesh\", \"spotlight\"] as const\n\nexport function NightSky() {\n  let $i = 0\n  let $wishes = 0\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: \"col\", gap: 3, p: 6, radius: 3 }}>\n      <Overlay effect={looks[$i % looks.length]} m:color=\"brand-gold\" opacity={0.8} />\n      <Overlay effect=\"vignette\" />\n      <strong sx={{ text: \"xl\" }}>Bu gece {() => looks[$i % looks.length]} gökyüzü</strong>\n      <span sx={{ color: \"muted\" }}>Tutulan dilek: {() => $wishes}</span>\n      <div sx={{ flex: \"row\", gap: 2 }}>\n        <Button size=\"sm\" on:click={() => $i++}>Gökyüzünü değiştir</Button>\n        <Button size=\"sm\" variant=\"ghost\" on:click={() => $wishes++}>Dilek tut</Button>\n      </div>\n    </div>\n  </Card>\n}\n"
     },

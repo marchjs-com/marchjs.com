@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "MediaDemo.tsx",
-      "code": "export { Media } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "MoodBoard.tsx",
       "code": "import { Media, Card, Segmented } from \"march/ui\"\n\n// ruh hâli panosu: aynı yuvada resim ya da video; tür uzantıdan anlaşılır (kind=\"auto\")\nconst moods = [\n  { value: \"calm\", label: \"Sakin\", src: \"/media/dusk.jpg\" },\n  { value: \"flow\", label: \"Akış\", src: \"/media/hadi-waves.webm\" },\n  { value: \"lost\", label: \"Kayıp\", src: \"/media/yok.jpg\" },\n]\n\nexport function MoodBoard() {\n  let $mood = \"calm\"\n  const now = () => moods.find((m) => m.value === $mood) ?? moods[0]!\n  return <Card title=\"Bugünün havası\">\n    <div sx={{ flex: \"col\", gap: 3 }}>\n      <Segmented aria-label=\"Hava\" options={moods.map((m) => ({ value: m.value, label: m.label }))} bind:value={$mood} />\n      <Media src={() => now().src} kind=\"auto\" alt={() => now().label} poster=\"/media/hadi-waves.jpg\" muted loop fallback=\"Bu hava kaybolmuş, başka birini seçin\" />\n    </div>\n  </Card>\n}\n"
     },

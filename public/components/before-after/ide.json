@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "BeforeAfterDemo.tsx",
-			"code": "export { BeforeAfter } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "MondayMorning.tsx",
 			"code": "import { BeforeAfter } from \"march/landing\"\n\n// pazartesi sabahı: kahveden önce ve sonra; her sürüklemede kaç kez baktığını sayar\nconst Face = (p: { emoji: string; text: string; tone: string }) =>\n  <div sx={{ flex: [\"col\", \"center\"], gap: 2, p: 6 }} style={{ minHeight: \"14rem\", background: p.tone }}>\n    <span style={{ fontSize: \"4rem\" }}>{p.emoji}</span><strong sx={{ text: \"lg\" }}>{p.text}</strong>\n  </div>\n\nexport function MondayMorning() {\n  let $peeks = 0\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <BeforeAfter beforeLabel=\"Kahveden önce\" afterLabel=\"Kahveden sonra\" onChange={() => $peeks++}\n      before={<Face emoji=\"😴\" text=\"Beş dakika daha…\" tone=\"#cfd3dc\" />}\n      after={<Face emoji=\"🤩\" text=\"Bugün her şeyi yaparım!\" tone=\"#ffd27a\" />} />\n    <small sx={{ color: \"muted\" }}>{$peeks} kez kıyasladın</small>\n  </div>\n}\n"
 		},

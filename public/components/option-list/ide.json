@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "OptionListDemo.tsx",
-			"code": "export { OptionList } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "MoodBoard.tsx",
 			"code": "import { OptionList, Card } from \"march/ui\"\n\n// bugünün modu: iki sütunlu emoji seçenekleri; seçilen mod kartın rengini ve cümlesini değiştirir\nconst moods = [\n  { value: \"happy\", label: \"Neşeli\", icon: \"😄\", hint: \"Her şey yolunda\" },\n  { value: \"calm\", label: \"Sakin\", icon: \"🌿\", hint: \"Yavaş bir gün\" },\n  { value: \"busy\", label: \"Yoğun\", icon: \"⚡\", hint: \"Toplantıdan toplantıya\" },\n  { value: \"sleepy\", label: \"Uykulu\", icon: \"😴\", hint: \"Kahve lazım\" },\n]\nconst colors: Record<string, string> = { happy: \"brand-orange\", calm: \"brand-green\", busy: \"brand-blue\", sleepy: \"brand-purple\" }\n\nexport function MoodBoard() {\n  let $mood = \"happy\"\n  return <Card m:color={colors[$mood]} title=\"Bugün nasılsın?\">\n    <OptionList bind:value={$mood} options={moods} columns={2} label=\"Mod\" />\n    <p sx={{ text: \"sm\", color: \"muted\" }}>{`Seçtiğin mod: ${moods.find((m) => m.value === $mood)?.label}`}</p>\n  </Card>\n}\n"
 		},

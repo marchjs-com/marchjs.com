@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "HonestCompareDemo.tsx",
-			"code": "export { HonestCompare } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "CatOrDog.tsx",
 			"code": "import { HonestCompare } from \"march/landing\"\nimport { Segmented } from \"march/ui\"\n\n// kedi mi köpek mi: tarafını seç, tablo kendi tarafını dürüstçe puanlar (nerede geride olduğunu da söyler)\nconst ROWS = [\n  { label: \"Sabah yürüyüşü ister\", values: { kedi: false, kopek: true } },\n  { label: \"Evde yalnız kalabilir\", values: { kedi: true, kopek: \"partial\" as const } },\n  { label: \"Kapıda karşılar\", values: { kedi: \"partial\" as const, kopek: true } },\n  { label: \"Kum kabı ister\", values: { kedi: true, kopek: false } },\n]\n\ntype Counts = { ahead: number; even: number; behind: number }\n\nexport function CatOrDog() {\n  let $side: \"kedi\" | \"kopek\" = \"kedi\"\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Segmented aria-label=\"Tarafın\" options={[{ value: \"kedi\", label: \"🐱 Kedi\" }, { value: \"kopek\", label: \"🐶 Köpek\" }]} bind:value={$side} />\n    {() => { const side = $side; return <HonestCompare us={side} caption=\"Kedi ve köpek\" columns={[{ id: \"kedi\", name: \"🐱 Kedi\" }, { id: \"kopek\", name: \"🐶 Köpek\" }]} rows={ROWS}\n      labels={{ counts: (c: Counts) => `${c.ahead} konuda önde, ${c.behind} konuda geride` }} /> }}\n  </div>\n}\n"
 		},

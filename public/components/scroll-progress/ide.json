@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ScrollProgressDemo.tsx",
-			"code": "export { ScrollProgress } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "ThickBar.tsx",
 			"code": "import { ScrollProgress } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// kalınlık oyunu: her basışta çubuk kalınlaşır ve rengi değişir; 12 px'ten sonra başa döner\nconst COLORS = [\"brand-orange\", \"brand-purple\", \"brand-blue\", \"brand-green\"] as const\n\nexport function ThickBar() {\n  let $size = 3\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button variant=\"secondary\" on:click={() => $size = $size >= 12 ? 3 : $size + 3}>Kalınlaştır ({$size} px)</Button>\n    {() => {\n      const size = $size\n      return <ScrollProgress position=\"inline\" size={size} color={COLORS[(size / 3 - 1) % COLORS.length]} label={`${size} piksellik çubuk`} />\n    }}\n    <p sx={{ color: \"muted\" }}>Sayfayı kaydır: çubuk okunan kısmı gösterir.</p>\n  </div>\n}\n"
 		},

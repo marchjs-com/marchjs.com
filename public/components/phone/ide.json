@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "PhoneInputDemo.tsx",
-			"code": "export { PhoneInput } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "CountryDial.tsx",
 			"code": "import { PhoneInput, Button } from \"march/ui\"\n\n// ülke seç, numarayı yaz: kod düğmeleri öneki değiştirir; saklanan değer her zaman \"+\" ve rakamlardan oluşur\nconst countries = [\n  { code: \"+90\", flag: \"🇹🇷\", sample: \"532 111 22 33\" },\n  { code: \"+49\", flag: \"🇩🇪\", sample: \"151 2345 6789\" },\n  { code: \"+44\", flag: \"🇬🇧\", sample: \"7700 900123\" },\n  { code: \"+1\", flag: \"🇺🇸\", sample: \"202 555 0143\" },\n]\n\nexport function CountryDial() {\n  let $cc = \"+90\"\n  let $phone = \"\"\n  const $sample = countries.find((c) => c.code === $cc)?.sample ?? \"\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 1 }}>\n      {countries.map((c) => <Button size=\"sm\" shape=\"pill\" pressed={$cc === c.code} on:click={() => { $cc = c.code; $phone = \"\" }}>{c.flag} {c.code}</Button>)}\n    </div>\n    <PhoneInput bind:value={$phone} country={$cc} placeholder={$sample} aria-label=\"Telefon\" />\n    <span sx={{ text: [\"sm\", \"mono\"], color: \"muted\" }}>{$phone || \"henüz numara yok\"}</span>\n  </div>\n}\n"
 		},

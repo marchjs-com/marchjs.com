@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ProjectDetailDemo.tsx",
-			"code": "export { ProjectDetail } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "ScienceFair.tsx",
 			"code": "import { ProjectDetail } from \"march/landing\"\n\n// bilim şenliği: üç öğrenci projesi; sondaki \"sonraki proje\" kartı bir sonrakini açar, sonuncudan başa döner\n// bir projenin biçimi (kapak ve galeri: görsel ya da düğüm)\ntype Picture = { src: string; alt: string; width: number; height: number }\ntype Project = { id: string; title: string; category?: string; year?: number | string; summary?: string; cover: Node | Picture }\ntype ProjectDetails = Project & { role?: string; client?: string; services?: string[]; body?: unknown; gallery?: (Node | Picture)[]; links?: { label: string; href: string }[] }\nconst Big = (p: { emoji: string }) => <div style={{ \"font-size\": \"5rem\", \"text-align\": \"center\", padding: \"2rem\" }} aria-hidden=\"true\">{p.emoji}</div>\n\nconst RAW = [\n  { id: \"volkan\", title: \"Köpüren volkan\", category: \"Kimya\", year: \"5. sınıf\", summary: \"Sirke ve karbonatla patlayan bir dağ.\", emoji: \"🌋\" },\n  { id: \"fasulye\", title: \"Işığa dönen fasulye\", category: \"Biyoloji\", year: \"4. sınıf\", summary: \"Bir kutuda labirent çözen filiz.\", emoji: \"🌱\" },\n  { id: \"pil\", title: \"Limon pili\", category: \"Fizik\", year: \"6. sınıf\", summary: \"Dört limonla yanan bir LED.\", emoji: \"🍋\" },\n]\n// her okumada yeni kapak düğümü\nconst project = (i: number): ProjectDetails => { const r = RAW[i]!; return { ...r, cover: <Big emoji={r.emoji} /> as Node } }\n\nexport function ScienceFair() {\n  let $i = 0\n  return <div>\n    {() => {\n      const i = $i\n      return <ProjectDetail project={project(i)} reveal={false}\n        next={{ project: project((i + 1) % RAW.length), onOpen: () => $i = (i + 1) % RAW.length }} />\n    }}\n  </div>\n}\n"
 		},

@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "ErrorBoxDemo.tsx",
-      "code": "export { ErrorBox } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "LostCat.tsx",
       "code": "import { ErrorBox, Card } from \"march/ui\"\n\n// kayıp kedi: her denemede başka bir yere bakılır, üçüncüsünde kedi bulunur\nconst PLACES = [\"Koltuğun altında yok.\", \"Dolabın içinde de yok.\", \"Balkonda da yok.\"]\n\nexport function LostCat() {\n  let $tries = 0\n  return <Card title=\"Pamuk nerede?\">\n    {() => $tries >= 3\n      ? <p sx={{ text: \"lg\" }}>🐈 Pamuk kutunun içinde uyuyormuş!</p>\n      : <ErrorBox title=\"Kedi bulunamadı\" message={PLACES[$tries]} retry={() => $tries++} retryLabel=\"Başka yere bak\" />}\n  </Card>\n}\n"
     },

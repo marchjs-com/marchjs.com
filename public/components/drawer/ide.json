@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "DrawerDemo.tsx",
-			"code": "export { Drawer } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "MusicQueue.tsx",
 			"code": "import { Drawer, Button, Card } from \"march/ui\"\n\n// sıradaki şarkılar: alttan açılan, iki durma noktalı çekmece; koyu tema\nconst queue = [\"Gece Yolu\", \"Sahil\", \"Kuzey Rüzgârı\", \"Şafak\", \"Son Vapur\"]\n\nexport function MusicQueue() {\n  let $open = false\n  return <Card m:theme=\"night\">\n    <Button on:click={() => $open = true}>Sıradakiler ({queue.length})</Button>\n    <Drawer open={$open} onClose={() => $open = false} side=\"bottom\" snapPoints={[0.4, 0.9]} title=\"Sıradakiler\">\n      <ol>{queue.map((s) => <li>{s}</li>)}</ol>\n    </Drawer>\n  </Card>\n}\n"
 		},

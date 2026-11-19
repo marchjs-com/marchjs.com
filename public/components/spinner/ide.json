@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "SpinnerDemo.tsx",
-      "code": "export { Spinner } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "MagicEightBall.tsx",
       "code": "import { Spinner, Button, Card } from \"march/ui\"\n\n// sihirli küre: soru sorunca küre bir an \"düşünür\" (dönen halka), sonra bir cevap verir\nconst ANSWERS = [\"Kesinlikle evet ✨\", \"Pek sanmam 🤔\", \"Yıldızlar öyle diyor 🌟\", \"Sonra tekrar sor 🔮\"]\n\nexport function MagicEightBall() {\n  let $thinking = false\n  let $answer = \"Bir soru düşünün ve sorun.\"\n  const ask = () => {\n    $thinking = true\n    setTimeout(() => { $answer = ANSWERS[Math.floor(Math.random() * ANSWERS.length)]!; $thinking = false }, 1200)\n  }\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: [\"col\", \"center\"], gap: 3, p: 3 }}>\n      {() => $thinking ? <Spinner size=\"lg\" colors=\"brand\" label=\"Küre düşünüyor\" /> : <span sx={{ text: \"lg\" }}>{$answer}</span>}\n      <Button variant=\"primary\" disabled={() => $thinking} on:click={ask}>Küreye sor</Button>\n    </div>\n  </Card>\n}\n"
     },

@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "LiveFeedDemo.tsx",
-			"code": "export { LiveFeed } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "BirdWatch.tsx",
 			"code": "import { LiveFeed } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// kuş gözlemi defteri: her basışta yeni bir kuş en üste düşer, en eskisi uçup gider\nconst BIRDS = [[\"🐦\", \"Serçe\", \"balkonda\"], [\"🦜\", \"Muhabbet kuşu\", \"komşunun penceresinde\"], [\"🦉\", \"Baykuş\", \"çam ağacında\"], [\"🦆\", \"Yaban ördeği\", \"gölette\"], [\"🕊️\", \"Güvercin\", \"meydanda\"]]\n\nexport function BirdWatch() {\n  let $seen = [{ id: 0, avatar: \"🐦\", title: \"Serçe\", body: \"bahçede\", meta: \"sabah\" }]\n  let $n = 1\n  const spot = () => {\n    const [emoji, name, where] = BIRDS[$n % BIRDS.length]!\n    $seen = [{ id: $n, avatar: emoji, title: name, body: where, meta: \"şimdi\" }, ...$seen]\n    $n++\n  }\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button on:click={spot}>Kuş gördüm ({$n})</Button>\n    <LiveFeed items={() => $seen} max={4} enter=\"drop\" leave=\"fall\" label=\"Kuş defteri\" pausable={false} />\n  </div>\n}\n"
 		},

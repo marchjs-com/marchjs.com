@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "CalendarDemo.tsx",
-			"code": "export { Calendar } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "Holidays.tsx",
 			"code": "import { Calendar } from \"march/ui\"\n\n// resmi tatil takvimi: tatil günlerinin yanında nokta; bir güne basınca o günün adı yazar\ntype Day = string | null\nconst holidays: Record<string, string> = {\n  \"01-01\": \"Yılbaşı\", \"04-23\": \"Ulusal Egemenlik ve Çocuk Bayramı\", \"05-01\": \"Emek ve Dayanışma Günü\",\n  \"05-19\": \"Gençlik ve Spor Bayramı\", \"07-15\": \"Demokrasi ve Milli Birlik Günü\", \"08-30\": \"Zafer Bayramı\", \"10-29\": \"Cumhuriyet Bayramı\",\n}\nconst nameOf = (iso: Day) => (iso && holidays[iso.slice(5)]) || \"sıradan bir gün\"\n\nexport function Holidays() {\n  let $day: Day = \"2026-10-29\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Calendar bind:value={$day} firstDay={1} m:color=\"brand-orange\"\n      renderDay={(iso: string, d: number) => (holidays[iso.slice(5)] ? <b>{`${d}•`}</b> : d)} />\n    <span sx={{ text: \"bold\" }}>{$day}: {nameOf($day)}</span>\n  </div>\n}\n"
 		},

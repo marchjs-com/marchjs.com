@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "TreeDemo.tsx",
-      "code": "export { Tree } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "MenuTree.tsx",
       "code": "import { Tree, Card } from \"march/ui\"\n\n// bir kafenin menüsü: dallar kategoriler, yapraklar ürünler; seçince altta fiyat görünür\nconst menu = [\n  { id: \"hot\", label: \"Sıcak içecekler\", children: [\n    { id: \"tea\", label: \"Çay\", meta: \"20 ₺\" },\n    { id: \"latte\", label: \"Latte\", meta: \"75 ₺\" },\n  ] },\n  { id: \"cold\", label: \"Soğuk içecekler\", children: [\n    { id: \"lemon\", label: \"Limonata\", meta: \"60 ₺\" },\n    { id: \"cold-brew\", label: \"Soğuk demleme\", meta: \"85 ₺\" },\n  ] },\n  { id: \"cake\", label: \"Tatlılar\", children: [{ id: \"cheese\", label: \"San Sebastian\", meta: \"120 ₺\" }] },\n]\nconst all = menu.flatMap((c) => c.children ?? [])\n\nexport function MenuTree() {\n  let $pick = \"latte\"\n  const item = () => all.find((x) => x.id === $pick)\n  return <Card title=\"Menü\">\n    <Tree label=\"Menü\" nodes={menu} expanded={[\"hot\"]} m:color=\"brand-orange\" selected={() => $pick} onSelect={(n: { id: string; children?: unknown }) => { if (!n.children) $pick = n.id }} />\n    <p sx={{ text: \"bold\", color: \"brand-orange\" }}>{() => item() ? `${String(item()!.label)} · ${String(item()!.meta)}` : \"Bir ürün seçin\"}</p>\n  </Card>\n}\n"
     },

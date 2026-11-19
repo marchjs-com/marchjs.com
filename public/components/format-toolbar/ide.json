@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "FormatToolbarDemo.tsx",
-			"code": "export { FormatToolbar } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "NeonSign.tsx",
 			"code": "import { FormatToolbar, Card } from \"march/ui\"\n\n// neon tabela: üç aç / kapa aracı (harf ikonlarıyla) gece kartındaki yazının biçimini değiştirir\nexport function NeonSign() {\n  let $bold = true\n  let $italic = false\n  let $strike = false\n  const toggle = (tool: \"bold\" | \"italic\" | \"strike\") => {\n    if (tool === \"bold\") $bold = !$bold\n    else if (tool === \"italic\") $italic = !$italic\n    else $strike = !$strike\n  }\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: [\"col\", \"center\"], gap: 3 }}>\n      <FormatToolbar tools={[\"bold\", \"italic\", \"strike\"]} onTool={toggle} size=\"md\" m:color=\"brand-pink\"\n        icons={{ bold: \"B\", italic: \"I\", strike: \"S\" }} pressed={{ bold: () => $bold, italic: () => $italic, strike: () => $strike }} />\n      <span sx={{ text: \"xl\", color: \"brand-pink\" }} style={{ \"font-weight\": $bold ? \"800\" : \"400\", \"font-style\": $italic ? \"italic\" : \"normal\", \"text-decoration\": $strike ? \"line-through\" : \"none\" }}>\n        AÇIĞIZ\n      </span>\n    </div>\n  </Card>\n}\n"
 		},

@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "OverflowTextDemo.tsx",
-			"code": "export { OverflowText } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "NowPlaying.tsx",
 			"code": "import { OverflowText, IconButton, Card } from \"march/ui\"\nimport { play, pause, arrowRight } from \"march/icons\"\n\n// çalan şarkı: uzun ad durmadan akar, ♪ ile ayrılır; duraklatınca yazı da durur, sonraki şarkıda yeni ad akar\nconst SONGS = [\n  \"HADİ Orkestrası — Moda'da gün batımı (akustik, uzun versiyon, canlı kayıt)\",\n  \"Kadıköy Sokak Müzisyenleri — Vapur düdüğü ve martılar eşliğinde sabah\",\n  \"Gece Treni — İstanbul'dan Ankara'ya, pencere kenarında\",\n]\n\nexport function NowPlaying() {\n  let $i = 0\n  let $playing = true\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: \"col\", gap: 2 }}>\n      <span sx={{ text: \"xs\", color: \"brand-pink\" }}>{$playing ? \"ŞİMDİ ÇALIYOR\" : \"DURAKLATILDI\"}</span>\n      <div sx={{ text: \"lg\" }}>\n        <OverflowText text={SONGS[$i]} trigger=\"always\" mode=\"loop\" separator=\"♪\" speed={45} disabled={!$playing} />\n      </div>\n      <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n        <IconButton icon={$playing ? pause : play} label={$playing ? \"Duraklat\" : \"Çal\"} variant=\"solid\" shape=\"round\" m:color=\"brand-pink\"\n          on:click={() => $playing = !$playing} />\n        <IconButton icon={arrowRight} label=\"Sonraki şarkı\" on:click={() => $i = ($i + 1) % SONGS.length} />\n      </div>\n    </div>\n  </Card>\n}\n"
 		},

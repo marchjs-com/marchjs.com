@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "FeedDemo.tsx",
-			"code": "export { Feed } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "HaikuFeed.tsx",
 			"code": "import { Feed, Button, type Post } from \"march/ui\"\n\n// üç dizelik şiirler akışı: her gönderi kendi kartıyla çizilir (renderPost); \"Yeni şiir\" yukarıda bekleyen\n// gönderi hapını gösterir, hapa basınca şiirler akışın başına katılır\nconst LINES = [\n  [\"Sabah sisinde\", \"martı tek başına\", \"denizi çizer\"],\n  [\"Çay buğusunda\", \"eski bir şarkı döner\", \"pencere açık\"],\n  [\"Kedi uykuda\", \"güneş halıya düşmüş\", \"saat durmuş sanki\"],\n  [\"Yağmur damlası\", \"kaldırımda bir harita\", \"eve dönüş yolu\"],\n]\nlet n = 0\nconst poem = (): Post => { const l = LINES[n % LINES.length]!; n++; return { id: `h${n}`, author: { name: \"Şiir Defteri\" }, time: Date.now(), text: l.join(\"\\n\"), likes: 0 } }\n\nexport function HaikuFeed() {\n  let $posts: Post[] = [poem(), poem()]\n  let $waiting: Post[] = []\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Button size=\"sm\" variant=\"ghost\" on:click={() => $waiting = [poem(), ...$waiting]}>Yeni şiir</Button>\n    <Feed posts={$posts} newCount={$waiting.length} newColor=\"brand-purple\" end={<i>Defterin sonu ✒️</i>}\n      labels={{ newPosts: (c) => `${c} yeni şiir` }}\n      onShowNew={() => { $posts = [...$waiting, ...$posts]; $waiting = [] }}\n      renderPost={(p) => <blockquote sx={{ p: 3, text: [\"lg\", \"center\"] }}>{p().text?.split(\"\\n\").map((line) => <div>{line}</div>)}</blockquote>} />\n  </div>\n}\n"
 		},

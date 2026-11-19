@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "TypingIndicatorDemo.tsx",
-			"code": "export { TypingIndicator } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "NightOwls.tsx",
 			"code": "import { TypingIndicator, Card } from \"march/ui\"\n\n// gece kuşları: koyu temada, satır içi, mor noktalar yanıp söner\nexport function NightOwls() {\n  return <Card m:theme=\"night\">\n    <TypingIndicator names={[\"Baykuş\"]} variant=\"inline\" motion=\"fade\" m:color=\"brand-purple\" />\n  </Card>\n}\n"
 		},

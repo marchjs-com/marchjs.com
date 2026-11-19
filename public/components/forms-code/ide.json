@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "CodeInputDemo.tsx",
-			"code": "export { CodeInput } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "VaultLock.tsx",
 			"code": "import { CodeInput, Card } from \"march/ui\"\n\n// kasa kilidi: dört haneli şifreyi gir; doğruysa kilit açılır, yanlışsa kutular boşalır (ipucu: bu yıl)\nexport function VaultLock() {\n  let $code = \"\"\n  let $open = false\n  let $tries = 0\n  const check = (c: string) => {\n    if (c === \"2026\") $open = true\n    else { $tries++; $code = \"\" }\n  }\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: [\"col\", \"center\"], gap: 3 }}>\n      <span sx={{ text: [\"2xl\", \"bold\"], color: $open ? \"brand-green\" : \"brand-gold\" }}>{$open ? \"🔓 Kasa açıldı\" : \"🔒 Kilitli\"}</span>\n      <CodeInput bind:value={$code} length={4} mask size=\"lg\" colors=\"palette\" disabled={$open} onComplete={check}\n        boxLabel={(i: number, n: number) => `Şifre hanesi ${i} / ${n}`} />\n      <span sx={{ text: \"sm\", color: \"muted\" }}>{$tries ? `${$tries} yanlış deneme` : \"İpucu: bu yıl\"}</span>\n    </div>\n  </Card>\n}\n"
 		},

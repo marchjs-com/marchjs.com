@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ComboboxDemo.tsx",
-			"code": "export { Combobox } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "WorldClock.tsx",
 			"code": "import { Combobox, Field } from \"march/ui\"\n\n// dünya saati: bir şehir yaz, oradaki saat kocaman görünsün\nconst cities = [\n  { value: \"Europe/Istanbul\", label: \"İstanbul\" }, { value: \"Europe/London\", label: \"Londra\" },\n  { value: \"America/New_York\", label: \"New York\" }, { value: \"Asia/Tokyo\", label: \"Tokyo\" },\n  { value: \"Australia/Sydney\", label: \"Sidney\" }, { value: \"America/Sao_Paulo\", label: \"São Paulo\" },\n  { value: \"Asia/Dubai\", label: \"Dubai\" }, { value: \"Europe/Berlin\", label: \"Berlin\" },\n]\n\nexport function WorldClock() {\n  let $zone = \"Asia/Tokyo\"\n  const time = () => new Date().toLocaleTimeString(\"tr\", { timeZone: $zone, hour: \"2-digit\", minute: \"2-digit\" })\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Field label=\"Şehir\"><Combobox bind:value={$zone} options={cities} placeholder=\"Şehir yaz\" /></Field>\n    <span sx={{ text: \"2xl\", color: \"brand-blue\" }}>{time()}</span>\n  </div>\n}\n"
 		},

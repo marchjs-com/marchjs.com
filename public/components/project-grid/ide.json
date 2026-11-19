@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ProjectGridDemo.tsx",
-			"code": "export { ProjectGrid } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PetShelter.tsx",
 			"code": "import { ProjectGrid } from \"march/landing\"\n\n// barınaktaki dostlar: kapaklar büyük emojiler, kedi / köpek / kuş süzgeci; birine basınca \"sahiplen\" sayacı artar\n// bir projenin biçimi: kapak bir görsel ya da düğüm\ntype Project = { id: string; title: string; category?: string; year?: number | string; summary?: string; href?: string; cover: Node | { src: string; alt: string; width: number; height: number } }\nconst PETS = [\n  { id: \"pamuk\", title: \"Pamuk\", category: \"Kedi\", year: \"2 yaş\", emoji: \"🐱\" },\n  { id: \"karabas\", title: \"Karabaş\", category: \"Köpek\", year: \"4 yaş\", emoji: \"🐶\" },\n  { id: \"limon\", title: \"Limon\", category: \"Kuş\", year: \"1 yaş\", emoji: \"🐤\" },\n  { id: \"tarcin\", title: \"Tarçın\", category: \"Kedi\", year: \"6 ay\", emoji: \"😺\" },\n  { id: \"bulut\", title: \"Bulut\", category: \"Köpek\", year: \"3 yaş\", emoji: \"🐕\" },\n]\n\nconst Face = (p: { emoji: string }) => <div style={{ \"font-size\": \"4rem\", \"text-align\": \"center\", padding: \"1.5rem\" }} aria-hidden=\"true\">{p.emoji}</div>\n\nexport function PetShelter() {\n  let $adopted = 0\n  const pets: Project[] = PETS.map((p) => ({ ...p, get cover() { return <Face emoji={p.emoji} /> as Node } }))\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <strong>Sahiplenme isteği: {$adopted}</strong>\n    <ProjectGrid projects={pets} cols={3} allLabel=\"Hepsi\" onOpen={() => $adopted++} />\n  </div>\n}\n"
 		},

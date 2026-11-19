@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "LinkCardDemo.tsx",
-			"code": "export { LinkCard } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "LearnPath.tsx",
 			"code": "import { LinkCard } from \"march/ui\"\n\n// March'ı öğrenme yolu: her durak bir kart; baş kısmı kocaman bir emoji (lead), sonda okuma süresi (meta)\n// bağlantılar vitrinin gerçek sayfalarına gider\nconst path = [\n  { emoji: \"🔘\", title: \"1. Düğme\", description: \"Beş varyant, yükleniyor durumu\", meta: \"2 dk\", href: \"/buttons/button\" },\n  { emoji: \"🎯\", title: \"2. İkon düğmesi\", description: \"Erişilebilir ad zorunlu, ipucu bedava\", meta: \"3 dk\", href: \"/buttons/icon-button\" },\n  { emoji: \"🃏\", title: \"3. Kart\", description: \"Başlık, eylemler, alt bilgi\", meta: \"4 dk\", href: \"/data/card\" },\n]\n\nexport function LearnPath() {\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    {path.map((p) => <LinkCard href={p.href} lead={<span sx={{ text: \"2xl\" }}>{p.emoji}</span>} title={p.title} description={p.description} meta={p.meta} />)}\n  </div>\n}\n"
 		},

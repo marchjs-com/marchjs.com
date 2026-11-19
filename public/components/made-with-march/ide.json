@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "MadeWithMarchDemo.tsx",
-			"code": "export { MadeWithMarch } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "HeartSwap.tsx",
 			"code": "import { MadeWithMarch, Card, Button } from \"march/ui\"\n\n// imzanın kalbi senin: her basışta sıradaki işaret gelir; adı (heartLabel) da onunla değişir, cümle yerinde kalır\nconst marks = [[\"💗\", \"Sevgi\"], [\"☕\", \"Kahve\"], [\"🚀\", \"Roket\"], [\"✨\", \"Pırıltı\"], [\"🎵\", \"Müzik\"]] as const\nconst markAt = (i: number) => marks[i % marks.length]!\n\nexport function HeartSwap() {\n  let $i = 0\n  const $mark = markAt($i)\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: [\"col\", \"center\"], gap: 3 }}>\n      <MadeWithMarch variant=\"badge\" heart={$mark[0]} heartLabel={$mark[1]} />\n      <Button variant=\"secondary\" size=\"sm\" on:click={() => $i = ($i + 1) % marks.length}>{`Kalbi değiştir (${$mark[1]})`}</Button>\n    </div>\n  </Card>\n}\n"
 		},

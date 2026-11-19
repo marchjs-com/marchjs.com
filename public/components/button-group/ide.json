@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ButtonGroupDemo.tsx",
-			"code": "export { ButtonGroup } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "FontSizer.tsx",
 			"code": "import { ButtonGroup, Button } from \"march/ui\"\n\n// yazı boyu ayarı: bitişik üç düğme tek şerit gibi durur; basılan düğme basılı kalır, örnek cümle büyüyüp küçülür\nconst sizes = [[\"A−\", \"sm\"], [\"A\", \"md\"], [\"A+\", \"xl\"]] as const\n\nexport function FontSizer() {\n  let $size: \"sm\" | \"md\" | \"xl\" = \"md\"\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <ButtonGroup attached label=\"Yazı boyu\">\n      {sizes.map(([name, size]) => <Button variant=\"secondary\" pressed={$size === size} on:click={() => $size = size}>{name}</Button>)}\n    </ButtonGroup>\n    <p sx={{ text: $size }}>March'ta bileşen bir kez çalışır; değişen yalnız bu yazının boyudur.</p>\n  </div>\n}\n"
 		},

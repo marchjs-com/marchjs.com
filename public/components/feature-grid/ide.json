@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "FeatureGridDemo.tsx",
-			"code": "export { FeatureGrid } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "SuperpowerGrid.tsx",
 			"code": "import { FeatureGrid } from \"march/landing\"\nimport { Button } from \"march/ui\"\nimport { zap, eye, globe, clock, heart, star } from \"march/icons\"\n\n// süper güç seç: her basışta ızgaraya yeni bir güç eklenir; altısı dolunca baştan\nconst POWERS = [\n  { icon: zap, title: \"Şimşek hızı\", body: \"Kahve soğumadan iş biter.\" },\n  { icon: eye, title: \"Röntgen bakışı\", body: \"Hatayı kod okumadan görürsün.\" },\n  { icon: globe, title: \"Işınlanma\", body: \"Toplantıya trafiksiz gidersin.\" },\n  { icon: clock, title: \"Zamanı durdur\", body: \"Cuma akşamı biraz daha uzar.\" },\n  { icon: heart, title: \"Herkes sever\", body: \"Kod incelemesi tek seferde geçer.\" },\n  { icon: star, title: \"Şans yıldızı\", body: \"Derleme her zaman yeşil.\" },\n]\n\nexport function SuperpowerGrid() {\n  let $count = 2\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button on:click={() => $count = $count >= POWERS.length ? 1 : $count + 1}>\n      {$count >= POWERS.length ? \"Baştan başla\" : `Bir güç daha (${$count}/${POWERS.length})`}\n    </Button>\n    {() => { const n = $count; return <FeatureGrid variant=\"plain\" cols={3} reveal=\"scale\" items={POWERS.slice(0, n)} /> }}\n  </div>\n}\n"
 		},

@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "TreeViewDemo.tsx",
-      "code": "export { TreeView } from \"march/components/tree-view\";\n"
-    },
-    {
-      "type": "code",
       "name": "RecipeBook.tsx",
       "code": "import { TreeView } from \"march/components/tree-view\"\nimport { Card, SearchBox } from \"march/ui\"\nimport { book, coffee, heart } from \"march/icons\"\n\n// bir tarif defteri: bölümler, tarifler; yazdıkça arar, eşleşen tarifler ve yolları vurgulanır\nconst book1 = [\n  { id: \"breakfast\", label: \"Kahvaltı\", icon: coffee, children: [\n    { id: \"menemen\", label: \"Menemen\", meta: \"15 dk\" },\n    { id: \"pancake\", label: \"Pankek\", meta: \"20 dk\" },\n    { id: \"simit\", label: \"Ev yapımı simit\", meta: \"1 sa\" },\n  ] },\n  { id: \"dinner\", label: \"Akşam yemeği\", icon: book, children: [\n    { id: \"manti\", label: \"Mantı\", meta: \"2 sa\" },\n    { id: \"pilaf\", label: \"Tereyağlı pilav\", meta: \"30 dk\" },\n    { id: \"kofte\", label: \"Izgara köfte\", meta: \"40 dk\" },\n  ] },\n  { id: \"fav\", label: \"Favoriler\", icon: heart, children: [{ id: \"baklava\", label: \"Baklava\", meta: \"3 sa\" }] },\n]\n\nexport function RecipeBook() {\n  let $q = \"\"\n  return <Card title=\"Tarif defteri\">\n    <SearchBox label=\"Tarif ara\" placeholder=\"Tarif ara (ör. pilav)\" value={() => $q} onInput={(q: string) => $q = q} />\n    <TreeView label=\"Tarifler\" nodes={book1} expanded={[\"breakfast\", \"dinner\"]} search={() => $q} height={260} m:color=\"brand-orange\" />\n  </Card>\n}\n"
     },

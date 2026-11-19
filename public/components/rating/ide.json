@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "RatingDemo.tsx",
-			"code": "export { Rating } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "CoffeeStrength.tsx",
 			"code": "import { Rating } from \"march/ui\"\nimport { coffee } from \"march/icons\"\n\n// kahve sertliği: yıldız yerine fincanlar; her seviyenin bir adı var, ekran okuyucu da o adı söyler\nconst levels = [\"Seçilmedi\", \"Çok yumuşak\", \"Yumuşak\", \"Dengeli\", \"Sert\", \"Uyandırır\"]\n\nexport function CoffeeStrength() {\n  let $cups = 3\n  return <div sx={{ flex: [\"row\", \"center\", \"wrap\"], gap: 3 }}>\n    <Rating bind:value={$cups} icon={coffee} m:color=\"brand-orange\" size=\"lg\" label=\"Kahve sertliği\"\n      starLabel={(n: number) => levels[n] ?? String(n)} />\n    <span sx={{ text: [\"lg\", \"bold\"] }}>{levels[$cups]}</span>\n  </div>\n}\n"
 		},

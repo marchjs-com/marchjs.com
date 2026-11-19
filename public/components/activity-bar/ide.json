@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ActivityBarDemo.tsx",
-			"code": "export { ActivityBar } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "SeasonBar.tsx",
 			"code": "import { ActivityBar, Card } from \"march/ui\"\n\n// dört mevsim: yatay bir çubuk, çizgi seçilen mevsime kayar; kartın rengi ve sözü mevsimle değişir\nconst SEASONS = [\n  { id: \"spring\", label: \"İlkbahar\", icon: \"🌸\", color: \"brand-pink\", text: \"Erik ağaçları çiçek açtı.\" },\n  { id: \"summer\", label: \"Yaz\", icon: \"☀️\", color: \"brand-orange\", text: \"Deniz ılık, gölge serin.\" },\n  { id: \"autumn\", label: \"Sonbahar\", icon: \"🍂\", color: \"brand-gold\", text: \"Yapraklar yere, kestaneler ateşe.\" },\n  { id: \"winter\", label: \"Kış\", icon: \"❄️\", color: \"brand-blue\", text: \"Sokaklar beyaz, çaylar demli.\" },\n] as const\n\nexport function SeasonBar() {\n  let $season = \"spring\"\n  const now = () => SEASONS.find((s) => s.id === $season)!\n  return <Card m:color={now().color}>\n    <div sx={{ flex: \"col\", gap: 3 }}>\n      <ActivityBar label=\"Mevsimler\" orientation=\"horizontal\" collapsible={false} showLabels tooltips={false}\n        items={SEASONS.map((s) => ({ id: s.id, label: s.label, icon: s.icon }))} value={$season} onChange={(id: string) => $season = id ?? $season} />\n      <span sx={{ text: \"lg\", color: \"primary\" }}>{now().text}</span>\n    </div>\n  </Card>\n}\n"
 		},

@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "VirtualListDemo.tsx",
-      "code": "export { VirtualList } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "StarCount.tsx",
       "code": "import { VirtualList, Card } from \"march/ui\"\n\n// yıldızları saymak: 100 000 satır, ama DOM'da yalnız görünenler; her onuncu satır bir takımyıldız\nconst sky = Array.from({ length: 100000 }, (_, i) => ({ id: i, name: i % 10 === 0 ? `✨ Takımyıldız ${i / 10 + 1}` : `⭐ Yıldız ${i + 1}` }))\n\nexport function StarCount() {\n  return <Card title=\"100 000 yıldız\">\n    <div style={{ height: \"260px\" }}>\n      <VirtualList label=\"Yıldızlar\" items={sky} key={(s: { id: number }) => s.id} estimate={32}\n        render={(s: () => { name: string }) => <div sx={{ p: 1 }}>{() => s().name}</div>} />\n    </div>\n  </Card>\n}\n"
     },

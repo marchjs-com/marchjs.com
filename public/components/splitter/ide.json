@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "SplitterDemo.tsx",
-			"code": "export { Splitter } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "BeforeAfter.tsx",
 			"code": "import { Splitter, Card } from \"march/ui\"\n\n// önce / sonra: iki renk alanı arasında tutamaç; pay yüzde olarak yazılır\nexport function BeforeAfter() {\n  let $share = 0.5\n  return <Card m:theme=\"night\">\n    <div style={{ \"block-size\": \"14rem\" }}>\n      <Splitter initial={0.5} min={0.1} label=\"Karşılaştırma\" m:color=\"brand-orange\" onChange={(s: number) => $share = s}\n        start={<div sx={{ p: 4, flex: \"center\", text: [\"lg\", \"bold\"], color: \"brand-blue\" }}>Önce</div>}\n        end={<div sx={{ p: 4, flex: \"center\", text: [\"lg\", \"bold\"], color: \"brand-orange\" }}>Sonra</div>} />\n    </div>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>Önce: %{Math.round($share * 100)}</span>\n  </Card>\n}\n"
 		},

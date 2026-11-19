@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "SelectDemo.tsx",
-			"code": "export { Select } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "MoodSelect.tsx",
 			"code": "import { Select, Card } from \"march/ui\"\n\n// değerler türünü korur: her şık bir nesne; seçilen nesnenin emojisi, rengi ve sözü kartı süsler\ntype Mood = { emoji: string; color: \"brand-orange\" | \"brand-blue\" | \"brand-green\" | \"brand-purple\"; word: string }\nconst moods: { value: Mood; label: string }[] = [\n  { value: { emoji: \"🌞\", color: \"brand-orange\", word: \"enerjik\" }, label: \"🌞 Enerjik\" },\n  { value: { emoji: \"🌊\", color: \"brand-blue\", word: \"sakin\" }, label: \"🌊 Sakin\" },\n  { value: { emoji: \"🌿\", color: \"brand-green\", word: \"huzurlu\" }, label: \"🌿 Huzurlu\" },\n  { value: { emoji: \"🔮\", color: \"brand-purple\", word: \"meraklı\" }, label: \"🔮 Meraklı\" },\n]\n\nexport function MoodSelect() {\n  let $mood = moods[0]!.value\n  return <Card>\n    <div sx={{ flex: \"col\", gap: 3 }}>\n      <Select bind:value={$mood} options={moods} placeholder={false} aria-label=\"Bugünkü ruh halin\" />\n      <span sx={{ text: [\"2xl\", \"bold\"], color: $mood.color }}>{$mood.emoji} Bugün {$mood.word} hissediyorsun</span>\n    </div>\n  </Card>\n}\n"
 		},

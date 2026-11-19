@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "TextareaDemo.tsx",
-			"code": "export { Textarea } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "HaikuPad.tsx",
 			"code": "import { Textarea, Card, Badge } from \"march/ui\"\n\n// haiku defteri: üç dize yaz; alan dizelerle büyür, rozet kaç dize yazıldığını sayar, üçte yeşile döner\nexport function HaikuPad() {\n  let $poem = \"Sessiz bir gölde\\nkurbağa suya atlar\"\n  const $lines = $poem.split(\"\\n\").filter((l) => l.trim()).length\n  return <Card m:theme=\"night\" title=\"Haiku defteri\" actions={<Badge tone={$lines === 3 ? \"success\" : \"warn\"}>{$lines} / 3 dize</Badge>}>\n    <Textarea bind:value={$poem} rows={3} aria-label=\"Haiku\" placeholder=\"Beş, yedi, beş hece…\" spellcheck={false} />\n    <span sx={{ text: \"sm\", color: $lines === 3 ? \"brand-green\" : \"muted\" }}>\n      {$lines === 3 ? \"Tamam: bir haiku oldu.\" : $lines > 3 ? \"Fazla dize var, sadeleştir.\" : \"Bir dize daha…\"}\n    </span>\n  </Card>\n}\n"
 		},

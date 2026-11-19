@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "CountRollDemo.tsx",
-			"code": "export { CountRoll } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "Scoreboard.tsx",
 			"code": "import { CountRoll, Button, Card } from \"march/ui\"\n\n// skor tabelası: iki takım, her gol yalnız değişen basamağı döndürür\nexport function Scoreboard() {\n  let $home = 9\n  let $away = 19\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: [\"row\", \"center\"], gap: 4, text: [\"2xl\", \"bold\"] }}>\n      <CountRoll value={$home} /> <span>:</span> <CountRoll value={$away} />\n    </div>\n    <div sx={{ flex: \"row\", gap: 2 }}>\n      <Button size=\"sm\" on:click={() => $home++}>Ev sahibi gol</Button>\n      <Button size=\"sm\" on:click={() => $away++}>Konuk gol</Button>\n    </div>\n  </Card>\n}\n"
 		},

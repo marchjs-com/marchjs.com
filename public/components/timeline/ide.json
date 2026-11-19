@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "TimelineDemo.tsx",
-      "code": "export { Timeline } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "RocketLaunch.tsx",
       "code": "import { Timeline, Button } from \"march/ui\"\nimport { zap, check } from \"march/icons\"\n\n// bir roket fırlatma geri sayımı: \"Sonraki adım\" her basışta bir aşama ekler; son aşamada düğme kapanır\nconst STEPS = [\n  { title: \"Yakıt dolduruldu\", tone: \"info\" },\n  { title: \"Motorlar ısındı\", tone: \"warn\" },\n  { title: \"Kalkış!\", tone: \"danger\" },\n  { title: \"Yörüngede\", tone: \"success\" },\n] as const\n\nexport function RocketLaunch() {\n  let $n = 1\n  const items = () => STEPS.slice(0, $n).map((s, i) => ({ time: `T+${i * 30} sn`, title: s.title, tone: s.tone, icon: i === STEPS.length - 1 ? check : zap }))\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Timeline items={items} />\n    <Button disabled={() => $n >= STEPS.length} on:click={() => $n++}>Sonraki adım</Button>\n  </div>\n}\n"
     },

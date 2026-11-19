@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "RichTextEditorDemo.tsx",
-			"code": "export { RichTextEditor } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "ShortNote.tsx",
 			"code": "import { RichTextEditor, Card } from \"march/ui\"\n\n// 280 karakterlik kısa not: sade araç çubuğu, sayaç kalan karakteri sayar; sınır aşılınca kart kırmızıya döner\nconst LIMIT = 280\n\nexport function ShortNote() {\n  let $md = \"Bugün **sahilde** koştum, deniz *çarşaf* gibiydi :)\"\n  const $left = LIMIT - $md.length\n  return <Card m:color={$left < 0 ? \"danger\" : \"brand-blue\"}>\n    <div sx={{ flex: \"col\", gap: 2 }}>\n      <span sx={{ text: \"lg\", color: $left < 0 ? \"danger\" : \"brand-blue\" }}>{$left < 0 ? \"Biraz kısalt\" : \"Ne düşünüyorsun?\"}</span>\n      <RichTextEditor bind:value={$md} rows={3} toolbar={[\"bold\", \"italic\", \"strike\", \"|\", \"emoji\"]} hint={false}\n        placeholder=\"Kısa bir şey yaz…\" labels={{ count: () => `${$left} karakter kaldı` }} />\n    </div>\n  </Card>\n}\n"
 		},

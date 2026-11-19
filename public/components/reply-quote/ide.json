@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ReplyQuoteDemo.tsx",
-			"code": "export { ReplyQuote } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "QuoteOfTheDay.tsx",
 			"code": "import { ReplyQuote, Card } from \"march/ui\"\n\n// günün sözü: alıntı bloğu, mor çubuk, tek satıra kısaltılmaz\nexport function QuoteOfTheDay() {\n  return <Card m:theme=\"night\">\n    <ReplyQuote name=\"Yunus Emre\" text=\"Gelin tanış olalım, işi kolay kılalım.\" lines={0} m:color=\"brand-purple\" />\n  </Card>\n}\n"
 		},

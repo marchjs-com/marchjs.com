@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "CheckboxDemo.tsx",
-			"code": "export { Checkbox } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PackingList.tsx",
 			"code": "import { Checkbox } from \"march/ui\"\nimport { sparkles } from \"march/icons\"\n\n// tatil bavulu: her eşyayı işaretledikçe sayaç dolar; hepsi hazır olunca yola çıkma vakti\nconst items = [\"Pasaport\", \"Güneş kremi\", \"Mayo\", \"Şarj aleti\", \"Kitap\", \"Gözlük\"]\n\nexport function PackingList() {\n  let $packed: string[] = []\n  const toggle = (item: string, on: boolean) => $packed = on ? [...$packed, item] : $packed.filter((x) => x !== item)\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 2 }}>\n      {items.map((item) => <Checkbox variant=\"chip\" label={item} value={$packed.includes(item)} onChange={(on: boolean) => toggle(item, on)} />)}\n    </div>\n    <span sx={{ text: \"bold\", color: $packed.length === items.length ? \"brand-green\" : \"muted\" }}>\n      {$packed.length === items.length ? \"Bavul hazır, iyi yolculuklar!\" : `${$packed.length} / ${items.length} eşya bavulda`}\n    </span>\n    <Checkbox icon={sparkles} m:color=\"brand-gold\" label=\"Bavulu tamamen hazırla\" value={$packed.length === items.length}\n      indeterminate={$packed.length > 0 && $packed.length < items.length} onChange={(on: boolean) => $packed = on ? [...items] : []} />\n  </div>\n}\n"
 		},

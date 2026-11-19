@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "SiteNavDemo.tsx",
-			"code": "export { SiteNav } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "MoodNav.tsx",
 			"code": "import { SiteNav } from \"march/landing\"\nimport { Card } from \"march/ui\"\n\n// ruh hâli menüsü: bir bağlantıya basınca o hâl seçilir, hap üstünde durur ve aşağıdaki kart değişir\nconst MOODS = [\n  { href: \"#mood-sun\", label: \"Neşeli\", face: \"😄\", text: \"Bugün her şey yolunda.\" },\n  { href: \"#mood-tea\", label: \"Sakin\", face: \"🍵\", text: \"Bir çay, bir kitap.\" },\n  { href: \"#mood-fire\", label: \"Hırslı\", face: \"🔥\", text: \"Listeyi bitiriyoruz!\" },\n]\n\nexport function MoodNav() {\n  let $mood = MOODS[0]!.href\n  const current = () => MOODS.find((m) => m.href === $mood)!\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <SiteNav mode=\"solid\" sticky={false} brand={{ name: \"Hâlim\", mark: \"🙂\" }}\n      links={MOODS.map((m) => ({ label: m.label, href: m.href, active: () => $mood === m.href }))}\n      onNavigate={(href: string) => $mood = href} />\n    <Card>\n      {() => {\n        const m = current()\n        return <div id={m.href.slice(1)} sx={{ flex: [\"row\", \"center\"], gap: 3, p: 4 }}>\n          <span sx={{ text: \"2xl\" }}>{m.face}</span>\n          <strong>{m.text}</strong>\n        </div>\n      }}\n    </Card>\n  </div>\n}\n"
 		},

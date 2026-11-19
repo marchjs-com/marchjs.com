@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "NavMenuDemo.tsx",
-			"code": "export { NavMenu } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PlanetGuide.tsx",
 			"code": "import { NavMenu } from \"march/ui\"\n\n// gezegen rehberi: her gezegen bir sayfa, simgesi emoji; süzme kutusuna \"kızıl\" ya da \"halka\" yaz, anahtar sözcükler\n// (keywords) gezegeni bulur. Bağlantılar bu sayfanın içinde kalır (#)\nconst at = (id: string) => `${location.pathname}#${id}`\n\nexport function PlanetGuide() {\n  return <NavMenu brand={<strong>🪐 Güneş sistemi</strong>} label=\"Gezegen rehberi\" palette={false} storageKey=\"ornek.gezegenler\"\n    labels={{ filterPlaceholder: \"Gezegen ara… (kızıl, halka)\" }} items={[\n      { id: \"mercury\", title: \"Merkür\", href: at(\"mercury\"), icon: \"☿️\", group: \"İç gezegenler\", keywords: \"en küçük sıcak\" },\n      { id: \"venus\", title: \"Venüs\", href: at(\"venus\"), icon: \"♀️\", group: \"İç gezegenler\", keywords: \"çoban yıldızı parlak\" },\n      { id: \"earth\", title: \"Dünya\", href: at(\"earth\"), icon: \"🌍\", group: \"İç gezegenler\", keywords: \"ev mavi\" },\n      { id: \"mars\", title: \"Mars\", href: at(\"mars\"), icon: \"🔴\", group: \"İç gezegenler\", keywords: \"kızıl gezegen\" },\n      { id: \"jupiter\", title: \"Jüpiter\", href: at(\"jupiter\"), icon: \"🟠\", group: \"Dış gezegenler\", keywords: \"dev fırtına\", badge: 95 },\n      { id: \"saturn\", title: \"Satürn\", href: at(\"saturn\"), icon: \"🪐\", group: \"Dış gezegenler\", keywords: \"halka\" },\n      { id: \"uranus\", title: \"Uranüs\", href: at(\"uranus\"), icon: \"🧊\", group: \"Dış gezegenler\", keywords: \"buz yan yatmış\" },\n      { id: \"neptune\", title: \"Neptün\", href: at(\"neptune\"), icon: \"🔵\", group: \"Dış gezegenler\", keywords: \"rüzgar uzak\" },\n    ]} />\n}\n"
 		},

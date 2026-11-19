@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "TextInputDemo.tsx",
-			"code": "export { TextInput } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "HandlePicker.tsx",
 			"code": "import { TextInput, Card } from \"march/ui\"\n\n// kullanıcı adı seç: yazarken küçük harfe ve boşluksuza dönüşür, \"@\" ön ekiyle; profil adresi canlı belirir\nexport function HandlePicker() {\n  let $handle = \"deniz.yildiz\"\n  const $short = $handle.length < 3\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: \"col\", gap: 2 }}>\n      <TextInput bind:value={$handle} prefix=\"@\" aria-label=\"Kullanıcı adı\" maxLength={20}\n        transform={(v: string) => v.toLocaleLowerCase(\"tr\").replace(/\\s+/g, \"\")}\n        error={$short ? \"En az 3 harf\" : \"\"} errorSpace />\n      <span sx={{ text: \"sm\", color: $short ? \"danger\" : \"brand-green\" }}>hadisosyal.com/@{$handle}</span>\n    </div>\n  </Card>\n}\n"
 		},

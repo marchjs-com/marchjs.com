@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "SiteSectionDemo.tsx",
-			"code": "export { SiteSection } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "MoodSection.tsx",
 			"code": "import { SiteSection } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// ruh hâli bölümü: her basışta bölümün tonu ve başlığı değişir (düz → soluk → marka → ters)\nconst MOODS = [\n  { tone: \"plain\", emoji: \"🙂\", title: \"Sakin bir gün\" },\n  { tone: \"muted\", emoji: \"☁️\", title: \"Biraz bulutlu\" },\n  { tone: \"brand\", emoji: \"🎉\", title: \"Kutlama zamanı\" },\n  { tone: \"inverse\", emoji: \"🌙\", title: \"Gece modu\" },\n] as const\n\nexport function MoodSection() {\n  let $i = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button on:click={() => $i = ($i + 1) % MOODS.length}>Ruh hâlini değiştir</Button>\n    {() => {\n      const m = MOODS[$i]!\n      return <SiteSection tone={m.tone} space=\"sm\" width=\"narrow\" reveal={false} eyebrow={m.emoji} title={m.title}\n        lead={`Bu bölümün tonu: ${m.tone}`} />\n    }}\n  </div>\n}\n"
 		},

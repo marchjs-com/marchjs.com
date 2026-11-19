@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "AppShellDemo.tsx",
-			"code": "export { AppShell } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "NightReader.tsx",
 			"code": "import { AppShell, Card } from \"march/ui\"\n\n// gece okuma uygulaması: koyu temada kenar çubuğu ve kayan sayfa\nexport function NightReader() {\n  return <Card m:theme=\"night\">\n    <AppShell features={[]} nav={<div sx={{ flex: \"col\", gap: 1, p: 2 }}><strong>Kitaplık</strong><span>Okunanlar</span><span>Notlar</span></div>}>\n      <article sx={{ p: 3 }}><h3 sx={{ text: [\"lg\", \"bold\"] }}>Birinci bölüm</h3><p sx={{ text: \"sm\" }}>Gece yarısı, şehir sustuğunda…</p></article>\n    </AppShell>\n  </Card>\n}\n"
 		},

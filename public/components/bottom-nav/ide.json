@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "BottomNavDemo.tsx",
-			"code": "export { BottomNav } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "MoodBar.tsx",
 			"code": "import { BottomNav, Card } from \"march/ui\"\n\n// bugünün havası: her sekme bir ruh hâli, kendi rengiyle; seçilen sekmenin baloncuğu o renge boyanır\nconst MOODS = [\n  { id: \"sunny\", label: \"Neşeli\", icon: \"😄\", color: \"brand-gold\" as const, text: \"Bugün her şey yolunda!\" },\n  { id: \"calm\", label: \"Sakin\", icon: \"😌\", color: \"brand-blue\" as const, text: \"Bir çay, bir kitap.\" },\n  { id: \"busy\", label: \"Yoğun\", icon: \"🤯\", color: \"brand-orange\" as const, text: \"Kahve takviyesi gerekiyor.\" },\n  { id: \"sleepy\", label: \"Uykulu\", icon: \"😴\", color: \"brand-purple\" as const, text: \"Erken yatma zamanı.\" },\n]\n\nexport function MoodBar() {\n  let $mood = \"sunny\"\n  return <Card>\n    <p sx={{ text: [\"xl\", \"center\"], p: 3 }}>{MOODS.find((m) => m.id === $mood)?.text}</p>\n    <BottomNav items={MOODS} value={$mood} onChange={(id) => $mood = id} label=\"Ruh hâli\" />\n  </Card>\n}\n"
 		},

@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "RoadmapDemo.tsx",
-			"code": "export { Roadmap } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PizzaTracker.tsx",
 			"code": "import { Roadmap } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// pizza takibi: her basışta sipariş bir adım ilerler; geçen adımlar biter, sıradaki yanıp söner\nconst STEPS = [\n  { title: \"Sipariş alındı\", body: \"Margarita, bol peynir 🧀\" },\n  { title: \"Fırında\", body: \"Taş fırın, 3 dakika 🔥\" },\n  { title: \"Yolda\", body: \"Kurye köşeyi döndü 🛵\" },\n  { title: \"Afiyet olsun\", body: \"Kapıdayız 🍕\" },\n]\n\nexport function PizzaTracker() {\n  let $stage = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button on:click={() => $stage = $stage >= STEPS.length - 1 ? 0 : $stage + 1}>{$stage >= STEPS.length - 1 ? \"Yeni sipariş\" : \"Sonraki adım\"}</Button>\n    {() => {\n      const stage = $stage\n      return <Roadmap scroll={false} labels={{ done: \"Tamam\", now: \"Şimdi\", next: \"Bekliyor\" }}\n        items={STEPS.map((s, i) => ({ ...s, status: (i < stage ? \"done\" : i === stage ? \"now\" : \"next\") as \"done\" | \"now\" | \"next\" }))} />\n    }}\n  </div>\n}\n"
 		},

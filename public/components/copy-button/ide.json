@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "CopyButtonDemo.tsx",
-			"code": "export { CopyButton } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "ColorTokens.tsx",
 			"code": "import { CopyButton, Card } from \"march/ui\"\n\n// renk paleti: her satırda tokenin rengi, adı ve tek dokunuşla kopyala; kopyalanınca düğme o tokenin rengine bürünür\nconst tokens = [\"brand-orange\", \"brand-blue\", \"brand-green\", \"brand-purple\", \"brand-pink\"] as const\n\nconst TokenRow = (props: { token: (typeof tokens)[number] }) => <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n  <span sx={{ color: props.token, text: \"2xl\" }} aria-hidden=\"true\">●</span>\n  <code sx={{ text: \"sm\" }}>{`--m-${props.token}`}</code>\n  <CopyButton text={`var(--m-${props.token})`} iconOnly label={`${props.token} kopyala`} copiedLabel={`${props.token} panoda`} copiedColor={props.token} />\n</div>\n\nexport function ColorTokens() {\n  return <Card title=\"HADİ renkleri\" m:theme=\"night\">\n    <div sx={{ flex: \"col\", gap: 1 }}>{tokens.map((t) => <TokenRow token={t} />)}</div>\n  </Card>\n}\n"
 		},

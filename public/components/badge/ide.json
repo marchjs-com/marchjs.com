@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "BadgeDemo.tsx",
-      "code": "export { Badge } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "MoodTags.tsx",
       "code": "import { Badge } from \"march/ui\"\n\n// ruh hâli etiketleri: rozetlere basınca seçilir (basılı görünür); seçilenler alttaki cümlede toplanır\nconst MOODS = [\n  { text: \"Neşeli\", tone: \"success\" }, { text: \"Meraklı\", tone: \"info\" },\n  { text: \"Uykulu\", tone: \"neutral\" }, { text: \"Heyecanlı\", tone: \"warn\" }, { text: \"Aceleci\", tone: \"danger\" },\n] as const\n\nexport function MoodTags() {\n  let $picked: string[] = [\"Meraklı\"]\n  const flip = (m: string) => $picked = $picked.includes(m) ? $picked.filter((x) => x !== m) : [...$picked, m]\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 2 }}>\n      {MOODS.map((m) => <Badge tone={m.tone} pressed={() => $picked.includes(m.text)} onClick={() => flip(m.text)}>{m.text}</Badge>)}\n    </div>\n    <span sx={{ color: \"muted\" }}>{() => $picked.length ? `Bugün: ${$picked.join(\", \")}` : \"Bir ruh hâli seçin\"}</span>\n  </div>\n}\n"
     },

@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "StatusDotDemo.tsx",
-      "code": "export { StatusDot } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "TrafficLight.tsx",
       "code": "import { StatusDot, Button, Card } from \"march/ui\"\n\n// trafik lambası: üç büyük nokta; yanan lamba yanıp söner, düğme sıradakine geçer\nconst LIGHTS = [[\"danger\", \"Kırmızı: dur\"], [\"warn\", \"Sarı: hazırlan\"], [\"success\", \"Yeşil: geç\"]] as const\n\nexport function TrafficLight() {\n  let $on = 0\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: [\"row\", \"center\"], gap: 3 }}>\n      <div sx={{ flex: \"col\", gap: 2 }}>\n        {LIGHTS.map(([tone, name], i) => <StatusDot size=\"lg\" tone={tone} hollow={() => $on !== i} pulse={() => ($on === i ? \"blink\" : false)}\n          label={() => ($on === i ? name : null)} />)}\n      </div>\n      <div sx={{ flex: \"col\", gap: 2 }}>\n        <span sx={{ text: \"lg\" }}>{() => LIGHTS[$on]![1]}</span>\n        <Button size=\"sm\" on:click={() => $on = ($on + 1) % 3}>Sıradaki</Button>\n      </div>\n    </div>\n  </Card>\n}\n"
     },

@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "KeyValueDemo.tsx",
-      "code": "export { KeyValue } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "PlanetCard.tsx",
       "code": "import { KeyValue, Card, Segmented } from \"march/ui\"\n\n// bir gezegen kartı: seçilen gezegenin bilgileri; nesne verince anahtarlar etiket olur\nconst PLANETS: Record<string, Record<string, string>> = {\n  Mars: { \"Güneşe uzaklık\": \"228 milyon km\", \"Bir gün\": \"24 sa 37 dk\", \"Uydu\": \"2\", \"Renk\": \"Kızıl\" },\n  Jüpiter: { \"Güneşe uzaklık\": \"778 milyon km\", \"Bir gün\": \"9 sa 56 dk\", \"Uydu\": \"95\", \"Renk\": \"Çizgili\" },\n  Satürn: { \"Güneşe uzaklık\": \"1,4 milyar km\", \"Bir gün\": \"10 sa 33 dk\", \"Uydu\": \"146\", \"Renk\": \"Altın\" },\n}\n\nexport function PlanetCard() {\n  let $p = \"Mars\"\n  return <Card title={() => `🪐 ${$p}`}>\n    <Segmented options={Object.keys(PLANETS)} bind:value={$p} />\n    <KeyValue items={() => PLANETS[$p]} columns={2} />\n  </Card>\n}\n"
     },

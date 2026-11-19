@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "FaqDemo.tsx",
-			"code": "export { Faq } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "RiddleFaq.tsx",
 			"code": "import { Faq } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// bilmece kutusu: soruya bas, cevap açılır; düğme kolay ve zor bilmeceler arasında geçer\nconst EASY = [\n  { q: \"Ağzı var, dili yok; durmadan akar. Nedir?\", a: \"Nehir 🌊\" },\n  { q: \"Benim bir ağacım var, on iki dalı var. Nedir?\", a: \"Yıl ve aylar 📅\" },\n]\nconst HARD = [\n  { q: \"Ne kadar çok alırsan o kadar büyür. Nedir?\", a: \"Çukur 🕳️\" },\n  { q: \"Adımı söylersen beni bozarsın. Ben neyim?\", a: \"Sessizlik 🤫\" },\n  { q: \"Gece gelir, sabah gider; saymakla bitmez. Nedir?\", a: \"Yıldızlar ✨\" },\n]\n\nexport function RiddleFaq() {\n  let $hard = false\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button variant=\"secondary\" on:click={() => $hard = !$hard}>{$hard ? \"Kolaylara dön\" : \"Zor bilmeceler 🧠\"}</Button>\n    {() => { const hard = $hard; return <Faq items={hard ? HARD : EASY} multiple={hard} /> }}\n  </div>\n}\n"
 		},

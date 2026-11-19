@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "TestimonialsDemo.tsx",
-			"code": "export { Testimonials } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PetReviews.tsx",
 			"code": "import { Testimonials } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// evcil hayvanlar yeni ödül mamasını yorumluyor: her basışta bir yorum daha gelir\nconst PETS = [\n  { quote: \"Hav! Hav hav. Yani: harika.\", name: \"Karabaş\", role: \"Golden, 4 yaş\", rating: 5 },\n  { quote: \"Kokladım, yedim, uyudum. Beş yıldız.\", name: \"Pamuk\", role: \"Tekir, 2 yaş\", rating: 5 },\n  { quote: \"Havuçlu olanı daha iyiydi.\", name: \"Zıpzıp\", role: \"Tavşan, 1 yaş\", rating: 3 },\n  { quote: \"Tırmalamadım; bu bir şey demek.\", name: \"Duman\", role: \"Van kedisi, 6 yaş\", rating: 4 },\n]\n\nexport function PetReviews() {\n  let $count = 2\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button on:click={() => $count = $count >= PETS.length ? 1 : $count + 1}>{$count >= PETS.length ? \"Baştan\" : \"Bir yorum daha 🐾\"}</Button>\n    {() => { const n = $count; return <Testimonials variant=\"grid\" cols={2} ratingColor=\"brand-gold\" items={PETS.slice(0, n)} /> }}\n  </div>\n}\n"
 		},

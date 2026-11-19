@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ThreadNavDemo.tsx",
-			"code": "export { ThreadNav } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "RecipeThread.tsx",
 			"code": "import { ThreadNav, Card, threadPath } from \"march/ui\"\n\n// tarif defteri bir ipte: öğünler boncuk, kategoriler kapsülde, tarifler alt iplikte; damla seçilen tarife akar\n// bir yer: bölüm, kategori ya da sayfa (ThreadNav'ın öğe biçimi)\ninterface Item { id: string; label: string; desc?: string; count?: number; color?: string; href?: string; children?: Item[] }\nconst recipes: Item[] = [\n  { id: \"breakfast\", label: \"Kahvaltı\", color: \"brand-gold\", children: [\n    { id: \"eggs\", label: \"Yumurtalar\", count: 2, children: [\n      { id: \"menemen\", label: \"Menemen\", desc: \"Domates, biber, bol sabır\" },\n      { id: \"cilbir\", label: \"Çılbır\", desc: \"Sarımsaklı yoğurt, kızgın tereyağı\" },\n    ] },\n  ] },\n  { id: \"main\", label: \"Ana yemek\", color: \"brand-orange\", children: [\n    { id: \"stews\", label: \"Tencere\", count: 2, children: [\n      { id: \"kuru\", label: \"Kuru fasulye\", desc: \"Akşamdan ıslat, sabah unutma\" },\n      { id: \"karniyarik\", label: \"Karnıyarık\", desc: \"Patlıcan, kıyma, fırın\" },\n    ] },\n  ] },\n  { id: \"dessert\", label: \"Tatlı\", color: \"brand-pink\", children: [\n    { id: \"milky\", label: \"Sütlü\", count: 2, children: [\n      { id: \"sutlac\", label: \"Sütlaç\", desc: \"Fırında, üstü kızarmış\" },\n      { id: \"kazandibi\", label: \"Kazandibi\", desc: \"Dibi tutması işin sırrı\" },\n    ] },\n  ] },\n]\n\nexport function RecipeThread() {\n  let $dish = \"menemen\"\n  const dish = () => threadPath(recipes, $dish).at(-1)\n  // ThreadNav yerini doldurur: kapsülün yüksekliğini çevresindeki kutu verir (sx'te yükseklik yok, style nesnesi)\n  return <div sx={{ flex: \"row\", gap: 3 }}>\n    <div style={{ \"block-size\": \"17rem\" }}>\n      <ThreadNav items={recipes} value={$dish} search={false} onNavigate={(it: Item) => $dish = it.id} />\n    </div>\n    <div sx={{ flex: \"grow\" }}>\n      <Card title=\"Bugün ne pişirsek?\">\n        <p sx={{ text: \"2xl\", color: \"brand-orange\" }}>{dish()?.label}</p>\n        <p sx={{ color: \"muted\" }}>{dish()?.desc}</p>\n      </Card>\n    </div>\n  </div>\n}\n"
 		},

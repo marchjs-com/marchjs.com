@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "EasingCurveEditorDemo.tsx",
-      "code": "export { EasingCurveEditor } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "BounceBall.tsx",
       "code": "import { EasingCurveEditor, Button, Card } from \"march/ui\"\nimport { animate } from \"march/motion\"\n\n// zıplayan top: eğriyi çek, top o eğriyle zıplar; eğri hareket motoruna \"zipla\" adıyla kaydolur\nexport function BounceBall() {\n  let $curve = \"cubic-bezier(.34, 1.56, .64, 1)\"\n  const ball = <div sx={{ display: \"inline-block\", p: 4, radius: 4, shadow: 2, text: \"2xl\" }}>🏀</div> as HTMLElement\n  const jump = () => animate(ball, [{ transform: \"translateY(0)\" }, { transform: \"translateY(-4rem)\" }, { transform: \"translateY(0)\" }], { duration: 800, easing: \"zipla\" })\n  return <Card title=\"Zıplayan top\">\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 4 }}>\n      <EasingCurveEditor bind:value={$curve} name=\"zipla\" compact preview=\"none\" handleColors={[\"brand-orange\", \"brand-gold\"]} />\n      <div sx={{ flex: \"col\", gap: 3 }}>\n        {ball}\n        <Button on:click={jump}>Zıplat</Button>\n        <code sx={{ text: \"xs\" }}>{() => $curve}</code>\n      </div>\n    </div>\n  </Card>\n}\n"
     },

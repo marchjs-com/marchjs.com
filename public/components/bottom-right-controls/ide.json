@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "BottomRightControlsDemo.tsx",
-			"code": "export { BottomRightControls } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "HelpBubble.tsx",
 			"code": "import { addCornerControl, IconButton, toast } from \"march/ui\"\nimport { helpCircle } from \"march/icons\"\n\n// yardım balonu: sayfanın alt-son köşesine yuvarlak bir düğme ekler; bileşen gidince düğme de kalkar\nexport function HelpBubble() {\n  addCornerControl(\"bottom-end\", <IconButton icon={helpCircle} label=\"Yardım\" variant=\"solid\" shape=\"round\" on:click={() => toast(\"Size nasıl yardım edebiliriz?\")} /> as Node, 5)\n  return <p sx={{ text: \"sm\", color: \"muted\" }}>Sağ alt köşedeki yardım düğmesine bakın.</p>\n}\n"
 		},

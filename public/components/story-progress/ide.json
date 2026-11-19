@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "StoryProgressDemo.tsx",
-			"code": "export { StoryProgress } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "Countdown.tsx",
 			"code": "import { StoryProgress, Card } from \"march/ui\"\n\n// beş saniyelik geri sayım: beş parça, biri bitince sıradaki başlar\nexport function Countdown() {\n  let $i = 0\n  return <Card m:theme=\"night\">\n    <StoryProgress count={5} index={$i} duration={1000} color=\"brand-orange\" onDone={() => { if ($i < 4) $i++ }} />\n    <span sx={{ text: [\"2xl\", \"bold\"] }}>{5 - $i}</span>\n  </Card>\n}\n"
 		},

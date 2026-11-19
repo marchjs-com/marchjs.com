@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "SchedulerDemo.tsx",
-      "code": "export { Scheduler } from \"march/components/scheduler\";\n"
-    },
-    {
-      "type": "code",
       "name": "MoonPhases.tsx",
       "code": "import { Scheduler } from \"march/components/scheduler\"\n\n// bu ayın gökyüzü takvimi: ay evreleri ve bir meteor yağmuru, salt okunur ay görünümünde\nconst iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, \"0\")}-${String(d.getDate()).padStart(2, \"0\")}`\nconst day = (n: number) => { const d = new Date(); d.setDate(n); return iso(d) }\nconst sky = [\n  { id: \"new\", title: \"🌑 Yeni ay\", start: day(3), end: day(3), allDay: true, color: \"brand-purple\" as const },\n  { id: \"first\", title: \"🌓 İlk dördün\", start: day(10), end: day(10), allDay: true, color: \"brand-blue\" as const },\n  { id: \"full\", title: \"🌕 Dolunay\", start: day(17), end: day(17), allDay: true, color: \"brand-gold\" as const },\n  { id: \"last\", title: \"🌗 Son dördün\", start: day(24), end: day(24), allDay: true, color: \"brand-blue\" as const },\n  { id: \"meteor\", title: \"☄️ Meteor yağmuru\", start: day(12), end: day(14), allDay: true, color: \"brand-pink\" as const },\n]\n\nexport function MoonPhases() {\n  return <Scheduler label=\"Gökyüzü takvimi\" events={sky} view=\"month\" editable={false} help={false} height={420} views={false} />\n}\n"
     },

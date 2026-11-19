@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "MediaGridDemo.tsx",
-			"code": "export { MediaGrid } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "TripAlbum.tsx",
 			"code": "import { MediaGrid, Card } from \"march/ui\"\n\n// gezi albümü: dört fotoğraf kare ızgarada; dokununca hangisi açıldı yazılır\nconst photos = [\"sunset\", \"sea\", \"forest\", \"city\"].map((n) => ({ src: `/media/social/${n}.svg`, alt: n }))\n\nexport function TripAlbum() {\n  let $open = \"—\"\n  return <Card m:theme=\"night\">\n    <MediaGrid items={photos} gap=\"gap\" onOpen={(i: number) => $open = photos[i]!.alt} />\n    <span sx={{ text: \"sm\", color: \"muted\" }}>Açılan: {$open}</span>\n  </Card>\n}\n"
 		},

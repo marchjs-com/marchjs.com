@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "CodeViewDemo.tsx",
-			"code": "export { CodeView } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "TypingCode.tsx",
 			"code": "import { CodeView, Button } from \"march/ui\"\nimport { onCleanup } from \"march\"\nimport { rotateCcw } from \"march/icons\"\n\n// kod kendini yazar: code bir erişimci, her tikte bir harf daha; satırlar ve renkler yazdıkça gelir\nconst SRC = `export function Merhaba() {\n  let $ad = \"March\"\n  return <h1>Merhaba, {$ad}!</h1>\n}`\n\nexport function TypingCode() {\n  let $n = 0\n  const timer = setInterval(() => { if ($n < SRC.length) $n++ }, 45)\n  onCleanup(() => clearInterval(timer))\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <CodeView code={() => SRC.slice(0, $n)} lang=\"tsx\" langLabel=\"Merhaba.tsx\" copy={false} wrapButton={false} label=\"Kendini yazan kod\" />\n    <div sx={{ flex: [\"row\", \"between\"], gap: 2 }}>\n      <span sx={{ text: \"sm\", color: \"muted\" }}>{$n} / {SRC.length} harf</span>\n      <Button variant=\"ghost\" size=\"sm\" icon={rotateCcw} disabled={$n < SRC.length} on:click={() => $n = 0}>Baştan yaz</Button>\n    </div>\n  </div>\n}\n"
 		},

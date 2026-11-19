@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "DebuggerDemo.tsx",
-			"code": "export { Debugger } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "RocketCountdown.tsx",
 			"code": "import { Debugger, createDebugSession, type DebugMeta } from \"march/ui\"\n\n// roket geri sayımı: dört satırlık bir program, 3. satırda kesme noktası; Başlat'a bas, Devam ile her turda n azalır\nconst SOURCE = `let n = 3\nwhile (n > 0) {\n  n--\n}\nconsole.log(\"kalkış!\")`\nconst META: DebugMeta = { file: \"roket.js\", module: [\"n\"], fns: [], steps: [[1, 1, -1, \"\", [], []], [3, 3, -1, \"\", [], []], [5, 1, -1, \"\", [], []]] }\ntype Hooks = { s(f: number, s: number, g: () => (() => unknown)[]): void }\n\n// programın hata ayıklayıcı çağrıları yazılmış hâli (derleyicinin instrument.js'i bunu kendisi yazar)\nfunction run() {\n  const d = (globalThis as unknown as { __marchDebug: Hooks }).__marchDebug\n  d.s(0, 0, () => [() => n]); let n = 3\n  while (n > 0) { d.s(0, 1, () => [() => n]); n-- }\n  d.s(0, 2, () => [() => n]); console.log(\"kalkış!\")\n}\n\nexport function RocketCountdown() {\n  const session = createDebugSession({ evaluate: async (expr, scope) => scope[expr] })\n  session.setBreakpoint(\"roket.js\", 3)\n  session.addWatch(\"n\")\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <pre sx={{ p: 2, radius: 2, text: \"sm\" }}>{SOURCE}</pre>\n    <Debugger session={session} sections={[\"watch\", \"output\"]} timeline={false} options={false} onStart={() => { session.begin([META]); run() }} />\n  </div>\n}\n"
 		},

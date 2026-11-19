@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "CornerMarkDemo.tsx",
-      "code": "export { CornerMark } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "StickerTile.tsx",
       "code": "import { CornerMark, Picture, Button } from \"march/ui\"\nimport { heart, star, sparkles } from \"march/icons\"\n\n// çıkartma köşesi: fotoğrafın köşesine bir çıkartma; düğme çıkartmayı ve köşesini değiştirir\nconst stickers = [\n  { icon: heart, corner: \"top-end\", color: \"brand-pink\" },\n  { icon: star, corner: \"bottom-start\", color: \"brand-gold\" },\n  { icon: sparkles, corner: \"top-start\", color: \"brand-purple\" },\n] as const\n\nexport function StickerTile() {\n  let $i = 0\n  const now = () => stickers[$i % stickers.length]!\n  return <div sx={{ flex: \"col\", gap: 2, w: \"sm\" }}>\n    <div class=\"m-corner-host\" sx={{ radius: 3 }}>\n      <Picture src=\"/media/dusk.jpg\" alt=\"Gün batımında tepeler\" fit=\"cover\" />\n      {() => <CornerMark icon={now().icon} corner={now().corner} variant=\"solid\" m:color={now().color} size=\"lg\" label=\"Çıkartma\" />}\n    </div>\n    <Button size=\"sm\" on:click={() => $i++}>Çıkartmayı değiştir</Button>\n  </div>\n}\n"
     },

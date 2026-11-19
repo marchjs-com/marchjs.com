@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ContextMenuDemo.tsx",
-			"code": "export { ContextMenu } from \"march/components/context-menu\";\n"
-		},
-		{
-			"type": "code",
 			"name": "ColorSwatches.tsx",
 			"code": "import { ContextMenu } from \"march/components/context-menu\"\n\n// renk paleti: bir renge sağ tıkla; menü o rengin adını ve hex kodunu bilir\nconst colors = [[\"Mercan\", \"#ff6b5b\"], [\"Nane\", \"#3ecf8e\"], [\"Gece\", \"#2b3a67\"], [\"Hardal\", \"#f2b33d\"]]\n\nexport function ColorSwatches() {\n  let $bg = \"transparent\"\n  let $note = \"Bir renge sağ tıklayın.\"\n  const items = (target: Element) => {\n    const hex = target.closest(\"[data-hex]\")?.getAttribute(\"data-hex\") ?? \"#000000\"\n    return [\n      { label: `Arka plan yap (${hex})`, onSelect: () => { $bg = hex; $note = `Arka plan: ${hex}` } },\n      { label: \"Hex kodunu kopyala\", shortcut: \"mod+c\", onSelect: () => { $note = `Kopyalandı: ${hex}` } },\n      \"-\",\n      { label: \"Arka planı sıfırla\", onSelect: () => { $bg = \"transparent\"; $note = \"Sıfırlandı\" } },\n    ]\n  }\n  return <div sx={{ flex: \"col\", gap: 2, p: 3, radius: 3 }} style={{ background: $bg }}>\n    <ContextMenu items={items} label=\"Renk işlemleri\">\n      <div sx={{ flex: \"row\", gap: 2 }}>\n        {colors.map(([name, hex]) => <button type=\"button\" data-hex={hex} aria-label={name}\n          style={{ inlineSize: \"3rem\", blockSize: \"3rem\", borderRadius: \"50%\", border: \"2px solid white\", background: hex }} />)}\n      </div>\n    </ContextMenu>\n    <span sx={{ text: \"sm\" }}>{$note}</span>\n  </div>\n}\n"
 		},

@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "PasswordInputDemo.tsx",
-			"code": "export { PasswordInput } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "StrengthMeter.tsx",
 			"code": "import { PasswordInput, Field, Badge } from \"march/ui\"\n\n// parola gücü: yazdıkça uzunluk, rakam, büyük harf ve simge sayılır; rozetin rengi ve sözü birlikte değişir\nconst rules = [/.{8,}/, /\\d/, /[A-ZÇĞİÖŞÜ]/, /[^\\p{L}\\d\\s]/u]\nconst words = [\"Çok zayıf\", \"Zayıf\", \"Orta\", \"İyi\", \"Çok güçlü\"]\nconst tones = [\"danger\", \"danger\", \"warn\", \"info\", \"success\"]\n\nexport function StrengthMeter() {\n  let $pw = \"\"\n  const $score = rules.filter((r) => r.test($pw)).length\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Field label=\"Yeni parola\" help=\"8 karakter, bir rakam, bir büyük harf ve bir simge: dördü de tam puan\">\n      <PasswordInput bind:value={$pw} autocomplete=\"new-password\" placeholder=\"Bir parola uydur\" />\n    </Field>\n    <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n      <Badge tone={tones[$score]}>{words[$score]}</Badge>\n      <span sx={{ text: \"sm\", color: \"muted\" }}>{$score} / 4 kural</span>\n    </div>\n  </div>\n}\n"
 		},

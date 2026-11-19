@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ToastDemo.tsx",
-			"code": "export { ToastHost as Toast } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "Achievements.tsx",
 			"code": "import { Button, toast } from \"march/ui\"\nimport { star } from \"march/icons\"\n\n// başarımlar: her basışta mor yıldızlı, kapat düğmesiz, belirerek gelen bir bildirim\nconst badges = [\"İlk adım\", \"Hızlı koşucu\", \"Gece kuşu\", \"Takım oyuncusu\"]\n\nexport function Achievements() {\n  let $i = 0\n  return <Button variant=\"primary\" on:click={() => { toast(`Başarım: ${badges[$i % badges.length]}`, { icon: star, color: \"brand-purple\", closable: false, motion: \"fade\" }); $i++ }}>\n    Başarım kazan ({$i})\n  </Button>\n}\n"
 		},

@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ReactionPickerDemo.tsx",
-			"code": "export { ReactionPicker } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "MoodMeter.tsx",
 			"code": "import { ReactionPicker, Card } from \"march/ui\"\n\n// günün havası: kendi emojilerin, seçilen büyük yazılır\nexport function MoodMeter() {\n  let $mood = \"\"\n  return <Card m:theme=\"night\">\n    <ReactionPicker emojis={[\"☀️\", \"⛅\", \"🌧️\", \"⛈️\", \"❄️\"]} selected={$mood} onPick={(e: string) => $mood = e} m:color=\"brand-orange\" label=\"Hava\" />\n    <span sx={{ text: \"2xl\" }}>{$mood || \"?\"}</span>\n  </Card>\n}\n"
 		},

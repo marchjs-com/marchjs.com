@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "PresentationDemo.tsx",
-			"code": "export { Presentation } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "QuizDeck.tsx",
 			"code": "import { Presentation, Slide, Appear } from \"march/landing\"\n\n// bilgi yarışması: her slaytta bir soru; ileri basınca önce cevap belirir, sonra sıradaki soru gelir\nconst QUESTIONS = [\n  { q: \"Türkiye'nin en uzun nehri?\", a: \"Kızılırmak 🌊\" },\n  { q: \"Bir ahtapotun kaç kalbi var?\", a: \"Üç 🐙\" },\n  { q: \"Ay'a ilk ayak basan kim?\", a: \"Neil Armstrong 🚀\" },\n]\n\nexport function QuizDeck() {\n  return <Presentation label=\"Bilgi yarışması\" transition=\"zoom\" sync={false}\n    counter={(i: number, n: number) => `Soru ${i + 1} / ${n}`}>\n    {QUESTIONS.map((x) => <Slide layout=\"center\" tone=\"brand\">\n      <h2>{x.q}</h2>\n      <Appear as=\"div\" effect=\"scale\"><p>{x.a}</p></Appear>\n    </Slide>)}\n  </Presentation>\n}\n"
 		},

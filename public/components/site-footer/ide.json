@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "SiteFooterDemo.tsx",
-			"code": "export { SiteFooter } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "SeasonFooter.tsx",
 			"code": "import { SiteFooter } from \"march/landing\"\nimport { Segmented } from \"march/ui\"\n\n// mevsimlik alt bilgi: mevsim seçilince marka, kısa satır ve büyük yazı birlikte değişir\nconst SEASONS = {\n  kış: { mark: \"❄️\", about: \"Sıcak çikolata ve uzun sohbetler.\", word: \"KIŞ\" },\n  bahar: { mark: \"🌸\", about: \"Parkta piknik, akşam yürüyüşü.\", word: \"BAHAR\" },\n  yaz: { mark: \"☀️\", about: \"Sahil, dondurma, gece konserleri.\", word: \"YAZ\" },\n  güz: { mark: \"🍂\", about: \"Yağmur, kitap ve filtre kahve.\", word: \"GÜZ\" },\n} as const\n\nexport function SeasonFooter() {\n  let $season: keyof typeof SEASONS = \"bahar\"\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Segmented aria-label=\"Mevsim\" options={Object.keys(SEASONS)} bind:value={$season} />\n    {() => {\n      const s = SEASONS[$season]\n      return <SiteFooter brand={{ name: \"Mevsim\", mark: s.mark }} about={s.about} wordmark={s.word} toTop={false} />\n    }}\n  </div>\n}\n"
 		},

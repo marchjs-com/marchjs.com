@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ChatComposerDemo.tsx",
-			"code": "export { ChatComposer } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "EmojiMirror.tsx",
 			"code": "import { ChatComposer } from \"march/ui\"\n\n// ayna: ne yazarsan büyük harflerle ve tersinden geri gelir; düğme mor, gönder ikonu bir yıldız\nexport function EmojiMirror() {\n  let $last = \"🪞 Bir şey yaz, ayna geri söylesin\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <p sx={{ text: [\"xl\", \"center\"], color: \"brand-purple\" }}>{$last}</p>\n    <ChatComposer placeholder=\"Aynaya yaz\" sendColor=\"brand-purple\" sendIcon=\"✨\"\n      onSend={(text) => $last = [...text.toLocaleUpperCase(\"tr-TR\")].reverse().join(\"\")} />\n  </div>\n}\n"
 		},

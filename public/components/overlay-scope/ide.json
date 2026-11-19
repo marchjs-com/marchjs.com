@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "OverlayScopeDemo.tsx",
-			"code": "export { OverlayScope } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PhoneMock.tsx",
 			"code": "import { OverlayScope, Button, openDrawer } from \"march/ui\"\n\n// telefon taslağı: çekmece ekranın içinde açılır, sayfayı örtmez\nexport function PhoneMock() {\n  return <OverlayScope class=\"m-card\" sx={{ p: 3, w: \"sm\" }}>\n    <div sx={{ flex: \"col\", gap: 2 }}>\n      <strong>HADİ</strong>\n      <Button size=\"sm\" on:click={() => openDrawer(() => <p sx={{ p: 3 }}>Telefonun içindeki menü</p>, { title: \"Menü\", side: \"bottom\" })}>Menüyü aç</Button>\n    </div>\n  </OverlayScope>\n}\n"
 		},

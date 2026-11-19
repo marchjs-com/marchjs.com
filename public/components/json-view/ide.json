@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "JsonViewDemo.tsx",
-      "code": "export { JsonView } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "LiveState.tsx",
       "code": "import { JsonView, Button } from \"march/ui\"\n\n// canlı durum: düğmelere bastıkça nesne değişir, ağaç yeniden çizilir (value bir erişimci)\nexport function LiveState() {\n  let $likes = 0\n  let $tags = [\"march\"]\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: \"row\", gap: 2 }}>\n      <Button size=\"sm\" on:click={() => $likes++}>Beğen</Button>\n      <Button size=\"sm\" on:click={() => $tags = [...$tags, `etiket${$tags.length}`]}>Etiket ekle</Button>\n    </div>\n    <JsonView label=\"Gönderi durumu\" open={2} value={() => ({ post: { title: \"Sinyaller\", likes: $likes, tags: $tags } })} />\n  </div>\n}\n"
     },

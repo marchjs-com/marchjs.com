@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ToggleDemo.tsx",
-			"code": "export { Toggle } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "AirplaneMode.tsx",
 			"code": "import { Toggle, Card } from \"march/ui\"\n\n// uçak modu: açınca Wi-Fi ve Bluetooth kapanır ve kilitlenir; kapatınca eski hallerine döner\nexport function AirplaneMode() {\n  let $plane = false\n  let $wifi = true\n  let $bluetooth = false\n  return <Card title={$plane ? \"✈️ Uçak modu\" : \"📶 Bağlantılar\"}>\n    <div sx={{ flex: \"col\", gap: 2 }}>\n      <Toggle bind:value={$plane} m:color=\"brand-orange\" label=\"Uçak modu\" />\n      <Toggle value={$wifi && !$plane} onChange={(v: boolean) => $wifi = v} disabled={$plane} label=\"Wi-Fi\" />\n      <Toggle value={$bluetooth && !$plane} onChange={(v: boolean) => $bluetooth = v} disabled={$plane} m:color=\"brand-blue\" label=\"Bluetooth\" />\n      <span sx={{ text: \"sm\", color: \"muted\" }}>{$plane ? \"İyi uçuşlar, bağlantılar kapalı\" : $wifi ? \"Ev ağına bağlı\" : \"Çevrimdışı\"}</span>\n    </div>\n  </Card>\n}\n"
 		},

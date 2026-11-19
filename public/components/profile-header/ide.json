@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ProfileHeaderDemo.tsx",
-			"code": "export { ProfileHeader } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PlantProfile.tsx",
 			"code": "import { ProfileHeader, type FollowState } from \"march/ui\"\n\n// bir saksı bitkisinin profili: takip edince takipçi sayısı döner; istatistikler \"Yaprak / Hayran / Güneş\"\nconst LEAF = \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAFklEQVR42mPY/f2C0tE4BrFUE5FgXQAtngULJa1nqAAAAABJRU5ErkJggg==\"\n\nexport function PlantProfile() {\n  let $follow: FollowState = \"follow\"\n  return <ProfileHeader follow={$follow} onFollow={(s) => $follow = s} cover=\"sm\"\n    user={{ name: \"Fesleğen 🌿\", handle: \"feslegen.balkon\", cover: LEAF, bio: \"Balkonda yaşıyorum. Sabah güneşi severim, akşam sulanırım.\",\n      posts: 42, followers: 318, following: 1, story: \"new\" }}\n    labels={{ posts: \"Yaprak\", followers: \"Hayran\", following: \"Güneş\" }} />\n}\n"
 		},

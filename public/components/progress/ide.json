@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "ProgressDemo.tsx",
-      "code": "export { Progress } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "PizzaOven.tsx",
       "code": "import { Progress, Button, Card } from \"march/ui\"\n\n// pizza fırını: \"Fırına at\" her saniye pişirir; renk pişme durumuna göre maviden turuncuya, sonra kırmızıya döner\nexport function PizzaOven() {\n  let $baked = 0\n  let $timer = 0\n  const bake = () => {\n    clearInterval($timer)\n    $baked = 0\n    $timer = setInterval(() => { $baked = Math.min(120, $baked + 10); if ($baked >= 120) clearInterval($timer) }, 400) as unknown as number\n  }\n  const tone = () => ($baked < 60 ? \"info\" : $baked <= 100 ? \"success\" : \"danger\") as \"info\"\n  const say = () => ($baked === 0 ? \"Hamur bekliyor\" : $baked < 100 ? \"Pişiyor…\" : $baked === 100 ? \"Tam kıvamında! 🍕\" : \"Yandı! 🔥\")\n  return <Card title=\"Pizza fırını\">\n    <Progress value={() => $baked} max={100} tone={tone} label={say} showValue size=\"lg\" />\n    <Button size=\"sm\" on:click={bake}>Fırına at</Button>\n  </Card>\n}\n"
     },

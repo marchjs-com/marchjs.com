@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "AlertDemo.tsx",
-      "code": "export { Alert } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "MoodAlert.tsx",
       "code": "import { Alert, Button } from \"march/ui\"\nimport { sun, cloud, zap } from \"march/icons\"\n\n// havanın ruh hâli: düğmeye her basışta uyarının tonu, ikonu ve mesajı birlikte değişir\nconst MOODS = [\n  { tone: \"success\", icon: sun, title: \"Güneşli\", text: \"Bugün yürüyüş için harika bir gün.\" },\n  { tone: \"info\", icon: cloud, title: \"Bulutlu\", text: \"Hafif bir hırka yanınızda olsun.\" },\n  { tone: \"warn\", icon: zap, title: \"Fırtına\", text: \"Akşamüstü gök gürültülü sağanak bekleniyor.\" },\n] as const\n\nexport function MoodAlert() {\n  let $i = 0\n  const mood = () => MOODS[$i % MOODS.length]!\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    {() => <Alert tone={mood().tone} icon={mood().icon} title={mood().title}\n      action={<Button size=\"sm\" on:click={() => $i++}>Yarın?</Button>}>{mood().text}</Alert>}\n  </div>\n}\n"
     },

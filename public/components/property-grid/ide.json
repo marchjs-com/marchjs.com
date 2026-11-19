@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "PropertyGridDemo.tsx",
-			"code": "export { PropertyGrid } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "AvatarMaker.tsx",
 			"code": "import { PropertyGrid, Card } from \"march/ui\"\n\n// emoji avatar yapıcı: soldaki avatar, sağdaki ızgaranın değerleriyle çizilir (bind:value)\nconst ROWS = [\n  { key: \"face\", label: \"Yüz\", type: \"segmented\" as const, options: [\"😀\", \"😎\", \"🤖\", \"🦊\"], group: \"Avatar\" },\n  { key: \"size\", label: \"Boyut\", type: \"slider\" as const, min: 32, max: 96, unit: \"px\", group: \"Avatar\" },\n  { key: \"round\", label: \"Yuvarlak\", type: \"switch\" as const, group: \"Çerçeve\" },\n  { key: \"ring\", label: \"Halka rengi\", type: \"color\" as const, group: \"Çerçeve\" },\n]\n\nexport function AvatarMaker() {\n  let $look: Record<string, unknown> = { face: \"🦊\", size: 64, round: true, ring: \"#f2801f\" }\n  return <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n    <Card>\n      <div sx={{ flex: [\"row\", \"center\"] }} style={{\n        width: `${Number($look.size) + 24}px`, height: `${Number($look.size) + 24}px`, fontSize: `${Number($look.size) * 0.6}px`,\n        borderRadius: $look.round ? \"50%\" : \"12px\", border: `4px solid ${String($look.ring)}`,\n      }}>{String($look.face)}</div>\n    </Card>\n    <PropertyGrid properties={ROWS} bind:value={$look} label=\"Avatar\" search={false} footer={false} history={false} dirty={false} />\n  </div>\n}\n"
 		},

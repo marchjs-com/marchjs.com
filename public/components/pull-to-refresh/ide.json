@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "PullToRefreshDemo.tsx",
-      "code": "export { PullToRefresh } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "FortuneCookie.tsx",
       "code": "import { PullToRefresh, Card } from \"march/ui\"\nimport { sparkles } from \"march/icons\"\n\n// şans kurabiyesi: aşağı çek (ya da odaklanıp \"Yeni şans\" düğmesine bas), yeni bir söz gelsin\nconst SAYINGS = [\"Bugün küçük bir adım büyük bir kapı açar.\", \"Bir fincan kahve iyi bir fikri çağırır.\", \"Beklemediğin bir mesaj seni gülümsetecek.\", \"Yarım kalan işini bitirmenin tam zamanı.\", \"Yeni bir dost kapıda.\"]\n\nexport function FortuneCookie() {\n  let $n = 0\n  return <Card title=\"🥠 Şans kurabiyesi\">\n    <div style={{ height: \"160px\" }}>\n      <PullToRefresh icon={sparkles} m:color=\"brand-gold\" labels={{ refresh: \"Yeni şans\" }}\n        onRefresh={() => new Promise((ok) => setTimeout(ok, 700)).then(() => { $n++ })}>\n        <p sx={{ text: [\"lg\", \"center\"], p: 4 }}>{() => SAYINGS[$n % SAYINGS.length]}</p>\n        <p sx={{ text: [\"sm\", \"center\"], color: \"muted\" }}>Aşağı çekin</p>\n      </PullToRefresh>\n    </div>\n  </Card>\n}\n"
     },

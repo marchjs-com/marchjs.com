@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "MenuDemo.tsx",
-			"code": "export { Menu } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "MoodMenu.tsx",
 			"code": "import { Menu, Card } from \"march/ui\"\nimport { smile } from \"march/icons\"\n\n// ruh hâli seçici: gülen yüz düğmesi bir menü açar; tek seçimlik (radyo) öğeler, seçilen büyük harflerle sahneye çıkar\nconst moods = [\n  { emoji: \"😍\", name: \"Bayıldım\" },\n  { emoji: \"😎\", name: \"Havalı\" },\n  { emoji: \"🤔\", name: \"Düşünceli\" },\n  { emoji: \"😴\", name: \"Uykulu\" },\n]\n\nconst start = moods[1]!\n\nexport function MoodMenu() {\n  let $mood = start\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: [\"row\", \"center\", \"between\"], gap: 3 }}>\n      <span sx={{ text: \"2xl\" }}>{`${$mood.emoji} ${$mood.name}`}</span>\n      <Menu label=\"Ruh hâlini seç\" icon={smile} m:color=\"brand-gold\" placement=\"bottom-end\"\n        items={moods.map((m) => ({ label: `${m.emoji}  ${m.name}`, radio: true, checked: () => $mood === m, onSelect: () => $mood = m }))} />\n    </div>\n  </Card>\n}\n"
 		},

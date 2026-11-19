@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "TabsDemo.tsx",
-			"code": "export { Tabs } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "WeekWeather.tsx",
 			"code": "import { Tabs, Tab } from \"march/ui\"\n\n// haftanın havası: her gün bir <Tab>; hap görünümde, panel yeni günün yanından kayarak gelir (ileri ya da geri)\nconst DAYS = [\n  { id: \"mon\", label: \"Pzt\", icon: \"☀️\", temp: 24, say: \"Güneşli, hafif rüzgâr\" },\n  { id: \"tue\", label: \"Sal\", icon: \"⛅\", temp: 21, say: \"Parçalı bulutlu\" },\n  { id: \"wed\", label: \"Çar\", icon: \"🌧️\", temp: 17, say: \"Öğleden sonra yağmur\" },\n  { id: \"thu\", label: \"Per\", icon: \"⛈️\", temp: 15, say: \"Gök gürültülü sağanak\" },\n  { id: \"fri\", label: \"Cum\", icon: \"🌈\", temp: 19, say: \"Yağmur sonrası gökkuşağı\" },\n]\n\nexport function WeekWeather() {\n  return <Tabs label=\"Haftanın havası\" variant=\"pill\" motion=\"slide\">\n    {DAYS.map((d) => <Tab id={d.id} label={d.label} icon={d.icon}>\n      <div sx={{ flex: [\"row\", \"center\"], gap: 3, p: 2 }}>\n        <span sx={{ text: \"2xl\" }}>{d.icon}</span>\n        <div sx={{ flex: \"col\" }}>\n          <strong sx={{ text: \"xl\" }}>{d.temp}°</strong>\n          <span sx={{ color: \"muted\" }}>{d.say}</span>\n        </div>\n      </div>\n    </Tab>)}\n  </Tabs>\n}\n"
 		},

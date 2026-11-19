@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ScrollStoryDemo.tsx",
-			"code": "export { ScrollStory } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "SeasonStory.tsx",
 			"code": "import { ScrollStory } from \"march/landing\"\n\n// dört mevsim: sayfa kaydıkça yandaki büyük emoji değişir, bölüm o mevsimin rengini alır\nconst Big = (p: { face: string }) => <div sx={{ flex: [\"row\", \"center\"], p: 6 }} style={{ fontSize: \"96px\" }} role=\"img\" aria-label={p.face}>{p.face}</div>\n\nexport function SeasonStory() {\n  let $now = \"İlkbahar\"\n  const NAMES = [\"İlkbahar\", \"Yaz\", \"Sonbahar\", \"Kış\"]\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <strong>{`Şu an: ${$now}`}</strong>\n    <ScrollStory onStep={(i: number) => $now = NAMES[i]!} steps={[\n      { title: \"İlkbahar\", body: \"Erikler çiçek açtı, ceketler dolaba.\", media: <Big face=\"🌸\" />, color: \"brand-pink\" },\n      { title: \"Yaz\", body: \"Deniz, karpuz, uzun akşamlar.\", media: <Big face=\"🏖️\" />, color: \"brand-orange\" },\n      { title: \"Sonbahar\", body: \"Yapraklar sarı, çay demlik demlik.\", media: <Big face=\"🍂\" />, color: \"brand-gold\" },\n      { title: \"Kış\", body: \"Kar yağdı; sahlep sırası.\", media: <Big face=\"☃️\" />, color: \"brand-blue\" },\n    ]} />\n  </div>\n}\n"
 		},

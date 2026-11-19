@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "LikeButtonDemo.tsx",
-			"code": "export { LikeButton } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "StarRating.tsx",
 			"code": "import { LikeButton, Card } from \"march/ui\"\nimport { star } from \"march/icons\"\n\n// favori yıldızı: kalp yerine yıldız, altın renk, tek renkli parçacıklar\nexport function StarRating() {\n  let $on = false\n  let $n = 41\n  return <Card m:theme=\"night\">\n    <LikeButton liked={$on} count={$n} onToggle={(v: boolean) => { $on = v; $n += v ? 1 : -1 }}\n      icon={star} m:color=\"brand-gold\" colors=\"single\" size=\"lg\" label=\"Favorilere ekle\" />\n  </Card>\n}\n"
 		},

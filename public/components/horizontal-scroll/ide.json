@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "HorizontalScrollDemo.tsx",
-			"code": "export { HorizontalScroll } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "ColorStrip.tsx",
 			"code": "import { HorizontalScroll } from \"march/landing\"\nimport { Button } from \"march/ui\"\nimport { plus } from \"march/icons\"\n\n// renk şeridi: her basışta yeni bir renk paneli eklenir, şerit yana kayarak uzar (sabitlenmeden, yerel kaydırma)\nconst COLORS = [\"#ff7a59\", \"#ffb347\", \"#7c5cff\", \"#2bb8ff\", \"#3ecf8e\", \"#ff5fa2\"]\n\nconst Swatch = (p: { color: string; n: number }) =>\n  <div style={{ background: p.color, color: \"#fff\", \"min-height\": \"9rem\", \"border-radius\": \"1rem\", padding: \"1rem\" }}>\n    <strong sx={{ text: \"xl\" }}>{String(p.n).padStart(2, \"0\")}</strong>\n    <p>{p.color}</p>\n  </div>\n\nexport function ColorStrip() {\n  let $count = 3\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button icon={plus} on:click={() => $count = $count + 1}>Renk ekle ({$count})</Button>\n    {() => {\n      const n = $count\n      return <HorizontalScroll pinned={false} panel=\"10rem\" label=\"Renk şeridi\">\n        {Array.from({ length: n }, (_, i) => <Swatch color={COLORS[i % COLORS.length]!} n={i + 1} />)}\n      </HorizontalScroll>\n    }}\n  </div>\n}\n"
 		},

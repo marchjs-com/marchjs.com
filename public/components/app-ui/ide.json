@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "AppUIDemo.tsx",
-			"code": "export { AppUI } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "HaikuStudio.tsx",
 			"code": "import { AppUI, Textarea, row, tabs } from \"march/ui\"\nimport { edit, eye } from \"march/icons\"\n\n// haiku atölyesi: solda taslak, sağda önizleme; iki panel aynı sinyali okur, yerleşimi sürükleyerek değiştir\nexport function HaikuStudio() {\n  let $text = \"sessiz bir havuz\\nkurbağa atlar içine\\nsuyun sesi\"\n  const lines = () => $text.split(\"\\n\").filter(Boolean)\n  const panels = [\n    { id: \"draft\", title: \"Taslak\", icon: edit, content: () => <div sx={{ p: 2 }}><Textarea label=\"Haiku\" bind:value={$text} rows={4} /></div> },\n    { id: \"view\", title: \"Önizleme\", icon: eye, content: () => <div sx={{ p: 3, flex: \"col\", gap: 1 }}>\n      {() => lines().map((l, i) => <span sx={{ text: i === 1 ? [\"lg\", \"bold\"] : \"md\" }}>{l}</span>)}\n      <span sx={{ text: \"xs\", color: \"muted\" }}>{() => lines().length} dize</span>\n    </div> },\n  ]\n  return <div style={{ height: \"18rem\" }}>\n    <AppUI title=\"haiku-atölyesi\" description=\"5 · 7 · 5\" panels={panels} layout={row([0.5, tabs(\"draft\")], [0.5, tabs(\"view\")])} commands={false} />\n  </div>\n}\n"
 		},

@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "TooltipDemo.tsx",
-			"code": "export { Tooltip } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PeriodicTable.tsx",
 			"code": "import { Tooltip } from \"march/ui\"\n\n// periyodik tablodan bir sıra: her elementin adı ipucunda, renkli balonla\nconst elements = [[\"H\", \"Hidrojen\"], [\"He\", \"Helyum\"], [\"Li\", \"Lityum\"], [\"C\", \"Karbon\"], [\"O\", \"Oksijen\"]]\n\nexport function PeriodicTable() {\n  return <div sx={{ flex: \"row\", gap: 2 }}>\n    {elements.map(([sym, name]) => <Tooltip text={name!} color=\"brand-purple\" delay={0}>\n      <button class=\"m-card\" sx={{ p: 3, text: [\"lg\", \"bold\"] }}>{sym}</button>\n    </Tooltip>)}\n  </div>\n}\n"
 		},

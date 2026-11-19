@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "RowToolsDemo.tsx",
-			"code": "export { RowTools } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "FlavorRanking.tsx",
 			"code": "import { RowTools, Card } from \"march/ui\"\n\n// dondurma sıralaman: tatları oklarla yukarı / aşağı taşı; birinci altın renginde ve büyük yazılır\nexport function FlavorRanking() {\n  let $list = [\"Fıstıklı\", \"Vişneli\", \"Limonlu\", \"Karamelli\"]\n  const move = (i: number, d: number) => { const n = [...$list]; [n[i], n[i + d]] = [n[i + d]!, n[i]!]; $list = n }\n  return <Card m:theme=\"night\" title=\"Dondurma sıralaman\">\n    <ol sx={{ flex: \"col\", gap: 2 }}>\n      {$list.map((name, i) => <li sx={{ flex: [\"row\", \"between\", \"center\"], gap: 2 }}>\n        <span sx={{ text: i === 0 ? \"xl\" : \"md\", color: i === 0 ? \"brand-gold\" : \"muted\" }}>{i + 1}. {name}</span>\n        <RowTools actions={[\"up\", \"down\"]} index={i} count={$list.length} size=\"sm\"\n          labels={{ up: `${name} yukarı`, down: `${name} aşağı` }} onUp={() => move(i, -1)} onDown={() => move(i, 1)} />\n      </li>)}\n    </ol>\n  </Card>\n}\n"
 		},

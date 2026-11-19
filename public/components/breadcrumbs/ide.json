@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "BreadcrumbsDemo.tsx",
-			"code": "export { Breadcrumbs } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "TreasureTrail.tsx",
 			"code": "import { Breadcrumbs, Button } from \"march/ui\"\n\n// hazine yolu: her adım yola bir durak ekler, ayraç ayak izi; geride kalan bir durağa basınca yol oraya kadar kısalır\nconst PLACES = [\n  { id: \"home\", label: \"Ev\", icon: \"🏠\" },\n  { id: \"forest\", label: \"Orman\", icon: \"🌲\" },\n  { id: \"river\", label: \"Nehir\", icon: \"🌊\" },\n  { id: \"mountain\", label: \"Dağ\", icon: \"⛰️\" },\n  { id: \"cave\", label: \"Mağara\", icon: \"🕯️\" },\n  { id: \"treasure\", label: \"Hazine\", icon: \"💎\" },\n]\n\nexport function TreasureTrail() {\n  let $steps = 1\n  const done = () => $steps >= PLACES.length\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Breadcrumbs label=\"Yürüdüğün yol\" separator=\"👣\" items={() => PLACES.slice(0, $steps).map((p, i) => ({ ...p, onSelect: () => $steps = i + 1 }))} />\n    <Button variant={done() ? \"primary\" : \"secondary\"} disabled={done()} on:click={() => $steps++}>\n      {done() ? \"Hazineyi buldun!\" : `Bir adım daha: ${PLACES[$steps]?.label}`}\n    </Button>\n  </div>\n}\n"
 		},

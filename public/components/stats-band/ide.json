@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "StatsBandDemo.tsx",
-			"code": "export { StatsBand } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "CoffeeMeter.tsx",
 			"code": "import { StatsBand } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// kahve ölçer: her fincanda rakamlar yeni değere sayarak gider (değerler birer işlev, kendileri güncellenir)\nexport function CoffeeMeter() {\n  let $cups = 1\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button on:click={() => $cups++}>Bir kahve daha ☕</Button>\n    <StatsBand variant=\"cards\" items={[\n      { value: () => $cups, label: \"fincan\", suffix: \" ☕\" },\n      { value: () => $cups * 80, label: \"mg kafein\" },\n      { value: () => Math.min(100, $cups * 15), label: \"odak\", suffix: \"%\", note: () => ($cups > 5 ? \"biraz su iç\" : \"iyi gidiyor\") },\n    ]} />\n  </div>\n}\n"
 		},

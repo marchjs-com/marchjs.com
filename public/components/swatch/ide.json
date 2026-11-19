@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "SwatchDemo.tsx",
-			"code": "export { Swatch } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "TShirtPainter.tsx",
 			"code": "import { Swatch } from \"march/ui\"\n\n// tişört boyacısı: küçük daireden bir renk seç, büyük örnek o renge boyanır ve üstündeki yazı aynı kalır\nconst colors: [string, string][] = [[\"#f2801f\", \"Turuncu\"], [\"#1d9ad6\", \"Gök mavisi\"], [\"#78be3a\", \"Çimen\"], [\"#a3338c\", \"Mürdüm\"], [\"#111827\", \"Gece\"]]\n\nexport function TShirtPainter() {\n  let $color = \"#f2801f\"\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 4 }}>\n    <Swatch color={$color} size=\"lg\" shape=\"square\" checker={false} label=\"Tişört önizlemesi\">HADİ</Swatch>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 2 }}>\n      {colors.map(([c, name]) => <Swatch color={c} label={name} shape=\"circle\" mark\n        selected={$color === c} onClick={() => $color = c} />)}\n    </div>\n  </div>\n}\n"
 		},

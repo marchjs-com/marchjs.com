@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "GridDemo.tsx",
-			"code": "export { Grid } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "ColorWall.tsx",
 			"code": "import { Grid } from \"march/ui\"\n\n// renk duvarı: 7 renk 4 sütunda; balance satırları dengeler (4 + 3), fill=\"stretch\" son satırı doldurur\nconst colors = [\"brand-orange\", \"brand-blue\", \"brand-green\", \"brand-purple\", \"brand-pink\", \"brand-gold\", \"danger\"]\n\nconst Swatch = (props: { color: string }) => <div sx={{ p: 4, radius: 2, flex: \"center\", text: [\"sm\", \"bold\"] }} m:color={props.color}\n  class=\"m-tone-solid\">{props.color}</div>\n\nexport function ColorWall() {\n  return <Grid cols={4} gap={2} fill=\"stretch\" balance>\n    {colors.map((c) => <Swatch color={c} />)}\n  </Grid>\n}\n"
 		},

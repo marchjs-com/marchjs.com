@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "StepperDemo.tsx",
-			"code": "export { Stepper } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PizzaStepper.tsx",
 			"code": "import { Stepper } from \"march/ui\"\n\n// pizza dört adımda: her adımın paneli bir öncekine bulanarak geçer, vurgu adımdan adıma akar; son düğme fırına verir\nconst STEPS = [{ title: \"Hamur\" }, { title: \"Sos\" }, { title: \"Peynir\" }, { title: \"Fırın\" }]\nconst PANELS = [\"🫓 İnce hamur açıldı.\", \"🍅 Domates sosu sürüldü.\", \"🧀 Bol mozzarella serpildi.\", \"🔥 250°C, 8 dakika.\"]\n\nexport function PizzaStepper() {\n  let $step = 0\n  let $baked = false\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Stepper steps={STEPS} current={$step} onSelect={(i: number) => { $step = i; $baked = false }} m:color=\"brand-orange\"\n      panels={PANELS.map((t) => <p sx={{ text: \"lg\" }}>{t}</p>)} labels={{ back: \"Geri\", next: \"Sonraki\" }} finishLabel=\"Fırına ver\" onFinish={() => $baked = true} />\n    <span sx={{ text: \"bold\", color: \"success\" }}>{$baked ? \"Pizza fırında, afiyet olsun! 🍕\" : \"\"}</span>\n  </div>\n}\n"
 		},

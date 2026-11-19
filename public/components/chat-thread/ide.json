@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ChatThreadDemo.tsx",
-			"code": "export { ChatThread } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "RobotChat.tsx",
 			"code": "import { ChatThread, Button, type ChatMessage } from \"march/ui\"\n\n// bir robotla hızlı yanıt sohbeti: bir düğmeye bas, robot \"yazıyor…\" der ve yanıt verir\nconst ANSWERS: Record<string, string> = {\n  \"Merhaba 👋\": \"Bip bop! Merhaba insan 🤖\",\n  \"Hava nasıl?\": \"Sunucu odası her zaman 18 derece ❄️\",\n  \"Bir şaka yap\": \"Neden robotlar hiç korkmaz? Çünkü sinirleri yok, kabloları var ⚡\",\n}\n\nexport function RobotChat() {\n  let $messages: ChatMessage[] = [{ id: \"r0\", senderName: \"Robo\", text: \"Bir şey sor bakalım!\", time: new Date() }]\n  let $typing: string[] = []\n  let n = 0\n  const ask = (q: string) => {\n    $messages = [...$messages, { id: `q${++n}`, mine: true, text: q, time: new Date(), status: \"read\" }]\n    $typing = [\"Robo\"]\n    setTimeout(() => { $typing = []; $messages = [...$messages, { id: `a${n}`, senderName: \"Robo\", text: ANSWERS[q], time: new Date() }] }, 900)\n  }\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <ChatThread messages={$messages} typing={$typing} days={false} label=\"Robo ile sohbet\" />\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 1 }}>\n      {Object.keys(ANSWERS).map((q) => <Button size=\"sm\" variant=\"ghost\" disabled={$typing.length > 0} on:click={() => ask(q)}>{q}</Button>)}\n    </div>\n  </div>\n}\n"
 		},

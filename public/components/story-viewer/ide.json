@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "StoryViewerDemo.tsx",
-			"code": "export { StoryViewer } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "ColorDiary.tsx",
 			"code": "import { StoryViewer, Button } from \"march/ui\"\n\n// günün renkleri: dört renk, her biri iki saniyelik bir hikâye; sonuncusu bitince görüntüleyici kendiliğinden kapanır\nconst PNG = (p: string) => `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAFklEQVR42m${p}AAAAABJRU5ErkJggg==`\nconst DAY = [{\n  id: \"day\", name: \"Renk günlüğü\", items: [\n    { id: \"dawn\", src: PNG(\"P4+6zr9yQbhuXdvwz1GgE6ZgdD1tcTig\"), caption: \"06:40 · şafak pembesi\" },\n    { id: \"sea\", src: PNG(\"Ow2PuDb+lLBlm/Gz+LxQAthgZP+C/Xcg\"), caption: \"12:15 · öğle mavisi\" },\n    { id: \"sunset\", src: PNG(\"P4WSz2xmMmQ43VWzlpbwAsKgV3rhVt4w\"), caption: \"18:50 · gün batımı\" },\n    { id: \"city\", src: PNG(\"OQk/Y21GtkeLWZg19cCwAXQQNaq9+sQQ\"), caption: \"23:30 · şehir gecesi\" },\n  ],\n}]\n\nexport function ColorDiary() {\n  let $open = false\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n    <Button variant=\"primary\" m:color=\"brand-pink\" on:click={() => $open = true}>🎨 Günün renklerini aç</Button>\n    <StoryViewer open={$open} onClose={() => $open = false} groups={DAY} duration={2000} arrows={false} avatar={false} time={false} />\n  </div>\n}\n"
 		},

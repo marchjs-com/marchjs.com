@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "IconPickerDemo.tsx",
-			"code": "export { IconPicker } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "AppIconStudio.tsx",
 			"code": "import { IconPicker, Card } from \"march/ui\"\nimport { Icon, zap, star, heart, music, coffee, gamepad, compass, trophy, palette, smile } from \"march/icons\"\n\n// uygulama ikonu atölyesi: küçük bir seçkiden ikon seç, koyu karoda kocaman görünsün\nconst studio = { zap, star, heart, music, coffee, gamepad, compass, trophy, palette, smile }\n\nexport function AppIconStudio() {\n  let $name: string | null = \"zap\"\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 4 }}>\n    <IconPicker icons={studio} value={$name} onChange={(n: string | null) => $name = n} label=\"Uygulama ikonu\" setLabel=\"Atölye\" />\n    <Card m:theme=\"night\">\n      <div sx={{ flex: [\"col\", \"center\"], gap: 1 }}>\n        <span sx={{ text: \"2xl\", color: \"brand-gold\" }}>{$name ? <Icon of={studio[$name as keyof typeof studio]} /> : \"?\"}</span>\n        <span sx={{ text: \"xs\", color: \"muted\" }}>{$name ?? \"ikonsuz\"}</span>\n      </div>\n    </Card>\n  </div>\n}\n"
 		},

@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "CommandPaletteDemo.tsx",
-			"code": "export { CommandPalette } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "MoodPalette.tsx",
 			"code": "import { CommandPalette, PaletteButton, Card } from \"march/ui\"\nimport { sun, moon, coffee, zap, heart } from \"march/icons\"\n\n// ruh hâli paleti: Ctrl+K yerine düğmeyle açılır; seçilen komut kartın ikonunu ve sözünü değiştirir\nconst moods = [\n  { id: \"mood.sun\", title: \"Neşeli\", icon: sun, word: \"Bugün her şey güzel\" },\n  { id: \"mood.coffee\", title: \"Uykulu\", icon: coffee, word: \"Önce bir kahve\" },\n  { id: \"mood.zap\", title: \"Enerjik\", icon: zap, word: \"Hadi başlayalım!\" },\n  { id: \"mood.heart\", title: \"Sevgi dolu\", icon: heart, word: \"Herkese selam\" },\n  { id: \"mood.moon\", title: \"Sakin\", icon: moon, word: \"Yavaş ve derin\" },\n]\n\nexport function MoodPalette() {\n  let $word = \"Ruh hâlini seç\"\n  // her komutun run'ı sözü yazar; palet yalnız bu örneğe ait (shortcut={false}: sayfanın Ctrl+K'sıyla yarışmaz)\n  const commands = moods.map((m) => ({ id: m.id, title: m.title, icon: m.icon, group: \"Ruh hâli\", run: () => $word = m.word }))\n  return <Card>\n    <div sx={{ flex: \"col\", gap: 3 }}>\n      <span sx={{ text: [\"xl\", \"bold\"] }}>{$word}</span>\n      <PaletteButton label=\"Ruh hâli ara…\" kbd={false} />\n    </div>\n    <CommandPalette shortcut={false} commands={commands} placeholder=\"neşeli, uykulu, sakin…\" />\n  </Card>\n}\n"
 		},

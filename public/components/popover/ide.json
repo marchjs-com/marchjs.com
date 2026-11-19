@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "PopoverDemo.tsx",
-			"code": "export { Popover } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "EmojiNote.tsx",
 			"code": "import { Popover, Button } from \"march/ui\"\n\n// not için ruh hali: düğmeye basınca emoji paneli açılır, seçince kapanır\nconst moods = [\"😀\", \"😌\", \"😴\", \"🤩\", \"😤\", \"🥳\"]\n\nexport function EmojiNote() {\n  let $mood = \"😀\"\n  return <Popover trigger={<Button variant=\"secondary\">Ruh hali: {$mood}</Button>} title=\"Bugün nasılsın?\" placement=\"bottom-start\">\n    {(close: () => void) => <div sx={{ flex: \"row\", gap: 1 }}>\n      {moods.map((m) => <Button variant=\"ghost\" on:click={() => { $mood = m; close() }}>{m}</Button>)}\n    </div>}\n  </Popover>\n}\n"
 		},

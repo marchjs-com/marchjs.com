@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "PaginationDemo.tsx",
-			"code": "export { Pagination } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "QuoteDeck.tsx",
 			"code": "import { Pagination, Card } from \"march/ui\"\nimport { arrowLeft, arrowRight } from \"march/icons\"\n\n// günün sözleri bir deste gibi: yalın sayfalama, oklar ve \"2 / 5\" sayacı; her sayfa bir söz\nconst QUOTES = [\n  [\"Yol, yürüyene görünür.\", \"Atasözü\"],\n  [\"Basit olan, karmaşık olanı yener.\", \"Bir yazılımcı\"],\n  [\"Her büyük iş küçük bir adımla başlar.\", \"Lao Tzu\"],\n  [\"Bugün dikilen ağaç yarın gölge verir.\", \"Atasözü\"],\n  [\"Merak, öğrenmenin motorudur.\", \"Bir öğretmen\"],\n]\n\nexport function QuoteDeck() {\n  let $page = 1\n  const $quote = QUOTES[$page - 1] ?? [\"\", \"\"]\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: \"col\", gap: 3 }}>\n      <span sx={{ text: \"xl\" }}>{\"“\" + $quote[0] + \"”\"}</span>\n      <span sx={{ text: \"sm\", color: \"brand-gold\" }}>{\"— \" + $quote[1]}</span>\n      <Pagination variant=\"simple\" bind:page={$page} pages={QUOTES.length} status={(p: number, n: number) => `${p} / ${n}`}\n        prev={arrowLeft} next={arrowRight} labels={{ previous: \"Önceki söz\", next: \"Sonraki söz\" }} m:color=\"brand-gold\" />\n    </div>\n  </Card>\n}\n"
 		},

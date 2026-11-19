@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "GradientEditorDemo.tsx",
-			"code": "export { GradientEditor } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "SkyPainter.tsx",
 			"code": "import { GradientEditor } from \"march/ui\"\n\n// gökyüzü boyacısı: sabah, öğle, akşam hazırlarından birini seç ya da durakları kendin taşı; güneş gökte asılı\nconst SKIES = [\n  { label: \"Sabah\", value: [\"#ffd3a5\", \"#fd6585\"] },\n  { label: \"Öğle\", value: [\"#4cc3e0\", \"#1d9ad6\"] },\n  { label: \"Akşam\", value: [\"#f2801f\", \"#a3338c\", \"#13233a\"] },\n]\n\nexport function SkyPainter() {\n  let $sky = \"linear-gradient(180deg, #ffd3a5 0%, #fd6585 100%)\"\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div style={{ background: $sky, height: \"8rem\", borderRadius: \"1rem\", display: \"grid\", placeItems: \"center\", fontSize: \"3rem\" }}>☀️</div>\n    <GradientEditor bind:value={$sky} types={[\"linear\"]} presets={SKIES} output={false} preview={false} angles={[0, 180]} aria-label=\"Gökyüzü\" />\n  </div>\n}\n"
 		},

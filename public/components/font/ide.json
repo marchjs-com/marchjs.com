@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "FontPickerDemo.tsx",
-			"code": "export { FontPicker } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "ShopSign.tsx",
 			"code": "import { FontPicker, TextInput, Card, type FontChoice } from \"march/ui\"\n\n// dükkân tabelası: adını yaz, cihazdaki yazı tiplerinden birini seç (hiçbir yere istek gitmez), tabela o yazıyla asılır\nexport function ShopSign() {\n  let $name = \"Kahve Durağı\"\n  let $font = \"Georgia\"\n  let $stack = \"Georgia, serif\"\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 2 }}>\n      <TextInput bind:value={$name} aria-label=\"Dükkânın adı\" />\n      <FontPicker bind:value={$font} catalog={false} specimen={false} closeOnPick onPick={(c: FontChoice) => $stack = c.stack} />\n    </div>\n    <Card m:theme=\"night\">\n      <div style={{ fontFamily: $stack, fontSize: \"2.4rem\", textAlign: \"center\", letterSpacing: \"0.04em\" }}>{$name}</div>\n    </Card>\n  </div>\n}\n"
 		},

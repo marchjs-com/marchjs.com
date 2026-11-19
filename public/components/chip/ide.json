@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ChipDemo.tsx",
-			"code": "export { Chip } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PizzaBuilder.tsx",
 			"code": "import { Chip, Card } from \"march/ui\"\nimport { heart } from \"march/icons\"\n\n// pizzanı yap: her malzeme bir aç / kapa çip; seçilenin tiki yerine kalp çıkar, fiyat kendiliğinden toplanır\nconst toppings = [\n  { name: \"🍄 Mantar\", price: 15 },\n  { name: \"🫒 Zeytin\", price: 10 },\n  { name: \"🌶️ Biber\", price: 8 },\n  { name: \"🧀 Ekstra peynir\", price: 25 },\n  { name: \"🍍 Ananas\", price: 20 },\n]\n\nexport function PizzaBuilder() {\n  let $picked = new Set([\"🧀 Ekstra peynir\"])\n  const $total = 120 + toppings.filter((t) => $picked.has(t.name)).reduce((sum, t) => sum + t.price, 0)\n  const toggle = (name: string) => { const n = new Set($picked); if (n.has(name)) n.delete(name); else n.add(name); $picked = n }\n  return <Card title=\"Pizzanı yap\" subtitle=\"Margarita tabanı · ₺120\" m:color=\"brand-orange\">\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 2, mb: 3 }}>\n      {toppings.map((t) => <Chip selected={$picked.has(t.name)} selectedIcon={heart} onClick={() => toggle(t.name)}>{t.name}</Chip>)}\n    </div>\n    <span sx={{ text: [\"xl\", \"bold\"], color: \"brand-orange\" }}>{`Toplam ₺${$total}`}</span>\n  </Card>\n}\n"
 		},

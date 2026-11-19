@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "BranchingStoryDemo.tsx",
-			"code": "export { BranchingStory } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "MysteryDoor.tsx",
 			"code": "import { BranchingStory } from \"march/landing\"\n\n// gizemli kapılar: üç kapıdan birini seç; her adımda kaç adım attığını sayar\nexport function MysteryDoor() {\n  let $steps = 0\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <BranchingStory start=\"hol\" minHeight=\"14rem\" label=\"Gizemli kapılar\" onChange={(p: string[]) => $steps = p.length - 1}\n      passages={{\n        hol: { title: \"🚪🚪🚪 Üç kapı\", body: \"Uzun bir koridordasın. Önünde üç kapı var.\", choices: [\n          { label: \"Kırmızı kapı\", to: \"kirmizi\" }, { label: \"Mavi kapı\", to: \"mavi\" }, { label: \"Minicik kapı\", to: \"mini\", note: \"eğilmen gerek\" }] },\n        kirmizi: { title: \"🔥 Sıcak oda\", body: \"İçerisi fırın gibi. Ortada bir dondurma makinesi duruyor.\", choices: [\n          { label: \"Dondurma al\", to: \"dondurma\" }, { label: \"Geri çık\", to: \"hol\" }] },\n        mavi: { title: \"🌊 Akvaryum\", body: \"Duvarlar camdan, bir ahtapot sana el sallıyor.\", ending: \"Ahtapotun arkadaşı\" },\n        mini: { title: \"🐭 Fare kasabası\", body: \"Küçülüyorsun! Fareler seni çay içmeye davet ediyor.\", ending: \"Kasabanın konuğu\" },\n        dondurma: { title: \"🍦 Serinlik\", body: \"Fıstıklı ve limonlu. Fırın artık umrunda değil.\", ending: \"Dondurmacı\" },\n      }} />\n    <small sx={{ color: \"muted\" }}>{$steps} adım attın</small>\n  </div>\n}\n"
 		},

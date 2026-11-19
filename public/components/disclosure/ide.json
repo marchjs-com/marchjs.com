@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "DisclosureDemo.tsx",
-			"code": "export { Disclosure } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "Spoiler.tsx",
 			"code": "import { Disclosure, Card } from \"march/ui\"\n\n// sürprizbozan: film yorumunda sonu gizli; açan okur sayılır\nexport function Spoiler() {\n  let $peeks = 0\n  return <Card m:theme=\"night\">\n    <p sx={{ text: \"sm\" }}>Film harika başlıyor, ikinci yarı ise bambaşka bir şeye dönüşüyor.</p>\n    <Disclosure title={<span sx={{ color: \"brand-orange\", text: \"bold\" }}>Sonu göster (sürprizbozan!)</span>} onToggle={(o: boolean) => { if (o) $peeks++ }}>\n      <p sx={{ text: \"sm\" }}>Kahraman baştan beri kendi rüyasındaymış.</p>\n    </Disclosure>\n    <span sx={{ text: \"xs\", color: \"muted\" }}>{$peeks} kez bakıldı</span>\n  </Card>\n}\n"
 		},

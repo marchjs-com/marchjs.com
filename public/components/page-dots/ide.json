@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "PageDotsDemo.tsx",
-			"code": "export { PageDots } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "StoryDots.tsx",
 			"code": "import { PageDots, Card, IconButton } from \"march/ui\"\nimport { chevronLeft, chevronRight } from \"march/icons\"\n\n// günün hikâyesi: üç kare, altında noktalar; oklar ya da noktalar kareyi değiştirir, etkin nokta uzar\nconst slides = [\n  { emoji: \"🌅\", text: \"Güne bir çayla başla\" },\n  { emoji: \"🚲\", text: \"Öğlen biraz pedal çevir\" },\n  { emoji: \"🌙\", text: \"Gece yıldızları say\" },\n]\n\nexport function StoryDots() {\n  let $i = 0\n  const go = (d: number) => $i = (($i + d) % slides.length + slides.length) % slides.length\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: [\"col\", \"center\"], gap: 3 }}>\n      <span sx={{ text: \"2xl\" }}>{slides[$i].emoji}</span>\n      <span sx={{ text: \"lg\" }}>{slides[$i].text}</span>\n      <div sx={{ flex: \"row\", gap: 2 }}>\n        <IconButton icon={chevronLeft} label=\"Önceki kare\" inverse on:click={() => go(-1)} />\n        <PageDots count={slides.length} bind:value={$i} m:color=\"brand-pink\" labels={{ page: (n: number) => `${n}. kare` }} />\n        <IconButton icon={chevronRight} label=\"Sonraki kare\" inverse on:click={() => go(1)} />\n      </div>\n    </div>\n  </Card>\n}\n"
 		},

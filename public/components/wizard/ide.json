@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "WizardDemo.tsx",
-			"code": "export { Wizard } from \"march/components/wizard\";\n"
-		},
-		{
-			"type": "code",
 			"name": "CoffeeWizard.tsx",
 			"code": "import { useForm, toast } from \"march/ui\"\nimport { Wizard } from \"march/components/wizard\"\n\n// üç adımda bir kahve: boy, süt ve bardağa yazılacak ad; son adım siparişi verir\nexport function CoffeeWizard() {\n  let $order = \"\"\n  // march/ui'de useForm bir alan tanımından formu kurar; Wizard bu formun alanlarını adım adım gösterir\n  const form = useForm({\n    size: { type: \"pick\", label: \"Boy\", options: [\"Küçük\", \"Orta\", \"Büyük\"], default: \"Orta\" },\n    milk: { type: \"pick\", label: \"Süt\", options: [\"Sütsüz\", \"İnek sütü\", \"Yulaf sütü\"], default: \"Yulaf sütü\" },\n    name: { type: \"text\", label: \"Bardağa yazılacak ad\", required: true },\n  }, {}, { onSubmit: (v) => { $order = `☕ ${v.name}: ${v.size} boy, ${v.milk}`; toast(\"Kahven hazırlanıyor\") } })\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Wizard form={form} submitLabel=\"Sipariş ver\" m:color=\"brand-orange\"\n      steps={[{ title: \"Boy\", fields: [\"size\"] }, { title: \"Süt\", fields: [\"milk\"] }, { title: \"Ad\", fields: [\"name\"] }]} />\n    <span sx={{ text: \"lg\", color: $order ? \"brand-orange\" : \"muted\" }}>{$order || \"Henüz sipariş yok\"}</span>\n  </div>\n}\n"
 		},

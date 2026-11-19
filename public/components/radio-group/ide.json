@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "RadioGroupDemo.tsx",
-			"code": "export { RadioGroup } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "CoffeeSize.tsx",
 			"code": "import { RadioGroup, Card } from \"march/ui\"\n\n// kahve boyu: segmented görünümde S / M / L; seçtikçe fincan büyür ve fiyat değişir\nconst sizes = { S: { text: \"lg\", price: 65 }, M: { text: \"xl\", price: 80 }, L: { text: \"2xl\", price: 95 } } as const\n\nexport function CoffeeSize() {\n  let $size = \"M\"\n  const $cup = sizes[$size as keyof typeof sizes]\n  return <Card title=\"Filtre kahve\">\n    <div sx={{ flex: [\"row\", \"between\", \"center\"], gap: 3 }}>\n      <RadioGroup bind:value={$size} variant=\"segmented\" options=\"S, M, L\" aria-label=\"Boy\" />\n      <span sx={{ text: $cup.text }}>☕</span>\n      <strong sx={{ text: \"lg\", color: \"brand-orange\" }}>{$cup.price} ₺</strong>\n    </div>\n  </Card>\n}\n"
 		},

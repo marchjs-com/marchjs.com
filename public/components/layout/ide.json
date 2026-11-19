@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "LayoutDemo.tsx",
-			"code": "export { Layout } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "Magazine.tsx",
 			"code": "import { Layout } from \"march/ui\"\n\n// dergi sayfası: üst bilgi, yan alanda içindekiler, altta künye; köşe denetimleri kapalı (features={[]})\nconst Box = (props: { children?: unknown }) => <div sx={{ p: 2, radius: 2 }} class=\"sc-ld-box\">{props.children}</div>\n\nexport function Magazine() {\n  return <Layout features={[]} header={<Box>HADİ Dergi · Kasım</Box>} aside={<Box>İçindekiler</Box>} footer={<Box>© HADİ</Box>}>\n    <article sx={{ p: 2 }}>\n      <h3 sx={{ text: [\"lg\", \"bold\"] }}>Sinyallerle düşünmek</h3>\n      <p sx={{ text: \"sm\" }}>Bir değer değişince yalnız ona bağlı olan yer yeniden çizilir.</p>\n    </article>\n  </Layout>\n}\n"
 		},

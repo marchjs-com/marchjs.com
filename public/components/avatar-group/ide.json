@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "AvatarGroupDemo.tsx",
-			"code": "export { AvatarGroup } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PartyGuests.tsx",
 			"code": "import { AvatarGroup, Button } from \"march/ui\"\n\n// parti davetlileri: \"Katıl\" her basışta gruba bir kişi ekler; dört kişiden sonrası +N\nconst names = [\"Elif\", \"Can\", \"Deniz\", \"Ada\", \"Mert\", \"Zeynep\", \"Kerem\", \"Selin\"]\n\nexport function PartyGuests() {\n  let $n = 3\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 3 }}>\n    <AvatarGroup names={names.slice(0, $n)} max={4} size=\"md\" />\n    <Button size=\"sm\" disabled={$n >= names.length} on:click={() => $n++}>Katıl</Button>\n  </div>\n}\n"
 		},

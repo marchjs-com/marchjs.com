@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "MarkdownEditorDemo.tsx",
-			"code": "export { MarkdownEditor } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "Postcard.tsx",
 			"code": "import { MarkdownEditor, Card } from \"march/ui\"\n\n// kartpostal: arkasına Markdown ile yazılır, \"Ön yüz\" sekmesi yazıyı gece temalı bir kartta gösterir\nexport function Postcard() {\n  let $md = \"**Selam** Ece!\\n\\nKapadokya'dan sevgiler. Balonlar *şafakta* kalkıyor:\\n\\n- sıcak çikolata\\n- bol fotoğraf\"\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: \"col\", gap: 2 }}>\n      <span sx={{ text: \"lg\", color: \"brand-gold\" }}>Kapadokya'dan kartpostal</span>\n      <MarkdownEditor bind:value={$md} views={[\"write\", \"preview\"]} view=\"preview\" rows={6} stats={false}\n        toolbar={[\"bold\", \"italic\", \"|\", \"ul\"]} labels={{ write: \"Arka yüz\", preview: \"Ön yüz\" }} />\n    </div>\n  </Card>\n}\n"
 		},

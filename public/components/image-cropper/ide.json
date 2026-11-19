@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ImageCropperDemo.tsx",
-			"code": "export { ImageCropper } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "StickerMaker.tsx",
 			"code": "import { ImageCropper, type CropState } from \"march/ui\"\n\n// çıkartma yapıcı: gülen yüzü kare kırp, döndür, aynala; altta yuvarlak çıkartma hâlini anlatan satır\n// küçük bir satır içi SVG; blob: adresi olarak (data: SVG güvenli sayılmaz, engellenir)\nconst FACE = URL.createObjectURL(new Blob([`<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect width=\"100\" height=\"100\" fill=\"#ffd27a\"/><circle cx=\"50\" cy=\"50\" r=\"34\" fill=\"#f2801f\"/><circle cx=\"38\" cy=\"42\" r=\"5\" fill=\"#13233a\"/><circle cx=\"62\" cy=\"42\" r=\"5\" fill=\"#13233a\"/><path d=\"M34 60q16 14 32 0\" stroke=\"#13233a\" stroke-width=\"5\" fill=\"none\" stroke-linecap=\"round\"/></svg>`], { type: \"image/svg+xml\" }))\n\nexport function StickerMaker() {\n  let $crop: CropState | undefined\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <ImageCropper src={FACE} alt=\"Gülen yüz\" aspect={1} sliders={[\"angle\"]} hint={false} bind:value={$crop} />\n    <span sx={{ text: \"sm\", color: \"muted\" }}>\n      Çıkartma: {$crop ? `${Math.round($crop.rotate)}° döndü${$crop.flip ? \", aynalandı\" : \"\"}` : \"henüz dokunulmadı\"}\n    </span>\n  </div>\n}\n"
 		},

@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ChevronDemo.tsx",
-			"code": "export { Chevron } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "GiftBox.tsx",
 			"code": "import { Button, Chevron } from \"march/ui\"\nimport { gift } from \"march/icons\"\n\n// sürpriz kutusu: düğme yalnız aria-expanded taşır; ok onu kendiliğinden izler (open verilmedi) ve yaylı döner\nexport function GiftBox() {\n  let $open = false\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Button variant=\"ghost\" icon={gift} aria-expanded={$open ? \"true\" : \"false\"} on:click={() => $open = !$open}>\n      {$open ? \"Kutuyu kapat\" : \"Sürprizi aç\"} <Chevron direction=\"down\" motion=\"spring\" size=\"md\" m:color=\"brand-pink\" />\n    </Button>\n    {$open ? <p sx={{ text: \"lg\" }}>🎉 Ok tek satır bağlama kodu istemedi: düğmenin durumunu kendisi okudu.</p> : null}\n  </div>\n}\n"
 		},

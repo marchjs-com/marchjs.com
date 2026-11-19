@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ScrollToTopDemo.tsx",
-			"code": "export { ScrollToTop } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "Elevator.tsx",
 			"code": "import { ScrollToTop, Card } from \"march/ui\"\n\n// asansör: kutu aşağı kaydıkça \"çatıya çık\" düğmesi kayarak gelir; basınca kutu yumuşakça en üst kata döner\nconst floors = [\"Çatı katı · teras\", ...Array.from({ length: 11 }, (_, i) => `${11 - i}. kat`), \"Zemin kat · lobi\"]\n\nexport function Elevator() {\n  let $floor = floors[0] ?? \"\"\n  const shaft = (<div style={{ height: \"200px\", overflow: \"auto\" }} on:scroll={(e: Event) => {\n    const el = e.currentTarget as HTMLElement\n    $floor = floors[Math.min(floors.length - 1, Math.round(el.scrollTop / 48))] ?? \"\"\n  }}>\n    {floors.map((f) => <div sx={{ p: 3, text: \"md\" }}>{f}</div>)}\n  </div>) as HTMLElement\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: [\"row\", \"between\", \"center\"], gap: 3, mb: 2 }}>\n      <span sx={{ text: [\"lg\", \"bold\"], color: \"brand-orange\" }}>{$floor}</span>\n      <ScrollToTop inline target={shaft} threshold={60} label=\"Çatıya çık\" motion=\"slide\" m:color=\"brand-orange\" />\n    </div>\n    {shaft}\n  </Card>\n}\n"
 		},

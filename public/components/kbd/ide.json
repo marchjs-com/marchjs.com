@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "KbdDemo.tsx",
-			"code": "export { Kbd } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "ShortcutOfTheDay.tsx",
 			"code": "import { Kbd, IconButton } from \"march/ui\"\nimport { refresh } from \"march/icons\"\n\n// günün kısayolu: yenile düğmesi bir sonrakini getirir; keys canlı, mod macOS'ta ⌘, ötekilerde Ctrl yazılır\nconst tips = [\n  { keys: \"mod+k\", what: \"komut paletini aç\" },\n  { keys: \"mod+shift+z\", what: \"yinele\" },\n  { keys: \"alt+arrowleft\", what: \"geri git\" },\n  { keys: \"shift+enter\", what: \"yeni satır\" },\n]\n\nexport function ShortcutOfTheDay() {\n  let $i = 0\n  const $tip = tips[$i % tips.length]\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n    <span sx={{ text: \"bold\" }}>Günün kısayolu:</span>\n    <Kbd keys={$tip.keys} />\n    <span sx={{ color: \"muted\" }}>{$tip.what}</span>\n    <IconButton icon={refresh} label=\"Başka bir kısayol\" size=\"sm\" on:click={() => $i++} />\n  </div>\n}\n"
 		},

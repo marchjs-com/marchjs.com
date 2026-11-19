@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "SegmentedDemo.tsx",
-			"code": "export { Segmented } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "Thermometer.tsx",
 			"code": "import { Segmented, Card } from \"march/ui\"\n\n// termometre: aynı sıcaklık üç birimde; kayan gösterge seçilen birime süzülür, sayı ve rengi birlikte değişir\nconst celsius = 23\nconst units = {\n  \"°C\": { value: celsius, color: \"brand-orange\" },\n  \"°F\": { value: Math.round(celsius * 9 / 5 + 32), color: \"brand-purple\" },\n  \"K\": { value: Math.round(celsius + 273.15), color: \"brand-blue\" },\n} as const\n\nexport function Thermometer() {\n  let $unit = \"°C\"\n  const $now = units[$unit as keyof typeof units]\n  return <Card title=\"İstanbul, şu an\">\n    <div sx={{ flex: [\"row\", \"between\", \"center\"], gap: 3 }}>\n      <span sx={{ text: \"2xl\", color: $now.color }}>{$now.value} {$unit}</span>\n      <Segmented bind:value={$unit} indicator=\"slide\" m:color={$now.color} options=\"°C, °F, K\" aria-label=\"Birim\" />\n    </div>\n  </Card>\n}\n"
 		},

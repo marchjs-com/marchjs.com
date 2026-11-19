@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "KeyframeTimelineDemo.tsx",
-			"code": "export { KeyframeTimeline } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "Heartbeat.tsx",
 			"code": "import { KeyframeTimeline, type TimelineModel } from \"march/ui\"\n\n// kalp atışı: tek iz (büyüklük), iki vuruş; sahnede hap yerine bir kalp çizilir, kendiliğinden ve döngüde atar\nconst BEAT: TimelineModel = { duration: 1000, tracks: [\n  { id: \"beat\", target: \"Kalp\", prop: \"scale\", color: \"danger\", keys: [{ at: 0, value: 1 }, { at: 120, value: 1.35, easing: \"out\" }, { at: 240, value: 1 }, { at: 360, value: 1.25, easing: \"out\" }, { at: 600, value: 1, easing: \"in-out\" }] },\n] }\n\nexport function Heartbeat() {\n  let $beat = BEAT\n  return <KeyframeTimeline bind:value={$beat} autoplay transport={[\"play\"]} inspector={false}\n    renderTarget={() => <span sx={{ text: \"2xl\" }}>❤️</span> as Element} aria-label=\"Kalp atışı\" />\n}\n"
 		},

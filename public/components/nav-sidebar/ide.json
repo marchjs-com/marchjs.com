@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "NavSidebarDemo.tsx",
-			"code": "export { NavSidebar } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "QuestMenu.tsx",
 			"code": "import { NavSidebar } from \"march/ui\"\n\n// bir oyunun yan menüsü: altın ve görevler canlı rozetlerde; günlük ödülü almak altını artırır, rozeti söndürür\nexport function QuestMenu() {\n  let $gold = 120\n  let $gift = true\n  let $quests = 3\n  let $place = \"Harita\"\n  const go = (label: string) => () => { $place = label }\n  return <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n    <NavSidebar title=\"🐉 Ejder Vadisi\" subtitle={`${$gold} altın`} search={false} recent={0} collapsible={false}\n      hotkey={false} palette={false} storageKey=\"quest.menu\" defaultOpen=\"all\" groupOrder=\"none\" itemOrder=\"none\"\n      featured={[{ id: \"gift\", label: \"Günlük ödül\", icon: \"🎁\", badge: () => ($gift ? \"hazır\" : null), badgeTone: \"primary\",\n        onSelect: () => { if ($gift) { $gold += 50; $gift = false } $place = \"Ödül alındı\" } }]}\n      items={[\n        { id: \"map\", label: \"Harita\", icon: \"🗺️\", group: \"Dünya\", onSelect: go(\"Harita\") },\n        { id: \"quests\", label: \"Görevler\", icon: \"📜\", group: \"Dünya\", badge: () => $quests, onSelect: () => { $quests = 0; $place = \"Görevler\" } },\n        { id: \"bag\", label: \"Çanta\", icon: \"🎒\", group: \"Kahraman\", sub: \"12 eşya\", onSelect: go(\"Çanta\") },\n        { id: \"skills\", label: \"Yetenekler\", icon: \"✨\", group: \"Kahraman\", onSelect: go(\"Yetenekler\") },\n      ]} />\n    <span sx={{ text: \"xl\" }}>{$place}</span>\n  </div>\n}\n"
 		},

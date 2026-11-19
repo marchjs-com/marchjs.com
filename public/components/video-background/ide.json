@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "VideoBackgroundDemo.tsx",
-			"code": "export { VideoBackground } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "MoodSwitch.tsx",
 			"code": "import { VideoBackground } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// ruh hâli düğmesi: her basışta videonun üstündeki renk katmanı ve yazı değişir\nconst MOODS = [\n  { tint: \"dark\", text: \"Gece modu 🌙\" },\n  { tint: \"light\", text: \"Sabah serinliği ☀️\" },\n  { tint: \"brand\", text: \"Parti zamanı 🎉\" },\n] as const\n\nexport function MoodSwitch() {\n  let $mood = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button variant=\"secondary\" on:click={() => $mood = ($mood + 1) % MOODS.length}>Ruh hâlini değiştir</Button>\n    {() => {\n      const m = MOODS[$mood]!\n      return <VideoBackground src=\"/media/hadi-waves.webm\" poster=\"/media/hadi-waves.jpg\" tint={m.tint} tintOpacity={0.55}>\n        <div sx={{ p: 6, text: \"2xl\" }}><strong>{m.text}</strong></div>\n      </VideoBackground>\n    }}\n  </div>\n}\n"
 		},

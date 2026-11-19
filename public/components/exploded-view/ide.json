@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ExplodedViewDemo.tsx",
-			"code": "export { ExplodedView } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "LayerCake.tsx",
 			"code": "import { ExplodedView, Button, Card } from \"march/ui\"\nimport { sparkles } from \"march/icons\"\n\n// katman pastası: bir düğmenin katmanları yaylanarak ayrılır; düğmeye basınca birleşir\nexport function LayerCake() {\n  let $apart = true\n  return <Card m:theme=\"night\">\n    <ExplodedView open={$apart} motion=\"spring\" gap={34} m:color=\"brand-pink\">\n      <Button variant=\"primary\" icon={sparkles}>Sihir</Button>\n    </ExplodedView>\n    <Button size=\"sm\" on:click={() => $apart = !$apart}>{$apart ? \"Birleştir\" : \"Ayır\"}</Button>\n  </Card>\n}\n"
 		},

@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ClampTextDemo.tsx",
-			"code": "export { ClampText } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "SpoilerReview.tsx",
 			"code": "import { ClampText, Card } from \"march/ui\"\n\n// sürprizi bozmayan film yorumu: tek satıra katlı; düğme ölçmeden hep görünür (\"always\"), metinleri senin\nexport function SpoilerReview() {\n  return <Card title=\"🎬 Gece Yarısı Treni · ★★★★☆\">\n    <ClampText lines={1} expandable=\"always\" labels={{ more: \"🙈 Sürprizi göster\", less: \"🙉 Yeniden gizle\" }} m:color=\"brand-purple\">\n      Başta sıradan bir yolculuk gibi görünüyor ama son durakta anlıyoruz ki kondüktör baştan beri yolcuların\n      kendisiymiş: her vagon, kahramanın unuttuğu bir yılı taşıyor ve tren aslında hiç hareket etmemiş.\n    </ClampText>\n  </Card>\n}\n"
 		},

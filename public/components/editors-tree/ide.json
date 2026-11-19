@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "TreeEditorDemo.tsx",
-			"code": "export { TreeEditor } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PizzaOrder.tsx",
 			"code": "import { TreeEditor, Card } from \"march/ui\"\n\n// pizza siparişi: malzemeleri ağaçta ekle, sil, değiştir; kart pizzayı malzeme emojileriyle çizer\nconst EMOJI: Record<string, string> = { mantar: \"🍄\", zeytin: \"🫒\", biber: \"🌶️\", domates: \"🍅\", mısır: \"🌽\", peynir: \"🧀\" }\ntype Pizza = { size?: string; toppings?: unknown[]; extraCheese?: boolean }\n\nexport function PizzaOrder() {\n  let $order: unknown = { size: \"orta\", toppings: [\"mantar\", \"zeytin\", \"biber\"], extraCheese: true }\n  const $p = ($order ?? {}) as Pizza\n  const $face = [...($p.toppings ?? []).map((t) => EMOJI[String(t).toLowerCase()] ?? \"❔\"), ...($p.extraCheese ? [\"🧀\"] : [])].join(\" \")\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Card m:theme=\"night\">\n      <div sx={{ flex: [\"row\", \"center\", \"between\"] }}>\n        <span sx={{ text: \"xl\" }}>{`🍕 ${$face}`}</span>\n        <span sx={{ text: \"sm\", color: \"brand-orange\" }}>{`${$p.size ?? \"?\"} boy`}</span>\n      </div>\n    </Card>\n    <TreeEditor bind:value={$order} search={false} expand={2} label=\"Pizza siparişi\" history\n      schema={{ type: \"object\", properties: { size: { enum: [\"küçük\", \"orta\", \"büyük\"] }, toppings: { type: \"array\", items: { type: \"string\" }, maxItems: 5 } } }} />\n  </div>\n}\n"
 		},

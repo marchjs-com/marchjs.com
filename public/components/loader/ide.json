@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "LoaderDemo.tsx",
-      "code": "export { Loader } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "KettleLoader.tsx",
       "code": "import { Loader, Button, Card } from \"march/ui\"\n\n// çaydanlık: \"Demle\" yükleyiciyi kendi işaretiyle (☕) gösterir; metin geri sayar, bitince çay hazır\nexport function KettleLoader() {\n  let $left = 0\n  const brew = () => {\n    $left = 3\n    const t = setInterval(() => { $left--; if ($left <= 0) clearInterval(t) }, 700)\n  }\n  return <Card title=\"Çay ocağı\">\n    {() => $left > 0\n      ? <Loader spinner={<span sx={{ text: \"2xl\" }}>☕</span> as Node} fade={false} text={() => `Demleniyor… ${$left}`} />\n      : <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}><span>Çay hazır 🫖</span><Button size=\"sm\" on:click={brew}>Demle</Button></div>}\n  </Card>\n}\n"
     },

@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "ListRowDemo.tsx",
-      "code": "export { ListRow } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "Playlist.tsx",
       "code": "import { ListRow } from \"march/ui\"\nimport { music, play, pause } from \"march/icons\"\n\n// bir çalma listesi: satıra basınca şarkı çalar (etkin satır ve çubuk); çalan şarkının ikonu duraklat olur\nconst SONGS = [\n  { id: \"s1\", name: \"Gün Ortası\", who: \"Mavi Dalga\", time: \"3:41\" },\n  { id: \"s2\", name: \"Uzun ve sığmayan bir şarkı adı: gece yarısı İstanbul'da yağmur\", who: \"Kuzey\", time: \"5:02\" },\n  { id: \"s3\", name: \"Sabah Kahvesi\", who: \"Lo-fi Kedi\", time: \"2:58\" },\n]\n\nexport function Playlist() {\n  let $now = \"\"\n  return <div sx={{ flex: \"col\", w: \"full\" }}>\n    {SONGS.map((s) => <ListRow lead={() => $now === s.id ? pause : music} title={s.name} sub={s.who} trail={s.time}\n      active={() => $now === s.id} indicator m:color=\"brand-purple\" onClick={() => $now = $now === s.id ? \"\" : s.id} />)}\n    <ListRow lead={play} title=\"Karışık çal\" sub=\"3 şarkı\" size=\"sm\" onClick={() => $now = SONGS[Math.floor(Math.random() * 3)].id} />\n  </div>\n}\n"
     },

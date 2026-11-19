@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "CheckboxGroupDemo.tsx",
-			"code": "export { CheckboxGroup } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "PizzaBuilder.tsx",
 			"code": "import { CheckboxGroup, Card } from \"march/ui\"\n\n// pizza ustası: her malzeme kendi HADİ renginde bir çip; seçtikçe fiyat ve dilimdeki malzemeler değişir\nconst toppings = [\n  { value: \"mantar\", label: \"Mantar\", meta: 15 }, { value: \"zeytin\", label: \"Zeytin\", meta: 10 },\n  { value: \"sucuk\", label: \"Sucuk\", meta: 25 }, { value: \"biber\", label: \"Biber\", meta: 10 }, { value: \"mısır\", label: \"Mısır\", meta: 8 },\n]\n\nexport function PizzaBuilder() {\n  let $picked = [\"mantar\", \"sucuk\"]\n  const $price = 180 + toppings.filter((t) => $picked.includes(t.value)).reduce((sum, t) => sum + t.meta, 0)\n  return <Card title=\"Pizzanı yap\" subtitle=\"Hamur ve peynir 180 ₺\">\n    <div sx={{ flex: \"col\", gap: 3 }}>\n      <CheckboxGroup bind:value={$picked} variant=\"chip\" colors=\"brand\" inline options={toppings.map((t) => ({ value: t.value, label: t.label }))} aria-label=\"Malzemeler\" />\n      <span sx={{ text: \"xl\", color: \"brand-orange\" }}>{$picked.length ? `🍕 ${$picked.join(\" · \")}` : \"🍕 Sade margarita\"}</span>\n      <strong sx={{ text: \"lg\" }}>Toplam: {$price} ₺</strong>\n    </div>\n  </Card>\n}\n"
 		},

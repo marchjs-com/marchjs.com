@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "NotForYouDemo.tsx",
-			"code": "export { NotForYou } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "GrumpyCat.tsx",
 			"code": "import { NotForYou } from \"march/landing\"\n\n// huysuz kediyi sahiplenmek: sana uymayan satırların üstünü çiz; hepsi çizilince kedi senindir\nconst LINES = [\n  { text: \"Sabah 5'te uyanmaktan nefret ediyorsun\", instead: \"Erkenci kuşsun: kahvaltı saati kedinle aynı.\" },\n  { text: \"Kanepene bir şey olmasın istiyorsun\", instead: \"Kanepe zaten eskiydi.\" },\n  { text: \"Sevgi gösterisi bekliyorsun\", instead: \"Haftada bir mırıltı sana yeter.\" },\n]\n\nexport function GrumpyCat() {\n  let $count = 0\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <strong sx={{ text: \"xl\" }}>{$count === LINES.length ? \"😼 Pamuk artık senin!\" : \"😾 Pamuk'u sahiplenmek ister misin?\"}</strong>\n    <NotForYou check title=\"Pamuk sana göre değil, eğer…\" items={LINES} onCheck={(m: number[]) => $count = m.length}\n      hint=\"Sen değil misin? Dokun\" markedHint=\"Tamam, sen değilsin\"\n      verdict={(n: number, total: number) => (n === total ? \"Pamuk seni onayladı.\" : `${total - n} engel kaldı.`)} />\n  </div>\n}\n"
 		},

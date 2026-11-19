@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "FileUploadDemo.tsx",
-			"code": "export { FileUpload } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "AvatarDrop.tsx",
 			"code": "import { FileUpload, Avatar, Card } from \"march/ui\"\n\n// profil fotoğrafı: bir görsel bırak ya da seç; anında yuvarlak avatar olur, adı ve boyutu yanında\nconst NO_PHOTO: unknown = null\n\nexport function AvatarDrop() {\n  let $photo = NO_PHOTO\n  const $file = $photo instanceof File ? $photo : null\n  const $url = $file ? URL.createObjectURL($file) : null\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: \"col\", gap: 3 }}>\n      <FileUpload bind:value={$photo} accept=\"image/*\" maxSize={2_000_000} preview={false} label=\"Fotoğrafını buraya bırak\" />\n      <div sx={{ flex: [\"row\", \"center\"], gap: 3 }}>\n        <Avatar src={$url} name=\"Deniz Yılmaz\" size=\"xl\" />\n        <span sx={{ color: $file ? \"brand-green\" : \"muted\" }}>\n          {$file ? `${$file.name} · ${Math.round($file.size / 1024)} KB` : \"Henüz fotoğraf yok: baş harfler gösteriliyor\"}\n        </span>\n      </div>\n    </div>\n  </Card>\n}\n"
 		},

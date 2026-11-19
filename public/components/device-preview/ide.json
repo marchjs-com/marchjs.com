@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "DevicePreviewDemo.tsx",
-			"code": "export { DevicePreview } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "LockScreen.tsx",
 			"code": "import { DevicePreview } from \"march/ui\"\n\n// kilit ekranı: Pixel kasası, sabit saat; ekranın içinde büyük saat ve bildirim\nexport function LockScreen() {\n  return <DevicePreview device=\"pixel-8\" time=\"9:41\" fitHeight={460}>\n    <div sx={{ flex: [\"col\", \"center\"], gap: 2, p: 6 }}>\n      <span sx={{ text: [\"2xl\", \"bold\"] }}>9:41</span>\n      <span sx={{ text: \"sm\", color: \"muted\" }}>Salı, 19 Kasım</span>\n      <div class=\"m-card\" sx={{ p: 2, text: \"sm\" }}>HADİ: Elif seni etiketledi</div>\n    </div>\n  </DevicePreview>\n}\n"
 		},

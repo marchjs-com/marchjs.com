@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "DatePickerDemo.tsx",
-			"code": "export { DatePicker } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "BirthdayCountdown.tsx",
 			"code": "import { DatePicker, Field, todayIso } from \"march/ui\"\n\n// doğum günü sayacı: tarihi yaz ya da takvimden seç; yaşın ve bir sonraki doğum gününe kalan gün çıkar\ntype Day = string | null\nfunction countdown(iso: Day): string {\n  if (!iso) return \"Doğum tarihini seç\"\n  const [y, m, d] = iso.split(\"-\").map(Number) as [number, number, number]\n  const today = new Date(`${todayIso()}T00:00:00`)\n  let next = new Date(today.getFullYear(), m - 1, d), age = today.getFullYear() - y\n  if (next < today) next = new Date(today.getFullYear() + 1, m - 1, d)\n  else if (next > today) age--\n  const days = Math.round((next.getTime() - today.getTime()) / 864e5)\n  return days === 0 ? `İyi ki doğdun! Bugün ${age} yaşındasın 🎂` : `${age} yaşındasın · doğum gününe ${days} gün var`\n}\n\nexport function BirthdayCountdown() {\n  let $born: Day = \"1998-05-19\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Field label=\"Doğum tarihin\"><DatePicker bind:value={$born} max={todayIso()} /></Field>\n    <span sx={{ text: [\"lg\", \"bold\"], color: \"brand-purple\" }}>{countdown($born)}</span>\n  </div>\n}\n"
 		},

@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "WindowDemo.tsx",
-			"code": "export { Window } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "RetroDesk.tsx",
 			"code": "import { Window } from \"march/ui\"\n\n// eski usul masaüstü: Windows görünümünde iki pencere; kapatılan pencere sayılır\nexport function RetroDesk() {\n  let $closed = 0\n  return <div style={{ position: \"relative\", \"block-size\": \"20rem\" }}>\n    <Window title=\"Hesap makinesi\" chrome=\"windows\" x={16} y={16} width={220} height={150} onClose={() => $closed++}>\n      <p sx={{ p: 2, text: [\"lg\", \"mono\"] }}>2 + 2 = 4</p>\n    </Window>\n    <Window title=\"Not defteri\" chrome=\"windows\" x={180} y={90} width={240} height={150} onClose={() => $closed++}>\n      <p sx={{ p: 2 }}>{$closed} pencere kapandı</p>\n    </Window>\n  </div>\n}\n"
 		},

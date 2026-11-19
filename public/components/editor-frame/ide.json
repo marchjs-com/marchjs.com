@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "EditorFrameDemo.tsx",
-			"code": "export { EditorFrame } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "HaikuPad.tsx",
 			"code": "import { EditorFrame, Badge } from \"march/ui\"\n\n// haiku defteri: çerçevenin alt çubuğu satırları sayar; üç satır olunca çerçeve yeşile döner\nexport function HaikuPad() {\n  let $text = \"Sessiz göl kıyı\\nbir kurbağa atlıyor\"\n  const $lines = $text.split(\"\\n\").filter((l) => l.trim()).length\n  return <EditorFrame m:color={$lines === 3 ? \"success\" : \"brand-purple\"}\n    head={<span sx={{ text: \"bold\" }}>Haiku</span>}\n    actions={<Badge tone={$lines === 3 ? \"success\" : \"neutral\"}>{`${$lines} / 3 satır`}</Badge>}\n    foot={<span>{$lines === 3 ? \"Tamam, şiir hazır\" : \"Üç kısa satır yazın\"}</span>}>\n    <textarea class=\"m-editor-area\" rows={3} aria-label=\"Haiku\" value={$text}\n      on:input={(e: Event) => $text = (e.target as HTMLTextAreaElement).value} />\n  </EditorFrame>\n}\n"
 		},

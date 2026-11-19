@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "LiveStatusDemo.tsx",
-      "code": "export { LiveStatus } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "CookieJar.tsx",
       "code": "import { LiveStatus, Button, Card } from \"march/ui\"\n\n// kurabiye kavanozu: her alışta durum satırı kalanı söyler; biterse araya girerek (assertive) uyarır\nexport function CookieJar() {\n  let $left = 5\n  return <Card title=\"Kurabiye kavanozu 🍪\">\n    <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n      <Button size=\"sm\" disabled={() => $left === 0} on:click={() => $left--}>Bir tane al</Button>\n      <Button size=\"sm\" variant=\"ghost\" on:click={() => $left = 5}>Doldur</Button>\n    </div>\n    {() => <LiveStatus politeness={$left === 0 ? \"assertive\" : \"polite\"} text={() => ($left ? `${\"🍪\".repeat($left)} ${$left} kurabiye kaldı` : \"Kavanoz boş!\")} />}\n  </Card>\n}\n"
     },

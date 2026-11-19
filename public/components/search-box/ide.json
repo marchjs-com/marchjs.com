@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "SearchBoxDemo.tsx",
-			"code": "export { SearchBox } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "EmojiFinder.tsx",
 			"code": "import { SearchBox, Card } from \"march/ui\"\n\n// emoji bulucu: her tuşta hemen süzer (debounce 0); bulunanlar koyu kartta büyük büyük dizilir\nconst EMOJIS = [\n  { char: \"❤️\", name: \"kalp\" }, { char: \"🔥\", name: \"ateş\" }, { char: \"🎉\", name: \"kutlama\" }, { char: \"☕\", name: \"kahve\" },\n  { char: \"🌙\", name: \"ay gece\" }, { char: \"☀️\", name: \"güneş\" }, { char: \"🚀\", name: \"roket\" }, { char: \"🍕\", name: \"pizza\" },\n  { char: \"🐱\", name: \"kedi\" }, { char: \"🎧\", name: \"müzik kulaklık\" }, { char: \"⚡\", name: \"şimşek\" }, { char: \"🌊\", name: \"deniz dalga\" },\n]\n\nexport function EmojiFinder() {\n  let $q = \"\"\n  const $found = EMOJIS.filter((e) => e.name.includes($q.toLocaleLowerCase(\"tr\")))\n  return <Card m:theme=\"night\">\n    <SearchBox bind:value={$q} debounce={0} size=\"sm\" placeholder=\"kalp, roket, kahve…\" label=\"Emoji ara\" />\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 2, text: \"2xl\", p: 2 }}>\n      {$found.length ? $found.map((e) => <span title={e.name}>{e.char}</span>) : <span sx={{ text: \"sm\", color: \"muted\" }}>Böyle bir emoji yok 🤷</span>}\n    </div>\n  </Card>\n}\n"
 		},

@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "KeyValueEditorDemo.tsx",
-			"code": "export { KeyValueEditor } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "CakeRecipe.tsx",
 			"code": "import { KeyValueEditor, Card } from \"march/ui\"\n\n// kek tarifi: malzeme → gram; sayılar sayı olarak saklanır, toplam hamur ağırlığı canlı hesaplanır\nexport function CakeRecipe() {\n  let $recipe: Record<string, string | number> = { \"un\": 250, \"şeker\": 180, \"tereyağı\": 120, \"yumurta\": 150 }\n  const $total = Object.values($recipe).reduce((sum: number, g) => sum + (typeof g === \"number\" ? g : 0), 0)\n  return <Card title=\"Limonlu kek\" subtitle={`Toplam hamur: ${$total} g`}>\n    <KeyValueEditor bind:value={$recipe} numbers keyPlaceholder=\"Malzeme\" valuePlaceholder=\"Gram\"\n      labels={{ key: \"Malzeme\", value: \"Gram\", remove: \"Malzemeyi çıkar\", add: \"Malzeme ekle\", duplicate: \"Bu malzeme zaten var\" }} />\n    <span sx={{ text: \"sm\", color: \"muted\" }}>{$total > 800 ? \"Büyük kalıp gerekecek.\" : \"Orta boy kalıba sığar.\"}</span>\n  </Card>\n}\n"
 		},

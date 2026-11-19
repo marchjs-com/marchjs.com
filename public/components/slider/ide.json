@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "SliderDemo.tsx",
-			"code": "export { Slider } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "SpiceLevel.tsx",
 			"code": "import { Slider, Card } from \"march/ui\"\n\n// acı seviyesi: 0–5 arası kaydırıcı; değer biber olarak görünür, renk rampası ısındıkça ustanın yorumu değişir\nconst notes = [\"Hiç acı yok\", \"Hafif\", \"Tatlı sert\", \"Acı\", \"Çok acı\", \"Ateş! 🔥\"]\n\nexport function SpiceLevel() {\n  let $spice = 2\n  return <Card title=\"Adana dürüm\">\n    <div sx={{ flex: \"col\", gap: 2 }}>\n      <Slider bind:value={$spice} min={0} max={5} track m:color={$spice > 3 ? \"danger\" : \"brand-orange\"}\n        format={(v: number) => (v ? \"🌶️\".repeat(v) : \"🫑\")} valueText={(v: number) => notes[v] ?? \"\"} aria-label=\"Acı seviyesi\" />\n      <span sx={{ text: \"lg\", color: $spice > 3 ? \"danger\" : \"brand-orange\" }}>{notes[$spice]}</span>\n    </div>\n  </Card>\n}\n"
 		},

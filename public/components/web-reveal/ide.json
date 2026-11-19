@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "RevealDemo.tsx",
-			"code": "export { Reveal } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "EmojiParade.tsx",
 			"code": "import { Reveal } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\ntype RevealEffect = \"fade\" | \"up\" | \"down\" | \"start\" | \"end\" | \"scale\" | \"blur\" | \"flip\"\n\n// emoji geçidi: her basışta sıradaki efektle emojiler yeniden girer\nconst EFFECTS: RevealEffect[] = [\"up\", \"scale\", \"flip\", \"blur\", \"start\", \"down\"]\nconst EMOJI = [\"🍕\", \"🎈\", \"🚲\", \"🌵\", \"🎧\", \"🐙\"]\n\nexport function EmojiParade() {\n  let $round = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button variant=\"secondary\" on:click={() => $round = $round + 1}>Bir daha ({EFFECTS[$round % EFFECTS.length]})</Button>\n    {() => {\n      const effect = EFFECTS[$round % EFFECTS.length]\n      return <Reveal effect={effect} stagger={90} sx={{ flex: \"row\", gap: 3, text: \"2xl\" }}>\n        {EMOJI.map((e) => <span role=\"img\" aria-label=\"emoji\">{e}</span>)}\n      </Reveal>\n    }}\n  </div>\n}\n"
 		},

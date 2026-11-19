@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ColorPickerDemo.tsx",
-			"code": "export { ColorPicker } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "MoodRing.tsx",
 			"code": "import { ColorPicker, parse, rgbToHsv } from \"march/ui\"\n\n// ruh hâli yüzüğü: bir renk seç, yüzük o renge boyanır ve tonuna göre bir ruh hâli söyler\nconst MOODS = [[30, \"Heyecanlı\"], [70, \"Neşeli\"], [160, \"Huzurlu\"], [250, \"Düşünceli\"], [320, \"Romantik\"], [360, \"Heyecanlı\"]] as const\nconst moodOf = (color: string) => {\n  const rgb = parse(color)\n  const hue = rgb ? rgbToHsv(rgb).h : 0\n  return MOODS.find(([max]) => hue < max)?.[1] ?? \"Heyecanlı\"\n}\n\nexport function MoodRing() {\n  let $color = \"#f2801f\"\n  return <div sx={{ flex: [\"row\", \"wrap\", \"center\"], gap: 4 }}>\n    <ColorPicker bind:value={$color} alpha={false} palettes={false} contrast={false} formats={false} aria-label=\"Yüzüğün rengi\" />\n    <div sx={{ flex: [\"col\", \"center\"], gap: 2 }}>\n      <div style={{ width: \"6rem\", height: \"6rem\", borderRadius: \"50%\", border: `0.75rem solid ${$color}` }} />\n      <b sx={{ text: \"lg\" }}>{moodOf($color)}</b>\n    </div>\n  </div>\n}\n"
 		},

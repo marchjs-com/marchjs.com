@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "CardDemo.tsx",
-      "code": "export { Card } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "FlipQuote.tsx",
       "code": "import { Card, IconButton } from \"march/ui\"\nimport { refresh } from \"march/icons\"\n\n// günün sözü: başlıktaki düğme sıradaki söze geçer, alt bilgi kaçıncı söz olduğunu yazar\nconst QUOTES = [\n  { text: \"Basit olan, karmaşığın en zor hâlidir.\", who: \"Leonardo da Vinci\" },\n  { text: \"Önce çalıştır, sonra doğru yap, sonra hızlandır.\", who: \"Kent Beck\" },\n  { text: \"Sabır acıdır, meyvesi tatlıdır.\", who: \"Atasözü\" },\n]\n\nexport function FlipQuote() {\n  let $i = 0\n  const q = () => QUOTES[$i % QUOTES.length]\n  return <Card title=\"Günün sözü\" subtitle={() => q().who}\n    actions={<IconButton icon={refresh} label=\"Sıradaki söz\" on:click={() => $i++} />}\n    footer={<span sx={{ text: \"xs\", color: \"muted\" }}>{() => `${($i % QUOTES.length) + 1} / ${QUOTES.length}`}</span>}>\n    <p sx={{ text: \"lg\" }}>{() => `“${q().text}”`}</p>\n  </Card>\n}\n"
     },

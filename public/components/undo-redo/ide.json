@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "UndoRedoDemo.tsx",
-			"code": "export { UndoRedo } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "EmojiPainter.tsx",
 			"code": "import { UndoRedo, Button } from \"march/ui\"\n\n// emoji dizisi: her emoji bir adım; UndoRedo'ya küçük bir geçmiş (history) verilir, ipucu adımı adıyla söyler\n// (\"Geri al: 🌵\"); geçmiş iki sinyalden ibaret: yapılanlar ve geri alınanlar\nconst palette = [\"🌵\", \"🐙\", \"🍕\", \"🚀\", \"🌈\"]\n\nexport function EmojiPainter() {\n  let $past: string[] = []\n  let $future: string[] = []\n  const history = {\n    canUndo: () => $past.length > 0,\n    canRedo: () => $future.length > 0,\n    undo: () => { const last = $past[$past.length - 1]; $past = $past.slice(0, -1); $future = [last, ...$future] },\n    redo: () => { const [next, ...rest] = $future; $future = rest; $past = [...$past, next] },\n    past: () => [...$past].reverse(),\n    future: () => $future,\n  }\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: [\"row\", \"center\"], gap: 1 }}>\n      {palette.map((e) => <Button variant=\"ghost\" on:click={() => { $past = [...$past, e]; $future = [] }}>{e}</Button>)}\n      <UndoRedo history={history} size=\"sm\" />\n    </div>\n    <div sx={{ text: \"2xl\" }}>{$past.length ? $past.join(\"\") : \"Bir emojiye bas\"}</div>\n  </div>\n}\n"
 		},

@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "LiveCounterDemo.tsx",
-			"code": "export { LiveCounter } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "HeartCounter.tsx",
 			"code": "import { LiveCounter } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// kalp sayacı: her basışta sayı artar, üstünden kendi \"❤ +N\" balonun yükselir\nexport function HeartCounter() {\n  let $likes = 41\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 4 }}>\n    <LiveCounter value={() => $likes} label=\"kişi bu fotoğrafı sevdi\" dotColor=\"brand-pink\"\n      bubble={(d: number) => <b>❤ +{d}</b>} />\n    <Button on:click={() => $likes++}>❤ Sev</Button>\n    <Button variant=\"secondary\" on:click={() => $likes += 10}>❤ ×10</Button>\n  </div>\n}\n"
 		},

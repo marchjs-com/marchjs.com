@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "JoinedDemo.tsx",
-			"code": "export { Joined } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "SearchPill.tsx",
 			"code": "import { Joined, TextInput, Button } from \"march/ui\"\n\n// hap biçiminde arama: alan ve düğme tek bir bütün; köşeler yalnız dışta yuvarlak\nexport function SearchPill() {\n  let $q = \"\"\n  let $sent = \"\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Joined direction=\"horizontal\" radius=\"full\">\n      <TextInput placeholder=\"Şehir ara…\" aria-label=\"Şehir\" value={$q} onInput={(v: string) => $q = v} />\n      <Button variant=\"primary\" on:click={() => $sent = $q}>Ara</Button>\n    </Joined>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>{$sent ? `“${$sent}” aranıyor` : \"Bir şehir yazın\"}</span>\n  </div>\n}\n"
 		},

@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ParallaxDemo.tsx",
-			"code": "export { Parallax } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "StarField.tsx",
 			"code": "import { Parallax } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// yıldız tarlası: üç katman yıldız, imleci gezdirince derinliğe göre kayar; düğme fare izlemenin gücünü değiştirir\nconst Stars = (p: { list: string }) => <div style={{ \"font-size\": \"1.6rem\", \"letter-spacing\": \"3rem\", \"line-height\": \"4rem\", padding: \"2rem\" }} aria-hidden=\"true\">{p.list}</div>\n\nexport function StarField() {\n  let $power = 1\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button variant=\"secondary\" on:click={() => $power = $power >= 3 ? 0 : $power + 1}>Fare gücü: {$power}</Button>\n    {() => { const power = $power; return <Parallax height=\"16rem\" pointer={power} m:theme=\"night\" layers={[\n      { content: <Stars list=\"· · · · · · · · · · · ·\" />, speed: 0.5 },\n      { content: <Stars list=\"✦ ✧ ✦ ✧ ✦ ✧\" />, speed: 0.25 },\n      { content: <Stars list=\"🌙 ⭐ 🪐\" />, speed: -0.15, depth: 90 },\n    ]}>\n      <h3 sx={{ text: \"xl\" }}>Gece gökyüzü</h3>\n    </Parallax> }}\n  </div>\n}\n"
 		},

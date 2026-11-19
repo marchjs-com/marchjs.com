@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ChoicePickerDemo.tsx",
-			"code": "export { ChoicePicker } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "CoffeeSize.tsx",
 			"code": "import { ChoicePicker } from \"march/ui\"\nimport { Icon, coffee } from \"march/icons\"\n\n// kahve boyu: üç kısa seçenek kendiliğinden segmented olur; fincan seçilen boya göre büyür, fiyat da değişir\nconst sizes = [\n  { value: \"sm\", label: \"Küçük\", price: 60, text: \"md\" },\n  { value: \"md\", label: \"Orta\", price: 75, text: \"xl\" },\n  { value: \"lg\", label: \"Büyük\", price: 90, text: \"2xl\" },\n] as const\n\nexport function CoffeeSize() {\n  let $size = \"md\"\n  const cup = () => sizes.find((s) => s.value === $size) ?? sizes[1]\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 3 }}>\n    <ChoicePicker aria-label=\"Kahve boyu\" bind:value={$size} options={sizes} />\n    <span sx={{ text: cup().text, color: \"brand-orange\" }}><Icon of={coffee} /></span>\n    <span sx={{ text: \"bold\" }}>{cup().price} ₺</span>\n  </div>\n}\n"
 		},

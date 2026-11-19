@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "PictureDemo.tsx",
-      "code": "export { Picture } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "Postcard.tsx",
       "code": "import { Picture, Card, Button } from \"march/ui\"\n\n// bir kartpostal: ön yüzde resim, basınca arka yüzde hazır bir düğüm; ikisi de aynı Picture yuvasından geçer\nconst front = { src: \"/media/dusk.jpg\", alt: \"Gün batımında tepeler\", width: 1200, height: 800 }\n\nexport function Postcard() {\n  let $back = false\n  const back = <div sx={{ flex: \"col\", gap: 2, p: 6 }}><strong>Sevgili Deniz,</strong><span>Tepelerde gün batımı harikaydı. Yakında görüşürüz!</span></div>\n  return <Card title=\"Kartpostal\" m:theme={$back ? \"night\" : undefined}>\n    <div sx={{ flex: \"col\", gap: 3 }}>\n      {() => <Picture source={$back ? back as Node : front} fit=\"cover\" />}\n      <Button size=\"sm\" on:click={() => $back = !$back}>{() => ($back ? \"Ön yüzü göster\" : \"Arkasını çevir\")}</Button>\n    </div>\n  </Card>\n}\n"
     },

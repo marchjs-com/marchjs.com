@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ThemeMenuDemo.tsx",
-			"code": "export { ThemeMenu } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "ThemePostcard.tsx",
 			"code": "import { ThemeMenu, Card } from \"march/ui\"\n\n// tema kartpostalı: kart kendi temasıyla çizilir (m:theme); menü yalnız bu kartın temasını seçer, sayfanınki yerinde kalır\nexport function ThemePostcard() {\n  let $theme = \"cream\"\n  return <Card m:theme={$theme}>\n    <div sx={{ flex: \"col\", gap: 2 }}>\n      <span sx={{ text: [\"xl\", \"bold\"] }}>Selam, March!</span>\n      <span sx={{ color: \"muted\" }}>Bu kartpostal \"{$theme}\" temasında yazıldı.</span>\n      <ThemeMenu value={$theme} onChange={(id) => $theme = id} view=\"cards\" current modes={false} accents={false} headings={false} />\n    </div>\n  </Card>\n}\n"
 		},

@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "EmptyDemo.tsx",
-      "code": "export { Empty } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "EmptyPlate.tsx",
       "code": "import { Empty, Button } from \"march/ui\"\n\n// boş tabak: emojili boş durum; \"Yemek ekle\" tabağı doldurur, \"Bitir\" yeniden boşaltır\nconst FOODS = [\"🍕\", \"🥗\", \"🍜\", \"🌮\", \"🍰\"]\n\nexport function EmptyPlate() {\n  let $plate: string[] = []\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    {() => $plate.length\n      ? <div sx={{ flex: [\"row\", \"wrap\"], gap: 2, text: \"xl\" }}>\n          {$plate.join(\" \")}\n          <Button size=\"sm\" variant=\"ghost\" on:click={() => $plate = []}>Bitir</Button>\n        </div>\n      : <Empty icon=\"🍽️\" title=\"Tabak bomboş\" action={<Button variant=\"primary\" on:click={() => $plate = [...$plate, FOODS[0]!]}>Yemek ekle</Button>}>\n          Acıktıysanız bir şeyler ekleyin.\n        </Empty>}\n    {() => $plate.length > 0 && $plate.length < FOODS.length\n      ? <Button size=\"sm\" on:click={() => $plate = [...$plate, FOODS[$plate.length]!]}>Bir tane daha</Button> : null}\n  </div>\n}\n"
     },

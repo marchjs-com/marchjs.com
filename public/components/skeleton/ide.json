@@ -4,11 +4,6 @@
   "sources": [
     {
       "type": "code",
-      "name": "SkeletonDemo.tsx",
-      "code": "export { Skeleton } from \"march/ui\";\n"
-    },
-    {
-      "type": "code",
       "name": "PhotoFrame.tsx",
       "code": "import { Skeleton, Button, Card } from \"march/ui\"\n\n// fotoğraf çerçevesi: \"Çek\" düğmesi iskeleti bir anlığına gösterir, sonra rastgele bir manzara emojisi gelir\nconst VIEWS = [\"🏔️\", \"🌅\", \"🏝️\", \"🌌\", \"🏜️\"]\n\nexport function PhotoFrame() {\n  let $busy = false\n  let $view = \"🏔️\"\n  const shoot = () => { $busy = true; setTimeout(() => { $view = VIEWS[Math.floor(Math.random() * VIEWS.length)]!; $busy = false }, 900) }\n  return <Card title=\"Fotoğraf\">\n    {() => $busy ? <Skeleton block height=\"lg\" colors=\"brand\" /> : <div sx={{ text: \"2xl\", p: 4 }}>{$view}</div>}\n    <Button size=\"sm\" disabled={() => $busy} on:click={shoot}>Çek</Button>\n  </Card>\n}\n"
     },

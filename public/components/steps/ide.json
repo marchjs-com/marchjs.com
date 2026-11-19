@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "StepsDemo.tsx",
-			"code": "export { Steps } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "TeaSteps.tsx",
 			"code": "import { Steps, Button, Card } from \"march/ui\"\nimport { zap, coffee, clock, smile } from \"march/icons\"\n\n// bir bardak çay, dört adım: her basışta bir sonraki adım; sonunda afiyet olsun\nconst TEA = [\n  { title: \"Su kaynasın\", icon: zap },\n  { title: \"Demle\", icon: coffee },\n  { title: \"Beklet\", icon: clock },\n  { title: \"Afiyet\", icon: smile },\n]\n\nexport function TeaSteps() {\n  let $step = 0\n  const $ready = $step >= TEA.length\n  return <Card>\n    <div sx={{ flex: \"col\", gap: 3 }}>\n      <Steps steps={TEA} current={$step} onSelect={(i: number) => $step = i} m:color=\"brand-orange\" />\n      <div sx={{ flex: [\"row\", \"between\"], gap: 2 }}>\n        <span sx={{ text: \"lg\", color: $ready ? \"success\" : \"muted\" }}>{$ready ? \"Çay hazır, afiyet olsun!\" : \"Sıradaki: \" + TEA[$step]?.title}</span>\n        <Button variant=\"primary\" on:click={() => $step = $ready ? 0 : $step + 1}>{$ready ? \"Bir bardak daha\" : \"Sonraki adım\"}</Button>\n      </div>\n    </div>\n  </Card>\n}\n"
 		},

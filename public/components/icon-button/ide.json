@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "IconButtonDemo.tsx",
-			"code": "export { IconButton } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "DayNight.tsx",
 			"code": "import { IconButton, Card } from \"march/ui\"\nimport { sun, moon } from \"march/icons\"\n\n// gece / gündüz anahtarı: tek yuvarlak düğme; basınca ikon, ad ve kartın teması birlikte döner\nexport function DayNight() {\n  let $night = false\n  return <Card m:theme={$night ? \"night\" : \"hadi\"}>\n    <div sx={{ flex: [\"row\", \"center\"], gap: 3 }}>\n      <IconButton shape=\"round\" variant=\"raised\" size=\"lg\" icon={$night ? moon : sun}\n        label={$night ? \"Gündüze geç\" : \"Geceye geç\"} pressed={$night} on:click={() => $night = !$night} />\n      <span sx={{ text: \"lg\", color: $night ? \"brand-blue\" : \"brand-orange\" }}>{$night ? \"İyi geceler\" : \"Günaydın\"}</span>\n    </div>\n  </Card>\n}\n"
 		},

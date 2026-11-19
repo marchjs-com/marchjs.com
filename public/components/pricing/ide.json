@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "PricingDemo.tsx",
-			"code": "export { Pricing } from \"march/landing\";\n"
-		},
-		{
-			"type": "code",
 			"name": "CatFood.tsx",
 			"code": "import { Pricing } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// kedi maması aboneliği: kedi sayısı arttıkça fiyatlar sayaç gibi döner\nexport function CatFood() {\n  let $cats = 1\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n      <Button variant=\"secondary\" on:click={() => $cats = Math.max(1, $cats - 1)}>– Kedi</Button>\n      <span sx={{ text: \"xl\" }}>{\"🐱\".repeat($cats)}</span>\n      <Button variant=\"secondary\" on:click={() => $cats = Math.min(5, $cats + 1)}>+ Kedi</Button>\n    </div>\n    {() => {\n      const cats = $cats\n      return <Pricing currency=\"TRY\" saving=\"1 ay bedava\" plans={[\n      { name: \"Kuru mama\", price: { monthly: 250 * cats, yearly: 230 * cats }, features: [`${cats * 3} kg / ay`, \"Kapıya teslim\"] },\n      { name: \"Gurme\", price: { monthly: 420 * cats, yearly: 380 * cats }, featured: true, badge: \"Miyav!\", features: [`${cats * 3} kg / ay`, \"Haftada 2 yaş mama\", \"Oyuncak sürprizi\"] },\n    ]} />\n    }}\n  </div>\n}\n"
 		},

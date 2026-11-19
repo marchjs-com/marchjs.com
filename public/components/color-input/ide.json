@@ -4,11 +4,6 @@
 	"sources": [
 		{
 			"type": "code",
-			"name": "ColorInputDemo.tsx",
-			"code": "export { ColorInput } from \"march/ui\";\n"
-		},
-		{
-			"type": "code",
 			"name": "GradientMixer.tsx",
 			"code": "import { ColorInput, Swatch } from \"march/ui\"\n\n// iki renk seç: ortadaki daire ikisinden bir gradyan çizer, altında kopyalanacak CSS satırı\nexport function GradientMixer() {\n  let $from = \"#f2801f\"\n  let $to = \"#a3338c\"\n  const $css = `linear-gradient(135deg, ${$from}, ${$to})`\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div sx={{ flex: [\"row\", \"center\", \"wrap\"], gap: 3 }}>\n      <ColorInput bind:value={$from} swatchLabel=\"Başlangıç rengi\" aria-label=\"Başlangıç kodu\" />\n      <Swatch color={$css} shape=\"circle\" size=\"lg\" label=\"Gradyan\" />\n      <ColorInput bind:value={$to} swatchLabel=\"Bitiş rengi\" aria-label=\"Bitiş kodu\" />\n    </div>\n    <code sx={{ text: [\"sm\", \"mono\"], color: \"muted\" }}>background: {$css};</code>\n  </div>\n}\n"
 		},
