@@ -11,7 +11,7 @@ import { appUrl } from "march/base";
 type Tone = "success" | "warn" | "error" | "info" | "muted";
 /** Where the build reports (the Console panel: a read-only Terminal). */
 export type BuildLog = (text: string, tone?: Tone) => void;
-interface MarchCompile { (source: string, opts: { filename: string }): { code: string; keys: string[]; texts: string[]; warnings: string[] } }
+interface MarchCompile { (source: string, opts: { filename: string; sourceMarks?: boolean; i18n?: boolean }): { code: string; keys: string[]; texts: string[]; warnings: string[] } }
 interface Message { text: string; location?: { file: string; line: number; column: number } | null }
 interface Esbuild {
   initialize(o: { wasmURL: string; worker: boolean }): Promise<void>;
@@ -68,7 +68,9 @@ export function createBuilder(log: BuildLog) {
   }
 
   /** Bundle `entry` (a path in `files`) with the files it imports. */
-  async function build(files: Record<string, string>, entry: string): Promise<BuildResult | null> {
+  /** `i18n: false`: what is shown is not passed through _tr (an exported page whose March may not have it yet). */
+  async function build(files: Record<string, string>, entry: string, opts: { i18n?: boolean } = {}): Promise<BuildResult | null> {
+    const i18n = opts.i18n !== false;
     const n = ++run;
     let t: { compile: MarchCompile; esbuild: Esbuild };
     try { t = await load(); } catch (err) { tools = null; say(`Derleme araçları yüklenemedi: ${String((err as Error)?.message ?? err)}`, "error"); return null; }
@@ -88,7 +90,7 @@ export function createBuilder(log: BuildLog) {
           if (source === undefined) return { errors: [{ text: `Dosya yok: ${a.path}` }] };
           const t1 = performance.now();
           try {
-            const r = compile(source, { filename: a.path, sourceMarks: true });
+            const r = compile(source, { filename: a.path, sourceMarks: true, i18n });
             for (const x of [...r.texts, ...r.keys]) found.add(x);
             modules[a.path] = r.code;
             say(`✓ ${a.path} · ${ms(t1)}`, "success");
@@ -107,7 +109,7 @@ export function createBuilder(log: BuildLog) {
       for (const o of Object.values(out.metafile?.outputs ?? {})) for (const [k, v] of Object.entries(o.inputs)) inputs[k.replace(/^files:/, "")] = (inputs[k.replace(/^files:/, "")] ?? 0) + v.bytesInOutput;
       const r = { ok: true, code, ...(map ? { map } : {}), inputs, texts: [...found].sort((a, b) => a.localeCompare(b, "tr")), modules, at: Date.now() };
       // kept even when another tab came to the front meanwhile: showing this one again needs no build
-      memo.set(keyOf(files, entry), r);
+      if (i18n) memo.set(keyOf(files, entry), r);
       if (n !== run) return null;
       for (const w of out.warnings) say(`⚠ ${where(w)}${w.text}`, "warn");
       texts.set(r.texts);

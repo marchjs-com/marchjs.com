@@ -6,7 +6,7 @@ import {
   safeUrl, registerTransition, If, Else, For, Switch, Match, Try, Await, Dynamic, setFlipHook, Portal, PortalTarget,
   portalTarget, openLayer, layers, render, define, pipe, applyPipe, toDate, t, locale, messages, missing,
   setFallbackLocale, sx, sxValue, SX, version, extend, intercept, inside, partOf, defineExtension, withExtensions, Extensions, extensions,
-  generator, _gen,
+  generator, _gen, _tr, _trf, setLocale,
 } from "march";
 import { Button, Badge, Segmented } from "march/ui";
 import { examples } from "./types.ts";
@@ -92,6 +92,24 @@ function* List(p) { … }   // → function List(p) { return _gen(_$gList(p), Li
       run: () => {
         const it = (function* () { yield "bir · "; yield "iki · "; yield "üç" })()
         return <p>{_gen(it, { yields: "append" })}</p>
+      },
+    },
+    _tr: {
+      code: `// written by the compiler in an i18n build, not by hand:
+<p>{m.label}</p>   // → <p>{_tr(m.label)}</p>: shown in the active locale; m.label stays a string`,
+      run: () => {
+        messages("en", { "Enerjik": "Energetic" })
+        const label = "Enerjik"
+        return <Row><p>{_tr(label)}</p><Button onClick={() => setLocale(locale() === "en" ? "tr" : "en")}>Dili değiştir</Button></Row>
+      },
+    },
+    _trf: {
+      code: `// written by the compiler in an i18n build, not by hand:
+<b>Gönder ({$sent})</b>   // → <b>{_trf("Gönder ({0})", [() => $sent])}</b>: the value where the translation puts it`,
+      run: () => {
+        messages("en", { "Gönder ({0})": "Sent {0} times" })
+        let $n = 2
+        return <Row><p>{_trf("Gönder ({0})", [() => $n])}</p><Button onClick={() => $n++}>+1</Button><Button onClick={() => setLocale(locale() === "en" ? "tr" : "en")}>Dili değiştir</Button></Row>
       },
     },
     extend: {

@@ -1055,9 +1055,14 @@ const exportSizes = signal<ExportSizes | null>(null)
 const loadSizes = (): void => { sizesP ??= fetch(appUrl("export-sizes.json")).then((x) => (x.ok ? x.json() as Promise<ExportSizes> : null)).catch(() => null).then((s) => { exportSizes.set(s); return s }) }
 // the March imports of the files the last build bundled (not every tab)
 const bundleImports = computed((): MarchImport[] => marchImports((bundleOwn()?.files ?? []).map(([f]) => saved.get(f)?.() ?? "")))
+/** What the last build was made of (the export builds it again without i18n: the page's March is the CDN's). */
+let lastInputs: Record<string, string> | null = null
 const showOutput = async (): Promise<boolean> => {
-  const b = untrack(lastBuild)
-  if (!b) return false
+  if (!untrack(lastBuild) || !lastInputs) return false
+  // the exported page loads March from cdn.marchjs.com, which may not have _tr yet: its build shows the code's own
+  // texts and its languages are put in by the page (lang/<code>.json)
+  const b = await builder.build(lastInputs, ENTRY, { i18n: false })
+  if (!b?.ok) return false
   await openBuildOutput({ build: b, name: (untrack(builtFile) || untrack(active)).replace(/\.[jt]sx?$/, ""), entry: ENTRY, js: builder.js,
     // every language added in lang.json, as its file (the texts not translated yet keep the code's own)
     languages: untrack(() => Object.fromEntries(Object.keys(langs()).map((c) => [c, langFile(c)]))) })
@@ -1125,6 +1130,7 @@ const buildNow = async () => {
     catch (e) { print(`[${stamp()}] ✖ Hata ayıklama hazırlanamadı: ${String((e as Error)?.message ?? e)}`, "error") }
   }
   const now = untrack(() => ({ [path]: withData(src), [ENTRY]: entrySource() }))
+  lastInputs = now
   const r = await builder.build(now, ENTRY)
   if (r?.ok) { batch(() => { lastBuild.set(r); builtFile.set(path) }); void measureBundle(r); await render(r.code) }
   if ([...files.keys()].some(isTestFile)) void runAllTests()
@@ -1443,7 +1449,7 @@ const langPanel = () => <div class="sc-lang">
 let previewEl: HTMLElement | null = null
 type Parts = Record<string, Record<string, unknown>>
 let tsSvc: TypeScriptService | null = null
-type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(dict: Record<string, string> | null): void; onTree(cb: () => void): void; onConsole(cb: (e: ConsoleEvent) => void): void; sourceAt(node: Node | null): { file: string; line: number } | null; onProbes(cb: (p: Probe[], dom: [string, number][]) => void, root: Element): void; resetProbes(): void; runTests(code: string): Promise<TestResult[]>; elementsAt(root: Element, file: string, line: number): Element[]; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void }
+type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(code: string | null, dict: Record<string, string> | null): void; onTree(cb: () => void): void; onConsole(cb: (e: ConsoleEvent) => void): void; sourceAt(node: Node | null): { file: string; line: number } | null; onProbes(cb: (p: Probe[], dom: [string, number][]) => void, root: Element): void; resetProbes(): void; runTests(code: string): Promise<TestResult[]>; elementsAt(root: Element, file: string, line: number): Element[]; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void }
 let runtime: Promise<Runtime> | null = null, runtimeNow: Runtime | null = null
 const loadRuntime = () => (runtime ??= (async () => {
   // its components' stylesheet, once
@@ -1834,7 +1840,7 @@ export default function ComponentLayout(props: { ide: () => IdeJson; id: () => s
     scheduleBuild(350)
   })
   // the preview's language: its file, or the code's own texts
-  effect(() => { const code = previewLang(), file = code ? langFile(code) : null; void runtime?.then((r) => r.setLanguage(file)) })
+  effect(() => { const code = previewLang(), file = code ? langFile(code) : null; void runtime?.then((r) => r.setLanguage(code || null, file)) })
   // an instance's own values: given to that instance only (the runtime draws again)
   effect(() => {
     const map = Object.fromEntries(Object.entries(valuesByInst()).map(([k, v]) => [k, propsOf(optsOf(nameOfKey(k)), v, true)]).filter(([, p]) => Object.keys(p as object).length))

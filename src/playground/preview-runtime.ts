@@ -4,6 +4,7 @@
 // into this runtime's own modules; the module is imported from a blob: URL (the showcase's CSP allows script-src
 // blob: — the showcase is served from its own domain, with no sessions).
 import * as core from "../../../../src/index.ts";
+import { dicts } from "../../../../src/core/i18n.ts";
 import * as ui from "../../../../src/ui/index.ts";
 import * as icons from "../../../../src/icons/index.ts";
 import * as theme from "../../../../src/theme/index.ts";
@@ -319,141 +320,33 @@ const watchData = (): void => {
     return dispose;
   });
 };
-// the language: the drawn texts (and title / placeholder / aria-label / alt) that are keys of the chosen language's
-// dictionary are written in it; what is drawn later is translated as it comes. A switch (to another language or back
-// to the code's own) happens on what is drawn, nothing is drawn again: each node keeps its own text (what the code
-// wrote), so the components keep their state.
-let dict: Record<string, string> | null = null;
-/** A text node's own text (what the code wrote) and what the translator last wrote into it. */
-const ownText = new WeakMap<Node, string>(), wroteText = new WeakMap<Node, string>();
-/** An element's own attribute texts and what the translator last wrote. */
-const ownAttr = new WeakMap<Element, Map<string, string>>(), wroteAttr = new WeakMap<Element, Map<string, string>>();
-/** The sentences written again (placeholders): the nodes as the code drew them, and the ones the translation added. */
-let rewritten: { parent: Node; own: Node[]; added: Node[] }[] = [];
-const ATTRS = ["title", "placeholder", "aria-label", "alt", "label"];
-// a text with placeholders (`Gönder ({0})`, written by the compiler from `Gönder ({$sent})`): its words and the values
-// between them stand in several text nodes side by side (and comment anchors); the run that reads like it is written
-// again as the translation says (`{0} kez gönderildi`): the words as new text, the values' own nodes moved to their
-// places (they stay the ones the code updates, so a value that changes later shows in the translated sentence)
-interface Pattern { re: RegExp; words: string[]; order: number[]; to: string }
-let patterns: Pattern[] = [];
-const escapeRe = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const patternsOf = (d: Record<string, string>): Pattern[] => Object.entries(d).filter(([k, v]) => /\{\d+\}/.test(k) && v !== k).map(([k, to]) => {
-  const words = k.split(/\{\d+\}/);
-  return { re: new RegExp(`^${words.map(escapeRe).join("([\\s\\S]*?)")}$`), words, order: [...k.matchAll(/\{(\d+)\}/g)].map((m) => Number(m[1])), to };
-});
-const translateRun = (run: Node[]): void => {
-  const texts = run.filter((n) => n.nodeType === 3), all = texts.map((n) => n.nodeValue ?? "").join("");
-  const said = all.trim();
-  if (!said) return;
-  const p = patterns.find((x) => x.re.test(said));
-  if (!p) return;
-  // which text nodes are the key's words (in order) and which are the values (the rest, in the key's order)
-  const values: Node[] = [];
-  let w = 0;
-  for (const n of texts) { const v = (n.nodeValue ?? "").trim(); if (w < p.words.length && v && p.words[w]!.trim() === v) w++; else if (v) values.push(n); }
-  const slot = new Map<number, Node>(); p.order.forEach((i, at) => { const n = values[at]; if (n) slot.set(i, n); });
-  const first = run[0]!, parent = first.parentNode;
-  if (!parent) return;
-  const out: Node[] = [];
-  for (const piece of p.to.split(/(\{\d+\})/)) {
-    const m = /^\{(\d+)\}$/.exec(piece);
-    if (m) { const n = slot.get(Number(m[1])); if (n) out.push(n); } else if (piece) out.push(document.createTextNode(piece));
-  }
-  // remembered, to put the code's own sentence back on the next switch
-  rewritten.push({ parent, own: [...run], added: out.filter((n) => !run.includes(n)) });
-  for (const n of out) parent.insertBefore(n, first);
-  for (const n of texts) if (!out.includes(n)) n.parentNode?.removeChild(n);
-};
-/** The text a node shows in the language: its own text when the translator wrote the current one, else what the code
- *  just wrote (that becomes its own). */
-const textOf = (cur: string, own: string | undefined, wrote: string | undefined): string => (own !== undefined && wrote === cur ? own : cur);
-const translateAttrs = (el: Element, d: Record<string, string>): void => {
-  let own = ownAttr.get(el), wrote = wroteAttr.get(el);
-  for (const a of ATTRS) {
-    const cur = el.getAttribute(a);
-    if (cur == null) continue;
-    const base = textOf(cur, own?.get(a), wrote?.get(a)), key = base.trim(), to = key ? d[key] : undefined;
-    const next = to !== undefined ? base.replace(key, to) : base;
-    if (!own) ownAttr.set(el, (own = new Map()));
-    if (!wrote) wroteAttr.set(el, (wrote = new Map()));
-    own.set(a, base); wrote.set(a, next);
-    if (next !== cur) el.setAttribute(a, next);
-  }
-};
-const translate = (root: Node): void => {
-  const d = dict ?? {};
-  // the runs of text (with their comment anchors) under each element, read as one sentence
-  if (dict && patterns.length) {
-    const els = root.nodeType === 1 ? [root as Element, ...(root as Element).querySelectorAll("*")] : root.parentElement ? [root.parentElement] : [];
-    for (const el of els) {
-      let run: Node[] = [];
-      const end = (): void => { if (run.some((n) => n.nodeType === 3)) translateRun(run); run = []; };
-      for (const n of [...el.childNodes]) { if (n.nodeType === 3 || n.nodeType === 8) run.push(n); else end(); }
-      end();
-    }
-  }
-  const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
-  for (let n: Node | null = root; n; n = walk.nextNode()) {
-    if (n.nodeType === 3) {
-      const cur = n.nodeValue ?? "", base = textOf(cur, ownText.get(n), wroteText.get(n)), key = base.trim(), to = key ? d[key] : undefined;
-      const next = to !== undefined ? base.replace(key, to) : base;
-      ownText.set(n, base); wroteText.set(n, next);
-      if (next !== cur) n.nodeValue = next;
-    } else if (n.nodeType === 1) translateAttrs(n as Element, d);
-  }
-};
-/** The code's own sentences put back under `el` (the ones the last language wrote again). */
-const restoreSentences = (el: Node): void => {
-  const keep: typeof rewritten = [];
-  for (const r of rewritten.reverse()) {
-    if (!r.parent.isConnected) continue;
-    if (!el.contains(r.parent)) { keep.push(r); continue; }
-    const anchor = r.added.find((n) => n.parentNode === r.parent) ?? r.own.find((n) => n.parentNode === r.parent);
-    if (!anchor) continue;
-    for (const n of r.own) r.parent.insertBefore(n, anchor);
-    for (const n of r.added) n.parentNode?.removeChild(n);
-  }
-  rewritten = keep.reverse();
-};
-const watchers = new Map<HTMLElement, MutationObserver>();
-const follow = (el: HTMLElement): void => {
-  watchers.get(el)?.disconnect();
-  const mo = new MutationObserver((list) => {
-    for (const m of list) {
-      if (m.type === "characterData") translate(m.target);
-      else if (m.type === "attributes") translateAttrs(m.target as Element, dict ?? {});
-      else m.addedNodes.forEach((n) => translate(n));
-    }
-    mo.takeRecords(); // what the translator itself just wrote
-  });
-  mo.observe(el, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ATTRS });
-  watchers.set(el, mo);
-  translate(el);
-  mo.takeRecords();
-};
-/** Another language for what is drawn under `el`: the code's own sentences back, every text and attribute written in
- *  the language (or its own); then followed as it changes. Nothing is drawn again. */
-const relabel = (el: HTMLElement): void => {
-  watchers.get(el)?.disconnect();
-  restoreSentences(el);
-  translate(el);
-  if (dict) follow(el); else watchers.delete(el);
-};
+// the language: the code is built with i18n (what it shows goes through March's _tr), so a language is March's own:
+// its texts are registered as that locale's messages and the locale is switched. Only the shown texts are written
+// again; nothing is drawn again and the components keep their state. The default is the code's own texts (the page's
+// own locale, whose library texts stay as they are).
+const ownLocale = core.locale.peek();
+let userTexts: { code: string; keys: string[] } | null = null;
 let lastProps: Record<string, Props> = {}, lastParts: Record<string, Parts> = {};
-/** The preview's language: its dictionary (text → text), or null for the code's own texts. What is drawn is written in
- *  it in place: the components are not drawn again and keep their state. */
-export function setLanguage(next: Record<string, string> | null): void {
-  dict = next && Object.keys(next).length ? next : null;
-  patterns = dict ? patternsOf(dict) : [];
-  if (!last) return;
-  for (const [, cell] of last.cells) relabel(cell.el);
+/** The preview's language: its code and dictionary (the code's text → its translation), or null for the code's own
+ *  texts. What is shown is written in it in place: the components keep their state. */
+export function setLanguage(code: string | null, next: Record<string, string> | null): void {
+  // the previous language's texts go (a text removed from its file must not stay translated)
+  if (userTexts) {
+    const d = dicts.get(userTexts.code);
+    if (d) for (const k of userTexts.keys) delete d[k];
+    core.messages(userTexts.code, {}); // what is shown follows (also when the locale stays the same)
+    userTexts = null;
+  }
+  if (!code || !next) { core.locale.set(ownLocale); return; }
+  core.messages(code, next);
+  userTexts = { code, keys: Object.keys(next) };
+  core.locale.set(code);
 }
 /** Send new props (and parts) to the rendered components, by name (the Properties panel calls it on every change). */
 export function setProps(props: Record<string, Props>, parts: Record<string, Parts> = {}): void {
   lastProps = props; lastParts = parts;
   if (!last) return;
-  for (const [name, cell] of last.cells) { cell.dispose(); cell.dispose = draw(cell.C, cell.el, props[name] ?? {}, parts[name] ?? {}, name); if (dict) follow(cell.el); else watchers.get(cell.el)?.disconnect(); }
+  for (const [name, cell] of last.cells) { cell.dispose(); cell.dispose = draw(cell.C, cell.el, props[name] ?? {}, parts[name] ?? {}, name); }
 }
 /**
  * Run `code` (an ES module) and render every component it exports (a name with a capital letter) into a cell of
@@ -491,7 +384,6 @@ export async function run(code: string, el: HTMLElement, props: Record<string, P
     box.append(tag, stage);
     el.append(box);
     cells.set(name, { C, el: stage, dispose: draw(C, stage, props[name] ?? {}, parts[name] ?? {}, name) });
-    if (dict) follow(stage);
   }
   // what the code puts on "the page" stays in the preview: the preview is an overlay scope (its fixed layers cover it,
   // not the page) and has a toast stack of its own (toast() then opens none on the page)
@@ -671,8 +563,6 @@ export function stop(): void {
   dataStop?.(); dataStop = null;
   // the preview's toasts go with it
   ui.toast.clear(); toastStop?.(); toastStop = null;
-  for (const mo of watchers.values()) mo.disconnect();
-  watchers.clear();
   if (!last) return;
   for (const cell of last.cells.values()) cell.dispose();
   URL.revokeObjectURL(last.url);
