@@ -5,7 +5,7 @@
 // is chosen in the tree. The code is esbuild's print of it (laid out the same way every time). The toolbar has one
 // button: download every file as a zip.
 import "./output.css";
-import { signal, computed, effect, untrack, version } from "march";
+import { signal, computed, effect, untrack } from "march";
 import { openDialog, Tree, Button } from "march/ui";
 import { AppUI, codeEditorPlugin, groups, row, tabs, type AppPanel, type DockApi, type Preset } from "march/app-ui";
 import { fileText, folder, download } from "march/icons";
@@ -40,37 +40,8 @@ for (const [name, C] of Object.entries(app)) {
   render(() => h(C, {}), box);
 }
 `;
-// with languages: the chosen one's file is loaded and its texts put in, as the playground's preview does (the JSX
-// texts and the read attributes, also what is drawn later); t`` keys go through messages / setLocale
-const LANGUAGE = `
-// a text or a read attribute that is a key of the file takes its translation
-const ATTRS = ["title", "placeholder", "aria-label", "alt", "label"];
-const translate = (node) => {
-  const walk = document.createTreeWalker(node, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
-  for (let n = node; n; n = walk.nextNode()) {
-    if (n.nodeType === 3) {
-      const key = n.nodeValue.trim(), to = dict[key];
-      if (key && to !== undefined && to !== key) n.nodeValue = n.nodeValue.replace(key, to);
-    } else if (n.nodeType === 1) {
-      for (const a of ATTRS) {
-        const v = n.getAttribute(a)?.trim(), to = v ? dict[v] : undefined;
-        if (v && to !== undefined && to !== v) n.setAttribute(a, to);
-      }
-    }
-  }
-};
-`;
-const FOLLOW = `
-if (dict) {
-  translate(root);
-  new MutationObserver((list) => {
-    for (const m of list) {
-      if (m.type === "characterData") translate(m.target);
-      else m.addedNodes.forEach(translate);
-    }
-  }).observe(root, { childList: true, subtree: true, characterData: true });
-}
-`;
+// with languages: the chosen one's file becomes the locale's messages: the code is built with i18n (what it shows goes
+// through March's _tr), so the texts follow the locale as in the playground's preview
 /** The page's start: every exported component in its own section; with languages, the one asked for (?lang=de, else
  * the browser's when there is a file for it) from lang/<code>.json. */
 function startFile(codes: readonly string[]): string {
@@ -91,10 +62,11 @@ if (lang) {
   document.documentElement.lang = lang;
 }
 `;
-  return head + pick + LANGUAGE + DRAW + FOLLOW;
+  return head + pick + DRAW;
 }
-/** Where the page takes MarchJS from: this version on cdn.marchjs.com (tools/build-cdn.js). */
-const CDN = `https://cdn.marchjs.com/${version}`;
+/** Where the page takes MarchJS from: the latest release on cdn.marchjs.com (tools/build-cdn.js), so an exported page
+ *  has what the playground built it with (_tr…) without waiting for its own version. */
+const CDN = "https://cdn.marchjs.com/latest";
 /** A stylesheet import (`import "march/css/props.css"`) leaves: a browser does not import CSS as a module, march.css has it. */
 const cssFree = (js: string): string => js.replace(/^\s*import\s*["'][^"']+\.css["'];?\s*\n/gm, "");
 /** The files of the output, path → text: the page, its start, the bundle, each compiled module, the texts and every
@@ -109,7 +81,7 @@ export async function outputFiles(o: OutputSource): Promise<Record<string, strin
     return [`src/${base(p)}.js`, cssFree(js)];
   }));
   const start = release && o.minify ? await o.minify(startFile(codes)) : startFile(codes), bundle = cssFree(b.code);
-  // every march module the page imports, from cdn.marchjs.com at this version
+  // every march module the page imports, from cdn.marchjs.com (its latest release)
   const specs = [...new Set([start, bundle, ...modules.map(([, js]) => js)].flatMap((js) => [...js.matchAll(/from\s*["'](march(?:\/[\w./-]+)?)["']/g)].map((m) => m[1] as string)))].sort();
   const imports = Object.fromEntries(specs.map((s) => [s, `${CDN}/${s === "march" ? "march" : s.slice("march/".length)}.js`]));
   const out: Record<string, string> = {
@@ -119,7 +91,7 @@ export async function outputFiles(o: OutputSource): Promise<Record<string, strin
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>${name}</title>
-    <!-- MarchJS ${version} from cdn.marchjs.com: every style in march.css, the modules by the import map -->
+    <!-- MarchJS from cdn.marchjs.com/latest: every style in march.css, the modules by the import map -->
     <link rel="stylesheet" href="${CDN}/march.css" />
     <script type="importmap">
 ${JSON.stringify({ imports }, null, 2).replace(/^/gm, "      ")}

@@ -1066,13 +1066,12 @@ const exportSizes = signal<ExportSizes | null>(null)
 const loadSizes = (): void => { sizesP ??= fetch(appUrl("export-sizes.json")).then((x) => (x.ok ? x.json() as Promise<ExportSizes> : null)).catch(() => null).then((s) => { exportSizes.set(s); return s }) }
 // the March imports of the files the last build bundled (not every tab)
 const bundleImports = computed((): MarchImport[] => marchImports((bundleOwn()?.files ?? []).map(([f]) => saved.get(f)?.() ?? "")))
-/** What the last build was made of (the export builds it again without i18n: the page's March is the CDN's). */
+/** What the last build was made of (the export builds it again in the chosen mode). */
 let lastInputs: Record<string, string> | null = null
 const showOutput = async (): Promise<boolean> => {
   if (!untrack(lastBuild) || !lastInputs) return false
-  // the exported page loads March from cdn.marchjs.com, which may not have _tr yet: its build shows the code's own
-  // texts and its languages are put in by the page (lang/<code>.json)
-  const b = await builder.build(lastInputs, ENTRY, { i18n: false, release: untrack(buildMode) === "release" })
+  // the exported page's build: the same as the preview's (i18n: its languages are March's messages), in the chosen mode
+  const b = await builder.build(lastInputs, ENTRY, { release: untrack(buildMode) === "release" })
   if (!b?.ok) return false
   await openBuildOutput({ build: b, name: (untrack(builtFile) || untrack(active)).replace(/\.[jt]sx?$/, ""), entry: ENTRY, js: builder.js,
     release: untrack(buildMode) === "release", minify: builder.minify,
