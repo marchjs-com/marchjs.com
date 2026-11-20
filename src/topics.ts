@@ -58,7 +58,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "row-tools", title: "Satır araçları", name: "RowTools", desc: "Düzenlenebilir listede satır araçları: yukarı, aşağı, sil; uçlarda kapanır.", group: "Form kurma" },
   ],
   "/data": [
-    { slug: "table", title: "Tablo", desc: "10.000 satır; sıralama, sütunlar, seçim, toplu işlem.", group: "Tablo ve listeler" },
+    { slug: "table", title: "Tablo", name: "Table", desc: "10.000 satır; sıralama, sütunlar, seçim, toplu işlem.", group: "Tablo ve listeler" },
     { slug: "tree", title: "Ağaç", name: "Tree", desc: "Genişleyen ağaç; ok tuşlarıyla gezinme.", group: "Tablo ve listeler" },
     { slug: "kanban", title: "Kanban", name: "Kanban", desc: "Sürükle bırak pano; klavyeyle taşıma.", group: "Tablo ve listeler" },
     { slug: "timeline", title: "Zaman akışı", name: "Timeline", desc: "Olaylar sırayla, tonlu noktalar.", group: "Tablo ve listeler" },

@@ -363,6 +363,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Bir halkaya dokunun.`,
   // examples/showcase/public/components/swatch/ide.json
   t`Tıklanır renk ya da gradyan örneği, dama zemini.`,
+  // examples/showcase/public/components/table/ide.json
+  t`10.000 satır; sıralama, sütunlar, seçim, toplu işlem.`,
   // examples/showcase/public/components/tabs/ide.json
   t`Sekmeli paneller.`,
   // examples/showcase/public/components/terminal/ide.json
