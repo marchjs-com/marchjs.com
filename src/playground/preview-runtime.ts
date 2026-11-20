@@ -554,6 +554,9 @@ const HIERARCHY = core.defineExtension({
  * bundle's function names are shortened. A test that reads the path turns on an owner per instance. */
 const watchTree = (): void => {
   core.extensions.name(ui as Record<string, unknown>);
+  // the components outside the ui barrel (march/components/<folder>, march/landing) are named too: else the Hierarchy
+  // shows their minified names and Properties never reaches their instances
+  for (const [k, m] of Object.entries(MODULES)) if (k.startsWith("march/components/") || k === "march/landing") core.extensions.name(m as Record<string, unknown>);
   core.extend({ test: (_c: unknown, _i: unknown, path: readonly unknown[]) => path.length >= 0 }, HIERARCHY);
 };
 watchTree();
