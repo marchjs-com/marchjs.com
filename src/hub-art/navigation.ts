@@ -4,10 +4,6 @@ import type { ArtSet } from "./types.ts";
 export const art: ArtSet = {
   // A persistent layout (side links), a dashed outlet and a modal route over it.
   routing: [["box", 10, 8, 130, 64, 8], ["path", "M40 8v64", { o: 0.3, w: 1 }], ["ln", 16, 18, 18, { o: 0.7 }], ["ln", 16, 30, 18], ["ln", 16, 42, 18], ["box", 48, 16, 84, 48, 6, { dash: true, o: 0.6 }], ["box", 66, 28, 50, 28, 6, { mv: { y: -5 } }], ["ln", 74, 35, 30, { o: 0.7, mv: { y: -5 } }], ["ln", 74, 45, 20, { mv: { y: -5 } }]],
-  // A menu with a section label, an active row, count badges and a starred row.
-  "admin-sidebar": [["box", 32, 6, 86, 68, 8], ["ln", 42, 13, 26], ["fill", 38, 22, 74, 13, 4, { o: 0.18 }], ["ln", 44, 26, 34, { o: 0.8 }], ["fill", 94, 24, 13, 9, 4.5, { color: "orange", mv: { scale: 1.2 } }], ["ln", 44, 42, 40], ["shape", "m48 52.5 1.7 3.5 3.8.5-2.8 2.7.7 3.8-3.4-1.8-3.4 1.8.7-3.8-2.8-2.7 3.8-.5z", { color: "gold" }], ["ln", 58, 56, 30], ["fill", 94, 54, 13, 9, 4.5, { o: 0.3 }]],
-  // An icon rail, a menu column and its edge with a grip that is dragged wider.
-  "resizable-sidebar": [["box", 10, 8, 130, 64, 8], ["dot", 22, 20, 4], ["dot", 22, 34, 4, { o: 0.35 }], ["dot", 22, 48, 4, { o: 0.35 }], ["path", "M34 8v64", { o: 0.3, w: 1 }], ["ln", 42, 18, 30, { o: 0.7 }], ["ln", 42, 30, 24], ["ln", 42, 42, 28], ["path", "M84 8v64", { mv: { x: 12 } }], ["fill", 81, 31, 6, 18, 3, { mv: { x: 12 } }]],
   // An open category with nested pages and a collapsed one; the active page changes.
   "nav-sidebar": [["box", 32, 6, 86, 68, 8], ["path", "m40 15 4 4 4-4"], ["ln", 54, 14.5, 36, { o: 0.7 }], ["path", "M44 24v24", { o: 0.3, w: 1 }], ["fill", 50, 36.5, 62, 12, 4, { o: 0.18, mv: { y: -12.5 } }], ["ln", 54, 27.5, 44], ["ln", 54, 40, 36, { o: 0.6 }], ["path", "m42 56 4 4-4 4"], ["ln", 54, 57.5, 30, { o: 0.7 }]],
   // Pinned pages as tiles (one with a pin) above a recently opened row.

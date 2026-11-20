@@ -1,6 +1,6 @@
 // Forms: form from a schema + validation, the choice looks side by side, then one card per input (src/components/forms/<name>/: demo, Playground, Code) and the wizard.
 import { schema } from "march/schema";
-import { Form, Field, Checkbox, Toggle, RadioGroup, CheckboxGroup, Slider, ColorInput, Rating, toast, Card } from "march/ui";
+import { Form, Checkbox, RadioGroup, CheckboxGroup, toast, Card } from "march/ui";
 import { users, zap, shieldCheck } from "march/icons";
 import type { ColorToken } from "march/theme";
 import { shapesFor } from "march/ui";
@@ -21,10 +21,6 @@ const Signup = schema({
   interests: { type: "multi", label: "İlgi alanları", options: ["Tasarım", "Mühendislik", "Satış", "Destek"] },
   newsletter: { type: "bool", label: "Ürün haberlerini gönder", control: "switch" },
 })
-
-const CITIES = ["İstanbul", "Ankara", "İzmir", "Bursa", "Antalya", "Konya", "Adana", "Gaziantep", "Kayseri", "Eskişehir", "Trabzon", "Samsun"].map((c) => ({ value: c, label: c }))
-
-
 
 const DAYS = [{ value: "mon", label: "Pzt" }, { value: "tue", label: "Sal" }, { value: "wed", label: "Çar" }, { value: "thu", label: "Per" }, { value: "fri", label: "Cum" }]
 const PLANS = [
@@ -53,11 +49,6 @@ export default function Forms(props: { params?: { rest?: string } }) {
   let $chBrand = false
   let $plan = "team"
   let $partial = true
-  let $agree = true
-  let $notify = true
-  let $vol = 64
-  let $color = "#f2801f"
-  let $stars = 4
   const RENDER: Record<string, () => unknown> = {
     "row-tools": () => <ComponentDemo folder="forms/row-tools" title="RowTools: satır araçları" desc="Düzenlenebilir bir listenin satır sonundaki araçlar: yukarı taşı, aşağı taşı, sil. İlk satırda yukarı, son satırda aşağı kapanır; araçların alt kümesi, adları ve ikonları değişir." />,
     "choice-variants": () => <>
@@ -109,14 +100,6 @@ seats: { type: "int", min: 2, when: (v) => v.plan === "team" },
           toast(`Hoş geldin, ${v.name}!`, { kind: "success" })
         }} />
     </Card>
-  </Demo>,
-    "together": () => <Demo title="Bir arada: anahtarlar, kaydırıcı, renk, puan" desc="Toggle, Checkbox, Slider, ColorInput ve Rating aynı Field düzeninde (Rating ← → ile değişir). Her girişin kendi kartı aşağıda.">
-    <Toggle bind:value={$notify} label="Anlık bildirimler" />
-    <Checkbox bind:value={$agree} label="Kullanım koşullarını okudum" />
-    <Field label={() => `Ses: ${$vol}`}><Slider bind:value={$vol} min={0} max={100} /></Field>
-    <Field label="Marka rengi"><ColorInput bind:value={$color} /></Field>
-    <Field label="Puan" group><Rating bind:value={$stars} size="lg" /></Field>
-    <p class="m-muted">{() => `${$stars} yıldız · bildirim ${$notify ? "açık" : "kapalı"} · ${$agree ? "onaylandı" : "onay bekliyor"}`}</p>
   </Demo>,
     "text-input": () => <ComponentDemo folder="forms/text-input" />,
     "search-box": () => <ComponentDemo folder="forms/search-box" />,

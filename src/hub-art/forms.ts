@@ -122,13 +122,6 @@ export const art: ArtSet = {
     ["shape", star(21, 40, 12)], ["shape", star(48, 40, 12)], ["shape", star(75, 40, 12)],
     ["shape", star(102, 40, 12), { mv: { scale: 1.2 } }], ["path", star(129, 40, 12), { o: 0.5, w: 1.4 }],
   ],
-  // A switch, a slider, colours and stars on one panel.
-  together: [
-    ["fill", 16, 12, 28, 14, 7], ["box", 31, 13, 12, 12, 6, { mv: { x: -14 } }],
-    ["fill", 56, 17, 78, 4, 2, { o: 0.2 }], ["fill", 56, 17, 42, 4, 2], ["dot", 98, 19, 5],
-    ["dot", 22, 41, 6, { color: "orange" }], ["dot", 38, 41, 6, { color: "blue" }], ["dot", 54, 41, 6],
-    ["shape", star(20, 63, 6.5)], ["shape", star(36, 63, 6.5)], ["shape", star(52, 63, 6.5)], ["path", star(68, 63, 6.5), { o: 0.5, w: 1.2 }],
-  ],
   calendar: [
     ["box", 18, 6, 114, 68, 9], ["ln", 28, 13, 40, { o: 0.7 }], ["path", "m110 13 -3 3 3 3M118 13l3 3-3 3", { o: 0.5 }],
     ["path", "M34 32h0M50 32h0M67 32h0M83 32h0M100 32h0M116 32h0M34 46h0M50 46h0M67 46h0M100 46h0M116 46h0M34 60h0M50 60h0M67 60h0M83 60h0", { w: 6, o: 0.28 }],

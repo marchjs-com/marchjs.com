@@ -1,13 +1,13 @@
 // Data: a 10,000-row table (sorting, filters, selection, virtual scrolling, column sizing), tree, kanban, steps, pagination,
-// accordion, timeline, key-value, splitter, carousel.
+// accordion, timeline, key-value.
 import { lazy } from "march/lazy";
 
 // heavy parts load when they come into view, with a table / card shaped placeholder of the same size
 const Table = lazy(() => import("march/table/render.ts"), { pick: "Table", when: "visible", placeholder: "table", height: "30rem" })
 import {
-  Badge, Avatar, Steps, Pagination, Accordion, Splitter, Carousel, Card, Button, action, Stack, IconTile, Rating,
+  Badge, Avatar, action, Rating,
 } from "march/ui";
-import { trash, mail, check, packageBox, truck, users, zap, shieldCheck, creditCard } from "march/icons";
+import { trash, mail } from "march/icons";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
@@ -26,8 +26,6 @@ const ROWS = Array.from({ length: 10_000 }, (_, i) => ({
 }))
 
 export default function Data(props: { params?: { rest?: string } }) {
-  let $page = 4
-  let $step = 1
   const invite = action("Davet gönder", async () => { await new Promise((r) => setTimeout(r, 300)) }, { icon: mail, success: "Davet gönderildi" })
   const suspend = action("Askıya al", async () => { await new Promise((r) => setTimeout(r, 300)) }, { icon: trash, danger: true, confirm: "Seçilenler askıya alınsın mı?", success: "Askıya alındı" })
   const RENDER: Record<string, () => unknown> = {
@@ -60,13 +58,6 @@ bulkActions={[invite, suspend]} />`}>
     "list-row": () => <ComponentDemo folder="data/list-row" title="ListRow: listelerin ortak satırı" desc="Baş yuva (ikon, avatar, nokta), başlık, alt metin, son yuva. Bağlantı, düğme, liste seçeneği ya da düz satır olur; sığmayan başlık üstüne gelince kayar." />,
     "stat-tile": () => <ComponentDemo folder="data/stat-tile" title="StatTile: değer ve etiket" desc="Profil sayıları, özet rakamlar. Değer bir sayaç olabilir; karoya basınca sayı artar ve basamaklar döner." />,
     "badge": () => <ComponentDemo folder="data/badge"title="Badge: durum ve sayı" desc="Altı ton, noktalı etiket; sayı rozeti 0'da gizlenir, 99'dan sonra 99+ yazar ve ekran okuyucuya ne saydığını söyler." />,
-    "panels": () => <Demo wide title="Bölünebilir panel ve galeri" desc="Splitter tutamacı sürüklenir (ya da ← →); Carousel kaydırarak yaslanır, okları ve noktaları var.">
-    <Splitter initial={0.38} start={<div class="sc-pane"><strong>Gelen kutusu</strong><p class="m-muted">Tutamacı sürükle.</p></div>} end={<div class="sc-pane"><strong>Ayrıntı</strong><p class="m-muted">İki panel, CSS değişkeniyle boyutlanır.</p></div>} />
-    <Carousel perView={3} label="Özellikler">
-      {[[zap, "Sinyaller", "Yalnız değişen düğüm güncellenir."], [shieldCheck, "Sıkı CSP", "innerHTML yok, satır içi stil yok."], [users, "Erişilebilir", "ARIA rolleri ve klavye."], [creditCard, "Tam kit", "Form, tablo, grafik, hareket."], [check, "Testli", "node --test ile DOM testleri."]].map(([ic, title, text]) =>
-        <Card><Stack gap={2}><IconTile icon={ic} /><strong>{title as string}</strong><span class="m-muted">{text as string}</span></Stack></Card>)}
-    </Carousel>
-  </Demo>,
   }
   return <Hub section="/data" kicker="Bileşenler" title="Veri" lead="10.000 satır sanal kaydırmayla akar; yalnız görünen satırlar çizilir. Sıralama, süzgeç çipleri, seçim ve toplu işlemler, sütun gizleme/taşıma/boyutlama, CSV dışa aktarma." render={RENDER} params={props.params} />
 }

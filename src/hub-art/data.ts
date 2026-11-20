@@ -24,8 +24,6 @@ export const art: ArtSet = {
   "list-row": [["box", 10, 22, 130, 36, 9], ["dot", 30, 40, 10, { o: 0.25 }], ["ln", 48, 32, 46, { o: 0.7 }], ["ln", 48, 43, 30], ["fill", 106, 34, 24, 12, 6, { o: 0.25 }], ["dot", 124, 40, 4, { mv: { x: -12 } }]],
   // Label, a big value, a rising trend.
   "stat-tile": [["box", 20, 10, 110, 60, 10], ["ln", 30, 20, 34], ["fill", 30, 32, 46, 14, 4, { o: 0.85, mv: { y: -3 } }], ["ln", 30, 54, 24, { o: 0.8, color: "green" }], ["path", "M96 52l8-8 6 5 10-12", { color: "green", w: 2 }], ["path", "M113 37h7v7", { color: "green", w: 2 }]],
-  // A split panel with a draggable divider, beside a scrolling gallery.
-  panels: [["box", 10, 10, 62, 60, 8], ["ln", 17, 20, 16], ["ln", 17, 30, 12], ["path", "M38 10v60", { mv: { x: 8 } }], ["fill", 36, 33, 4, 14, 2, { mv: { x: 8 } }], ["ln", 52, 20, 12], ["fill", 82, 14, 34, 42, 6, { o: 0.22 }], ["fill", 120, 14, 20, 42, 6, { o: 0.12 }], ["fill", 96, 63, 12, 5, 2.5], ["dot", 114, 65.5, 2.5, { o: 0.3 }], ["dot", 122, 65.5, 2.5, { o: 0.3 }]],
   // Three tinted squares, each with an icon.
   "icon-tile": [["fill", 14, 24, 32, 32, 9, { o: 0.2 }], ["path", "m23 40 5 5 9-10", { w: 2.2 }], ["fill", 59, 24, 32, 32, 9, { o: 0.22, color: "orange", mv: { y: -5 } }], ["path", "M77 31l-8 11h8l-2 7 8-11h-8z", { color: "orange", w: 1.8, mv: { y: -5 } }], ["fill", 104, 24, 32, 32, 9, { o: 0.22, color: "green" }], ["ring", 120, 40, 6, { color: "green", w: 2.2 }]],
   // A card that is a link: icon tile, title, description and an arrow that slides on hover.
