@@ -67,7 +67,11 @@ const madeAt = (): { line: number; column: number } | null => {
   return m ? { line: Number(m[1]), column: Number(m[2]) - 1 } : null;
 };
 /** A probe leaves the list with what owns it (a component drawn again makes new signals). */
-const leave = (p: Probe): void => { if (core.getOwner()) core.onCleanup(() => { probes.delete(p.id); notifyProbes(); }); };
+const leave = (p: Probe): void => { if (core.getOwner()) core.onCleanup(() => { probes.delete(p.id); probeSignals.delete(p.id); notifyProbes(); }); };
+/** The named signals (a component's `let $x`) by probe id: the Data tab sets one of them in the running preview. */
+const probeSignals = new Map<number, { set(x: unknown): unknown }>();
+/** Set a component's state (a named signal, by its probe's id) in the running preview; false when it is gone. */
+export function setProbe(id: number, value: unknown): boolean { const s = probeSignals.get(id); if (!s) return false; s.set(value); return true; }
 const traced = {
   ...core,
   signal: <T,>(v: T, o?: { name?: string }) => {
@@ -75,6 +79,7 @@ const traced = {
     if (!o?.name || !probeCb) return s;
     const p: Probe = { id: ++probeSeq, kind: "signal", name: o.name, at: null, count: 0, value: v, last: 0 };
     probes.set(p.id, p);
+    probeSignals.set(p.id, s as { set(x: unknown): unknown });
     leave(p);
     const set = s.set;
     (s as { set: (x: T) => T }).set = (x: T) => { const r = set(x); p.count++; p.value = s.peek(); p.last = performance.now(); notifyProbes(); return r; };
@@ -114,7 +119,7 @@ export function onProbes(cb: (p: Probe[], dom: [string, number][]) => void, root
 /** The counters back to zero (the probes stay). */
 export function resetProbes(): void { for (const p of probes.values()) p.count = 0; domCounts.clear(); notifyProbes(); }
 /** A new run: its own signals and effects. */
-const newRun = (): void => { probes.clear(); domCounts.clear(); };
+const newRun = (): void => { probes.clear(); probeSignals.clear(); domCounts.clear(); };
 
 // ---- the Tests tab: a test file's `test("…", fn)` cases run here, one after the other, each in a hidden box (its
 // renderTest screens are disposed after it); `expect` is a small assertion set. "march/testing" is March's testing

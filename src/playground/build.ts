@@ -53,7 +53,10 @@ export function createBuilder(log: BuildLog) {
   })());
   /** The texts of the last build (lang.json). */
   const texts = signal<readonly string[]>([]);
-  let run = 0;
+  // the latest request of each entry wins (a newer build of the same entry makes a waiting one return null); the
+  // preview's entry and a test file are separate: a test run never cancels the preview's build, nor the other way
+  const runs = new Map<string, number>();
+  const bump = (entry: string): number => { const n = (runs.get(entry) ?? 0) + 1; runs.set(entry, n); return n; };
   // every build kept by what went in (the entry and the files' texts): a tab shown again with the same code is not
   // built again, its last result comes back at once
   const memo = new Map<string, BuildResult>();
@@ -62,7 +65,7 @@ export function createBuilder(log: BuildLog) {
   function cached(files: Record<string, string>, entry: string, release = false): BuildResult | null {
     const r = memo.get(keyOf(files, entry, release));
     if (!r) return null;
-    run++; // a build still on its way is no longer wanted
+    bump(entry); // a build of this entry still on its way is no longer wanted
     texts.set(r.texts);
     return r;
   }
@@ -75,10 +78,10 @@ export function createBuilder(log: BuildLog) {
    */
   async function build(files: Record<string, string>, entry: string, opts: { i18n?: boolean; release?: boolean } = {}): Promise<BuildResult | null> {
     const i18n = opts.i18n !== false, release = !!opts.release, key = keyOf(files, entry, release);
-    const n = ++run;
+    const n = bump(entry), stale = (): boolean => runs.get(entry) !== n;
     let t: { compile: MarchCompile; esbuild: Esbuild };
     try { t = await load(); } catch (err) { tools = null; say(`Derleme araçları yüklenemedi: ${String((err as Error)?.message ?? err)}`, "error"); return null; }
-    if (n !== run) return null; // a newer change is on its way
+    if (stale()) return null; // a newer change is on its way
     const t0 = performance.now();
     say(`Derleniyor: ${entry}`, "info");
     const found = new Set<string>(), modules: Record<string, string> = {};
@@ -115,13 +118,13 @@ export function createBuilder(log: BuildLog) {
       const r = { ok: true, code, ...(map ? { map } : {}), inputs, texts: [...found].sort((a, b) => a.localeCompare(b, "tr")), modules, at: Date.now() };
       // kept even when another tab came to the front meanwhile: showing this one again needs no build
       if (i18n) memo.set(key, r);
-      if (n !== run) return null;
+      if (stale()) return null;
       for (const w of out.warnings) say(`⚠ ${where(w)}${w.text}`, "warn");
       texts.set(r.texts);
       say(`Bitti${release ? " (release)" : ""}: ${(code.length / 1024).toFixed(1)} KB paket · ${ms(t0)}`, "success");
       return r;
     } catch (err) {
-      if (n !== run) return null;
+      if (stale()) return null;
       const errors = (err as { errors?: Message[] }).errors ?? [{ text: String((err as Error)?.message ?? err) }];
       for (const e of errors) say(`✖ ${where(e)}${e.text}`, "error");
       say(`Derleme başarısız: ${errors.length} hata · ${ms(t0)}`, "error");

@@ -341,7 +341,8 @@ const isHtml = (o: PlaygroundOption): boolean => /^(html|a11y|mp|api|ext|sx):/.t
 const extInfo = signal<ExtInfo>(NO_EXT, { equals: (a, b) => JSON.stringify(a) === JSON.stringify(b) })
 const extOptions = (name: string): PlaygroundOption[] => extensionOptions(extInfo(), name, new Set((optionsBy()[name] ?? []).map((o) => String(o.prop || o.key))))
 const isA11y = (o: PlaygroundOption): boolean => o.key.startsWith("a11y:")
-const options = (): readonly PlaygroundOption[] => optsOf(selected())
+// kept: every row of Properties, the Accessibility tab, the Terminal and the values read it (built once per change)
+const options = computed((): readonly PlaygroundOption[] => optsOf(selected()))
 // the set of options (the grid is made again when it changes: a component chosen, the root's tag read)
 const optionKeys = computed(() => `${selected()}:${options().map((o) => o.key).join(",")}:${selected() in tableBy() ? 1 : 0}:${selected() in apiPropsBy() ? 1 : 0}:${locale()}:${Object.values(commonText())[0] ?? ""}`)
 // an instance chosen in the Hierarchy (one of several Buttons) takes its own values: Properties changes that one
@@ -360,7 +361,7 @@ const target = (): string => {
   const many = liveTree().filter((x) => x.name === name).length
   return many > 1 ? `tüm ${name} örnekleri (${many})` : name
 }
-const values = (): Record<string, unknown> => { const k = instOn(), v = (k ? valuesByInst()[k] : valuesBy()[selected()]) ?? {}; return Object.fromEntries(options().map((o) => [o.key, v[o.key] ?? defaultOf(o)])) }
+const values = computed((): Record<string, unknown> => { const k = instOn(), v = (k ? valuesByInst()[k] : valuesBy()[selected()]) ?? {}; return Object.fromEntries(options().map((o) => [o.key, v[o.key] ?? defaultOf(o)])) })
 const setValues = (v: Record<string, unknown>) => {
   const k = untrack(instOn), name = selected.peek()
   if (k) { valuesByInst.set({ ...valuesByInst.peek(), [k]: { ...v } }); return }
@@ -1011,14 +1012,42 @@ const dataRow = (d: DataItem) => {
       : null}
   </li>
 }
+// the components' state in the running preview (each `let $x` of each instance: a named signal of the runtime's probes):
+// its value live, and set with Enter (JSON; the component draws again at once, nothing is built)
+interface StateRow { id: number; name: string; file?: string; line?: number }
+const stateRows = signal<StateRow[]>([], { equals: (a, b) => !!a && !!b && a.map((x) => `${x.id}:${x.name}`).join() === b.map((x) => `${x.id}:${x.name}`).join() })
+const stateValues = signal<Record<number, unknown>>({})
+const stateRow = (s: StateRow) => {
+  let draft: string | null = null
+  const commit = (): void => {
+    if (draft === null) return
+    const p = parse(draft)
+    if (!p.ok) { print(`[${stamp()}] ✖ ${s.name}: geçerli bir JSON değil`, "error"); return }
+    void runtime?.then((r) => { if (!r.setProbe(s.id, p.value)) print(`[${stamp()}] ✖ ${s.name} artık önizlemede yok`, "warn") })
+    print(`[${stamp()}] ⇢ ${s.name} = ${short(p.value)}`, "info")
+    draft = null
+  }
+  return <li class="sc-data-row">
+    <span class="sc-data-name"><code>{s.name}</code><Badge tone="info" size="xs">durum</Badge>{s.file ? <small class="m-muted">{`${s.file}:${s.line}`}</small> : null}</span>
+    <TextInput aria-label={`${s.name} değeri`} placeholder="Enter ile uygula" value={json(stateValues()[s.id])}
+      onChange={(v: string) => { draft = v }} onKeyDown={(e: KeyboardEvent) => { if (e.key === "Enter") commit() }} />
+  </li>
+}
 const dataPanel = () => <div class="sc-data">
   {() => {
     const list = dataItems()
     liveData()
-    return untrack(() => list.length
-      ? <ul class="sc-data-list" aria-label="Veriler">{list.map(dataRow)}</ul>
-      : <div class="sc-playground-empty"><b>Veri yok</b><span>Kodda sinyal, hesaplanan değer ya da sabit yok</span></div>)
+    return untrack(() => list.length ? <ul class="sc-data-list" aria-label="Veriler">{list.map(dataRow)}</ul> : null)
   }}
+  {() => {
+    const rows = stateRows()
+    return untrack(() => rows.length
+      ? <><h3 class="sc-events-head">Bileşen durumu</h3><ul class="sc-data-list" aria-label="Bileşen durumu">{rows.map(stateRow)}</ul></>
+      : null)
+  }}
+  {() => (!dataItems().length && !stateRows().length
+    ? <div class="sc-playground-empty"><b>Veri yok</b><span>Kodda sinyal, hesaplanan değer, sabit ya da bileşen durumu (let $x) yok</span></div>
+    : null)}
 </div>
 
 // the build: its steps go to the Console (lines written before the Console is there wait for it)
@@ -1138,7 +1167,8 @@ const runAllTests = async (): Promise<void> => {
     const rt = await loadRuntime(), runs: TestRun[] = []
     const all = Object.fromEntries([...files.keys()].map((n) => [n, forBuild(saved.get(n)?.peek() ?? files.get(n)?.peek() ?? "")]))
     for (const file of names) {
-      const b = await builder.build(all, file)
+      // the same files built before (every build of the preview runs the tests again): the kept bundle, no esbuild run
+      const b = builder.cached(all, file) ?? await builder.build(all, file)
       if (!b?.ok) { runs.push({ file, error: "Derlenemedi: ayrıntı Konsol'da.", results: [] }); continue }
       const sm = b.map ? parseSourceMap(b.map) : null
       const results = await rt.runTests(b.code).catch((e: unknown) => { runs.push({ file, error: String((e as Error)?.message ?? e), results: [] }); return null })
@@ -1505,7 +1535,7 @@ const langPanel = () => <div class="sc-lang">
 let previewEl: HTMLElement | null = null
 type Parts = Record<string, Record<string, unknown>>
 let tsSvc: TypeScriptService | null = null
-type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(code: string | null, dict: Record<string, string> | null): void; onTree(cb: () => void): void; onConsole(cb: (e: ConsoleEvent) => void): void; sourceAt(node: Node | null): { file: string; line: number } | null; onProbes(cb: (p: Probe[], dom: [string, number][]) => void, root: Element): void; resetProbes(): void; runTests(code: string): Promise<TestResult[]>; elementsAt(root: Element, file: string, line: number): Element[]; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void }
+type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(code: string | null, dict: Record<string, string> | null): void; onTree(cb: () => void): void; onConsole(cb: (e: ConsoleEvent) => void): void; sourceAt(node: Node | null): { file: string; line: number } | null; onProbes(cb: (p: Probe[], dom: [string, number][]) => void, root: Element): void; resetProbes(): void; runTests(code: string): Promise<TestResult[]>; elementsAt(root: Element, file: string, line: number): Element[]; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void; setProbe(id: number, value: unknown): boolean }
 let runtime: Promise<Runtime> | null = null, runtimeNow: Runtime | null = null
 const loadRuntime = () => (runtime ??= (async () => {
   // its components' stylesheet, once
@@ -1629,6 +1659,10 @@ const watchReactivity = (r: Runtime, root: HTMLElement): void => {
       return { kind: p.kind, name: named?.name ?? p.kind, ...(file ? { file } : {}), ...(line ? { line } : {}), count: p.count, ...(p.value !== undefined || p.kind === "signal" ? { value: consoleText(p.value) } : {}), recent: now - p.last < 900 }
     }))
     reactDom.set(dom)
+    // the components' own state (`let $liked` …: named signals) for the Data tab, with their values now
+    const named = list.filter((p) => p.kind === "signal").map((p) => ({ id: p.id, ...parseProbeName(p.name) }))
+    stateRows.set(named)
+    stateValues.set(Object.fromEntries(list.filter((p) => p.kind === "signal").map((p) => [p.id, p.value])))
   }, root)
 }
 // MarchIDE's loading layer: the page whose files were just taken is ready once its tabs are in the workspace (the
@@ -1924,6 +1958,8 @@ const ideTitle = (id: string): string => {
 
 export default function ComponentLayout(props: { ide: () => IdeJson; id: () => string; ready?: (id: string) => void }) {
   readyCb = props.ready
+  // the preview's runtime loads beside the build's tools (in a free moment): the first preview does not wait for it
+  void loadRuntime()
   // the first files before the workspace is drawn (the layout's preset names their tabs), the next ones as they come
   effect(() => workspaceId.set(props.id()))
   let shown = untrack(props.ide)
