@@ -1190,6 +1190,7 @@ const runAllTests = async (): Promise<void> => {
 }
 const buildNow = async () => {
   const path = untrack(active)
+  if (!path || !files.has(path)) return null
   // a test file in front: its tests run (the preview keeps what it shows)
   if (isTestFile(path)) { await runAllTests(); dock?.open("tests"); return null }
   // the saved text: what is typed and not saved yet is not built
@@ -1987,8 +1988,10 @@ export default function ComponentLayout(props: { ide: () => IdeJson; id: () => s
   effect(() => {
     // only the file in front (and the entry that renders it)
     const path = active()
-    const now = { [path]: withData(forBuild(saved.get(path)?.() ?? "")), [ENTRY]: entrySource() }
     clearTimeout(timer)
+    // no file in front (a page being left: its files are gone, the next page's not here yet): nothing to build
+    if (!path || !files.has(path)) return
+    const now = { [path]: withData(forBuild(saved.get(path)?.() ?? "")), [ENTRY]: entrySource() }
     // debugging: every build writes the debugger's calls in (buildNow), nothing kept is used
     if (debugSvc()?.active()) { scheduleBuild(350); return }
     // built before with this very code (a tab shown again): the kept result, at once
