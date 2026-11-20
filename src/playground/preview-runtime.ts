@@ -177,11 +177,22 @@ export async function runTests(code: string): Promise<TestResult[]> {
   const url = URL.createObjectURL(new Blob([link(code)], { type: "text/javascript" }));
   try { await import(/* @vite-ignore */ url); } finally { URL.revokeObjectURL(url); }
   const out: TestResult[] = [];
-  for (const c of cases) {
-    const t0 = performance.now();
-    try { await c.fn(); out.push({ name: c.name, ok: true, ms: performance.now() - t0 }); }
-    catch (e) { out.push({ name: c.name, ok: false, ms: performance.now() - t0, error: { message: String((e as Error)?.message ?? e), stack: String((e as Error)?.stack ?? "") } }); }
-    finally { for (const s of screens) { try { s.dispose(); } catch { /* gone */ } } screens = []; }
+  // tests read the code's own texts: they run in its own language even while the preview shows another (lang.json),
+  // then the preview's language comes back
+  // (the chosen language's texts may sit in the code's own locale's dictionary: they are taken out meanwhile)
+  const shown = core.locale.peek(), held = userTexts, kept: Record<string, string> = {};
+  if (held) { const d = dicts.get(held.code) ?? {}; for (const k of held.keys) if (k in d) { kept[k] = d[k]!; delete d[k]; } core.messages(held.code, {}); }
+  if (shown !== ownLocale) core.locale.set(ownLocale);
+  try {
+    for (const c of cases) {
+      const t0 = performance.now();
+      try { await c.fn(); out.push({ name: c.name, ok: true, ms: performance.now() - t0 }); }
+      catch (e) { out.push({ name: c.name, ok: false, ms: performance.now() - t0, error: { message: String((e as Error)?.message ?? e), stack: String((e as Error)?.stack ?? "") } }); }
+      finally { for (const s of screens) { try { s.dispose(); } catch { /* gone */ } } screens = []; }
+    }
+  } finally {
+    if (held) core.messages(held.code, kept);
+    if (shown !== ownLocale) core.locale.set(shown);
   }
   return out;
 }
