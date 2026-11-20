@@ -1,26 +1,26 @@
 {
-  "layout": "component",
-  "description": "Açılır JSON ağacı, türe göre renkler.",
-  "sources": [
-    {
-      "type": "code",
-      "name": "LiveState.tsx",
-      "code": "import { JsonView, Button } from \"march/ui\"\n\n// canlı durum: düğmelere bastıkça nesne değişir, ağaç yeniden çizilir (value bir erişimci)\nexport function LiveState() {\n  let $likes = 0\n  let $tags = [\"march\"]\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: \"row\", gap: 2 }}>\n      <Button size=\"sm\" on:click={() => $likes++}>Beğen</Button>\n      <Button size=\"sm\" on:click={() => $tags = [...$tags, `etiket${$tags.length}`]}>Etiket ekle</Button>\n    </div>\n    <JsonView label=\"Gönderi durumu\" open={2} value={() => ({ post: { title: \"Sinyaller\", likes: $likes, tags: $tags } })} />\n  </div>\n}\n"
-    },
-    {
-      "type": "code",
-      "name": "ApiResponse.tsx",
-      "code": "import { JsonView, Card, Badge, Segmented } from \"march/ui\"\n\n// bir API yanıtını incelemek: uç noktayı seç, yanıt ağaç olarak açılır; Türkçe sayım metinleri\nconst RESPONSES: Record<string, unknown> = {\n  \"/users/7\": { id: 7, name: \"Ada Yılmaz\", email: \"ada@ornek.com\", roles: [\"admin\", \"editor\"], lastLogin: \"2026-11-18T08:30:00Z\", manager: null },\n  \"/orders?limit=2\": { total: 128, page: 1, data: [{ id: 48210, sum: 1249.3, paid: true }, { id: 48211, sum: 89.9, paid: false }] },\n  \"/health\": { ok: true, uptime: 86400, services: { db: \"up\", cache: \"up\", mail: \"degraded\" } },\n}\n\nexport function ApiResponse() {\n  let $url = \"/users/7\"\n  return <Card title=\"İstek\" actions={<Badge tone=\"success\">200 OK</Badge>}>\n    <Segmented label=\"Uç nokta\" options={Object.keys(RESPONSES)} bind:value={$url} />\n    <JsonView label=\"Yanıt\" open={1} value={() => RESPONSES[$url]} labels={{ items: \"öğe\", keys: \"alan\" }} />\n  </Card>\n}\n"
-    },
-    {
-      "type": "code",
-      "name": "JsonViewLab.tsx",
-      "code": "import { JsonView, Card } from \"march/ui\"\n\n// JsonView'un bütün özellikleri bir arada: value (her tür: sayı, metin, null, dizi, tarih, döngüsel, işlev),\n// open, labels, arrow (ok / yok / kendi), label, describe ve class\nconst data: Record<string, unknown> = {\n  name: \"March\", version: 2, stable: true, author: null, tags: [\"tsx\", \"signals\"],\n  since: new Date(Date.UTC(2026, 0, 1)), nested: { deep: { deeper: { deepest: \"dip\" } } },\n  onClick: () => 1,\n}\ndata.self = data\n\n// bir ağaç ve üstünde adı\nconst Box = (props: { title: string; children?: unknown }) => <div sx={{ flex: \"col\", gap: 1 }}>\n  <span sx={{ text: \"xs\", color: \"muted\" }}>{props.title}</span>\n  {props.children}\n</div>\n\nexport function JsonViewLab() {\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Box title=\"Her tür değer, iki kat açık, kendi metinler, işlevin adı\">\n      <JsonView class=\"lab-json\" label=\"Paket\" value={data} open={2}\n        labels={{ items: \"öğe\", keys: \"alan\", circular: \"(kendisi)\" }}\n        describe={(v: unknown) => typeof v === \"function\" ? \"ƒ işlev\" : null} />\n    </Box>\n    <Box title=\"Kapalı, kendi işaretim\">\n      <JsonView label=\"Kapalı\" value={{ a: 1, b: [1, 2, 3] }} open={0} arrow={(open: () => boolean) => <b>{() => (open() ? \"−\" : \"+\")}</b>} />\n    </Box>\n    <Card m:theme=\"night\">\n      <Box title=\"Oksuz, koyu zemin\">\n        <JsonView label=\"Koyu\" value={[1, \"iki\", { üç: 3 }]} arrow={false} />\n      </Box>\n    </Card>\n  </div>\n}\n"
-    },
-    {
-      "type": "code",
-      "name": "JsonViewLab.test.tsx",
-      "code": "import { test, expect, renderTest } from \"march/testing\"\nimport { JsonViewLab } from \"./JsonViewLab.tsx\"\n\n// JsonViewLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"ağaç role=tree ve label adıyla\", () => {\n  const s = renderTest(() => <JsonViewLab />)\n  const tree = s.get(\".lab-json [role=tree]\")!\n  expect(tree.getAttribute(\"aria-label\")).toBe(\"Paket\")\n})\n\ntest(\"describe işlevi adlandırır, döngü kendi metniyle yazılır\", () => {\n  const s = renderTest(() => <JsonViewLab />)\n  const text = s.get(\".lab-json\")!.textContent!\n  expect(text).toContain(\"ƒ işlev\")\n  expect(text).toContain(\"(kendisi)\")\n  expect(text).toContain(\"\\\"tsx\\\"\")\n})\n\ntest(\"open={0} kapalı başlar, tıklayınca açılır\", async () => {\n  const s = renderTest(() => <JsonViewLab />)\n  const trees = s.all(\".m-json\")\n  const btn = trees[1].querySelector(\".m-json-toggle\")!\n  expect(btn.getAttribute(\"aria-expanded\")).toBe(\"false\")\n  await s.click(btn)\n  expect(btn.getAttribute(\"aria-expanded\")).toBe(\"true\")\n})\n\ntest(\"kapalı dal labels.keys ile sayılır\", () => {\n  const s = renderTest(() => <JsonViewLab />)\n  expect(s.get(\".lab-json\")!.textContent).toContain(\"1 alan\")\n})\n"
-    }
-  ]
+	"layout": "component",
+	"description": "Açılır JSON ağacı, türe göre renkler.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "LiveState.tsx",
+			"code": "import { JsonView, Button } from \"march/ui\"\n\n// canlı durum: düğmelere bastıkça nesne değişir, ağaç yeniden çizilir (value bir erişimci)\nexport function LiveState() {\n  let $likes = 0\n  let $tags = [\"march\"]\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: \"row\", gap: 2 }}>\n      <Button size=\"sm\" on:click={() => $likes++}>Beğen</Button>\n      <Button size=\"sm\" on:click={() => $tags = [...$tags, `etiket${$tags.length}`]}>Etiket ekle</Button>\n    </div>\n    <JsonView label=\"Gönderi durumu\" open={2} value={() => ({ post: { title: \"Sinyaller\", likes: $likes, tags: $tags } })} />\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ApiResponse.tsx",
+			"code": "import { JsonView, Card, Badge, Segmented } from \"march/ui\"\n\n// bir API yanıtını incelemek: uç noktayı seç, yanıt ağaç olarak açılır; Türkçe sayım metinleri\nconst RESPONSES: Record<string, unknown> = {\n  \"/users/7\": { id: 7, name: \"Ada Yılmaz\", email: \"ada@ornek.com\", roles: [\"admin\", \"editor\"], lastLogin: \"2026-11-18T08:30:00Z\", manager: null },\n  \"/orders?limit=2\": { total: 128, page: 1, data: [{ id: 48210, sum: 1249.3, paid: true }, { id: 48211, sum: 89.9, paid: false }] },\n  \"/health\": { ok: true, uptime: 86400, services: { db: \"up\", cache: \"up\", mail: \"degraded\" } },\n}\n\nexport function ApiResponse() {\n  let $url = \"/users/7\"\n  return <Card title=\"İstek\" actions={<Badge tone=\"success\">200 OK</Badge>}>\n    <Segmented label=\"Uç nokta\" options={Object.keys(RESPONSES)} bind:value={$url} />\n    <JsonView label=\"Yanıt\" open={1} value={() => RESPONSES[$url]} labels={{ items: \"öğe\", keys: \"alan\" }} />\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "JsonViewLab.tsx",
+			"code": "import { JsonView, Card } from \"march/ui\"\n\n// JsonView'un bütün özellikleri bir arada: value (her tür: sayı, metin, null, dizi, tarih, döngüsel, işlev),\n// open, labels, arrow (ok / yok / kendi), label, describe ve class\nconst data: Record<string, unknown> = {\n  name: \"March\", version: 2, stable: true, author: null, tags: [\"tsx\", \"signals\"],\n  since: new Date(Date.UTC(2026, 0, 1)), nested: { deep: { deeper: { deepest: \"dip\" } } },\n  onClick: () => 1,\n}\ndata.self = data\n\n// bir ağaç ve üstünde adı\nconst Box = (props: { title: string; children?: unknown }) => <div sx={{ flex: \"col\", gap: 1 }}>\n  <span sx={{ text: \"xs\", color: \"muted\" }}>{props.title}</span>\n  {props.children}\n</div>\n\nexport function JsonViewLab() {\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Box title=\"Her tür değer, iki kat açık, kendi metinler, işlevin adı\">\n      <JsonView class=\"lab-json\" label=\"Paket\" value={data} open={2}\n        labels={{ items: \"öğe\", keys: \"alan\", circular: \"(kendisi)\" }}\n        describe={(v: unknown) => typeof v === \"function\" ? \"ƒ işlev\" : null} />\n    </Box>\n    <Box title=\"Kapalı, kendi işaretim\">\n      <JsonView label=\"Kapalı\" value={{ a: 1, b: [1, 2, 3] }} open={0} arrow={(open: () => boolean) => <b>{() => (open() ? \"−\" : \"+\")}</b>} />\n    </Box>\n    <Card m:theme=\"night\">\n      <Box title=\"Oksuz, koyu zemin\">\n        <JsonView label=\"Koyu\" value={[1, \"iki\", { üç: 3 }]} arrow={false} />\n      </Box>\n    </Card>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "JsonViewLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { JsonViewLab } from \"./JsonViewLab.tsx\"\n\n// JsonViewLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"kök liste label adıyla adlandırılır\", () => {\n  const s = renderTest(() => <JsonViewLab />)\n  // iç içe listeler ve aria-expanded taşıyan aç / kapa düğmeleri: kök listenin adı label\n  const root = s.get(\".lab-json .m-json-root\")!\n  expect(root.getAttribute(\"aria-label\")).toBe(\"Paket\")\n})\n\ntest(\"describe işlevi adlandırır, döngü kendi metniyle yazılır\", () => {\n  const s = renderTest(() => <JsonViewLab />)\n  const text = s.get(\".lab-json\")!.textContent!\n  expect(text).toContain(\"ƒ işlev\")\n  expect(text).toContain(\"(kendisi)\")\n  expect(text).toContain(\"\\\"tsx\\\"\")\n})\n\ntest(\"open={0} kapalı başlar, tıklayınca açılır\", async () => {\n  const s = renderTest(() => <JsonViewLab />)\n  const trees = s.all(\".m-json\")\n  const btn = trees[1].querySelector(\".m-json-toggle\")!\n  expect(btn.getAttribute(\"aria-expanded\")).toBe(\"false\")\n  await s.click(btn)\n  expect(btn.getAttribute(\"aria-expanded\")).toBe(\"true\")\n})\n\ntest(\"kapalı dal labels.keys ile sayılır\", () => {\n  const s = renderTest(() => <JsonViewLab />)\n  expect(s.get(\".lab-json\")!.textContent).toContain(\"1 alan\")\n})\n"
+		}
+	]
 }
