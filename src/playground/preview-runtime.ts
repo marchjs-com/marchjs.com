@@ -157,7 +157,9 @@ const testApi = {
     // the screen looks only in the test's box (the preview on the page has the same texts); the box is an overlay
     // scope, so the dialogs and toasts the test opens stay in it
     box.classList.add("m-overlay-scope");
-    const s = testing.renderTest(fn, { container: box, root: box, ...o });
+    // the box is the scope's element given to what is drawn (as the preview's cells): a Dialog open from its first
+    // draw opens in the box too, not on the page, where the screen would not find it
+    const s = testing.renderTest(() => { core.provide(OverlayScopeContext, box); return fn(); }, { container: box, root: box, ...o });
     screens.push({ dispose: () => { s.dispose(); box.remove(); } });
     return s;
   },

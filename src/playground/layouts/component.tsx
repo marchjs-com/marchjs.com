@@ -1263,7 +1263,8 @@ const audit = (root: HTMLElement): Issue[] => {
   const out: Issue[] = [], add = (problem: string, el: Element) => out.push({ problem, element: describe(el) })
   for (const el of root.querySelectorAll("img:not([alt])")) add("alt yok", el)
   for (const el of root.querySelectorAll(FOCUSABLE)) {
-    if (el.closest("[hidden], [inert]") || (el as HTMLInputElement).type === "hidden") continue
+    // out of reach: hidden, inert, or kept from both the keyboard and screen readers (a file input under its drop zone)
+    if (el.closest("[hidden], [inert]") || (el as HTMLInputElement).type === "hidden" || (el.closest("[aria-hidden=true]") && el.getAttribute("tabindex") === "-1")) continue
     if (!nameOf(el)) add("erişilebilir adı yok", el)
     if (el.closest("[aria-hidden=true]") && !el.hasAttribute("disabled") && el.getAttribute("tabindex") !== "-1") add("aria-hidden içinde odaklanabilir", el)
     if (+(el.getAttribute("tabindex") ?? 0) > 0) add("tabindex > 0 (sırayı bozar)", el)
