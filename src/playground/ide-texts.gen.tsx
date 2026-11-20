@@ -21,6 +21,10 @@ export const IDE_TEXTS = (): string[] => [
   t`Üst üste binen avatarlar; sığmayanlar +N balonunda.`,
   // examples/showcase/public/components/badge/ide.json
   t`Durum ve sayı.`,
+  // examples/showcase/public/components/bar-chart/ide.json
+  t`Gruplu ya da yığılmış, dikey ya da yatay; veri değişince çubuklar kayar.`,
+  // examples/showcase/public/components/bar-list/ide.json
+  t`Sıralı yatay çubuklar: en çok ziyaret edilen sayfalar, ülkeler, şarkılar.`,
   // examples/showcase/public/components/before-after/ide.json
   t`Sürüklenen ayırıcıyla iki katmanı karşılaştırır; basınca oraya atlar, klavyeyle ve imleci izleyerek de çalışır; yatay ya da dikey.`,
   // examples/showcase/public/components/bottom-nav/ide.json
@@ -145,6 +149,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Duraklar ve açı; CSS çıktısı.`,
   // examples/showcase/public/components/grid/ide.json
   t`Sütun sayısı, son satırın davranışı ve dengeleme.`,
+  // examples/showcase/public/components/heatmap/ide.json
+  t`Gün × saat ya da hafta takvimi; tema vurgusunun tonlarında yoğunluk.`,
   // examples/showcase/public/components/hero/ide.json
   t`Yedi görünüm, tek yapı: üst etiket, gradyan vurgulu başlık, açıklama, eylemler.`,
   // examples/showcase/public/components/honest-compare/ide.json
@@ -181,6 +187,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Başlıktan sürükle; kenara bırakınca yarısına, üste bırakınca tamamına yerleşir; başlığa çift tıkla: alanı…`,
   // examples/showcase/public/components/like-button/ide.json
   t`Kalp yayla zıplar, halka büyür, parçacıklar HADİ renkleriyle saçılır.`,
+  // examples/showcase/public/components/line-chart/ide.json
+  t`Zaman, sayı ya da kategori ekseni; birden çok seri, sürükleyerek yakınlaştırma, ← → ile noktalar.`,
   // examples/showcase/public/components/link-card/ide.json
   t`Tamamı bağlantı olan kart: ikon karosu, başlık, açıklama, sondaki metin ve üstüne gelince ok.`,
   // examples/showcase/public/components/list-editor/ide.json
@@ -247,6 +255,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Ülke seçimi ve biçimli numara.`,
   // examples/showcase/public/components/picture/ide.json
   t`Resim nesnesi (src, alt, width, height…) ya da hazır düğüm: biri img olur, öteki olduğu gibi çizilir.`,
+  // examples/showcase/public/components/pie-chart/ide.json
+  t`Bütünün payları; halkanın ortasında toplam, dilimler odaklanır ve yeni açılara döner.`,
   // examples/showcase/public/components/popover/ide.json
   t`Tetikleyici ve yanında yüzen panel: dışarı tıkla ya da Esc ile kapanır, odak içeri girer ve geri döner.`,
   // examples/showcase/public/components/post-card/ide.json
@@ -259,6 +269,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Kapak, hikâye halkalı avatar, ad ve biyografi, sayaçlı istatistikler.`,
   // examples/showcase/public/components/progress/ide.json
   t`Değer, belirsiz, renkler.`,
+  // examples/showcase/public/components/progress-ring/ide.json
+  t`0–100 puan halkası; düşük / orta / yüksek düzey ya da birden çok renk.`,
   // examples/showcase/public/components/project-detail/ide.json
   t`Bir projeye tıkla: kapak ayrıntı sayfasındaki yerine büyür (paylaşılan öğe geçişi); geri dönüşte küçülür.`,
   // examples/showcase/public/components/project-grid/ide.json
@@ -317,12 +329,16 @@ export const IDE_TEXTS = (): string[] => [
   t`Değer ve aralık, adımlar.`,
   // examples/showcase/public/components/spacer/ide.json
   t`Kendinden sonrakileri satırın mantıksal sonuna iter; RTL'de aynalanır.`,
+  // examples/showcase/public/components/sparkline/ide.json
+  t`Eksensiz küçük çizgi: tablo hücresinde, liste satırında, göstergede.`,
   // examples/showcase/public/components/spinner/ide.json
   t`Küçük bekleme göstergesi.`,
   // examples/showcase/public/components/splitter/ide.json
   t`Tutamacı sürükleyin ya da odaklayıp ← → (RTL'de aynalı), Home / End; Enter başlangıç payına döndürür.`,
   // examples/showcase/public/components/stack/ide.json
   t`Satır ya da sütun, boşluk belirteçleri (0–8), hizalama ve satır kaydırma; etiketli araç çubuğu ve ayraçlar.`,
+  // examples/showcase/public/components/stat/ide.json
+  t`Değer, önceki döneme göre değişim (iyi yeşil, kötü kırmızı) ve eğilim çizgisi.`,
   // examples/showcase/public/components/stat-tile/ide.json
   t`Değer ve etiket; tıklanabilir, sayaçlı.`,
   // examples/showcase/public/components/stats-band/ide.json

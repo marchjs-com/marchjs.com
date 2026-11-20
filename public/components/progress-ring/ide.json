@@ -1,0 +1,26 @@
+{
+	"layout": "component",
+	"description": "0–100 puan halkası; düşük / orta / yüksek düzey ya da birden çok renk.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "PlantWater.tsx",
+			"code": "import { ProgressRing } from \"march/charts\"\nimport { Button } from \"march/ui\"\n\n// saksı bitkisinin su seviyesi: her gün biraz azalır, \"Sula\" doldurur; düşükte kırmızı, ortada sarı, dolu yeşil\nexport function PlantWater() {\n  let $water = 64\n  return <div sx={{ flex: [\"row\", \"wrap\", \"center\"], gap: 3 }}>\n    <ProgressRing value={$water} size={96} thickness={12} label=\"Su seviyesi\" format={(v: number) => `${Math.round(v)}%`} />\n    <div sx={{ flex: \"col\", gap: 2 }}>\n      <Button on:click={() => { $water = Math.min(100, $water + 30) }}>🪴 Sula</Button>\n      <Button variant=\"ghost\" on:click={() => { $water = Math.max(0, $water - 15) }}>☀️ Bir gün geçsin</Button>\n    </div>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "CourseProgress.tsx",
+			"code": "import { ProgressRing } from \"march/charts\"\nimport { Card, ListRow } from \"march/ui\"\n\n// bir eğitim platformunda derslerin ilerlemesi: her satırın başında halka, düzeye göre renk\nconst COURSES = [\n  { ad: \"TypeScript'e giriş\", bitti: 18, toplam: 20 },\n  { ad: \"Sinyallerle durum\", bitti: 9, toplam: 14 },\n  { ad: \"Erişilebilir formlar\", bitti: 2, toplam: 12 },\n]\n\nexport function CourseProgress() {\n  return <Card title=\"Derslerim\">\n    {COURSES.map((c) => <ListRow title={c.ad} sub={`${c.bitti} / ${c.toplam} bölüm`}\n      lead={<ProgressRing value={c.bitti} max={c.toplam} size={44} thickness={5} label={c.ad} format={(v: number) => `${Math.round((v / c.toplam) * 100)}`} />} />)}\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ProgressRingLab.tsx",
+			"code": "import { ProgressRing } from \"march/charts\"\nimport { Button, Card } from \"march/ui\"\n\n// ProgressRing'in bütün özellikleri: value (erişimci), max, size, thickness, thresholds, format, label, color, colors\n// (\"brand\", liste, \"single\"), paint (gradient, segments, cycle)\nexport function ProgressRingLab() {\n  let $v = 40\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 2 }}>\n      <Button class=\"lab-up\" size=\"sm\" on:click={() => { $v = Math.min(100, $v + 40) }}>Artır</Button>\n      <Button class=\"lab-down\" size=\"sm\" variant=\"ghost\" on:click={() => { $v = Math.max(0, $v - 30) }}>Azalt</Button>\n    </div>\n    <div sx={{ flex: [\"row\", \"wrap\", \"center\"], gap: 3 }}>\n      <span class=\"lab-score\"><ProgressRing value={$v / 10} max={10} thresholds={[40, 70]} size={88} thickness={10} label=\"Puan\" format={(v: number) => `${v}/10`} /></span>\n      <span class=\"lab-color\"><ProgressRing value={$v} color=\"brand-blue\" label=\"Mavi\" /></span>\n      <span class=\"lab-brand\"><ProgressRing value={$v} colors=\"brand\" paint=\"segments\" label=\"HADİ\" /></span>\n      <ProgressRing value={$v} colors={[\"brand-orange\", \"brand-pink\"]} paint=\"gradient\" label=\"İki renk\" />\n      <ProgressRing value={100} colors=\"brand\" paint=\"cycle\" label=\"Akan\" />\n      <ProgressRing value={$v} colors=\"single\" label=\"Tek renk\" />\n    </div>\n    <Card m:theme=\"night\">\n      <ProgressRing value={$v} size={72} label=\"Koyu zeminde\" />\n    </Card>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "ProgressRingLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { ProgressRingLab } from \"./ProgressRingLab.tsx\"\n\n// ProgressRingLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"ekran okuyucu adı değeri ve tam puanı söyler; biçim ortada\", () => {\n  const s = renderTest(() => <ProgressRingLab />)\n  const ring = s.get(\".lab-score svg\")!\n  expect(ring.getAttribute(\"aria-label\")).toBe(\"Puan: 4/10 of 10\")\n  expect(ring.querySelector(\".m-ring-text\")!.textContent).toBe(\"4/10\")\n})\n\ntest(\"eşikler düzeyi belirler: 40'ta orta, artınca yüksek\", async () => {\n  const s = renderTest(() => <ProgressRingLab />)\n  expect(s.get(\".lab-score svg\")!.getAttribute(\"class\")).toContain(\"m-ring-mid\")\n  await s.click(\".lab-up\")\n  expect(s.get(\".lab-score svg\")!.getAttribute(\"class\")).toContain(\"m-ring-high\")\n})\n\ntest(\"renk tek renge boyar; HADİ renkleri boya katmanı ekler\", () => {\n  const s = renderTest(() => <ProgressRingLab />)\n  expect(s.get(\".lab-color svg\")!.getAttribute(\"data-m-color\")).toBe(\"brand-blue\")\n  expect(s.get(\".lab-brand .m-ring-paint\")).toBeTruthy()\n})\n"
+		}
+	]
+}

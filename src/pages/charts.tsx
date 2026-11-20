@@ -1,61 +1,29 @@
-// Charts: stats, line/area (zoom), bar, pie, bar list, heatmap, progress ring. Colors come from the theme.
-import { Stat, BarList, ProgressRing, Sparkline } from "march/charts";
+// Charts: one MarchIDE page per chart component (src/components/data/<name>/). The charts have their own entry
+// (march/charts), so the card registry has no demo loader for them: each demo is a lazy part here (the chart code stays
+// out of this route's chunk until its page opens); the option specs come from the registry.
 import { lazy } from "march/lazy";
-
-// the big charts load when they come into view (chart-shaped placeholder, same height); each from its own module
-const xy = () => import("march/charts/xy.ts")
-const LineChart = lazy(xy, { pick: "LineChart", when: "visible", placeholder: "chart", height: "15rem" })
-const AreaChart = lazy(xy, { pick: "AreaChart", when: "visible", placeholder: "chart", height: "15rem" })
-const BarChart = lazy(() => import("march/charts/bar.ts"), { pick: "BarChart", when: "visible", placeholder: "chart", height: "15rem" })
-const PieChart = lazy(() => import("march/charts/pie.ts"), { pick: "PieChart", when: "visible", placeholder: "chart", height: "15rem" })
-const Heatmap = lazy(() => import("march/charts/heatmap.ts"), { pick: "Heatmap", when: "visible", placeholder: "chart", height: "12rem" })
-import { Card, Button, Grid } from "march/ui";
-import { users, activity, diamond, message, plus } from "march/icons";
-import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
+import { ComponentDemo } from "../component-demo.tsx";
 
-const DAY = 864e5, start = Date.UTC(2026, 9, 13);
-const wave = (i: number, base: number, amp: number, k: number) => Math.round(base + amp * Math.sin((i + k) / 3) + (amp / 2) * Math.cos((i * 7 + k) / 5) + i * base * 0.006);
+const LineChartDemo = lazy(() => import("march/components/data/line-chart/demo.tsx"), { placeholder: "card" });
+const BarChartDemo = lazy(() => import("march/components/data/bar-chart/demo.tsx"), { placeholder: "card" });
+const PieChartDemo = lazy(() => import("march/components/data/pie-chart/demo.tsx"), { placeholder: "card" });
+const HeatmapDemo = lazy(() => import("march/components/data/heatmap/demo.tsx"), { placeholder: "card" });
+const StatDemo = lazy(() => import("march/components/data/stat/demo.tsx"), { placeholder: "card" });
+const SparklineDemo = lazy(() => import("march/components/data/sparkline/demo.tsx"), { placeholder: "card" });
+const ProgressRingDemo = lazy(() => import("march/components/data/progress-ring/demo.tsx"), { placeholder: "card" });
+const BarListDemo = lazy(() => import("march/components/data/bar-list/demo.tsx"), { placeholder: "card" });
 
 export default function Charts(props: { params?: { rest?: string } }) {
-  let $rows = Array.from({ length: 30 }, (_, i) => ({ day: start + i * DAY, revenue: wave(i, 1200, 260, 1), expenses: wave(i, 760, 180, 4), active: wave(i, 8200, 700, 2) }))
-  const addDay = () => { const n = $rows.length; $rows = [...$rows.slice(1), { day: $rows[n - 1].day + DAY, revenue: wave(n + 30, 1300, 300, 1), expenses: wave(n + 30, 800, 200, 4), active: wave(n + 30, 8800, 800, 2) }] }
-  const channels = [{ label: "Uygulama", value: 4200 }, { label: "Web", value: 2900 }, { label: "Davet", value: 1800 }, { label: "Kampanya", value: 950 }, { label: "Diğer", value: 610 }]
-  const heat: { h: number; d: number; v: number }[] = []
-  for (let d = 0; d < 7; d++) for (let h = 0; h < 24; h++) heat.push({ h, d, v: Math.max(0, Math.round((d < 5 ? 40 : 25) * Math.sin(((h - 6) / 24) * Math.PI) + ((h * 7 + d * 3) % 9))) })
-  const days = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"]
   const RENDER: Record<string, () => unknown> = {
-    "stats": () => <Demo wide title="Göstergeler" desc="Stat: değer, önceki döneme göre değişim, eğilim çizgisi."
-    code={`<Stat icon={users} label="Toplam üye" value={48210} delta={0.214} spark={seri} hint="önceki döneme göre" />`}>
-    <Grid cols={4} gap={4}>
-      <Card><Stat icon={users} label="Toplam üye" value={48210} delta={0.214} hint="önceki döneme göre" spark={$rows.map((r) => r.active)} /></Card>
-      <Card><Stat icon={activity} label="Günlük aktif" value={9640} delta={0.068} hint="önceki döneme göre" spark={$rows.map((r) => r.active)} /></Card>
-      <Card><Stat icon={diamond} label="Gelir" value={$rows.reduce((s, r) => s + r.revenue, 0)} delta={0.105} format={["money", "TRY"]} spark={$rows.map((r) => r.revenue)} /></Card>
-      <Card><Stat icon={message} label="Gider" value={$rows.reduce((s, r) => s + r.expenses, 0)} delta={-0.031} invert format={["money", "TRY"]} spark={$rows.map((r) => r.expenses)} /></Card>
-    </Grid>
-  </Demo>,
-    "line-area": () => <Demo wide title="Çizgi ve alan" desc="Sürükleyerek yakınlaştır; noktalar arasında ← → ile gez. Yeni gün ekle: grafik akar.">
-    <div class="sc-row"><Button size="sm" icon={plus} on:click={addDay}>Gün ekle</Button></div>
-    <Grid cols={2} gap={4}>
-      <Card title="Gelir ve gider"><LineChart data={$rows} x="day" y={["revenue", "expenses"]} series={{ revenue: "Gelir", expenses: "Gider" }} format={["money", "TRY"]} xFormat="date" zoom height={240} title="Gelir ve gider" /></Card>
-      <Card title="Etkin kullanıcı"><AreaChart data={$rows} x="day" y="active" series={{ active: "Etkin" }} xFormat="date" height={240} title="Etkin kullanıcı" legend={false} /></Card>
-    </Grid>
-  </Demo>,
-    "bar": () => <Demo title="Çubuk" desc="Gruplu ya da yatay.">
-    <BarChart data={$rows.slice(-7)} x={(r: { day: number }) => new Date(r.day).toLocaleDateString("tr", { weekday: "short" })} y={["revenue", "expenses"]} series={{ revenue: "Gelir", expenses: "Gider" }} title="Son 7 gün" height={220} />
-  </Demo>,
-    "pie": () => <Demo title="Pasta ve halka" desc="Donut ortasında toplam; dilimler odaklanabilir.">
-    <div class="sc-row sc-row-center">
-      <PieChart data={channels} donut title="Kanal payı" legend="right" width={340} height={210} />
-    </div>
-  </Demo>,
-    "bar-list": () => <Demo title="Çubuk listesi ve halkalar" desc="BarList, ProgressRing, Sparkline.">
-    <BarList data={channels} title="Kanallar" format="number" />
-    <div class="sc-row"><ProgressRing value={82} label="Sağlık" /><ProgressRing value={57} label="Hedef" /><ProgressRing value={23} label="Risk" /><Sparkline data={$rows.map((r) => r.revenue)} width={160} height={40} area /></div>
-  </Demo>,
-    "heatmap": () => <Demo title="Isı haritası" desc="Gün × saat yoğunluğu (tema vurgusunun tonları).">
-    <Heatmap data={heat} x="h" y="d" value="v" yFormat={(d: number) => days[d]} title="Etkinlik" />
-  </Demo>,
+    "line-chart": () => <ComponentDemo folder="data/line-chart" view={LineChartDemo as never} title="LineChart ve AreaChart: çizgi ve alan" desc="Gün ekle: grafik akar. Çizimin üstünde sürükle: yakınlaşır (çift tık geri alır). Tab ile gel, ← → ile noktalar arasında gez, Enter seçer." />,
+    "bar-chart": () => <ComponentDemo folder="data/bar-chart" view={BarChartDemo as never} title="BarChart: çubuk grafik" desc="Yeni hafta: çubuklar yeni boylarına kayar. Yığılmış ve yatay görünümü Seçenekler'den aç; açıklamadaki bir seriye tıklamak onu gizler." />,
+    "pie-chart": () => <ComponentDemo folder="data/pie-chart" view={PieChartDemo as never} title="PieChart: pasta ve halka" desc="Sonraki ay: dilimler yeni açılarına döner. Ortadaki toplam ya da kendi yazın; dilime tıkla ya da klavyeyle gez." />,
+    "heatmap": () => <ComponentDemo folder="data/heatmap" view={HeatmapDemo as never} title="Heatmap: ısı haritası" desc="Gün × saat ya da hafta takvimi. Yeni hafta: hücreler yeni tonlarına geçer; oklarla hücreden hücreye gez." />,
+    "stat": () => <ComponentDemo folder="data/stat" view={StatDemo as never} title="Stat: gösterge" desc="Yeni gün: değerler, değişimler ve eğilim çizgileri akar. Bekleme bir maliyettir: azalması iyidir (invert)." />,
+    "sparkline": () => <ComponentDemo folder="data/sparkline" view={SparklineDemo as never} title="Sparkline: eğilim çizgisi" desc="Canlı: her saniye yeni fiyat gelir, çizgiler kayar. Ekran okuyucu her çizginin özetini duyar." />,
+    "progress-ring": () => <ComponentDemo folder="data/progress-ring" view={ProgressRingDemo as never} title="ProgressRing: ilerleme halkası" desc="Düşük, orta ve yüksek düzey kendi rengini alır; HADİ'nin dört rengi gradyan, parça ya da akan halka olur." />,
+    "bar-list": () => <ComponentDemo folder="data/bar-list" view={BarListDemo as never} title="BarList: çubuk listesi" desc="Bir dinleme daha: sıra değişir, çubuklar uzar. Uzun bir şarkı adı sığmazsa kayarak görünür; satırlar düğme olur." />,
   }
   return <Hub section="/charts" kicker="Bileşenler" title="Grafikler" lead="SVG, erişilebilir (ekran okuyucu için veri tablosu, klavyeyle nokta gezme), tema paletiyle renklenir. Veri sinyalse grafik kendiliğinden güncellenir." render={RENDER} params={props.params} />
 }

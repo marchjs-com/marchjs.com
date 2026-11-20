@@ -211,6 +211,8 @@ const loadOwn = (code: string): Promise<unknown> => Promise.all([...new Set([...
 async function loadPacks(code: string): Promise<void> {
   // march/landing is not in the ui barrel (its own lazy chunk): loaded once, when the code imports it
   if (!MODULES["march/landing"] && /["']march\/landing["']/.test(code)) MODULES["march/landing"] = await import("../../../../src/components/landing/index.ts");
+  // march/charts too (its own entry: LineChart, BarChart, PieChart, Heatmap, Stat, Sparkline, ProgressRing, BarList)
+  if (!MODULES["march/charts"] && /["']march\/charts["']/.test(code)) MODULES["march/charts"] = await import("../../../../src/charts/index.ts");
   await loadOwn(code);
   const ids = [...new Set([...code.matchAll(/from\s*["']march\/icons\/([a-z][a-z0-9-]*)["']/g)].map((m) => m[1]!))]
     .filter((id) => !(`march/icons/${id}` in MODULES) && !["packs", "catalog", "pack-paint"].includes(id));
@@ -328,7 +330,7 @@ const draw = (C: Comp, el: HTMLElement, props: Props, parts: Parts, cell = ""): 
   const own = resolve(rest);
   // m:parts: the components by themselves (this runtime's ui), each with its props
   const map = new Map<unknown, Record<string, unknown>>();
-  for (const [name, p] of Object.entries(parts)) { const comp = (ui as Record<string, unknown>)[name] ?? (MODULES["march/landing"] as Record<string, unknown> | undefined)?.[name]; if (typeof comp === "function" && Object.keys(p).length) map.set(comp, resolve(p)); }
+  for (const [name, p] of Object.entries(parts)) { const comp = (ui as Record<string, unknown>)[name] ?? (MODULES["march/landing"] as Record<string, unknown> | undefined)?.[name] ?? (MODULES["march/charts"] as Record<string, unknown> | undefined)?.[name]; if (typeof comp === "function" && Object.keys(p).length) map.set(comp, resolve(p)); }
   const bare = (): unknown => (children === undefined || children === "" ? core.h(C, own) : core.h(C, own, children));
   const make = (): unknown => (Object.keys(common).length ? mProps(bare(), common) : bare());
   // the cell is the root of its instances' keys (Hierarchy): counted afresh on every draw, so a key stays the same
@@ -554,9 +556,9 @@ const HIERARCHY = core.defineExtension({
  * bundle's function names are shortened. A test that reads the path turns on an owner per instance. */
 const watchTree = (): void => {
   core.extensions.name(ui as Record<string, unknown>);
-  // the components outside the ui barrel (march/components/<folder>, march/landing) are named too: else the Hierarchy
-  // shows their minified names and Properties never reaches their instances
-  for (const [k, m] of Object.entries(MODULES)) if (k.startsWith("march/components/") || k === "march/landing") core.extensions.name(m as Record<string, unknown>);
+  // the components outside the ui barrel (march/components/<folder>, march/landing, march/charts) are named too: else
+  // the Hierarchy shows their minified names and Properties never reaches their instances
+  for (const [k, m] of Object.entries(MODULES)) if (k.startsWith("march/components/") || k === "march/landing" || k === "march/charts") core.extensions.name(m as Record<string, unknown>);
   core.extend({ test: (_c: unknown, _i: unknown, path: readonly unknown[]) => path.length >= 0 }, HIERARCHY);
 };
 watchTree();

@@ -3,7 +3,7 @@
 export const HOME_STATS = {
   "dependencies": 0,
   "components": 277,
-  "registered": 194,
+  "registered": 202,
   "exports": 1281,
   "subpaths": 103,
   "categories": [
@@ -30,7 +30,7 @@ export const HOME_STATS = {
     {
       "id": "data",
       "label": "Veri gösterimi",
-      "components": 16
+      "components": 24
     },
     {
       "id": "feedback",
@@ -85,8 +85,8 @@ export const HOME_STATS = {
   },
   "managers": 30,
   "themes": 16,
-  "tests": 1468,
-  "testFiles": 332,
+  "tests": 1486,
+  "testFiles": 340,
   "budget": {
     "entry": 15360,
     "boot": 53248,

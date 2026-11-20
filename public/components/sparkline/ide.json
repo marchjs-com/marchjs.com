@@ -1,0 +1,26 @@
+{
+	"layout": "component",
+	"description": "Eksensiz küçük çizgi: tablo hücresinde, liste satırında, göstergede.",
+	"sources": [
+		{
+			"type": "code",
+			"name": "Heartbeat.tsx",
+			"code": "import { Sparkline } from \"march/charts\"\nimport { Button } from \"march/ui\"\n\n// kalp atışı: \"Koş\" nabzı yükseltir, \"Dinlen\" düşürür; çizgi son 20 ölçümü gösterir\nexport function Heartbeat() {\n  let $beats = [72, 74, 71, 73, 75, 72, 70, 74]\n  const add = (d: number) => { const last = $beats[$beats.length - 1]; $beats = [...$beats, Math.max(55, Math.min(180, last + d))].slice(-20) }\n  return <div sx={{ flex: [\"row\", \"wrap\", \"center\"], gap: 3 }}>\n    <Button size=\"sm\" on:click={() => add(14)}>🏃 Koş</Button>\n    <Button size=\"sm\" variant=\"secondary\" on:click={() => add(-10)}>🧘 Dinlen</Button>\n    <Sparkline data={() => $beats} width={160} height={40} area color={4} title=\"Nabız\" />\n    <strong>{() => `${$beats[$beats.length - 1]} bpm`}</strong>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "StockWatch.tsx",
+			"code": "import { Sparkline } from \"march/charts\"\nimport { Card, ListRow, Badge } from \"march/ui\"\n\n// borsa izleme listesi: her satırda hisse, 30 günlük eğilim, son fiyat ve değişim rozeti\nconst STOCKS = [\n  { kod: \"HADI\", fiyat: [41, 42, 44, 43, 46, 48, 47, 50, 52, 51, 54] },\n  { kod: \"MRCH\", fiyat: [88, 86, 87, 84, 82, 83, 80, 78, 79, 76, 75] },\n  { kod: \"KAHV\", fiyat: [12, 12.4, 12.1, 12.6, 12.5, 12.9, 13.1, 12.8, 13.3, 13.2, 13.4] },\n]\n\nexport function StockWatch() {\n  return <Card title=\"İzleme listesi\">\n    {STOCKS.map((s) => {\n      const first = s.fiyat[0], last = s.fiyat[s.fiyat.length - 1], ch = (last - first) / first\n      return <ListRow title={s.kod} sub={`₺${last}`}\n        trail={<div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n          <Sparkline data={s.fiyat} color={ch >= 0 ? 2 : 4} width={96} height={28} title={s.kod} />\n          <Badge tone={ch >= 0 ? \"success\" : \"danger\"}>{`${ch >= 0 ? \"+\" : \"\"}${(ch * 100).toFixed(1)}%`}</Badge>\n        </div>} />\n    })}\n  </Card>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "SparklineLab.tsx",
+			"code": "import { Sparkline } from \"march/charts\"\nimport { Button, Card } from \"march/ui\"\n\n// Sparkline'ın bütün özellikleri: data (sayılar ya da nesneler, sinyal), y, width, height, format, zero, area, dot,\n// color, colors, title, empty\nconst visits = [{ gun: 1, ziyaret: 40 }, { gun: 2, ziyaret: 55 }, { gun: 3, ziyaret: 48 }, { gun: 4, ziyaret: 70 }]\n\nexport function SparklineLab() {\n  let $nums = [3, 5, 4, 8, 6, 9]\n  let $empty = false\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 2 }}>\n      <Button class=\"lab-add\" size=\"sm\" on:click={() => { $nums = [...$nums, ($nums.length * 7) % 11] }}>Değer ekle</Button>\n      <Button class=\"lab-empty\" size=\"sm\" variant=\"ghost\" on:click={() => { $empty = !$empty }}>Boşalt / geri getir</Button>\n    </div>\n    <div sx={{ flex: [\"row\", \"wrap\", \"center\"], gap: 3 }}>\n      <span class=\"lab-nums\"><Sparkline data={() => ($empty ? [] : $nums)} width={180} height={48} zero area format={(v: number) => `${v} adet`} title=\"Satış\" empty=\"Satış yok\" /></span>\n      <span class=\"lab-obj\"><Sparkline data={visits} y=\"ziyaret\" dot={false} color={2} width={120} height={32} title=\"Ziyaret\" /></span>\n      <Sparkline data={[1, 4, 2, 5]} colors={[\"#f2801f\"]} title=\"Turuncu\" />\n    </div>\n    <Card m:theme=\"night\">\n      <Sparkline data={() => $nums} width={240} height={56} area color={3} title=\"Koyu zeminde\" />\n    </Card>\n  </div>\n}\n"
+		},
+		{
+			"type": "code",
+			"name": "SparklineLab.test.tsx",
+			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { SparklineLab } from \"./SparklineLab.tsx\"\n\n// SparklineLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"çizgi ve alan çizilir; ekran okuyucu özeti biçimli\", () => {\n  const s = renderTest(() => <SparklineLab />)\n  const svg = s.get(\".lab-nums svg\")!\n  expect(svg.querySelector(\".m-chart-area\")).toBeTruthy()\n  expect(svg.getAttribute(\"aria-label\")!).toContain(\"Satış\")\n  expect(svg.getAttribute(\"aria-label\")!).toContain(\"adet\")\n})\n\ntest(\"değer eklenince özet güncellenir\", async () => {\n  const s = renderTest(() => <SparklineLab />)\n  const before = s.get(\".lab-nums svg\")!.getAttribute(\"aria-label\")\n  await s.click(\".lab-add\")\n  expect(s.get(\".lab-nums svg\")!.getAttribute(\"aria-label\")).not.toBe(before)\n})\n\ntest(\"veri boşalınca boş metni söylenir\", async () => {\n  const s = renderTest(() => <SparklineLab />)\n  await s.click(\".lab-empty\")\n  expect(s.get(\".lab-nums svg\")!.getAttribute(\"aria-label\")).toBe(\"Satış: Satış yok\")\n})\n\ntest(\"dot={false}: son nokta gizli; boyut yazılır\", () => {\n  const s = renderTest(() => <SparklineLab />)\n  const obj = s.get(\".lab-obj svg\")!\n  expect(obj.querySelector(\".m-chart-marker\")!.getAttribute(\"visibility\")).toBe(\"hidden\")\n  expect(obj.getAttribute(\"width\")).toBe(\"120\")\n})\n"
+		}
+	]
+}
