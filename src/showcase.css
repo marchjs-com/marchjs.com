@@ -217,16 +217,6 @@
 .sc-resize-frame .m-nav-wrap { display: flex; }
 .sc-resize-content { flex: 1; min-width: 0; padding: var(--m-space-5); background: var(--m-bg); }
 
-/* forms: selection controls */
-.sc-choice-compare { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(22rem, 100%), 1fr)); gap: var(--m-space-3); }
-.sc-choice-case { display: grid; gap: var(--m-space-2); align-content: start; padding: var(--m-space-3); border: 1px solid var(--m-border-subtle); border-radius: var(--m-radius-2); background: var(--m-bg-subtle); }
-.sc-choice-case:has(.m-choice-card) { grid-column: 1 / -1; }
-.sc-choice-name { font-size: var(--m-text-xs); color: var(--m-muted); }
-
-/* feedback: multicolor */
-.sc-multi { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--m-space-5); align-items: start; }
-.sc-multi > :last-child { grid-column: 1 / -1; }
-@media (max-width: 900px) { .sc-multi { grid-template-columns: minmax(0, 1fr); } }
 .sc-choice-note { margin: 0; font-size: var(--m-text-sm); }
 
 /* overlay page */

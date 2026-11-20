@@ -216,6 +216,8 @@ async function loadPacks(code: string): Promise<void> {
   if (!MODULES["march/landing"] && /["']march\/landing["']/.test(code)) MODULES["march/landing"] = await import("../../../../src/components/landing/index.ts");
   // march/charts too (its own entry: LineChart, BarChart, PieChart, Heatmap, Stat, Sparkline, ProgressRing, BarList)
   if (!MODULES["march/charts"] && /["']march\/charts["']/.test(code)) MODULES["march/charts"] = await import("../../../../src/charts/index.ts");
+  // march/schema too (schema(), field types, validation: a form from one definition)
+  if (!MODULES["march/schema"] && /["']march\/schema["']/.test(code)) MODULES["march/schema"] = await import("../../../../src/schema/index.ts");
   await loadOwn(code);
   const ids = [...new Set([...code.matchAll(/from\s*["']march\/icons\/([a-z][a-z0-9-]*)["']/g)].map((m) => m[1]!))]
     .filter((id) => !(`march/icons/${id}` in MODULES) && !["packs", "catalog", "pack-paint"].includes(id));

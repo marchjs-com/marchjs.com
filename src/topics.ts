@@ -23,7 +23,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "keyframes", title: "Zaman çizelgesi", name: "KeyframeTimeline", desc: "Anahtar kareler, sürükleyerek zamanlama, kare başına eğri.", group: "Hareket" },
   ],
   "/forms": [
-    { slug: "schema", title: "Şemadan form", desc: "Alanlar, doğrulama ve koşullu alanlar tek tanımdan.", group: "Form kurma" },
+    { slug: "schema", title: "Şemadan form", name: "Form", desc: "Alanlar, doğrulama ve koşullu alanlar tek tanımdan.", group: "Form kurma" },
     { slug: "wizard", title: "Sihirbaz", name: "Wizard", desc: "Adım adım form; her adımın kendi şeması.", group: "Form kurma" },
     { slug: "list-editor", title: "Liste düzenleyici", name: "ListEditor", desc: "Satır ekle, sil, sırala.", group: "Form kurma" },
     { slug: "key-value-editor", title: "Anahtar-değer düzenleyici", name: "KeyValueEditor", desc: "Ad ve değer çiftleri.", group: "Form kurma" },

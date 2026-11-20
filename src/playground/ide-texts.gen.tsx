@@ -63,6 +63,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Etiket hapı: düz, seçilebilir süzgeç ya da kaldırılabilir; seçili işareti ve rengi değiştirilebilir.`,
   // examples/showcase/public/components/choice-picker/ide.json
   t`İkonlu, açıklamalı büyük seçenekler.`,
+  // examples/showcase/public/components/choice-variants/ide.json
+  t`Aynı seçici beş görünümde; boyut, köşe ve renk.`,
   // examples/showcase/public/components/clamp-text/ide.json
   t`N satıra katlanır; sığmıyorsa "devamı", açılınca "daha az".`,
   // examples/showcase/public/components/code-view/ide.json
@@ -297,6 +299,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Düzenlenebilir listede satır araçları: yukarı, aşağı, sil; uçlarda kapanır.`,
   // examples/showcase/public/components/scheduler/ide.json
   t`Ay, hafta, gün; sürükleyerek taşı ve boyutla.`,
+  // examples/showcase/public/components/schema/ide.json
+  t`Alanlar, doğrulama ve koşullu alanlar tek tanımdan.`,
   // examples/showcase/public/components/scroll-progress/ide.json
   t`Sayfanın ya da bir makalenin ne kadarının okunduğunu gösteren ince çubuk.`,
   // examples/showcase/public/components/scroll-story/ide.json
