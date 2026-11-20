@@ -562,7 +562,9 @@ function propsOf(opts: readonly PlaygroundOption[], v: Record<string, unknown>, 
     // a yes / no that is on by default and turned off: false is the choice (animated, dividers…), not "unset"
     if (x === undefined) continue
     if (o.key === "html:data") { delete out[prop]; for (const [k, d] of Object.entries(x as Record<string, unknown>)) out[`data-${k}`] = d; continue }
-    if (x === OMIT || x === "" || x === null || (x === false && !o.toCode && !o.toProp && !isTri(o) && o.default !== true)) { if (changed && x === false) out[prop] = false; continue }
+    // on an instance or a kind (changed), a yes / no turned off is written as false even when the card's code leaves it
+    // out: the prop written in the code (an Alert's title, a dismissable) is turned off, not kept
+    if (x === OMIT || x === "" || x === null || (x === false && !o.toCode && !o.toProp && !isTri(o) && o.default !== true)) { if (changed && (x === false || (x === OMIT && cur === false))) out[prop] = false; continue }
     out[prop] = x
   }
   // the sx keys (sx.p, sx.text…) become one sx object; a number scale's value is a number

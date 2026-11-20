@@ -536,7 +536,17 @@ const HIERARCHY = core.defineExtension({
     const extra = instProps[key];
     // an instance that throws while drawing (IconButton without its label, before the Properties' values arrive) is
     // not on screen and its cleanup never runs: it leaves the Hierarchy here, or every such draw would stay listed
-    try { return next(extra ? over(p, extra) : p); } catch (e) { instances.delete(id); treeChanged(); throw e; }
+    // the common props (m:color, m:tip…) and sx given from Properties (to this instance, or to its kind as m:parts) are no
+    // props of the component: they are applied to what it draws, as the compiler does for the ones written in code
+    const given = extra ? over(p, extra) : p;
+    const common: Record<string, unknown> = {};
+    // (sx only when Properties gave it: one written in code is the compiler's already)
+    const mine = (k: string): boolean => k.startsWith("m:") || (k === "sx" && !!extra && "sx" in extra);
+    for (const k of Object.keys(given)) if (mine(k)) common[k === "sx" ? k : k.slice(2)] = (given as Props)[k];
+    let clean = given;
+    if (Object.keys(common).length) { clean = over(given, {}); for (const k of Object.keys(given)) if (mine(k)) delete (clean as Props)[k]; }
+    try { const out = next(clean); return Object.keys(common).length ? mProps(out, Object.fromEntries(Object.entries(common).filter(([, v]) => v !== undefined && v !== ""))) : out; }
+    catch (e) { instances.delete(id); treeChanged(); throw e; }
   },
   setup: (ctx) => { const inst = instances.get(core.useContext(PARENT).id); if (inst && inst.name === ctx.info.name) inst.roots = ctx.roots; },
 });
