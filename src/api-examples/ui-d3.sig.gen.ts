@@ -2,7 +2,7 @@
 /** Signatures of the exports this group has examples for: { subpath: { name: signature } }. */
 const sig: Record<string, Record<string, string>> = {
  "march/ui": {
-  "ToastHost": "function ToastHost(props: { position?: \"bottom-end\" | \"bottom-start\" | \"bottom-center\" | \"top-end\" | \"top-start\" | \"top-center\" | undefined; class?: ClassProp; } = {}): Element",
+  "ToastHost": "function ToastHost(props: { position?: \"bottom-end\" | \"bottom-start\" | \"bottom-center\" | \"top-end\" | \"top-start\" | \"top-center\" | undefined; class?: ClassProp; fallback?: boolean | undefined; } = {}): Element",
   "Toggle": "function Toggle(props: ToggleProps): unknown",
   "Toolbar": "function Toolbar(props: ToolbarProps): Element",
   "Tooltip": "function Tooltip(props: TooltipProps): unknown[]",

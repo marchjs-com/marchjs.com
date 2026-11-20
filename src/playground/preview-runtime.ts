@@ -183,14 +183,25 @@ export async function runTests(code: string): Promise<TestResult[]> {
   const shown = core.locale.peek(), held = userTexts, kept: Record<string, string> = {};
   if (held) { const d = dicts.get(held.code) ?? {}; for (const k of held.keys) if (k in d) { kept[k] = d[k]!; delete d[k]; } core.messages(held.code, {}); }
   if (shown !== ownLocale) core.locale.set(ownLocale);
+  // while the tests run, the toasts they make go to a stack in the hidden host (the preview's stack is a fallback: it
+  // shows none while this one is there)
+  const toastBox = testHost.appendChild(document.createElement("div"));
+  const stopToasts = core.render(() => core.h(ui.ToastHost as never, {}), toastBox);
   try {
     for (const c of cases) {
       const t0 = performance.now();
+      // the toasts a test makes go when it ends (one stack serves the page: they would show on the preview)
+      const before = new Set(ui.toast.list().map((x) => x.id));
       try { await c.fn(); out.push({ name: c.name, ok: true, ms: performance.now() - t0 }); }
       catch (e) { out.push({ name: c.name, ok: false, ms: performance.now() - t0, error: { message: String((e as Error)?.message ?? e), stack: String((e as Error)?.stack ?? "") } }); }
-      finally { for (const s of screens) { try { s.dispose(); } catch { /* gone */ } } screens = []; }
+      finally {
+        for (const s of screens) { try { s.dispose(); } catch { /* gone */ } }
+        screens = [];
+        for (const x of ui.toast.list()) if (!before.has(x.id)) ui.toast.dismiss(x.id);
+      }
     }
   } finally {
+    stopToasts(); toastBox.remove();
     if (held) core.messages(held.code, kept);
     if (shown !== ownLocale) core.locale.set(shown);
   }
@@ -442,6 +453,12 @@ export async function run(code: string, el: HTMLElement, props: Record<string, P
   lastProps = props; lastParts = parts;
   el.replaceChildren();
   el.dataset["cells"] = String(comps.length);
+  // what the code puts on "the page" stays in the preview: the preview is an overlay scope (its fixed layers cover it,
+  // not the page) and has a toast stack of its own (toast() then opens none on the page). Set before the cells are
+  // drawn: a drawer or dialog drawn open finds the scope then
+  el.classList.add("m-overlay-scope");
+  el.style.setProperty("position", "relative");
+  el.style.setProperty("contain", "layout");
   const cells = new Map<string, Cell>();
   for (const [name, C] of comps) {
     const box = document.createElement("section");
@@ -458,16 +475,12 @@ export async function run(code: string, el: HTMLElement, props: Record<string, P
     el.append(box);
     cells.set(name, { C, el: stage, dispose: draw(C, stage, props[name] ?? {}, parts[name] ?? {}, name), sig: sigOf(props[name] ?? {}, parts[name] ?? {}) ?? undefined });
   }
-  // what the code puts on "the page" stays in the preview: the preview is an overlay scope (its fixed layers cover it,
-  // not the page) and has a toast stack of its own (toast() then opens none on the page)
-  el.classList.add("m-overlay-scope");
-  el.style.setProperty("position", "relative");
-  el.style.setProperty("contain", "layout");
   const toasts = document.createElement("div");
   toasts.className = "sc-pv-toasts";
   toasts.style.setProperty("display", "contents");
   el.append(toasts);
-  toastStop = core.render(() => core.h(ui.ToastHost as never, {}), toasts);
+  // a fallback: an example that renders its own <ToastHost /> shows its toasts there only
+  toastStop = core.render(() => core.h(ui.ToastHost as never, { fallback: true }), toasts);
   last = { url, cells };
   data = (mod["__marchData"] as Record<string, unknown> | undefined) ?? {};
   watchData();
