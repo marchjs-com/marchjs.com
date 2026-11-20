@@ -7,7 +7,7 @@ import type { ArtColor, ArtOpts, ArtSet, Shape } from "./hub-art/types.ts";
 /** The drawings of each section (topics.ts HUBS key → loader). */
 const SETS: Record<string, () => Promise<{ art: ArtSet }>> = {
   "/animation": () => import("./hub-art/animation.ts"), "/big-data": () => import("./hub-art/big-data.ts"),
-  "/buttons": () => import("./hub-art/buttons.ts"), "/charts": () => import("./hub-art/charts.ts"),
+  "/buttons": () => import("./hub-art/buttons.ts"), "/text": () => import("./hub-art/text.ts"), "/charts": () => import("./hub-art/charts.ts"),
   "/data": () => import("./hub-art/data.ts"), "/editors": () => import("./hub-art/editors.ts"),
   "/feedback": () => import("./hub-art/feedback.ts"), "/forms": () => import("./hub-art/forms.ts"),
   "/ide-shell": () => import("./hub-art/ide.ts"), "/language": () => import("./hub-art/language.ts"),

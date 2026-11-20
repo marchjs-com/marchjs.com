@@ -43,6 +43,7 @@ export default {
   "/start": () => import("./pages/start.tsx"),
   "/test-bilesen": () => import("./pages/test-bilesen.tsx"),
   "/text-motion": () => import("./pages/text-motion.tsx"),
+  "/text": () => import("./pages/text.tsx"),
   "/themes": () => import("./pages/themes.tsx"),
   "/transitions": () => import("./pages/transitions.tsx"),
   "/web": () => import("./pages/web.tsx"),

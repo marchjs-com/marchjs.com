@@ -11,6 +11,7 @@ export const PAGES: PageInfo[] = [
   { path: "/themes", title: "Temalar ve tokenlar" },
   { path: "/icons", title: "İkonlar" },
   { path: "/buttons", title: "Düğmeler ve rozetler" },
+  { path: "/text", title: "Metin ve ipuçları" },
   { path: "/forms", title: "Formlar" },
   { path: "/editors", title: "Editörler" },
   { path: "/data", title: "Veri" },
