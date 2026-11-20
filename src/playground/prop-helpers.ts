@@ -15,9 +15,9 @@ export type TagPlace =
   | { at: "code"; comp: string; tag: string; prop: string; frames: Frame[]; typed: string; quoted: boolean }
 
 const ID = /[\w$]/
-/** Read a tag from `s` (its `<`) to the end of `text`: null when the tag closed before it (or is no component tag). */
+/** Read a tag from `s` (its `<`) to the end of `text`: null when the tag closed before it (or is no tag). */
 function scanFrom(text: string, s: number): TagPlace | null {
-  const head = /^<([A-Z][\w$.]*)(?=\s)/.exec(text.slice(s))
+  const head = /^<([A-Za-z][\w$.-]*)(?=\s)/.exec(text.slice(s))
   if (!head) return null
   const comp = head[1]!, tag = text.slice(s), props: string[] = []
   let i = s + head[0].length
@@ -73,10 +73,13 @@ function scanFrom(text: string, s: number): TagPlace | null {
 /** Where the caret (the end of `before`) is in a component's tag; null outside one. Tags nested in a prop's braces
  * (`render={() => <Row>…</Row>}`) are stepped over: the tag the caret is in is found from the last `<Name` back. */
 export function tagPlace(before: string): TagPlace | null {
-  const starts = [...before.matchAll(/<[A-Z]/g)].map((m) => m.index!)
+  // a component's tag (<Button …>) or an HTML element's (<div …>, not after a name or a bracket: a generic, a
+  // comparison); an element counts only inside a prop's braces (sx={{ … }}, on:click={…}), between its props the
+  // language service answers
+  const starts = [...before.matchAll(/(?<![\w$)\]])<[A-Za-z]/g)].map((m) => m.index!)
   for (let i = starts.length - 1, tries = 0; i >= 0 && tries < 24; i--, tries++) {
     const r = scanFrom(before, starts[i]!)
-    if (r) return r
+    if (r) return /^[A-Z]/.test(r.comp) || r.at === "code" ? r : null
   }
   return null
 }
