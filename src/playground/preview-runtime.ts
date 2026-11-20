@@ -171,6 +171,9 @@ export async function runTests(code: string): Promise<TestResult[]> {
   testHost ??= Object.assign(document.body.appendChild(document.createElement("div")), { className: "sc-test-host" });
   testHost.setAttribute("aria-hidden", "true");
   testHost.style.setProperty("position", "fixed"); testHost.style.setProperty("inset-inline-start", "-10000px"); testHost.style.setProperty("inline-size", "800px");
+  // a containing block for fixed descendants: a menu, popover or tooltip a test opens is placed against the host (off
+  // screen) and clipped to it, not against the viewport, where it would flash on the page while the tests run
+  testHost.style.setProperty("contain", "layout paint");
   const url = URL.createObjectURL(new Blob([link(code)], { type: "text/javascript" }));
   try { await import(/* @vite-ignore */ url); } finally { URL.revokeObjectURL(url); }
   const out: TestResult[] = [];
