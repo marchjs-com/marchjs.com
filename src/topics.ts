@@ -92,7 +92,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
     { slug: "loader", title: "Yükleyici", name: "Loader", desc: "Bir alanı dolduran yükleme.", group: "Yükleme" },
   ],
   "/navigation": [
-    { slug: "routing", title: "Yönlendirici", desc: "Kalıcı yerleşim, adlı outlet, modal rota.", group: "Yönlendirme" },
+    { slug: "routing", title: "Yönlendirici", name: "Router", desc: "Kalıcı yerleşim, adlı outlet, modal rota.", group: "Yönlendirme" },
     { slug: "nav-sidebar", title: "Kenar menüsü", name: "NavSidebar", desc: "Kategori sırası, daraltma, iç içe sayfalar.", group: "Menüler" },
     { slug: "nav-menu", title: "Uygulama menüsü", name: "NavMenu", desc: "Sabitlenen ve son kullanılan sayfalar.", group: "Menüler" },
     { slug: "bottom-nav", title: "Alt sekme çubuğu", name: "BottomNav", desc: "Mobil sekmeler, orta eylem.", group: "Menüler" },

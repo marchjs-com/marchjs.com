@@ -1,6 +1,4 @@
-// Navigation: the router demo and one MarchIDE page per navigation component (NavSidebar, Tabs, Breadcrumbs, …).
-import { Button } from "march/ui";
-import { Demo } from "../demo.tsx";
+// Navigation: one MarchIDE page per navigation component (and the router: /navigation/routing) (NavSidebar, Tabs, Breadcrumbs, …).
 import { Hub } from "../hub.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
 import "./navigation.css";
@@ -11,17 +9,6 @@ export default function Navigation(props: { params?: { rest?: string } }) {
     "section-timeline": () => <ComponentDemo folder="navigation/section-timeline" title="SectionTimeline: bölüm zaman çizelgesi" desc="Uzun bir sayfanın her bölümü için bir nokta; okunan bölüm renkli, basınca oraya kayar. İmleç yaklaşınca Dock gibi büyür, adlar açılır. Dikey ya da yatay; istenirse adres satırı okunan bölümü izler." />,
     "page-dots": () => <ComponentDemo folder="navigation/page-dots" title="PageDots: sayfa noktaları" desc="Sayfa başına bir nokta; etkin olan uzar ve renklenir. onChange verilirse noktalar düğmedir (ok tuşları, Home / End), verilmezse yalnız konumu gösterir." />,
     "period-nav": () => <ComponentDemo folder="navigation/period-nav" title="PeriodNav: dönem gezinme" desc="Takvimin dönemini adımlayan küçük grup: önceki, bugün, sonraki. Başlık verilirse dönemin adı okların arasında durur (Calendar ay satırı), verilmezse üç düğme bitişik tek denetimdir (Scheduler çubuğu). Oklar sağdan sola yazıda yer değiştirir." />,
-    "routing": () => <Demo wide title="Yönlendirici: kalıcı yerleşim, adlı outlet, modal rota" desc="İç içe yerleşim (sekme değişince yerleşimdeki metin kalır), yanda açılan kayıt (adreste ?~aside=), pencerede açılan kayıt (geri tuşu kapatır, yenileyince tam sayfa) ve üst çubuğa sayfanın kendi düğmeleri (Portal)."
-    code={`createRouter({
-routes: { "/team": { load: () => import("./list.tsx"), layouts: [shell, teamLayout] } },
-outlets: { aside: { "/item/:id": () => import("./item.tsx") } },
-})
-// teamLayout: <Outlet /> + <Outlet name="aside" />
-<Link href="/item/3" outlet="aside">Open beside</Link>
-<Link href="/team/item/3" modal>Open over the list</Link>
-<Portal to="toolbar"><Button>New record</Button></Portal>`}>
-    <Button href="/navigation/router" variant="primary">Yönlendirici demosunu aç</Button>
-  </Demo>,
     "nav-sidebar": () => <ComponentDemo folder="composite/nav-sidebar" title="NavSidebar: seçenekler" desc="Karmaşık bileşen: kategori sırası, ilk açılışta hangi kategorilerin açık olduğu, ikon rayına daraltma ve son kullanılanlar sayısı. Parçaları aşağıdaki satırda, her biri kendi sayfasına bağlı." />,
     "bottom-nav": () => <ComponentDemo folder="composite/bottom-nav" title="BottomNav: mobil sekme çubuğu" desc="Etkin sekmeye kayan renkli baloncuk, sayı ve nokta rozetleri, ortada dört HADİ rengiyle dönen halkalı Oluştur düğmesi. Sohbet sekmesine geçince rozet sıfırlanır; Oluştur rozeti artırır." />,
     "stepper": () => <ComponentDemo folder="navigation/stepper" title="Stepper: morph geçişli adımlar" desc="Vurgu eski adımdan yenisine sıvı gibi uzayıp oturur; adım içeriği gidiş yönüne göre bulanıklaşıp kayarak değişir (RTL'de aynalı), çerçeve yüksekliği izler. Adıma tıklayın ya da Geri / İleri." />,

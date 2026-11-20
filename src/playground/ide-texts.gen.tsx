@@ -295,6 +295,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Biçimli metin, bağlantı, liste; Markdown giriş ve çıkış.`,
   // examples/showcase/public/components/roadmap/ide.json
   t`Kaydırdıkça dolan çizgi; geçilen noktalar yanar, süren adım parlar.`,
+  // examples/showcase/public/components/routing/ide.json
+  t`Kalıcı yerleşim, adlı outlet, modal rota, guard ve yönlendirme; önizlemede adres yönlendiricinin kendisinde kalır.`,
   // examples/showcase/public/components/row-tools/ide.json
   t`Düzenlenebilir listede satır araçları: yukarı, aşağı, sil; uçlarda kapanır.`,
   // examples/showcase/public/components/scheduler/ide.json

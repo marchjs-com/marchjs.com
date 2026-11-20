@@ -145,6 +145,10 @@ function expect(actual: unknown) {
   };
   return { ...make(false), not: make(true) };
 }
+// march/router in the preview: a test that makes a router replaces the preview's (one router at a time); the preview's
+// own router object is put back after the tests (its <Router /> still shows that one)
+type RouterMod = { _router?: { S: { router: { onPop?: () => void } | null } } };
+let keptRouter: { onPop?: () => void } | null = null;
 const testApi = {
   ...testing,
   test: (name: string, fn: () => unknown) => { cases.push({ name, fn }); },
@@ -183,6 +187,7 @@ export async function runTests(code: string): Promise<TestResult[]> {
   const shown = core.locale.peek(), held = userTexts, kept: Record<string, string> = {};
   if (held) { const d = dicts.get(held.code) ?? {}; for (const k of held.keys) if (k in d) { kept[k] = d[k]!; delete d[k]; } core.messages(held.code, {}); }
   if (shown !== ownLocale) core.locale.set(ownLocale);
+  keptRouter = (MODULES["march/router"] as RouterMod | undefined)?._router?.S.router ?? null;
   // while the tests run, the toasts they make go to a stack in the hidden host (the preview's stack is a fallback: it
   // shows none while this one is there)
   const toastBox = testHost.appendChild(document.createElement("div"));
@@ -202,6 +207,9 @@ export async function runTests(code: string): Promise<TestResult[]> {
     }
   } finally {
     stopToasts(); toastBox.remove();
+    const RS = (MODULES["march/router"] as RouterMod | undefined)?._router?.S;
+    if (RS && keptRouter && RS.router !== keptRouter) { RS.router = keptRouter; keptRouter.onPop?.(); }
+    keptRouter = null;
     if (held) core.messages(held.code, kept);
     if (shown !== ownLocale) core.locale.set(shown);
   }
@@ -242,6 +250,14 @@ async function loadPacks(code: string): Promise<void> {
   if (!MODULES["march/table"] && /["']march\/table["']/.test(code)) MODULES["march/table"] = await import("../../../../src/table/index.ts");
   // march/schema too (schema(), field types, validation: a form from one definition)
   if (!MODULES["march/schema"] && /["']march\/schema["']/.test(code)) MODULES["march/schema"] = await import("../../../../src/schema/index.ts");
+  // march/router too: every router the code makes keeps an address of its own (memoryHistory), so the preview never
+  // changes the page's address, title or back button
+  if (!MODULES["march/router"] && /["']march\/router["']/.test(code)) {
+    const router = await import("../../../../src/router/index.ts");
+    MODULES["march/router"] = { ...router, createRouter: (o: Parameters<typeof router.createRouter>[0]) => {
+      return router.createRouter({ ...o, history: o.history ?? router.memoryHistory() });
+    } };
+  }
   await loadOwn(code);
   const ids = [...new Set([...code.matchAll(/from\s*["']march\/icons\/([a-z][a-z0-9-]*)["']/g)].map((m) => m[1]!))]
     .filter((id) => !(`march/icons/${id}` in MODULES) && !["packs", "catalog", "pack-paint"].includes(id));
