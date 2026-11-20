@@ -1236,9 +1236,20 @@ const show = (v: unknown, io: TerminalIO): void => {
 }
 // the accessibility check: the preview's elements without a name, images without alt, hidden focusable ones,
 // repeated ids, a positive tabindex, and text whose contrast is under WCAG AA (4.5, 3 for large text)
-const rgb = (c: string): [number, number, number, number] | null => { const m = /rgba?\(([\d.]+)[, ]+([\d.]+)[, ]+([\d.]+)(?:[,/ ]+([\d.]+%?))?/.exec(c); if (!m) return null; const a = m[4] ? (m[4].endsWith("%") ? parseFloat(m[4]) / 100 : +m[4]) : 1; return [+m[1]!, +m[2]!, +m[3]!, a] }
+// a computed colour: rgb(a) as the browser writes most, or color(srgb r g b / a) (what a color-mix() computes to: 0–1)
+const rgb = (c: string): [number, number, number, number] | null => {
+  const alpha = (x?: string): number => (x ? (x.endsWith("%") ? parseFloat(x) / 100 : +x) : 1)
+  const s = /color\(srgb ([\d.e-]+) ([\d.e-]+) ([\d.e-]+)(?: \/ ([\d.]+%?))?\)/.exec(c)
+  if (s) return [+s[1]! * 255, +s[2]! * 255, +s[3]! * 255, alpha(s[4])]
+  const m = /rgba?\(([\d.]+)[, ]+([\d.]+)[, ]+([\d.]+)(?:[,/ ]+([\d.]+%?))?/.exec(c)
+  return m ? [+m[1]!, +m[2]!, +m[3]!, alpha(m[4])] : null
+}
 const lum = ([r, g, b]: readonly number[]): number => { const f = (x: number) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4 }; return 0.2126 * f(r!) + 0.7152 * f(g!) + 0.0722 * f(b!) }
-const bgOf = (el: Element | null): readonly number[] => { for (let n = el; n; n = n.parentElement) { const c = rgb(getComputedStyle(n).backgroundColor); if (c && c[3] > 0.5) return c } return [255, 255, 255] }
+// the colour behind an element: the first solid background up its ancestors; null when an image or a gradient comes
+// first (the colour under the text cannot be read, so its contrast is not judged)
+const bgOf = (el: Element | null): readonly number[] | null => { for (let n = el; n; n = n.parentElement) { const st = getComputedStyle(n); if (st.backgroundImage !== "none") return null; const c = rgb(st.backgroundColor); if (c && c[3] > 0.5) return c } return [255, 255, 255] }
+/** Whether an element is seen at its centre (not under an image, as an avatar's initials under its photo). */
+const onTop = (el: Element): boolean => { const r = el.getBoundingClientRect(), hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return !hit || hit === el || el.contains(hit) || hit.contains(el) }
 const nameOf = (el: Element): string => {
   const by = el.getAttribute("aria-labelledby")
   const label = el.id ? el.ownerDocument.querySelector(`label[for="${CSS.escape(el.id)}"]`) : null
@@ -1261,10 +1272,13 @@ const audit = (root: HTMLElement): Issue[] => {
   for (const el of root.querySelectorAll("[id]")) ids.set(el.id, (ids.get(el.id) ?? 0) + 1)
   for (const [id, n] of ids) if (n > 1) out.push({ problem: `id ${n} kez tekrar ediyor`, element: `#${id}` })
   for (const el of root.querySelectorAll<HTMLElement>("*")) {
-    if (![...el.childNodes].some((n) => n.nodeType === 3 && n.nodeValue?.trim()) || !el.offsetParent) continue
+    // text of an inactive control (disabled) is exempt from the contrast minimum (WCAG 1.4.3)
+    if (![...el.childNodes].some((n) => n.nodeType === 3 && n.nodeValue?.trim()) || !el.offsetParent || el.closest(":disabled, [aria-disabled=true]")) continue
     const st = getComputedStyle(el), fg = rgb(st.color)
     if (!fg) continue
-    const [hi, lo] = [lum(fg), lum(bgOf(el))].sort((x, y) => y - x) as [number, number], ratio = (hi + 0.05) / (lo + 0.05)
+    const bg = bgOf(el)
+    if (!bg || !onTop(el)) continue
+    const [hi, lo] = [lum(fg), lum(bg)].sort((x, y) => y - x) as [number, number], ratio = (hi + 0.05) / (lo + 0.05)
     const large = parseFloat(st.fontSize) >= 24 || (parseFloat(st.fontSize) >= 18.66 && +st.fontWeight >= 700)
     if (ratio < (large ? 3 : 4.5)) add(`kontrast ${ratio.toFixed(2)} (en az ${large ? 3 : 4.5})`, el)
   }
