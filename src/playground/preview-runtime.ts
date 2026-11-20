@@ -357,7 +357,15 @@ const draw = (C: Comp, el: HTMLElement, props: Props, parts: Parts, cell = ""): 
   return stopDraw;
 };
 // every component the module exports has a cell of its own: the preview is split into as many cells
-interface Cell { C: Comp; el: HTMLElement; dispose: () => void }
+interface Cell { C: Comp; el: HTMLElement; dispose: () => void; /** What it was drawn with (sigOf): the same again draws nothing. */ sig?: string }
+/** A cell's props, parts and the per-instance values as text: handlers by their source (a new closure of the same code
+ * is the same handler), an element by its markup; null when it cannot be read (then the cell is drawn again). */
+const sigOf = (props: Props, parts: Parts): string | null => {
+  try {
+    return JSON.stringify([props, parts, instProps], (_k, v: unknown) =>
+      typeof v === "function" ? `fn:${String(v)}` : v instanceof Node ? `node:${v instanceof Element ? v.outerHTML : v.textContent}` : v);
+  } catch { return null; }
+};
 let last: { url: string; cells: Map<string, Cell> } | null = null;
 // the module's data (its signals and computed values, exported by the playground as __marchData): watched, and set
 let data: Record<string, unknown> = {}, dataStop: (() => void) | null = null, onDataCb: ((values: Record<string, unknown>) => void) | null = null;
@@ -402,7 +410,14 @@ export function setProps(props: Record<string, Props>, parts: Record<string, Par
   if (!last) return;
   // a cell the props do not name is the previous file's (the tab changed, its build has not run yet): left as it is,
   // not drawn again without its props (a component with a required prop would throw)
-  for (const [name, cell] of last.cells) { if (!(name in props)) continue; cell.dispose(); cell.dispose = draw(cell.C, cell.el, props[name] ?? {}, parts[name] ?? {}, name); }
+  // a cell whose props did not change is not drawn again (the panel sends them right after every run: a second draw
+  // restarted the example, its entrance animations played twice)
+  for (const [name, cell] of last.cells) {
+    if (!(name in props)) continue;
+    const sig = sigOf(props[name] ?? {}, parts[name] ?? {});
+    if (sig != null && sig === cell.sig) continue;
+    cell.dispose(); cell.dispose = draw(cell.C, cell.el, props[name] ?? {}, parts[name] ?? {}, name); cell.sig = sig ?? undefined;
+  }
 }
 /**
  * Run `code` (an ES module) and render every component it exports (a name with a capital letter) into a cell of
@@ -439,7 +454,7 @@ export async function run(code: string, el: HTMLElement, props: Record<string, P
     stage.className = "sc-pv-stage";
     box.append(tag, stage);
     el.append(box);
-    cells.set(name, { C, el: stage, dispose: draw(C, stage, props[name] ?? {}, parts[name] ?? {}, name) });
+    cells.set(name, { C, el: stage, dispose: draw(C, stage, props[name] ?? {}, parts[name] ?? {}, name), sig: sigOf(props[name] ?? {}, parts[name] ?? {}) ?? undefined });
   }
   // what the code puts on "the page" stays in the preview: the preview is an overlay scope (its fixed layers cover it,
   // not the page) and has a toast stack of its own (toast() then opens none on the page)
