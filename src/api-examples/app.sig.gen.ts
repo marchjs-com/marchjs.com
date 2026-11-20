@@ -20,6 +20,7 @@ const sig: Record<string, Record<string, string>> = {
   "dir": "const dir",
   "format": "function format(msg: string, vals: Record<string, unknown>, loc: string = untrack(locale)): string",
   "loadLocale": "function loadLocale(loc: string, loader: () => Promise<{ default: Dict } | Dict>): void",
+  "removeMessages": "function removeMessages(loc: string, keys: Iterable<string>): Record<string, string>",
   "tKey": "const tKey = (strings: readonly string[]): string =>",
   "typed": "function typed<M extends Record<string, string>>(): <K extends keyof M & string>(key: K, ...args: Args<M[K]>) => string",
   "unused": "function unused(loc: string, used: Iterable<string>): string[]"

@@ -4,7 +4,7 @@
 //   parseCode(spec, name, source, values) → { values, extras, errors, changed }
 // Rules (src/components/meta.ts › PlaygroundOption.prop / toCode / fromCode, PlaygroundSpec.code): the option's key is
 // the prop; its default value is not written; `true` is a bare prop; a string is quoted; anything else is in braces.
-import type { PlaygroundOption, PlaygroundSpec, PlaygroundCode, PlaygroundCodeValue } from "../../../src/components/meta.ts";
+import type { PlaygroundOption, PlaygroundSpec, PlaygroundCode, PlaygroundCodeValue } from "march/components/meta.ts";
 
 type Values = Record<string, unknown>
 type Option = PlaygroundOption<Values>

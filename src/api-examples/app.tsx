@@ -3,7 +3,7 @@
 import { signal, effect, untrack, onCleanup, locale, setLocale, messages, t } from "march";
 import { store, derive, history, on, persist, readonly, snapshot, storeLog, subscribe, type StoreEvent } from "march/store";
 import { mProps, registerMProp, withParts } from "march/props";
-import { dir, format, loadLocale, tKey, typed, unused } from "march/i18n";
+import { dir, format, loadLocale, removeMessages, tKey, typed, unused } from "march/i18n";
 import {
   lazy, skeleton, chunksOf, loadDelay, loaderKey, prefetchCommon, preloadChunks, preloadFiles, runLoad, saveData,
   setLoadDelay, setLoadRunner, setPreloadManifest, whenIdle, beginLoad, loadsActive, onLoad, trackLoad, type LazyPlaceholder, type LazyWhen,
@@ -272,6 +272,21 @@ tt("cart.items", { n: 2 })   // tt("cart.items") or tt("cart.item", …) do not 
         return <div class="sc-ex-app-stack">
           <Row>{KEYS.map((k, i) => <Checkbox value={on[i]!} label={k} />)}</Row>
           <Out label='unused("x-hadi", kullanılan)' value={() => json(unused("x-hadi", used()))} />
+        </div>
+      },
+    },
+    removeMessages: {
+      code: `const kept = removeMessages("en", ["cart.title"])   // the text shows its key again
+messages("en", kept)                                  // and back`,
+      run: () => {
+        messages("x-hadi", { "api.ex.app.cart": "Sepetim" })
+        const kept = signal<Record<string, string> | null>(null)
+        return <div class="sc-ex-app-stack">
+          <Row>
+            <Button onClick={() => kept.set(removeMessages("x-hadi", ["api.ex.app.cart"]))}>Çıkar</Button>
+            <Button variant="ghost" onClick={() => { const k = kept(); if (k) messages("x-hadi", k); kept.set(null) }}>Geri koy</Button>
+          </Row>
+          <Out label="çıkan" value={() => json(kept())} />
         </div>
       },
     },

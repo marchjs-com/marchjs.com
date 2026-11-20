@@ -3,24 +3,24 @@
 // renders its default export into the preview's stage. The bundle's `import … from "march/…"` lines are turned
 // into this runtime's own modules; the module is imported from a blob: URL (the showcase's CSP allows script-src
 // blob: — the showcase is served from its own domain, with no sessions).
-import * as core from "../../../../src/index.ts";
-import { dicts } from "../../../../src/core/i18n.ts";
-import * as ui from "../../../../src/ui/index.ts";
-import * as icons from "../../../../src/icons/index.ts";
-import * as theme from "../../../../src/theme/index.ts";
-import * as motion from "../../../../src/motion/index.ts";
-import * as props from "../../../../src/props/index.ts";
+import * as core from "march";
+import { removeMessages } from "march/i18n";
+import * as ui from "march/ui";
+import * as icons from "march/icons";
+import * as theme from "march/theme";
+import * as motion from "march/motion";
+import * as props from "march/props";
 const { withParts, mProps, registerMProp } = props;
-import { packIcon } from "../../../../src/icons/pack-paint.ts";
+import { packIcon } from "march/icons/packs";
 // layers opened by the preview's code (dialogs, drawers, menus) find the scope around it (OverlayScope's lookup); a
 // component drawn open (a bare <Dialog open>) gets that scope as its context: it opens in the preview, not on the page
-import { OverlayScopeContext } from "../../../../src/components/layout/overlay-scope/index.ts";
-import * as testing from "../../../../src/testing/index.ts";
+import { OverlayScopeContext } from "march/ui";
+import * as testing from "march/testing";
 // the network speed of MarchIDE's preview (NetworkThrottle, its state shared with the page): the code's dynamic imports
 // and this March's lazy chunks wait as on the chosen network; fetch / XHR are slowed by the page's wrapper (its scope is
 // this code's stack: blob: modules and this runtime)
-import { throttledImport, throttledLoad, throttleBypass } from "../../../../src/components/composite/network-throttle/engine.ts";
-import { setLoadRunner } from "../../../../src/dom/preload.ts";
+import { throttledImport, throttledLoad, throttleBypass } from "march/components/composite/network-throttle";
+import { setLoadRunner } from "march/lazy";
 setLoadRunner((fn, info) => throttledLoad(fn, info));
 
 // the playground's helpers for a quick try (import { instrument, run } from "march/playground"): debug a piece of
@@ -185,7 +185,7 @@ export async function runTests(code: string): Promise<TestResult[]> {
   // then the preview's language comes back
   // (the chosen language's texts may sit in the code's own locale's dictionary: they are taken out meanwhile)
   const shown = core.locale.peek(), held = userTexts, kept: Record<string, string> = {};
-  if (held) { const d = dicts.get(held.code) ?? {}; for (const k of held.keys) if (k in d) { kept[k] = d[k]!; delete d[k]; } core.messages(held.code, {}); }
+  if (held) Object.assign(kept, removeMessages(held.code, held.keys));
   if (shown !== ownLocale) core.locale.set(ownLocale);
   keptRouter = (MODULES["march/router"] as RouterMod | undefined)?._router?.S.router ?? null;
   // while the tests run, the toasts they make go to a stack in the hidden host (the preview's stack is a fallback: it
@@ -230,30 +230,30 @@ const packLoads = new Map<string, Promise<void>>();
 // the components kept out of the ui barrel (meta.barrel === false: DataGrid, Scheduler…): the code imports them from
 // march/components/<folder>; each is read on its first import, like an icon pack
 const OWN_PARTS: Record<string, () => Promise<unknown>> = {
-  "data-grid": () => import("../../../../src/components/data/data-grid/index.ts"),
-  "tree-view": () => import("../../../../src/components/data/tree-view/index.ts"),
-  "scheduler": () => import("../../../../src/components/data/scheduler/index.ts"),
-  "gantt": () => import("../../../../src/components/data/gantt/index.ts"),
-  "wizard": () => import("../../../../src/components/composite/wizard/index.ts"),
-  "context-menu": () => import("../../../../src/components/overlays/context-menu/index.ts"),
-  "consent-banner": () => import("../../../../src/components/composite/consent-banner/index.ts"),
-  "theme-editor": () => import("../../../../src/components/composite/theme-editor/index.ts"),
+  "data-grid": () => import("march/components/data/data-grid"),
+  "tree-view": () => import("march/components/data/tree-view"),
+  "scheduler": () => import("march/components/data/scheduler"),
+  "gantt": () => import("march/components/data/gantt"),
+  "wizard": () => import("march/components/composite/wizard"),
+  "context-menu": () => import("march/components/overlays/context-menu"),
+  "consent-banner": () => import("march/components/composite/consent-banner"),
+  "theme-editor": () => import("march/components/composite/theme-editor"),
 };
 const loadOwn = (code: string): Promise<unknown> => Promise.all([...new Set([...code.matchAll(/from\s*["']march\/components\/([a-z][a-z0-9-]*)["']/g)].map((m) => m[1]!))]
   .filter((f) => OWN_PARTS[f] && !(`march/components/${f}` in MODULES)).map((f) => OWN_PARTS[f]!().then((m) => { MODULES[`march/components/${f}`] = m })));
 async function loadPacks(code: string): Promise<void> {
   // march/landing is not in the ui barrel (its own lazy chunk): loaded once, when the code imports it
-  if (!MODULES["march/landing"] && /["']march\/landing["']/.test(code)) MODULES["march/landing"] = await import("../../../../src/components/landing/index.ts");
+  if (!MODULES["march/landing"] && /["']march\/landing["']/.test(code)) MODULES["march/landing"] = await import("march/landing");
   // march/charts too (its own entry: LineChart, BarChart, PieChart, Heatmap, Stat, Sparkline, ProgressRing, BarList)
-  if (!MODULES["march/charts"] && /["']march\/charts["']/.test(code)) MODULES["march/charts"] = await import("../../../../src/charts/index.ts");
+  if (!MODULES["march/charts"] && /["']march\/charts["']/.test(code)) MODULES["march/charts"] = await import("march/charts");
   // march/table too (Table, createTable, column: sorting, filters, selection, virtual rows)
-  if (!MODULES["march/table"] && /["']march\/table["']/.test(code)) MODULES["march/table"] = await import("../../../../src/table/index.ts");
+  if (!MODULES["march/table"] && /["']march\/table["']/.test(code)) MODULES["march/table"] = await import("march/table");
   // march/schema too (schema(), field types, validation: a form from one definition)
-  if (!MODULES["march/schema"] && /["']march\/schema["']/.test(code)) MODULES["march/schema"] = await import("../../../../src/schema/index.ts");
+  if (!MODULES["march/schema"] && /["']march\/schema["']/.test(code)) MODULES["march/schema"] = await import("march/schema");
   // march/router too: every router the code makes keeps an address of its own (memoryHistory), so the preview never
   // changes the page's address, title or back button
   if (!MODULES["march/router"] && /["']march\/router["']/.test(code)) {
-    const router = await import("../../../../src/router/index.ts");
+    const router = await import("march/router");
     MODULES["march/router"] = { ...router, createRouter: (o: Parameters<typeof router.createRouter>[0]) => {
       return router.createRouter({ ...o, history: o.history ?? router.memoryHistory() });
     } };
@@ -423,9 +423,7 @@ let lastProps: Record<string, Props> = {}, lastParts: Record<string, Parts> = {}
 export function setLanguage(code: string | null, next: Record<string, string> | null): void {
   // the previous language's texts go (a text removed from its file must not stay translated)
   if (userTexts) {
-    const d = dicts.get(userTexts.code);
-    if (d) for (const k of userTexts.keys) delete d[k];
-    core.messages(userTexts.code, {}); // what is shown follows (also when the locale stays the same)
+    removeMessages(userTexts.code, userTexts.keys); // what is shown follows (also when the locale stays the same)
     userTexts = null;
   }
   if (!code || !next) { core.locale.set(ownLocale); return; }
