@@ -10,7 +10,7 @@
 		{
 			"type": "code",
 			"name": "AdvancedSettings.tsx",
-			"code": "import { Disclosure, Field, Toggle, NumberInput } from \"march/ui\"\n\n// form altında gelişmiş ayarlar: kapalı başlar; açıkken ayarların özeti başlıkta görünür\nexport function AdvancedSettings() {\n  let $open = false\n  let $cache = true\n  let $days = 30\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Disclosure open={$open} onToggle={(o: boolean) => $open = o}\n      title={$open ? \"Gelişmiş ayarlar\" : `Gelişmiş ayarlar · önbellek ${$cache ? \"açık\" : \"kapalı\"}, ${$days} gün`}>\n      <div sx={{ flex: \"col\", gap: 2 }}>\n        <Toggle label=\"Önbellek\" checked={$cache} onChange={(v: boolean) => $cache = v} />\n        <Field label=\"Kayıt saklama (gün)\"><NumberInput value={$days} min={1} max={365} onChange={(v: number) => $days = v} /></Field>\n      </div>\n    </Disclosure>\n  </div>\n}\n"
+			"code": "import { Disclosure, Field, Toggle, NumberInput } from \"march/ui\"\n\n// form altında gelişmiş ayarlar: kapalı başlar; açıkken ayarların özeti başlıkta görünür\nexport function AdvancedSettings() {\n  let $open = false\n  let $cache = true\n  let $days = 30\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Disclosure open={$open} onToggle={(o: boolean) => $open = o}\n      title={$open ? \"Gelişmiş ayarlar\" : `Gelişmiş ayarlar · önbellek ${$cache ? \"açık\" : \"kapalı\"}, ${$days} gün`}>\n      <div sx={{ flex: \"col\", gap: 2 }}>\n        <Toggle label=\"Önbellek\" bind:value={$cache} />\n        <Field label=\"Kayıt saklama (gün)\"><NumberInput value={$days} min={1} max={365} onChange={(v: number) => $days = v} /></Field>\n      </div>\n    </Disclosure>\n  </div>\n}\n"
 		},
 		{
 			"type": "code",

@@ -10,7 +10,7 @@
 		{
 			"type": "code",
 			"name": "FilterPanel.tsx",
-			"code": "import { PanelHeader, Button, Checkbox } from \"march/ui\"\nimport { filter } from \"march/icons\"\n\n// süzgeç paneli: üstte başlık ve kapat, altta alt çubuk (as=\"footer\") ile uygula\nexport function FilterPanel() {\n  let $open = true\n  let $stock = false\n  return <div class=\"m-card\">\n    {() => ($open ? <>\n      <PanelHeader icon={filter} title=\"Süzgeçler\" divider onClose={() => $open = false} />\n      <div sx={{ p: 3 }}><Checkbox label=\"Yalnız stoktakiler\" checked={$stock} onChange={(v: boolean) => $stock = v} /></div>\n      <PanelHeader as=\"footer\" title={$stock ? \"1 süzgeç\" : \"Süzgeç yok\"} divider actions={<Button size=\"sm\" variant=\"primary\">Uygula</Button>} close={false} />\n    </> : <Button size=\"sm\" on:click={() => $open = true}>Süzgeçleri aç</Button>)}\n  </div>\n}\n"
+			"code": "import { PanelHeader, Button, Checkbox } from \"march/ui\"\nimport { filter } from \"march/icons\"\n\n// süzgeç paneli: üstte başlık ve kapat, altta alt çubuk (as=\"footer\") ile uygula\nexport function FilterPanel() {\n  let $open = true\n  let $stock = false\n  return <div class=\"m-card\">\n    {() => ($open ? <>\n      <PanelHeader icon={filter} title=\"Süzgeçler\" divider onClose={() => $open = false} />\n      <div sx={{ p: 3 }}><Checkbox label=\"Yalnız stoktakiler\" bind:value={$stock} /></div>\n      <PanelHeader as=\"footer\" title={$stock ? \"1 süzgeç\" : \"Süzgeç yok\"} divider actions={<Button size=\"sm\" variant=\"primary\">Uygula</Button>} close={false} />\n    </> : <Button size=\"sm\" on:click={() => $open = true}>Süzgeçleri aç</Button>)}\n  </div>\n}\n"
 		},
 		{
 			"type": "code",

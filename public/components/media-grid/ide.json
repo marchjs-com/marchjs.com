@@ -10,7 +10,7 @@
 		{
 			"type": "code",
 			"name": "PostPhotos.tsx",
-			"code": "import { MediaGrid, Segmented } from \"march/ui\"\n\n// gönderi fotoğrafları: sayı seçilir, 1, 2, 3 ve 4+ için ayrı yerleşim; fazlası +N\nconst all = [\"sunset\", \"sea\", \"forest\", \"city\", \"coffee\", \"ride\"].map((n) => ({ src: `/media/social/${n}.svg`, alt: n }))\n\nexport function PostPhotos() {\n  let $n = \"3\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Segmented label=\"Fotoğraf\" value={$n} options={[\"1\", \"2\", \"3\", \"4\", \"6\"]} onChange={(v: string) => $n = v} />\n    {() => <MediaGrid items={all.slice(0, Number($n))} />}\n  </div>\n}\n"
+			"code": "import { MediaGrid, Segmented } from \"march/ui\"\n\n// gönderi fotoğrafları: sayı seçilir, 1, 2, 3 ve 4+ için ayrı yerleşim; fazlası +N\nconst all = [\"sunset\", \"sea\", \"forest\", \"city\", \"coffee\", \"ride\"].map((n) => ({ src: `/media/social/${n}.svg`, alt: n }))\n\nexport function PostPhotos() {\n  let $n = \"3\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Segmented aria-label=\"Fotoğraf\" value={$n} options={[\"1\", \"2\", \"3\", \"4\", \"6\"]} onChange={(v: string) => $n = v} />\n    {() => <MediaGrid items={all.slice(0, Number($n))} />}\n  </div>\n}\n"
 		},
 		{
 			"type": "code",

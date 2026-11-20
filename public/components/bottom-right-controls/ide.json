@@ -10,7 +10,7 @@
 		{
 			"type": "code",
 			"name": "FeedbackCorner.tsx",
-			"code": "import { addCornerControl, Button, Segmented } from \"march/ui\"\n\n// geri bildirim düğmesi: köşe seçilir, düğme oraya taşınır; eski köşeden çıkar\nexport function FeedbackCorner() {\n  let $corner = \"bottom-start\"\n  let off = () => {}\n  const place = (c: string) => { off(); off = addCornerControl(c as \"bottom-start\", <Button size=\"sm\" variant=\"primary\">Geri bildirim</Button> as Node, 1); $corner = c }\n  place(\"bottom-start\")\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Segmented label=\"Köşe\" value={$corner} options={[\"top-start\", \"top-end\", \"bottom-start\", \"bottom-end\"]} onChange={place} />\n    <span sx={{ text: \"sm\", color: \"muted\" }}>Düğme şimdi {$corner} köşesinde</span>\n  </div>\n}\n"
+			"code": "import { addCornerControl, Button, Segmented } from \"march/ui\"\n\n// geri bildirim düğmesi: köşe seçilir, düğme oraya taşınır; eski köşeden çıkar\nexport function FeedbackCorner() {\n  let $corner = \"bottom-start\"\n  let off = () => {}\n  const place = (c: string) => { off(); off = addCornerControl(c as \"bottom-start\", <Button size=\"sm\" variant=\"primary\">Geri bildirim</Button> as Node, 1); $corner = c }\n  place(\"bottom-start\")\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Segmented aria-label=\"Köşe\" value={$corner} options={[\"top-start\", \"top-end\", \"bottom-start\", \"bottom-end\"]} onChange={place} />\n    <span sx={{ text: \"sm\", color: \"muted\" }}>Düğme şimdi {$corner} köşesinde</span>\n  </div>\n}\n"
 		},
 		{
 			"type": "code",

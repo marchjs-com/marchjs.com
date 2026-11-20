@@ -5,12 +5,12 @@
 		{
 			"type": "code",
 			"name": "SearchPill.tsx",
-			"code": "import { Joined, TextInput, Button } from \"march/ui\"\n\n// hap biçiminde arama: alan ve düğme tek bir bütün; köşeler yalnız dışta yuvarlak\nexport function SearchPill() {\n  let $q = \"\"\n  let $sent = \"\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Joined direction=\"horizontal\" radius=\"full\">\n      <TextInput placeholder=\"Şehir ara…\" aria-label=\"Şehir\" value={$q} onInput={(v: string) => $q = v} />\n      <Button variant=\"primary\" on:click={() => $sent = $q}>Ara</Button>\n    </Joined>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>{$sent ? `“${$sent}” aranıyor` : \"Bir şehir yazın\"}</span>\n  </div>\n}\n"
+			"code": "import { Joined, TextInput, Button } from \"march/ui\"\n\n// hap biçiminde arama: alan ve düğme tek bir bütün; köşeler yalnız dışta yuvarlak\nexport function SearchPill() {\n  let $q = \"\"\n  let $sent = \"\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Joined direction=\"horizontal\" radius=\"full\">\n      <TextInput placeholder=\"Şehir ara…\" aria-label=\"Şehir\" bind:value={$q} />\n      <Button variant=\"primary\" on:click={() => $sent = $q}>Ara</Button>\n    </Joined>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>{$sent ? `“${$sent}” aranıyor` : \"Bir şehir yazın\"}</span>\n  </div>\n}\n"
 		},
 		{
 			"type": "code",
 			"name": "SettingsGroup.tsx",
-			"code": "import { Joined, ListRow, Toggle } from \"march/ui\"\nimport { bell, moon, globe } from \"march/icons\"\n\n// ayarlar grubu: satırlar alt alta, aralarında ince çizgi, bütünün tek çerçevesi\nexport function SettingsGroup() {\n  let $notify = true\n  let $dark = false\n  return <Joined radius={3}>\n    <ListRow icon={bell} title=\"Bildirimler\" trail={<Toggle label=\"Bildirimler\" checked={$notify} onChange={(v: boolean) => $notify = v} />} />\n    <ListRow icon={moon} title=\"Koyu tema\" trail={<Toggle label=\"Koyu tema\" checked={$dark} onChange={(v: boolean) => $dark = v} />} />\n    <ListRow icon={globe} title=\"Dil\" subtitle=\"Türkçe\" />\n  </Joined>\n}\n"
+			"code": "import { Joined, ListRow, Toggle } from \"march/ui\"\nimport { bell, moon, globe } from \"march/icons\"\n\n// ayarlar grubu: satırlar alt alta, aralarında ince çizgi, bütünün tek çerçevesi\nexport function SettingsGroup() {\n  let $notify = true\n  let $dark = false\n  return <Joined radius={3}>\n    <ListRow icon={bell} title=\"Bildirimler\" trail={<Toggle label=\"Bildirimler\" bind:value={$notify} />} />\n    <ListRow icon={moon} title=\"Koyu tema\" trail={<Toggle label=\"Koyu tema\" bind:value={$dark} />} />\n    <ListRow icon={globe} title=\"Dil\" subtitle=\"Türkçe\" />\n  </Joined>\n}\n"
 		},
 		{
 			"type": "code",

@@ -10,7 +10,7 @@
 		{
 			"type": "code",
 			"name": "ShareLink.tsx",
-			"code": "import { Popover, Button, TextInput, toast } from \"march/ui\"\nimport { link } from \"march/icons\"\n\n// paylaşım bağlantısı: açılır panelde bağlantı ve kopyala; alt çubukta kapat\nexport function ShareLink() {\n  const url = \"https://marchjs.com/p/42\"\n  return <Popover trigger={<Button icon={link}>Paylaş</Button>} title=\"Bağlantıyı paylaş\" width=\"md\" closable\n    footer={<span sx={{ text: \"xs\", color: \"muted\" }}>Bağlantısı olan herkes görebilir</span>}>\n    {(close: () => void) => <div sx={{ flex: \"row\", gap: 2 }}>\n      <TextInput aria-label=\"Bağlantı\" value={url} readOnly />\n      <Button variant=\"primary\" on:click={() => { toast(\"Kopyalandı\"); close() }}>Kopyala</Button>\n    </div>}\n  </Popover>\n}\n"
+			"code": "import { Popover, Button, TextInput, toast } from \"march/ui\"\nimport { link } from \"march/icons\"\n\n// paylaşım bağlantısı: açılır panelde bağlantı ve kopyala; alt çubukta kapat\nexport function ShareLink() {\n  const url = \"https://marchjs.com/p/42\"\n  return <Popover trigger={<Button icon={link}>Paylaş</Button>} title=\"Bağlantıyı paylaş\" width=\"md\" closable\n    footer={<span sx={{ text: \"xs\", color: \"muted\" }}>Bağlantısı olan herkes görebilir</span>}>\n    {(close: () => void) => <div sx={{ flex: \"row\", gap: 2 }}>\n      <TextInput aria-label=\"Bağlantı\" value={url} readonly />\n      <Button variant=\"primary\" on:click={() => { toast(\"Kopyalandı\"); close() }}>Kopyala</Button>\n    </div>}\n  </Popover>\n}\n"
 		},
 		{
 			"type": "code",

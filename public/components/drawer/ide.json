@@ -10,7 +10,7 @@
 		{
 			"type": "code",
 			"name": "FilterSheet.tsx",
-			"code": "import { Drawer, Button, Checkbox } from \"march/ui\"\n\n// mağaza süzgeçleri: sağdan açılan çekmece; seçilen süzgeç sayısı düğmede\nexport function FilterSheet() {\n  let $open = false\n  let $stock = false\n  let $sale = false\n  const count = () => Number($stock) + Number($sale)\n  return <div>\n    <Button on:click={() => $open = true}>Süzgeçler{count() ? ` (${count()})` : \"\"}</Button>\n    <Drawer open={$open} onClose={() => $open = false} side=\"end\" size=\"sm\" title=\"Süzgeçler\">\n      <Checkbox label=\"Stokta olanlar\" checked={$stock} onChange={(v: boolean) => $stock = v} />\n      <Checkbox label=\"İndirimdekiler\" checked={$sale} onChange={(v: boolean) => $sale = v} />\n      <Button variant=\"primary\" on:click={() => $open = false}>Uygula</Button>\n    </Drawer>\n  </div>\n}\n"
+			"code": "import { Drawer, Button, Checkbox } from \"march/ui\"\n\n// mağaza süzgeçleri: sağdan açılan çekmece; seçilen süzgeç sayısı düğmede\nexport function FilterSheet() {\n  let $open = false\n  let $stock = false\n  let $sale = false\n  const count = () => Number($stock) + Number($sale)\n  return <div>\n    <Button on:click={() => $open = true}>Süzgeçler{count() ? ` (${count()})` : \"\"}</Button>\n    <Drawer open={$open} onClose={() => $open = false} side=\"end\" size=\"sm\" title=\"Süzgeçler\">\n      <Checkbox label=\"Stokta olanlar\" bind:value={$stock} />\n      <Checkbox label=\"İndirimdekiler\" bind:value={$sale} />\n      <Button variant=\"primary\" on:click={() => $open = false}>Uygula</Button>\n    </Drawer>\n  </div>\n}\n"
 		},
 		{
 			"type": "code",

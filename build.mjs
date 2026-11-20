@@ -103,6 +103,16 @@ async function writePlaygroundTools(out) {
     mkdirSync(join(out, "ts", loc), { recursive: true });
     writeFileSync(join(out, "ts", loc, "lib-docs.json"), JSON.stringify(merged));
   }
+  // March's own types for the worker (march-types.json and the icon packs' declarations): made once per change of the
+  // sources (tools/gen-ide-types.mjs keeps them in node_modules/.cache), copied beside the lib files
+  {
+    const { execFileSync } = await import("node:child_process");
+    const cache = join(root, "node_modules", ".cache", "march-ide-types");
+    execFileSync(process.execPath, [join(root, "tools", "gen-ide-types.mjs"), join(cache, "march-types.json")], { stdio: "inherit" });
+    copyFileSync(join(cache, "march-types.json"), join(out, "ts", "march-types.json"));
+    mkdirSync(join(out, "ts", "march-icons"), { recursive: true });
+    for (const f of readdirSync(join(cache, "march-icons"))) copyFileSync(join(cache, "march-icons", f), join(out, "ts", "march-icons", f));
+  }
   const sx = join(root, "src", "core", "sx.ts").split("\\").join("/");
   await esbuild.build({
     entryPoints: [join(root, "compiler", "index.js")], bundle: true, format: "esm", platform: "browser", target: "es2022", minify: true,
