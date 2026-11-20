@@ -10,7 +10,7 @@
 		{
 			"type": "code",
 			"name": "ChatPopup.tsx",
-			"code": "import { Window, Button } from \"march/ui\"\nimport { messageCircle } from \"march/icons\"\n\n// destek sohbeti: küçük pencere; kapatınca \"Sohbeti aç\" düğmesi geri getirir\nexport function ChatPopup() {\n  let $open = true\n  return <div style={{ position: \"relative\", \"block-size\": \"20rem\" }}>\n    <Window title=\"Destek\" icon={messageCircle} color=\"brand-blue\" x={20} y={20} width={280} height={200} minimizable={false}\n      open={$open} onClose={() => $open = false}>\n      <div sx={{ p: 3, flex: \"col\", gap: 2 }}><p>Merhaba! Size nasıl yardım edebilirim?</p></div>\n    </Window>\n    {() => ($open ? null : <Button size=\"sm\" on:click={() => $open = true}>Sohbeti aç</Button>)}\n  </div>\n}\n"
+			"code": "import { Window, Button } from \"march/ui\"\nimport { messageCircle } from \"march/icons/lucide\"\n\n// destek sohbeti: küçük pencere; kapatınca \"Sohbeti aç\" düğmesi geri getirir\nexport function ChatPopup() {\n  let $open = true\n  return <div style={{ position: \"relative\", \"block-size\": \"20rem\" }}>\n    <Window title=\"Destek\" icon={messageCircle} color=\"brand-blue\" x={20} y={20} width={280} height={200} minimizable={false}\n      open={$open} onClose={() => $open = false}>\n      <div sx={{ p: 3, flex: \"col\", gap: 2 }}><p>Merhaba! Size nasıl yardım edebilirim?</p></div>\n    </Window>\n    {() => ($open ? null : <Button size=\"sm\" on:click={() => $open = true}>Sohbeti aç</Button>)}\n  </div>\n}\n"
 		},
 		{
 			"type": "code",

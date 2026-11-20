@@ -5,7 +5,7 @@
 		{
 			"type": "code",
 			"name": "MusicPanel.tsx",
-			"code": "import { PanelHeader, IconButton, Card } from \"march/ui\"\nimport { music, shuffle } from \"march/icons\"\n\n// çalma listesi paneli: koyu zeminde ikonlu başlık, şarkı sayısı, karıştır düğmesi\nexport function MusicPanel() {\n  let $shuffle = false\n  return <Card m:theme=\"night\">\n    <PanelHeader icon={music} m:color=\"brand-pink\" title=\"Gece Yolu\" subtitle=\"Çalma listesi\" meta={<span>12 şarkı</span>}\n      actions={<IconButton icon={shuffle} label=\"Karıştır\" pressed={$shuffle} on:click={() => $shuffle = !$shuffle} />} close={false} />\n    <p sx={{ p: 2, text: \"sm\" }}>{$shuffle ? \"Karışık çalıyor\" : \"Sırayla çalıyor\"}</p>\n  </Card>\n}\n"
+			"code": "import { PanelHeader, IconButton, Card } from \"march/ui\"\nimport { music } from \"march/icons\"\nimport { shuffle } from \"march/icons/lucide\"\n\n// çalma listesi paneli: koyu zeminde ikonlu başlık, şarkı sayısı, karıştır düğmesi\nexport function MusicPanel() {\n  let $shuffle = false\n  return <Card m:theme=\"night\">\n    <PanelHeader icon={music} m:color=\"brand-pink\" title=\"Gece Yolu\" subtitle=\"Çalma listesi\" meta={<span>12 şarkı</span>}\n      actions={<IconButton icon={shuffle} label=\"Karıştır\" pressed={$shuffle} on:click={() => $shuffle = !$shuffle} />} close={false} />\n    <p sx={{ p: 2, text: \"sm\" }}>{$shuffle ? \"Karışık çalıyor\" : \"Sırayla çalıyor\"}</p>\n  </Card>\n}\n"
 		},
 		{
 			"type": "code",
