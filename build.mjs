@@ -13,13 +13,27 @@ import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "
 import { createServer } from "node:http";
 import { join, dirname, extname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { genAll } from "../../tools/gen-all.mjs";
-import { writeGallery } from "../../cli/icons.js";
-import { filesOver } from "../../cli/perf.js";
-
 const here = dirname(fileURLToPath(import.meta.url));
 const dist = join(here, "dist");
-const cli = join(here, "..", "..", "cli", "march.js");
+// March: always the newest release (cdn.marchjs.com's latest). The site is compiled with that release's sources (its
+// compiler, demos, MarchIDE files) and reads that release's data from the CDN, so code and data are the same version.
+// Its sources are installed from March's tag v<latest> (package.json is not changed) when node_modules holds another one.
+const MARCH = join(here, "node_modules", "march");
+const MARCH_VERSION = process.env.MARCH_VERSION || (await (await fetch(`https://cdn.marchjs.com/versions.json?t=${Date.now()}`)).json()).latest;
+const MARCH_REF = `v${MARCH_VERSION}`;
+{
+  const mark = join(here, "node_modules", ".cache", "march-ref");
+  if (!existsSync(join(MARCH, "package.json")) || (existsSync(mark) ? readFileSync(mark, "utf8") : "") !== MARCH_REF) {
+    console.log(`March ${MARCH_REF} (latest): installing its sources`);
+    execFileSync(process.platform === "win32" ? "npm.cmd" : "npm", ["install", "--no-save", "--no-audit", "--no-fund", `github:marchjs-com/march#${MARCH_REF}`], { cwd: here, stdio: "inherit", shell: process.platform === "win32" });
+    const { mkdirSync } = await import("node:fs");
+    mkdirSync(dirname(mark), { recursive: true });
+    writeFileSync(mark, MARCH_REF);
+  }
+}
+const cli = join(MARCH, "cli", "march.js");
+const { writeGallery } = await import(pathToFileURL(join(MARCH, "cli", "icons.js")).href);
+const { filesOver } = await import(pathToFileURL(join(MARCH, "cli", "perf.js")).href);
 export const CSP = "default-src 'none'; script-src 'self' blob: 'wasm-unsafe-eval'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; media-src 'self'; connect-src 'self' https://api.anthropic.com https://api.openai.com https://generativelanguage.googleapis.com https://api.deepseek.com https://api.moonshot.ai https://api.mistral.ai https://api.groq.com https://openrouter.ai https://api.meta.ai https://api.x.ai https://dashscope-intl.aliyuncs.com https://api.z.ai https://api.together.xyz https://api.fireworks.ai https://api.cerebras.ai https://api.perplexity.ai http://localhost:11434 http://localhost:1234; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types march-worker";
 
 const args = process.argv.slice(2);
@@ -32,12 +46,8 @@ if (!serve || !existsSync(dist) || watching) {
   const t0 = performance.now();
   // the service worker only for the local preview: the published showcase must not leave a worker registered
   const env = { ...process.env, MARCH_SHOWCASE_SW: serve ? "1" : "0" };
-  // generated sources (registry, API reference, icons, themes…): the release build regenerates all of them
-  try { genAll({ force: release, log: (l) => console.log(l) }); } catch (e) { console.error(`✖ ${e.message}`); process.exit(1); }
-  // the home page numbers (components, exports, icons, tests …) from their sources: none is typed by hand
-  execFileSync(process.execPath, [join(here, "..", "..", "tools", "gen-home-stats.js")], { stdio: "inherit" });
-  // the command palette's section index (Ctrl+K finds a demo inside a page and jumps to it)
-  execFileSync(process.execPath, [join(here, "..", "..", "tools", "gen-sections.js")], { stdio: "inherit" });
+  // the site's generated sources (API reference, sections, home numbers, IDE texts) are committed; their generators move
+  // here next (they will read the data cdn.marchjs.com publishes for the pinned version)
   const tGen = performance.now() - t0;
   if (watching) {
     // stays running: march build --watch rebuilds on change (serve alongside with --serve)
@@ -58,10 +68,10 @@ if (!serve || !existsSync(dist) || watching) {
     const bad = walk(dist).filter((p) => /\.(js|css|html)$/.test(p) && !thirdParty.has(p)).filter((p) => /innerHTML\s*=|insertAdjacentHTML|document\.write\(/.test(readFileSync(p, "utf8")));
     if (bad.length) { console.error("✖ forbidden pattern:", bad); process.exit(1); }
     // icon packs for the Icons page: plain JSON fetched when a pack is opened (no JavaScript bundle grows)
-    const packs = writeGallery(join(here, "..", "..", "src", "icons", "packs"), join(dist, "icon-packs"));
+    const packs = writeGallery(join(MARCH, "src", "icons", "packs"), join(dist, "icon-packs"));
     console.log(`✔ icon packs: ${packs.length} (dist/icon-packs)`);
     // the spray theme wave's paint worklet: a plain script the page loads from its own origin (CSP script-src 'self')
-    writeFileSync(join(dist, "spray-worklet.js"), readFileSync(join(here, "..", "..", "src", "motion", "spray-worklet.js")));
+    writeFileSync(join(dist, "spray-worklet.js"), readFileSync(join(MARCH, "src", "motion", "spray-worklet.js")));
     // the playground's build tools, loaded only by MarchIDE (/ide): esbuild-wasm (its ESM browser build and the wasm; CSP
     // allows 'wasm-unsafe-eval') and the March compiler bundled for the browser (its node-only loader replaced by the
     // runtime's own sx module)
@@ -73,19 +83,48 @@ if (!serve || !existsSync(dist) || watching) {
     console.log(`✔ showcase (${release ? "release" : "dev"}): ${dist} in ${((performance.now() - t0) / 1000).toFixed(1)} s (generators ${(tGen / 1000).toFixed(1)} s)`);
   }
 }
+/** A text over HTTPS (build-time downloads: the pinned version's files). */
+async function fetchText(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${url}: ${r.status}`);
+  return r.text();
+}
+/**
+ * Files of the data cdn.marchjs.com publishes for March's version (<version>/data/, see data/index.json): the ones
+ * `want` names (a path or a test), downloaded once into node_modules/.cache/march-data/<version>/ and copied into
+ * `out` without the `strip` prefix.
+ */
+async function cdnData(want, out, strip = "") {
+  const { mkdirSync, copyFileSync } = await import("node:fs");
+  const base = `https://cdn.marchjs.com/${MARCH_VERSION}/data/`;
+  const cache = join(here, "node_modules", ".cache", "march-data", MARCH_VERSION);
+  const index = join(cache, "index.json");
+  if (!existsSync(index)) { mkdirSync(cache, { recursive: true }); writeFileSync(index, await fetchText(`${base}index.json`)); }
+  const files = JSON.parse(readFileSync(index, "utf8")).files.filter((f) => want.some((w) => (typeof w === "function" ? w(f) : w === f)));
+  await Promise.all(files.map(async (f) => {
+    const at = join(cache, f);
+    if (!existsSync(at)) { mkdirSync(dirname(at), { recursive: true }); writeFileSync(at, await fetchText(base + f)); }
+    const to = join(out, f.slice(strip.length));
+    mkdirSync(dirname(to), { recursive: true });
+    copyFileSync(at, to);
+  }));
+  return files.length;
+}
+
 async function writePlaygroundTools(out) {
   const { mkdirSync, copyFileSync } = await import("node:fs");
   const esbuild = await import("esbuild");
-  const root = join(here, "..", "..");
+  const root = MARCH;
   mkdirSync(out, { recursive: true });
-  copyFileSync(join(root, "node_modules", "esbuild-wasm", "esm", "browser.min.js"), join(out, "esbuild.js"));
-  copyFileSync(join(root, "node_modules", "esbuild-wasm", "esbuild.wasm"), join(out, "esbuild.wasm"));
+  copyFileSync(join(here, "node_modules", "esbuild-wasm", "esm", "browser.min.js"), join(out, "esbuild.js"));
+  copyFileSync(join(here, "node_modules", "esbuild-wasm", "esbuild.wasm"), join(out, "esbuild.wasm"));
   // the TypeScript language service: its worker (march-app-ui), the compiler and the lib .d.ts files it reads on demand
   copyFileSync(join(root, "src", "components", "composite", "app-ui", "ts-worker.js"), join(out, "ts-worker.js"));
   copyFileSync(join(root, "src", "components", "composite", "app-ui", "instrument.js"), join(out, "instrument.js"));
-  // March's guide for AI assistants: MarchIDE's AI reads it as its instructions (fetched on the first message)
-  copyFileSync(join(root, "AI_INSTRUCTIONS.md"), join(out, "ai-instructions.md"));
-  const tsLib = join(root, "node_modules", "typescript", "lib");
+  // March's guide for AI assistants: MarchIDE's AI reads it as its instructions (fetched on the first message); it is not
+  // part of the package, so it comes from March's repository at the pinned tag
+  writeFileSync(join(out, "ai-instructions.md"), await fetchText(`https://raw.githubusercontent.com/marchjs-com/march/${MARCH_REF}/AI_INSTRUCTIONS.md`));
+  const tsLib = join(here, "node_modules", "typescript", "lib");
   mkdirSync(join(out, "ts"), { recursive: true });
   copyFileSync(join(tsLib, "typescript.js"), join(out, "ts", "typescript.js"));
   for (const f of readdirSync(tsLib)) if (/^lib\..*\.d\.ts$/.test(f)) copyFileSync(join(tsLib, f), join(out, "ts", f));
@@ -103,16 +142,9 @@ async function writePlaygroundTools(out) {
     mkdirSync(join(out, "ts", loc), { recursive: true });
     writeFileSync(join(out, "ts", loc, "lib-docs.json"), JSON.stringify(merged));
   }
-  // March's own types for the worker (march-types.json and the icon packs' declarations): made once per change of the
-  // sources (tools/gen-ide-types.mjs keeps them in node_modules/.cache), copied beside the lib files
-  {
-    const { execFileSync } = await import("node:child_process");
-    const cache = join(root, "node_modules", ".cache", "march-ide-types");
-    execFileSync(process.execPath, [join(root, "tools", "gen-ide-types.mjs"), join(cache, "march-types.json")], { stdio: "inherit" });
-    copyFileSync(join(cache, "march-types.json"), join(out, "ts", "march-types.json"));
-    mkdirSync(join(out, "ts", "march-icons"), { recursive: true });
-    for (const f of readdirSync(join(cache, "march-icons"))) copyFileSync(join(cache, "march-icons", f), join(out, "ts", "march-icons", f));
-  }
+  // March's own types for the worker (march-types.json and the icon packs' declarations): the data cdn.marchjs.com
+  // publishes with the version (data/ide/), kept in node_modules/.cache per version, copied beside the lib files
+  await cdnData(["ide/march-types.json", (f) => f.startsWith("ide/march-icons/")], join(out, "ts"), "ide/");
   const sx = join(root, "src", "core", "sx.ts").split("\\").join("/");
   await esbuild.build({
     entryPoints: [join(root, "compiler", "index.js")], bundle: true, format: "esm", platform: "browser", target: "es2022", minify: true,
@@ -128,12 +160,17 @@ async function writePlaygroundTools(out) {
   await esbuild.build({
     entryPoints: [join(here, "src", "playground", "preview-runtime.ts")], bundle: true, format: "esm", platform: "browser", target: "es2022", minify: true,
     outdir: out, entryNames: "preview", assetNames: "[name]", logLevel: "error", loader: { ".woff2": "file", ".svg": "file", ".png": "file" },
+    // one file with all of March: March under node_modules is side-effect free by its package.json, and in a bundle
+    // without splitting esbuild then drops the initializer of a module that is both re-exported and imported lazily
+    // (Drawer: through march/ui and through Dialog), so it runs uninitialized. Nothing is shaken out here anyway.
+    ignoreAnnotations: true,
     plugins: [march({ dev: false, cssSplit: false, deepImports: false })],
   });
   console.log("✔ playground tools (esbuild-wasm, March compiler, TypeScript, preview runtime)");
 }
-// the port: 5181, or PORT (several checkouts serving side by side, each from its own .claude/launch.json)
-const port = Number(process.env.PORT) || 5181;
+// the port: 5181, or --port <n> / PORT (several checkouts serving side by side)
+const portArg = args.indexOf("--port");
+const port = Number(portArg >= 0 ? args[portArg + 1] : process.env.PORT) || 5181;
 if (serve) {
   const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".json": "application/json" };
   createServer((req, res) => {
