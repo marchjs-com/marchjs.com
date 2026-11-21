@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "ProfileName.tsx",
-			"code": "import { VerifiedMark, Card } from \"march/ui\"\n\n// profil adı: koyu kartta büyük ad ve altın rozet\nexport function ProfileName() {\n  return <Card m:theme=\"night\">\n    <span sx={{ text: [\"xl\", \"bold\"] }}>HADİ Koşu Kulübü <VerifiedMark size=\"lg\" m:color=\"brand-gold\" label=\"Onaylı kulüp\" /></span>\n  </Card>\n}\n"
+			"src": "examples://components/verified-mark/ProfileName.tsx"
 		},
 		{
 			"type": "code",
 			"name": "CommentList.tsx",
-			"code": "import { VerifiedMark, Avatar } from \"march/ui\"\n\n// yorumlar: onaylı hesapların adının yanında rozet\nconst comments = [{ name: \"Fotoğraf Atölyesi\", ok: true, text: \"Işık harika\" }, { name: \"Can\", ok: false, text: \"Katılıyorum\" }]\n\nexport function CommentList() {\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    {comments.map((c) => <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n      <Avatar name={c.name} size=\"sm\" />\n      <span><strong>{c.name}</strong> {c.ok ? <VerifiedMark size=\"sm\" /> : null}: {c.text}</span>\n    </div>)}\n  </div>\n}\n"
+			"src": "examples://components/verified-mark/CommentList.tsx"
 		},
 		{
 			"type": "code",
 			"name": "VerifiedMarkLab.tsx",
-			"code": "import { VerifiedMark } from \"march/ui\"\nimport { shieldCheck } from \"march/icons\"\n\n// VerifiedMark'ın özellikleri: label (metin ya da false: süs), icon (ikon ya da metin), size, class\nexport function VerifiedMarkLab() {\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 3 }}>\n    <VerifiedMark class=\"lab-default\" />\n    <VerifiedMark class=\"lab-own\" label=\"Onaylı işletme\" icon={shieldCheck} size=\"lg\" />\n    <VerifiedMark class=\"lab-text\" icon=\"✔\" size=\"sm\" />\n    <VerifiedMark class=\"lab-deco\" label={false} />\n  </div>\n}\n"
+			"src": "examples://components/verified-mark/VerifiedMarkLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "VerifiedMarkLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { VerifiedMarkLab } from \"./VerifiedMarkLab.tsx\"\n\n// VerifiedMarkLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"rozet bir resim, adı label\", () => {\n  const s = renderTest(() => <VerifiedMarkLab />)\n  expect(s.get(\".lab-own\")?.getAttribute(\"role\")).toBe(\"img\")\n  expect(s.get(\".lab-own\")?.getAttribute(\"aria-label\")).toBe(\"Onaylı işletme\")\n})\n\ntest(\"label={false} süs: ekran okuyucudan gizli\", () => {\n  const s = renderTest(() => <VerifiedMarkLab />)\n  expect(s.get(\".lab-deco\")?.getAttribute(\"aria-hidden\")).toBe(\"true\")\n})\n\ntest(\"metin ikon yazılır\", () => {\n  const s = renderTest(() => <VerifiedMarkLab />)\n  expect(s.get(\".lab-text\")?.textContent).toContain(\"✔\")\n})\n"
+			"src": "examples://components/verified-mark/VerifiedMarkLab.test.tsx"
 		}
 	]
 }

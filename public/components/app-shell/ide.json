@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "NightReader.tsx",
-			"code": "import { AppShell, Card } from \"march/ui\"\n\n// gece okuma uygulaması: koyu temada kenar çubuğu ve kayan sayfa\nexport function NightReader() {\n  return <Card m:theme=\"night\">\n    <AppShell features={[]} nav={<div sx={{ flex: \"col\", gap: 1, p: 2 }}><strong>Kitaplık</strong><span>Okunanlar</span><span>Notlar</span></div>}>\n      <article sx={{ p: 3 }}><h3 sx={{ text: [\"lg\", \"bold\"] }}>Birinci bölüm</h3><p sx={{ text: \"sm\" }}>Gece yarısı, şehir sustuğunda…</p></article>\n    </AppShell>\n  </Card>\n}\n"
+			"src": "examples://components/app-shell/NightReader.tsx"
 		},
 		{
 			"type": "code",
 			"name": "AdminApp.tsx",
-			"code": "import { AppShell, NavMenu, Button } from \"march/ui\"\nimport { home, settings, users } from \"march/icons\"\n\n// yönetim uygulaması: gezinme menüsü, üstte güncelleme duyurusu (kapatılabilir), seçilen sayfa ana alanda\nconst pages = [{ id: \"home\", title: \"Özet\", href: \"#home\", icon: home }, { id: \"users\", title: \"Kullanıcılar\", href: \"#users\", icon: users }, { id: \"settings\", title: \"Ayarlar\", href: \"#settings\", icon: settings }]\n\nexport function AdminApp() {\n  let $page = \"home\"\n  let $banner = true\n  return <AppShell features={[]} mainId=\"admin-main\"\n    top={$banner ? <div class=\"sc-shell-banner\">Yeni sürüm hazır <Button size=\"sm\" on:click={() => $banner = false}>Tamam</Button></div> : null}\n    nav={<div on:click={(e: MouseEvent) => { const a = (e.target as Element).closest(\"a[href^='#']\"); if (a) { e.preventDefault(); $page = a.getAttribute(\"href\")!.slice(1) } }}>\n      <NavMenu items={pages} palette={false} />\n    </div>}>\n    <h3 sx={{ p: 3, text: \"bold\" }}>{pages.find((p) => p.id === $page)!.title}</h3>\n  </AppShell>\n}\n"
+			"src": "examples://components/app-shell/AdminApp.tsx"
 		},
 		{
 			"type": "code",
 			"name": "AppShellLab.tsx",
-			"code": "import { AppShell } from \"march/ui\"\n\n// AppShell, Layout'un çerçeveli (framed) hâli: top, header, nav, aside, footer, mainId, labels, features, class ve içerik\nconst Box = (props: { children?: unknown }) => <div class=\"sc-ld-box\">{props.children}</div>\n\nexport function AppShellLab() {\n  return <AppShell class=\"lab-shell\" features={[]} mainId=\"lab-shell-main\" labels={{ skip: \"İçeriğe geç\" }}\n    top={<Box>Duyuru</Box>} header={<Box>Üst bilgi</Box>} nav={<Box>Gezinme</Box>} aside={<Box>Yan alan</Box>} footer={<Box>Alt bilgi</Box>}>\n    <Box>Sayfa</Box>\n  </AppShell>\n}\n"
+			"src": "examples://components/app-shell/AppShellLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "AppShellLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { AppShellLab } from \"./AppShellLab.tsx\"\n\n// AppShellLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"bölgeler ve içerik çizilir\", () => {\n  const s = renderTest(() => <AppShellLab />)\n  for (const t of [\"Duyuru\", \"Üst bilgi\", \"Gezinme\", \"Yan alan\", \"Alt bilgi\", \"Sayfa\"]) expect(s.sees(t)).toBe(true)\n})\n\ntest(\"İçeriğe geç bağlantısı ana alana gider\", () => {\n  const s = renderTest(() => <AppShellLab />)\n  expect(s.get(\"#lab-shell-main\")).not.toBe(null)\n  expect(s.get(\"a[href='#lab-shell-main']\")).not.toBe(null)\n})\n"
+			"src": "examples://components/app-shell/AppShellLab.test.tsx"
 		}
 	]
 }

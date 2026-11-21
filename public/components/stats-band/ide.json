@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "CoffeeMeter.tsx",
-			"code": "import { StatsBand } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// kahve ölçer: her fincanda rakamlar yeni değere sayarak gider (değerler birer işlev, kendileri güncellenir)\nexport function CoffeeMeter() {\n  let $cups = 1\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Button on:click={() => $cups++}>Bir kahve daha ☕</Button>\n    <StatsBand variant=\"cards\" items={[\n      { value: () => $cups, label: \"fincan\", suffix: \" ☕\" },\n      { value: () => $cups * 80, label: \"mg kafein\" },\n      { value: () => Math.min(100, $cups * 15), label: \"odak\", suffix: \"%\", note: () => ($cups > 5 ? \"biraz su iç\" : \"iyi gidiyor\") },\n    ]} />\n  </div>\n}\n"
+			"src": "examples://components/stats-band/CoffeeMeter.tsx"
 		},
 		{
 			"type": "code",
 			"name": "TreeStats.tsx",
-			"code": "import { StatsBand } from \"march/landing\"\n\n// bir ağaçlandırma derneğinin rakamları: büyük sayılar kısaltılır, ekranda görününce sayar\nexport function TreeStats() {\n  return <StatsBand variant=\"divided\" items={[\n    { value: 1250000, label: \"fidan toprakla buluştu\", format: { notation: \"compact\" }, suffix: \"+\" },\n    { value: 81, label: \"ilde gönüllü\" },\n    { value: 4.9, decimals: 1, label: \"bağışçı memnuniyeti\", note: \"5 üzerinden\" },\n    { value: 92, label: \"fidan yaşıyor\", suffix: \"%\", note: \"3 yıl sonra yapılan sayım\" },\n  ]} />\n}\n"
+			"src": "examples://components/stats-band/TreeStats.tsx"
 		},
 		{
 			"type": "code",
 			"name": "StatsBandLab.tsx",
-			"code": "import { StatsBand } from \"march/landing\"\nimport { Button, Card, Segmented } from \"march/ui\"\n\n// StatsBand'in bütün özellikleri bir arada: rakamlar (value, label, note, format, decimals, prefix, suffix), görünüm\n// (variant), sayaç (mode), süre (duration), eğri (easing), giriş (reveal) ve sınıf (class)\nconst VARIANTS = [\"plain\", \"divided\", \"cards\"] as const\nconst MODES = [\"none\", \"count\", \"roll\"] as const\n\nexport function StatsBandLab() {\n  let $variant: (typeof VARIANTS)[number] = \"divided\"\n  let $mode: (typeof MODES)[number] = \"none\"\n  let $members = 42\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Card>\n      <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n        <Segmented aria-label=\"Görünüm\" options={VARIANTS.map((v) => ({ value: v, label: v }))} bind:value={$variant} />\n        <Segmented aria-label=\"Sayaç\" options={MODES.map((m) => ({ value: m, label: m }))} bind:value={$mode} />\n        <Button variant=\"secondary\" on:click={() => $members++}>+1 üye</Button>\n      </div>\n    </Card>\n    {() => {\n      // bu satırda okunan durumlar değişince bant yeniden çizilir; üye sayısı bir işlev, kendisi güncellenir\n      const variant = $variant, mode = $mode\n      return <StatsBand class=\"lab-stats\" variant={variant} mode={mode} duration={800} easing=\"in-out\"\n        reveal={{ effect: \"scale\", stagger: 60 }} items={[\n          { value: () => $members, label: \"üye\", note: \"her gün artıyor\" },\n          { value: 2400000, label: \"mesaj\", format: { notation: \"compact\" }, suffix: \"+\" },\n          { value: 99.5, decimals: 1, label: \"çalışma süresi\", suffix: \"%\" },\n          { value: 12, label: \"ortalama bilet\", prefix: \"€\" },\n        ]} />\n    }}\n  </div>\n}\n"
+			"src": "examples://components/stats-band/StatsBandLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "StatsBandLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { StatsBandLab } from \"./StatsBandLab.tsx\"\n\n// StatsBandLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"dört rakam bir tanım listesinde; çizgili görünüm\", () => {\n  const s = renderTest(() => <StatsBandLab />)\n  expect(s.get(\"dl.lab-stats\")?.classList.contains(\"m-stats-divided\")).toBe(true)\n  expect(s.all(\".lab-stats .m-stats-item\").length).toBe(4)\n  expect(s.sees(\"her gün artıyor\")).toBe(true)\n})\n\ntest(\"sayaçsız modda düz sayı, ön ve son ekleriyle\", () => {\n  const s = renderTest(() => <StatsBandLab />)\n  const plain = s.all(\".lab-stats .m-stats-plain\")\n  expect(plain.length).toBe(4)\n  expect(plain[0]?.textContent).toBe(\"42\")\n  expect(plain[2]?.textContent).toContain(\"%\")\n  expect(plain[3]?.textContent).toContain(\"€\")\n})\n\ntest(\"üye sayısı bir işlev: düğmeyle artar\", async () => {\n  const s = renderTest(() => <StatsBandLab />)\n  await s.click(\"+1 üye\")\n  expect(s.get(\".lab-stats .m-stats-plain\")?.textContent).toBe(\"43\")\n})\n\ntest(\"kartlar görünümü ve sayaç modu seçilir\", async () => {\n  const s = renderTest(() => <StatsBandLab />)\n  await s.click(\"cards\")\n  await s.click(\"count\")\n  expect(s.get(\"dl.lab-stats\")?.classList.contains(\"m-stats-cards\")).toBe(true)\n  expect(s.get(\".lab-stats .m-stats-plain\")).toBe(null)\n  expect(s.get(\".lab-stats .m-counter\")).not.toBe(null)\n})\n"
+			"src": "examples://components/stats-band/StatsBandLab.test.tsx"
 		}
 	]
 }

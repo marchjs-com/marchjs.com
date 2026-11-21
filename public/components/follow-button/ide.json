@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "ClubJoin.tsx",
-			"code": "import { FollowButton, Card } from \"march/ui\"\n\n// kulübe katıl: kendi metinleri ve yeşil renk; koyu kartta\nexport function ClubJoin() {\n  let $state = \"follow\"\n  return <Card m:theme=\"night\">\n    <strong>HADİ Koşu Kulübü</strong>\n    <FollowButton state={$state as \"follow\"} onChange={(s: string) => $state = s} name=\"HADİ Koşu Kulübü\"\n      labels={{ follow: \"Katıl\", following: \"Üyesin\" }} m:color=\"brand-green\" />\n  </Card>\n}\n"
+			"src": "examples://components/follow-button/ClubJoin.tsx"
 		},
 		{
 			"type": "code",
 			"name": "SuggestedList.tsx",
-			"code": "import { FollowButton, Avatar } from \"march/ui\"\n\n// önerilen hesaplar: gizli hesapta istek gönderilir; takip sayısı altta\nconst people = [{ name: \"Fotoğraf Atölyesi\", private: false }, { name: \"Kitap Kulübü\", private: true }, { name: \"Masa Oyunları\", private: false }]\n\nexport function SuggestedList() {\n  let $states: Record<string, string> = {}\n  const count = () => Object.values($states).filter((s) => s !== \"follow\").length\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    {people.map((p) => <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n      <Avatar name={p.name} size=\"sm\" /><span sx={{ flex: \"grow\" }}>{p.name}</span>\n      <FollowButton size=\"sm\" name={p.name} private={p.private} state={($states[p.name] ?? \"follow\") as \"follow\"}\n        onChange={(s: string) => $states = { ...$states, [p.name]: s }} />\n    </div>)}\n    <span sx={{ text: \"sm\", color: \"muted\" }}>{count()} hesap</span>\n  </div>\n}\n"
+			"src": "examples://components/follow-button/SuggestedList.tsx"
 		},
 		{
 			"type": "code",
 			"name": "FollowButtonLab.tsx",
-			"code": "import { FollowButton } from \"march/ui\"\n\n// FollowButton'ın özellikleri: state, onChange, private, name, size, block, labels, ariaLabel, icon (işlev ya da false),\n// burst, morph, class\nexport function FollowButtonLab() {\n  let $state = \"follow\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <FollowButton class=\"lab-follow\" state={$state as \"follow\"} onChange={(s: string) => $state = s} name=\"Elif\" size=\"md\" block\n      ariaLabel={(st: string, n: string | undefined) => `${n}: ${st}`} burst={false} morph={false} />\n    <FollowButton class=\"lab-private\" state=\"follow\" onChange={() => {}} private icon={false} labels={{ follow: \"İstek gönder\" }} />\n    <span class=\"lab-state\">{$state}</span>\n  </div>\n}\n"
+			"src": "examples://components/follow-button/FollowButtonLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "FollowButtonLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { FollowButtonLab } from \"./FollowButtonLab.tsx\"\n\n// FollowButtonLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"basınca following olur, ariaLabel adı yazar\", async () => {\n  const s = renderTest(() => <FollowButtonLab />)\n  expect(s.get(\".lab-follow\")?.getAttribute(\"aria-label\")).toBe(\"Elif: follow\")\n  await s.click(s.get(\".lab-follow\")!)\n  expect(s.get(\".lab-state\")?.textContent).toBe(\"following\")\n})\n\ntest(\"labels kendi metnini yazar\", () => {\n  const s = renderTest(() => <FollowButtonLab />)\n  expect(s.get(\".lab-private\")?.textContent).toContain(\"İstek gönder\")\n})\n"
+			"src": "examples://components/follow-button/FollowButtonLab.test.tsx"
 		}
 	]
 }

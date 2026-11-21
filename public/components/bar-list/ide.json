@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "EmojiPoll.tsx",
-			"code": "import { BarList } from \"march/charts\"\n\n// emoji anketi: bir satıra tıklamak o emojiye 250 oy ekler (bir sınıf dolusu), sıra hemen değişir\nexport function EmojiPoll() {\n  let $votes = [{ label: \"🔥\", value: 1730 }, { label: \"😂\", value: 2410 }, { label: \"🤔\", value: 640 }, { label: \"😍\", value: 1980 }]\n  return <BarList data={() => $votes} title=\"En sevilen emoji\"\n    onSelect={(r: { label: string; value: number; rank: number }) => { $votes = $votes.map((v) => (v.label === r.label ? { ...v, value: v.value + 250 } : v)) }} />\n}\n"
+			"src": "examples://components/bar-list/EmojiPoll.tsx"
 		},
 		{
 			"type": "code",
 			"name": "TopPages.tsx",
-			"code": "import { BarList } from \"march/charts\"\nimport { Card, Segmented } from \"march/ui\"\n\n// bir sitenin en çok ziyaret edilen sayfaları: dönem seçilir, ilk beşi gösterilir; satıra tıklamak sayfayı açar gibi\nconst PAGES = {\n  today: [{ yol: \"/\", ziyaret: 1840 }, { yol: \"/fiyatlar\", ziyaret: 920 }, { yol: \"/blog/sinyaller-nedir-ve-neden-hizlidir\", ziyaret: 610 }, { yol: \"/iletisim\", ziyaret: 240 }, { yol: \"/kariyer\", ziyaret: 120 }, { yol: \"/yardim\", ziyaret: 95 }],\n  week: [{ yol: \"/\", ziyaret: 12400 }, { yol: \"/blog/sinyaller-nedir-ve-neden-hizlidir\", ziyaret: 8100 }, { yol: \"/fiyatlar\", ziyaret: 6300 }, { yol: \"/yardim\", ziyaret: 2100 }, { yol: \"/iletisim\", ziyaret: 1500 }, { yol: \"/kariyer\", ziyaret: 900 }],\n}\n\nexport function TopPages() {\n  let $range: \"today\" | \"week\" = \"today\"\n  let $open = \"—\"\n  return <Card title=\"En çok ziyaret edilenler\" actions={[<Segmented size=\"sm\" bind:value={$range} aria-label=\"Dönem\" options={[{ value: \"today\", label: \"Bugün\" }, { value: \"week\", label: \"Bu hafta\" }]} />]}>\n    <BarList data={() => PAGES[$range]} x=\"yol\" y=\"ziyaret\" limit={5} format=\"compact\" color={1} title=\"Sayfalar\" onSelect={(r: { label: string; value: number; rank: number }) => { $open = r.label }} />\n    <p sx={{ text: \"sm\", color: \"muted\" }}>Açılan: {() => $open}</p>\n  </Card>\n}\n"
+			"src": "examples://components/bar-list/TopPages.tsx"
 		},
 		{
 			"type": "code",
 			"name": "BarListLab.tsx",
-			"code": "import { BarList } from \"march/charts\"\nimport { Button, Card } from \"march/ui\"\n\n// BarList'in bütün özellikleri: data (sinyal), x, y (getter), format, sort, limit, max, color, colors, title, empty,\n// class, onSelect\nconst TASKS = [{ is: \"Tasarım\", yuzde: 80 }, { is: \"Kod\", yuzde: 55 }, { is: \"Test\", yuzde: 30 }, { is: \"Yayın\", yuzde: 5 }]\n\nexport function BarListLab() {\n  let $tasks = TASKS\n  let $picked = \"—\"\n  let $empty = false\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div sx={{ flex: [\"row\", \"wrap\", \"center\"], gap: 2 }}>\n      <Button class=\"lab-work\" size=\"sm\" on:click={() => { $tasks = $tasks.map((t) => ({ ...t, yuzde: Math.min(100, t.yuzde + 10) })) }}>Çalış</Button>\n      <Button class=\"lab-empty\" size=\"sm\" variant=\"ghost\" on:click={() => { $empty = !$empty }}>Boşalt / geri getir</Button>\n      <span class=\"lab-picked\">Seçilen: {() => $picked}</span>\n    </div>\n    <BarList class=\"lab-tasks\" data={() => ($empty ? [] : $tasks)} x=\"is\" y={(r: { yuzde: number }) => r.yuzde} sort={false} max={100}\n      format={(v: number) => `%${v}`} colors={[\"#1fa463\"]} title=\"Görevler\" empty=\"Görev yok\" onSelect={(r: { label: string; value: number; rank: number }) => { $picked = `${r.rank}. ${r.label}` }} />\n    <Card m:theme=\"night\">\n      <BarList class=\"lab-top\" data={() => $tasks} x=\"is\" y=\"yuzde\" limit={2} color={3} title=\"İlk iki\" />\n    </Card>\n  </div>\n}\n"
+			"src": "examples://components/bar-list/BarListLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "BarListLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { BarListLab } from \"./BarListLab.tsx\"\n\n// BarListLab'in testleri: kaydedince Testler sekmesinde çalışır\nconst labels = (el: Element) => [...el.querySelectorAll(\".m-barlist-label\")].map((l) => l.textContent)\n\ntest(\"sort={false}: veri sırası korunur; liste adıyla duyurulur\", () => {\n  const s = renderTest(() => <BarListLab />)\n  const list = s.get(\".lab-tasks\")!\n  expect(list.getAttribute(\"aria-label\")).toBe(\"Görevler\")\n  expect(labels(list)).toEqual([\"Tasarım\", \"Kod\", \"Test\", \"Yayın\"])\n})\n\ntest(\"onSelect satırları düğme yapar; tıklanan sırasıyla gelir\", async () => {\n  const s = renderTest(() => <BarListLab />)\n  await s.click(s.all(\".lab-tasks button\")[1]!)\n  expect(s.get(\".lab-picked\")!.textContent).toBe(\"Seçilen: 2. Kod\")\n})\n\ntest(\"limit ilk ikiyi gösterir; veri boşalınca boş metni\", async () => {\n  const s = renderTest(() => <BarListLab />)\n  expect(labels(s.get(\".lab-top\")!)).toEqual([\"Tasarım\", \"Kod\"])\n  await s.click(\".lab-empty\")\n  expect(s.sees(\"Görev yok\")).toBe(true)\n})\n"
+			"src": "examples://components/bar-list/BarListLab.test.tsx"
 		}
 	]
 }

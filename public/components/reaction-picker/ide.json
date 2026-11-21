@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "MoodMeter.tsx",
-			"code": "import { ReactionPicker, Card } from \"march/ui\"\n\n// günün havası: kendi emojilerin, seçilen büyük yazılır\nexport function MoodMeter() {\n  let $mood = \"\"\n  return <Card m:theme=\"night\">\n    <ReactionPicker emojis={[\"☀️\", \"⛅\", \"🌧️\", \"⛈️\", \"❄️\"]} selected={$mood} onPick={(e: string) => $mood = e} m:color=\"brand-orange\" label=\"Hava\" />\n    <span sx={{ text: \"2xl\" }}>{$mood || \"?\"}</span>\n  </Card>\n}\n"
+			"src": "examples://components/reaction-picker/MoodMeter.tsx"
 		},
 		{
 			"type": "code",
 			"name": "MessageReactions.tsx",
-			"code": "import { ReactionPicker } from \"march/ui\"\n\n// mesaja tepki: aynı emojiye yeniden basınca kalkar; + düğmesi tam paneli açar\nexport function MessageReactions() {\n  let $sel = \"\"\n  let $panel = false\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <p>“Yarın 7'de sahilde!”</p>\n    <ReactionPicker selected={$sel} onPick={(e: string) => $sel = $sel === e ? \"\" : e} onMore={() => $panel = !$panel} />\n    {() => ($panel ? <ReactionPicker layout=\"grid\" onPick={(e: string) => { $sel = e; $panel = false }} /> : null)}\n  </div>\n}\n"
+			"src": "examples://components/reaction-picker/MessageReactions.tsx"
 		},
 		{
 			"type": "code",
 			"name": "ReactionPickerLab.tsx",
-			"code": "import { ReactionPicker } from \"march/ui\"\nimport { smilePlus } from \"march/icons/lucide\"\n\n// ReactionPicker'ın özellikleri: onPick, emojis, selected, layout, onMore, pop, label, emojiLabel, moreLabel, moreIcon, class\nexport function ReactionPickerLab() {\n  let $sel = \"👍\"\n  let $more = 0\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <ReactionPicker class=\"lab-row\" emojis={[\"👍\", \"🎉\", \"🔥\"]} selected={$sel} onPick={(e: string) => $sel = e} pop={false}\n      label=\"Tepkiler\" emojiLabel={(e: string) => `Tepki ${e}`} onMore={() => $more++} moreLabel=\"Daha çok\" moreIcon={smilePlus} />\n    {/* layout=\"grid\": hap yerine panel (emoji klavyesi); ok tuşları dört yöne gider */}\n    <ReactionPicker class=\"lab-grid\" layout=\"grid\" emojis={[\"😀\", \"😂\", \"😍\", \"🥳\", \"😎\", \"🤔\"]} selected={$sel}\n      onPick={(e: string) => $sel = e} label=\"Emoji klavyesi\" />\n    <span class=\"lab-sel\">{$sel} · {$more}</span>\n  </div>\n}\n"
+			"src": "examples://components/reaction-picker/ReactionPickerLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "ReactionPickerLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { ReactionPickerLab } from \"./ReactionPickerLab.tsx\"\n\n// ReactionPickerLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"seçili tepki aria-pressed, basınca onPick\", async () => {\n  const s = renderTest(() => <ReactionPickerLab />)\n  expect(s.find(\"Tepki 👍\")?.getAttribute(\"aria-pressed\")).toBe(\"true\")\n  await s.click(\"Tepki 🔥\")\n  expect(s.get(\".lab-sel\")?.textContent).toContain(\"🔥\")\n})\n\ntest(\"+ düğmesi moreLabel adıyla onMore'u çağırır\", async () => {\n  const s = renderTest(() => <ReactionPickerLab />)\n  await s.click(\"Daha çok\")\n  expect(s.get(\".lab-sel\")?.textContent).toContain(\"1\")\n})\n\ntest(\"grid düzeni panel olarak çizilir ve seçer\", async () => {\n  const s = renderTest(() => <ReactionPickerLab />)\n  expect(s.get(\".lab-grid\")?.className).toContain(\"m-react-grid\")\n  await s.click(\"🥳\")\n  expect(s.get(\".lab-sel\")?.textContent).toContain(\"🥳\")\n})\n"
+			"src": "examples://components/reaction-picker/ReactionPickerLab.test.tsx"
 		}
 	]
 }

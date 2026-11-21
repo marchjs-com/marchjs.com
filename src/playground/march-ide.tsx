@@ -13,7 +13,7 @@ import { beginLoad } from "march/lazy";
 import { Alert, MadeWithMarch, Spinner } from "march/ui";
 import { Icon, arrowLeft, arrowRight } from "march/icons";
 import { HUBS } from "../topics.ts";
-import { LAYOUTS, DEFAULT_IDE, parseIde, type IdeJson, type IdeLayout } from "./ide.ts";
+import { LAYOUTS, DEFAULT_IDE, parseIde, loadIde, type IdeJson, type IdeLayout } from "./ide.ts";
 import { ideOf, isIdePage } from "./ide-pages.ts";
 import { ideOpen } from "./ide-open.ts";
 
@@ -24,7 +24,8 @@ export const idle = (ms = 500): Promise<void> => new Promise((r) => {
   if (g.requestIdleCallback) g.requestIdleCallback(() => r(), { timeout: ms }); else setTimeout(r, 50);
 });
 
-/** Fetches <id>/ide.json (the built-in files for ""): the parsed value, or a message saying what is wrong. */
+/** Fetches <id>/ide.json and the files it names (the built-in files for ""): the workspace's files, or a message saying
+ * what is wrong. */
 const fetched = new Map<string, IdeJson>();
 async function fetchIde(id: string): Promise<IdeJson | string> {
   if (!id) return DEFAULT_IDE;
@@ -34,7 +35,8 @@ async function fetchIde(id: string): Promise<IdeJson | string> {
   const res = await fetch(appUrl(`${id}/ide.json`)).catch(() => null);
   // the server answers a missing file with the page itself: only JSON counts
   if (!res?.ok || !/json/.test(res.headers.get("content-type") ?? "")) return `${id}/ide.json bulunamadı`;
-  const ide = parseIde(await res.text());
+  const file = parseIde(await res.text());
+  const ide = typeof file === "string" ? file : await loadIde(file);
   if (typeof ide !== "string") fetched.set(id, ide);
   return ide;
 }

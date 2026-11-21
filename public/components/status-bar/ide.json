@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "GameHud.tsx",
-			"code": "import { StatusBar, Card } from \"march/ui\"\nimport { heart, star, zap } from \"march/icons\"\n\n// oyun göstergesi: can, puan, enerji; puan düğmesi puanı artırır\nexport function GameHud() {\n  let $score = 120\n  let $lives = 3\n  return <Card m:theme=\"night\">\n    <StatusBar label=\"Oyun durumu\" items={[\n      { id: \"lives\", icon: heart, text: () => `${$lives}`, tone: () => ($lives > 1 ? \"success\" : \"danger\"), onSelect: () => $lives = Math.max(0, $lives - 1), title: \"Can kaybet\" },\n      { id: \"score\", icon: star, text: () => `${$score} puan`, onSelect: () => $score += 10, title: \"Puan kazan\" },\n      { id: \"energy\", side: \"end\", icon: zap, text: \"Enerji dolu\", tone: \"busy\" },\n    ]} />\n  </Card>\n}\n"
+			"src": "examples://components/status-bar/GameHud.tsx"
 		},
 		{
 			"type": "code",
 			"name": "EditorStatus.tsx",
-			"code": "import { StatusBar } from \"march/ui\"\nimport { gitBranch, alertTriangle } from \"march/icons\"\n\n// düzenleyici durum çubuğu: dal, hatalar, imleç satırı; kaydet düğmesi durumu değiştirir\nexport function EditorStatus() {\n  let $saving = false\n  let $line = 1\n  return <StatusBar label=\"Editör durumu\" items={[\n    { id: \"branch\", icon: gitBranch, text: \"main\", priority: 5 },\n    { id: \"problems\", icon: alertTriangle, text: \"0 hata\", priority: 3 },\n    { id: \"pos\", side: \"end\", text: () => `Sa ${$line}`, title: \"Sonraki satır\", onSelect: () => $line++, priority: 4 },\n    { id: \"save\", side: \"end\", text: () => ($saving ? \"Kaydediliyor…\" : \"Kaydet\"), tone: () => ($saving ? \"busy\" : \"success\"), onSelect: () => { $saving = true; setTimeout(() => $saving = false, 800) }, live: true, priority: 9 },\n  ]} />\n}\n"
+			"src": "examples://components/status-bar/EditorStatus.tsx"
 		},
 		{
 			"type": "code",
 			"name": "StatusBarLab.tsx",
-			"code": "import { StatusBar } from \"march/ui\"\nimport { bell } from \"march/icons\"\nimport { moreHorizontal } from \"march/icons/lucide\"\n\n// StatusBar'ın özellikleri: items (id, text, icon, side, tone, title, onSelect, command, priority, live), label,\n// moreLabel, moreIcon, overflow, dot (kendi işaretin), pulse, class\nexport function StatusBarLab() {\n  let $count = 0\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    {/* overflow: sığmayan öğeler (önce düşük priority) \"Daha fazla\" menüsüne taşınır; false: taşınmaz */}\n    <StatusBar class=\"lab-bar\" label=\"Durum\" moreLabel=\"Daha fazla\" moreIcon={moreHorizontal} pulse={false} overflow\n      dot={(tone: () => string) => <b>{() => (tone() === \"busy\" ? \"◌\" : \"◆\")}</b>}\n      items={[\n        { id: \"count\", text: () => `${$count} tık`, title: \"Say\", onSelect: () => $count++ },\n        { id: \"bell\", side: \"end\", icon: bell, text: \"2\", title: \"Bildirimler\", tone: \"busy\", priority: 2 },\n        { id: \"ok\", side: \"end\", text: \"Hazır\", tone: \"success\", live: true },\n      ]} />\n  </div>\n}\n"
+			"src": "examples://components/status-bar/StatusBarLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "StatusBarLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { StatusBarLab } from \"./StatusBarLab.tsx\"\n\n// StatusBarLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"öğeler çizilir, çubuğun adı label\", () => {\n  const s = renderTest(() => <StatusBarLab />)\n  expect(s.sees(\"Hazır\")).toBe(true)\n  expect(s.get(\".lab-bar\")?.getAttribute(\"aria-label\")).toBe(\"Durum\")\n})\n\ntest(\"onSelect'li öğe düğmedir ve basılınca çalışır\", async () => {\n  const s = renderTest(() => <StatusBarLab />)\n  await s.click(\"0 tık\")\n  expect(s.sees(\"1 tık\")).toBe(true)\n})\n"
+			"src": "examples://components/status-bar/StatusBarLab.test.tsx"
 		}
 	]
 }

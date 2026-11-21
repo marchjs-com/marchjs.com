@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "NightOwls.tsx",
-			"code": "import { TypingIndicator, Card } from \"march/ui\"\n\n// gece kuşları: koyu temada, satır içi, mor noktalar yanıp söner\nexport function NightOwls() {\n  return <Card m:theme=\"night\">\n    <TypingIndicator names={[\"Baykuş\"]} variant=\"inline\" motion=\"fade\" m:color=\"brand-purple\" />\n  </Card>\n}\n"
+			"src": "examples://components/typing-indicator/NightOwls.tsx"
 		},
 		{
 			"type": "code",
 			"name": "ChatFooter.tsx",
-			"code": "import { TypingIndicator, Button } from \"march/ui\"\n\n// sohbet altı: yazanlar eklenip çıkar; kimse yazmıyorsa gösterge gizlenir\nconst all = [\"Elif\", \"Can\", \"Deniz\"]\n\nexport function ChatFooter() {\n  let $n = 1\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <TypingIndicator names={all.slice(0, $n)} />\n    <div sx={{ flex: \"row\", gap: 2 }}>\n      <Button size=\"sm\" on:click={() => $n = Math.max(0, $n - 1)}>Biri sustu</Button>\n      <Button size=\"sm\" on:click={() => $n = Math.min(all.length, $n + 1)}>Biri yazıyor</Button>\n    </div>\n  </div>\n}\n"
+			"src": "examples://components/typing-indicator/ChatFooter.tsx"
 		},
 		{
 			"type": "code",
 			"name": "TypingIndicatorLab.tsx",
-			"code": "import { TypingIndicator } from \"march/ui\"\n\n// TypingIndicator'ın özellikleri: names, variant, text, label (kendi cümlen), dots (false ya da kendi öğen), motion, class\nexport function TypingIndicatorLab() {\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <TypingIndicator class=\"lab-own\" names={[\"Elif\", \"Can\"]} variant=\"bubble\" label={(n: readonly string[]) => `${n.join(\" ve \")} karalıyor`} motion=\"none\" />\n    <TypingIndicator class=\"lab-nodots\" names={[\"Deniz\"]} variant=\"inline\" dots={false} />\n    <TypingIndicator class=\"lab-quiet\" names={[\"Ada\"]} text={false} />\n  </div>\n}\n"
+			"src": "examples://components/typing-indicator/TypingIndicatorLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "TypingIndicatorLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { TypingIndicatorLab } from \"./TypingIndicatorLab.tsx\"\n\n// TypingIndicatorLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"label kendi cümlesini yazar\", () => {\n  const s = renderTest(() => <TypingIndicatorLab />)\n  expect(s.sees(\"Elif ve Can karalıyor\")).toBe(true)\n})\n\ntest(\"bir durum bölgesi (role=status)\", () => {\n  const s = renderTest(() => <TypingIndicatorLab />)\n  expect(s.all(\"[role=status]\").length).toBeGreaterThan(0)\n})\n"
+			"src": "examples://components/typing-indicator/TypingIndicatorLab.test.tsx"
 		}
 	]
 }

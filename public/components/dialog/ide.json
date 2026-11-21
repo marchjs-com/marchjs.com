@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "LevelUp.tsx",
-			"code": "import { Dialog, Button, Card } from \"march/ui\"\n\n// seviye atladın: kutlama penceresi, yükselerek gelir; \"Devam\" kapatır\nexport function LevelUp() {\n  let $open = false\n  let $level = 1\n  return <Card m:theme=\"night\">\n    <Button variant=\"primary\" on:click={() => { $level++; $open = true }}>Görevi bitir</Button>\n    <span sx={{ text: \"sm\", color: \"muted\" }}> Seviye {$level}</span>\n    <Dialog open={$open} onClose={() => $open = false} title={`🎉 Seviye ${$level}!`} size=\"sm\" motion=\"rise\"\n      footer={<Button variant=\"primary\" on:click={() => $open = false}>Devam</Button>}>\n      <p>Yeni bir rozet kazandın.</p>\n    </Dialog>\n  </Card>\n}\n"
+			"src": "examples://components/dialog/LevelUp.tsx"
 		},
 		{
 			"type": "code",
 			"name": "DeleteProject.tsx",
-			"code": "import { Button, confirm, prompt, toast } from \"march/ui\"\n\n// projeyi sil: önce onay (tehlikeli), sonra yeniden adlandırma için prompt\nexport function DeleteProject() {\n  let $name = \"Vitrin\"\n  let $gone = false\n  const remove = async () => { if (await confirm({ title: `${$name} silinsin mi?`, message: \"Bu işlem geri alınamaz.\", danger: true, ok: \"Sil\" })) { $gone = true; toast(\"Proje silindi\") } }\n  const rename = async () => { const n = await prompt({ title: \"Yeni ad\", value: $name, validate: (v: string) => (v.trim() ? null : \"Ad gerekli\"), ok: \"Kaydet\" }); if (n) $name = n }\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n    <strong>{$gone ? \"Silindi\" : $name}</strong>\n    <Button size=\"sm\" on:click={rename} disabled={$gone}>Yeniden adlandır</Button>\n    <Button size=\"sm\" variant=\"danger\" on:click={remove} disabled={$gone}>Sil</Button>\n  </div>\n}\n"
+			"src": "examples://components/dialog/DeleteProject.tsx"
 		},
 		{
 			"type": "code",
 			"name": "DialogLab.tsx",
-			"code": "import { Dialog, Button } from \"march/ui\"\nimport { arrowLeft } from \"march/icons\"\n\n// Dialog'un özellikleri: open, onClose, title, size, dismissable, footer, closeButton (kendi ikonun ya da yok),\n// closeLabel, motion, modal, label, role, class ve içerik\n// startOpen: önizlemede açık başlar; testler kapalı başlatıp Aç ile açar\nexport function DialogLab(props: { startOpen?: boolean }) {\n  let $open = props.startOpen ?? true\n  let $closed = 0\n  let $note = false\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Button on:click={() => $open = true}>Aç</Button>\n    <Button variant=\"secondary\" on:click={() => $note = !$note}>Not</Button>\n    <span class=\"lab-closed\">{$closed} kez kapandı</span>\n    <Dialog open={$open} onClose={() => { $open = false; $closed++ }} title=\"Ayarlar\" size=\"lg\" dismissable\n      closeButton={arrowLeft} closeLabel=\"Geri dön\" motion=\"fade\" class=\"lab-dialog\"\n      footer={<Button variant=\"primary\" on:click={() => { $open = false; $closed++ }}>Kaydet</Button>}>\n      <p>Uzun bir ayar listesi burada kayar.</p>\n    </Dialog>\n    {/* başlıksız pencere: label erişilebilir adı verir; modal={false} örtüsüz, sayfa kullanılabilir kalır */}\n    <Dialog open={$note} onClose={() => $note = false} label=\"Hızlı not\" modal={false} size=\"sm\" class=\"lab-note\">\n      <p>Sayfaya dokunmaya devam edebilirsin.</p>\n    </Dialog>\n  </div>\n}\n"
+			"src": "examples://components/dialog/DialogLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "DialogLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { DialogLab } from \"./DialogLab.tsx\"\n\n// DialogLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"Aç pencereyi başlığıyla gösterir\", async () => {\n  const s = renderTest(() => <DialogLab startOpen={false} />)\n  await s.click(\"Aç\")\n  await s.flush(2)\n  expect(s.sees(\"Ayarlar\")).toBe(true)\n})\n\ntest(\"kendi kapat düğmesi closeLabel adıyla onClose'u çağırır\", async () => {\n  const s = renderTest(() => <DialogLab startOpen={false} />)\n  await s.click(\"Aç\")\n  await s.flush(2)\n  await s.click(\"Geri dön\")\n  expect(s.get(\".lab-closed\")?.textContent).toBe(\"1 kez kapandı\")\n})\n\ntest(\"footer düğmesi de kapatır\", async () => {\n  const s = renderTest(() => <DialogLab startOpen={false} />)\n  await s.click(\"Aç\")\n  await s.flush(2)\n  await s.click(\"Kaydet\")\n  expect(s.get(\".lab-closed\")?.textContent).toBe(\"1 kez kapandı\")\n})\n\ntest(\"başlıksız kipsiz pencere label adını alır, aria-modal yok\", async () => {\n  const s = renderTest(() => <DialogLab startOpen={false} />)\n  await s.click(\"Not\")\n  await s.flush(2)\n  const d = document.querySelector(\"[aria-label='Hızlı not']\")\n  expect(d).not.toBe(null)\n  expect(d?.getAttribute(\"aria-modal\")).toBe(null)\n  await s.click(\"Not\")\n  await s.flush(2)\n})\n"
+			"src": "examples://components/dialog/DialogLab.test.tsx"
 		}
 	]
 }

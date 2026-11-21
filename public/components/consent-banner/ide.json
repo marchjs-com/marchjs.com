@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "CookieJar.tsx",
-			"code": "import { ConsentBanner } from \"march/components/consent-banner\"\n\n// kurabiye kavanozu: aynı bant, kendi sesiyle; üç seçenek yine eşit ağırlıkta\nexport function CookieJar() {\n  return <ConsentBanner inline always title=\"🍪 Kavanozda kurabiye var\"\n    text=\"Siteyi çalıştıranlar hep açık. Ölçüm ve öneri kurabiyelerini yalnız sen istersen pişiririz.\"\n    labels={{ reject: \"Hiç istemem\", customize: \"Tek tek seçeyim\", accept: \"Hepsini al\" }} />\n}\n"
+			"src": "examples://components/consent-banner/CookieJar.tsx"
 		},
 		{
 			"type": "code",
 			"name": "VideoEmbed.tsx",
-			"code": "import { Button } from \"march/ui\"\nimport { ConsentGate, openConsentPreferences } from \"march/components/consent-banner\"\n\n// blog yazısında gömülü video: üçüncü taraf izni gelene dek yer tutucu; altta \"çerez ayarları\" bağlantısı\nexport function VideoEmbed() {\n  return <article sx={{ flex: \"col\", gap: 2 }}>\n    <h3 sx={{ text: \"lg\" }}>Kapadokya'da gün doğumu</h3>\n    <p sx={{ color: \"muted\" }}>Balonların havalandığı o on dakika, tek çekimde.</p>\n    <ConsentGate category=\"thirdParty\" label=\"Bu video YouTube'dan gelir; izin verene dek yüklenmez.\"\n      labels={{ allow: \"Videoyu göster\", preferences: \"Çerez ayarları\" }}>\n      <div sx={{ p: 4, radius: 3, text: \"center\" }} style={{ background: \"var(--m-surface-2)\" }}>▶ Video oynatılıyor</div>\n    </ConsentGate>\n    <div><Button variant=\"link\" size=\"sm\" on:click={() => { void openConsentPreferences() }}>Çerez tercihlerim</Button></div>\n  </article>\n}\n"
+			"src": "examples://components/consent-banner/VideoEmbed.tsx"
 		},
 		{
 			"type": "code",
 			"name": "ConsentBannerLab.tsx",
-			"code": "import { Button } from \"march/ui\"\nimport { ConsentBanner, ConsentGate, showConsentBanner } from \"march/components/consent-banner\"\n\n// ConsentBanner'ın bütün özellikleri: title, text, policyLabel, labels, always, inline, customize, class;\n// yanında ConsentGate (category, label, labels, preferences, class, children) ve showConsentBanner()\nexport function ConsentBannerLab() {\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <ConsentBanner class=\"lab-banner\" inline always customize title=\"Lab bandı\" text=\"Lab metni.\"\n      policyLabel=\"Gizlilik\" labels={{ reject: \"Reddet (lab)\", customize: \"Seç (lab)\", accept: \"Kabul (lab)\" }} />\n    <ConsentGate class=\"lab-gate\" category=\"thirdParty\" label=\"Lab yer tutucusu\" preferences={false} labels={{ allow: \"İzin ver (lab)\" }}>\n      <p class=\"lab-content\">Lab içeriği</p>\n    </ConsentGate>\n    <div><Button size=\"sm\" on:click={showConsentBanner}>Bandı yeniden göster</Button></div>\n  </div>\n}\n"
+			"src": "examples://components/consent-banner/ConsentBannerLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "ConsentBannerLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { ConsentBannerLab } from \"./ConsentBannerLab.tsx\"\n\n// ConsentBannerLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"bant kendi başlığı ve düğme metinleriyle çizilir; Özelleştir kendi metniyle\", async () => {\n  const s = renderTest(() => <ConsentBannerLab />)\n  await s.click(\"Bandı yeniden göster\")\n  await s.flush(2)\n  expect(s.sees(\"Lab bandı\")).toBe(true)\n  expect(s.sees(\"Reddet (lab)\")).toBe(true)\n  expect(s.sees(\"Kabul (lab)\")).toBe(true)\n  expect(s.sees(\"Seç (lab)\")).toBe(true)\n})\n\ntest(\"reddedince bant kapanır, yer tutucu kalır; yeniden göster bandı geri getirir\", async () => {\n  const s = renderTest(() => <ConsentBannerLab />)\n  await s.click(\"Bandı yeniden göster\")\n  await s.flush(2)\n  await s.click(\"Reddet (lab)\")\n  await s.flush(2)\n  expect(s.get(\".lab-banner\")).toBeFalsy()\n  expect(s.sees(\"Lab yer tutucusu\")).toBe(true)\n  await s.click(\"Bandı yeniden göster\")\n  await s.flush(2)\n  expect(s.get(\".lab-banner\")).toBeTruthy()\n})\n"
+			"src": "examples://components/consent-banner/ConsentBannerLab.test.tsx"
 		}
 	]
 }

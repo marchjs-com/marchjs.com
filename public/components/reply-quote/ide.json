@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "QuoteOfTheDay.tsx",
-			"code": "import { ReplyQuote, Card } from \"march/ui\"\n\n// günün sözü: alıntı bloğu, mor çubuk, tek satıra kısaltılmaz\nexport function QuoteOfTheDay() {\n  return <Card m:theme=\"night\">\n    <ReplyQuote name=\"Yunus Emre\" text=\"Gelin tanış olalım, işi kolay kılalım.\" lines={0} m:color=\"brand-purple\" />\n  </Card>\n}\n"
+			"src": "examples://components/reply-quote/QuoteOfTheDay.tsx"
 		},
 		{
 			"type": "code",
 			"name": "ComposerReply.tsx",
-			"code": "import { ReplyQuote, TextInput, Button } from \"march/ui\"\n\n// mesaj yazarken yanıt: alanın üstünde vazgeç düğmeli önizleme\nexport function ComposerReply() {\n  let $reply = true\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    {() => ($reply ? <ReplyQuote name=\"Deniz Kaya'ya yanıt\" text=\"Cumartesi sabahı sahil koşusu için buluşma yerini değiştirdik.\" lines={1}\n      onClose={() => $reply = false} closeLabel=\"Yanıttan vazgeç\" /> : <Button size=\"sm\" on:click={() => $reply = true}>Yanıtla</Button>)}\n    <TextInput aria-label=\"Mesaj\" placeholder=\"Mesaj yaz…\" />\n  </div>\n}\n"
+			"src": "examples://components/reply-quote/ComposerReply.tsx"
 		},
 		{
 			"type": "code",
 			"name": "ReplyQuoteLab.tsx",
-			"code": "import { ReplyQuote, Button } from \"march/ui\"\nimport { trash } from \"march/icons\"\n\n// ReplyQuote'un özellikleri: name, text, lines, variant, bar, onClose, close (kendi ikonun), closeLabel, trail,\n// onClick, class\nexport function ReplyQuoteLab() {\n  let $log = \"—\"\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <ReplyQuote class=\"lab-q\" name=\"Elif\" text=\"Uzun bir mesaj metni\" lines={2} variant=\"soft\" bar={false}\n      onClose={() => $log = \"vazgeçildi\"} close={trash} closeLabel=\"Kaldır\" trail={<Button size=\"sm\">Git</Button>} onClick={() => $log = \"tıklandı\"} />\n    <span class=\"lab-log\">{$log}</span>\n  </div>\n}\n"
+			"src": "examples://components/reply-quote/ReplyQuoteLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "ReplyQuoteLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { ReplyQuoteLab } from \"./ReplyQuoteLab.tsx\"\n\n// ReplyQuoteLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"ad ve metin çizilir\", () => {\n  const s = renderTest(() => <ReplyQuoteLab />)\n  expect(s.get(\".lab-q\")?.textContent).toContain(\"Elif\")\n  expect(s.get(\".lab-q\")?.textContent).toContain(\"Uzun bir mesaj metni\")\n})\n\ntest(\"kapat düğmesi closeLabel adıyla onClose'u çağırır\", async () => {\n  const s = renderTest(() => <ReplyQuoteLab />)\n  await s.click(\"Kaldır\")\n  expect(s.get(\".lab-log\")?.textContent).toBe(\"vazgeçildi\")\n})\n"
+			"src": "examples://components/reply-quote/ReplyQuoteLab.test.tsx"
 		}
 	]
 }

@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "PartyGuests.tsx",
-			"code": "import { AvatarGroup, Button } from \"march/ui\"\n\n// parti davetlileri: \"Katıl\" her basışta gruba bir kişi ekler; dört kişiden sonrası +N\nconst names = [\"Elif\", \"Can\", \"Deniz\", \"Ada\", \"Mert\", \"Zeynep\", \"Kerem\", \"Selin\"]\n\nexport function PartyGuests() {\n  let $n = 3\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 3 }}>\n    <AvatarGroup names={names.slice(0, $n)} max={4} size=\"md\" />\n    <Button size=\"sm\" disabled={$n >= names.length} on:click={() => $n++}>Katıl</Button>\n  </div>\n}\n"
+			"src": "examples://components/avatar-group/PartyGuests.tsx"
 		},
 		{
 			"type": "code",
 			"name": "DocViewers.tsx",
-			"code": "import { AvatarGroup } from \"march/ui\"\n\n// belgeyi görüntüleyenler: küçük, yan yana, sabit renk; +N balonu kendi metniyle\nexport function DocViewers() {\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n    <span sx={{ text: \"sm\", color: \"muted\" }}>Şu an bakıyor:</span>\n    <AvatarGroup names={[\"Elif Arslan\", \"Can Demir\", \"Deniz Kaya\", \"Ada Yıldız\", \"Mert Öz\", \"Selin Ak\"]} max={3} size=\"xs\" spacing=\"gap\"\n      color=\"brand-blue\" more={(rest: number) => <b>{`+${rest} kişi`}</b>} label={(n: number) => `${n} kişi bakıyor`} />\n  </div>\n}\n"
+			"src": "examples://components/avatar-group/DocViewers.tsx"
 		},
 		{
 			"type": "code",
 			"name": "AvatarGroupLab.tsx",
-			"code": "import { AvatarGroup } from \"march/ui\"\n\n// AvatarGroup'un özellikleri: names (ad ya da { name, src }), max, size, label (metin ya da işlev), more (false ya da\n// kendi içeriğin), spacing, color, shape, class\nexport function AvatarGroupLab() {\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <AvatarGroup class=\"lab-more\" names={[\"A B\", \"C D\", \"E F\", \"G H\", \"I J\"]} max={2} label=\"Ekip\" />\n    <AvatarGroup class=\"lab-nomore\" names={[\"A B\", \"C D\", \"E F\"]} max={1} more={false} shape=\"square\" size=\"lg\" color=\"neutral\" />\n    <AvatarGroup class=\"lab-gap\" names={[{ name: \"Deniz\", src: \"/media/social/sea.svg\" }, \"Elif\"]} spacing=\"gap\" />\n  </div>\n}\n"
+			"src": "examples://components/avatar-group/AvatarGroupLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "AvatarGroupLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { AvatarGroupLab } from \"./AvatarGroupLab.tsx\"\n\n// AvatarGroupLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"max'tan fazlası +N balonunda\", () => {\n  const s = renderTest(() => <AvatarGroupLab />)\n  expect(s.get(\".lab-more\")?.textContent).toContain(\"+3\")\n  expect(s.get(\".lab-more\")?.getAttribute(\"aria-label\")).toBe(\"Ekip\")\n})\n\ntest(\"more={false} balonu kaldırır\", () => {\n  const s = renderTest(() => <AvatarGroupLab />)\n  expect(s.get(\".lab-nomore\")?.textContent).not.toContain(\"+\")\n})\n"
+			"src": "examples://components/avatar-group/AvatarGroupLab.test.tsx"
 		}
 	]
 }
