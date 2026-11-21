@@ -40,4 +40,14 @@ A MarchIDE page's files are listed in `public/components/<page>/ide.json`; their
 MarchIDE turns `examples://` into jsDelivr's URL of that repository at one commit (`EXAMPLES` in
 `src/playground/ide.ts`) and fetches the file. To publish changed examples, push them there and move the sha.
 
-**Still being moved:** the site's own CI.
+## Checks
+
+```sh
+node tools/check-ide.mjs                 # every MarchIDE page in headless Chrome / Edge (dist/ must be built)
+node tools/check-ide.mjs --shard 3/10    # one of 10 parts
+node tools/check-ide.mjs alert button    # some pages
+```
+
+A page passes when its files load from the examples repository, no file has Problems and its Lab tests pass. CI
+(`.github/workflows/ci.yml`) builds once (the dev build for now: the release build is over its size budgets), then checks the pages in 10 parallel jobs. When a new
+March release changes the generated sources, CI warns: run `node build.mjs` and commit them.
