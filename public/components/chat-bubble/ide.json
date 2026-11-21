@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "RobotChat.tsx",
-			"code": "import { ChatBubble, Card } from \"march/ui\"\n\n// robotla sohbet: koyu temada iki taraf; robot balonları mor, benimkiler yeşil\nexport function RobotChat() {\n  return <Card m:theme=\"night\">\n    <div sx={{ flex: \"col\", gap: 1 }}>\n      <ChatBubble text=\"Bip bop! Bugün sana nasıl yardım edebilirim?\" sender=\"Robot\" position=\"single\" />\n      <ChatBubble mine text=\"Bana bir şaka anlat.\" status=\"read\" m:color=\"brand-green\" position=\"first\" />\n      <ChatBubble mine text=\"Kısa olsun 🙂\" status=\"delivered\" m:color=\"brand-green\" position=\"last\" />\n      <ChatBubble text=\"Neden bilgisayar soğuk algınlığına yakalanmış? Çünkü pencereleri açık kalmış!\" sender=\"Robot\" position=\"single\" reactions={[{ emoji: \"😂\", count: 1, mine: true }]} />\n    </div>\n  </Card>\n}\n"
+			"src": "examples://components/chat-bubble/RobotChat.tsx"
 		},
 		{
 			"type": "code",
 			"name": "GroupChat.tsx",
-			"code": "import { ChatBubble } from \"march/ui\"\n\n// grup sohbeti: tepkiye basınca sayı değişir; gitmeyen mesajda \"yeniden dene\"\nexport function GroupChat() {\n  let $reacts = [{ emoji: \"❤️\", count: 2, mine: false }]\n  let $status = \"failed\"\n  const react = (e: string) => $reacts = $reacts.map((r) => (r.emoji === e ? { ...r, mine: !r.mine, count: r.count + (r.mine ? -1 : 1) } : r))\n  return <div sx={{ flex: \"col\", gap: 1 }}>\n    <ChatBubble sender=\"Deniz\" senderColor={2} text=\"Pazar koşusu 7'de!\" position=\"single\" reactions={$reacts} onReact={react} />\n    <ChatBubble mine text=\"Ben de geliyorum\" reply={{ name: \"Deniz\", text: \"Pazar koşusu 7'de!\" }} status={$status as \"failed\"}\n      onRetry={() => $status = \"sent\"} position=\"single\" edited />\n  </div>\n}\n"
+			"src": "examples://components/chat-bubble/GroupChat.tsx"
 		},
 		{
 			"type": "code",
 			"name": "ChatBubbleLab.tsx",
-			"code": "import { ChatBubble } from \"march/ui\"\nimport { cornerUpLeft, smilePlus } from \"march/icons/lucide\"\n\n// ChatBubble'ın özellikleri: text, mine, position, time, status, sender, senderColor, reply, reactions, edited, onReact,\n// onReactMenu, onReply, onRetry, labels, ticks, formatTime, replyHint, swipe, tools, reactIcon, replyIcon, class, içerik\nexport function ChatBubbleLab() {\n  let $log = \"—\"\n  return <div sx={{ flex: \"col\", gap: 1 }}>\n    <ChatBubble class=\"lab-mine\" mine text=\"Merhaba!\" time={new Date(2026, 10, 19, 9, 41)} formatTime={(d: Date) => `${d.getHours()}.${d.getMinutes()}`}\n      status=\"read\" labels={{ read: \"Görüldü\" }} ticks={(st: string) => <span>{st}</span>} edited tools onReply={() => $log = \"yanıt\"}\n      replyIcon={cornerUpLeft} replyHint={<span>↩</span>} />\n    <ChatBubble class=\"lab-other\" text=\"Selam\" sender=\"Elif\" senderColor={1} position=\"first\" swipe={false}\n      reactions={[{ emoji: \"👍\", count: 3 }]} onReact={(e: string) => $log = `tepki ${e}`} onReactMenu={() => $log = \"menü\"} reactIcon={smilePlus} />\n    {/* reply: üstte alıntı; status=\"failed\" ile onRetry yeniden deneme satırını gösterir */}\n    <ChatBubble class=\"lab-fail\" mine text=\"Akşam görüşelim\" reply={{ name: \"Elif\", text: \"Selam\" }} status=\"failed\"\n      labels={{ retry: \"Gitmedi · Yeniden dene\" }} onRetry={() => $log = \"yeniden\"} />\n    <ChatBubble class=\"lab-kids\" position=\"last\"><i>Kendi içeriğim</i></ChatBubble>\n    <span class=\"lab-log\">{$log}</span>\n  </div>\n}\n"
+			"src": "examples://components/chat-bubble/ChatBubbleLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "ChatBubbleLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { ChatBubbleLab } from \"./ChatBubbleLab.tsx\"\n\n// ChatBubbleLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"metin, gönderen ve kendi içerik çizilir\", () => {\n  const s = renderTest(() => <ChatBubbleLab />)\n  expect(s.sees(\"Merhaba!\")).toBe(true)\n  expect(s.get(\".lab-other\")?.textContent).toContain(\"Elif\")\n  expect(s.get(\".lab-kids\")?.textContent).toContain(\"Kendi içeriğim\")\n})\n\ntest(\"formatTime saati kendi biçiminde yazar\", () => {\n  const s = renderTest(() => <ChatBubbleLab />)\n  expect(s.get(\".lab-mine\")?.textContent).toContain(\"9.41\")\n})\n\ntest(\"tepki çipine basınca onReact çağrılır\", async () => {\n  const s = renderTest(() => <ChatBubbleLab />)\n  await s.click(s.get(\".lab-other button\")!)\n  expect(s.get(\".lab-log\")?.textContent).toContain(\"tepki\")\n})\n\ntest(\"alıntı çizilir, onRetry yeniden dener\", async () => {\n  const s = renderTest(() => <ChatBubbleLab />)\n  expect(s.get(\".lab-fail\")?.textContent).toContain(\"Elif\")\n  await s.click(\"Gitmedi · Yeniden dene\")\n  expect(s.get(\".lab-log\")?.textContent).toBe(\"yeniden\")\n})\n"
+			"src": "examples://components/chat-bubble/ChatBubbleLab.test.tsx"
 		}
 	]
 }

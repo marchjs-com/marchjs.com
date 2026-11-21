@@ -28,5 +28,16 @@ Every build regenerates the site's generated sources (`tools/`), from its pages 
 | `march-data.mjs` | `public/comp/`, `src/home-stats.gen.ts` | CDN `data/comp/`, `data/stats.json`, `march.config.js` budgets |
 | `gen-bench.mjs` (`--release`) | `public/bench/`, `src/bench/apps/` | the compared libraries |
 
-**Still being moved:** the component examples from [marchjs-com/examples](https://github.com/marchjs-com/examples)
-pinned to a commit, and the site's own CI.
+## Component examples
+
+A MarchIDE page's files are listed in `public/components/<page>/ide.json`; their code lives in
+[marchjs-com/examples](https://github.com/marchjs-com/examples):
+
+```json
+{ "type": "code", "name": "AlertLab.tsx", "src": "examples://components/alert/AlertLab.tsx" }
+```
+
+MarchIDE turns `examples://` into jsDelivr's URL of that repository at one commit (`EXAMPLES` in
+`src/playground/ide.ts`) and fetches the file. To publish changed examples, push them there and move the sha.
+
+**Still being moved:** the site's own CI.

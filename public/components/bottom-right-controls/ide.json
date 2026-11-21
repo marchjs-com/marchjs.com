@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "HelpBubble.tsx",
-			"code": "import { addCornerControl, IconButton, toast } from \"march/ui\"\nimport { helpCircle } from \"march/icons\"\n\n// yardım balonu: sayfanın alt-son köşesine yuvarlak bir düğme ekler; bileşen gidince düğme de kalkar\nexport function HelpBubble() {\n  addCornerControl(\"bottom-end\", <IconButton icon={helpCircle} label=\"Yardım\" variant=\"solid\" shape=\"round\" on:click={() => toast(\"Size nasıl yardım edebiliriz?\")} /> as Node, 5)\n  return <p sx={{ text: \"sm\", color: \"muted\" }}>Sağ alt köşedeki yardım düğmesine bakın.</p>\n}\n"
+			"src": "examples://components/bottom-right-controls/HelpBubble.tsx"
 		},
 		{
 			"type": "code",
 			"name": "FeedbackCorner.tsx",
-			"code": "import { addCornerControl, Button, Segmented } from \"march/ui\"\n\n// geri bildirim düğmesi: köşe seçilir, düğme oraya taşınır; eski köşeden çıkar\nexport function FeedbackCorner() {\n  let $corner = \"bottom-start\"\n  let off = () => {}\n  const place = (c: string) => { off(); off = addCornerControl(c as \"bottom-start\", <Button size=\"sm\" variant=\"primary\">Geri bildirim</Button> as Node, 1); $corner = c }\n  place(\"bottom-start\")\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Segmented aria-label=\"Köşe\" value={$corner} options={[\"top-start\", \"top-end\", \"bottom-start\", \"bottom-end\"]} onChange={place} />\n    <span sx={{ text: \"sm\", color: \"muted\" }}>Düğme şimdi {$corner} köşesinde</span>\n  </div>\n}\n"
+			"src": "examples://components/bottom-right-controls/FeedbackCorner.tsx"
 		},
 		{
 			"type": "code",
 			"name": "BottomRightControlsLab.tsx",
-			"code": "import { BottomRightControls, CornerControls, addCornerControl, addBottomRightControl, Button } from \"march/ui\"\n\n// köşe API'sinin hepsi: BottomRightControls (label, class), CornerControls (corner), addCornerControl (sıra: order),\n// addBottomRightControl ve geri dönen off()\nexport function BottomRightControlsLab() {\n  let $count = 0\n  const offs: (() => void)[] = []\n  const add = () => { $count++; offs.push(addBottomRightControl(<Button size=\"sm\">{`Denetim ${$count}`}</Button> as Node, $count)) }\n  const clear = () => { offs.splice(0).forEach((off) => off()); $count = 0 }\n  addCornerControl(\"top-start\", <span class=\"lab-top\">Üst baş</span> as Node)\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <BottomRightControls label=\"Sayfa denetimleri\" class=\"lab-corner\" />\n    <CornerControls corner=\"top-start\" label=\"Üst baş köşesi\" />\n    <div sx={{ flex: \"row\", gap: 2 }}>\n      <Button size=\"sm\" on:click={add}>Köşeye ekle</Button>\n      <Button size=\"sm\" on:click={clear}>Hepsini çıkar</Button>\n    </div>\n    <span class=\"lab-count\">{$count} denetim</span>\n  </div>\n}\n"
+			"src": "examples://components/bottom-right-controls/BottomRightControlsLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "BottomRightControlsLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { BottomRightControlsLab } from \"./BottomRightControlsLab.tsx\"\n\n// BottomRightControlsLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"köşe kendi adıyla çizilir\", () => {\n  const s = renderTest(() => <BottomRightControlsLab />)\n  expect(s.get(\".lab-corner\")?.getAttribute(\"aria-label\")).toBe(\"Sayfa denetimleri\")\n})\n\ntest(\"eklenen denetim köşeye girer, off() çıkarır\", async () => {\n  const s = renderTest(() => <BottomRightControlsLab />)\n  await s.click(\"Köşeye ekle\")\n  await s.click(\"Köşeye ekle\")\n  // the bottom-end corner is one for the page: it may sit outside the test's box\n  const corner = () => document.querySelector(\".m-corner-bottom-end, .lab-corner\")?.textContent ?? \"\"\n  expect(s.get(\".lab-count\")?.textContent).toBe(\"2 denetim\")\n  expect(document.body.textContent).toContain(\"Denetim 2\")\n  await s.click(\"Hepsini çıkar\")\n  expect(s.get(\".lab-count\")?.textContent).toBe(\"0 denetim\")\n  expect(corner()).not.toContain(\"Denetim 1\")\n})\n"
+			"src": "examples://components/bottom-right-controls/BottomRightControlsLab.test.tsx"
 		}
 	]
 }

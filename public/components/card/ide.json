@@ -5,22 +5,22 @@
     {
       "type": "code",
       "name": "FlipQuote.tsx",
-      "code": "import { Card, IconButton } from \"march/ui\"\nimport { refresh } from \"march/icons\"\n\n// günün sözü: başlıktaki düğme sıradaki söze geçer, alt bilgi kaçıncı söz olduğunu yazar\nconst QUOTES = [\n  { text: \"Basit olan, karmaşığın en zor hâlidir.\", who: \"Leonardo da Vinci\" },\n  { text: \"Önce çalıştır, sonra doğru yap, sonra hızlandır.\", who: \"Kent Beck\" },\n  { text: \"Sabır acıdır, meyvesi tatlıdır.\", who: \"Atasözü\" },\n]\n\nexport function FlipQuote() {\n  let $i = 0\n  const q = () => QUOTES[$i % QUOTES.length]\n  return <Card title=\"Günün sözü\" subtitle={() => q().who}\n    actions={<IconButton icon={refresh} label=\"Sıradaki söz\" on:click={() => $i++} />}\n    footer={<span sx={{ text: \"xs\", color: \"muted\" }}>{() => `${($i % QUOTES.length) + 1} / ${QUOTES.length}`}</span>}>\n    <p sx={{ text: \"lg\" }}>{() => `“${q().text}”`}</p>\n  </Card>\n}\n"
+      "src": "examples://components/card/FlipQuote.tsx"
     },
     {
       "type": "code",
       "name": "PlanCard.tsx",
-      "code": "import { Card, Button, Badge, KeyValue, toast } from \"march/ui\"\nimport { edit, download } from \"march/icons\"\n\n// bir abonelik kartı: başlıkta rozet ve düzenle düğmesi, gövdede ayrıntı, altta fatura indirme; düzenleyince alt bilgi değişir\nexport function PlanCard() {\n  let $seats = 48\n  return <Card as=\"article\" title=\"Kurumsal plan\" subtitle=\"HADİ A.Ş.\"\n    actions={[<Badge tone=\"success\">Aktif</Badge>, <Button size=\"sm\" icon={edit} on:click={() => { $seats += 5; toast(\"5 koltuk eklendi\") }}>Koltuk ekle</Button>]}\n    footer={<div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n      <span sx={{ color: \"muted\" }}>Yenileme: 1 Aralık</span>\n      <Button size=\"sm\" variant=\"ghost\" icon={download}>Fatura</Button>\n    </div>}>\n    <KeyValue columns={2} items={[\n      { label: \"Koltuk\", value: () => String($seats) },\n      { label: \"Aylık\", value: () => `${($seats * 120).toLocaleString(\"tr-TR\")} ₺` },\n      { label: \"Depolama\", value: \"1 TB\" },\n      { label: \"Destek\", value: \"7/24\" },\n    ]} />\n  </Card>\n}\n"
+      "src": "examples://components/card/PlanCard.tsx"
     },
     {
       "type": "code",
       "name": "CardLab.tsx",
-      "code": "import { Card, Button, Toggle } from \"march/ui\"\nimport { edit, trash } from \"march/icons\"\n\n// Card'ın bütün özellikleri bir arada: title, subtitle, actions (düğüm dizisi), footer, as, flush, plain (canlı),\n// class, gövde (children) ve kendi HTML öznitelikleri (id, aria-label…)\nexport function CardLab() {\n  let $plain = false\n  let $removed = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Toggle label=\"Çerçevesiz\" bind:value={$plain} />\n    <Card class=\"lab-card\" id=\"lab-card\" as=\"article\" title=\"Başlık\" subtitle=\"Alt başlık\" plain={() => $plain}\n      actions={[<Button size=\"sm\" icon={edit}>Düzenle</Button>, <Button size=\"sm\" variant=\"danger\" icon={trash} on:click={() => $removed++}>Sil</Button>]}\n      footer={<span>{() => `Silme sayısı: ${$removed}`}</span>}>\n      Kartın gövdesi: istediğiniz her şey.\n    </Card>\n    <Card flush title=\"Kenar boşluksuz (flush)\" aria-label=\"Liste kartı\">\n      <ul sx={{ m: 0 }}><li>Birinci satır</li><li>İkinci satır</li></ul>\n    </Card>\n    <Card m:theme=\"night\" as=\"div\">Başlıksız, koyu zemin: yalnız gövde.</Card>\n  </div>\n}\n"
+      "src": "examples://components/card/CardLab.tsx"
     },
     {
       "type": "code",
       "name": "CardLab.test.tsx",
-      "code": "import { test, expect, renderTest } from \"march/testing\"\nimport { CardLab } from \"./CardLab.tsx\"\n\n// CardLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"as kök etiketini, class ve id kartı belirler\", () => {\n  const s = renderTest(() => <CardLab />)\n  const card = s.get(\".lab-card\")!\n  expect(card.tagName).toBe(\"ARTICLE\")\n  expect(card.id).toBe(\"lab-card\")\n  expect(card.querySelector(\".m-card-title\")!.textContent).toBe(\"Başlık\")\n})\n\ntest(\"eylemdeki Sil düğmesi alt bilgiyi günceller\", async () => {\n  const s = renderTest(() => <CardLab />)\n  await s.click(\"Sil\")\n  expect(s.get(\".lab-card footer\")!.textContent).toBe(\"Silme sayısı: 1\")\n})\n\ntest(\"plain anahtarla açılır, flush sınıfı yazılır\", async () => {\n  const s = renderTest(() => <CardLab />)\n  expect(s.get(\".lab-card\")!.classList.contains(\"m-card-plain\")).toBe(false)\n  await s.click(\"Çerçevesiz\")\n  expect(s.get(\".lab-card\")!.classList.contains(\"m-card-plain\")).toBe(true)\n  expect(s.find(\"Liste kartı\")!.classList.contains(\"m-card-flush\")).toBe(true)\n})\n"
+      "src": "examples://components/card/CardLab.test.tsx"
     }
   ]
 }

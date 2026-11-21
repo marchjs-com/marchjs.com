@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "PiggyBank.tsx",
-			"code": "import { Stat } from \"march/charts\"\nimport { Button } from \"march/ui\"\nimport { wallet } from \"march/icons\"\n\n// kumbara: her \"₺50 at\" birikimi artırır; değişim geçen haftaya göre, eğilim çizgisi her atışta uzar\nexport function PiggyBank() {\n  let $history = [120, 160, 210, 230]\n  const now = () => $history[$history.length - 1]\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <Button on:click={() => { $history = [...$history, now() + 50] }}>🐷 ₺50 at</Button>\n    <Stat icon={wallet} label=\"Kumbaram\" value={now()} previous={$history[0]} format={[\"money\", \"TRY\"]} spark={$history} hint=\"ilk haftaya göre\" />\n  </div>\n}\n"
+			"src": "examples://components/stat/PiggyBank.tsx"
 		},
 		{
 			"type": "code",
 			"name": "SaasMetrics.tsx",
-			"code": "import { Stat } from \"march/charts\"\nimport { Card, Grid } from \"march/ui\"\nimport { users, creditCard, activity, clock } from \"march/icons\"\n\n// bir SaaS ürününün aylık paneli: üye, gelir, kayıp oranı (azalması iyi) ve yanıt süresi (azalması iyi)\nconst months = [41200, 42800, 44100, 45900, 47300, 48210]\nconst mrr = [182000, 189000, 194500, 201000, 212000, 219400]\n\nexport function SaasMetrics() {\n  return <Grid cols={2} gap={3}>\n    <Card><Stat icon={users} label=\"Toplam üye\" value={48210} previous={47300} spark={months} hint=\"geçen aya göre\" /></Card>\n    <Card><Stat icon={creditCard} label=\"Aylık gelir\" value={219400} previous={212000} format={[\"money\", \"TRY\"]} spark={mrr} hint=\"geçen aya göre\" /></Card>\n    <Card><Stat icon={activity} label=\"Kayıp oranı\" value={0.021} delta={-0.18} invert format={[\"percent\", 1]} hint=\"iyileşme\" /></Card>\n    <Card><Stat icon={clock} label=\"Yanıt süresi\" value={182} delta={0.07} invert format={(v: number) => `${v} ms`} hint=\"yavaşladı\" /></Card>\n  </Grid>\n}\n"
+			"src": "examples://components/stat/SaasMetrics.tsx"
 		},
 		{
 			"type": "code",
 			"name": "StatLab.tsx",
-			"code": "import { Stat } from \"march/charts\"\nimport { Button, Card } from \"march/ui\"\nimport { star } from \"march/icons\"\n\n// Stat'ın bütün özellikleri: label (düğüm de olur), value (erişimci), previous, delta, format, deltaFormat, invert,\n// hint, empty, class, spark (nesne listesi) ve sparkY, icon\nexport function StatLab() {\n  let $value = 120\n  let $none = false\n  const rows = () => [{ g: 1, puan: 90 }, { g: 2, puan: 104 }, { g: 3, puan: 98 }, { g: 4, puan: $value }]\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 2 }}>\n      <Button class=\"lab-up\" size=\"sm\" on:click={() => { $value += 30 }}>Artır</Button>\n      <Button class=\"lab-down\" size=\"sm\" on:click={() => { $value -= 60 }}>Azalt</Button>\n      <Button class=\"lab-none\" size=\"sm\" variant=\"ghost\" on:click={() => { $none = !$none }}>Değeri sil / geri getir</Button>\n    </div>\n    <Stat class=\"lab-main\" icon={star} label={<span>Puan <span sx={{ text: \"xs\", color: \"muted\" }}>(4. hafta)</span></span>} value={$none ? null : $value} previous={100}\n      format={(v: number) => `${v} puan`} deltaFormat={[\"percent\", 0]} hint=\"ilk haftaya göre\" empty=\"ölçülmedi\" spark={rows()} sparkY=\"puan\" />\n    <Card m:theme=\"night\">\n      <Stat class=\"lab-cost\" label=\"Gecikme\" value={240} delta={0.25} invert hint=\"kötüleşti\" />\n    </Card>\n  </div>\n}\n"
+			"src": "examples://components/stat/StatLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "StatLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { StatLab } from \"./StatLab.tsx\"\n\n// StatLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"değer biçimlenir; önceki değere göre artış iyi (yeşil)\", () => {\n  const s = renderTest(() => <StatLab />)\n  const main = s.get(\".lab-main\")!\n  expect(main.querySelector(\".m-stat-value\")!.textContent).toBe(\"120 puan\")\n  expect(main.querySelector(\".m-stat-delta\")!.className).toContain(\"m-stat-good\")\n  expect(main.querySelector(\".m-stat-delta-value\")!.textContent).toContain(\"20\")\n})\n\ntest(\"azalınca değişim düşüşe ve kötüye döner\", async () => {\n  const s = renderTest(() => <StatLab />)\n  await s.click(\".lab-down\")\n  const delta = s.get(\".lab-main .m-stat-delta\")!\n  expect(delta.className).toContain(\"m-stat-down\")\n  expect(delta.className).toContain(\"m-stat-bad\")\n})\n\ntest(\"değer yoksa boş metni yazar; eğilim çizgisi var\", async () => {\n  const s = renderTest(() => <StatLab />)\n  expect(s.get(\".lab-main .m-sparkline\")).toBeTruthy()\n  await s.click(\".lab-none\")\n  expect(s.get(\".lab-main .m-stat-value\")!.textContent).toBe(\"ölçülmedi\")\n})\n\ntest(\"invert: maliyetteki artış kötüdür\", () => {\n  const s = renderTest(() => <StatLab />)\n  expect(s.get(\".lab-cost .m-stat-delta\")!.className).toContain(\"m-stat-bad\")\n})\n"
+			"src": "examples://components/stat/StatLab.test.tsx"
 		}
 	]
 }

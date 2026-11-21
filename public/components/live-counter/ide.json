@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "HeartCounter.tsx",
-			"code": "import { LiveCounter } from \"march/landing\"\nimport { Button } from \"march/ui\"\n\n// kalp sayacı: her basışta sayı artar, üstünden kendi \"❤ +N\" balonun yükselir\nexport function HeartCounter() {\n  let $likes = 41\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 4 }}>\n    <LiveCounter value={() => $likes} label=\"kişi bu fotoğrafı sevdi\" dotColor=\"brand-pink\"\n      bubble={(d: number) => <b>❤ +{d}</b>} />\n    <Button on:click={() => $likes++}>❤ Sev</Button>\n    <Button variant=\"secondary\" on:click={() => $likes += 10}>❤ ×10</Button>\n  </div>\n}\n"
+			"src": "examples://components/live-counter/HeartCounter.tsx"
 		},
 		{
 			"type": "code",
 			"name": "DonationCounter.tsx",
-			"code": "import { LiveCounter } from \"march/landing\"\n\n// bir bağış kampanyasının sayfası: toplanan tutar ve destekçi sayısı izlerken artar\nexport function DonationCounter() {\n  return <section sx={{ flex: \"col\", gap: 4, p: 4 }}>\n    <h2>Köy okuluna kütüphane</h2>\n    <p sx={{ color: \"muted\" }}>Hedef 250.000 ₺. Her bağış bir rafı doldurur.</p>\n    <div sx={{ flex: [\"row\", \"wrap\"], gap: 6 }}>\n      <LiveCounter from={168450} rate={900} format={{ style: \"currency\", currency: \"TRY\", maximumFractionDigits: 0 }}\n        label=\"toplandı\" bubbleColor=\"brand-green\" />\n      <LiveCounter from={2311} rate={12} label=\"destekçi\" dotColor=\"brand-orange\" beat={false} />\n    </div>\n  </section>\n}\n"
+			"src": "examples://components/live-counter/DonationCounter.tsx"
 		},
 		{
 			"type": "code",
 			"name": "LiveCounterLab.tsx",
-			"code": "import { LiveCounter } from \"march/landing\"\nimport { animate } from \"march/motion\"\nimport { Toggle, Button, Card } from \"march/ui\"\n\n// LiveCounter'ın bütün özellikleri bir arada: canlı değer (value) ya da taklit edilen büyüme (from, rate, pause,\n// random), etiket, ön ve son ek, sayı biçimi, kendi rakam animasyonun (effect) ve seçenekleri, canlı nokta ve rengi,\n// +N balonu ve rengi, vuruş ve sınıf\nconst flash = (el: HTMLElement, o?: { duration?: number }) => {\n  const p = animate(el, { opacity: [0.2, 1], transform: [\"translateY(6px)\", \"translateY(0)\"] }, { duration: o?.duration ?? 400 })\n  return { stop: () => p.cancel() }\n}\n\nexport function LiveCounterLab() {\n  let $n = 120\n  let $sim = false\n  let $dot = true\n  let $bubble = true\n  let seed = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Card>\n      <div sx={{ flex: [\"row\", \"wrap\"], gap: 3 }}>\n        <Toggle label=\"Taklit büyüme\" bind:value={$sim} />\n        <Toggle label=\"Canlı nokta\" bind:value={$dot} />\n        <Toggle label=\"Balon\" bind:value={$bubble} />\n        <Button on:click={() => $n += 5}>+5 kişi</Button>\n      </div>\n    </Card>\n    {() => { const sim = $sim, dot = $dot, bubble = $bubble; return <LiveCounter class=\"lab-lc\"\n      value={sim ? undefined : () => $n} from={500} rate={120} pause={[600, 1400]} random={() => ((seed = (seed * 9301 + 49297) % 233280) / 233280)}\n      label=\"kişi sırada\" prefix=\"👥 \" suffix=\" kişi\" format={{ maximumFractionDigits: 0 }}\n      effect={flash as never} effectOptions={{ duration: 300 }}\n      dot={dot ? <span class=\"lab-dot\">🔴</span> as Node : false} dotColor=\"danger\"\n      bubble={bubble ? (d: number) => <b class=\"lab-bubble\">+{d}</b> : false} bubbleColor=\"brand-purple\" beat /> }}\n  </div>\n}\n"
+			"src": "examples://components/live-counter/LiveCounterLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "LiveCounterLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { LiveCounterLab } from \"./LiveCounterLab.tsx\"\n\n// LiveCounterLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"etiket, ön ve son ek, başlangıç değeri\", () => {\n  const s = renderTest(() => <LiveCounterLab />)\n  expect(s.get(\".lab-lc .m-lc-label\")?.textContent).toBe(\"kişi sırada\")\n  expect(s.get(\".lab-lc .m-lc-text\")?.textContent).toBe(\"120\")\n  expect(s.get(\".lab-lc .m-lc-plain\")?.textContent).toBe(\"👥 120 kişi\")\n})\n\ntest(\"değer artınca sayı değişir\", async () => {\n  const s = renderTest(() => <LiveCounterLab />)\n  await s.click(\"+5 kişi\")\n  expect(s.get(\".lab-lc .m-lc-text\")?.textContent).toBe(\"125\")\n})\n\ntest(\"kendi canlı noktası; anahtar kapatınca gider\", async () => {\n  const s = renderTest(() => <LiveCounterLab />)\n  expect(s.get(\".lab-lc .lab-dot\")).not.toBe(null)\n  await s.click(\"Canlı nokta\")\n  expect(s.container.querySelector(\".lab-lc .m-lc-dot-own\")).toBe(null)\n})\n\ntest(\"taklit büyüme from değerinden başlar\", async () => {\n  const s = renderTest(() => <LiveCounterLab />)\n  await s.click(\"Taklit büyüme\")\n  expect(s.get(\".lab-lc .m-lc-text\")?.textContent).toBe(\"500\")\n})\n"
+			"src": "examples://components/live-counter/LiveCounterLab.test.tsx"
 		}
 	]
 }

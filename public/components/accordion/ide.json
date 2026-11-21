@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "Recipe.tsx",
-			"code": "import { Accordion, Card } from \"march/ui\"\nimport { clock, sparkles } from \"march/icons\"\nimport { flame } from \"march/icons/lucide\"\n\n// bir tarifin adımları: her bölüm bir aşama; birini açınca öteki kapanır\nconst step = (text: string) => <p sx={{ text: \"sm\" }}>{text}</p>\n\nexport function Recipe() {\n  return <Card m:theme=\"night\">\n    <h3 sx={{ text: [\"lg\", \"bold\"] }}>Menemen</h3>\n    <Accordion m:color=\"brand-orange\" open={[0]} items={[\n      { title: \"Hazırlık\", subtitle: \"5 dk\", icon: clock, content: step(\"Biberleri ince doğrayın, domatesleri rendeleyin.\") },\n      { title: \"Pişirme\", subtitle: \"10 dk\", icon: flame, content: step(\"Biberi tereyağında yumuşatın, domatesi ekleyip suyunu çektirin.\") },\n      { title: \"Son dokunuş\", icon: sparkles, content: step(\"Yumurtaları kırın, iki kez karıştırıp ocaktan alın.\") },\n    ]} />\n  </Card>\n}\n"
+			"src": "examples://components/accordion/Recipe.tsx"
 		},
 		{
 			"type": "code",
 			"name": "HelpCenter.tsx",
-			"code": "import { Accordion, SearchBox } from \"march/ui\"\nimport { truck, receipt, shieldCheck, creditCard } from \"march/icons\"\n\n// yardım merkezi: arama kutusu soruları süzer; açılan soru sayılır\nconst faq = [\n  { id: \"kargo\", title: \"Kargom ne zaman gelir?\", icon: truck, content: \"Siparişler aynı gün paketlenir, 2–3 iş gününde teslim edilir.\" },\n  { id: \"iade\", title: \"Nasıl iade ederim?\", icon: receipt, content: \"Hesabım › Siparişler › İade et: etiket e-postanıza gelir.\" },\n  { id: \"garanti\", title: \"Garanti süresi ne kadar?\", icon: shieldCheck, content: \"Bütün cihazlar iki yıl garantilidir.\" },\n  { id: \"odeme\", title: \"Hangi ödeme yollarını kabul ediyorsunuz?\", icon: creditCard, content: \"Kredi kartı, banka kartı ve havale.\" },\n]\n\nexport function HelpCenter() {\n  let $q = \"\"\n  let $opened = 0\n  const shown = () => faq.filter((f) => f.title.toLocaleLowerCase(\"tr\").includes($q.toLocaleLowerCase(\"tr\")))\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <SearchBox label=\"Soru ara\" value={$q} onInput={(v: string) => $q = v} />\n    {() => <Accordion variant=\"contained\" items={shown()} onToggle={(_k: string | number, open: boolean) => { if (open) $opened++ }} />}\n    <span sx={{ text: \"xs\", color: \"muted\" }}>{shown().length} soru · {$opened} kez açıldı</span>\n  </div>\n}\n"
+			"src": "examples://components/accordion/HelpCenter.tsx"
 		},
 		{
 			"type": "code",
 			"name": "AccordionLab.tsx",
-			"code": "import { Accordion } from \"march/ui\"\nimport { Icon, user, bell, lock, plus, minus } from \"march/icons\"\n\n// Accordion'un bütün özellikleri: items (id, title, subtitle, icon, content, disabled), multiple, open, variant,\n// chevron (kendi işaretin, işlev ya da yok), animated, onToggle, class ve m:color\nexport function AccordionLab() {\n  let $log = \"henüz yok\"\n  const items = [\n    { id: \"profil\", title: \"Profil\", subtitle: \"Ad, fotoğraf\", icon: user, content: \"Adınızı ve fotoğrafınızı değiştirin.\" },\n    { id: \"bildirim\", title: \"Bildirimler\", subtitle: \"E-posta, anlık\", icon: bell, content: \"Hangi olaylarda haber verilsin?\" },\n    { id: \"guvenlik\", title: \"Güvenlik\", icon: lock, content: \"İki adımlı doğrulama\", disabled: true },\n  ]\n  return <div sx={{ flex: \"col\", gap: 4 }}>\n    <Accordion items={items} multiple open={[\"profil\", \"bildirim\"]} variant=\"contained\" class=\"lab-acc\"\n      chevron={(open: () => boolean) => <span>{() => <Icon of={open() ? minus : plus} />}</span>}\n      onToggle={(k: string | number, open: boolean) => $log = `${k} ${open ? \"açıldı\" : \"kapandı\"}`} />\n    <span sx={{ text: \"sm\", color: \"muted\" }}>Son olay: {$log}</span>\n    <Accordion items={items.slice(0, 2)} chevron={false} animated={false} m:color=\"brand-purple\" />\n  </div>\n}\n"
+			"src": "examples://components/accordion/AccordionLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "AccordionLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { AccordionLab } from \"./AccordionLab.tsx\"\n\n// AccordionLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"open ile verilen iki bölüm baştan açık (multiple)\", () => {\n  const s = renderTest(() => <AccordionLab />)\n  const heads = s.all(\".lab-acc .m-acc-btn\")\n  expect(heads[0]?.getAttribute(\"aria-expanded\")).toBe(\"true\")\n  expect(heads[1]?.getAttribute(\"aria-expanded\")).toBe(\"true\")\n})\n\ntest(\"başlığa basınca bölüm kapanır ve onToggle olayı yazar\", async () => {\n  const s = renderTest(() => <AccordionLab />)\n  await s.click(s.all(\".lab-acc .m-acc-btn\")[0]!)\n  expect(s.all(\".lab-acc .m-acc-btn\")[0]?.getAttribute(\"aria-expanded\")).toBe(\"false\")\n  expect(s.text()).toContain(\"profil kapandı\")\n})\n\ntest(\"disabled bölümün başlığı devre dışı\", () => {\n  const s = renderTest(() => <AccordionLab />)\n  expect((s.all(\".lab-acc .m-acc-btn\")[2] as HTMLButtonElement).disabled).toBe(true)\n})\n\ntest(\"chevron={false} ok çizmez\", () => {\n  const s = renderTest(() => <AccordionLab />)\n  const plain = s.all(\".m-accordion\")[1]!\n  expect(plain.querySelector(\".m-acc-chev\")).toBe(null)\n})\n"
+			"src": "examples://components/accordion/AccordionLab.test.tsx"
 		}
 	]
 }

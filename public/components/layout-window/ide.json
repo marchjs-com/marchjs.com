@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "RetroDesk.tsx",
-			"code": "import { Window } from \"march/ui\"\n\n// eski usul masaüstü: Windows görünümünde iki pencere; kapatılan pencere sayılır\nexport function RetroDesk() {\n  let $closed = 0\n  return <div style={{ position: \"relative\", \"block-size\": \"20rem\" }}>\n    <Window title=\"Hesap makinesi\" chrome=\"windows\" x={16} y={16} width={220} height={150} onClose={() => $closed++}>\n      <p sx={{ p: 2, text: [\"lg\", \"mono\"] }}>2 + 2 = 4</p>\n    </Window>\n    <Window title=\"Not defteri\" chrome=\"windows\" x={180} y={90} width={240} height={150} onClose={() => $closed++}>\n      <p sx={{ p: 2 }}>{$closed} pencere kapandı</p>\n    </Window>\n  </div>\n}\n"
+			"src": "examples://components/layout-window/RetroDesk.tsx"
 		},
 		{
 			"type": "code",
 			"name": "ChatPopup.tsx",
-			"code": "import { Window, Button } from \"march/ui\"\nimport { messageCircle } from \"march/icons/lucide\"\n\n// destek sohbeti: küçük pencere; kapatınca \"Sohbeti aç\" düğmesi geri getirir\nexport function ChatPopup() {\n  let $open = true\n  return <div style={{ position: \"relative\", \"block-size\": \"20rem\" }}>\n    <Window title=\"Destek\" icon={messageCircle} color=\"brand-blue\" x={20} y={20} width={280} height={200} minimizable={false}\n      open={$open} onClose={() => $open = false}>\n      <div sx={{ p: 3, flex: \"col\", gap: 2 }}><p>Merhaba! Size nasıl yardım edebilirim?</p></div>\n    </Window>\n    {() => ($open ? null : <Button size=\"sm\" on:click={() => $open = true}>Sohbeti aç</Button>)}\n  </div>\n}\n"
+			"src": "examples://components/layout-window/ChatPopup.tsx"
 		},
 		{
 			"type": "code",
 			"name": "WindowLab.tsx",
-			"code": "import { Window, Button } from \"march/ui\"\nimport { fileText } from \"march/icons\"\n\n// Window'un özellikleri: title, icon, chrome, x / y / width / height, minWidth / minHeight, state ve onStateChange,\n// open / onClose, minimizable / maximizable / closable, movable, resizable, snap, labels, icons, color, stripe,\n// animated, persist, class\nexport function WindowLab() {\n  let $state = \"normal\"\n  let $open = true\n  let $closes = 0\n  return <div sx={{ flex: \"col\", gap: 2 }}>\n    <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n      <Button size=\"sm\" disabled={$open} on:click={() => $open = true}>Raporu aç</Button>\n      <span class=\"lab-closes\">Kapatma: {$closes}</span>\n    </div>\n    {/* open: true iken görünür; onClose: kapat düğmesine basılınca çağrılır (burada open'ı kapatır)\n        persist: yer, boyut ve durum localStorage'da \"m.win.lab-rapor\" altında saklanır, sayfa yenilenince geri gelir */}\n    <div style={{ position: \"relative\", \"block-size\": \"20rem\" }}>\n      <Window class=\"lab-win\" title=\"Rapor\" icon={fileText} chrome=\"hadi\" x={10} y={10} width={300} height={180} minWidth={200} minHeight={120}\n        state={$state as \"normal\"} onStateChange={(s: string) => $state = s} snap resizable movable color=\"brand-purple\" stripe={false} animated={false}\n        open={$open} onClose={() => { $open = false; $closes++ }} persist=\"lab-rapor\"\n        labels={{ close: \"Raporu kapat\" }} icons={{ close: \"✕\" }}>\n        <p sx={{ p: 2 }} class=\"lab-state\">Durum: {$state}</p>\n      </Window>\n      <Window class=\"lab-fixed\" title=\"Sabit\" chrome=\"mac\" x={200} y={120} width={200} height={120} movable={false} resizable={false} closable={false} maximizable={false} minimizable={false} />\n    </div>\n  </div>\n}\n"
+			"src": "examples://components/layout-window/WindowLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "WindowLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { WindowLab } from \"./WindowLab.tsx\"\n\n// WindowLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"pencere başlığını ve içeriğini çizer\", () => {\n  const s = renderTest(() => <WindowLab />)\n  expect(s.sees(\"Rapor\")).toBe(true)\n  expect(s.get(\".lab-state\")?.textContent).toBe(\"Durum: normal\")\n})\n\ntest(\"labels kapat düğmesinin adını verir\", () => {\n  const s = renderTest(() => <WindowLab />)\n  expect(s.find(\"Raporu kapat\")).not.toBe(null)\n})\n\ntest(\"closable={false} kapat düğmesini kaldırır\", () => {\n  const s = renderTest(() => <WindowLab />)\n  expect(s.get(\".lab-fixed\")?.textContent).toContain(\"Sabit\")\n  expect(s.all(\".lab-fixed button\").length).toBe(0)\n})\n\ntest(\"kapat düğmesi onClose'u çağırır, open kapanır ve düğmeyle yeniden açılır\", async () => {\n  const s = renderTest(() => <WindowLab />)\n  await s.click(\"Raporu kapat\")\n  expect(s.get(\".lab-closes\")?.textContent).toBe(\"Kapatma: 1\")\n  // open={false}: pencere DOM'da kalır, gizlenir\n  expect(s.get(\".lab-win\")?.hasAttribute(\"hidden\")).toBe(true)\n  await s.click(\"Raporu aç\")\n  expect(s.get(\".lab-win\")?.hasAttribute(\"hidden\")).toBe(false)\n})\n"
+			"src": "examples://components/layout-window/WindowLab.test.tsx"
 		}
 	]
 }

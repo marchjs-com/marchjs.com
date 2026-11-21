@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "ShortcutOfTheDay.tsx",
-			"code": "import { Kbd, IconButton } from \"march/ui\"\nimport { refresh } from \"march/icons\"\n\n// günün kısayolu: yenile düğmesi bir sonrakini getirir; keys canlı, mod macOS'ta ⌘, ötekilerde Ctrl yazılır\nconst tips = [\n  { keys: \"mod+k\", what: \"komut paletini aç\" },\n  { keys: \"mod+shift+z\", what: \"yinele\" },\n  { keys: \"alt+arrowleft\", what: \"geri git\" },\n  { keys: \"shift+enter\", what: \"yeni satır\" },\n]\n\nexport function ShortcutOfTheDay() {\n  let $i = 0\n  const $tip = tips[$i % tips.length]\n  return <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n    <span sx={{ text: \"bold\" }}>Günün kısayolu:</span>\n    <Kbd keys={$tip.keys} />\n    <span sx={{ color: \"muted\" }}>{$tip.what}</span>\n    <IconButton icon={refresh} label=\"Başka bir kısayol\" size=\"sm\" on:click={() => $i++} />\n  </div>\n}\n"
+			"src": "examples://components/kbd/ShortcutOfTheDay.tsx"
 		},
 		{
 			"type": "code",
 			"name": "ShortcutSheet.tsx",
-			"code": "import { Card, Kbd, SectionLabel } from \"march/ui\"\n\n// bir uygulamanın \"Klavye kısayolları\" penceresi: bölümler, her satırda ne yaptığı ve tuşları\ninterface Shortcut { what: string; keys?: string; text?: string }\n\nconst groups: { title: string; items: Shortcut[] }[] = [\n  { title: \"Genel\", items: [{ what: \"Komut paleti\", keys: \"mod+k\" }, { what: \"Ara\", keys: \"mod+f\" }, { what: \"Pencereyi kapat\", text: \"Esc\" }] },\n  { title: \"Düzenleme\", items: [{ what: \"Geri al\", keys: \"mod+z\" }, { what: \"Yinele\", keys: \"mod+shift+z\" }, { what: \"Kaydet\", keys: \"mod+s\" }] },\n]\n\n// tek satır: solda açıklama, sağda tuş (kısayol dizisi ya da düz metin)\nconst Row = (props: { item: Shortcut }) => <div sx={{ flex: [\"row\", \"between\"], py: 1 }}>\n  <span>{props.item.what}</span>\n  {props.item.keys ? <Kbd keys={props.item.keys} /> : <Kbd>{props.item.text}</Kbd>}\n</div>\n\nexport function ShortcutSheet() {\n  return <Card title=\"Klavye kısayolları\">\n    <div sx={{ flex: \"col\", gap: 2 }}>\n      {groups.map((g) => <div>\n        <SectionLabel count={g.items.length}>{g.title}</SectionLabel>\n        {g.items.map((it) => <Row item={it} />)}\n      </div>)}\n    </div>\n  </Card>\n}\n"
+			"src": "examples://components/kbd/ShortcutSheet.tsx"
 		},
 		{
 			"type": "code",
 			"name": "KbdLab.tsx",
-			"code": "import { Kbd, Button } from \"march/ui\"\n\n// Kbd'nin bütün özellikleri bir arada: keys (platforma göre yazılan kısayol, canlı), children (düz tuş metni),\n// class (m-kbd'nin yanına kendi sınıfın)\nconst mods = [\"mod\", \"ctrl\", \"alt\", \"shift\"] as const\n\nexport function KbdLab() {\n  let $mod = \"mod\"\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <div sx={{ flex: [\"row\", \"wrap\", \"center\"], gap: 2 }}>\n      <Kbd keys=\"mod+k\" class=\"lab-cmd\" />\n      <Kbd keys=\"shift+enter\" class=\"lab-enter\" />\n      <Kbd keys=\"alt+arrowleft\" />\n      <Kbd keys=\"mod+shift+z\" />\n    </div>\n    <div sx={{ flex: [\"row\", \"center\"], gap: 2 }}>\n      <Kbd>Esc</Kbd> <Kbd>Tab</Kbd> <span sx={{ color: \"muted\" }}>düz metin (children)</span>\n    </div>\n    <div sx={{ flex: [\"row\", \"wrap\", \"center\"], gap: 2 }}>\n      {mods.map((m) => <Button size=\"sm\" variant={$mod === m ? \"primary\" : \"ghost\"} on:click={() => $mod = m}>{`${m} ile`}</Button>)}\n      <Kbd keys={`${$mod}+s`} class=\"lab-live\" />\n    </div>\n  </div>\n}\n"
+			"src": "examples://components/kbd/KbdLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "KbdLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { KbdLab } from \"./KbdLab.tsx\"\n\n// KbdLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"düz metin gerçek bir <kbd> öğesinde durur\", () => {\n  const s = renderTest(() => <KbdLab />)\n  expect(s.find(\"Esc\")?.tagName).toBe(\"KBD\")\n  expect(s.find(\"Esc\")?.classList.contains(\"m-kbd\")).toBe(true)\n})\n\ntest(\"keys platforma göre yazılır: mod sözcüğü görünmez\", () => {\n  const s = renderTest(() => <KbdLab />)\n  const cmd = s.get(\".lab-cmd\")?.textContent ?? \"\"\n  expect(cmd).toContain(\"K\")\n  expect(cmd).not.toContain(\"mod\")\n  expect(s.get(\".lab-enter\")?.textContent).toContain(\"Enter\")\n})\n\ntest(\"class m-kbd'nin yanına eklenir\", () => {\n  const s = renderTest(() => <KbdLab />)\n  expect(s.get(\"kbd.lab-enter.m-kbd\")).not.toBe(null)\n})\n\ntest(\"keys canlı: alt ile'ye basınca tuş yeniden yazılır\", async () => {\n  const s = renderTest(() => <KbdLab />)\n  const before = s.get(\".lab-live\")?.textContent\n  await s.click(\"alt ile\")\n  const after = s.get(\".lab-live\")?.textContent ?? \"\"\n  expect(after).not.toBe(before)\n  expect(after).toContain(\"S\")\n})\n"
+			"src": "examples://components/kbd/KbdLab.test.tsx"
 		}
 	]
 }

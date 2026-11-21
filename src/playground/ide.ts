@@ -8,6 +8,18 @@ export interface IdeSource {
   name: string;
   code: string;
 }
+/** A file of an ide.json as written: its text in `code`, or read from `src` (examples://<path>: EXAMPLES). */
+export type IdeFileSource = IdeSource | { type: "code"; name: string; src: string };
+/** An ide.json as written; MarchIDE reads its `src` files (loadIde) and the workspace takes an IdeJson. */
+export interface IdeFile extends Omit<IdeJson, "sources"> { sources: IdeFileSource[] }
+
+/** The examples repository (github.com/marchjs-com/examples) pinned to a commit, served by jsDelivr: what a source's
+ * `src: "examples://<path>"` is read from. A commit's files never change, so jsDelivr and the browser keep them; a new
+ * example reaches the site by moving this sha. connect-src in the CSP (build.mjs) allows https://cdn.jsdelivr.net. */
+export const EXAMPLES = "https://cdn.jsdelivr.net/gh/marchjs-com/examples@e5c89e04b3330ac983e22c9415cdca3d2a550656/";
+/** A source's URL: examples:// becomes EXAMPLES; anything else is fetched as written. */
+export const sourceUrl = (src: string): string => (src.startsWith("examples://") ? EXAMPLES + src.slice("examples://".length) : src);
+
 export interface IdeJson {
   layout: string;
   /** The workspace's description, shown beside MarchIDE's title (a component's: its sentence on the components page). */
@@ -47,7 +59,7 @@ export const Component3 = () => <p>{total()} öğe</p>
 `,
 }).map(([name, code]): IdeSource => ({ type: "code", name, code })) }
 /** Reads and checks an ide.json's text: the parsed value, or a message saying what is wrong. */
-export function parseIde(text: string): IdeJson | string {
+export function parseIde(text: string): IdeFile | string {
   let v: unknown;
   try { v = JSON.parse(text); } catch { return "ide.json geçerli bir JSON değil"; }
   if (!v || typeof v !== "object") return "ide.json bir nesne olmalı";
@@ -57,8 +69,21 @@ export function parseIde(text: string): IdeJson | string {
   const sources = Array.isArray(o["sources"]) ? o["sources"] : [];
   for (const s of sources) {
     const x = s as Record<string, unknown> | null;
-    if (!x || x["type"] !== "code" || typeof x["name"] !== "string" || typeof x["code"] !== "string") return "ide.json: her kaynak { type: \"code\", name, code } olmalı";
+    if (!x || x["type"] !== "code" || typeof x["name"] !== "string" || (typeof x["code"] !== "string" && typeof x["src"] !== "string")) return "ide.json: her kaynak { type: \"code\", name, code } ya da { type: \"code\", name, src } olmalı";
   }
   if (o["description"] !== undefined && typeof o["description"] !== "string") return "ide.json: \"description\" bir metin olmalı";
-  return { layout: o["layout"], ...(typeof o["description"] === "string" ? { description: o["description"] } : {}), sources: sources as IdeSource[] };
+  return { layout: o["layout"], ...(typeof o["description"] === "string" ? { description: o["description"] } : {}), sources: sources as IdeFileSource[] };
+}
+
+/** An ide.json's files with their texts: each `src` is made a URL (sourceUrl) and fetched, all at once. A file that
+ * cannot be read makes the whole ide.json a message saying which. */
+export async function loadIde(ide: IdeFile): Promise<IdeJson | string> {
+  const files = await Promise.all(ide.sources.map(async (s): Promise<IdeSource | string> => {
+    if ("code" in s) return s;
+    const url = sourceUrl(s.src);
+    const res = await fetch(url).catch(() => null);
+    return res?.ok ? { type: "code", name: s.name, code: await res.text() } : `${s.name} okunamadı (${url}${res ? `: ${res.status}` : ""})`;
+  }));
+  const failed = files.find((f): f is string => typeof f === "string");
+  return failed ?? { ...ide, sources: files as IdeSource[] };
 }

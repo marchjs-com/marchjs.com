@@ -5,22 +5,22 @@
 		{
 			"type": "code",
 			"name": "ColorWall.tsx",
-			"code": "import { Grid } from \"march/ui\"\n\n// renk duvarı: 7 renk 4 sütunda; balance satırları dengeler (4 + 3), fill=\"stretch\" son satırı doldurur\nconst colors = [\"brand-orange\", \"brand-blue\", \"brand-green\", \"brand-purple\", \"brand-pink\", \"brand-gold\", \"danger\"]\n\nconst Swatch = (props: { color: string }) => <div sx={{ p: 4, radius: 2, flex: \"center\", text: [\"sm\", \"bold\"] }} m:color={props.color}\n  class=\"m-tone-solid\">{props.color}</div>\n\nexport function ColorWall() {\n  return <Grid cols={4} gap={2} fill=\"stretch\" balance>\n    {colors.map((c) => <Swatch color={c} />)}\n  </Grid>\n}\n"
+			"src": "examples://components/grid/ColorWall.tsx"
 		},
 		{
 			"type": "code",
 			"name": "ProductList.tsx",
-			"code": "import { Grid, Card, Button, Segmented } from \"march/ui\"\n\n// ürün listesi: sütun sayısı seçilir, en dar sütun 12rem (dar kutuda kendiliğinden azalır), satırlar eşit boyda\nconst products = [\n  { name: \"Kulaklık\", price: 1290, note: \"Gürültü engelleme\" },\n  { name: \"Saat\", price: 3490, note: \"GPS ve nabız\" },\n  { name: \"Hoparlör\", price: 990, note: \"Suya dayanıklı\" },\n  { name: \"Klavye\", price: 1590, note: \"Mekanik, sessiz anahtarlar; arka ışıklı\" },\n  { name: \"Fare\", price: 590, note: \"Kablosuz\" },\n]\n\nexport function ProductList() {\n  let $cols = 3\n  let $cart = 0\n  return <div sx={{ flex: \"col\", gap: 3 }}>\n    <Segmented aria-label=\"Sütun\" value={String($cols)} options={[\"2\", \"3\", \"4\"]} onChange={(v: string) => $cols = Number(v)} />\n    {() => <Grid cols={$cols} minCol=\"12rem\" equal gap={3}>\n      {products.map((p) => <Card title={p.name} footer={<Button size=\"sm\" on:click={() => $cart++}>{p.price} ₺ · Sepete ekle</Button>}>{p.note}</Card>)}\n    </Grid>}\n    <span sx={{ text: \"sm\", color: \"muted\" }}>Sepette {$cart} ürün</span>\n  </div>\n}\n"
+			"src": "examples://components/grid/ProductList.tsx"
 		},
 		{
 			"type": "code",
 			"name": "GridLab.tsx",
-			"code": "import { Grid } from \"march/ui\"\n\n// Grid'in bütün özellikleri: cols, gap, min (otomatik sütun), fill (stretch / last), balance, minCol, equal, class\nconst Tile = (props: { n: number; tall?: boolean }) => <div class=\"sc-tile\" sx={{ p: props.tall ? 6 : 2 }}><span>Kart {props.n}</span></div>\nconst tiles = (n: number, tall = -1) => Array.from({ length: n }, (_, i) => <Tile n={i + 1} tall={i === tall} />)\n\nexport function GridLab() {\n  return <div sx={{ flex: \"col\", gap: 4 }}>\n    <Grid class=\"lab-cols\" cols={3} gap={2}>{tiles(5)}</Grid>\n    <Grid class=\"lab-last\" cols={3} gap={2} fill=\"last\">{tiles(5)}</Grid>\n    <Grid class=\"lab-balance\" cols={4} gap={2} balance>{tiles(5)}</Grid>\n    <Grid class=\"lab-min\" min=\"10rem\" gap={1}>{tiles(4)}</Grid>\n    <Grid class=\"lab-equal\" cols={2} gap={2} minCol=\"8rem\" equal fill=\"stretch\">{tiles(3, 0)}</Grid>\n  </div>\n}\n"
+			"src": "examples://components/grid/GridLab.tsx"
 		},
 		{
 			"type": "code",
 			"name": "GridLab.test.tsx",
-			"code": "import { test, expect, renderTest } from \"march/testing\"\nimport { GridLab } from \"./GridLab.tsx\"\n\n// GridLab'in testleri: kaydedince Testler sekmesinde çalışır\ntest(\"her ızgara bütün kartlarını çizer\", () => {\n  const s = renderTest(() => <GridLab />)\n  expect(s.all(\".lab-cols .sc-tile\").length).toBe(5)\n  expect(s.all(\".lab-min .sc-tile\").length).toBe(4)\n})\n\ntest(\"fill son satırın sınıfını verir\", () => {\n  const s = renderTest(() => <GridLab />)\n  expect(s.get(\".lab-last\")?.className).toContain(\"m-grid-fill-last\")\n})\n\ntest(\"balance ızgarayı dengeli kipe alır\", () => {\n  const s = renderTest(() => <GridLab />)\n  expect(s.get(\".lab-balance\")?.className).toContain(\"m-grid-balance\")\n})\n"
+			"src": "examples://components/grid/GridLab.test.tsx"
 		}
 	]
 }
