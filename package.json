@@ -1,0 +1,33 @@
+{
+  "name": "marchjs.com",
+  "private": true,
+  "type": "module",
+  "description": "The site of March: the showcase, the component pages (MarchIDE), the API reference and the benchmarks.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "node build.mjs --release",
+    "dev": "node build.mjs",
+    "watch": "node build.mjs --watch",
+    "serve": "node build.mjs --serve"
+  },
+  "dependencies": {
+    "march": "github:marchjs-com/march"
+  },
+  "devDependencies": {
+    "@babel/core": "7.29.13",
+    "babel-preset-solid": "1.9.19",
+    "esbuild": "0.28.2",
+    "esbuild-wasm": "0.28.2",
+    "lit": "3.3.3",
+    "preact": "10.29.8",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "solid-js": "1.9.19",
+    "svelte": "5.57.3",
+    "typescript": "6.0.3",
+    "vue": "3.5.45"
+  }
+}

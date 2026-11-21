@@ -1,4 +1,4 @@
-// March showcase: `node ../../cli/march.js dev` or `node build.mjs` (static, relative paths → dist/).
+// marchjs.com: `node build.mjs` (static, relative paths → dist/); March comes from node_modules/march (package.json).
 import { readFileSync } from "node:fs";
 
 // every page of the menu (nav.ts), also the ones under a wildcard route (/motion/svg…): each gets its own index.html
@@ -24,7 +24,8 @@ export default {
   components: "src/components",
   html: "index.html",
   port: 5180,
-  alias: { "march": "../../src" },
+  // March's sources from the installed package (its own subpaths: registry, cards, meta…)
+  alias: { "march": "./node_modules/march/src" },
   // sw.js only for the local preview (build.mjs --serve): the published showcase must not leave a worker registered
   sw: process.env.MARCH_SHOWCASE_SW === "1",
   // stable file names (main.js, chunks/home.js…, version in ?v=): each deploy overwrites the same paths
