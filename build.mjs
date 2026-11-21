@@ -13,13 +13,16 @@ import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "
 import { createServer } from "node:http";
 import { join, dirname, extname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { marchVersion, dataFile, dataFiles, fetchText } from "./tools/march.mjs";
 const here = dirname(fileURLToPath(import.meta.url));
 const dist = join(here, "dist");
 // March: always the newest release (cdn.marchjs.com's latest). The site is compiled with that release's sources (its
 // compiler, demos, MarchIDE files) and reads that release's data from the CDN, so code and data are the same version.
 // Its sources are installed from March's tag v<latest> (package.json is not changed) when node_modules holds another one.
 const MARCH = join(here, "node_modules", "march");
-const MARCH_VERSION = process.env.MARCH_VERSION || (await (await fetch(`https://cdn.marchjs.com/versions.json?t=${Date.now()}`)).json()).latest;
+// read once here and handed to the generators (tools/march.mjs reads MARCH_VERSION), so all of them use the same release
+const MARCH_VERSION = await marchVersion();
+process.env.MARCH_VERSION = MARCH_VERSION;
 const MARCH_REF = `v${MARCH_VERSION}`;
 {
   const mark = join(here, "node_modules", ".cache", "march-ref");
@@ -46,8 +49,14 @@ if (!serve || !existsSync(dist) || watching) {
   const t0 = performance.now();
   // the service worker only for the local preview: the published showcase must not leave a worker registered
   const env = { ...process.env, MARCH_SHOWCASE_SW: serve ? "1" : "0" };
-  // the site's generated sources (API reference, sections, home numbers, IDE texts) are committed; their generators move
-  // here next (they will read the data cdn.marchjs.com publishes for the pinned version)
+  // the site's generated sources, from its pages and the release's data (cdn.marchjs.com/<version>/data/): the section
+  // index (the API reference links to it), MarchIDE's texts and page list, the API examples index, the API reference,
+  // the components' prop tables and the home numbers; the benchmark data (each library bundled) on --release only
+  const gens = ["gen-sections.js", "gen-ide-texts.js", "api-examples.js", "api-data.mjs", "march-data.mjs", ...(release ? ["gen-bench.mjs"] : [])];
+  for (const g of gens) {
+    try { execFileSync(process.execPath, [join(here, "tools", g)], { cwd: here, stdio: "inherit" }); }
+    catch { console.error(`✖ tools/${g} failed`); process.exit(1); }
+  }
   const tGen = performance.now() - t0;
   if (watching) {
     // stays running: march build --watch rebuilds on change (serve alongside with --serve)
@@ -83,30 +92,17 @@ if (!serve || !existsSync(dist) || watching) {
     console.log(`✔ showcase (${release ? "release" : "dev"}): ${dist} in ${((performance.now() - t0) / 1000).toFixed(1)} s (generators ${(tGen / 1000).toFixed(1)} s)`);
   }
 }
-/** A text over HTTPS (build-time downloads: the pinned version's files). */
-async function fetchText(url) {
-  const r = await fetch(url);
-  if (!r.ok) throw new Error(`${url}: ${r.status}`);
-  return r.text();
-}
 /**
  * Files of the data cdn.marchjs.com publishes for March's version (<version>/data/, see data/index.json): the ones
- * `want` names (a path or a test), downloaded once into node_modules/.cache/march-data/<version>/ and copied into
- * `out` without the `strip` prefix.
+ * `want` names (a path or a test), from tools/march.mjs's cache, copied into `out` without the `strip` prefix.
  */
 async function cdnData(want, out, strip = "") {
   const { mkdirSync, copyFileSync } = await import("node:fs");
-  const base = `https://cdn.marchjs.com/${MARCH_VERSION}/data/`;
-  const cache = join(here, "node_modules", ".cache", "march-data", MARCH_VERSION);
-  const index = join(cache, "index.json");
-  if (!existsSync(index)) { mkdirSync(cache, { recursive: true }); writeFileSync(index, await fetchText(`${base}index.json`)); }
-  const files = JSON.parse(readFileSync(index, "utf8")).files.filter((f) => want.some((w) => (typeof w === "function" ? w(f) : w === f)));
+  const files = (await dataFiles()).filter((f) => want.some((w) => (typeof w === "function" ? w(f) : w === f)));
   await Promise.all(files.map(async (f) => {
-    const at = join(cache, f);
-    if (!existsSync(at)) { mkdirSync(dirname(at), { recursive: true }); writeFileSync(at, await fetchText(base + f)); }
     const to = join(out, f.slice(strip.length));
     mkdirSync(dirname(to), { recursive: true });
-    copyFileSync(at, to);
+    copyFileSync(await dataFile(f), to);
   }));
   return files.length;
 }

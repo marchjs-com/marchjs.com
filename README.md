@@ -17,6 +17,16 @@ release's sources from March's tag (`github:marchjs-com/march#v<latest>`, `packa
 version's data from the CDN (`cdn.marchjs.com/<version>/data/`: MarchIDE's types). `MARCH_VERSION=0.3.1` builds with
 another release.
 
-**Still being moved:** the site's generated files (API reference, sections, home numbers, IDE texts) are committed;
-their generators come here next and read the CDN data. Then the component examples from
-[marchjs-com/examples](https://github.com/marchjs-com/examples) pinned to a commit, and the site's own CI.
+Every build regenerates the site's generated sources (`tools/`), from its pages and that release's data:
+
+| Tool | Writes | From |
+| --- | --- | --- |
+| `gen-sections.js` | `src/sections.gen.ts` | the pages' demo sections |
+| `gen-ide-texts.js` | `src/playground/ide-texts.gen.tsx`, `ide-list.gen.ts` | `public/components/**/ide.json` |
+| `api-examples.js` | `src/api-examples.gen.ts` | `src/api-examples/`, March's exports |
+| `api-data.mjs` | `public/api/` | CDN `data/api/`, with links to the site's pages |
+| `march-data.mjs` | `public/comp/`, `src/home-stats.gen.ts` | CDN `data/comp/`, `data/stats.json`, `march.config.js` budgets |
+| `gen-bench.mjs` (`--release`) | `public/bench/`, `src/bench/apps/` | the compared libraries |
+
+**Still being moved:** the component examples from [marchjs-com/examples](https://github.com/marchjs-com/examples)
+pinned to a commit, and the site's own CI.
