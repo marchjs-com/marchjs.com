@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Every MarchIDE page in a headless browser, on the built site (dist/) served with its CSP: /ide/components/<name> for
-// each public/components/<name>/ide.json (src/playground/ide-list.gen.ts). A page passes when its files load (from
+// each page with an ide.json in the examples (src/playground/ide-list.gen.ts). A page passes when its files load (from
 // marchjs-com/examples through jsDelivr), every file's type check leaves no Problems, and its Lab tests (a *.test.tsx
 // file) pass.
 //   node tools/check-ide.mjs                    every page

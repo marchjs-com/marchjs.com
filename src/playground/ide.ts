@@ -1,5 +1,5 @@
-// ide.json: what MarchIDE loads for a page (playground/ide-pages.ts) or for /ide/<path> (<path>/ide.json, from
-// the showcase's public files) to set itself up. `layout` picks the workspace (LAYOUTS); `sources` are its files. The format is a first draft and will change.
+// ide.json: what MarchIDE loads for a page (playground/ide-pages.ts) or for /ide/<path> (the examples repository's
+// root ide.json holds every page's, examples.ts › ideBundle) to set itself up. `layout` picks the workspace (LAYOUTS); `sources` are its files. The format is a first draft and will change.
 
 export interface IdeSource {
   /** "code": a file of the workspace (its text in `code`). */
@@ -13,12 +13,9 @@ export type IdeFileSource = IdeSource | { type: "code"; name: string; src: strin
 /** An ide.json as written; MarchIDE reads its `src` files (loadIde) and the workspace takes an IdeJson. */
 export interface IdeFile extends Omit<IdeJson, "sources"> { sources: IdeFileSource[] }
 
-/** The examples repository (github.com/marchjs-com/examples) pinned to a commit, served by jsDelivr: what a source's
- * `src: "examples://<path>"` is read from. A commit's files never change, so jsDelivr and the browser keep them; a new
- * example reaches the site by moving this sha. connect-src in the CSP (build.mjs) allows https://cdn.jsdelivr.net. */
-export const EXAMPLES = "https://cdn.jsdelivr.net/gh/marchjs-com/examples@e5c89e04b3330ac983e22c9415cdca3d2a550656/";
-/** A source's URL: examples:// becomes EXAMPLES; anything else is fetched as written. */
-export const sourceUrl = (src: string): string => (src.startsWith("examples://") ? EXAMPLES + src.slice("examples://".length) : src);
+// a source's `src: "examples://<path>"` is read from the examples repository pinned to a commit (examples.ts)
+import { sourceUrl } from "./examples.ts";
+export { EXAMPLES, sourceUrl } from "./examples.ts";
 
 export interface IdeJson {
   layout: string;

@@ -1,13 +1,13 @@
-// The showcase pages that are MarchIDE: page path → the ide.json it opens (<path>/ide.json, from the public files).
+// The showcase pages that are MarchIDE: page path → the ide.json it opens (the examples' ide.json, examples.ts).
 // These pages share one route layout (playground/march-ide.tsx): moving between them keeps MarchIDE on screen and
-// only loads the next ide.json. /ide/<path> opens <path>/ide.json the same way.
-// A component page is MarchIDE as soon as public/components/<its slug>/ide.json exists (<section>-<slug> for a shared slug) (ide-list.gen.ts, written by
+// only takes the next ide.json. /ide/<path> opens <path>'s ide.json the same way.
+// A component page is MarchIDE as soon as the examples have components/<its slug>/ide.json (<section>-<slug> for a shared slug) (ide-list.gen.ts, written by
 // tools/gen-ide-texts.js): the page of topic <slug> under section <hub> is /<hub>/<slug>.
 import { TOPIC_ROWS } from "../topic-titles.gen.ts";
 import { IDE_COMPONENTS } from "./ide-list.gen.ts";
 
 // A slug that two sections share (/editors/code is CodeEditor, /forms/code is CodeInput) has its folder named after
-// the section too: public/components/editors-code/ide.json. A unique slug may use either name.
+// the section too: components/editors-code/ide.json. A unique slug may use either name.
 const wanted = new Set(IDE_COMPONENTS);
 const uses = new Map<string, number>();
 // (the topic pages from start-up's titles table: this module is part of start-up, topics.ts is not)

@@ -8,12 +8,12 @@ import "./layouts/component.css";
 import "../hub.css";
 import { h, signal, computed, effect, untrack, onCleanup, createRoot } from "march";
 import { Link, path, type Href } from "march/router";
-import { appUrl } from "march/base";
 import { beginLoad } from "march/lazy";
 import { Alert, MadeWithMarch, Spinner } from "march/ui";
 import { Icon, arrowLeft, arrowRight } from "march/icons";
 import { HUBS } from "../topics.ts";
 import { LAYOUTS, DEFAULT_IDE, parseIde, loadIde, type IdeJson, type IdeLayout } from "./ide.ts";
+import { ideBundle } from "./examples.ts";
 import { ideOf, isIdePage } from "./ide-pages.ts";
 import { ideOpen } from "./ide-open.ts";
 
@@ -24,18 +24,17 @@ export const idle = (ms = 500): Promise<void> => new Promise((r) => {
   if (g.requestIdleCallback) g.requestIdleCallback(() => r(), { timeout: ms }); else setTimeout(r, 50);
 });
 
-/** Fetches <id>/ide.json and the files it names (the built-in files for ""): the workspace's files, or a message saying
- * what is wrong. */
+/** The page's ide.json (from the examples' one file, which the site starts loading when idle on any page) and the files
+ * it names (the built-in files for ""): the workspace's files, or a message saying what is wrong. */
 const fetched = new Map<string, IdeJson>();
 async function fetchIde(id: string): Promise<IdeJson | string> {
   if (!id) return DEFAULT_IDE;
   // one read per visit: a page opened again takes the same files at once
   const known = fetched.get(id);
   if (known) return known;
-  const res = await fetch(appUrl(`${id}/ide.json`)).catch(() => null);
-  // the server answers a missing file with the page itself: only JSON counts
-  if (!res?.ok || !/json/.test(res.headers.get("content-type") ?? "")) return `${id}/ide.json bulunamadı`;
-  const file = parseIde(await res.text());
+  const raw = (await ideBundle())[id];
+  if (raw === undefined) return `${id}/ide.json bulunamadı`;
+  const file = parseIde(JSON.stringify(raw));
   const ide = typeof file === "string" ? file : await loadIde(file);
   if (typeof ide !== "string") fetched.set(id, ide);
   return ide;
