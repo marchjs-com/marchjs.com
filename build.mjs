@@ -124,7 +124,9 @@ async function writePlaygroundTools(out) {
   const tsLib = join(here, "node_modules", "typescript", "lib");
   mkdirSync(join(out, "ts"), { recursive: true });
   copyFileSync(join(tsLib, "typescript.js"), join(out, "ts", "typescript.js"));
-  for (const f of readdirSync(tsLib)) if (/^lib\..*\.d\.ts$/.test(f)) copyFileSync(join(tsLib, f), join(out, "ts", f));
+  // the lib .d.ts files in one file (ts-worker.js reads libs.json once): one file on the host instead of ~100
+  const libs = Object.fromEntries(readdirSync(tsLib).filter((f) => /^lib\..*\.d\.ts$/.test(f)).sort().map((f) => [f, readFileSync(join(tsLib, f), "utf8")]));
+  writeFileSync(join(out, "ts", "libs.json"), JSON.stringify(libs));
   // its messages in other languages (the worker loads the page's one: tr/diagnosticMessages.generated.json…)
   for (const d of readdirSync(tsLib)) {
     const msgs = join(tsLib, d, "diagnosticMessages.generated.json");

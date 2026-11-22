@@ -3,6 +3,10 @@ import { readFileSync } from "node:fs";
 
 // every page of the menu (nav.ts), also the ones under a wildcard route (/motion/svg…): each gets its own index.html
 const NAV_PATHS = [...readFileSync(new URL("./src/nav.ts", import.meta.url), "utf8").matchAll(/path: "([^"]+)"/g)].map((m) => m[1]);
+// MarchIDE pages (/buttons/button, /ide…) are not prerendered: their content (editors, code, preview) is drawn at run
+// time from the examples' ide.json, so their HTML would hold little more than a title, and 200 index.html files would
+// take the host's file room (budget.maxFiles). 404.html opens them.
+const { isIdePage } = await import("./src/playground/ide-pages.ts");
 
 // Speed › Comparison (/bench): each compared third-party library is a lazy chunk fetched only when its own test runs
 // (never at start-up, never with a page). THIRD_PARTY: those chunks (build.mjs skips its HTML-string check on them:
@@ -34,7 +38,7 @@ export default {
   headers: false,
   // every page is written as <route>/index.html at build time (march/seo), so each opens directly on a static host
   // without rewrites; addresses with params (/navigation/router/item/7) go through 404.html (docs/hosting.md)
-  seo: { prerender: true, routes: NAV_PATHS },
+  seo: { prerender: true, routes: NAV_PATHS, exclude: isIdePage },
   // the build fails when the entry, a route or a lazy part (lazy() component, shell piece) grows past it
   // boot: the route table and the shell pieces load at start-up, so a route row counts only what its own navigation downloads
   // (shell-late.tsx — palette, toasts — loads when idle: a lazy part of its own, not start-up)
