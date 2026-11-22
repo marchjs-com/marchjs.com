@@ -33,7 +33,8 @@ import { BRAND_COLORS_ALL, type ColorToken } from "march/theme/colors.ts";
 import { HOME_STATS as S } from "../home-stats.gen.ts";
 import { celebrate } from "./celebrate.ts";
 import { pages } from "../app.tsx";
-import { withMeta, SECTIONS, sectionOf, type NavSection } from "../nav-meta.ts";
+import { SECTIONS, sectionOf, type NavSection } from "../nav-meta.ts";
+import { withMeta } from "../nav-pages.ts";
 
 interface Report { entry?: { js: number }; boot?: { js: number } | null }
 const kb = (bytes: number): number => Math.round((bytes / 1024) * 10) / 10;

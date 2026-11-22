@@ -1,0 +1,36 @@
+// The topics of /web (one page each, /web/<slug>): titles, one-line descriptions, groups. The section page loads
+// only this file; src/topics.ts gathers every section for the menu, MarchIDE and the start-up titles.
+import type { Topic } from "./types.ts";
+
+export const TOPICS: readonly Topic[] = [
+  { slug: "hero", title: "Açılış bölümü", name: "Hero", desc: "Yedi görünüm, tek yapı: üst etiket, gradyan vurgulu başlık, açıklama, eylemler.", group: "Bloklar" },
+  { slug: "site-nav", title: "Site menüsü", name: "SiteNav", desc: "Saydamdan cama geçen, kaydırınca küçülen ya da yüzen hap görünümlü üst çubuk.", group: "Bloklar" },
+  { slug: "feature-grid", title: "Özellik ızgarası", name: "FeatureGrid", desc: "Kartlar (imleç ışığıyla), sade, liste ya da bento.", group: "Bloklar" },
+  { slug: "logo-cloud", title: "Logo bulutu", name: "LogoCloud", desc: "Eşit hücreli ızgara ya da sonsuz kayan şerit.", group: "Bloklar" },
+  { slug: "pricing", title: "Fiyatlar", name: "Pricing", desc: "Aylık / yıllık anahtarı: rakamlar odometre gibi döner, anahtarın başparmağı kayar, öne çıkan plan parlar.", group: "Bloklar" },
+  { slug: "testimonials", title: "Yorumlar", name: "Testimonials", desc: "Izgara, iki sıra kayan şerit, solarak biten duvar (Daha fazla göster) ya da kaydırmalı.", group: "Bloklar" },
+  { slug: "faq", title: "Sık sorulanlar", name: "Faq", desc: "Akordeon; iki sütunlu düzende yapışkan başlık; aramada aksan ve yazım hatasına dayanıklı sıralama.", group: "Bloklar" },
+  { slug: "stats-band", title: "Rakamlar", name: "StatsBand", desc: "Görününce sayan büyük rakamlar; sade, çizgili ya da kartlı.", group: "Bloklar" },
+  { slug: "counter", title: "Sayaç", name: "Counter", desc: "Görününce sayar, yeni değere süzülür; odometre modunda yalnız değişen basamaklar döner.", group: "Bloklar" },
+  { slug: "roadmap", title: "Yol haritası ve zaman çizelgesi", name: "Roadmap", desc: "Kaydırdıkça dolan çizgi; geçilen noktalar yanar, süren adım parlar.", group: "Bloklar" },
+  { slug: "scroll-story", title: "Kaydırma hikâyesi", name: "ScrollStory", desc: "Görsel sütunu sabit kalır, adımlar akar; etkin adımın görseli belirir, bölüm o adımın rengine geçer.", group: "Bloklar" },
+  { slug: "horizontal-scroll", title: "Yatay kaydırma", name: "HorizontalScroll", desc: "Sayfa aşağı kayarken paneller yana akar; dokunmatikte ve azaltılmış harekette yerel yatay kaydırıcı.", group: "Bloklar" },
+  { slug: "scroll-progress", title: "Okuma ilerlemesi", name: "ScrollProgress", desc: "Sayfanın ya da bir makalenin ne kadarının okunduğunu gösteren ince çubuk.", group: "Bloklar" },
+  { slug: "reveal", title: "Kaydırınca belirme", name: "Reveal", desc: "Solma, yükselme, baştan ya da sondan kayma (RTL'de aynalı), ölçek, bulanıklık, çevirme; sırayla ya da…", group: "Bloklar" },
+  { slug: "parallax", title: "Parallax", name: "Parallax", desc: "Her katman kendi hızında kayar; fare izleme açıkken derinliğine göre kayar.", group: "Bloklar" },
+  { slug: "project-grid", title: "Proje ızgarası", name: "ProjectGrid", desc: "Süzgeç çipleri; seçince kalanlar yeni yerlerine süzülür (FLIP).", group: "Bloklar" },
+  { slug: "project-detail", title: "Proje ayrıntısı", name: "ProjectDetail", desc: "Bir projeye tıkla: kapak ayrıntı sayfasındaki yerine büyür (paylaşılan öğe geçişi); geri dönüşte küçülür.", group: "Bloklar" },
+  { slug: "presentation", title: "Sunum", name: "Presentation", desc: "Ok tuşları, boşluk, kaydırma, dokunma; adım adım maddeler; konuşmacı görünümü (sonraki slayt, notlar, süre).", group: "Bloklar" },
+  { slug: "video-background", title: "Video arka plan", name: "VideoBackground", desc: "Sessiz döngü, önce poster; görünmüyorken durur, veri tasarrufu ve azaltılmış harekette yalnız poster.", group: "Bloklar" },
+  { slug: "cta-band", title: "Eylem bandı", name: "CtaBand", desc: "Sayfa sonundaki çağrı paneli: gradyan, ağ, cam, sade ya da video arka plan; imleç ışığı.", group: "Bloklar" },
+  { slug: "newsletter", title: "Bülten formu", name: "Newsletter", desc: "Doğrulama, bekleme düğmesi, başarıda beliren onay, hatada sallanan alan ve okunan ileti.", group: "Bloklar" },
+  { slug: "site-footer", title: "Altbilgi", name: "SiteFooter", desc: "Marka, bağlantı sütunları, sosyal bağlantılar, bülten, yasal satır, başa dön ve büyük yazı.", group: "Bloklar" },
+  { slug: "before-after", title: "Önce / sonra", name: "BeforeAfter", desc: "Sürüklenen ayırıcıyla iki katmanı karşılaştırır; basınca oraya atlar, klavyeyle ve imleci izleyerek de çalışır; yatay ya da dikey.", group: "Bloklar" },
+  { slug: "not-for-you", title: "Kimin için değil", name: "NotForYou", desc: "Ürünün kimin için olmadığı (ve kimin için olduğu); ziyaretçi uyanları işaretler, dürüst bir sonuç görür.", group: "Bloklar" },
+  { slug: "honest-compare", title: "Dürüst karşılaştırma", name: "HonestCompare", desc: "Rakiplerle tablo; geride kalınan satırlar işaretli ve gerekçeli, özet ve yalnız eksikleri gösteren süzgeç.", group: "Bloklar" },
+  { slug: "live-feed", title: "Canlı akış", name: "LiveFeed", desc: "Yeni etkinlik üstten kayarak gelir, en eskisi gider; üstüne gelince ya da düğmeyle durur.", group: "Bloklar" },
+  { slug: "live-counter", title: "Canlı sayaç", name: "LiveCounter", desc: "Sen bakarken büyüyen sayı: bir sinyalden ya da dakikadaki artışla; odometre basamakları ve canlı noktası.", group: "Bloklar" },
+  { slug: "branching-story", title: "Dallanan hikâye", name: "BranchingStory", desc: "Seçimlerle ilerleyen hikâye: geri sarılan yol, bulunan sonlar, 3B sayfa çevirme, 1–9 tuşları.", group: "Bloklar" },
+  { slug: "site-section", title: "Bölüm çerçevesi", name: "SiteSection", desc: "Her bloğun çerçevesi: genişlik, dikey ritim, ton ve beliren başlık grubu.", group: "Bloklar" },
+  { slug: "section-head", title: "Bölüm başlığı", name: "SectionHead", desc: "Üst etiket, başlık, açıklama, eylemler ve not tek blokta; hizalama, başlık düzeyi ve ölçek, isteğe bağlı giriş hareketi.", group: "Bloklar" },
+];

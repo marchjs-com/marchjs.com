@@ -4,6 +4,7 @@ import { installSeo, useHead, headTags, headToHtml, ld, checkHtml, formatIssues,
 import { onCleanup } from "march";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/seo.ts";
 
 const SAMPLE_BAD = `<html><head><title>Ürünler</title></head>
 <body><h1>Ürünler</h1><img src="kapak.jpg"></body></html>`
@@ -109,7 +110,7 @@ createRouter({ routes: { "/product/:id": { load, head: (to) => ({ title: \`Ürü
     <p class="m-muted">Her rotanın kendi index.html dosyası var; adres başka bir rotayı gösterirse (404 yedeği, eski bir hash bağlantısı) ön işlenmiş içerik hemen kaldırılır, yanlış içerik görünmez.</p>
   </Demo>,
   }
-  return <Hub section="/seo" kicker="Temel" title="SEO" lead="Rota başına başlık ve meta, Open Graph ve Twitter kartları, JSON-LD, derlemede ön işleme (prerender), sitemap.xml ve robots.txt. Hepsi yönlendiriciyle bütünleşik." render={RENDER} params={props.params} />
+  return <Hub section="/seo" topics={TOPICS} kicker="Temel" title="SEO" lead="Rota başına başlık ve meta, Open Graph ve Twitter kartları, JSON-LD, derlemede ön işleme (prerender), sitemap.xml ve robots.txt. Hepsi yönlendiriciyle bütünleşik." render={RENDER} params={props.params} />
 }
 
 function Report(props: { title: string; issues: SeoIssue[] }) {

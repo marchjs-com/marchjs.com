@@ -1,6 +1,7 @@
 // Data: one MarchIDE page per component (src/components/data/<name>/, Table from march/table): tree, kanban, timeline,
 // key-value, cards, rows, badges.
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/data.ts";
 import { ComponentDemo } from "../component-demo.tsx";
 
 export default function Data(props: { params?: { rest?: string } }) {
@@ -19,5 +20,5 @@ export default function Data(props: { params?: { rest?: string } }) {
     "stat-tile": () => <ComponentDemo folder="data/stat-tile" title="StatTile: değer ve etiket" desc="Profil sayıları, özet rakamlar. Değer bir sayaç olabilir; karoya basınca sayı artar ve basamaklar döner." />,
     "badge": () => <ComponentDemo folder="data/badge"title="Badge: durum ve sayı" desc="Altı ton, noktalı etiket; sayı rozeti 0'da gizlenir, 99'dan sonra 99+ yazar ve ekran okuyucuya ne saydığını söyler." />,
   }
-  return <Hub section="/data" kicker="Bileşenler" title="Veri" lead="10.000 satır sanal kaydırmayla akar; yalnız görünen satırlar çizilir. Sıralama, süzgeç çipleri, seçim ve toplu işlemler, sütun gizleme/taşıma/boyutlama, CSV dışa aktarma." render={RENDER} params={props.params} />
+  return <Hub section="/data" topics={TOPICS} kicker="Bileşenler" title="Veri" lead="10.000 satır sanal kaydırmayla akar; yalnız görünen satırlar çizilir. Sıralama, süzgeç çipleri, seçim ve toplu işlemler, sütun gizleme/taşıma/boyutlama, CSV dışa aktarma." render={RENDER} params={props.params} />
 }

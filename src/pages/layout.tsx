@@ -3,6 +3,7 @@
 import { Grid, Segmented, Slider, Field, Card, Badge } from "march/ui";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/layout.ts";
 import { Playground } from "../playground.tsx";
 import { ComponentDemo } from "../component-demo.tsx";
 import "./layout.css";
@@ -104,5 +105,5 @@ export default function Layout(props: { params?: { rest?: string } }) {
     "exploded-view": () => <ComponentDemo folder="layout/exploded-view" title="ExplodedView: parçalarına ayır" desc="İçindeki AYNI öğeler eğilir ve plaka plaka yükselir; kapatınca geri iner. Parça seçicileri verirsen o parçalar adlarıyla kalkar; vermezsen tek öğe gölge, zemin, içerik ve odak halkası katmanlarına açılır. Ayrıkken bir plakaya tıkla: adı sahnenin altına yazılır." />,
     "app-shell": () => <ComponentDemo folder="layout/app-shell" title="AppShell: uygulama çerçevesi" desc="Kenar çubuğu sütunu, üst duyuru ve kayan ana alan; önce gelen 'İçeriğe geç' bağlantısı. Dar ekranda tam genişlik." />,
   }
-  return <Hub section="/layout" kicker="Yerleşim" title="Yerleşim" lead="Grid hiçbir genişlikte yatay taşmaz. Son satır için isteğe bağlı fill (stretch: kalan alanı eşit paylaş, last: son kart genişlesin) ve balance (satırlara dengeli dağıt). Yalnız CSS; telefonda tek sütun." render={RENDER} params={props.params} />
+  return <Hub section="/layout" topics={TOPICS} kicker="Yerleşim" title="Yerleşim" lead="Grid hiçbir genişlikte yatay taşmaz. Son satır için isteğe bağlı fill (stretch: kalan alanı eşit paylaş, last: son kart genişlesin) ve balance (satırlara dengeli dağıt). Yalnız CSS; telefonda tek sütun." render={RENDER} params={props.params} />
 }

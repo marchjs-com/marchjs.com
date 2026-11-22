@@ -8,6 +8,7 @@ import { perf, type VitalName } from "march/managers/perf";
 import { rateLimit } from "march/managers/rate";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/managers-ops.ts";
 import { ticker, tone } from "../managers-data/ticker.ts";
 import { ChannelPanel } from "../managers-data/channel-panel.tsx";
 
@@ -140,5 +141,5 @@ export default function ManagersOps(props: { params?: { rest?: string } }) {
     "perf": () => <><ChannelPanel /><PerfDemo /></>,
     "rate": () => <><ChannelPanel /><RateDemo /></>,
   }
-  return <Hub section="/managers-ops" kicker="Temel › Yöneticiler" title="Bayrak, günlük, performans ve hız yöneticileri" lead="Özellik bayrakları, günlük, Web Vitals ve hız sınırı: her biri tek örnek, ilk kullanımda başlar, olaylarını kanala yayınlar." render={RENDER} params={props.params} />
+  return <Hub section="/managers-ops" topics={TOPICS} kicker="Temel › Yöneticiler" title="Bayrak, günlük, performans ve hız yöneticileri" lead="Özellik bayrakları, günlük, Web Vitals ve hız sınırı: her biri tek örnek, ilk kullanımda başlar, olaylarını kanala yayınlar." render={RENDER} params={props.params} />
 }

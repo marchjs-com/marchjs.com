@@ -6,7 +6,7 @@ import { signal } from "march";
 import { Outlet, Link, path } from "march/router";
 import { MarchLogo } from "./logo.tsx";
 import { AppShell, type BreadcrumbsProps, type Crumb } from "march/ui";
-import { lazy, skeleton } from "march/lazy";
+import { lazy } from "march/lazy";
 
 const ShellNav = lazy(() => import("./shell-nav.tsx"), { fallback: () => <div class="sc-nav-placeholder" data-rail-only={() => (path() === "/" ? "" : null)} aria-hidden="true" /> })
 // the full trail (section / category / page, each with the pages beside it) comes with the side menu's manifest
@@ -14,7 +14,8 @@ const ShellNav = lazy(() => import("./shell-nav.tsx"), { fallback: () => <div cl
 const trail = signal<((path: string) => readonly Crumb[]) | null>(null)
 export const setTrail = (of: (path: string) => readonly Crumb[]): void => { trail.set(of) }
 const ShellTools = lazy(() => import("./shell-tools.tsx"), { fallback: () => <div class="sc-tools sc-tools-placeholder" aria-hidden="true" /> })
-const ShellLate = lazy(() => import("./shell-late.tsx"), { fallback: () => null })
+// palette, toasts, commands: not part of start-up, loaded once the first paint is done (idle)
+const ShellLate = lazy(() => import("./shell-late.tsx"), { when: "idle", fallback: () => null })
 // the trail is the Breadcrumbs component in its own chunk (as <Page> loads it); its height is reserved, so nothing jumps
 const Crumbs = lazy<BreadcrumbsProps>(() => import("march/components/navigation/breadcrumbs"), { pick: "Breadcrumbs", placeholder: "none", height: "1.875rem" })
 
@@ -64,8 +65,6 @@ export function App() {
     </AppShell>
   </>
 }
-/** The shell as a layout loader (it is in the entry: resolves at once, so the frame paints before the page arrives). */
+/** The shell as a layout loader (it comes with the route table, a start-up chunk: resolves at once, so the frame paints
+ * before the page arrives). */
 export const SHELL = async () => ({ default: App })
-export const PAGE_LOADING = <div class="m-loader" role="status" aria-label="Yükleniyor"><span class="m-loading m-spin-lg" /></div>
-/** A page that is not here 100 ms after a click: its heading, lead and two cards as skeletons (no layout jump). */
-export const PAGE_SKELETON = () => <div class="sc-page-skel" role="status" aria-label="Yükleniyor">{skeleton("text")}{skeleton("card")}{skeleton("card")}</div>

@@ -1,5 +1,6 @@
 // Forms: one MarchIDE page per input (src/components/forms/<name>/), the form from a schema and the choice looks.
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/forms.ts";
 import { ComponentDemo } from "../component-demo.tsx";
 
 export default function Forms(props: { params?: { rest?: string } }) {
@@ -36,5 +37,5 @@ export default function Forms(props: { params?: { rest?: string } }) {
     "rating": () => <ComponentDemo folder="forms/rating" title="Rating: yıldızla puan" desc="Radyo grubu: oklarla değişir (RTL'de aynalanır), üstüne gelince önizler; salt okunurken yarım yıldız gösterir." />,
     "wizard": () => <ComponentDemo folder="composite/wizard" title="Wizard: adım adım form" desc="Karmaşık bileşen: her adımın kendi şeması; ileri giderken doğrular, geri dönünce değerler korunur, önceki adımlar geçince sonraki adıma üstteki listeden atlanır. Parçaları aşağıdaki satırda." />,
   }
-  return <Hub section="/forms" kicker="Bileşenler" title="Formlar" lead="Şemadan form: alanlar, doğrulama, koşullu alanlar ve tür bilgisi tek tanımdan. Bütün alanlar bind: ile iki yönlü bağlanır." render={RENDER} params={props.params} />
+  return <Hub section="/forms" topics={TOPICS} kicker="Bileşenler" title="Formlar" lead="Şemadan form: alanlar, doğrulama, koşullu alanlar ve tür bilgisi tek tanımdan. Bütün alanlar bind: ile iki yönlü bağlanır." render={RENDER} params={props.params} />
 }

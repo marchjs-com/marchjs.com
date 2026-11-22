@@ -37,9 +37,10 @@ export default {
   seo: { prerender: true, routes: NAV_PATHS },
   // the build fails when the entry, a route or a lazy part (lazy() component, shell piece) grows past it
   // boot: the route table and the shell pieces load at start-up, so a route row counts only what its own navigation downloads
+  // (shell-late.tsx — palette, toasts — loads when idle: a lazy part of its own, not start-up)
   // bootLimit: start-up as a whole; the packer folds shared code into start-up chunks only below it
   // maxFiles: the host keeps at most 512 files per published version (pages, chunks, media, icon packs): room under it
-  budget: { maxFiles: 450, entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, bootLimit: 52 * 1024, boot: ["src/routes.ts", "src/shell-nav.tsx", "src/shell-tools.tsx", "src/shell-late.tsx"], fail: true, parts: BENCH_PARTS },
+  budget: { maxFiles: 450, entry: 15 * 1024, route: 60 * 1024, part: 25 * 1024, bootLimit: 52 * 1024, boot: ["src/routes.ts", "src/shell-nav.tsx", "src/shell-tools.tsx"], fail: true, parts: BENCH_PARTS },
   // no output file under 10 KB (before gzip): small shared code folds, small lazy modules join their parent or a group
   // allow: a locale dictionary stays its own file (only that locale downloads it; grouping it would make every
   // Turkish visitor download pages, or every English visitor the dictionary)

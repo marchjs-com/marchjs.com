@@ -1,6 +1,7 @@
 // Big data: components for large collections, each from its folder in src/components (demo, Playground, Code tab).
 // Every demo is its own lazy chunk: the page itself is only the frame.
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/big-data.ts";
 import { ComponentDemo } from "../component-demo.tsx";
 
 export default function BigDataPage(props: { params?: { rest?: string } }) {
@@ -10,5 +11,5 @@ export default function BigDataPage(props: { params?: { rest?: string } }) {
     "scheduler": () => <ComponentDemo folder="data/scheduler" title="Takvim (Scheduler)" desc="Ay, hafta ve gün görünümü. Etkinliği sürükleyerek taşı (15 dakikaya oturur, sütunlar arası gün değiştirir), kenarından boyutla; boş saate sürükleyerek yeni etkinlik oluştur. Tarih dili değişince gün adları, haftanın ilk günü ve saat biçimi Intl ile değişir." />,
     "gantt": () => <ComponentDemo folder="data/gantt" title="Gantt" desc="Bağımlılık okları, bugün çizgisi, gün/hafta/ay ölçeği. Çubuğu sürükleyerek taşı, uçlarından boyutla, altındaki tutamaçla ilerlemeyi ayarla; ardıl görevler gerekirse ileri itilir. Klavye: ↑↓ görev seç, Alt+←→ taşı." />,
   }
-  return <Hub section="/big-data" kicker="Bileşenler" title="Büyük veri" lead="Sanal pencereyle yüz binlerce satır, tembel ağaçlar, sürüklenebilir takvim ve zaman çizelgesi, dosya yöneticisi. Hepsi ortak sanal liste ve seçim modelinin üstünde." render={RENDER} params={props.params} />
+  return <Hub section="/big-data" topics={TOPICS} kicker="Bileşenler" title="Büyük veri" lead="Sanal pencereyle yüz binlerce satır, tembel ağaçlar, sürüklenebilir takvim ve zaman çizelgesi, dosya yöneticisi. Hepsi ortak sanal liste ve seçim modelinin üstünde." render={RENDER} params={props.params} />
 }

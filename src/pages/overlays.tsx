@@ -5,6 +5,7 @@ import {
 import { trash, edit, sliders, command, bell, check, alertTriangle, info, xCircle } from "march/icons";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/overlays.ts";
 import { ComponentDemo } from "../component-demo.tsx";
 import { lazy } from "march/lazy";
 // ContextMenu has its own entry (march/context-menu), so the card registry has no demo loader for it: its demo is a
@@ -39,5 +40,5 @@ export default function Overlays(props: { params?: { rest?: string } }) {
     "context-menu": () => <ComponentDemo folder="overlays/context-menu" title="ContextMenu: sağ tık menüsü" desc="Bir karta sağ tıklayın ya da odaklayıp Shift+F10'a (Menü tuşuna) basın. Öğeler tıklanan hedefe göre değişir; ok tuşları, Enter ve Esc Menu'deki gibi." view={ContextMenuDemo as never} />,
     "consent-banner": () => <ComponentDemo folder="composite/consent-banner" title="ConsentBanner: çerez onayı" desc="Reddet, Özelleştir ve Kabul et yan yana; Özelleştir tercihler panelini açar. Üçüncü taraf içerik izin verilene dek yer tutucuda bekler. Seçim bandı kapatır; 'Şeridi yeniden göster' geri getirir." />,
   }
-  return <Hub section="/overlays" kicker="Bileşenler" title="Pencereler ve bildirimler" lead="Odak tuzağı, Esc ile kapanma, arka plan kaydırma kilidi, ekran okuyucu rolleri; mobilde alttan açılan sayfa. Hepsi Promise döndürür." render={RENDER} params={props.params} />
+  return <Hub section="/overlays" topics={TOPICS} kicker="Bileşenler" title="Pencereler ve bildirimler" lead="Odak tuzağı, Esc ile kapanma, arka plan kaydırma kilidi, ekran okuyucu rolleri; mobilde alttan açılan sayfa. Hepsi Promise döndürür." render={RENDER} params={props.params} />
 }

@@ -18,6 +18,7 @@ import { command, commands, onCommandRun } from "march/managers/command";
 import { commandItems, CommandButton, CommandToolbar, bindCommandKeys } from "march/managers/command/ui";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/managers.ts";
 import { ComponentDemo } from "../component-demo.tsx";
 
 const yes = (v: boolean) => <Badge tone={v ? "success" : "neutral"} dot>{v ? "evet" : "hayır"}</Badge>
@@ -173,5 +174,5 @@ export default function Managers(props: { params?: { rest?: string } }) {
     "consent": () => <ConsentDemo />,
     "command": () => <CommandDemo />,
   }
-  return <Hub section="/managers" kicker="Temel" title="Yöneticiler" lead="Uygulama genelindeki hizmetler: tek örnek, ilk kullanımda başlar, tek yerden yapılandırılır ve kapatılır. Viewport ortamın tek sinyal kaynağı, Consent çerez ve KVKK/GDPR rızası, Command tek eylem kaydı." render={RENDER} params={props.params} />
+  return <Hub section="/managers" topics={TOPICS} kicker="Temel" title="Yöneticiler" lead="Uygulama genelindeki hizmetler: tek örnek, ilk kullanımda başlar, tek yerden yapılandırılır ve kapatılır. Viewport ortamın tek sinyal kaynağı, Consent çerez ve KVKK/GDPR rızası, Command tek eylem kaydı." render={RENDER} params={props.params} />
 }

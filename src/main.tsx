@@ -6,14 +6,13 @@ import "march/css/tokens.css";
 import "march/css/sx.css"; // components bring their own CSS (only what is used, split per page)
 import "march/motion/motion.css";
 import "./showcase.css";
-import { render, setLocale } from "march";
+import { setLocale } from "march";
 import { loadLocale } from "march/i18n";
-import { createRouter, Router } from "march/router";
 import { runLoad } from "march/lazy";
 import { prerenderedFor } from "march/seo/prerendered";
-import { PAGE_LOADING, PAGE_SKELETON } from "./app.tsx";
 // the route table is a start-up chunk (grouped with the shell pieces): the entry stays the same size however many
-// pages there are; runLoad preloads all of its files at once through the build manifest
+// pages there are; runLoad preloads all of its files at once through the build manifest. It also brings the router and
+// the renderer (start.tsx): the entry only loads
 const ROUTES = () => import("./routes.ts");
 
 // the Turkish pack is a lazy chunk (library texts switch to Turkish when it arrives)
@@ -27,13 +26,4 @@ const pre = !!el && prerenderedFor(el);
 if (el && !pre) el.replaceChildren();
 const hydrateChunk = pre ? import("march/seo/hydrate") : null;
 
-void runLoad(ROUTES, { kind: "part", key: "" }).then(async ({ ROUTES: routes, OUTLETS, pageTitle, restoreFrameRoute }) => {
-  // in an iframe, a reload that went back to the frame's first address returns to the page it showed
-  restoreFrameRoute();
-  // every page sits in the shell layout (kept alive while pages change)
-  createRouter({ mode: "history", base: "auto", routes, outlets: OUTLETS, title: pageTitle });
-  if (!el) return;
-  const app = () => <Router loading={PAGE_LOADING} skeleton={PAGE_SKELETON} />;
-  if (hydrateChunk) (await hydrateChunk).hydrate(app, el); else render(app, el);
-  document.getElementById("m-boot")?.remove();
-});
+void runLoad(ROUTES, { kind: "part", key: "" }).then((table) => table.start(table, el, hydrateChunk));

@@ -1,5 +1,6 @@
 // Overlay and media: one MarchIDE page per component (Overlay: video, image, SVG, canvas and CSS effect layers that never take input).
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/overlay.ts";
 import { ComponentDemo } from "../component-demo.tsx";
 
 export default function OverlayPage(props: { params?: { rest?: string } }) {
@@ -10,5 +11,5 @@ export default function OverlayPage(props: { params?: { rest?: string } }) {
     "media": () => <ComponentDemo folder="media/media" title="Media: resim, video, ses" desc="Kabına sığar, türü uzantıdan anlar; yüklenemezse yedek metin gösterir. Pencerede açmak için openMedia." />,
     "carousel": () => <ComponentDemo folder="media/carousel" title="Carousel: kaydır ve yaslan" desc="Geniş ekranda 1–4 slayt, telefonda bir slayt ve sonrakinin ucu; oklar uçlarda gizlenir, noktalar konumu gösterir." />,
   }
-  return <Hub section="/overlay" kicker="Hareket" title="Overlay" lead="Bir kapsayıcının içinde yaşayan katmanlar: sessiz döngülü video, resim, SVG, çizim işlevli canvas ya da CSS efekti (cam, gradyan, mesh, gürültü, vinyet, spot ışığı, ızgara, noktalar). Eklenme sırasıyla üst üste biner; arka plan katmanları içeriğin altında, front olanlar üstünde. Hiçbiri tıklama almaz: altındaki düğme ve alanlar çalışır." render={RENDER} params={props.params} />
+  return <Hub section="/overlay" topics={TOPICS} kicker="Hareket" title="Overlay" lead="Bir kapsayıcının içinde yaşayan katmanlar: sessiz döngülü video, resim, SVG, çizim işlevli canvas ya da CSS efekti (cam, gradyan, mesh, gürültü, vinyet, spot ışığı, ızgara, noktalar). Eklenme sırasıyla üst üste biner; arka plan katmanları içeriğin altında, front olanlar üstünde. Hiçbiri tıklama almaz: altındaki düğme ve alanlar çalışır." render={RENDER} params={props.params} />
 }

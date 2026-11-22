@@ -11,7 +11,8 @@ import { DevicePreview, previewFrame } from "march/components/layout/index.ts";
 import { appUrl } from "march/base";
 import { lazy } from "march/lazy";
 import { Hub } from "../hub.tsx";
-import { HUBS, SITE_KINDS } from "../topics.ts";
+import { TOPICS } from "../topics/sites.ts";
+import { SITE_KINDS } from "../topics/sites.ts";
 
 export const title = "Örnek uygulamalar"
 
@@ -35,7 +36,7 @@ const PARTS: Record<string, { file: string; blocks: string[] }> = {
   live: { file: "live.tsx", blocks: ["live-feed", "live-counter", "counter", "site-nav", "hero", "cta-band", "site-footer", "site-section"] },
   story: { file: "story.tsx", blocks: ["branching-story", "site-nav", "hero", "cta-band", "site-footer", "site-section"] },
 }
-const SAMPLES = (HUBS["/sites"] ?? []).filter((t) => LOAD[t.slug]).map((t) => ({ view: t.slug, title: t.title, ...PARTS[t.slug]! }))
+const SAMPLES = TOPICS.filter((t) => LOAD[t.slug]).map((t) => ({ view: t.slug, title: t.title, ...PARTS[t.slug]! }))
 type Sample = typeof SAMPLES[number]
 const SOURCE = "https://github.com/marchjs-com/march/blob/main/examples/showcase/src/web/"
 // desktop: the full frame; the others: a real device body (DevicePreview) with touch
@@ -122,7 +123,7 @@ export default function SitesPage(props: { params?: { rest?: string } }) {
       // a kind of sample app (/sites/landing): its apps; /sites: every kind
       const kind = SITE_KINDS.find((k) => k.slug === view())
       return kind
-        ? <Hub section="/sites" kicker="Örnek uygulamalar" title={kind.title} lead={`${kind.desc} Her biri kendi penceresinde açılır: cihaz, tema ve yazı yönü yalnız önizlemede değişir; hangi bileşenlerden oluştuğu ve kaynağı üst çubukta.`} render={{}} />
+        ? <Hub section="/sites" topics={TOPICS} kicker="Örnek uygulamalar" title={kind.title} lead={`${kind.desc} Her biri kendi penceresinde açılır: cihaz, tema ve yazı yönü yalnız önizlemede değişir; hangi bileşenlerden oluştuğu ve kaynağı üst çubukta.`} render={{}} />
         : <Hub section="/sites" kicker="Web tasarım araçları" title="Örnek uygulamalar" lead="Yalnız web sitesi bileşenleriyle kurulmuş tam uygulamalar, türlerine göre. Şimdilik açılış sayfaları; yönetim paneli, CRM ve e-ticaret sırada." render={{}} params={props.params} />
     }
     const S = LOAD[sample.view] as () => unknown
