@@ -52,5 +52,5 @@ node tools/check-ide.mjs alert button    # some pages
 ```
 
 A page passes when its files load from the examples repository, no file has Problems and its Lab tests pass. CI
-(`.github/workflows/ci.yml`) builds once (the dev build for now: the release build is over its size budgets), then checks the pages in 10 parallel jobs. When a new
+(`.github/workflows/ci.yml`) makes the release build once (size budgets, prerendering), then checks the pages in 10 parallel jobs. When a new
 March release changes the generated sources, CI warns: run `node build.mjs` and commit them.
