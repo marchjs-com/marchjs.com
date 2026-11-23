@@ -46,7 +46,7 @@ const args = process.argv.slice(2);
 const release = args.includes("--release");
 const watching = !release && args.includes("--watch");
 const serve = args.includes("--serve");
-const extra = args.filter((a) => ["--timing", "--no-minify", "--analyze"].includes(a));
+const extra = args.filter((a) => ["--timing", "--no-minify", "--analyze", "--force"].includes(a));
 
 if (!serve || !existsSync(dist) || watching) {
   const t0 = performance.now();
