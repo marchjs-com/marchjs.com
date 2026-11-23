@@ -2,8 +2,7 @@
 // through loading / success / error (confetti from march/fx on success). All on the motion engine.
 import "../motion-pages.css";
 import { onCleanup } from "march";
-import { ripple, hoverParallax, stateMorph, type ButtonState } from "march/motion/micro.ts";
-import { magnet, press } from "march/motion/gestures.ts";
+import { ripple, hoverParallax, stateMorph, type ButtonState, magnet, press } from "march/motion";
 import { Section } from "../../demo.tsx";
 // the demo kit is part of the shared Playground module (as on the other /motion/* pages)
 import { MotionDemo, opt } from "../../playground.tsx";

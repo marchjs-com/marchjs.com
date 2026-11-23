@@ -13,7 +13,7 @@ import { DateRangePicker, type DateRange } from "march/components/forms/date-ran
 import { Accordion } from "march/components/layout/accordion";
 import { Tabs } from "march/components/navigation/tabs";
 import { Stepper } from "march/components/navigation/stepper";
-import { Reveal } from "march/components/landing/index.ts";
+import { Reveal } from "march/components/landing/reveal";
 import { Head } from "../head.tsx";
 
 // ── a table ─────────────────────────────────────────────────────────────────────────────────────────────────────

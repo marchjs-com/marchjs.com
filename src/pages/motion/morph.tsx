@@ -1,7 +1,7 @@
 // Motion › Morph: container transforms (button → dialog, card → page), shared element FLIP, icon morphs and shape
 // morphs. Each one is an engine Playback (global speed, "Stop all", reduced motion).
 import "../motion-pages.css";
-import { morph, morphBack, morphIcon, shapeMorph, MORPH_ICONS, type MorphIconName, type ShapeName } from "march/motion/morph.ts";
+import { morph, morphBack, morphIcon, shapeMorph, MORPH_ICONS, type MorphIconName, type ShapeName } from "march/motion";
 import type { Playback } from "march/motion";
 import { Button } from "march/ui";
 import { Section } from "../../demo.tsx";

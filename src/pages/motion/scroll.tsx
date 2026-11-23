@@ -2,7 +2,7 @@
 // progress indicator. Each runs in its own scroll box here (`source`), the page scroll works the same without it.
 import "../motion-pages.css";
 import { effect, onCleanup } from "march";
-import { scrollTimeline, parallaxLayers, stickyReveal, scrollIndicator } from "march/motion/scroll-fx.ts";
+import { scrollTimeline, parallaxLayers, stickyReveal, scrollIndicator } from "march/motion";
 import { Section } from "../../demo.tsx";
 // the demo kit is part of the shared Playground module (as on the other /motion/* pages)
 import { MotionDemo, opt } from "../../playground.tsx";

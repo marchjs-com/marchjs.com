@@ -19,7 +19,7 @@ import { ChatComposer } from "march/components/composite/chat-composer";
 import { StoryViewer, type StoryGroup } from "march/components/composite/story-viewer";
 import { Pricing, type PricingPlan } from "march/components/landing/pricing";
 import { Testimonials } from "march/components/landing/testimonials";
-import { Reveal } from "march/components/landing/index.ts";
+import { Reveal } from "march/components/landing/reveal";
 import { Head } from "../head.tsx";
 import { every } from "../clock.ts";
 

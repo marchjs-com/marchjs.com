@@ -2,7 +2,7 @@
 // march/flow › portPoint
 import { Out, Row } from "../../_kit.tsx";
 import { Button } from "march/ui";
-import { portPoint } from "march/components/composite/flow-canvas/model.ts";
+import { portPoint } from "march/components/composite/flow-canvas";
 import { doc } from "./_doc.tsx";
 import { newFlow } from "./_new-flow.tsx";
 import { Stack } from "./_stack.tsx";

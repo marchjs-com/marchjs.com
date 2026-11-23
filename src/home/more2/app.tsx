@@ -15,7 +15,7 @@ import { idle } from "march/managers/idle";
 import { format } from "march/i18n";
 import { swState } from "march/sw";
 import { Badge, Button, CodeView, Slider, TextInput } from "march/ui";
-import { Reveal } from "march/components/landing/index.ts";
+import { Reveal } from "march/components/landing/reveal";
 import { Icon, check, copy, globe, zap } from "march/icons";
 import { HOME_STATS as S } from "../../home-stats.gen.ts";
 import { Head } from "../head.tsx";

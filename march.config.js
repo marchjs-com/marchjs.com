@@ -22,14 +22,17 @@ const BENCH_PARTS = {
 // Showcase pages and parts past the default budgets (route 60 KB, part 25 KB): each is a demo of many components at
 // once, a full tool or a whole sample site, loaded only where it is shown. Each limit is the larger of two release measurements
 // (23 Nov 2026, March 0.3.5: this machine, Windows / Node 26, and CI, Linux / Node 24: packing differs a little between
-// them) plus 15%, rounded up to 5 KB. The packer packs to the default budgets, so the limits do not change the packing. A row that grows past its limit still fails the build.
+// them) plus 15%, rounded up to 5 KB. Rows re-measured on March 0.3.9-0.3.10 (23 Nov 2026, this machine and CI's report): the web-proof / web-talk /
+// editors-4 cards, march-ide, API part 09, the start page's app and visual sections, shell-late and the product sample's
+// lower half (March's own changes since 0.3.5 moved code into them; shell-late 40 → 62 KB and the app section
+// 30 → 64 KB are the ones to look at). The packer packs to the default budgets, so the limits do not change the packing. A row that grows past its limit still fails the build.
 const kb = (n) => n * 1024;
 const PAGE = "a section page: live demos of every component of its section on one page";
 const IDE = "MarchIDE's live workbench (/ide-live): editors, the compiler, preview and panels, a full tool on its own page";
 const APP_UI = "/app-ui: the AppUI kit's full app (editor, terminal, AI, debugger) drawn live on one page";
 const API_EX = "API reference examples, one part of ~1/15 of them (tools/api-examples.js): live code of every export in its range, loaded when a card of the range opens";
 const THEME_EDITOR = "a ThemeEditor tab (ColorPicker, the live preview with real components, saving): loaded when the editor opens it";
-const CARDS = "component cards of one showcase page (tools/gen-registry.js): loaded with that page only";
+const CARDS = "component cards of one showcase page (tools/gen-catalog.mjs): loaded with that page only";
 const SAMPLE = "a sample website (a whole page made of real components): loaded only when its page opens";
 const HOME = "a lower section of the start page with live demos: loaded as it comes near the viewport";
 const MARCH_IDE = "MarchIDE's component workspace (editor, preview, panels): loaded on a MarchIDE page only";
@@ -60,7 +63,7 @@ const SHOWCASE_ROUTES = Object.fromEntries(Object.entries(argued({
   "/managers": [125, PAGE],
   "/managers-a11y": [185, PAGE],
   "/managers-data": [175, PAGE],
-  "/managers-env": [120, PAGE],
+  "/managers-env": [160, PAGE],
   "/managers-ops": [145, PAGE],
   "/messaging": [70, PAGE],
   "/motion": [140, PAGE],
@@ -72,9 +75,9 @@ const SHOWCASE_ROUTES = Object.fromEntries(Object.entries(argued({
   "/navigation/router": [70, PAGE],
   "/navigation/router/about": [70, PAGE],
   "/navigation/router/item/:id": [70, PAGE],
-  "/network": [125, PAGE],
+  "/network": [165, PAGE],
   "/overlays": [180, PAGE],
-  "/seo": [100, PAGE],
+  "/seo": [120, PAGE],
   "/sites": [115, PAGE],
   "/speed": [150, PAGE],
   "/start": [70, PAGE],
@@ -85,23 +88,25 @@ const SHOWCASE_ROUTES = Object.fromEntries(Object.entries(argued({
   "/web": [70, PAGE],
 })).map(([k, v]) => [k, v.limit]));
 const SHOWCASE_PARTS = argued({
-  "node_modules/march/src/components/composite/theme-editor/panels.ts": [75, THEME_EDITOR],
+  "node_modules/march/src/components/composite/theme-editor/panels.ts": [95, THEME_EDITOR],
+  "node_modules/march/src/components/composite/theme-editor/colors.ts": [40, THEME_EDITOR],
   "node_modules/march/src/components/composite/theme-editor/persist.ts": [55, THEME_EDITOR],
-  "node_modules/march/src/components/composite/theme-editor/preview.ts": [45, THEME_EDITOR],
-  "node_modules/march/src/components/web-hero.demos.gen.ts": [30, CARDS],
-  "node_modules/march/src/components/web-proof.demos.gen.ts": [30, CARDS],
-  "node_modules/march/src/components/web-sell.demos.gen.ts": [30, CARDS],
-  "node_modules/march/src/components/web-talk.demos.gen.ts": [30, CARDS],
-  "node_modules/march/src/components/web-work.demos.gen.ts": [30, CARDS],
+  "node_modules/march/src/components/composite/theme-editor/preview.ts": [65, THEME_EDITOR],
+  "src/catalog/web-hero.demos.gen.ts": [40, CARDS],
+  "src/catalog/web-proof.demos.gen.ts": [50, CARDS],
+  "src/catalog/web-sell.demos.gen.ts": [40, CARDS],
+  "src/catalog/web-talk.demos.gen.ts": [50, CARDS],
+  "src/catalog/editors-4.demos.gen.ts": [35, CARDS],
+  "src/catalog/web-work.demos.gen.ts": [30, CARDS],
   "src/api-examples/gen/part-01.ex.tsx": [115, API_EX],
   "src/api-examples/gen/part-02.ex.tsx": [280, API_EX],
   "src/api-examples/gen/part-03.ex.tsx": [160, API_EX],
   "src/api-examples/gen/part-04.ex.tsx": [130, API_EX],
   "src/api-examples/gen/part-05.ex.tsx": [145, API_EX],
   "src/api-examples/gen/part-06.ex.tsx": [185, API_EX],
-  "src/api-examples/gen/part-07.ex.tsx": [120, API_EX],
+  "src/api-examples/gen/part-07.ex.tsx": [145, API_EX],
   "src/api-examples/gen/part-08.ex.tsx": [110, API_EX],
-  "src/api-examples/gen/part-09.ex.tsx": [65, API_EX],
+  "src/api-examples/gen/part-09.ex.tsx": [115, API_EX],
   "src/api-examples/gen/part-10.ex.tsx": [135, API_EX],
   "src/api-examples/gen/part-11.ex.tsx": [235, API_EX],
   "src/api-examples/gen/part-12.ex.tsx": [350, API_EX],
@@ -113,21 +118,21 @@ const SHOWCASE_PARTS = argued({
   "src/bench/apps/vue.ts": [35, BENCH],
   "src/bench/scenarios-section.tsx": [65, BENCH],
   "src/component-page/_layout.tsx": [70, COMPONENT_PAGE],
-  "src/home/more2/app.tsx": [30, HOME],
+  "src/home/more2/app.tsx": [75, HOME],
   "src/home/more3/tools.tsx": [90, HOME],
-  "src/home/more3/visual.tsx": [45, HOME],
+  "src/home/more3/visual.tsx": [90, HOME],
   "src/home/sections.tsx": [225, HOME],
   "src/playground/layouts/component.tsx": [200, MARCH_IDE],
-  "src/playground/march-ide.tsx": [70, MARCH_IDE],
+  "src/playground/march-ide.tsx": [85, MARCH_IDE],
   "src/router-demo/_layout.tsx": [70, ROUTER_DEMO],
   "src/sections.gen.ts": [30, SECTIONS],
-  "src/shell-late.tsx": [40, LATE],
+  "src/shell-late.tsx": [75, LATE],
   "src/shell-menu.tsx": [145, MENU],
   "src/web/honest.tsx": [130, SAMPLE],
   "src/web/live.tsx": [130, SAMPLE],
   "src/web/portfolio-more.tsx": [30, SAMPLE],
   "src/web/portfolio.tsx": [170, SAMPLE],
-  "src/web/product-more.tsx": [30, SAMPLE],
+  "src/web/product-more.tsx": [55, SAMPLE],
   "src/web/product.tsx": [115, SAMPLE],
   "src/web/redesign.tsx": [155, SAMPLE],
   "src/web/slides.tsx": [55, SAMPLE],
@@ -144,8 +149,6 @@ export default {
   components: "src/components",
   html: "index.html",
   port: 5180,
-  // March's sources from the installed package (its own subpaths: registry, cards, meta…)
-  alias: { "march": "./node_modules/march/src" },
   // sw.js only for the local preview (build.mjs --serve): the published showcase must not leave a worker registered
   sw: process.env.MARCH_SHOWCASE_SW === "1",
   // stable file names (main.js, chunks/home.js…, version in ?v=): each deploy overwrites the same paths
@@ -167,10 +170,12 @@ export default {
   // Turkish visitor download pages, or every English visitor the dictionary)
   // commonRoom: page groups stay 6 KB under the route budget, room for the shared "common" chunk (small code many pages
   // use, outside start-up, prefetched when idle) on every route that loads it
-  // fail: false — the 10 KB floor is an aim: the packer folds what it can in two builds (maxBuilds: 2, ~1 min) and lists
-  // what is left instead of failing; Cloudflare serves small files over HTTP/2 at little cost, and maxFiles still caps
-  // the count. Chasing the last ~50 small files took up to 12 more minutes per release.
-  chunks: { minSize: 10 * 1024, fail: false, maxBuilds: 2, commonRoom: 6 * 1024, allow: {
+  // fail: false — the 10 KB floor is an aim: the packer folds what it can and lists what is left instead of failing;
+  // Cloudflare serves small files over HTTP/2 at little cost, and maxFiles still caps the count.
+  // maxBuilds: 3 (~2.5 min): the planner groups small pages from size estimates and takes a group past the route budget
+  // apart only on its next pass; the third build checks the second's groups. With 2 they were never checked: from 0.3.7 on they
+  // came out past 60 KB (/buttons, /big-data, /overlay, /text and /forms each loading one group of 85–137 KB).
+  chunks: { minSize: 10 * 1024, fail: false, maxBuilds: 3, commonRoom: 6 * 1024, allow: {
     "src/web/product.tsx": "Web siteleri sample page: loaded only when /sites/product opens it, never with the blocks page",
     "src/web/product-more.tsx": "lower half of the product sample: loaded when it comes near the viewport",
     "src/web/portfolio-more.tsx": "lower half of the portfolio sample: loaded when it comes near the viewport",
@@ -187,20 +192,20 @@ export default {
     "src/shell-menu.tsx": "the side menu with its manifest, loaded on first idle by shell-nav: inlined into it, the menu would be part of start-up again",
     "src/seo/hydrate.ts": "takes over a prerendered page (1 KB): loaded only on a page's first load, never with a page group",
     "src/pages/navigation.tsx": "page whose code is mostly shared (NavSidebar, router): any page group would push its route past the 60 KB budget",
-    "src/components/composite/dock-layout/demo.tsx": "IDE shell component demo: loads with its card only (folded into the registry, every page with a component card would download it)",
-    "src/components/actions/overflow-toolbar/demo.tsx": "IDE shell component demo: loads with its card only (folded into the registry, every page with a component card would download it)",
-    "src/components/layout/status-bar/demo.tsx": "IDE shell component demo: loads with its card only (folded into the registry, every page with a component card would download it)",
-    "src/components/composite/property-grid/demo.tsx": "IDE shell component demo: loads with its card only (folded into the registry, every page with a component card would download it)",
+    "src/catalog/composite/dock-layout/demo.tsx": "IDE shell component demo: loads with its card only (folded into the registry, every page with a component card would download it)",
+    "src/catalog/actions/overflow-toolbar/demo.tsx": "IDE shell component demo: loads with its card only (folded into the registry, every page with a component card would download it)",
+    "src/catalog/layout/status-bar/demo.tsx": "IDE shell component demo: loads with its card only (folded into the registry, every page with a component card would download it)",
+    "src/catalog/composite/property-grid/demo.tsx": "IDE shell component demo: loads with its card only (folded into the registry, every page with a component card would download it)",
     "src/components/composite/property-grid/index.ts": "PropertyGrid (7 KB), shared by its card and the IDE shell demo page: either host would make the other download it",
     "src/env-managers/sync-server.ts": "Sync demo of the environment managers page: net and its mock arrive only when that demo is drawn",
     "src/components/composite/consent-banner/index.ts": "the consent UI (march/managers/consent/ui), lazy on purpose: loaded by the managers page and the ConsentBanner card, never folded into the component registry",
     ".ex.tsx": "API reference examples, one part of ~1/14 of them (api-examples/gen/part-NN.ex.tsx, tools/api-examples.js): loads when a card of its range opens; joining the API page would make the page download every example",
-    ".demos.gen.ts":"component cards of one showcase page (tools/gen-registry.js): joining the registry would make every page with a component card load them",
+    ".demos.gen.ts":"component cards of one showcase page (tools/gen-catalog.mjs): joining the registry would make every page with a component card load them",
     "src/motion/scroll.ts": "motion values, scroll and pointer (4 KB) shared by /flow, the home page group and four demos: start-up is at its budget and any page host would push a demo part past 25 KB",
     "src/pages/editors.tsx": "a page of lazy editor cards (each card loads its own editor): grouping it would make its neighbours download nothing useful and regroup the other pages",
     "src/components/composite/theme-editor/colors.ts": "ThemeEditor colors tab: with ColorPicker its own part; folded into the editor, the editor's first part passes 25 KB",
     "src/components/composite/theme-editor/persist.ts": "ThemeEditor start step and saving (StorageManager, DirtyState): loads after the editor shows; folded, the editor's first part passes 25 KB",
     "src/components/composite/theme-editor/preview.ts": "ThemeEditor preview screen (real components, a chart): its own part; folded into the editor, the editor's first part passes 25 KB",
-    "src/components/composite/wizard/demo.tsx": "Wizard card's stage: it brings the form engine; folded into the component registry, every page with a component card would download it",
+    "src/catalog/composite/wizard/demo.tsx": "Wizard card's stage: it brings the form engine; folded into the component registry, every page with a component card would download it",
   } },
 };

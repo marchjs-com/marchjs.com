@@ -7,8 +7,8 @@
 // lang.json the texts the build found. No tab has a close mark (groups still collapse to strips).
 import "./component.css";
 import { h, render as mount, createRoot, signal, computed, effect, untrack, batch, onCleanup, SX, locale, t } from "march";
-import { registry } from "march/components/registry.gen.ts";
-import type { PlaygroundOption } from "march/components/meta.ts";
+import { registry } from "../../catalog/registry.gen.ts";
+import type { PlaygroundOption } from "../../catalog/spec.ts";
 import { appUrl } from "march/base";
 import { PaletteButton, Spinner, Segmented, JsonView, Terminal, PropertyGrid, IconPicker, Chip, Combobox, Toggle, Select, Badge, Button, IconButton, Dropdown, toast, colorThemes, Tree, CodeView, Alert, type TerminalApi, type TerminalCommand, type TerminalIO, type PropertySpec } from "march/ui";
 import { AppUI, AppPreview, codeEditorPlugin, marchLanguagePlugin, typeScriptPlugin, debuggerPlugin, vaultPlugin, aiPlugin, groups, type AiService, type DebuggerService, type TypeScriptService, type AppKit, type DockApi, row, col, tabs, type AppPanel, type Preset, type MarchCatalog, type CodeProblem } from "march/app-ui";

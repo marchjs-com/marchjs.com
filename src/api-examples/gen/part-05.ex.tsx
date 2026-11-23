@@ -68,6 +68,8 @@ import e63 from "./managers-b/managers--manager-channel.x.tsx";
 import e64 from "./managers-b/managers--manager-channel-of.x.tsx";
 import e65 from "./managers-b/managers--memory-transport.x.tsx";
 import e66 from "./managers-b/managers--normalize-shortcut.x.tsx";
+import e67 from "./managers-b/managers--notification-manager.x.tsx";
+import e68 from "./managers-b/managers--notifications.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "march/managers#configurePresence": e0,
   "march/managers#configureScroll": e1,
@@ -136,5 +138,7 @@ const examples: Record<string, ApiExample<any>> = {
   "march/managers#managerChannelOf": e64,
   "march/managers#memoryTransport": e65,
   "march/managers#normalizeShortcut": e66,
+  "march/managers#notificationManager": e67,
+  "march/managers#notifications": e68,
 };
 export default examples;

@@ -10,7 +10,7 @@ import { wave, rainbow, neon, shimmer, glow, float, type TextAnimation } from "m
 import { draggable } from "march/behaviors/drag";
 import { Particles, Aurora, Noise } from "march/fx";
 import { Button, Chip, Badge, Avatar } from "march/ui";
-import { Reveal } from "march/components/landing/index.ts";
+import { Reveal } from "march/components/landing/reveal";
 import { Icon, home, user, settings, sparkles, star, heart, zap } from "march/icons";
 import { Head } from "../head.tsx";
 

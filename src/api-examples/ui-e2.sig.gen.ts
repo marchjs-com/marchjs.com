@@ -3,7 +3,6 @@
 const sig: Record<string, Record<string, string>> = {
  "march/ui": {
   "defineMeta": "const defineMeta = (m: ComponentMeta): ComponentMeta =>",
-  "definePlayground": "const definePlayground",
   "distance": "function distance(a: string, b: string, max = Infinity): number",
   "firstDayOf": "function firstDayOf(loc: string): number",
   "fold": "function fold(s: unknown): string",

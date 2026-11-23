@@ -1,10 +1,16 @@
 // Sample page: a living wall. The page proves the place is busy instead of saying so: live counters that grow while
 // you watch and a wall of activity that keeps arriving (sample data). Built from LiveCounter and LiveFeed.
 import { Button } from "march/ui";
-import { SiteNav, Hero, SiteSection, LiveFeed, LiveCounter, CtaBand, SiteFooter } from "march/components/landing/index.ts";
+import { SiteNav } from "march/components/landing/site-nav";
+import { Hero } from "march/components/landing/hero";
+import { SiteSection } from "march/components/landing/site-section";
+import { LiveFeed } from "march/components/landing/live-feed";
+import { LiveCounter } from "march/components/landing/live-counter";
+import { CtaBand } from "march/components/landing/cta-band";
+import { SiteFooter } from "march/components/landing/site-footer";
 import { arrowRight, sparkles, globe, message, mail } from "march/icons";
-import { activitySource } from "march/components/landing/live-feed/demo.tsx";
-import { FOOTER_COLUMNS } from "march/components/landing/site-footer/demo.tsx";
+import { activitySource } from "../catalog/landing/live-feed/demo.tsx";
+import { FOOTER_COLUMNS } from "../catalog/landing/site-footer/demo.tsx";
 
 const LINKS = [{ label: "Şu an", href: "#l-now" }, { label: "Az önce", href: "#l-wall" }]
 

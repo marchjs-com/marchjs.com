@@ -282,7 +282,7 @@ orders.filter((o) => matchFilter(o, amount, { min: 1000 }))`,
       ] },
       run: (p: { values: { layout: "auto" | "table" | "cards"; selectable: boolean; paging: boolean } }) => <div>{() => {
         const { layout, selectable, paging } = p.values
-        return untrack(() => <Load load={() => import("march/table/render.ts")}>{({ Table }: { Table: (p: any) => unknown }) => <Table rows={ORDERS} columns={COLS} rowKey="id" pageSize={4} paging={paging} selectable={selectable} layout={layout} cardBreakpoint={520} caption="Siparişler" filename="hadi-siparisler" />}</Load>)
+        return untrack(() => <Load load={() => import("march/table").then((m) => ({ Table: m.Table }))}>{({ Table }: { Table: (p: any) => unknown }) => <Table rows={ORDERS} columns={COLS} rowKey="id" pageSize={4} paging={paging} selectable={selectable} layout={layout} cardBreakpoint={520} caption="Siparişler" filename="hadi-siparisler" />}</Load>)
       }}</div>,
     },
     toCSV: {

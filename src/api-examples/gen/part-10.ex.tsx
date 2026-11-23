@@ -71,6 +71,7 @@ import e66 from "./app/store--store-log.x.tsx";
 import e67 from "./app/store--subscribe.x.tsx";
 import e68 from "./mock/sw--apply-update.x.tsx";
 import e69 from "./mock/sw--register-service-worker.x.tsx";
+import e70 from "./mock/sw--sw-state.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "march/net/mock#reply": e0,
   "march/net/mock#rng": e1,
@@ -142,5 +143,6 @@ const examples: Record<string, ApiExample<any>> = {
   "march/store#subscribe": e67,
   "march/sw#applyUpdate": e68,
   "march/sw#registerServiceWorker": e69,
+  "march/sw#swState": e70,
 };
 export default examples;

@@ -2,7 +2,7 @@
 // march/ui › formatDate
 import { signal } from "march";
 import { Out, Row } from "../../_kit.tsx";
-import { formatDate } from "march/ui";
+import { formatDate } from "march/components/forms/date-picker";
 import { Pick } from "./_pick.tsx";
 import { Field } from "./_field.tsx";
 import type { ApiExample } from "../../types.ts";

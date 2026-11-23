@@ -7,7 +7,7 @@ import { computed, signal, effect, onCleanup } from "march";
 import { Link, query, navigate } from "march/router";
 import { colorThemes, loadTheme, ThemeSwatch } from "march/ui";
 import { Icon, arrowLeft, arrowRight, maximize, minimize, externalLink, rotateCw } from "march/icons";
-import { DevicePreview, previewFrame } from "march/components/layout/index.ts";
+import { DevicePreview, previewFrame } from "march/components/layout/device-preview";
 import { appUrl } from "march/base";
 import { lazy } from "march/lazy";
 import { Hub } from "../hub.tsx";

@@ -7,7 +7,7 @@ import { onCleanup, intercept } from "march";
 import { inView, reducedMotion } from "march/motion";
 import { Badge, Button, Chip, CodeView, CopyButton, Toggle } from "march/ui";
 import { Terminal, type TerminalApi } from "march/components/composite/terminal";
-import { Reveal } from "march/components/landing/index.ts";
+import { Reveal } from "march/components/landing/reveal";
 import { Widget, widgetPoint } from "march/widget";
 import { sparkles } from "march/icons";
 import { HOME_STATS as S } from "../../home-stats.gen.ts";

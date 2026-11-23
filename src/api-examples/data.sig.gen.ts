@@ -43,9 +43,6 @@ const sig: Record<string, Record<string, string>> = {
   "fieldType": "function fieldType(name: string, def: Partial<FieldTypeDef>): void",
   "options": "function options(f: { options?: FieldSpec[\"options\"] }): FieldOption[]",
   "schema": "function schema<S extends SchemaSpec>(spec: S, opts?: SchemaOptions<Infer<S>>): Schema<Infer<S>>"
- },
- "march/components/registry.gen.ts": {
-  "registry": "const registry: readonly RegistryEntry[]"
  }
 };
 export default sig;

@@ -29,7 +29,7 @@ function reportRows(r: Report): Row[] {
 const KIND: Record<string, string> = { entry: "giriş", route: "sayfa", layout: "yerleşim", part: "parça" }
 
 // a lazy component for the slow 3G demo: skeleton on its first arrival, instant afterwards (no skeleton when cached)
-const PieChart = lazy(() => import("march/charts/pie.ts"), { pick: "PieChart", when: "immediate", placeholder: "chart", height: "14rem" })
+const PieChart = lazy(() => import("march/components/data/pie-chart").then((m) => ({ default: m.PieChart })), { when: "immediate", placeholder: "chart", height: "14rem" })
 const SHARE = [{ label: "Uygulama", value: 4200 }, { label: "Web", value: 2900 }, { label: "Davet", value: 1800 }, { label: "Diğer", value: 610 }]
 
 /** The build's chunk manifest (the JSON data block in index.html): dynamic import source → its files. */
@@ -83,7 +83,7 @@ export default function Speed(props: { params?: { rest?: string } }) {
     "slow-3g": () => <Demo wide title="Yavaş 3G" desc={`Açıkken her tembel parça ve sayfa yüklenmeden önce ${SLOW_MS / 1000} sn bekler (setLoadDelay ile benzetim). Böylece iskelet, ilerleme çizgisi ve yumuşak geliş görünür. Bu sekme boyunca açık kalır; Veri ya da Grafikler sayfasına gidip bak. Aynı parça ikinci kez istendiğinde önbellektedir, iskelet hiç görünmez.`}
     code={`import { setLoadDelay } from "march/lazy"
 setLoadDelay(1600)   // demo / test: every lazy() part and route waits 1.6 s
-const Pie = lazy(() => import("march/charts/pie.ts"), { pick: "PieChart", placeholder: "chart", height: "14rem" })`}>
+const Pie = lazy(() => import("march/charts").then((m) => ({ default: m.PieChart })), { placeholder: "chart", height: "14rem" })`}>
     <div class="sc-row">
       <Toggle value={slow} label="Yavaş 3G" />
       <Button size="sm" on:click={() => { $showPie = !$showPie }}>{() => ($showPie ? "Grafiği kaldır" : "Grafiği göster")}</Button>

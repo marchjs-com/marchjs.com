@@ -2,8 +2,7 @@
 // staggered entrances (linear, from the centre, across a grid).
 import "../motion-pages.css";
 import { effect, onCleanup } from "march";
-import { animateList, staggerIn, listFrames, type ListPreset } from "march/motion/list.ts";
-import { animate } from "march/motion/engine/playback.ts";
+import { animateList, staggerIn, listFrames, type ListPreset, animate } from "march/motion";
 import { Button } from "march/ui";
 import { Icon, plus, refresh, x as xIcon } from "march/icons";
 import { Section } from "../../demo.tsx";

@@ -2,7 +2,7 @@
 // march/ui › getAt
 import { signal } from "march";
 import { Out } from "../../_kit.tsx";
-import { getAt } from "march/ui";
+import { getAt } from "march/components/composite/tree-editor";
 import { json } from "./_json.tsx";
 import { Pre } from "./_pre.tsx";
 import { Field } from "./_field.tsx";

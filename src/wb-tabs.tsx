@@ -1,13 +1,13 @@
 // The tabs under a component's workbench: Özellikler (its props table: the row of the prop an option just changed
 // lights up), Erişilebilirlik (keyboard, screen reader, focus) and Parçalar ve ilgili (the components it is built from
-// and the ones built from it). The text comes from the folder's docs.md (tools/gen-registry.js writes one JSON per
+// and the ones built from it). The text comes from the folder's docs.md (March publishes one JSON per
 // category under public/comp/<category>.json), fetched when a tab first opens.
 import { signal, effect, untrack, onCleanup } from "march";
 import { Link, type Href } from "march/router";
 import { Tabs } from "march/ui";
 import { appUrl } from "march/base";
-import type { PlaygroundOption, PlaygroundSpec } from "march/ui";
-import { cards, type CardEntry } from "march/components/cards.gen.ts";
+import type { PlaygroundOption, PlaygroundSpec } from "./catalog/spec.ts";
+import { cards, type CardEntry } from "./catalog/cards.gen.ts";
 import { demoId } from "./component-demo.tsx";
 import { HUBS } from "./topics.ts";
 

@@ -2,8 +2,8 @@
 // and an honest comparison: where MarchJS stands and where it does not.
 import "./more.css";
 import { PostCard, type Post } from "march/components/composite/post-card";
-import { HonestCompare } from "march/components/landing/index.ts";
-import { Reveal } from "march/components/landing/index.ts";
+import { HonestCompare } from "march/components/landing/honest-compare";
+import { Reveal } from "march/components/landing/reveal";
 import { HOME_STATS as S } from "../../home-stats.gen.ts";
 import { Head } from "../head.tsx";
 

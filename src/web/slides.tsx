@@ -1,8 +1,8 @@
 // Sample page: a presentation. The slide number lives in the URL (?slide=, through setQuery), ?presenter=1 shows the speaker view; both
 // windows stay in step.
 import { query, setQuery, hrefOf } from "march/router";
-import { Presentation } from "march/components/landing/index.ts";
-import { DemoSlides } from "march/components/landing/presentation/demo.tsx";
+import { Presentation } from "march/components/landing/presentation";
+import { DemoSlides } from "../catalog/landing/presentation/demo.tsx";
 
 export default function SlidesSample() {
   const slide = () => String(query()["slide"] ?? "1")

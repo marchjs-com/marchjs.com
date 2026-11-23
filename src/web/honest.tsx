@@ -2,11 +2,17 @@
 // verdict), then compares it with the alternatives including the rows where it is behind. Built from NotForYou and
 // HonestCompare.
 import { Button } from "march/ui";
-import { SiteNav, Hero, SiteSection, NotForYou, HonestCompare, CtaBand, SiteFooter } from "march/components/landing/index.ts";
+import { SiteNav } from "march/components/landing/site-nav";
+import { Hero } from "march/components/landing/hero";
+import { SiteSection } from "march/components/landing/site-section";
+import { NotForYou } from "march/components/landing/not-for-you";
+import { HonestCompare } from "march/components/landing/honest-compare";
+import { CtaBand } from "march/components/landing/cta-band";
+import { SiteFooter } from "march/components/landing/site-footer";
 import { arrowRight, sparkles, globe, message, mail } from "march/icons";
-import { NOT_FOR_YOU, FOR_YOU } from "march/components/landing/not-for-you/demo.tsx";
-import { COMPARE_COLUMNS, COMPARE_ROWS } from "march/components/landing/honest-compare/demo.tsx";
-import { FOOTER_COLUMNS } from "march/components/landing/site-footer/demo.tsx";
+import { NOT_FOR_YOU, FOR_YOU } from "../catalog/landing/not-for-you/demo.tsx";
+import { COMPARE_COLUMNS, COMPARE_ROWS } from "../catalog/landing/honest-compare/demo.tsx";
+import { FOOTER_COLUMNS } from "../catalog/landing/site-footer/demo.tsx";
 
 const LINKS = [{ label: "Kimin için değil", href: "#h-check" }, { label: "Karşılaştırma", href: "#h-compare" }]
 

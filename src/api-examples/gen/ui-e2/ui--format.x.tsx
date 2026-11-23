@@ -2,7 +2,7 @@
 // march/ui › format
 import { signal } from "march";
 import { Out, Row } from "../../_kit.tsx";
-import { format } from "march/ui";
+import { format } from "march/components/composite/color-picker";
 import { Pick } from "./_pick.tsx";
 import { Swatch } from "./_swatch.tsx";
 import { warm } from "./_warm.tsx";

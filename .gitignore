@@ -2,3 +2,6 @@ node_modules/
 dist/
 .march/
 *.log
+
+# the component catalog modules: written by tools/gen-catalog.mjs on every build (from March's published data), never committed
+src/catalog/*.gen.ts

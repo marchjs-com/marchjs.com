@@ -4,9 +4,7 @@
 import "../motion-pages.css";
 import { effect, onCleanup } from "march";
 import { Link, path, back } from "march/router";
-import { motion } from "march/motion/engine/motion.ts";
-import { usePageTransitions, PAGE_VARIANTS } from "march/motion/page-fx.ts";
-import { definePageTransition } from "march/motion/page.ts";
+import { motion, usePageTransitions, PAGE_VARIANTS, definePageTransition } from "march/motion";
 import { Button, setTheme, resolvedTheme, setColorTheme, colorTheme, colorThemes } from "march/ui";
 import { WAVE_SHAPES, waveShape, waveDuration, setWave } from "../../wave.ts";
 import { Section } from "../../demo.tsx";

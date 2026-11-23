@@ -9,7 +9,9 @@ import { inView, reducedMotion } from "march/motion";
 import { Link } from "march/router";
 import { appUrl } from "march/base";
 import { Button, Card, CodeView, IconTile, Kbd, ListRow, MadeWithMarch, StatTile, heartBurst, openPalette } from "march/ui";
-import { Reveal, StatsBand, Counter, revealOnScroll } from "march/components/landing/index.ts";
+import { Reveal, revealOnScroll } from "march/components/landing/reveal";
+import { StatsBand } from "march/components/landing/stats-band";
+import { Counter } from "march/components/landing/counter";
 import { Head } from "./head.tsx";
 import { Features } from "./features.tsx";
 import { HomeToc } from "./toc.tsx";
@@ -29,7 +31,8 @@ const MoreTools = lazy(() => import("./more3/tools.tsx"), { when: "visible", pla
 const MorePeople = lazy(() => import("./more/people.tsx"), { when: "visible", placeholder: "none", height: "40rem" })
 const Cta = lazy(() => import("./more/cta.tsx"), { when: "visible", placeholder: "none", height: "24rem" })
 import { search, sparkles } from "march/icons";
-import { BRAND_COLORS_ALL, type ColorToken } from "march/theme/colors.ts";
+import { BRAND_COLORS_ALL } from "../catalog/demo-util.ts";
+import { type ColorToken } from "march/theme";
 import { HOME_STATS as S } from "../home-stats.gen.ts";
 import { celebrate } from "./celebrate.ts";
 import { pages } from "../app.tsx";

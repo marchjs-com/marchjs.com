@@ -89,7 +89,6 @@ import e84 from "./platform/behaviors.swipe--swipeable.x.tsx";
 import e85 from "./platform/channel---channel-scope.x.tsx";
 import e86 from "./platform/channel--channel.x.tsx";
 import e87 from "./platform/channel--channel-devtools.x.tsx";
-import e88 from "./platform/channel--channel-scope.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "march#Await": e0,
   "march#DEV": e1,
@@ -179,6 +178,5 @@ const examples: Record<string, ApiExample<any>> = {
   "march/channel#ChannelScope": e85,
   "march/channel#channel": e86,
   "march/channel#channelDevtools": e87,
-  "march/channel#channelScope": e88,
 };
 export default examples;

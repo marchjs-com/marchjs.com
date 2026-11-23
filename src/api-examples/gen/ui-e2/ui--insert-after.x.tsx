@@ -2,7 +2,8 @@
 // march/ui › insertAfter
 import { signal } from "march";
 import { Out, Row } from "../../_kit.tsx";
-import { Button, freeKey, insertAfter } from "march/ui";
+import { Button } from "march/components/actions/button";
+import { freeKey, insertAfter } from "march/components/composite/tree-editor";
 import { json } from "./_json.tsx";
 import type { ApiExample } from "../../types.ts";
 import "../../ui-e.css";

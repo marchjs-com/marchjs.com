@@ -6,11 +6,8 @@ import "./flow.css";
 import { signal, computed, effect, onCleanup, Await } from "march";
 import { Button, Segmented } from "march/ui";
 // the model and the runner are small and load with this part; the editor components (FlowCanvas …) load on demand
-import {
-  createFlow, boundsOf, edgePath, emit, emitted, endOf, FLOW_SCHEMA, layeredLayout, NODE_HEAD, NODE_W, PORT_ROW, portPoint, portsOf,
-  validateFlow, type FlowDoc, type FlowNodeType, type FlowRunContext,
-} from "march/components/composite/flow-canvas/model.ts";
-import { createFlowRunner } from "march/components/composite/flow-controls/runner.ts";
+import { createFlow, boundsOf, edgePath, emit, emitted, endOf, FLOW_SCHEMA, layeredLayout, NODE_HEAD, NODE_W, PORT_ROW, portPoint, portsOf, validateFlow, type FlowDoc, type FlowNodeType, type FlowRunContext } from "march/components/composite/flow-canvas";
+import { createFlowRunner } from "march/components/composite/flow-controls";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 export { default as SIG } from "./flow.sig.gen.ts";

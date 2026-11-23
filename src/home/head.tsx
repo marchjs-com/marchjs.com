@@ -2,8 +2,8 @@
 // the feature (built word by word as it scrolls into view), the lead, and the example the demo shows.
 import { inView, reducedMotion } from "march/motion";
 import { tilt } from "march/motion/text";
-import { SectionHead } from "march/components/landing/index.ts";
-import type { ColorToken } from "march/theme/colors.ts";
+import { SectionHead } from "march/components/landing/section-head";
+import type { ColorToken } from "march/theme";
 
 /** Action on a heading: its words tilt in one after another when it scrolls into view (the text is there at once with reduced motion). */
 function words(el: Element): () => void {
