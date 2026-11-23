@@ -172,10 +172,10 @@ export default {
   // use, outside start-up, prefetched when idle) on every route that loads it
   // fail: false — the 10 KB floor is an aim: the packer folds what it can and lists what is left instead of failing;
   // Cloudflare serves small files over HTTP/2 at little cost, and maxFiles still caps the count.
-  // maxBuilds: 5 (~6 min): the planner groups small pages from size estimates and takes a group past the route budget
-  // apart only on its next pass. With 2 builds the second pass's groups were never checked: from March 0.3.7 on they
+  // maxBuilds: 3 (~2.5 min): the planner groups small pages from size estimates and takes a group past the route budget
+  // apart only on its next pass; the third build checks the second's groups. With 2 they were never checked: from 0.3.7 on they
   // came out past 60 KB (/buttons, /big-data, /overlay, /text and /forms each loading one group of 85–137 KB).
-  chunks: { minSize: 10 * 1024, fail: false, maxBuilds: 5, commonRoom: 6 * 1024, allow: {
+  chunks: { minSize: 10 * 1024, fail: false, maxBuilds: 3, commonRoom: 6 * 1024, allow: {
     "src/web/product.tsx": "Web siteleri sample page: loaded only when /sites/product opens it, never with the blocks page",
     "src/web/product-more.tsx": "lower half of the product sample: loaded when it comes near the viewport",
     "src/web/portfolio-more.tsx": "lower half of the portfolio sample: loaded when it comes near the viewport",
