@@ -13,6 +13,7 @@ import { Try } from "march";
 import { appUrl } from "march/base";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/network.ts";
 
 // ------------------------------------------------------------------ the app's API (one class) + the mock behind it
 interface User { id: string; name: string; email: string; role: string }
@@ -316,5 +317,5 @@ errors.report((e) => myLogger.send(e))                      // opt-in`}>
     <ErrorsDemo />
   </Demo>,
   }
-  return <Hub section="/network" kicker="Altyapı" title="Ağ ve hatalar" lead="Bütün istekler tek merkezden geçer: kategori, anahtar ve politika (latest, dedupe, queue, parallel), öncelik, yeniden deneme, çevrimdışı kuyruk ve middleware zinciri. Hatalar tek toplayıcıda AppError olur, kurallara göre gösterilir." render={RENDER} params={props.params} />
+  return <Hub section="/network" topics={TOPICS} kicker="Altyapı" title="Ağ ve hatalar" lead="Bütün istekler tek merkezden geçer: kategori, anahtar ve politika (latest, dedupe, queue, parallel), öncelik, yeniden deneme, çevrimdışı kuyruk ve middleware zinciri. Hatalar tek toplayıcıda AppError olur, kurallara göre gösterilir." render={RENDER} params={props.params} />
 }

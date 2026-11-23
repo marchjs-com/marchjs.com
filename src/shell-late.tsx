@@ -9,11 +9,16 @@ import { palette, moon, sun, sparkles, hash } from "march/icons";
 import "./perflog.ts";
 import { busyLogo } from "./logo-busy.ts";
 import { whenIdle, onLoad, loadsActive } from "march/lazy";
+import { ideBundle } from "./playground/examples.ts";
 
 // the motion engine (transitions, <For animate> FLIP, page transitions) is its own lazy part, loaded once the browser
 // is idle after start-up: the first paint and the start-up download do not wait for it (a navigation before then has
 // no page transition, nothing else changes)
 whenIdle(() => { void import("./motion-late.ts"); }, 3000);
+
+// every MarchIDE page's ide.json is one file of the examples repository (≈19 KB gzip, immutable at its sha): loaded in
+// the background on any page, so a MarchIDE page opened later starts with it
+whenIdle(() => { void ideBundle(); }, 4000);
 
 // Ctrl+K also finds the demo sections inside pages ("terminal" → Editörler › Terminal): the index is its own chunk,
 // loaded when idle; picking one opens the page, scrolls to the section and flashes it

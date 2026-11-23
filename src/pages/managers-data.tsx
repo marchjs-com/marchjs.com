@@ -14,6 +14,7 @@ import { command } from "march/managers/command";
 import { CommandButton, bindCommandKeys } from "march/managers/command/ui";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/managers-data.ts";
 import { ticker } from "../managers-data/ticker.ts";
 import { ChannelPanel } from "../managers-data/channel-panel.tsx";
 
@@ -215,5 +216,5 @@ export default function ManagersData(props: { params?: { rest?: string } }) {
     "cache": () => <><ChannelPanel /><CacheDemo /></>,
     "config": () => <><ChannelPanel /><ConfigDemo /></>,
   }
-  return <Hub section="/managers-data" kicker="Temel › Yöneticiler" title="Veri ve durum yöneticileri" lead="Pano, geri alma, kaydedilmemiş değişiklik, depolama, önbellek ve yapılandırma: her biri tek örnek, ilk kullanımda başlar, olaylarını kanala yayınlar." render={RENDER} params={props.params} />
+  return <Hub section="/managers-data" topics={TOPICS} kicker="Temel › Yöneticiler" title="Veri ve durum yöneticileri" lead="Pano, geri alma, kaydedilmemiş değişiklik, depolama, önbellek ve yapılandırma: her biri tek örnek, ilk kullanımda başlar, olaylarını kanala yayınlar." render={RENDER} params={props.params} />
 }

@@ -10,6 +10,7 @@ import { resolveSize, type FileSize } from "../netsize.ts";
 import { appUrl } from "march/base";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/speed.ts";
 
 interface ReportRow { name: string; kind?: string; js: number; css: number; limit?: number | null; over?: boolean; files?: string[] }
 interface ChunkStats { minSize: number; files: number; bytes: number; smallest: { file: string; bytes: number } | null; under: number }
@@ -204,5 +205,5 @@ registerServiceWorker({ onUpdate: () => toast("Yeni sürüm", { action: { label:
     </Stack>
   </Demo>,
   }
-  return <Hub section="/speed" kicker="Temel" title="Hız" lead="Uygulama tek sayfa ama hepsi açılışta inmez: giriş paketi yalnız kabuk ve yönlendiricidir; her sayfa, ağır bileşen ve tema kendi parçasıdır ve gerektiğinde gelir. Bağlantının üzerine gelince parçalar önceden çekilir, boşta kalınca da sayfadaki bağlantılar. Gelen her şey önbelleğe girer." render={RENDER} params={props.params} />
+  return <Hub section="/speed" topics={TOPICS} kicker="Temel" title="Hız" lead="Uygulama tek sayfa ama hepsi açılışta inmez: giriş paketi yalnız kabuk ve yönlendiricidir; her sayfa, ağır bileşen ve tema kendi parçasıdır ve gerektiğinde gelir. Bağlantının üzerine gelince parçalar önceden çekilir, boşta kalınca da sayfadaki bağlantılar. Gelen her şey önbelleğe girer." render={RENDER} params={props.params} />
 }

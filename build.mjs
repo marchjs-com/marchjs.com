@@ -50,9 +50,10 @@ if (!serve || !existsSync(dist) || watching) {
   // the service worker only for the local preview: the published showcase must not leave a worker registered
   const env = { ...process.env, MARCH_SHOWCASE_SW: serve ? "1" : "0" };
   // the site's generated sources, from its pages and the release's data (cdn.marchjs.com/<version>/data/): the section
-  // index (the API reference links to it), MarchIDE's texts and page list, the API examples index, the API reference,
-  // the components' prop tables and the home numbers; the benchmark data (each library bundled) on --release only
-  const gens = ["gen-sections.js", "gen-ide-texts.js", "api-examples.js", "api-data.mjs", "march-data.mjs", ...(release ? ["gen-bench.mjs"] : [])];
+  // index (the API reference links to it), the topic pages' start-up titles, MarchIDE's texts and page list, the API
+  // examples index, the API reference, the components' prop tables and the home numbers; the benchmark data (each
+  // library bundled) on --release only
+  const gens = ["gen-sections.js", "gen-topic-titles.mjs", "gen-ide-texts.js", "api-examples.js", "api-data.mjs", "march-data.mjs", ...(release ? ["gen-bench.mjs"] : [])];
   for (const g of gens) {
     try { execFileSync(process.execPath, [join(here, "tools", g)], { cwd: here, stdio: "inherit" }); }
     catch { console.error(`✖ tools/${g} failed`); process.exit(1); }
@@ -123,7 +124,9 @@ async function writePlaygroundTools(out) {
   const tsLib = join(here, "node_modules", "typescript", "lib");
   mkdirSync(join(out, "ts"), { recursive: true });
   copyFileSync(join(tsLib, "typescript.js"), join(out, "ts", "typescript.js"));
-  for (const f of readdirSync(tsLib)) if (/^lib\..*\.d\.ts$/.test(f)) copyFileSync(join(tsLib, f), join(out, "ts", f));
+  // the lib .d.ts files in one file (ts-worker.js reads libs.json once): one file on the host instead of ~100
+  const libs = Object.fromEntries(readdirSync(tsLib).filter((f) => /^lib\..*\.d\.ts$/.test(f)).sort().map((f) => [f, readFileSync(join(tsLib, f), "utf8")]));
+  writeFileSync(join(out, "ts", "libs.json"), JSON.stringify(libs));
   // its messages in other languages (the worker loads the page's one: tr/diagnosticMessages.generated.json…)
   for (const d of readdirSync(tsLib)) {
     const msgs = join(tsLib, d, "diagnosticMessages.generated.json");

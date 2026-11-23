@@ -22,7 +22,7 @@ Every build regenerates the site's generated sources (`tools/`), from its pages 
 | Tool | Writes | From |
 | --- | --- | --- |
 | `gen-sections.js` | `src/sections.gen.ts` | the pages' demo sections |
-| `gen-ide-texts.js` | `src/playground/ide-texts.gen.tsx`, `ide-list.gen.ts` | `public/components/**/ide.json` |
+| `gen-ide-texts.js` | `src/playground/ide-texts.gen.tsx`, `ide-list.gen.ts` | the examples' `ide.json` at the pinned sha |
 | `api-examples.js` | `src/api-examples.gen.ts` | `src/api-examples/`, March's exports |
 | `api-data.mjs` | `public/api/` | CDN `data/api/`, with links to the site's pages |
 | `march-data.mjs` | `public/comp/`, `src/home-stats.gen.ts` | CDN `data/comp/`, `data/stats.json`, `march.config.js` budgets |
@@ -30,15 +30,18 @@ Every build regenerates the site's generated sources (`tools/`), from its pages 
 
 ## Component examples
 
-A MarchIDE page's files are listed in `public/components/<page>/ide.json`; their code lives in
-[marchjs-com/examples](https://github.com/marchjs-com/examples):
+A MarchIDE page's `ide.json` and its files live in [marchjs-com/examples](https://github.com/marchjs-com/examples)
+(`components/<page>/ide.json`; the root `ide.json` holds every page's, and the site loads it in the background on any
+page). A file in an `ide.json`:
 
 ```json
 { "type": "code", "name": "AlertLab.tsx", "src": "examples://components/alert/AlertLab.tsx" }
 ```
 
 MarchIDE turns `examples://` into jsDelivr's URL of that repository at one commit (`EXAMPLES` in
-`src/playground/ide.ts`) and fetches the file. To publish changed examples, push them there and move the sha.
+`src/playground/examples.ts`) and fetches the file. To publish changed examples, push them there (with
+`node tools/bundle.mjs` for a changed `ide.json`) and move the sha. `MARCH_EXAMPLES_DIR=<checkout>` makes
+`gen-ide-texts.js` read a local checkout instead of the pinned sha.
 
 ## Checks
 
@@ -49,5 +52,5 @@ node tools/check-ide.mjs alert button    # some pages
 ```
 
 A page passes when its files load from the examples repository, no file has Problems and its Lab tests pass. CI
-(`.github/workflows/ci.yml`) builds once (the dev build for now: the release build is over its size budgets), then checks the pages in 10 parallel jobs. When a new
+(`.github/workflows/ci.yml`) makes the release build once (size budgets, prerendering), then checks the pages in 10 parallel jobs. When a new
 March release changes the generated sources, CI warns: run `node build.mjs` and commit them.

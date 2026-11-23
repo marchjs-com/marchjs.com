@@ -1,6 +1,7 @@
 // Buttons, menus, chips, copy and undo buttons, secret values.
 import "./buttons.css";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/buttons.ts";
 import { ComponentDemo } from "../component-demo.tsx";
 
 export default function Buttons(props: { params?: { rest?: string } }) {
@@ -16,5 +17,5 @@ export default function Buttons(props: { params?: { rest?: string } }) {
     "chevron": () => <ComponentDemo folder="actions/chevron" title="Chevron: açılınca dönen ok" desc="Dört yön, RTL'de aynalanır; open verilmezse içinde durduğu düğmenin aria-expanded değerini kendisi izler." />,
     "secret": () => <ComponentDemo folder="typography/secret" title="Secret: gizli değer" desc="Göz düğmesi değerin tamamını gösterir; gizliyken gizli karakterler DOM'da yoktur. Aralıkları ve maskeyi Seçenekler'den değiştir." />,
   }
-  return <Hub section="/buttons" kicker="Bileşenler" title="Düğmeler ve rozetler" lead="Dört varyant, üç boyut; yükleniyor, devre dışı, odak halkası ve basma geri bildirimi. Hepsi klavyeyle tam kullanılır." render={RENDER} params={props.params} />
+  return <Hub section="/buttons" topics={TOPICS} kicker="Bileşenler" title="Düğmeler ve rozetler" lead="Dört varyant, üç boyut; yükleniyor, devre dışı, odak halkası ve basma geri bildirimi. Hepsi klavyeyle tam kullanılır." render={RENDER} params={props.params} />
 }

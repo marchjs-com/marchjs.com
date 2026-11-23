@@ -7,6 +7,7 @@ import { Button, IconButton, Card, Badge, Slider, Field, toast } from "march/ui"
 import { plus, refresh, sparkles, x as xIcon } from "march/icons";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/motion.ts";
 
 interface Item { id: number; name: string; tone: number }
 const NAMES = ["Elmas", "Akçe", "Sohbet", "Etkinlik", "Canlı", "Oyun", "Market", "Radyo", "Akademi", "Kurye"];
@@ -83,5 +84,5 @@ const x = spring(() => $hedef, { stiffness: 210, damping: 16 })
     <div class="sc-reveal-grid">{Array.from({ length: 6 }, (_, i) => <Card use:reveal={{ delay: i * 70, y: 24 }}><strong>Kart {i + 1}</strong><p class="m-muted">Sırayla belirir.</p></Card>)}</div>
   </Demo>,
   }
-  return <Hub section="/motion" kicker="Hareket" title="Hareket ve efektler" lead="march/motion: yay fiziği, tween, FLIP, zaman çizelgesi, jestler ve kaydırma tetikleyicileri. march/fx: parçacıklar, konfeti, spot ışığı. Satır içi stil yerine CSS değişkenleri; 'hareketi azalt' açıkken sakinleşir." render={RENDER} params={props.params} />
+  return <Hub section="/motion" topics={TOPICS} kicker="Hareket" title="Hareket ve efektler" lead="march/motion: yay fiziği, tween, FLIP, zaman çizelgesi, jestler ve kaydırma tetikleyicileri. march/fx: parçacıklar, konfeti, spot ışığı. Satır içi stil yerine CSS değişkenleri; 'hareketi azalt' açıkken sakinleşir." render={RENDER} params={props.params} />
 }

@@ -1,5 +1,6 @@
 // Feedback: alerts, progress, skeleton, spinner, empty state, error box, loader, notice.
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/feedback.ts";
 import { ComponentDemo } from "../component-demo.tsx";
 
 export default function Feedback(props: { params?: { rest?: string } }) {
@@ -15,5 +16,5 @@ export default function Feedback(props: { params?: { rest?: string } }) {
     "error-box": () => <ComponentDemo folder="feedback/error-box"title="ErrorBox: hata ve yeniden dene" desc="Hatanın iletisi metin olarak; yeniden dene düğmesi denemeleri sayar, üçüncüsü başarılı olur." />,
     "loader": () => <ComponentDemo folder="feedback/loader" title="Loader: bir alanı dolduran yükleme" desc="Yerinde ya da içeriğin üstünde yarı saydam perdeyle; hızlı yüklemede çark hiç görünmez (gecikmeli belirir)." />,
   }
-  return <Hub section="/feedback" kicker="Bileşenler" title="Durumlar" lead="Her ekranın yükleniyor, boş ve hata hâli birinci sınıf: iskeletler gerçek düzeni taklit eder, boş durumlar bir sonraki adımı gösterir." render={RENDER} params={props.params} />
+  return <Hub section="/feedback" topics={TOPICS} kicker="Bileşenler" title="Durumlar" lead="Her ekranın yükleniyor, boş ve hata hâli birinci sınıf: iskeletler gerçek düzeni taklit eder, boş durumlar bir sonraki adımı gösterir." render={RENDER} params={props.params} />
 }

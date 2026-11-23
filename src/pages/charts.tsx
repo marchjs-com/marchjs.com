@@ -3,6 +3,7 @@
 // out of this route's chunk until its page opens); the option specs come from the registry.
 import { lazy } from "march/lazy";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/charts.ts";
 import { ComponentDemo } from "../component-demo.tsx";
 
 const LineChartDemo = lazy(() => import("march/components/data/line-chart/demo.tsx"), { placeholder: "card" });
@@ -25,5 +26,5 @@ export default function Charts(props: { params?: { rest?: string } }) {
     "progress-ring": () => <ComponentDemo folder="data/progress-ring" view={ProgressRingDemo as never} title="ProgressRing: ilerleme halkası" desc="Düşük, orta ve yüksek düzey kendi rengini alır; HADİ'nin dört rengi gradyan, parça ya da akan halka olur." />,
     "bar-list": () => <ComponentDemo folder="data/bar-list" view={BarListDemo as never} title="BarList: çubuk listesi" desc="Bir dinleme daha: sıra değişir, çubuklar uzar. Uzun bir şarkı adı sığmazsa kayarak görünür; satırlar düğme olur." />,
   }
-  return <Hub section="/charts" kicker="Bileşenler" title="Grafikler" lead="SVG, erişilebilir (ekran okuyucu için veri tablosu, klavyeyle nokta gezme), tema paletiyle renklenir. Veri sinyalse grafik kendiliğinden güncellenir." render={RENDER} params={props.params} />
+  return <Hub section="/charts" topics={TOPICS} kicker="Bileşenler" title="Grafikler" lead="SVG, erişilebilir (ekran okuyucu için veri tablosu, klavyeyle nokta gezme), tema paletiyle renklenir. Veri sinyalse grafik kendiliğinden güncellenir." render={RENDER} params={props.params} />
 }

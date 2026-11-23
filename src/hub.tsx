@@ -10,7 +10,7 @@ import { Link, navigate, type Href } from "march/router";
 import { Chip, CopyButton, SearchBox, Grid } from "march/ui";
 import { Icon, arrowLeft, arrowRight, copy, code } from "march/icons";
 import { cards } from "march/components/cards.gen.ts";
-import { HUBS, type Topic } from "./topics.ts";
+import type { Topic } from "./topics/types.ts";
 import { sectionOf, PAGE_META } from "./nav-meta.ts";
 import { HubArt, loadArt } from "./hub-art.tsx";
 import type { ArtSet } from "./hub-art/types.ts";
@@ -18,6 +18,8 @@ import type { ArtSet } from "./hub-art/types.ts";
 export interface HubProps {
   /** The section's path (a key of topics.ts HUBS). */
   section: string;
+  /** The section's topics (src/topics/<section>.ts: the page loads only its own list). */
+  topics: readonly Topic[];
   kicker: string;
   title: string;
   lead: string;
@@ -35,7 +37,7 @@ let morphing = false
 
 export function Hub(props: HubProps) {
   const base = props.section
-  const topics = HUBS[base] ?? []
+  const topics = props.topics
   const slug = computed(() => (props.params?.rest ?? "").split("/")[0] ?? "")
   // an old link to a demo on the one long page (/editors#c-composite-terminal) opens the topic that has it
   const hash = globalThis.location?.hash.slice(1)
@@ -45,7 +47,7 @@ export function Hub(props: HubProps) {
   })
   return <>{() => {
     const at = topics.findIndex((t) => t.slug === slug())
-    if (at < 0) return <Overview section={base} kicker={props.kicker} title={props.title} lead={props.lead} />
+    if (at < 0) return <Overview section={base} topics={topics} kicker={props.kicker} title={props.title} lead={props.lead} />
     return <TopicPage section={base} title={props.title} topics={topics} at={at} draw={props.render[topics[at]!.slug]} />
   }}</>
 }
@@ -97,9 +99,9 @@ function TopicPage(props: { section: string; title: string; topics: readonly Top
 }
 
 /** The overview: head card, sticky group chips + filter, the topics as drawn cards by group (topics.ts order). */
-function Overview(props: { section: string; kicker: string; title: string; lead: string }) {
+function Overview(props: { section: string; topics: readonly Topic[]; kicker: string; title: string; lead: string }) {
   const base = props.section
-  const topics = HUBS[base] ?? []
+  const topics = props.topics
   const groups = [...new Set(topics.map((t) => t.group))]
   const group = signal(""), q = signal("")
   const art = signal<ArtSet>({})

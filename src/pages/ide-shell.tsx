@@ -3,6 +3,7 @@
 import "./ide.css";
 import { Button } from "march/ui";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/ide-shell.ts";
 import { ComponentDemo } from "../component-demo.tsx";
 import { Demo } from "../demo.tsx";
 
@@ -21,5 +22,5 @@ export default function IdePage(props: { params?: { rest?: string } }) {
     "activity-bar": () => <ComponentDemo folder="navigation/activity-bar" title="ActivityBar: görünüm çubuğu" desc="Yan görünümü değiştirir; gösterge etkin simgeye kayar. Etkin simgeye yeniden basınca yan görünüm kapanır. Rozetler, sonda duran öğeler, dikey ya da yatay." />,
     "breadcrumbs": () => <ComponentDemo folder="navigation/breadcrumbs" title="Breadcrumbs: yol çubuğu" desc="Dosya yolu; kardeşi olan parça menü açar. Daraltınca ortadaki parçalar “…” menüsünde toplanır, ilk ve son kalır." />,
   }
-  return <Hub section="/ide-shell" kicker="Karmaşık bileşenler" title="IDE kabuğu" lead="Editör ve geliştirici araçları için yerleşim parçaları; tabanı march-app-ui (AppUI ve DockLayout): sürükle-bırak panel yerleşimi, özellik düzenleyici, taşan araç çubuğu, durum ve etkinlik çubukları, yol çubuğu. Hepsi mevcut bileşenlerden kurulur ve komut paletine bağlanır." render={RENDER} params={props.params} />
+  return <Hub section="/ide-shell" topics={TOPICS} kicker="Karmaşık bileşenler" title="IDE kabuğu" lead="Editör ve geliştirici araçları için yerleşim parçaları; tabanı march-app-ui (AppUI ve DockLayout): sürükle-bırak panel yerleşimi, özellik düzenleyici, taşan araç çubuğu, durum ve etkinlik çubukları, yol çubuğu. Hepsi mevcut bileşenlerden kurulur ve komut paletine bağlanır." render={RENDER} params={props.params} />
 }

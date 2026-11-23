@@ -4,8 +4,9 @@
 import "./web.css";
 import { query, navigate } from "march/router";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/web.ts";
 import { ComponentDemo } from "../component-demo.tsx";
-import { HUBS } from "../topics.ts";
+import { TOPICS as SITES } from "../topics/sites.ts";
 
 export const title = "Bileşenler"
 
@@ -42,13 +43,13 @@ function Blocks(props: { params?: { rest?: string } | undefined }) {
     "site-section": () => <ComponentDemo folder="landing/site-section" title="Bölüm çerçevesi" desc="Her bloğun çerçevesi: genişlik, dikey ritim, ton ve beliren başlık grubu." />,
     "section-head": () => <ComponentDemo folder="landing/section-head" title="Bölüm başlığı" desc="Üst etiket, başlık, açıklama, eylemler ve not: her parça isteğe bağlı; hizalama, başlık düzeyi ve ölçek seçilir, kaydırınca belirebilir." />,
   }
-  return <Hub section="/web" kicker="Web tasarım araçları" title="Bileşenler" lead="Tanıtım, ana sayfa, portfolyo ve sunum için bloklar. Bunlarla kurulmuş tam uygulamalar Örnek uygulamalar bölümünde. Her blok mevcut bileşenlerden kurulur, hareket motoruyla canlanır, temaya, RTL'ye ve dile uyar. Yalnız kullanılan blok derlenir." render={RENDER} params={props.params} />
+  return <Hub section="/web" topics={TOPICS} kicker="Web tasarım araçları" title="Bileşenler" lead="Tanıtım, ana sayfa, portfolyo ve sunum için bloklar. Bunlarla kurulmuş tam uygulamalar Örnek uygulamalar bölümünde. Her blok mevcut bileşenlerden kurulur, hareket motoruyla canlanır, temaya, RTL'ye ve dile uyar. Yalnız kullanılan blok derlenir." render={RENDER} params={props.params} />
 }
 
 export default function WebPage(props: { params?: { rest?: string } }) {
   // a sample site used to open here (/web/product, /web?view=product): it now has its own address under /sites
   const rest = (props.params?.rest ?? "").split("/")[0] ?? "", legacy = rest || String(query()["view"] ?? "")
-  if (legacy && (HUBS["/sites"] ?? []).some((x) => x.slug === legacy)) {
+  if (legacy && SITES.some((x) => x.slug === legacy)) {
     const q = new URLSearchParams(globalThis.location?.search ?? ""); q.delete("view")
     const qs = q.toString()
     queueMicrotask(() => void navigate(`/sites/${legacy}${qs ? `?${qs}` : ""}` as never, { replace: true }))

@@ -1,7 +1,7 @@
 // Showcase pages: path and title only (start-up needs them for the breadcrumb and the document title). Descriptions,
 // groups, icons and the menu group order live in nav-meta.ts (the menu manifest), which only the side menu (on first
 // idle) and the home page load.
-import { TOPIC_PAGES } from "./topics.ts";
+import { TOPIC_ROWS } from "./topic-titles.gen.ts";
 
 export interface PageInfo { path: string; title: string; /** The page this one is listed under in the menu. */ parent?: string; desc?: string; /** March name of the component(s) on the page (topics.ts). */ name?: string }
 export const PAGES: PageInfo[] = [
@@ -49,6 +49,7 @@ export const PAGES: PageInfo[] = [
 ];
 /** Pages under one wildcard route (the menu lists them under their parent; titles for the breadcrumb). */
 export const SUB_PAGES: PageInfo[] = [
-  // one page per topic of a section (topics.ts): /editors/terminal, /forms/select…
-  ...TOPIC_PAGES,
+  // one page per topic of a section (topics.ts, its start-up form topic-titles.gen.ts): /editors/terminal, /forms/select…
+  // (their descriptions and March names come with the menu manifest, nav-meta.ts › withMeta)
+  ...TOPIC_ROWS.map(([path, title, parent]) => ({ path, title, parent: parent ?? path.slice(0, path.lastIndexOf("/")) })),
 ];

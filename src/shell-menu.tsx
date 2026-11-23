@@ -9,7 +9,8 @@ import { Link, path, navigate, type Href } from "march/router";
 import { viewport } from "march/managers/viewport";
 import { pages, setTrail } from "./app.tsx";
 import { ideOpen } from "./playground/ide-open.ts";
-import { withMeta, MENU_GROUPS, SECTIONS, sectionOf, type NavSection } from "./nav-meta.ts";
+import { MENU_GROUPS, SECTIONS, sectionOf, type NavSection } from "./nav-meta.ts";
+import { withMeta } from "./nav-pages.ts";
 
 const SECTION_KEY = "sc.section";
 const HOME = "home";

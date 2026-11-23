@@ -27,9 +27,8 @@ jobs:
       # one March release for the whole run: the IDE jobs check the build made with it
       - id: march
         run: echo "version=$(node -e 'fetch("https://cdn.marchjs.com/versions.json").then((r) => r.json()).then((v) => console.log(v.latest))')" >> "$GITHUB_OUTPUT"
-      # the dev build for now: the release build (--release) fails its size budgets, as March's own showcase did
-      # before the split; it joins CI once the budgets hold
-      - run: node build.mjs
+      # the release build: size budgets, prerendering, the published files (~3 minutes)
+      - run: node build.mjs --release
         env:
           MARCH_VERSION: ${{ steps.march.outputs.version }}
       # the generated sources follow March's newest release: a new one may change them (a count, a prop table); that
@@ -45,6 +44,14 @@ jobs:
           name: dist
           path: dist
           retention-days: 3
+      # the size report also when the budgets fail: its rows (full names, sizes, limits) are what the limits in
+      # march.config.js are measured on (CI is the gate: packing differs a little between platforms)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: march-report
+          path: dist/march-report.json
+          retention-days: 7
 
   ide:
     needs: build

@@ -3,11 +3,13 @@
 // (test/entry-pages.test.js checks it).
 import type { RouteTarget } from "march/router";
 import { PAGES, SUB_PAGES } from "./nav.ts";
-import { HUBS } from "./topics.ts";
+import { HUB_BASES } from "./topic-titles.gen.ts";
 import { SHELL, setPages } from "./app.tsx";
 import GEN from "./routes.gen.js";
 import { IDE_PAGES } from "./playground/ide-pages.ts";
 export { restoreFrameRoute } from "./frame-reload.ts";
+// start-up's last step (main.tsx calls it): the router and the renderer come with this chunk, not with the entry
+export { start } from "./start.tsx";
 
 const ROUTER_DEMO = () => import("./router-demo/_layout.tsx");
 // the component page template: a title, the page in its Outlet, Previous / Next (component-page/_layout.tsx)
@@ -32,7 +34,7 @@ export const ROUTES = {
   // API page: /api/<subpath>/<name> opens one export (the same page module)
   "/api/*": { load: LOADERS["/api"], layouts: [SHELL], title: "API", keep: true },
   // sections with one page per topic (topics.ts): the section's page module draws the overview and each topic
-  ...Object.fromEntries(Object.keys(HUBS).map((base) => [`${base}/*`, { load: LOADERS[base], layouts: [SHELL], title: PAGES.find((p) => p.path === base)?.title }])),
+  ...Object.fromEntries(HUB_BASES.map((base) => [`${base}/*`, { load: LOADERS[base], layouts: [SHELL], title: PAGES.find((p) => p.path === base)?.title }])),
   // motion library pages (/motion/svg, /motion/morph…): one route, each page its own lazy chunk
   "/motion/*": { load: () => import("./motion-hub.tsx"), layouts: [SHELL], title: "Hareket" },
   // router demo: a section layout under the shell (nested, kept while its tabs change) and a record page that opens

@@ -3,6 +3,7 @@
 import "./editors.css";
 import { ComponentDemo } from "../component-demo.tsx";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/editors.ts";
 
 const RENDER: Record<string, () => unknown> = {
   "rich-text": () => <ComponentDemo folder="composite/rich-text-editor" title="RichTextEditor: zengin metin, Markdown giriş/çıkış" desc="Metni seçip araç çubuğunu ya da Ctrl+B / I / K kısayollarını kullanın; satır başında # , - , 1. , > yazmak bloğu dönüştürür. @ ile kişi, : ile emoji önerilir. Başka bir siteden yapıştırılan içerik güvenli içerik çekirdeğinden geçer: yalnız izinli öğeler kalır. Ctrl+Z / Ctrl+Shift+Z editörün kendi geçmişini kullanır." />,
@@ -23,5 +24,5 @@ const RENDER: Record<string, () => unknown> = {
 }
 
 export default function Editors(props: { params?: { rest?: string } }) {
-  return <Hub section="/editors" kicker="Bileşenler" title="Editörler" lead="Zengin metin, Markdown, JSON ağacı, renk ve gradyan, hareket eğrisi, anahtar kare zaman çizelgesi ve resim kırpma. Hepsi klavyeyle kullanılır, sağdan sola yazında aynalanır, geri alınabilir." render={RENDER} params={props.params} />
+  return <Hub section="/editors" topics={TOPICS} kicker="Bileşenler" title="Editörler" lead="Zengin metin, Markdown, JSON ağacı, renk ve gradyan, hareket eğrisi, anahtar kare zaman çizelgesi ve resim kırpma. Hepsi klavyeyle kullanılır, sağdan sola yazında aynalanır, geri alınabilir." render={RENDER} params={props.params} />
 }

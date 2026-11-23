@@ -11,6 +11,7 @@ import { scroll, configureScroll } from "march/managers/scroll";
 import { presence, configurePresence, type PresenceState } from "march/managers/presence";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/managers-env.ts";
 import { yes, time, secs, clock, Signals } from "../env-managers/common.tsx";
 
 import { SyncDemo } from "../env-managers/sync.tsx";
@@ -213,5 +214,5 @@ export default function ManagersEnv(props: { params?: { rest?: string } }) {
     "scroll": () => <><EventFeed /><ScrollDemo /></>,
     "device": () => <><EventFeed /><DeviceDemo /></>,
   }
-  return <Hub section="/managers-env" kicker="Temel › Yöneticiler" title="Ortam yöneticileri" lead="Kullanıcının ve cihazın durumu için uygulama genelinde hizmetler: boşta olma, çevrimdışı eşitleme, cihaz yetenekleri, izinler, konum, bildirimler, sekmeler, kaydırma, oturum süresi ve varlık. Hepsi tek örnek, ilk kullanımda başlar ve olaylarını managers kanalına yayınlar." render={RENDER} params={props.params} />
+  return <Hub section="/managers-env" topics={TOPICS} kicker="Temel › Yöneticiler" title="Ortam yöneticileri" lead="Kullanıcının ve cihazın durumu için uygulama genelinde hizmetler: boşta olma, çevrimdışı eşitleme, cihaz yetenekleri, izinler, konum, bildirimler, sekmeler, kaydırma, oturum süresi ve varlık. Hepsi tek örnek, ilk kullanımda başlar ve olaylarını managers kanalına yayınlar." render={RENDER} params={props.params} />
 }

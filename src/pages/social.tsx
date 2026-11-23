@@ -2,6 +2,7 @@
 // from them, then one Playground per component (each card comes from the component folder: demo, options, code).
 import "./social.css";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/social.ts";
 import { ComponentDemo } from "../component-demo.tsx";
 
 export default function SocialPage(props: { params?: { rest?: string } }) {
@@ -27,5 +28,5 @@ export default function SocialPage(props: { params?: { rest?: string } }) {
     "profile-header": () => <ComponentDemo folder="composite/profile-header" title="ProfileHeader: profil başlığı" desc="Kapak, hikâye halkalı avatar, ad ve biyografi, sayaçlı istatistikler. Takip et'e basınca düğme dönüşür ve takipçi sayısı birlikte yuvarlanır." />,
     "follow-button": () => <ComponentDemo folder="social/follow-button" title="FollowButton: takip et" desc="Takip et → Takip ediliyor: genişlik yaylanır, dolgu çerçeveye döner, + tike çevrilir, dört renk parlar. Gizli hesapta istek gönderilir; takip edilirken üzerine gelince kırmızı uyarır." />,
   }
-  return <Hub section="/social" kicker="Bileşenler" title="Sosyal" lead="Gönderi kartı, akış, hikâye, sohbet, yorum, profil, etkinlik ve bildirim bileşenleri. HADİ'nin dört rengi, hareket motoru ve tam klavye erişimi; her bileşenin kendi Playground'u var." render={RENDER} params={props.params} />
+  return <Hub section="/social" topics={TOPICS} kicker="Bileşenler" title="Sosyal" lead="Gönderi kartı, akış, hikâye, sohbet, yorum, profil, etkinlik ve bildirim bileşenleri. HADİ'nin dört rengi, hareket motoru ve tam klavye erişimi; her bileşenin kendi Playground'u var." render={RENDER} params={props.params} />
 }

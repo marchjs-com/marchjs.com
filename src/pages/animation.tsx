@@ -11,6 +11,7 @@ import { Button, Badge, Slider, Field, CodeView } from "march/ui";
 import { Segmented, Toggle } from "march/forms";
 import { Demo } from "../demo.tsx";
 import { Hub } from "../hub.tsx";
+import { TOPICS } from "../topics/animation.ts";
 
 installPresets();
 const NAMES = Object.keys(PRESETS) as PresetName[];
@@ -320,5 +321,5 @@ m.drops(); m.longTasks()`}>
     <CodeView code={keyframesCss({ names: ["fadeUp", "pop", "spin"] }).trim()} lang="css" copy />
   </Demo>,
   }
-  return <Hub section="/animation" kicker="Hareket" title="Animasyon motoru" lead="Tek keyframe motoru: değer katmanı hedeften bağımsız; DOM (WAAPI), CSS değişkeni, canvas, WebGL ve düz nesneler aynı timeline'da oynar. Tek saat, global hız, durdurma ve 'hareketi azalt' her animasyona — saf CSS animasyonlarına bile — ulaşır." render={RENDER} params={props.params} />
+  return <Hub section="/animation" topics={TOPICS} kicker="Hareket" title="Animasyon motoru" lead="Tek keyframe motoru: değer katmanı hedeften bağımsız; DOM (WAAPI), CSS değişkeni, canvas, WebGL ve düz nesneler aynı timeline'da oynar. Tek saat, global hız, durdurma ve 'hareketi azalt' her animasyona — saf CSS animasyonlarına bile — ulaşır." render={RENDER} params={props.params} />
 }
