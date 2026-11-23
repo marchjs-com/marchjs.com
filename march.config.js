@@ -1,4 +1,6 @@
-// marchjs.com: `node build.mjs` (static, relative paths → dist/); March comes from node_modules/march (package.json).
+// marchjs.com: `node build.mjs` (static, relative paths → dist/). March runs from cdn.marchjs.com, like on any site made
+// with it: the release build.mjs picked (the newest, MARCH_VERSION), its version folder (immutable, one release per
+// page). node_modules/march is only the build's tools (CLI, compiler, prerender) and its types.
 import { readFileSync } from "node:fs";
 
 // every page of the menu (nav.ts), also the ones under a wildcard route (/motion/svg…): each gets its own index.html
@@ -142,6 +144,8 @@ const SHOWCASE_PARTS = argued({
 
 export default {
   entry: "src/main.tsx",
+  // MARCH_CDN: another CDN folder (a local build of March's CDN, node tools/build-cdn.js --base <origin>) for a test
+  cdn: process.env.MARCH_CDN || `https://cdn.marchjs.com/${process.env.MARCH_VERSION}`,
   outdir: "dist",
   base: "./", // relative asset URLs: the same build works at a domain root, in a sub-folder, from files and in an artifact
   publicDir: "public",
