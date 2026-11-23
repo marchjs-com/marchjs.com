@@ -37,13 +37,16 @@ const MARCH_REF = `v${MARCH_VERSION}`;
 const cli = join(MARCH, "cli", "march.js");
 const { writeGallery } = await import(pathToFileURL(join(MARCH, "cli", "icons.js")).href);
 const { filesOver } = await import(pathToFileURL(join(MARCH, "cli", "perf.js")).href);
-export const CSP = "default-src 'none'; script-src 'self' blob: 'wasm-unsafe-eval'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; media-src 'self'; connect-src 'self' https://cdn.jsdelivr.net https://api.anthropic.com https://api.openai.com https://generativelanguage.googleapis.com https://api.deepseek.com https://api.moonshot.ai https://api.mistral.ai https://api.groq.com https://openrouter.ai https://api.meta.ai https://api.x.ai https://dashscope-intl.aliyuncs.com https://api.z.ai https://api.together.xyz https://api.fireworks.ai https://api.cerebras.ai https://api.perplexity.ai http://localhost:11434 http://localhost:1234; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types march-worker";
+// March's CDN (march.config.js › cdn): its origin in script-src, style-src, font-src, img-src and connect-src (theme
+// transitions read the stylesheets)
+const CDN_ORIGIN = new URL(process.env.MARCH_CDN || "https://cdn.marchjs.com").origin;
+export const CSP = `default-src 'none'; script-src 'self' ${CDN_ORIGIN} blob: 'wasm-unsafe-eval'; style-src 'self' ${CDN_ORIGIN} https://fonts.googleapis.com; img-src 'self' ${CDN_ORIGIN} data: blob:; font-src 'self' ${CDN_ORIGIN} https://fonts.gstatic.com; media-src 'self'; connect-src 'self' ${CDN_ORIGIN} https://cdn.jsdelivr.net https://api.anthropic.com https://api.openai.com https://generativelanguage.googleapis.com https://api.deepseek.com https://api.moonshot.ai https://api.mistral.ai https://api.groq.com https://openrouter.ai https://api.meta.ai https://api.x.ai https://dashscope-intl.aliyuncs.com https://api.z.ai https://api.together.xyz https://api.fireworks.ai https://api.cerebras.ai https://api.perplexity.ai http://localhost:11434 http://localhost:1234; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types march-worker`;
 
 const args = process.argv.slice(2);
 const release = args.includes("--release");
 const watching = !release && args.includes("--watch");
 const serve = args.includes("--serve");
-const extra = args.filter((a) => ["--timing", "--no-minify", "--analyze"].includes(a));
+const extra = args.filter((a) => ["--timing", "--no-minify", "--analyze", "--force"].includes(a));
 
 if (!serve || !existsSync(dist) || watching) {
   const t0 = performance.now();
