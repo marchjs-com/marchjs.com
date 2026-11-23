@@ -44,6 +44,14 @@ jobs:
           name: dist
           path: dist
           retention-days: 3
+      # the size report also when the budgets fail: its rows (full names, sizes, limits) are what the limits in
+      # march.config.js are measured on (CI is the gate: packing differs a little between platforms)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: march-report
+          path: dist/march-report.json
+          retention-days: 7
 
   ide:
     needs: build
