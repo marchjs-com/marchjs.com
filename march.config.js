@@ -22,7 +22,10 @@ const BENCH_PARTS = {
 // Showcase pages and parts past the default budgets (route 60 KB, part 25 KB): each is a demo of many components at
 // once, a full tool or a whole sample site, loaded only where it is shown. Each limit is the larger of two release measurements
 // (23 Nov 2026, March 0.3.5: this machine, Windows / Node 26, and CI, Linux / Node 24: packing differs a little between
-// them) plus 15%, rounded up to 5 KB. The packer packs to the default budgets, so the limits do not change the packing. A row that grows past its limit still fails the build.
+// them) plus 15%, rounded up to 5 KB. Rows re-measured on March 0.3.9 (23 Nov 2026, this machine): the web-proof / web-talk /
+// editors-4 cards, march-ide, API part 09, the start page's app and visual sections, shell-late and the product sample's
+// lower half (March's own changes since 0.3.5 moved code into them; shell-late 40 → 62 KB and the app section
+// 30 → 64 KB are the ones to look at). The packer packs to the default budgets, so the limits do not change the packing. A row that grows past its limit still fails the build.
 const kb = (n) => n * 1024;
 const PAGE = "a section page: live demos of every component of its section on one page";
 const IDE = "MarchIDE's live workbench (/ide-live): editors, the compiler, preview and panels, a full tool on its own page";
@@ -89,9 +92,10 @@ const SHOWCASE_PARTS = argued({
   "node_modules/march/src/components/composite/theme-editor/persist.ts": [55, THEME_EDITOR],
   "node_modules/march/src/components/composite/theme-editor/preview.ts": [45, THEME_EDITOR],
   "src/catalog/web-hero.demos.gen.ts": [30, CARDS],
-  "src/catalog/web-proof.demos.gen.ts": [30, CARDS],
+  "src/catalog/web-proof.demos.gen.ts": [40, CARDS],
   "src/catalog/web-sell.demos.gen.ts": [30, CARDS],
-  "src/catalog/web-talk.demos.gen.ts": [30, CARDS],
+  "src/catalog/web-talk.demos.gen.ts": [50, CARDS],
+  "src/catalog/editors-4.demos.gen.ts": [35, CARDS],
   "src/catalog/web-work.demos.gen.ts": [30, CARDS],
   "src/api-examples/gen/part-01.ex.tsx": [115, API_EX],
   "src/api-examples/gen/part-02.ex.tsx": [280, API_EX],
@@ -101,7 +105,7 @@ const SHOWCASE_PARTS = argued({
   "src/api-examples/gen/part-06.ex.tsx": [185, API_EX],
   "src/api-examples/gen/part-07.ex.tsx": [120, API_EX],
   "src/api-examples/gen/part-08.ex.tsx": [110, API_EX],
-  "src/api-examples/gen/part-09.ex.tsx": [65, API_EX],
+  "src/api-examples/gen/part-09.ex.tsx": [80, API_EX],
   "src/api-examples/gen/part-10.ex.tsx": [135, API_EX],
   "src/api-examples/gen/part-11.ex.tsx": [235, API_EX],
   "src/api-examples/gen/part-12.ex.tsx": [350, API_EX],
@@ -113,21 +117,21 @@ const SHOWCASE_PARTS = argued({
   "src/bench/apps/vue.ts": [35, BENCH],
   "src/bench/scenarios-section.tsx": [65, BENCH],
   "src/component-page/_layout.tsx": [70, COMPONENT_PAGE],
-  "src/home/more2/app.tsx": [30, HOME],
+  "src/home/more2/app.tsx": [75, HOME],
   "src/home/more3/tools.tsx": [90, HOME],
-  "src/home/more3/visual.tsx": [45, HOME],
+  "src/home/more3/visual.tsx": [70, HOME],
   "src/home/sections.tsx": [225, HOME],
   "src/playground/layouts/component.tsx": [200, MARCH_IDE],
-  "src/playground/march-ide.tsx": [70, MARCH_IDE],
+  "src/playground/march-ide.tsx": [85, MARCH_IDE],
   "src/router-demo/_layout.tsx": [70, ROUTER_DEMO],
   "src/sections.gen.ts": [30, SECTIONS],
-  "src/shell-late.tsx": [40, LATE],
+  "src/shell-late.tsx": [75, LATE],
   "src/shell-menu.tsx": [145, MENU],
   "src/web/honest.tsx": [130, SAMPLE],
   "src/web/live.tsx": [130, SAMPLE],
   "src/web/portfolio-more.tsx": [30, SAMPLE],
   "src/web/portfolio.tsx": [170, SAMPLE],
-  "src/web/product-more.tsx": [30, SAMPLE],
+  "src/web/product-more.tsx": [40, SAMPLE],
   "src/web/product.tsx": [115, SAMPLE],
   "src/web/redesign.tsx": [155, SAMPLE],
   "src/web/slides.tsx": [55, SAMPLE],
@@ -165,10 +169,12 @@ export default {
   // Turkish visitor download pages, or every English visitor the dictionary)
   // commonRoom: page groups stay 6 KB under the route budget, room for the shared "common" chunk (small code many pages
   // use, outside start-up, prefetched when idle) on every route that loads it
-  // fail: false — the 10 KB floor is an aim: the packer folds what it can in two builds (maxBuilds: 2, ~1 min) and lists
-  // what is left instead of failing; Cloudflare serves small files over HTTP/2 at little cost, and maxFiles still caps
-  // the count. Chasing the last ~50 small files took up to 12 more minutes per release.
-  chunks: { minSize: 10 * 1024, fail: false, maxBuilds: 2, commonRoom: 6 * 1024, allow: {
+  // fail: false — the 10 KB floor is an aim: the packer folds what it can and lists what is left instead of failing;
+  // Cloudflare serves small files over HTTP/2 at little cost, and maxFiles still caps the count.
+  // maxBuilds: 5 (~6 min): the planner groups small pages from size estimates and takes a group past the route budget
+  // apart only on its next pass. With 2 builds the second pass's groups were never checked: from March 0.3.7 on they
+  // came out past 60 KB (/buttons, /big-data, /overlay, /text and /forms each loading one group of 85–137 KB).
+  chunks: { minSize: 10 * 1024, fail: false, maxBuilds: 5, commonRoom: 6 * 1024, allow: {
     "src/web/product.tsx": "Web siteleri sample page: loaded only when /sites/product opens it, never with the blocks page",
     "src/web/product-more.tsx": "lower half of the product sample: loaded when it comes near the viewport",
     "src/web/portfolio-more.tsx": "lower half of the portfolio sample: loaded when it comes near the viewport",
