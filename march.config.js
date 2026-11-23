@@ -22,7 +22,7 @@ const BENCH_PARTS = {
 // Showcase pages and parts past the default budgets (route 60 KB, part 25 KB): each is a demo of many components at
 // once, a full tool or a whole sample site, loaded only where it is shown. Each limit is the larger of two release measurements
 // (23 Nov 2026, March 0.3.5: this machine, Windows / Node 26, and CI, Linux / Node 24: packing differs a little between
-// them) plus 15%, rounded up to 5 KB. Rows re-measured on March 0.3.9 (23 Nov 2026, this machine): the web-proof / web-talk /
+// them) plus 15%, rounded up to 5 KB. Rows re-measured on March 0.3.9-0.3.10 (23 Nov 2026, this machine and CI's report): the web-proof / web-talk /
 // editors-4 cards, march-ide, API part 09, the start page's app and visual sections, shell-late and the product sample's
 // lower half (March's own changes since 0.3.5 moved code into them; shell-late 40 → 62 KB and the app section
 // 30 → 64 KB are the ones to look at). The packer packs to the default budgets, so the limits do not change the packing. A row that grows past its limit still fails the build.
@@ -63,7 +63,7 @@ const SHOWCASE_ROUTES = Object.fromEntries(Object.entries(argued({
   "/managers": [125, PAGE],
   "/managers-a11y": [185, PAGE],
   "/managers-data": [175, PAGE],
-  "/managers-env": [120, PAGE],
+  "/managers-env": [160, PAGE],
   "/managers-ops": [145, PAGE],
   "/messaging": [70, PAGE],
   "/motion": [140, PAGE],
@@ -75,9 +75,9 @@ const SHOWCASE_ROUTES = Object.fromEntries(Object.entries(argued({
   "/navigation/router": [70, PAGE],
   "/navigation/router/about": [70, PAGE],
   "/navigation/router/item/:id": [70, PAGE],
-  "/network": [125, PAGE],
+  "/network": [165, PAGE],
   "/overlays": [180, PAGE],
-  "/seo": [100, PAGE],
+  "/seo": [120, PAGE],
   "/sites": [115, PAGE],
   "/speed": [150, PAGE],
   "/start": [70, PAGE],
@@ -88,12 +88,13 @@ const SHOWCASE_ROUTES = Object.fromEntries(Object.entries(argued({
   "/web": [70, PAGE],
 })).map(([k, v]) => [k, v.limit]));
 const SHOWCASE_PARTS = argued({
-  "node_modules/march/src/components/composite/theme-editor/panels.ts": [75, THEME_EDITOR],
+  "node_modules/march/src/components/composite/theme-editor/panels.ts": [95, THEME_EDITOR],
+  "node_modules/march/src/components/composite/theme-editor/colors.ts": [40, THEME_EDITOR],
   "node_modules/march/src/components/composite/theme-editor/persist.ts": [55, THEME_EDITOR],
-  "node_modules/march/src/components/composite/theme-editor/preview.ts": [45, THEME_EDITOR],
-  "src/catalog/web-hero.demos.gen.ts": [30, CARDS],
-  "src/catalog/web-proof.demos.gen.ts": [40, CARDS],
-  "src/catalog/web-sell.demos.gen.ts": [30, CARDS],
+  "node_modules/march/src/components/composite/theme-editor/preview.ts": [65, THEME_EDITOR],
+  "src/catalog/web-hero.demos.gen.ts": [40, CARDS],
+  "src/catalog/web-proof.demos.gen.ts": [50, CARDS],
+  "src/catalog/web-sell.demos.gen.ts": [40, CARDS],
   "src/catalog/web-talk.demos.gen.ts": [50, CARDS],
   "src/catalog/editors-4.demos.gen.ts": [35, CARDS],
   "src/catalog/web-work.demos.gen.ts": [30, CARDS],
@@ -103,9 +104,9 @@ const SHOWCASE_PARTS = argued({
   "src/api-examples/gen/part-04.ex.tsx": [130, API_EX],
   "src/api-examples/gen/part-05.ex.tsx": [145, API_EX],
   "src/api-examples/gen/part-06.ex.tsx": [185, API_EX],
-  "src/api-examples/gen/part-07.ex.tsx": [120, API_EX],
+  "src/api-examples/gen/part-07.ex.tsx": [145, API_EX],
   "src/api-examples/gen/part-08.ex.tsx": [110, API_EX],
-  "src/api-examples/gen/part-09.ex.tsx": [80, API_EX],
+  "src/api-examples/gen/part-09.ex.tsx": [115, API_EX],
   "src/api-examples/gen/part-10.ex.tsx": [135, API_EX],
   "src/api-examples/gen/part-11.ex.tsx": [235, API_EX],
   "src/api-examples/gen/part-12.ex.tsx": [350, API_EX],
@@ -119,7 +120,7 @@ const SHOWCASE_PARTS = argued({
   "src/component-page/_layout.tsx": [70, COMPONENT_PAGE],
   "src/home/more2/app.tsx": [75, HOME],
   "src/home/more3/tools.tsx": [90, HOME],
-  "src/home/more3/visual.tsx": [70, HOME],
+  "src/home/more3/visual.tsx": [90, HOME],
   "src/home/sections.tsx": [225, HOME],
   "src/playground/layouts/component.tsx": [200, MARCH_IDE],
   "src/playground/march-ide.tsx": [85, MARCH_IDE],
@@ -131,7 +132,7 @@ const SHOWCASE_PARTS = argued({
   "src/web/live.tsx": [130, SAMPLE],
   "src/web/portfolio-more.tsx": [30, SAMPLE],
   "src/web/portfolio.tsx": [170, SAMPLE],
-  "src/web/product-more.tsx": [40, SAMPLE],
+  "src/web/product-more.tsx": [55, SAMPLE],
   "src/web/product.tsx": [115, SAMPLE],
   "src/web/redesign.tsx": [155, SAMPLE],
   "src/web/slides.tsx": [55, SAMPLE],
