@@ -1,5 +1,6 @@
 // Showcase stage for DateRangePicker: with presets or only the custom pair.
-import { DateRangePicker, type DateRange, Field } from "march/forms";
+import { DateRangePicker, type DateRange } from "march/components/forms/date-range-picker";
+import { Field } from "march/forms";
 // unions live outside JSX: the March compiler reads `|` in a JSX expression as a pipe
 type Maybe<T> = T | null | undefined
 

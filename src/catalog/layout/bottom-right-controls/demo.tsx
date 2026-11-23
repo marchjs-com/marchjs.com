@@ -1,6 +1,6 @@
 // Showcase stage for the page corners: add a control to a corner of this page and take it out again.
-import { addCornerControl, type Corner } from "march/layout";
-import { Button } from "march/actions";
+import { addCornerControl, type Corner } from "march/components/layout/bottom-right-controls";
+import { Button } from "march/components/actions/button";
 import { signal, effect, onCleanup } from "march";
 
 export const code = `import { addCornerControl, BottomRightControls } from "march/layout"

@@ -1,5 +1,6 @@
 // Showcase stage for Select.
-import { Select, Field } from "march/forms";
+import { Select } from "march/components/forms/select";
+import { Field } from "march/forms";
 // unions live outside JSX: the March compiler reads `|` in a JSX expression as a pipe
 type Maybe<T> = T | null | undefined
 type V = { options: string; placeholder: string; disabled: boolean }

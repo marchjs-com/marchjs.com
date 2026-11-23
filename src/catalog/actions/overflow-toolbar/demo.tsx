@@ -3,9 +3,9 @@
 // icon and the colour of pressed toggles follow the options.
 import { signal } from "march";
 import { type Signal } from "../../demo-util.ts";
-import { OverflowToolbar, type ToolbarItem } from "march/actions";
+import { OverflowToolbar, type ToolbarItem } from "march/components/actions/overflow-toolbar";
 import { command } from "march/managers/command";
-import { toast } from "march/overlays";
+import { toast } from "march/components/overlays/toast";
 import { plus, download, menu } from "march/icons";
 import { animate } from "march/motion";
 import type { ColorToken } from "march/theme";

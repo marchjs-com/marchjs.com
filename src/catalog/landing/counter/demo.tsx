@@ -1,5 +1,5 @@
 // Showcase stage for Counter: the value slider makes it glide (count) or roll (odometer) to the new number.
-import { Counter } from "march/landing";
+import { Counter } from "march/components/landing/counter";
 
 export const code = `<Counter value={12840} />                                     // counts up when visible
 <Counter value={$price} mode="roll" format={{ style: "currency", currency: "EUR" }} />

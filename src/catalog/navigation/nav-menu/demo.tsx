@@ -1,6 +1,6 @@
 // Showcase stage for NavMenu: the chosen menu (Playground items) in a framed column (values in playground.ts). On narrow
 // screens the menu is a drawer: the menu button opens it.
-import { NavMenu, type NavItem } from "march/navigation";
+import { NavMenu, type NavItem } from "march/components/navigation/nav-menu";
 import { users, wallet, plus } from "march/icons";
 import type { Href } from "march/router";
 import { load, save } from "../../demo-util.ts";

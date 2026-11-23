@@ -1,9 +1,9 @@
 // Showcase stage for DevicePreview: a small app in a phone — drag to scroll, Shift + drag to pinch, open its drawer (it
 // stays in the device), and play the device from its control rail (shake, tilt, offline, battery, keyboard).
 import { signal, effect } from "march";
-import { DevicePreview } from "march/layout";
-import { Button } from "march/actions";
-import { openDrawer } from "march/overlays";
+import { DevicePreview } from "march/components/layout/device-preview";
+import { Button } from "march/components/actions/button";
+import { openDrawer } from "march/components/overlays/dialog";
 
 export const code = `<DevicePreview device="iphone-15" landscape={$land} controls touch time="9:41">
   <MyApp />          // its drawers and dialogs open inside the device

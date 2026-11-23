@@ -1,5 +1,5 @@
 // Showcase stage for ThemeMenu: the menu button as it would sit in a top bar; the choices change the whole showcase.
-import { ThemeMenu } from "march/composite";
+import { ThemeMenu } from "march/components/composite/theme-menu";
 import type { ColorToken } from "march/theme";
 import { sun } from "march/icons";
 

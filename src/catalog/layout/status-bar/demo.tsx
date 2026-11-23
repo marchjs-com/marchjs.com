@@ -1,7 +1,7 @@
 // Showcase stage for StatusBar: change the state and the width (Playground values in playground.ts).
 import { signal } from "march";
-import { StatusBar, type StatusItem, type StatusTone } from "march/layout";
-import { toast } from "march/overlays";
+import { StatusBar, type StatusItem, type StatusTone } from "march/components/layout/status-bar";
+import { toast } from "march/components/overlays/toast";
 import { gitBranch, alertTriangle, bell } from "march/icons";
 
 export const code = `<StatusBar items={[

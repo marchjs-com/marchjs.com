@@ -1,5 +1,5 @@
 // Showcase stage for Layout: regions switched on and off; the page itself sits in the app's Layout (back-to-top corner).
-import { Layout } from "march/layout";
+import { Layout } from "march/components/layout/layout";
 
 export const code = `import { Layout, defineLayout, scrollToTopFeature } from "march/layout"
 

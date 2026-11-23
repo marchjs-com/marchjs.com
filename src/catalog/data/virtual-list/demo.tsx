@@ -1,6 +1,6 @@
 // Showcase stage for VirtualList (items, label, estimate, gap, overscan from playground.ts): thousands of rows of mixed height in a fixed box; a live count shows how few are in
 // the DOM while you scroll.
-import { VirtualList } from "march/data";
+import { VirtualList } from "march/components/data/virtual-list";
 import { onFrame } from "march/motion";
 import { onCleanup } from "march";
 import { ITEMS } from "./playground.ts";

@@ -1,5 +1,5 @@
 // Showcase stage for CheckboxGroup: look, HADİ colors and the row layout.
-import { CheckboxGroup } from "march/forms";
+import { CheckboxGroup } from "march/components/forms/checkbox-group";
 import { users, zap, shieldCheck } from "march/icons";
 
 export const code = `<CheckboxGroup bind:value={$days} inline variant="chip" options="Pzt, Sal, Çar, Per, Cum" />

@@ -1,6 +1,6 @@
 // Showcase stage for PullToRefresh: a short feed in a fixed-height scroll area (playground.ts sets the text above it, threshold, indicator, icon, colour, settle, keyboard button, delay).
-import { PullToRefresh, type PullPhase } from "march/feedback";
-import { Button } from "march/actions";
+import { PullToRefresh, type PullPhase } from "march/components/feedback/pull-to-refresh";
+import { Button } from "march/components/actions/button";
 import { Icon, sparkles, arrowDown, arrowUp, hourglass, refresh, rotateCw } from "march/icons";
 
 // the Playground's icon names → their glyphs

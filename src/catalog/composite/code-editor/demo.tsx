@@ -1,8 +1,8 @@
 // Showcase stage for CodeEditor: a <Button> tag you edit by hand. The foot line says what was read from it; the
 // button under the editor follows the valid part (variant, size, the text).
-import { CodeEditor, jsxCompleter, type CodeMark } from "march/composite";
-import { Button } from "march/actions";
-import { toast } from "march/overlays";
+import { CodeEditor, jsxCompleter, type CodeMark } from "march/components/composite/code-editor";
+import { Button } from "march/components/actions/button";
+import { toast } from "march/components/overlays/toast";
 import type { ColorToken } from "march/theme";
 
 export const code = `<CodeEditor bind:value={$code} lang="tsx" message={$note} status={$bad ? "error" : "ok"}

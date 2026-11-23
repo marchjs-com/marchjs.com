@@ -2,7 +2,8 @@
 // march/ui › mediaKind
 import { signal } from "march";
 import { Out, Row } from "../../_kit.tsx";
-import { Button, mediaKind } from "march/ui";
+import { Button } from "march/components/actions/button";
+import { mediaKind } from "march/components/media/media";
 import { Field } from "./_field.tsx";
 import type { ApiExample } from "../../types.ts";
 import "../../ui-e.css";

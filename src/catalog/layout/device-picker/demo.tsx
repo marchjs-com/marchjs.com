@@ -1,6 +1,7 @@
 // Showcase stage for DevicePicker: choose a device; its silhouette and size show beside the list.
 import { signal } from "march";
-import { DevicePicker, deviceById } from "march/layout";
+import { DevicePicker } from "march/components/layout/device-picker";
+import { deviceById } from "march/components/layout/device-preview";
 
 export const code = `const $device = signal("iphone-15"), $land = signal(false)
 <DevicePicker value={$device} landscape={$land} fit />`

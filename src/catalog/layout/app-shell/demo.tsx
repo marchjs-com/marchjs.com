@@ -1,6 +1,6 @@
 // Showcase stage for AppShell: a framed miniature app (sidebar, optional banner, page) — Playground values in
 // playground.ts. The frame keeps the shell's full-height layout inside the card.
-import { AppShell } from "march/layout";
+import { AppShell } from "march/components/layout/app-shell";
 
 export const code = `<AppShell nav={<NavMenu items={items} />} top={<UpdateBanner />}>
   <Outlet />

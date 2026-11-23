@@ -1,6 +1,6 @@
 // Showcase stage for Stack, Toolbar and Divider (Playground values in playground.ts).
-import { Stack, Toolbar, Divider, type Align } from "march/layout";
-import { Button } from "march/actions";
+import { Stack, Toolbar, Divider, type Align } from "march/components/layout/stack";
+import { Button } from "march/components/actions/button";
 import { STACK_ITEMS } from "./playground.ts";
 
 export const code = `<Stack direction="row" gap={3} align="center" wrap>…</Stack>

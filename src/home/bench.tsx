@@ -14,7 +14,7 @@ import { sparkles } from "march/icons";
 import { celebrate } from "./celebrate.ts";
 
 // the chart is a part of its own (the charts page loads the same one): the cards do not wait for it
-const BarChart = lazy(() => import("march/charts").then((m) => ({ default: m.BarChart })), { placeholder: "chart", height: "7rem" });
+const BarChart = lazy(() => import("march/components/data/bar-chart").then((m) => ({ default: m.BarChart })), { placeholder: "chart", height: "7rem" });
 
 const ACCENT_NAMES: Record<string, string> = { "brand-orange": "Turuncu", "brand-blue": "Mavi", "brand-green": "Yeşil", "brand-purple": "Mor" };
 

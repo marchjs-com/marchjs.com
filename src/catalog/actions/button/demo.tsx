@@ -1,6 +1,6 @@
 // Showcase stage for Button: variant, size, shape, pressed, icon, loading (and its spinner), disabled and block follow the Playground values; the second
 // row is an ActionButton (an action() with confirm and toasts).
-import { Button, ActionButton } from "march/actions";
+import { Button, ActionButton } from "march/components/actions/button";
 import { action } from "march/ui";
 import { plus, trash, arrowRight, refresh, rotateCw, hourglass, sparkles, star, sun } from "march/icons";
 

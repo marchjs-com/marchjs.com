@@ -1,5 +1,5 @@
 // Showcase stage for Parallax: three themed SVG layers (far hills, mid hills, near shapes) and a title in front.
-import { Parallax } from "march/landing";
+import { Parallax } from "march/components/landing/parallax";
 
 export const code = `<Parallax pointer={1} layers={[
   { src: "/sky.jpg", speed: 0.5 },                 // far: slower than the page

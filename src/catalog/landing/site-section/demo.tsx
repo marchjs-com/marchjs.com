@@ -1,5 +1,5 @@
 // Showcase stage for SiteSection: a section with a heading group and a body for the Playground values.
-import { SiteSection, type SectionTone } from "march/landing";
+import { SiteSection, type SectionTone } from "march/components/landing/site-section";
 
 export const code = `<SiteSection eyebrow="Özellikler" title="İhtiyacın olan her şey" lead="…" tone="muted">
   <FeatureGrid items={features} />

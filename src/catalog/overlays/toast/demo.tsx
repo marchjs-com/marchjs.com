@@ -1,6 +1,6 @@
 // Showcase stage for toast: the button shows a toast with the Playground values; the list below mirrors toast.list().
-import { toast, ToastHost } from "march/overlays";
-import { Button } from "march/actions";
+import { toast, ToastHost } from "march/components/overlays/toast";
+import { Button } from "march/components/actions/button";
 import { star } from "march/icons";
 
 export const code = `const id = toast("Dosya arşivlendi", { kind: "success", action: { label: "Geri al", run: () => restore() } })

@@ -1,7 +1,9 @@
 // Showcase stage for CornerMark: a mark on a photo tile (focusable, so "on hover" also shows with the keyboard) and
 // the same mark as a badge on an avatar (always overlapping). Every option of the Playground changes both.
-import { CornerMark, type Corner, Picture } from "march/media";
-import { Avatar } from "march/social";
+import { CornerMark } from "march/components/media/corner-mark";
+import { type Corner } from "march/components/layout/bottom-right-controls";
+import { Picture } from "march/components/media/picture";
+import { Avatar } from "march/components/social/avatar";
 import { appUrl } from "march/base";
 import { video, arrowUpRight, plus, play } from "march/icons";
 

@@ -1,5 +1,5 @@
 // Showcase stage for TypingIndicator: who is typing comes from the Playground.
-import { TypingIndicator } from "march/social";
+import { TypingIndicator } from "march/components/social/typing-indicator";
 import type { ColorToken } from "march/theme";
 
 export const code = `<TypingIndicator names={$typing} />                       // dots in a bubble, announced

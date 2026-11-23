@@ -1,7 +1,7 @@
 // Showcase stage for Alert: one alert with the Playground values (playground.ts); a dismissed one comes back with "Geri getir".
-import { Alert } from "march/feedback";
+import { Alert } from "march/components/feedback/alert";
 import { TEXT } from "./playground.ts";
-import { Button } from "march/actions";
+import { Button } from "march/components/actions/button";
 import { sparkles, check } from "march/icons";
 
 export const code = `<Alert tone="warn" title="Kota" dismissable onDismiss={() => …}>Bu ay depolamanın %90'ı kullanıldı.</Alert>

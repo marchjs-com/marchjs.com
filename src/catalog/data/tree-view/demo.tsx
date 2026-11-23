@@ -1,6 +1,6 @@
 // Showcase stage for TreeView: the Playground's nodes (JSON) and a generated project tree of ~3 000 nodes; folders marked "lazy" load their children on open.
 import { signal, untrack } from "march";
-import { TextInput } from "march/forms";
+import { TextInput } from "march/components/forms/text-input";
 import { TreeView, type TreeViewNode } from "march/components/data/tree-view";
 import { NODES } from "./playground.ts";
 

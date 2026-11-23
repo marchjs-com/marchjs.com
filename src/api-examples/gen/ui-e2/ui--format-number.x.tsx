@@ -2,7 +2,8 @@
 // march/ui › formatNumber
 import { signal } from "march";
 import { Out, Row } from "../../_kit.tsx";
-import { Slider, formatNumber } from "march/ui";
+import { Slider } from "march/components/forms/slider";
+import { formatNumber } from "march/ui";
 import { Pick } from "./_pick.tsx";
 import type { ApiExample } from "../../types.ts";
 import "../../ui-e.css";

@@ -1,6 +1,6 @@
 // Showcase stage for IconPicker: the chosen icon, the picker (inline or behind a button) for the Playground values.
 import { signal } from "march";
-import { IconPicker } from "march/forms";
+import { IconPicker } from "march/components/forms/icon-picker";
 import { ICONS } from "march/icons/catalog";
 import { Icon } from "march/icons";
 

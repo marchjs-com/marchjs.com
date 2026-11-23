@@ -1,6 +1,6 @@
 // Showcase stage for ContextMenu: right-click (or Shift+F10) a card. Code is shown in the Code tab.
-import { ContextMenu } from "march/context-menu";
-import { Button } from "march/actions";
+import { ContextMenu } from "march/components/overlays/context-menu";
+import { Button } from "march/components/actions/button";
 import { itemsOf, FILES } from "./playground.ts";
 
 export const code = `<ContextMenu items={(target) => [

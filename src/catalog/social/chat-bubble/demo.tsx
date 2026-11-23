@@ -1,5 +1,5 @@
 // Showcase stage for ChatBubble: a short run of bubbles; chips toggle your reaction, drag a bubble sideways to reply.
-import { ChatBubble, type Reaction, type MessageStatus } from "march/social";
+import { ChatBubble, type Reaction, type MessageStatus } from "march/components/social/chat-bubble";
 import { minutesAgo } from "../demo-data.ts";
 import type { ColorToken } from "march/theme";
 

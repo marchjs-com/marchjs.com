@@ -2,7 +2,7 @@
 // follows as the page scrolls; on a wide screen the dots stand at the side, magnify near the pointer and scroll to a
 // section when pressed (a section in a lazy part not loaded yet is reached through the part's slot).
 import "./toc.css";
-import { SectionTimeline, type SectionTimelineItem } from "march/navigation";
+import { SectionTimeline, type SectionTimelineItem } from "march/components/navigation/section-timeline";
 
 /** One section: the id of its heading, its address (#name), its timeline label, the lazy part it lives in (-1: none). */
 interface Item { head: string; slug: string; label: string; part: number }

@@ -1,5 +1,5 @@
 // Showcase stage for NotForYou: who HADİ is not for (and who it is for); mark the lines that apply.
-import { NotForYou, type NotForYouItem } from "march/landing";
+import { NotForYou, type NotForYouItem } from "march/components/landing/not-for-you";
 
 export const code = `<NotForYou check items={[{ text: "Hep aynı beş arkadaşla buluşuyorsun", detail: "…" }]}
   forYou={[{ text: "Yeni insanlarla tanışmak istiyorsun" }]} />

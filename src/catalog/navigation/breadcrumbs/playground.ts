@@ -1,5 +1,5 @@
 import { definePlayground } from "../../spec.ts";
-import type { Crumb } from "march/navigation";
+import type { Crumb } from "march/components/navigation/breadcrumbs";
 import { folder, fileText, hash, store, tag } from "march/icons";
 
 interface Values { items: readonly Crumb[]; width: number; siblings: boolean; subs: boolean; separator: string; collapse: boolean }

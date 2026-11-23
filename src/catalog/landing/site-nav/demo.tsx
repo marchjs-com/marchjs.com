@@ -1,6 +1,6 @@
 // Showcase stage for SiteNav: the bar over a short hero inside the frame; scroll the page to see shrink / glass / hide.
-import { SiteNav } from "march/landing";
-import { Button } from "march/actions";
+import { SiteNav } from "march/components/landing/site-nav";
+import { Button } from "march/components/actions/button";
 import { sparkles } from "march/icons";
 
 export const code = `<SiteNav mode="transparent" brand={{ name: "HADİ", mark: logo, href: "/" }}

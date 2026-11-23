@@ -1,7 +1,7 @@
 // Showcase stage for Stepper: a checkout in four steps with the Playground values. Code is shown in the Code tab.
 import { effect } from "march";
-import { Stepper } from "march/navigation";
-import type { StepItem } from "march/navigation";
+import { Stepper } from "march/components/navigation/stepper";
+import type { StepItem } from "march/components/navigation/steps";
 import type { ColorToken } from "march/theme";
 
 export const code = `<Stepper steps={[{ title: "Sepet" }, { title: "Adres" }, { title: "Ödeme" }, { title: "Onay" }]}

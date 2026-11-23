@@ -1,7 +1,8 @@
 // Showcase stage for Popover: a filter panel (or a list of choices) behind a button; the panel follows the Playground values.
-import { Popover } from "march/overlays";
-import { Button } from "march/actions";
-import { OptionList, Checkbox } from "march/forms";
+import { Popover } from "march/components/overlays/popover";
+import { Button } from "march/components/actions/button";
+import { OptionList } from "march/components/forms/option-list";
+import { Checkbox } from "march/components/forms/checkbox";
 import { filter } from "march/icons";
 
 export const code = `<Popover trigger={<Button icon={filter}>Süzgeçler</Button>} title="Süzgeçler" placement="bottom-start"

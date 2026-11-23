@@ -6,12 +6,14 @@ import "march/css/table.css";
 import { Link } from "march/router";
 import { Badge, TextInput, Toggle, toast } from "march/ui";
 import { Table } from "march/table";
-import { Kanban, type KanbanColumn } from "march/data";
+import { Kanban, type KanbanColumn } from "march/components/data/kanban";
 import { TreeView, type TreeViewNode } from "march/components/data/tree-view";
-import { Calendar, DateRangePicker, type DateRange } from "march/forms";
-import { Accordion } from "march/layout";
-import { Tabs, Stepper } from "march/navigation";
-import { Reveal } from "march/landing";
+import { Calendar } from "march/components/forms/calendar";
+import { DateRangePicker, type DateRange } from "march/components/forms/date-range-picker";
+import { Accordion } from "march/components/layout/accordion";
+import { Tabs } from "march/components/navigation/tabs";
+import { Stepper } from "march/components/navigation/stepper";
+import { Reveal } from "march/components/landing/reveal";
 import { Head } from "../head.tsx";
 
 // ── a table ─────────────────────────────────────────────────────────────────────────────────────────────────────

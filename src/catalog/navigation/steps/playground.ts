@@ -1,5 +1,5 @@
 import { definePlayground } from "../../spec.ts";
-import type { StepItem } from "march/navigation";
+import type { StepItem } from "march/components/navigation/steps";
 
 interface Values { steps: readonly StepItem[]; current: number; vertical: boolean; clickable: boolean; color: string; done: string; connector: boolean }
 

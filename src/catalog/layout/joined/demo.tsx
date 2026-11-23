@@ -1,8 +1,8 @@
 // Showcase stage for Joined: direction, radius, frame and dividers follow the Playground values (playground.ts).
-import { Joined } from "march/layout";
-import { Card } from "march/data";
-import { Button } from "march/actions";
-import { TextInput } from "march/forms";
+import { Joined } from "march/components/layout/joined";
+import { Card } from "march/components/data/card";
+import { Button } from "march/components/actions/button";
+import { TextInput } from "march/components/forms/text-input";
 
 export const code = `<Joined>                                   // one under the other, one frame
   <Card title="Önizleme">…</Card>

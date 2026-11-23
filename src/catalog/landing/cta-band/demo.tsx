@@ -1,5 +1,5 @@
 // Showcase stage for CtaBand.
-import { CtaBand } from "march/landing";
+import { CtaBand } from "march/components/landing/cta-band";
 import { arrowRight } from "march/icons";
 import { appUrl } from "march/base";
 

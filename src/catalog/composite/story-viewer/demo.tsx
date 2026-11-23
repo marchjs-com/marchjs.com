@@ -1,8 +1,8 @@
 // Showcase stage for StoryViewer: a story tray (StoryRing); a ring opens the viewer at that person, seen rings turn grey.
 // The viewer reads the Playground values each time it opens: "Hikâyeleri baştan aç" shows a new choice.
 import { computed, effect, untrack } from "march";
-import { StoryViewer, type StoryGroup } from "march/composite";
-import { StoryRing } from "march/social";
+import { StoryViewer, type StoryGroup } from "march/components/composite/story-viewer";
+import { StoryRing } from "march/components/social/story-ring";
 import { PHOTO, USERS, minutesAgo } from "../../social/demo-data.ts";
 
 export const code = `<StoryViewer open={$open} onClose={() => $open = false} groups={stories} start={$who}

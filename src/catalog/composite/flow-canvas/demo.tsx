@@ -1,7 +1,7 @@
 // Showcase stage for FlowCanvas: the sample order flow with the Playground values. Code is shown in the Code tab.
 // FlowCanvas has its own entry (march/flow): the flow page imports this demo statically.
 import { computed } from "march";
-import { FlowCanvas, createFlow } from "march/flow";
+import { FlowCanvas, createFlow } from "march/components/composite/flow-canvas";
 import { sampleTypes, sampleDoc } from "./sample.ts";
 
 export const code = `const flow = createFlow({ types, doc })

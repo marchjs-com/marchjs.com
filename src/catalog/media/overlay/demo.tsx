@@ -1,7 +1,7 @@
 // Showcase stage for Overlay: one effect layer in a card, behind or in front of its content; colour, opacity, inset and
 // blend follow the Playground (playground.ts).
-import { Overlay } from "march/media";
-import { Button } from "march/actions";
+import { Overlay } from "march/components/media/overlay";
+import { Button } from "march/components/actions/button";
 
 export const code = `<div class="card"><Overlay effect="mesh" /><h3>Başlık</h3></div>
 <Overlay src="media/hadi-waves.webm" poster="media/hadi-waves.jpg" />   // sessiz, döngülü, görünürken oynar

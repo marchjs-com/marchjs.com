@@ -1,6 +1,6 @@
 // Showcase stage for FormatToolbar: the bar over a sample line. The toggle tools switch a format of the line on and
 // off; the last tool run is named under it. The bar is re-created for the Playground values (playground.ts).
-import { FormatToolbar, formatToolName, type FormatTool } from "march/composite";
+import { FormatToolbar, formatToolName, type FormatTool } from "march/components/composite/format-toolbar";
 import type { ColorToken } from "march/theme";
 
 export const code = `<FormatToolbar tools={["bold", "italic", "|", "link"]} onTool={exec}

@@ -1,5 +1,6 @@
 // Showcase stage for FlowPalette: a palette next to a small canvas to drop onto. Code is shown in the Code tab.
-import { FlowPalette, FlowCanvas, createFlow } from "march/flow";
+import { FlowPalette } from "march/components/composite/flow-palette";
+import { FlowCanvas, createFlow } from "march/components/composite/flow-canvas";
 import { sampleTypes } from "../flow-canvas/sample.ts";
 
 export const code = `<FlowPalette flow={flow} types={types} />

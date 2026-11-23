@@ -1,7 +1,13 @@
 // Sample page: a redesign launch. Every claim is shown, not told: a BeforeAfter for the whole screen and one for each
 // detail (feed, profile, reading), then the numbers that changed and a call to action.
 import { Button } from "march/ui";
-import { SiteNav, Hero, SiteSection, BeforeAfter, StatsBand, CtaBand, SiteFooter } from "march/landing";
+import { SiteNav } from "march/components/landing/site-nav";
+import { Hero } from "march/components/landing/hero";
+import { SiteSection } from "march/components/landing/site-section";
+import { BeforeAfter } from "march/components/landing/before-after";
+import { StatsBand } from "march/components/landing/stats-band";
+import { CtaBand } from "march/components/landing/cta-band";
+import { SiteFooter } from "march/components/landing/site-footer";
 import { arrowRight, sparkles, globe, message, mail } from "march/icons";
 import { MockApp } from "../catalog/landing/demo-kit.tsx";
 import { FOOTER_COLUMNS } from "../catalog/landing/site-footer/demo.tsx";

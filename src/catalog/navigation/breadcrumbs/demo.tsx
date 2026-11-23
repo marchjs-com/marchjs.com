@@ -1,6 +1,6 @@
 // Showcase stage for Breadcrumbs: the path comes from the Playground (playground.ts); narrow it to collapse the middle.
 import { signal } from "march";
-import { Breadcrumbs, type Crumb, type CrumbSibling } from "march/navigation";
+import { Breadcrumbs, type Crumb, type CrumbSibling } from "march/components/navigation/breadcrumbs";
 import { arrowRight } from "march/icons";
 
 export const code = `<Breadcrumbs label="Dosya yolu" items={[

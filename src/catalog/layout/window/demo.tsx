@@ -1,8 +1,8 @@
 // Showcase stage for Window: a small desk with two windows. Drag a title bar, drop it on an edge to dock, double
 // click to fill, drag an edge to resize; the buttons minimize, fill / restore and close.
 import { signal } from "march";
-import { Button } from "march/actions";
-import { Window } from "march/layout";
+import { Button } from "march/components/actions/button";
+import { Window } from "march/components/layout/window";
 import { fileText, Icon } from "march/icons";
 
 export const code = `<div class="desk">                               // the area: any positioned box

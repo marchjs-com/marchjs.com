@@ -1,6 +1,6 @@
 // Showcase stage for Disclosure: two sections, one open (Playground values in playground.ts).
 import { signal } from "march";
-import { Disclosure } from "march/layout";
+import { Disclosure } from "march/components/layout/disclosure";
 import { settings, Icon } from "march/icons";
 
 export const code = `<Disclosure title={<span>Gelişmiş ayarlar</span>} open={$open} onToggle={(o) => $open = o}>…</Disclosure>

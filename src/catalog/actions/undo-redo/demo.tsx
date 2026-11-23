@@ -2,7 +2,8 @@
 // the buttons go back and forth. The line under them writes the tooltips the two buttons carry (step name, shortcut).
 // The history starts with two steps, one of them undone, so both buttons have something to do. canUndo / canRedo off
 // turn one button off over the history (the props win over it).
-import { UndoRedo, Button } from "march/actions";
+import { UndoRedo } from "march/components/actions/undo-redo";
+import { Button } from "march/components/actions/button";
 import { undoHistory } from "march/managers/undo/history";
 import { labelWithKey } from "../../demo-util.ts";
 import { rotateCcw, rotateCw } from "march/icons";

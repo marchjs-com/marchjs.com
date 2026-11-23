@@ -1,5 +1,5 @@
 // Showcase stage for Roadmap.
-import { Roadmap, type RoadmapItem } from "march/landing";
+import { Roadmap, type RoadmapItem } from "march/components/landing/roadmap";
 
 export const code = `<Roadmap items={[
   { time: "Bahar", title: "Tanışma yemekleri", body: "…", status: "done" },

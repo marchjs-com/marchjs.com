@@ -1,7 +1,7 @@
 // Showcase stage for LineChart / AreaChart: 30 days of income and spending. "Gün ekle" pushes a new day in (the chart
 // flows), every option of the card reaches the chart, and a click on a point names it.
-import { LineChart, AreaChart } from "march/charts";
-import { Button } from "march/actions";
+import { LineChart, AreaChart } from "march/components/data/line-chart";
+import { Button } from "march/components/actions/button";
 import { plus } from "march/icons";
 
 export const code = `<LineChart data={$days} x="day" y={["income", "spend"]} series={{ income: "Gelir", spend: "Gider" }}

@@ -1,6 +1,6 @@
 // Showcase stage for VerifiedMark: the badge beside a name, the way a post author or a profile title shows it, drawn
 // for the Playground values (size, colour, icon, accessible name).
-import { VerifiedMark } from "march/social";
+import { VerifiedMark } from "march/components/social/verified-mark";
 import type { ColorToken } from "march/theme";
 import { shieldCheck } from "march/icons";
 

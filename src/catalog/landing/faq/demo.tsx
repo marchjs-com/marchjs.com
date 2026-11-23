@@ -1,6 +1,6 @@
 // Showcase stage for Faq.
-import { Faq, type FaqItem } from "march/landing";
-import { Button } from "march/actions";
+import { Faq, type FaqItem } from "march/components/landing/faq";
+import { Button } from "march/components/actions/button";
 
 export const code = `<Faq layout="split" search title="Sık sorulanlar" lead="…" contact={<Button variant="secondary">Bize yaz</Button>}
   items={[{ q: "HADİ ücretsiz mi?", a: "Evet. Premium isteğe bağlı." }, …]} />

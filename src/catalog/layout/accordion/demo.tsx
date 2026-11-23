@@ -1,5 +1,5 @@
 // Showcase stage for Accordion: a help centre's questions (Playground values in playground.ts).
-import { Accordion } from "march/layout";
+import { Accordion } from "march/components/layout/accordion";
 import { truck, receipt, shieldCheck, plus, minus, Icon } from "march/icons";
 
 export const code = `<Accordion multiple open={[0]} items={[

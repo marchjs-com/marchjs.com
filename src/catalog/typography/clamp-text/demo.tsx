@@ -1,8 +1,8 @@
 // Showcase stage for ClampText: a long caption in a narrow column, folded to the Playground's line count (long or short text: the "Metin" option). The state
 // is controlled (`open` / `onOpenChange`): the button under it opens and folds the text from outside, and the line
 // shows the state.
-import { ClampText } from "march/typography";
-import { Button } from "march/actions";
+import { ClampText } from "march/components/typography/clamp-text";
+import { Button } from "march/components/actions/button";
 
 export const code = `<ClampText lines={3}>{post.text}</ClampText>                    // "devamı" appears only when it does not fit
 <ClampText text={bio} lines={2} open={$open} onOpenChange={(v) => $open = v} />   // controlled

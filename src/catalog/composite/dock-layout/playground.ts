@@ -1,5 +1,5 @@
 import { definePlayground } from "../../spec.ts";
-import { row, col, tabs, type TreeSpec } from "march/composite";
+import { row, col, tabs, type TreeSpec } from "march/components/composite/dock-layout";
 
 interface Values { panels: string; preset: string; actions: string; collapsed: boolean; icons: boolean; motion: boolean }
 

@@ -1,5 +1,5 @@
 // Showcase stage for SearchBox: a filtered list; the field follows the Playground values (playground.ts).
-import { SearchBox } from "march/forms";
+import { SearchBox } from "march/components/forms/search-box";
 import { filter, trash, Icon } from "march/icons";
 
 export const code = `<SearchBox bind:value={$q} onSearch={(q) => load(q)} shortcut />

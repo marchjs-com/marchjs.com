@@ -1,8 +1,8 @@
 // Showcase stage for CommandPalette: the app's palette (mounted once by the shell) with this card's commands added while
 // the card is on screen; the trigger button opens it. Playground values swap the commands and the button text.
 import { computed, onCleanup } from "march";
-import { PaletteButton, registerCommands, type Command } from "march/composite";
-import { toast } from "march/overlays";
+import { PaletteButton, registerCommands, type Command } from "march/components/composite/command-palette";
+import { toast } from "march/components/overlays/toast";
 import { fileText, download, copy, users, plus, command } from "march/icons";
 
 export const code = `registerCommands([

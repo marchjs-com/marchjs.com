@@ -1,5 +1,6 @@
 // Showcase stage for KeyValueEditor: the sample rows, numbers on or off (see the stored object) and read-only.
-import { KeyValueEditor, Field } from "march/forms";
+import { KeyValueEditor } from "march/components/forms/key-value-editor";
+import { Field } from "march/forms";
 import { START } from "./playground.ts";
 
 export const code = `<Field label="Kota" group><KeyValueEditor bind:value={$limits} numbers keyPlaceholder="Plan" valuePlaceholder="Koltuk" /></Field>

@@ -1,5 +1,5 @@
 // Showcase stage for ProjectGrid: illustrated covers (markup), filters; opening shows the Lightbox-less detail note.
-import { ProjectGrid, type Project } from "march/landing";
+import { ProjectGrid, type Project } from "march/components/landing/project-grid";
 
 export const code = `<ProjectGrid projects={work} onOpen={(p, cover) => sharedTransition(\`project-\${p.id}\`, cover, () => { $open = p })} />
 <ProjectGrid projects={work} />            // without onOpen: the cover opens in the Lightbox`

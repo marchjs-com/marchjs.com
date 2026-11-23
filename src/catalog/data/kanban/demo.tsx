@@ -1,6 +1,6 @@
 // Showcase stage for Kanban: drag cards (or Alt+← / Alt+→); the columns (JSON), their count and colours, dot, count and entrance follow the Playground values.
-import { Kanban, type KanbanColumn } from "march/data";
-import { Chip } from "march/actions";
+import { Kanban, type KanbanColumn } from "march/components/data/kanban";
+import { Chip } from "march/components/actions/chip";
 import { Icon, layers } from "march/icons";
 import { COLUMNS } from "./playground.ts";
 

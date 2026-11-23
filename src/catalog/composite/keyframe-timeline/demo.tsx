@@ -1,6 +1,6 @@
 // Showcase stage for KeyframeTimeline: three scenes, for the Playground values (playground.ts).
 import { signal } from "march";
-import { KeyframeTimeline } from "march/composite";
+import { KeyframeTimeline } from "march/components/composite/keyframe-timeline";
 import { SCENES } from "./playground.ts";
 
 const BAR: Record<string, boolean | ("play" | "time")[]> = { all: true, short: ["play", "time"], none: false }

@@ -1,6 +1,6 @@
 // Showcase stage for OverflowText and Marquee: rows in several scripts (RTL scrolls the other way) and a ticker
 // (Playground values in playground.ts).
-import { OverflowText, Marquee, type MarqueeTrigger, type MarqueeMode } from "march/typography";
+import { OverflowText, Marquee, type MarqueeTrigger, type MarqueeMode } from "march/components/typography/overflow-text";
 import { Icon, heart } from "march/icons";
 
 export const code = `<OverflowText text={title} play={() => selected()} /> // the selected row keeps scrolling

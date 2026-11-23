@@ -1,5 +1,5 @@
 // Showcase stage for BeforeAfter: the same HADİ screen, before (grey, flat) and after (the new design).
-import { BeforeAfter } from "march/landing";
+import { BeforeAfter } from "march/components/landing/before-after";
 import { MockApp } from "../demo-kit.tsx";
 import { heart, Icon } from "march/icons";
 

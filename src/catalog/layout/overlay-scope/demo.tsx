@@ -1,7 +1,7 @@
 // Showcase stage for OverlayScope: a small "app" whose drawer and dialog open inside its box, or on the page.
-import { OverlayScope } from "march/layout";
-import { Button } from "march/actions";
-import { openDrawer, openDialog } from "march/overlays";
+import { OverlayScope } from "march/components/layout/overlay-scope";
+import { Button } from "march/components/actions/button";
+import { openDrawer, openDialog } from "march/components/overlays/dialog";
 
 export const code = `<OverlayScope class="app">
   <button onClick={() => openDrawer(() => <Menu />)}>Menü</button>      // opens inside the box

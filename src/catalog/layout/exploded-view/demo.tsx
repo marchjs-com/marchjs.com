@@ -1,9 +1,10 @@
 // Showcase stage for ExplodedView: a small card taken apart into its parts (Avatar, Badge, Button), or a Button opened
 // into its layers. The same elements move: a click on a plate names it under the stage.
-import { ExplodedView } from "march/layout";
-import { Card, Badge } from "march/data";
-import { Avatar } from "march/social";
-import { Button } from "march/actions";
+import { ExplodedView } from "march/components/layout/exploded-view";
+import { Card } from "march/components/data/card";
+import { Badge } from "march/components/data/badge";
+import { Avatar } from "march/components/social/avatar";
+import { Button } from "march/components/actions/button";
 import { plus } from "march/icons";
 import type { ColorToken } from "march/theme";
 

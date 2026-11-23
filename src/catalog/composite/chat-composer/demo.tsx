@@ -1,6 +1,6 @@
 // Showcase stage for ChatComposer: what you send is listed above; the Playground turns parts on and off. A line under
 // the composer says what the round button's colour and the motion choice are (both show only while it is used).
-import { ChatComposer } from "march/composite";
+import { ChatComposer } from "march/components/composite/chat-composer";
 import { image, fileText, mapPin, arrowUp, radio, heart } from "march/icons";
 import type { ColorToken } from "march/theme";
 

@@ -1,6 +1,6 @@
 // Showcase stage for PeriodNav: the arrows step a month, the today button returns to this month. Every Playground
 // value changes the group: title, today button, arrows, icons, attached, size, colour, limits and texts.
-import { PeriodNav } from "march/navigation";
+import { PeriodNav } from "march/components/navigation/period-nav";
 import { computed, effect, untrack } from "march";
 import { arrowLeft, arrowRight } from "march/icons";
 

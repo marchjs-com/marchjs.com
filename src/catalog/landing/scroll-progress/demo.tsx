@@ -1,5 +1,5 @@
 // Showcase stage for ScrollProgress: an inline bar that follows how far this page is read.
-import { ScrollProgress } from "march/landing";
+import { ScrollProgress } from "march/components/landing/scroll-progress";
 
 export const code = `<ScrollProgress />                                        // whole page, fixed to the top
 <ScrollProgress target={() => article} position="inline" paint="accent" />`

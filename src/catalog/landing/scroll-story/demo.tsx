@@ -1,5 +1,6 @@
 // Showcase stage for ScrollStory: four steps with markup media in the four HADİ colours.
-import { ScrollStory, type StoryStep, Counter } from "march/landing";
+import { ScrollStory, type StoryStep } from "march/components/landing/scroll-story";
+import { Counter } from "march/components/landing/counter";
 import { MockApp } from "../demo-kit.tsx";
 import { animate } from "march/motion";
 

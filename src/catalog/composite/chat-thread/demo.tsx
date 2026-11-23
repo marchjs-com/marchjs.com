@@ -2,8 +2,9 @@
 // React from a bubble's smile button, reply by dragging a bubble or its reply button. A new answer speed or motion
 // choice sends a sample message, so the choice is seen at once (how the message comes in, when the answer arrives).
 import { computed, effect, untrack } from "march";
-import { ChatThread, type ChatMessage, ChatComposer } from "march/composite";
-import type { Reaction } from "march/social";
+import { ChatThread, type ChatMessage } from "march/components/composite/chat-thread";
+import { ChatComposer } from "march/components/composite/chat-composer";
+import type { Reaction } from "march/components/social/chat-bubble";
 import { minutesAgo, PHOTO } from "../../social/demo-data.ts";
 
 export const code = `<ChatThread messages={$messages} typing={$typing} group

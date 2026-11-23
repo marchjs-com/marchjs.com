@@ -1,5 +1,5 @@
 // Showcase stage for VideoBackground: a short hero over the showcase clip for the Playground values.
-import { VideoBackground } from "march/landing";
+import { VideoBackground } from "march/components/landing/video-background";
 import { appUrl } from "march/base";
 
 export const code = `<VideoBackground src="/media/clip.webm" poster="/media/clip.jpg" tint="dark">

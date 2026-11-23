@@ -1,5 +1,5 @@
 // Showcase stage for Splitter: a list and a preview side by side (Playground values in playground.ts).
-import { Splitter } from "march/layout";
+import { Splitter } from "march/components/layout/splitter";
 import { moreVertical, Icon } from "march/icons";
 
 export const code = `<Splitter start={<FileList />} end={<Preview />} initial={0.35} min={0.2} />

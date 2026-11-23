@@ -1,5 +1,5 @@
 import { definePlayground } from "../../spec.ts";
-import type { TimelineModel } from "march/composite";
+import type { TimelineModel } from "march/components/composite/keyframe-timeline";
 
 interface Values { scene: string; snap: number; loop: boolean; stage: boolean; readonly: boolean; transport: string; inspector: boolean; curves: boolean; labels: boolean }
 

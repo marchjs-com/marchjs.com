@@ -1,6 +1,6 @@
 // Showcase stage for Avatar: a row of communities for the Playground values (playground.ts). The first one has a
 // picture; "broken address" shows the fallback to the initials.
-import { Avatar, type AvatarSize } from "march/social";
+import { Avatar, type AvatarSize } from "march/components/social/avatar";
 import { USERS, PHOTO } from "../demo-data.ts";
 import { user } from "march/icons";
 

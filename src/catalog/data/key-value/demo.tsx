@@ -1,5 +1,5 @@
 // Showcase stage for KeyValue: the rows (JSON), columns, the empty text, and the card's hints and empty note follow the Playground values (playground.ts).
-import { KeyValue, type KeyValueItem } from "march/data";
+import { KeyValue, type KeyValueItem } from "march/components/data/key-value";
 import { ITEMS } from "./playground.ts";
 
 export const code = `<KeyValue columns={2} items={[

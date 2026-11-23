@@ -1,5 +1,5 @@
 // Showcase stage for Rating: the value from the Playground (a fraction fills part of a star), editable or read-only.
-import { Rating } from "march/forms";
+import { Rating } from "march/components/forms/rating";
 import { heart } from "march/icons";
 import { computed, effect, untrack } from "march";
 

@@ -1,5 +1,6 @@
 // Showcase stage for Combobox: a static list or an async search.
-import { Combobox, Field } from "march/forms";
+import { Combobox } from "march/components/forms/combobox";
+import { Field } from "march/forms";
 import { TOWNS } from "./playground.ts";
 
 export const code = `<Field label="İlçe"><Combobox bind:value={$town} options={towns} placeholder="Yazmaya başla" /></Field>

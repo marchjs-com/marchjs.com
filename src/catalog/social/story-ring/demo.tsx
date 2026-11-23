@@ -1,5 +1,5 @@
 // Showcase stage for StoryRing: a story tray; the first ring follows the Playground, a tap marks a ring seen.
-import { StoryRing, type StoryRingState } from "march/social";
+import { StoryRing, type StoryRingState } from "march/components/social/story-ring";
 import { USERS } from "../demo-data.ts";
 import type { ColorToken } from "march/theme";
 import { Icon, star } from "march/icons";

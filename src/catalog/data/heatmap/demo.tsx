@@ -1,7 +1,7 @@
 // Showcase stage for Heatmap: how busy a café is by weekday and hour, or a reading habit as a calendar of weeks.
 // "Yeni hafta" draws new numbers (the cells fade to their new tone with `animate`), a click on a cell names it.
-import { Heatmap } from "march/charts";
-import { Button } from "march/actions";
+import { Heatmap } from "march/components/data/heatmap";
+import { Button } from "march/components/actions/button";
 import { refresh } from "march/icons";
 
 export const code = `<Heatmap data={visits} x="hour" y="day" value="people" yFormat={(d) => DAYS[d]} title="Kafe yoğunluğu" />

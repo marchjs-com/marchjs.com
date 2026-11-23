@@ -2,7 +2,8 @@
 // march/ui › formatCount
 import { signal } from "march";
 import { Out, Row } from "../../_kit.tsx";
-import { Slider, formatCount } from "march/ui";
+import { Slider } from "march/components/forms/slider";
+import { formatCount } from "march/components/landing/counter";
 import { Pick } from "./_pick.tsx";
 import type { ApiExample } from "../../types.ts";
 import "../../ui-e.css";

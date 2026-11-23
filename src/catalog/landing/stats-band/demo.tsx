@@ -1,5 +1,5 @@
 // Showcase stage for StatsBand.
-import { StatsBand, type StatItem } from "march/landing";
+import { StatsBand, type StatItem } from "march/components/landing/stats-band";
 
 export const code = `<StatsBand items={[
   { value: 250000, label: "kişi", format: { notation: "compact" }, suffix: "+" },

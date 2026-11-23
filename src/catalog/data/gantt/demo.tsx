@@ -1,7 +1,7 @@
 // Showcase stage for Gantt: the Playground's launch plan around today (tasks as JSON, neutral demo data).
 import { signal, computed, untrack } from "march";
 import { Gantt, type GanttTask } from "march/components/data/gantt";
-import { Button } from "march/actions";
+import { Button } from "march/components/actions/button";
 import { TASKS } from "./playground.ts";
 
 export const code = `<Gantt tasks={$tasks} scale="day" cascade

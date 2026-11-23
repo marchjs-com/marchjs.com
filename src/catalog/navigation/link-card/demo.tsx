@@ -1,8 +1,8 @@
 // Showcase stage for LinkCard: three cards in a grid; the first one's title, link, icon, description and end text are
 // the Playground's, and the Playground switches every card's lead, tile colour, description, end text and arrow.
-import { LinkCard } from "march/navigation";
-import { Grid } from "march/layout";
-import { Avatar } from "march/social";
+import { LinkCard } from "march/components/navigation/link-card";
+import { Grid } from "march/components/layout/grid";
+import { Avatar } from "march/components/social/avatar";
 import { Icon, users, calendar, settings, chevronRight } from "march/icons";
 
 export const code = `<LinkCard href="/members" icon={users} title="Üyeler" description="Ara, davet et, yönet" meta="128" />

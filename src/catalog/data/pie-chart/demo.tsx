@@ -1,7 +1,7 @@
 // Showcase stage for PieChart: where a month's budget goes. "Sonraki ay" moves money between slices (they turn with
 // `animate`), every option of the card reaches the chart, and a click on a slice names it.
-import { PieChart } from "march/charts";
-import { Button } from "march/actions";
+import { PieChart } from "march/components/data/pie-chart";
+import { Button } from "march/components/actions/button";
 import { refresh } from "march/icons";
 
 export const code = `<PieChart data={$budget} x="label" y="value" donut format={["money", "TRY"]} legend="right" title="Bütçe dağılımı" />

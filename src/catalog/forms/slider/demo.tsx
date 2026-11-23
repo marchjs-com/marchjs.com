@@ -1,5 +1,6 @@
 // Showcase stage for Slider: step, whether the value is shown and the track (the browser's or a color ramp).
-import { Slider, Field } from "march/forms";
+import { Slider } from "march/components/forms/slider";
+import { Field } from "march/forms";
 import type { ColorToken } from "march/theme";
 type Opt<T> = T | undefined
 

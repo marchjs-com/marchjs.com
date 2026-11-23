@@ -2,7 +2,7 @@
 // march/ui › initials
 import { signal } from "march";
 import { Out } from "../../_kit.tsx";
-import { initials } from "march/ui";
+import { initials } from "march/components/social/avatar";
 import { Field } from "./_field.tsx";
 import type { ApiExample } from "../../types.ts";
 import "../../ui-e.css";

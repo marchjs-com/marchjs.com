@@ -29,7 +29,7 @@ function reportRows(r: Report): Row[] {
 const KIND: Record<string, string> = { entry: "giriş", route: "sayfa", layout: "yerleşim", part: "parça" }
 
 // a lazy component for the slow 3G demo: skeleton on its first arrival, instant afterwards (no skeleton when cached)
-const PieChart = lazy(() => import("march/charts").then((m) => ({ default: m.PieChart })), { when: "immediate", placeholder: "chart", height: "14rem" })
+const PieChart = lazy(() => import("march/components/data/pie-chart").then((m) => ({ default: m.PieChart })), { when: "immediate", placeholder: "chart", height: "14rem" })
 const SHARE = [{ label: "Uygulama", value: 4200 }, { label: "Web", value: 2900 }, { label: "Davet", value: 1800 }, { label: "Diğer", value: 610 }]
 
 /** The build's chunk manifest (the JSON data block in index.html): dynamic import source → its files. */

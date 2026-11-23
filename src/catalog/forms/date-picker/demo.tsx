@@ -1,5 +1,6 @@
 // Showcase stage for DatePicker: the locale changes the typing order and the placeholder.
-import { DatePicker, Field } from "march/forms";
+import { DatePicker } from "march/components/forms/date-picker";
+import { Field } from "march/forms";
 import { Icon, clock } from "march/icons";
 import { computed, untrack } from "march";
 // unions live outside JSX: the March compiler reads `|` in a JSX expression as a pipe

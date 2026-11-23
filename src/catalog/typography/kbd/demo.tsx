@@ -1,6 +1,6 @@
 // Showcase stage for Kbd: the shortcut (or the plain text) follows the Playground values (playground.ts); mod is ⌘ on
 // macOS, Ctrl elsewhere.
-import { Kbd } from "march/typography";
+import { Kbd } from "march/components/typography/kbd";
 
 export const code = `<Kbd keys="mod+k" />          // Ctrl+K, or ⌘K on macOS
 <Kbd keys="shift+enter" />

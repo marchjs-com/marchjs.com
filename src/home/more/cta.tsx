@@ -2,7 +2,7 @@
 // the CDN, the repository) with their lines to copy.
 import "./more.css";
 import { Button, CopyButton } from "march/ui";
-import { Reveal } from "march/landing";
+import { Reveal } from "march/components/landing/reveal";
 import { Icon, arrowRight } from "march/icons";
 import { github } from "march/icons/simple-icons";
 import { version } from "march";

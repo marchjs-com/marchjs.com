@@ -2,7 +2,7 @@
 // march/flow › validateFlow
 import { signal } from "march";
 import { Segmented } from "march/ui";
-import { validateFlow } from "march/flow";
+import { validateFlow } from "march/components/composite/flow-canvas";
 import { TYPES } from "./_types.tsx";
 import { doc } from "./_doc.tsx";
 import { Stack } from "./_stack.tsx";

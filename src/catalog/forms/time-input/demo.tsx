@@ -1,5 +1,6 @@
 // Showcase stage for TimeInput: the clock dial (picker="clock") or the browser's field, with or without seconds.
-import { TimeInput, Field } from "march/forms";
+import { TimeInput } from "march/components/forms/time-input";
+import { Field } from "march/forms";
 import { effect, untrack } from "march";
 
 export const code = `<Field label="Başlangıç"><TimeInput bind:value={$start} picker="clock" min="09:00" max="18:00" /></Field>

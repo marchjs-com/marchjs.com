@@ -1,5 +1,5 @@
 // Sample node types and an order flow for the flow demos (HADİ store).
-import { emit, FLOW_SCHEMA, type FlowDoc, type FlowNodeType } from "march/flow";
+import { emit, FLOW_SCHEMA, type FlowDoc, type FlowNodeType } from "march/components/composite/flow-canvas";
 import { zap, globe, filter, creditCard, mail, hourglass, database, layers, userCheck } from "march/icons";
 
 let orderNo = 1040;

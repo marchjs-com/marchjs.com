@@ -1,7 +1,8 @@
 // Showcase stage for EasingCurveEditor: the curve is registered as "hadi-pop" in the motion engine; the button runs a
 // real engine animation with that name, for the Playground values (playground.ts).
 import { untrack } from "march";
-import { animate, EasingCurveEditor } from "march/motion";
+import { animate } from "march/motion";
+import { EasingCurveEditor } from "march/components/motion/easing-curve-editor";
 import type { ColorToken } from "march/theme";
 
 // the Playground's handleColors (JSON): two colour tokens, else the editor's own

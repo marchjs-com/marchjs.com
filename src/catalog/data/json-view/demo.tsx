@@ -1,5 +1,5 @@
 // Showcase stage for JsonView: the value (JSON), the initially open depth, the arrow, the count texts and the name follow the Playground values (playground.ts).
-import { JsonView, type JsonViewLabels } from "march/data";
+import { JsonView, type JsonViewLabels } from "march/components/data/json-view";
 import { ORDER } from "./playground.ts";
 
 export const code = `<JsonView value={order} open={1} />   // open = initially expanded depth

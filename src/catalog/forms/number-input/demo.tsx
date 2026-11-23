@@ -1,6 +1,7 @@
 // Showcase stage for the NumberInput family: the starting value, decimals, grouping, prefix / suffix and the arrow step; MoneyInput and
 // PercentInput under it.
-import { NumberInput, MoneyInput, PercentInput, Field } from "march/forms";
+import { NumberInput, MoneyInput, PercentInput } from "march/components/forms/number-input";
+import { Field } from "march/forms";
 // unions live outside JSX: the March compiler reads `|` in a JSX expression as a pipe
 type Maybe<T> = T | null | undefined
 type V = { value: number; decimals: number; grouping: boolean; prefix: string; suffix: string; step: number }

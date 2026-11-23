@@ -1,5 +1,6 @@
 // Showcase stage for ListEditor: the sample items it starts with, a cap on the list, the row buttons, the add line and the read-only state.
-import { ListEditor, Field } from "march/forms";
+import { ListEditor } from "march/components/forms/list-editor";
+import { Field } from "march/forms";
 import { SAMPLES } from "./playground.ts";
 
 export const code = `<Field label="Etiketler" group><ListEditor bind:value={$tags} max={5} placeholder="Etiket ekle" /></Field>

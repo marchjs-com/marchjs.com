@@ -1,7 +1,7 @@
 // Showcase stage for ActivityBar: the bar beside the view it switches; its views and the active one come from the
 // Playground (playground.ts) like the rest of its values.
 import { signal, effect, untrack } from "march";
-import { ActivityBar, type ActivityItem } from "march/navigation";
+import { ActivityBar, type ActivityItem } from "march/components/navigation/activity-bar";
 import type { ColorToken } from "march/theme";
 
 export const code = `<ActivityBar value={$view} onChange={(v) => $view = v} controls="side-view" items={[

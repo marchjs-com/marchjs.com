@@ -2,7 +2,8 @@
 // the Debugger beside it. The program below is written with the calls the instrumenter (march-app-ui, instrument.js)
 // writes in, so the stage needs no compiler: Start runs it, the breakpoint on line 4 stops in the loop, Continue goes
 // to the next round, the watch `sum * 2` follows.
-import { Debugger, createDebugSession, type DebugMeta, type DebuggerSection, CodeEditor } from "march/composite";
+import { Debugger, createDebugSession, type DebugMeta, type DebuggerSection } from "march/components/composite/debugger";
+import { CodeEditor } from "march/components/composite/code-editor";
 import { star, sparkles } from "march/icons";
 
 export const code = `const session = createDebugSession({ persist: "my-debugger" })

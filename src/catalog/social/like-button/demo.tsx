@@ -1,6 +1,6 @@
 // Showcase stage for LikeButton: one heart with the Playground options, plus heartBurst on a plain tile.
 import { computed, effect, untrack } from "march";
-import { LikeButton, heartBurst, heartPop } from "march/social";
+import { LikeButton, heartBurst, heartPop } from "march/components/social/like-button";
 import type { ColorToken } from "march/theme";
 import { Icon, star, sparkles } from "march/icons";
 

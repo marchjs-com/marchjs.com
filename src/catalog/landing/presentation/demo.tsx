@@ -1,6 +1,7 @@
 // Showcase stage for Presentation: a short deck (title, fragments, split, numbers, closing) for the Playground values.
-import { Presentation, Slide, Appear, Counter } from "march/landing";
-import { Overlay } from "march/media";
+import { Presentation, Slide, Appear } from "march/components/landing/presentation";
+import { Counter } from "march/components/landing/counter";
+import { Overlay } from "march/components/media/overlay";
 import { MockApp } from "../demo-kit.tsx";
 import { effect, untrack } from "march";
 import { animate } from "march/motion";

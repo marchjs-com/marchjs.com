@@ -1,6 +1,6 @@
 // Showcase stage for ProfileHeader: follow and watch the follower count roll with the button.
-import { ProfileHeader, type ProfileUser } from "march/composite";
-import type { FollowState } from "march/social";
+import { ProfileHeader, type ProfileUser } from "march/components/composite/profile-header";
+import type { FollowState } from "march/components/social/follow-button";
 import { PHOTO } from "../../social/demo-data.ts";
 import { link, flag } from "march/icons";
 

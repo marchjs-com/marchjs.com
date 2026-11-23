@@ -10,10 +10,16 @@ import { Button, Segmented, Textarea, Toggle, openDialog, toast } from "march/ui
 import { BarChart, Heatmap, PieChart, type PiePoint } from "march/charts";
 import { markdownNodes } from "march/dom/markdown";
 import { Icon, arrowLeft, arrowRight, bold, code, heart, italic, link, list, quote, refresh } from "march/icons";
-import { Media } from "march/media";
-import { MediaGrid, type MediaItem, StoryRing, FollowButton, type FollowState } from "march/social";
-import { ChatThread, type ChatMessage, ChatComposer, StoryViewer, type StoryGroup } from "march/composite";
-import { Pricing, type PricingPlan, Testimonials, Reveal } from "march/landing";
+import { Media } from "march/components/media/media";
+import { MediaGrid, type MediaItem } from "march/components/social/media-grid";
+import { StoryRing } from "march/components/social/story-ring";
+import { FollowButton, type FollowState } from "march/components/social/follow-button";
+import { ChatThread, type ChatMessage } from "march/components/composite/chat-thread";
+import { ChatComposer } from "march/components/composite/chat-composer";
+import { StoryViewer, type StoryGroup } from "march/components/composite/story-viewer";
+import { Pricing, type PricingPlan } from "march/components/landing/pricing";
+import { Testimonials } from "march/components/landing/testimonials";
+import { Reveal } from "march/components/landing/reveal";
 import { Head } from "../head.tsx";
 import { every } from "../clock.ts";
 

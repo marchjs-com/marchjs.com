@@ -66,6 +66,7 @@ import e61 from "./motion-b/motion--parse-color.x.tsx";
 import e62 from "./motion-b/motion--parse-path.x.tsx";
 import e63 from "./motion-b/motion--path-length.x.tsx";
 import e64 from "./motion-b/motion--path-sampler.x.tsx";
+import e65 from "./motion-b/motion--pixel-dissolve.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "march/motion#Track": e0,
   "march/motion#animate": e1,
@@ -132,5 +133,6 @@ const examples: Record<string, ApiExample<any>> = {
   "march/motion#parsePath": e62,
   "march/motion#pathLength": e63,
   "march/motion#pathSampler": e64,
+  "march/motion#pixelDissolve": e65,
 };
 export default examples;

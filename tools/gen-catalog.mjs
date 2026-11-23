@@ -50,8 +50,8 @@ export async function generate() {
       if (!known.has(`${cat.name}/${n.name}`)) problems.push(`src/catalog/${cat.name}/${n.name}: no such component in March ${await marchVersion()}`);
     }
   }
-  // the public subpath of a component: its own path for the large ones (meta.barrel false), its own entry, else its category
-  const subpath = (c) => (c.meta?.barrel === false ? `march/components/${c.folder}` : c.meta?.entry ?? `march/${c.category}`);
+  // a component's own package entry, march/components/<category>/<name> (also one CDN module each)
+  const subpath = (c) => `march/components/${c.folder}`;
   // the API index: subpaths with their names and kinds (the same order as March's package exports)
   const api = JSON.parse(readFileSync(await dataFile("api/index.en.json"), "utf8")).subpaths.map((s) => ({ subpath: s.subpath, slug: s.slug, items: s.items.map((i) => [i[0], i[1]]) }));
   const exportName = (c) => (api.some((x) => x.items.some((it) => it[0] === nameOf(c))) ? nameOf(c) : nameOf(c)[0].toLowerCase() + nameOf(c).slice(1));
@@ -145,8 +145,7 @@ export async function generate() {
   files["cards-roots.gen.ts"] = HEAD + "/** Component name → the class of its root element. */\nexport const roots: Record<string, string> = {\n" +
     list.filter((c) => rootClass(c)).map((c) => `  ${JSON.stringify(nameOf(c))}: ${JSON.stringify(rootClass(c))},\n`).join("") + "};\n";
   // the components other components are built from (every name in a composedOf), each behind a loader: a card gives
-  // them props through m:parts when a part of a composite is chosen on the stage. `import("march/<category>").then((m)
-  // => m.Name)`: March's compiler loads the module that defines Name, so the lazy part is that one component.
+  // them props through m:parts when a part of a composite is chosen on the stage: each loads the component's own entry.
   const partList = list.filter((c) => partNames.has(nameOf(c)) && !c.meta?.entry);
   const partLoader = (c) => `() => import("${subpath(c)}").then((m) => m.${exportName(c)})`;
   files["cards-parts.gen.ts"] = HEAD + "/** Component name → a loader of the component itself (the key of an m:parts map). */\n" +

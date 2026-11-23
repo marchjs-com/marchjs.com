@@ -1,6 +1,6 @@
 // type-only import: the spec is plain data (its page imports it without the shared component chunk)
 import type { PlaygroundSpec } from "../../spec.ts";
-import type { MenuItem } from "march/actions";
+import type { MenuItem } from "march/components/actions/menu";
 import { el } from "../../playground-el.ts";
 
 interface Values { shortcuts: boolean; danger: boolean; label: string; cardsOnly: boolean; area: string }

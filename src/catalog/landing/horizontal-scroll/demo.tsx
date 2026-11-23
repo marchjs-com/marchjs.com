@@ -1,5 +1,5 @@
 // Showcase stage for HorizontalScroll: coloured case-study panels.
-import { HorizontalScroll } from "march/landing";
+import { HorizontalScroll } from "march/components/landing/horizontal-scroll";
 
 export const code = `<HorizontalScroll label="Vaka çalışmaları" panel="26rem">
   {cases.map((c) => <Card>…</Card>)}

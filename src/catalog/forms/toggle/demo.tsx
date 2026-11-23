@@ -1,5 +1,5 @@
 // Showcase stage for Toggle: the label, the color token, three states and the disabled state.
-import { Toggle } from "march/forms";
+import { Toggle } from "march/components/forms/toggle";
 import type { ColorToken } from "march/theme";
 // unions live outside JSX: the March compiler reads `|` in a JSX expression as a pipe
 type Opt<T> = T | undefined

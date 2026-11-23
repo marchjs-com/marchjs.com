@@ -1,5 +1,5 @@
 // Showcase stage for Spinner: size, name and colours from the Playground values (playground.ts), inside a button and alone.
-import { Spinner } from "march/feedback";
+import { Spinner } from "march/components/feedback/spinner";
 
 export const code = `<Spinner size="lg" label="Kullanıcılar yükleniyor" />
 <Spinner colors="brand" />                     // dört HADİ rengi

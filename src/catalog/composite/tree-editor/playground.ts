@@ -1,5 +1,5 @@
 import { definePlayground } from "../../spec.ts";
-import type { JsonSchema } from "march/composite";
+import type { JsonSchema } from "march/components/composite/tree-editor";
 
 interface Values { data: string; schema: boolean; search: boolean; expand: number; readonly: boolean; status: boolean; typeBadges: boolean; actions: string; ownLabels: boolean }
 

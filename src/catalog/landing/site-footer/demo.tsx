@@ -1,5 +1,5 @@
 // Showcase stage for SiteFooter.
-import { SiteFooter } from "march/landing";
+import { SiteFooter } from "march/components/landing/site-footer";
 import { sparkles, globe, message, mail } from "march/icons";
 
 export const code = `<SiteFooter brand={{ name: "HADİ", mark: logo }} about="…" wordmark="HADİ"

@@ -1,7 +1,7 @@
 // Showcase stage for FileUpload: one or several files, what is accepted, and a simulated upload with progress.
-import { FileUpload, type UploadFn } from "march/forms";
+import { FileUpload, type UploadFn } from "march/components/forms/file-upload";
 import { Icon, trash } from "march/icons";
-import { Button } from "march/actions";
+import { Button } from "march/components/actions/button";
 import { computed, untrack } from "march";
 
 export const code = `<FileUpload multiple accept="image/*" maxSize={5_000_000} label="Görselleri bırak ya da seç" />

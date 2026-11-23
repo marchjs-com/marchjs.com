@@ -1,7 +1,8 @@
 // Showcase stage for PanelHeader: one panel whose bar follows the Playground values (playground.ts).
-import { PanelHeader } from "march/layout";
-import { Button, IconButton } from "march/actions";
-import { Badge } from "march/data";
+import { PanelHeader } from "march/components/layout/panel-header";
+import { Button } from "march/components/actions/button";
+import { IconButton } from "march/components/actions/icon-button";
+import { Badge } from "march/components/data/badge";
 import { settings, more, minus, Icon } from "march/icons";
 
 export const code = `<PanelHeader icon={settings} title="Ayarlar" subtitle="Çalışma alanı" divider

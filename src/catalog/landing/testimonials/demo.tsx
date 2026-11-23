@@ -1,5 +1,5 @@
 // Showcase stage for Testimonials: what people say about HADİ (sample quotes).
-import { Testimonials, type Testimonial } from "march/landing";
+import { Testimonials, type Testimonial } from "march/components/landing/testimonials";
 
 export const code = `<Testimonials variant="wall" items={[
   { quote: "Yeni şehirde ilk arkadaşlarımı bir tanışma yemeğinde buldum.", name: "Deniz Arı", role: "İzmir", rating: 5 },

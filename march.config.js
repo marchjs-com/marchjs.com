@@ -23,9 +23,6 @@ const BENCH_PARTS = {
 // once, a full tool or a whole sample site, loaded only where it is shown. Each limit is the larger of two release measurements
 // (23 Nov 2026, March 0.3.5: this machine, Windows / Node 26, and CI, Linux / Node 24: packing differs a little between
 // them) plus 15%, rounded up to 5 KB. The packer packs to the default budgets, so the limits do not change the packing. A row that grows past its limit still fails the build.
-// Re-measured 23 Nov 2026 with the catalog in the site (imports through March's entries; the compiler resolves them to
-// the defining modules): ThemeEditor panels, the /web proof cards and the start page's app and tools sections pack
-// differently (their own code did not grow). Same rule, this machine only: CI's report is the gate.
 const kb = (n) => n * 1024;
 const PAGE = "a section page: live demos of every component of its section on one page";
 const IDE = "MarchIDE's live workbench (/ide-live): editors, the compiler, preview and panels, a full tool on its own page";
@@ -88,11 +85,11 @@ const SHOWCASE_ROUTES = Object.fromEntries(Object.entries(argued({
   "/web": [70, PAGE],
 })).map(([k, v]) => [k, v.limit]));
 const SHOWCASE_PARTS = argued({
-  "node_modules/march/src/components/composite/theme-editor/panels.ts": [110, THEME_EDITOR],
+  "node_modules/march/src/components/composite/theme-editor/panels.ts": [75, THEME_EDITOR],
   "node_modules/march/src/components/composite/theme-editor/persist.ts": [55, THEME_EDITOR],
   "node_modules/march/src/components/composite/theme-editor/preview.ts": [45, THEME_EDITOR],
   "src/catalog/web-hero.demos.gen.ts": [30, CARDS],
-  "src/catalog/web-proof.demos.gen.ts": [55, CARDS],
+  "src/catalog/web-proof.demos.gen.ts": [30, CARDS],
   "src/catalog/web-sell.demos.gen.ts": [30, CARDS],
   "src/catalog/web-talk.demos.gen.ts": [30, CARDS],
   "src/catalog/web-work.demos.gen.ts": [30, CARDS],
@@ -116,8 +113,8 @@ const SHOWCASE_PARTS = argued({
   "src/bench/apps/vue.ts": [35, BENCH],
   "src/bench/scenarios-section.tsx": [65, BENCH],
   "src/component-page/_layout.tsx": [70, COMPONENT_PAGE],
-  "src/home/more2/app.tsx": [45, HOME],
-  "src/home/more3/tools.tsx": [110, HOME],
+  "src/home/more2/app.tsx": [30, HOME],
+  "src/home/more3/tools.tsx": [90, HOME],
   "src/home/more3/visual.tsx": [45, HOME],
   "src/home/sections.tsx": [225, HOME],
   "src/playground/layouts/component.tsx": [200, MARCH_IDE],

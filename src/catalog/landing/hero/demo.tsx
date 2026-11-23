@@ -1,5 +1,5 @@
 // Showcase stage for Hero: every variant with the same copy; product and split get the markup product mock.
-import { Hero, type HeroVariant } from "march/landing";
+import { Hero, type HeroVariant } from "march/components/landing/hero";
 import { MockApp } from "../demo-kit.tsx";
 import { arrowRight } from "march/icons";
 import { appUrl } from "march/base";

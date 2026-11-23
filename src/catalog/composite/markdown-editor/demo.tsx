@@ -1,8 +1,8 @@
 // Showcase stage for MarkdownEditor, for the Playground values (playground.ts). The editor is re-created when an
 // option changes; the text is kept.
 import { untrack } from "march";
-import { MarkdownEditor, type MarkdownView } from "march/composite";
-import { Button } from "march/actions";
+import { MarkdownEditor, type MarkdownView } from "march/components/composite/markdown-editor";
+import { Button } from "march/components/actions/button";
 
 const START = [
   "## HADİ ekip toplantısı",

@@ -1,7 +1,8 @@
 // Showcase stage for OptionList: a panel of choices; role (and several choices), the chosen row, layout, parts, the
 // hint beside the label and a long label follow the Playground values.
-import { OptionList, type OptionItem, SearchBox } from "march/forms";
-import { Kbd } from "march/typography";
+import { OptionList, type OptionItem } from "march/components/forms/option-list";
+import { SearchBox } from "march/components/forms/search-box";
+import { Kbd } from "march/components/typography/kbd";
 import { sun, moon, monitor, palette, star, Icon } from "march/icons";
 
 export const code = `<OptionList bind:value={$theme} label="Tema"

@@ -1,7 +1,7 @@
 // Showcase stage for SectionTimeline: a box of sections that scrolls, the timeline beside it (vertical) or under it
 // (horizontal), following the box (root). Point at the dots to magnify them, press one to scroll there; the line shows
 // the section being read.
-import { SectionTimeline, type SectionTimelineItem } from "march/navigation";
+import { SectionTimeline, type SectionTimelineItem } from "march/components/navigation/section-timeline";
 
 export const code = `<SectionTimeline items={sections} hash fixed intro />              // the page: dots at the side, the address follows
 <SectionTimeline items={steps} orientation="horizontal" root={() => box} />   // a scrolling box: a row of dots under it

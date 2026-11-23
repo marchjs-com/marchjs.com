@@ -2,7 +2,8 @@
 // march/ui › formatKey
 import { signal } from "march";
 import { Out, Row } from "../../_kit.tsx";
-import { Kbd, formatKey } from "march/ui";
+import { formatKey } from "march/ui";
+import { Kbd } from "march/components/typography/kbd";
 import { Field } from "./_field.tsx";
 import type { ApiExample } from "../../types.ts";
 import "../../ui-e.css";

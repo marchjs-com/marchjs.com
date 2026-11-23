@@ -1,6 +1,6 @@
 // Showcase stage for Progress: label, value, look (bar / line), parts, colours, paint, tone and size from the Playground
 // values (playground.ts). Timed parts fill one after the other and start over.
-import { Progress } from "march/feedback";
+import { Progress } from "march/components/feedback/progress";
 
 export const code = `<Progress value={$p} label="Yükleniyor" showValue />
 <Progress />                                              // belirsiz

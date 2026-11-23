@@ -1,6 +1,6 @@
 // Showcase stage for Skeleton: lines, a block or a whole card while "loading"; the button swaps in the real content.
-import { Skeleton } from "march/feedback";
-import { Button } from "march/actions";
+import { Skeleton } from "march/components/feedback/skeleton";
+import { Button } from "march/components/actions/button";
 
 export const code = `<Skeleton lines={3} />
 <Skeleton block height="lg" />

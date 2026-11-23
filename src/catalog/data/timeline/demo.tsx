@@ -1,5 +1,5 @@
 // Showcase stage for Timeline: the items (JSON), dot, line, and the card's colours, icons and time format follow the Playground values (playground.ts).
-import { Timeline, type TimelineItem } from "march/data";
+import { Timeline, type TimelineItem } from "march/components/data/timeline";
 import { check, truck, creditCard } from "march/icons";
 import { ITEMS } from "./playground.ts";
 

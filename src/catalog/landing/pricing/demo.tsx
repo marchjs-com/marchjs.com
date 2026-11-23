@@ -1,5 +1,5 @@
 // Showcase stage for Pricing: switch monthly / yearly to see the prices roll.
-import { Pricing, type PricingPlan } from "march/landing";
+import { Pricing, type PricingPlan } from "march/components/landing/pricing";
 
 export const code = `let $period = "monthly"
 <Pricing bind:period={$period} saving="4 ay bedava" currency="TRY" plans={[

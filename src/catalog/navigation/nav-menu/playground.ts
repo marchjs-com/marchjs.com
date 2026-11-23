@@ -1,5 +1,5 @@
 import { definePlayground } from "../../spec.ts";
-import type { NavItem } from "march/navigation";
+import type { NavItem } from "march/components/navigation/nav-menu";
 import type { Href } from "march/router";
 import { inbox, barChart, settings, book, calendar, message } from "march/icons";
 

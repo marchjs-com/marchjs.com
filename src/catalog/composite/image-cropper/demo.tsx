@@ -1,7 +1,7 @@
 // Showcase stage for ImageCropper: a picture drawn on a canvas with the theme's HADİ colors (a blob: URL, so the cropper
 // can read it back), for the Playground values (playground.ts).
 import { signal } from "march";
-import { ImageCropper, DEFAULT_CROP, type CropState } from "march/composite";
+import { ImageCropper, DEFAULT_CROP, type CropState } from "march/components/composite/image-cropper";
 import { DEFAULT_SRC } from "./playground.ts";
 
 const token = (name: string): string => globalThis.getComputedStyle?.(globalThis.document.documentElement).getPropertyValue(name).trim() || "gray"

@@ -1,6 +1,6 @@
 // Showcase stage for Empty: size, icon, title, text and action follow the Playground values (playground.ts).
-import { Empty } from "march/feedback";
-import { Button } from "march/actions";
+import { Empty } from "march/components/feedback/empty";
+import { Button } from "march/components/actions/button";
 import { inbox, plus } from "march/icons";
 
 export const code = `<Empty icon={inbox} title="Gelen kutusu boş" action={[<Button variant="primary" icon={plus}>Yeni mesaj</Button>]}>

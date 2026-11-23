@@ -1,7 +1,7 @@
 // Showcase stage for BarChart: a week of a bakery's sales, in the shop and online. "Yeni hafta" draws new numbers (the
 // bars glide with `animate`), every option of the card reaches the chart, and a click on a bar names it.
-import { BarChart } from "march/charts";
-import { Button } from "march/actions";
+import { BarChart } from "march/components/data/bar-chart";
+import { Button } from "march/components/actions/button";
 import { refresh } from "march/icons";
 
 export const code = `<BarChart data={$week} x="day" y={["shop", "online"]} series={{ shop: "Dükkân", online: "Çevrimiçi" }}

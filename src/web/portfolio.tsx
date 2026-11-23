@@ -1,7 +1,12 @@
 // Sample page: a personal portfolio — projects open into their detail page with a shared element transition.
 import { Button } from "march/ui";
 import { lazy } from "march/lazy";
-import { SiteNav, Hero, SiteSection, ProjectGrid, HorizontalScroll, SiteFooter, type Project } from "march/landing";
+import { SiteNav } from "march/components/landing/site-nav";
+import { Hero } from "march/components/landing/hero";
+import { SiteSection } from "march/components/landing/site-section";
+import { ProjectGrid, type Project } from "march/components/landing/project-grid";
+import { HorizontalScroll } from "march/components/landing/horizontal-scroll";
+import { SiteFooter } from "march/components/landing/site-footer";
 import { sharedTransition } from "march/motion";
 import { arrowRight, mail, message } from "march/icons";
 import { PROJECTS, Cover } from "../catalog/landing/project-grid/demo.tsx";

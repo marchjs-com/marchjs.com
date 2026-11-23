@@ -1,5 +1,6 @@
 // Showcase stage for ButtonGroup: attached or spaced follows the Playground value (playground.ts).
-import { ButtonGroup, Button } from "march/actions";
+import { ButtonGroup } from "march/components/actions/button-group";
+import { Button } from "march/components/actions/button";
 
 export const code = `<ButtonGroup attached label="Hizalama">
   <Button>Başa</Button><Button>Ortaya</Button><Button>Sona</Button>

@@ -1,7 +1,7 @@
 // Showcase stage for PageDots: the dots drive a page number; Previous / Next move it from outside, so read-only dots
 // (interactive off) still change. The line shows the current page.
-import { PageDots } from "march/navigation";
-import { Button } from "march/actions";
+import { PageDots } from "march/components/navigation/page-dots";
+import { Button } from "march/components/actions/button";
 
 export const code = `<PageDots count={5} bind:value={$page} />                        // buttons: click, arrow keys, Home / End
 <PageDots count={steps.length} value={$active} m:color="brand-orange" />   // read-only: shows the position

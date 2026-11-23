@@ -1,9 +1,9 @@
 // Showcase stage for CheckMark: the chosen value on top, then the three values in a small comparison list, drawn for
 // the Playground values (look, size, visible text, own glyphs, colour).
-import { CheckMark, type CheckMarkValue, type CheckMarkIcons, type CheckMarkMotionFn } from "march/feedback";
+import { CheckMark, type CheckMarkValue, type CheckMarkIcons, type CheckMarkMotionFn } from "march/components/feedback/check-mark";
 import { computed, untrack } from "march";
 import { animate } from "march/motion";
-import { Button } from "march/actions";
+import { Button } from "march/components/actions/button";
 import type { ColorToken } from "march/theme";
 import { heart, trash, more } from "march/icons";
 

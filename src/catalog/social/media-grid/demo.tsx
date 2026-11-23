@@ -1,5 +1,5 @@
 // Showcase stage for MediaGrid: the Playground picks how many photos and the layout; taps are logged below.
-import { MediaGrid } from "march/social";
+import { MediaGrid } from "march/components/social/media-grid";
 import { PHOTOS } from "../demo-data.ts";
 
 export const code = `<MediaGrid items={post.media} onOpen={(i, el) => openLightbox(post.media, i, el)}

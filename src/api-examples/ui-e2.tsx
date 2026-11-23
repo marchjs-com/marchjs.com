@@ -3,9 +3,26 @@
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
 import { signal, untrack } from "march";
 import type { Signal } from "march";
-import {
-  Button, Badge, Segmented, TextInput, Textarea, Slider, Kbd, action, isAction, colorTheme, colorThemes, defineMeta, distance, firstDayOf, fold, format, formatCount, formatDate, formatKey, formatNumber, frameSize, freeKey, getAt, gradientCss, heartBurst, heartPop, hsvToRgb, htmlToMarkdown, initials, inputFor, insertAfter, isMac, isSafeLink, key, loadTheme, markdownNodes, mediaKind, mix, model, normalizePhone, openDialog,
-} from "march/ui";
+import { Button } from "march/components/actions/button";
+import { Badge } from "march/components/data/badge";
+import { Segmented } from "march/components/forms/segmented";
+import { TextInput } from "march/components/forms/text-input";
+import { Textarea } from "march/components/forms/textarea";
+import { Slider } from "march/components/forms/slider";
+import { Kbd } from "march/components/typography/kbd";
+import { action, isAction, colorTheme, colorThemes, defineMeta, distance, firstDayOf, fold, formatKey, formatNumber, inputFor, isMac, isSafeLink, key, loadTheme, markdownNodes, model } from "march/ui";
+import { format, hsvToRgb, mix } from "march/components/composite/color-picker";
+import { formatCount } from "march/components/landing/counter";
+import { formatDate } from "march/components/forms/date-picker";
+import { frameSize } from "march/components/composite/image-cropper";
+import { freeKey, getAt, insertAfter } from "march/components/composite/tree-editor";
+import { gradientCss } from "march/components/composite/gradient-editor";
+import { heartBurst, heartPop } from "march/components/social/like-button";
+import { htmlToMarkdown } from "march/components/composite/rich-text-editor";
+import { initials } from "march/components/social/avatar";
+import { mediaKind } from "march/components/media/media";
+import { normalizePhone } from "march/components/forms/phone-input";
+import { openDialog } from "march/components/overlays/dialog";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
 import "./ui-e.css";

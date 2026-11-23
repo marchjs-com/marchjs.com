@@ -1,7 +1,7 @@
 // Showcase stage for StatTile: the three numbers of a profile. A click on a tile adds to its number (the Counter rolls),
 // so the button, the node value and every look option show at once.
-import { StatTile } from "march/data";
-import { Counter } from "march/landing";
+import { StatTile } from "march/components/data/stat-tile";
+import { Counter } from "march/components/landing/counter";
 import type { ColorToken } from "march/theme";
 
 export const code = `<StatTile value="128" label="Gönderi" />

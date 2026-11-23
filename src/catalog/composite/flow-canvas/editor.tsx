@@ -1,11 +1,15 @@
 // The live flow editor of the showcase page: controls, palette / JSON, canvas, timeline on one sample order flow.
 import { effect, untrack, onCleanup } from "march";
-import { Button, CopyButton, UndoRedo } from "march/actions";
-import { Tabs } from "march/navigation";
-import { Toggle } from "march/forms";
+import { Button } from "march/components/actions/button";
+import { CopyButton } from "march/components/actions/copy-button";
+import { UndoRedo } from "march/components/actions/undo-redo";
+import { Tabs } from "march/components/navigation/tabs";
+import { Toggle } from "march/components/forms/toggle";
 import { undoStack } from "march/managers/undo";
-import { JsonEditor } from "march/composite";
-import { FlowCanvas, createFlow, validateFlow, type FlowDoc, FlowPalette, FlowControls, FlowTimeline, createFlowRunner } from "march/flow";
+import { JsonEditor } from "march/components/composite/json-editor";
+import { FlowCanvas, createFlow, validateFlow, type FlowDoc } from "march/components/composite/flow-canvas";
+import { FlowPalette } from "march/components/composite/flow-palette";
+import { FlowControls, FlowTimeline, createFlowRunner } from "march/components/composite/flow-controls";
 import { sampleTypes, sampleDoc } from "./sample.ts";
 
 /** The live editor of the showcase page: controls, palette / JSON, canvas, timeline. */

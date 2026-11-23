@@ -1,5 +1,5 @@
 // Showcase stage for StoryProgress: bars over a dark card; each segment fills, then the next starts (loops).
-import { StoryProgress } from "march/social";
+import { StoryProgress } from "march/components/social/story-progress";
 import type { ColorToken } from "march/theme";
 
 export const code = `<StoryProgress count={items.length} index={$i} run={item.id}

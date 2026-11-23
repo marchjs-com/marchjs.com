@@ -1,5 +1,5 @@
 import { definePlayground } from "../../spec.ts";
-import type { ActivityItem } from "march/navigation";
+import type { ActivityItem } from "march/components/navigation/activity-bar";
 import { files, search, gitBranch, bug, settings, user, fileText, clock, star, folder, compass, history, palette, layers, image, users } from "march/icons";
 
 interface Values { items: readonly ActivityItem[]; value: string; orientation: string; badges: boolean; indicator: boolean; motion: string; color: string; tooltips: boolean; showLabels: boolean; glass: boolean; subItems: boolean }

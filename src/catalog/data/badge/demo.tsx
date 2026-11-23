@@ -1,5 +1,5 @@
 // Showcase stage for Badge: kind, text, tone, fill, size, dot (mark, colour, motion), the clickable form and the count (max, label) follow the Playground values (playground.ts).
-import { Badge } from "march/data";
+import { Badge } from "march/components/data/badge";
 import { LABEL } from "./playground.ts";
 import { Icon, heart } from "march/icons";
 

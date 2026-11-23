@@ -1,6 +1,6 @@
 // Showcase stage for Dialog: a button opens <Dialog open> with the Playground values; the result shows what closed it.
-import { Dialog } from "march/overlays";
-import { Button } from "march/actions";
+import { Dialog } from "march/components/overlays/dialog";
+import { Button } from "march/components/actions/button";
 import { arrowLeft } from "march/icons";
 
 export const code = `<Dialog open={$open} onClose={() => $open = false} title="Davet gönder" size="md"

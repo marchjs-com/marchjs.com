@@ -1,7 +1,8 @@
 // Showcase stage for ReplyQuote: the quote above a message field (with its cancel button) or inside a coloured
 // bubble, drawn for the Playground values (playground.ts).
-import { ReplyQuote, ChatBubble } from "march/social";
-import { Button } from "march/actions";
+import { ReplyQuote } from "march/components/social/reply-quote";
+import { ChatBubble } from "march/components/social/chat-bubble";
+import { Button } from "march/components/actions/button";
 import type { ColorToken } from "march/theme";
 import { trash } from "march/icons";
 

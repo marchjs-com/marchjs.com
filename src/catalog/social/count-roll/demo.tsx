@@ -1,8 +1,8 @@
 // Showcase stage for CountRoll: − / + move the value by the Playground step; only the changed digits roll. A new roll
 // choice (on / off, duration) moves the value once, so the choice is seen at once.
 import { computed, effect, untrack } from "march";
-import { CountRoll } from "march/social";
-import { Button } from "march/actions";
+import { CountRoll } from "march/components/social/count-roll";
+import { Button } from "march/components/actions/button";
 
 export const code = `<CountRoll value={$likes} />                 // 1,2 B · rolls on change
 <CountRoll value={$followers} format="full" />  // 12.480`

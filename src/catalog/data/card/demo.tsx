@@ -1,6 +1,7 @@
 // Showcase stage for Card: title, subtitle, body, footer, root tag, flush body, plain and the header's Edit button follow the Playground values (playground.ts).
-import { Card, KeyValue } from "march/data";
-import { Button } from "march/actions";
+import { Card } from "march/components/data/card";
+import { KeyValue } from "march/components/data/key-value";
+import { Button } from "march/components/actions/button";
 import { edit } from "march/icons";
 
 export const code = `<Card title="HADİ" subtitle="Kurumsal plan" actions={[<Button size="sm" icon={edit}>Düzenle</Button>]}

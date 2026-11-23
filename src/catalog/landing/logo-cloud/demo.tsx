@@ -1,5 +1,5 @@
 // Showcase stage for LogoCloud: sample community wordmarks as a grid or a ticker.
-import { LogoCloud } from "march/landing";
+import { LogoCloud } from "march/components/landing/logo-cloud";
 import { Wordmark, LOGO_NAMES } from "../demo-kit.tsx";
 
 export const code = `<LogoCloud title="Bu topluluklar HADİ'de buluşuyor" variant="marquee" logos={[

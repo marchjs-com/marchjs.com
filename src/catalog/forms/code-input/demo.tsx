@@ -1,6 +1,6 @@
 // Showcase stage for CodeInput: length, characters, colors, font, size, look, groups and masking.
-import { CodeInput } from "march/forms";
-import { toast } from "march/overlays";
+import { CodeInput } from "march/components/forms/code-input";
+import { toast } from "march/components/overlays/toast";
 
 export const code = `<CodeInput length={6} groups={[3, 3]} onComplete={verify} />            // HADİ: brand colors + display font
 <CodeInput length={8} pattern="alphanumeric" colors="palette" font="mono" variant="filled" />

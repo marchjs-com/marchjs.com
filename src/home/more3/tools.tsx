@@ -4,16 +4,18 @@
 // Real March APIs throughout; numbers shown are computed.
 import "./tools.css";
 import { onCleanup } from "march";
-import { animate, inView, reducedMotion, EasingCurveEditor } from "march/motion";
+import { animate, inView, reducedMotion } from "march/motion";
+import { EasingCurveEditor } from "march/components/motion/easing-curve-editor";
 import { createFlow, createFlowRunner, emit, FlowCanvas, FlowControls, type FlowDoc, type FlowNodeType, type TimelineEntry } from "march/flow";
-import { ColorPicker, FontPicker, type FontChoice } from "march/composite";
-import { IconPicker } from "march/forms";
+import { ColorPicker } from "march/components/composite/color-picker";
+import { FontPicker, type FontChoice } from "march/components/composite/font-picker";
+import { IconPicker } from "march/components/forms/icon-picker";
 import { undoHistory } from "march/managers/undo/history";
 import { a11y, type MotionPref } from "march/managers/accessibility";
 import { Badge, Button, Kbd, Segmented, Slider, Toggle } from "march/ui";
 import { Icon, check as checkIcon, eye, play as playIcon, redo, sparkles, trash, undo } from "march/icons";
 import { Icon as NamedIcon } from "march/icons/packs";
-import { Reveal } from "march/landing";
+import { Reveal } from "march/components/landing/reveal";
 import { Head } from "../head.tsx";
 import { every } from "../clock.ts";
 

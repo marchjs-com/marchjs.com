@@ -1,7 +1,7 @@
 // Showcase stage for GradientEditor: the editor and a banner painted with its value, for the Playground values (playground.ts).
 import { setStyle } from "../../demo-util.ts";
 import { effect, untrack } from "march";
-import { GradientEditor } from "march/composite";
+import { GradientEditor } from "march/components/composite/gradient-editor";
 
 const START: Record<string, string> = {
   hadi: "linear-gradient(120deg, #f2801f 0%, #1d9ad6 35%, #78be3a 65%, #a3338c 100%)",

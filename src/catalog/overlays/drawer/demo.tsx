@@ -1,6 +1,6 @@
 // Showcase stage for Drawer: a button opens it with the Playground values (playground.ts).
-import { Drawer } from "march/overlays";
-import { Button } from "march/actions";
+import { Drawer } from "march/components/overlays/drawer";
+import { Button } from "march/components/actions/button";
 
 export const code = `<Drawer open={$open} onClose={() => $open = false} side="bottom" snapPoints={[0.4, 0.9]} title="Filtreler">…</Drawer>
 <Drawer open={$menu} onClose={() => $menu = false} side="start" size="sm" title="Menü">…</Drawer>     // RTL'de sağdan

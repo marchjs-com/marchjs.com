@@ -3,7 +3,7 @@
 import { setStyle } from "../../demo-util.ts";
 import { effect, untrack, computed, signal } from "march";
 import { storage } from "march/managers/storage";
-import { FontPicker, type FontChoice, type FontCategory, type FontSort } from "march/composite";
+import { FontPicker, type FontChoice, type FontCategory, type FontSort } from "march/components/composite/font-picker";
 import type { Values } from "./playground.ts";
 
 export const code = `<FontPicker bind:value={$font} onPick={(f) => setStyle(card, { "font-family": f.stack, "font-weight": f.weight })} />

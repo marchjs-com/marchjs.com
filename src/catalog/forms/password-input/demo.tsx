@@ -1,5 +1,6 @@
 // Showcase stage for PasswordInput.
-import { PasswordInput, Field } from "march/forms";
+import { PasswordInput } from "march/components/forms/password-input";
+import { Field } from "march/forms";
 import { computed, untrack } from "march";
 
 export const code = `<Field label="Parola" help="Güçlü bir parola seç"><PasswordInput bind:value={$pw} autocomplete="new-password" /></Field>   // the eye

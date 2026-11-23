@@ -1,7 +1,7 @@
 // Showcase stage for NetworkThrottle: choose a network, then load something; the request comes at that speed.
 import { signal } from "march";
-import { NetworkThrottle } from "march/composite";
-import { Button } from "march/actions";
+import { NetworkThrottle } from "march/components/composite/network-throttle";
+import { Button } from "march/components/actions/button";
 
 export const code = `<NetworkThrottle />                                    // the whole page while it is shown
 <NetworkThrottle scope={(stack) => /blob:/.test(stack)} />  // only the code loaded from blob: modules`

@@ -1,5 +1,5 @@
 // Showcase stage for Chip: draws the chips for the Playground values (playground.ts). Code is shown in the Code tab.
-import { Chip } from "march/actions";
+import { Chip } from "march/components/actions/chip";
 import type { ColorToken } from "march/theme";
 import { heart, tag, star } from "march/icons";
 

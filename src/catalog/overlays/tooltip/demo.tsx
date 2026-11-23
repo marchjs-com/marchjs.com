@@ -1,6 +1,7 @@
 // Showcase stage for Tooltip: hover or focus the control; the Playground picks what it describes (playground.ts).
-import { Tooltip } from "march/overlays";
-import { Button, IconButton } from "march/actions";
+import { Tooltip } from "march/components/overlays/tooltip";
+import { Button } from "march/components/actions/button";
+import { IconButton } from "march/components/actions/icon-button";
 import { sparkles, bell } from "march/icons";
 import { later } from "../../demo-util.ts";
 import type { ColorToken } from "march/theme";

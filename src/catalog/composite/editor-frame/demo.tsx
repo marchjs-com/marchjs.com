@@ -1,9 +1,10 @@
 // Showcase stage for EditorFrame: a small note editor built from the frame, a FormatToolbar in its head and a word
 // count in its foot, drawn for the Playground values (playground.ts). The text is kept while the options change.
 import { untrack } from "march";
-import { EditorFrame, FormatToolbar } from "march/composite";
-import { Badge } from "march/data";
-import { Button } from "march/actions";
+import { EditorFrame } from "march/components/composite/editor-frame";
+import { FormatToolbar } from "march/components/composite/format-toolbar";
+import { Badge } from "march/components/data/badge";
+import { Button } from "march/components/actions/button";
 import type { ColorToken } from "march/theme";
 
 export const code = `<EditorFrame head={<FormatToolbar onTool={exec} />} actions={<Badge>{$words} kelime</Badge>}

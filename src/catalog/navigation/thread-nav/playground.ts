@@ -1,5 +1,5 @@
 import { definePlayground } from "../../spec.ts";
-import type { ThreadNavItem } from "march/navigation";
+import type { ThreadNavItem } from "march/components/navigation/thread-nav";
 
 interface Values { items: readonly ThreadNavItem[]; magnify: boolean; bend: boolean; search: boolean; crumbs: boolean; closeOnNavigate: boolean; reach: number; grow: number; colors: boolean }
 

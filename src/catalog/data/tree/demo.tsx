@@ -1,5 +1,5 @@
 // Showcase stage for Tree: nodes (JSON), label, initial expansion, icons and meta follow the Playground values (playground.ts).
-import { Tree, type TreeNode } from "march/data";
+import { Tree, type TreeNode } from "march/components/data/tree";
 import { folder, fileText, code as codeIcon, settings } from "march/icons";
 import { NODES } from "./playground.ts";
 

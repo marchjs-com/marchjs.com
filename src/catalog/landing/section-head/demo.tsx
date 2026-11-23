@@ -1,6 +1,6 @@
 // Showcase stage for SectionHead: one heading group whose parts follow the Playground values (playground.ts).
-import { SectionHead } from "march/landing";
-import { Badge } from "march/data";
+import { SectionHead } from "march/components/landing/section-head";
+import { Badge } from "march/components/data/badge";
 
 export const code = `<SectionHead eyebrow="Özellikler" title="İhtiyacın olan her şey" lead="Bileşenler, tema, hareket ve hız tek pakette."
   actions={[{ label: "Hemen başla", href: "/start" }, { label: "Belgeler", href: "/docs" }]} note="Kart gerekmez" />

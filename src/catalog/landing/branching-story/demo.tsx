@@ -1,5 +1,5 @@
 // Showcase stage for BranchingStory: "A Saturday on HADİ", a short story with five endings (sample content).
-import { BranchingStory, type StoryPassage } from "march/landing";
+import { BranchingStory, type StoryPassage } from "march/components/landing/branching-story";
 
 export const code = `<BranchingStory start="intro" passages={{
   intro: { title: "Cumartesi sabahı", body: "…", choices: [{ label: "Etkinliklere bak", to: "explore" }, { label: "Kendi buluşmamı kur", to: "host" }] },

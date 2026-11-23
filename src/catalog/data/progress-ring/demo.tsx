@@ -1,7 +1,7 @@
 // Showcase stage for ProgressRing: last night's sleep in three rings. The first ring takes every option (its value
 // too); the other two show the low / mid / high levels: "Bir gece daha" draws new scores, those rings fill to them.
-import { ProgressRing } from "march/charts";
-import { Button } from "march/actions";
+import { ProgressRing } from "march/components/data/progress-ring";
+import { Button } from "march/components/actions/button";
 import { refresh } from "march/icons";
 import type { ColorToken } from "march/theme";
 import type { MultiColors } from "../../demo-util.ts";

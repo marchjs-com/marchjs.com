@@ -1,9 +1,9 @@
 // Showcase stage for RichTextEditor: the editor and its live Markdown value, for the Playground values (playground.ts).
 import { lazy } from "march/lazy";
-import type { Mention, RichTextEditorProps } from "march/composite";
+import type { Mention, RichTextEditorProps } from "march/components/composite/rich-text-editor";
 
 // the editor is one lazy chunk, shared with MarkdownEditor's rich view (two entries would split it into a shared chunk)
-const RichTextEditor = lazy<RichTextEditorProps>(() => import("march/composite").then((m) => ({ default: m.RichTextEditor })), { placeholder: "form" });
+const RichTextEditor = lazy<RichTextEditorProps>(() => import("march/components/composite/rich-text-editor").then((m) => ({ default: m.RichTextEditor })), { placeholder: "form" });
 
 const TEAM: Mention[] = [
   { id: "u1", label: "Deniz Kaya", hint: "Tasarım" },

@@ -1,7 +1,8 @@
 // Showcase stage for Tabs: the tab set of the Playground; panels with a count badge, icons, closable tabs and an action (Playground values in playground.ts).
 import { signal } from "march";
-import { Button, IconButton } from "march/actions";
-import { Tabs, type TabsProps, type TabSpec } from "march/navigation";
+import { Button } from "march/components/actions/button";
+import { IconButton } from "march/components/actions/icon-button";
+import { Tabs, type TabsProps, type TabSpec } from "march/components/navigation/tabs";
 import { animate } from "march/motion";
 import { home, users, settings, creditCard, plus } from "march/icons";
 

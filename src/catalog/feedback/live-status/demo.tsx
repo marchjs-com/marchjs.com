@@ -1,8 +1,8 @@
 // Showcase stage for LiveStatus: the buttons change a selection count; the status line says it (the Playground text after the count). With "Görünür metin"
 // off the line is only read, so the stage prints what a screen reader hears.
-import { LiveStatus } from "march/feedback";
-import { Button } from "march/actions";
-import { Kbd } from "march/typography";
+import { LiveStatus } from "march/components/feedback/live-status";
+import { Button } from "march/components/actions/button";
+import { Kbd } from "march/components/typography/kbd";
 
 export const code = `<LiveStatus text={() => \`\${$count} satır seçildi\`} />                       // görünür, kibarca okunur
 <LiveStatus visible={false} text={$moved} help="Taşımak için sürükleyin" helpId="plan-help" />   // ipucu + yalnız okunan durum

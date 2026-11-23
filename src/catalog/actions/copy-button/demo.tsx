@@ -1,6 +1,6 @@
 // Showcase stage for CopyButton: what is copied, text or icon-only, the icons, the "copied" text and its colour follow the Playground values.
 // What shows only after a copy (text, colour) is also said in a line next to the button, so a choice is seen at once.
-import { CopyButton } from "march/actions";
+import { CopyButton } from "march/components/actions/copy-button";
 import type { ColorToken } from "march/theme";
 import { link, heart } from "march/icons";
 

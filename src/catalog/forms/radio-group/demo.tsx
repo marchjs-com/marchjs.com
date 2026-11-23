@@ -1,5 +1,5 @@
 // Showcase stage for RadioGroup: look and size.
-import { RadioGroup } from "march/forms";
+import { RadioGroup } from "march/components/forms/radio-group";
 import { users, zap, shieldCheck } from "march/icons";
 // unions live outside JSX: the March compiler reads `|` in a JSX expression as a pipe
 type Maybe<T> = T | null | undefined

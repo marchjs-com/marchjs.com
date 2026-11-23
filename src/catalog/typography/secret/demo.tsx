@@ -1,6 +1,6 @@
 // Showcase stage for Secret: an API key and a card number, hidden as the Playground says (playground.ts); the eye
 // shows them, the copy button copies the real value.
-import { Secret, type SecretRegion } from "march/typography";
+import { Secret, type SecretRegion } from "march/components/typography/secret";
 
 export const code = `<Secret value={$key} />                                 // sk_l••••••••••••••••d05a
 <Secret value={card} regions={[[4, 12]]} mask="*" />     // 4111********1111

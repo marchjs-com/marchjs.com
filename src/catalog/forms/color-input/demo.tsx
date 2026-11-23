@@ -1,5 +1,6 @@
 // Showcase stage for ColorInput: start from one of the HADİ colors.
-import { ColorInput, Field } from "march/forms";
+import { ColorInput } from "march/components/forms/color-input";
+import { Field } from "march/forms";
 
 export const code = `<Field label="Marka rengi"><ColorInput bind:value={$color} /></Field>
 <ColorInput bind:value={$color} text={false} swatchLabel="Marka rengi" />   // only the swatch; swatch={false}: only the text`

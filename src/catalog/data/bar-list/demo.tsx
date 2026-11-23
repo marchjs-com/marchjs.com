@@ -1,7 +1,7 @@
 // Showcase stage for BarList: this week's most played songs of a small radio. "Bir dinleme daha" adds plays to a random
 // song (the order changes, the bars grow), every option reaches the list, and a row click names the song.
-import { BarList } from "march/charts";
-import { Button } from "march/actions";
+import { BarList } from "march/components/data/bar-list";
+import { Button } from "march/components/actions/button";
 import { plus } from "march/icons";
 
 export const code = `<BarList data={$songs} x="title" y="plays" title="En çok dinlenenler" />

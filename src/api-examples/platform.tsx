@@ -37,7 +37,7 @@ export { default as SIG } from "./platform.sig.gen.ts";
 const catalogLib = () => import("march/icons/catalog")
 const menuLib = () => import("march/context-menu")
 const consentLib = () => import("march/managers/consent/ui")
-const commandLib = () => Promise.all([import("march/managers/command/ui"), import("march/ui").then((m) => m.Menu), menuLib()]).then(([c, Menu, x]) => ({ ...c, Menu, ContextMenu: x.ContextMenu }))
+const commandLib = () => Promise.all([import("march/managers/command/ui"), import("march/components/actions/menu").then((m) => m.Menu), menuLib()]).then(([c, Menu, x]) => ({ ...c, Menu, ContextMenu: x.ContextMenu }))
 const a11yLib = () => import("march/managers/accessibility/ui")
 const hintLib = () => import("march/managers/shortcut-hint/ui")
 /** Renders `children(module)` once the module has loaded. */

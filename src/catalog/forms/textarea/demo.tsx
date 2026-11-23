@@ -1,5 +1,6 @@
 // Showcase stage for Textarea: rows, a character limit with a live counter, growing, monospace text and Tab indenting.
-import { Textarea, Field } from "march/forms";
+import { Textarea } from "march/components/forms/textarea";
+import { Field } from "march/forms";
 
 export const code = `<Field label="Hakkında" help={() => \`\${$about.length}/280\`}>
   <Textarea bind:value={$about} rows={3} maxLength={280} />

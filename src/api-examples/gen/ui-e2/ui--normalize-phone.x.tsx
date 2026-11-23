@@ -2,7 +2,7 @@
 // march/ui › normalizePhone
 import { signal } from "march";
 import { Out, Row } from "../../_kit.tsx";
-import { normalizePhone } from "march/ui";
+import { normalizePhone } from "march/components/forms/phone-input";
 import { Pick } from "./_pick.tsx";
 import { Field } from "./_field.tsx";
 import type { ApiExample } from "../../types.ts";

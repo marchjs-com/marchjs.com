@@ -1,5 +1,6 @@
 // Showcase stage for AppUI: the workspace with three panels for the Playground values (playground.ts).
-import { AppUI, row, col, tabs, type DockPanel, type Preset } from "march/composite";
+import { AppUI } from "march/components/composite/app-ui";
+import { row, col, tabs, type DockPanel, type Preset } from "march/components/composite/dock-layout";
 import { fileText, terminal, folder, grid } from "march/icons";
 
 export const code = `<AppUI title="march-app-ui" panels={panels} presets={{

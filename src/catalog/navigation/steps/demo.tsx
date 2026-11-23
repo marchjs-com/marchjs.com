@@ -1,7 +1,7 @@
 // Showcase stage for Steps: a four-stage checkout with Back / Next (Playground values in playground.ts).
 import { signal, effect } from "march";
-import { Button } from "march/actions";
-import { Steps, type StepItem } from "march/navigation";
+import { Button } from "march/components/actions/button";
+import { Steps, type StepItem } from "march/components/navigation/steps";
 import type { ColorToken } from "march/theme";
 import { star } from "march/icons";
 

@@ -1,5 +1,6 @@
 // Showcase stage for PhoneInput: pick a calling code; the stored value is shown under the field.
-import { PhoneInput, Field } from "march/forms";
+import { PhoneInput } from "march/components/forms/phone-input";
+import { Field } from "march/forms";
 
 export const code = `<Field label="Telefon"><PhoneInput bind:value={$phone} country="+90" /></Field>`
 

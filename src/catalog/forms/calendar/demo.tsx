@@ -1,6 +1,7 @@
 // Showcase stage for Calendar: first weekday, the earliest / latest day, the color, and the parts you can switch off or redraw
 // (weekday row, month buttons, day content).
-import { Calendar, todayIso, addDays } from "march/forms";
+import { Calendar } from "march/components/forms/calendar";
+import { todayIso, addDays } from "march/forms";
 import { computed, untrack } from "march";
 // unions live outside JSX: the March compiler reads `|` in a JSX expression as a pipe
 type Maybe<T> = T | null | undefined

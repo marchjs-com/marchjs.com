@@ -1,6 +1,6 @@
 // Showcase stage for Terminal: a few commands that show typed arguments, sub-commands, async work with Ctrl+C,
 // colored output, tables, JSON and progress. Try: help, deploy staging, user list, theme hadi, motion, fetch, colors.
-import { Terminal, TerminalWindow, ansi, type TerminalCommand as Command, type ColorScheme, type TerminalApi } from "march/composite";
+import { Terminal, TerminalWindow, ansi, type TerminalCommand as Command, type ColorScheme, type TerminalApi } from "march/components/composite/terminal";
 import { signal, untrack, computed } from "march";
 import { setColorTheme, colorThemes } from "march/ui";
 

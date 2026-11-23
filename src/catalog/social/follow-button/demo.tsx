@@ -1,7 +1,7 @@
 // Showcase stage for FollowButton: press it to follow (or send a request to a private account), press again to undo.
 // Texts, icon, color, burst and the morph follow the Playground.
 import { computed, effect, untrack } from "march";
-import { FollowButton, type FollowState } from "march/social";
+import { FollowButton, type FollowState } from "march/components/social/follow-button";
 import type { ColorToken } from "march/theme";
 import { Icon, star, sparkles } from "march/icons";
 

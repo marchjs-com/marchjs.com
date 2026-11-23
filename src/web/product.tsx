@@ -1,6 +1,15 @@
 // Sample page: a product landing page built only from the website blocks (march/landing).
 import { Button } from "march/ui";
-import { SiteNav, Hero, LogoCloud, SiteSection, FeatureGrid, ScrollStory, StatsBand, Pricing, ScrollProgress, Counter } from "march/landing";
+import { SiteNav } from "march/components/landing/site-nav";
+import { Hero } from "march/components/landing/hero";
+import { LogoCloud } from "march/components/landing/logo-cloud";
+import { SiteSection } from "march/components/landing/site-section";
+import { FeatureGrid } from "march/components/landing/feature-grid";
+import { ScrollStory } from "march/components/landing/scroll-story";
+import { StatsBand } from "march/components/landing/stats-band";
+import { Pricing } from "march/components/landing/pricing";
+import { ScrollProgress } from "march/components/landing/scroll-progress";
+import { Counter } from "march/components/landing/counter";
 import { lazy } from "march/lazy";
 import { arrowRight, sparkles } from "march/icons";
 import { MockApp, Wordmark, LOGO_NAMES } from "../catalog/landing/demo-kit.tsx";

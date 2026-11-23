@@ -1,5 +1,5 @@
 // Showcase stage for Newsletter: a fake server that answers after 900 ms with success or an error.
-import { Newsletter } from "march/landing";
+import { Newsletter } from "march/components/landing/newsletter";
 import { heart, Icon } from "march/icons";
 
 export const code = `<Newsletter title="Haberdar ol" lead="Ayda bir e-posta, yalnız yenilikler."

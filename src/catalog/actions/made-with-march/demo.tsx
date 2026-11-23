@@ -1,5 +1,5 @@
 // Showcase stage for MadeWithMarch: the credit line in the Playground's variant, with the chosen heart and sentence.
-import { MadeWithMarch } from "march/actions";
+import { MadeWithMarch } from "march/components/actions/made-with-march";
 
 export const code = `<MadeWithMarch />
 <MadeWithMarch variant="badge" />

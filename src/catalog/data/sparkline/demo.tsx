@@ -1,7 +1,7 @@
 // Showcase stage for Sparkline: the fruit market board, one price trend line per row. "Canlı" adds a price every
 // second on the motion clock (global speed and "Stop all" reach it; the lines move), and every option of the card reaches every line.
-import { Sparkline } from "march/charts";
-import { Button } from "march/actions";
+import { Sparkline } from "march/components/data/sparkline";
+import { Button } from "march/components/actions/button";
 import { onCleanup } from "march";
 import { onFrame } from "march/motion";
 

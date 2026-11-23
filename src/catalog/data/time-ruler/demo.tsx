@@ -1,7 +1,7 @@
 // Showcase stage for TimeRuler: a ruler over two sample tracks. Drag the ruler or the playhead (or use the arrow
 // keys on it); "Oynat" moves the time on the motion clock. The bars under it use the same scale (timePercent).
-import { TimeRuler, timePercent } from "march/data";
-import { Button } from "march/actions";
+import { TimeRuler, timePercent } from "march/components/data/time-ruler";
+import { Button } from "march/components/actions/button";
 import { onFrame } from "march/motion";
 import { onCleanup } from "march";
 

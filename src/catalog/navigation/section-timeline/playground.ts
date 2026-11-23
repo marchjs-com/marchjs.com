@@ -1,5 +1,5 @@
 import { definePlayground } from "../../spec.ts";
-import type { SectionTimelineItem } from "march/navigation";
+import type { SectionTimelineItem } from "march/components/navigation/section-timeline";
 
 interface Values { items: readonly SectionTimelineItem[]; orientation: string; count: number; magnify: boolean; intro: boolean; reach: number; grow: number; wave: number; smooth: boolean; color: string; line: number }
 

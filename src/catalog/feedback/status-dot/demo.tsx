@@ -1,5 +1,5 @@
 // Showcase stage for StatusDot: the dot alone, next to text and in a list of states, drawn for the Playground values (tone, colour, pulse, size, label, hollow).
-import { StatusDot, type StatusDotTone } from "march/feedback";
+import { StatusDot, type StatusDotTone } from "march/components/feedback/status-dot";
 import type { ColorToken } from "march/theme";
 
 export const code = `<StatusDot tone="success" pulse label="Canlı" />        // role="img", read as "Canlı"

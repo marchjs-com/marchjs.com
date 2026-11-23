@@ -2,7 +2,9 @@
 // march/ui › isSafeLink
 import { signal } from "march";
 import { Out, Row } from "../../_kit.tsx";
-import { Badge, Button, isSafeLink } from "march/ui";
+import { Button } from "march/components/actions/button";
+import { isSafeLink } from "march/ui";
+import { Badge } from "march/components/data/badge";
 import { Field } from "./_field.tsx";
 import type { ApiExample } from "../../types.ts";
 import "../../ui-e.css";

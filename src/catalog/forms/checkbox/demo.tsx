@@ -1,6 +1,6 @@
 // Showcase stage for Checkbox: look, size, the indeterminate state and label-less selection cells with Shift ranges.
 import { signal } from "march";
-import { Checkbox } from "march/forms";
+import { Checkbox } from "march/components/forms/checkbox";
 import { users } from "march/icons";
 
 export const code = `<Checkbox bind:value={$agree} label="Kullanım koşullarını okudum" />

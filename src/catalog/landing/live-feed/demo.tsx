@@ -1,6 +1,6 @@
 // Showcase stage for LiveFeed: sample HADİ activity, one new line every couple of seconds. Every option change starts
 // the feed again with other lines and brings the first new one after 0.6 s, so the chosen motion shows at once.
-import { LiveFeed, type FeedItem } from "march/landing";
+import { LiveFeed, type FeedItem } from "march/components/landing/live-feed";
 
 export const code = `<LiveFeed next={() => nextActivity()} every={2400} max={5} enter="drop" leave="fall" />
 <LiveFeed items={$events} variant="wall" live="polite" />   // newest first, pushed from a socket

@@ -1,5 +1,5 @@
 // Showcase stage for NavSidebar: an admin menu in a framed box, drawn again when a Playground value changes.
-import { NavSidebar } from "march/composite";
+import { NavSidebar } from "march/components/composite/nav-sidebar";
 import { dashboard, users, settings, barChart } from "march/icons";
 import type { Href } from "march/router";
 import { load, save } from "../../demo-util.ts";

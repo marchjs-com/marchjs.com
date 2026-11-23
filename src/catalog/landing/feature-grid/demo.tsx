@@ -1,5 +1,6 @@
 // Showcase stage for FeatureGrid: six features (bento gets sizes and small media) for the Playground values.
-import { FeatureGrid, type FeatureItem, Counter } from "march/landing";
+import { FeatureGrid, type FeatureItem } from "march/components/landing/feature-grid";
+import { Counter } from "march/components/landing/counter";
 import { MockApp } from "../demo-kit.tsx";
 import { mapPin, users, message, video, ticket, heart } from "march/icons";
 

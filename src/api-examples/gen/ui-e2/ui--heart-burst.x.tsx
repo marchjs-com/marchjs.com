@@ -2,7 +2,8 @@
 // march/ui › heartBurst
 import { signal } from "march";
 import { Row } from "../../_kit.tsx";
-import { Button, heartBurst } from "march/ui";
+import { Button } from "march/components/actions/button";
+import { heartBurst } from "march/components/social/like-button";
 import { Pick } from "./_pick.tsx";
 import type { ApiExample } from "../../types.ts";
 import "../../ui-e.css";

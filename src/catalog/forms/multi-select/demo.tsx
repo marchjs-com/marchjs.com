@@ -1,5 +1,6 @@
 // Showcase stage for MultiSelect.
-import { MultiSelect, Field } from "march/forms";
+import { MultiSelect } from "march/components/forms/multi-select";
+import { Field } from "march/forms";
 import { Icon, trash } from "march/icons";
 
 export const code = `<Field label="Diller"><MultiSelect bind:value={$langs} options={languages} /></Field>

@@ -1,6 +1,6 @@
 // Showcase stage for Swatch: a small palette (plain colours, gradients, transparent colours over the checkerboard, or
 // theme tokens). A click selects a swatch; the line under it shows the chosen value.
-import { Swatch } from "march/forms";
+import { Swatch } from "march/components/forms/swatch";
 import { heart } from "march/icons";
 
 export const code = `<Swatch color="#ff7a1a" label="Turuncu" selected={$c === "#ff7a1a"} onClick={() => $c = "#ff7a1a"} />

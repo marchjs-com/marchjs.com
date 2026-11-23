@@ -1,6 +1,7 @@
 // Showcase stage for TextInput (and EmailInput / UrlInput): the Playground picks the kind, the prefix and the state.
 import { untrack } from "march";
-import { TextInput, EmailInput, UrlInput, Field } from "march/forms";
+import { TextInput, EmailInput, UrlInput } from "march/components/forms/text-input";
+import { Field } from "march/forms";
 import { Icon, search, globe } from "march/icons";
 
 export const code = `<Field label="Ara"><TextInput bind:value={$q} placeholder="Üye, sipariş, etiket…" prefix={<Icon of={search} />} /></Field>

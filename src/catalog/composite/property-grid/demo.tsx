@@ -1,9 +1,9 @@
 // Showcase stage for PropertyGrid: a card whose look follows the inspector (Playground values in playground.ts).
 import { signal } from "march";
-import { PropertyGrid, type PropertySpec } from "march/composite";
-import { toast } from "march/overlays";
+import { PropertyGrid, type PropertySpec } from "march/components/composite/property-grid";
+import { toast } from "march/components/overlays/toast";
 import { cx } from "../../demo-util.ts";
-import { Button } from "march/actions";
+import { Button } from "march/components/actions/button";
 
 export const code = `<PropertyGrid label="Kart" bind:value={$card} onSave={(v) => api.save(v)} properties={[
   { key: "title", label: "Başlık", group: "İçerik" },

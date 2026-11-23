@@ -1,10 +1,12 @@
 // Showcase stage for ListRow: four rows of a small list in a narrow box (the long title does not fit). A click makes
 // a row the active one; the options change what the row is (button, link, listbox option, plain), its slots and its look.
-import { ListRow, Badge } from "march/data";
-import { Kbd } from "march/typography";
-import { Avatar } from "march/social";
-import { StatusDot, type StatusDotTone } from "march/feedback";
-import { Chevron, IconButton } from "march/actions";
+import { ListRow } from "march/components/data/list-row";
+import { Badge } from "march/components/data/badge";
+import { Kbd } from "march/components/typography/kbd";
+import { Avatar } from "march/components/social/avatar";
+import { StatusDot, type StatusDotTone } from "march/components/feedback/status-dot";
+import { Chevron } from "march/components/actions/chevron";
+import { IconButton } from "march/components/actions/icon-button";
 import type { ColorToken } from "march/theme";
 import { home, calendar, bell, settings, more } from "march/icons";
 

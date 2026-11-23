@@ -1,6 +1,6 @@
 // Neutral demo data shared by the social component demos (showcase only): communities and handles, never real people.
 // Images are the abstract SVG scenes the site serves under media/social/.
-import type { MediaItem } from "march/social";
+import type { MediaItem } from "march/components/social/media-grid";
 import { appUrl } from "march/base";
 
 /** A scene under the app's root, on every route (appUrl: a relative path would resolve against the route). */

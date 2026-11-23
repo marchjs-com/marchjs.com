@@ -1,6 +1,7 @@
 // Showcase stage for Menu / Dropdown: the trigger's name, the entries, an icon-only trigger, its look, size and colour
 // follow the Playground values (playground.ts); a Dropdown beside it takes the same trigger options.
-import { Menu, Dropdown, type MenuItem, Chip } from "march/actions";
+import { Menu, Dropdown, type MenuItem } from "march/components/actions/menu";
+import { Chip } from "march/components/actions/chip";
 import type { ColorToken } from "march/theme";
 import { action } from "march/ui";
 import { signal } from "march";

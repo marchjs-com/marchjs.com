@@ -1,7 +1,7 @@
 // Showcase stage for ColorPicker: the picker and a card painted with its value, for the Playground values (playground.ts).
 import { setStyle } from "../../demo-util.ts";
 import { effect, untrack, computed } from "march";
-import { ColorPicker, type ColorFormat } from "march/composite";
+import { ColorPicker, type ColorFormat } from "march/components/composite/color-picker";
 
 export default function ColorPickerDemo(props: { values: { format: string; alpha: boolean; palettes: boolean; contrast: boolean; eyedropper: boolean; readonly: boolean; preview: boolean; formats: boolean; input: boolean } }) {
   let $c = "#1d9ad6"

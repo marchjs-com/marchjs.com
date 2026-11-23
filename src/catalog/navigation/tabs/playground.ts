@@ -1,5 +1,5 @@
 import { definePlayground } from "../../spec.ts";
-import type { TabSpec } from "march/navigation";
+import type { TabSpec } from "march/components/navigation/tabs";
 
 interface Values { tabs: readonly TabSpec[]; variant: string; icons: boolean; closable: boolean; actions: boolean; badges: boolean; disabled: boolean; motion: string; indicator: boolean }
 

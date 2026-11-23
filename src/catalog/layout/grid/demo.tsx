@@ -1,5 +1,5 @@
 // Showcase stage for Grid: cards with the last-row options (Playground values in playground.ts).
-import { Grid } from "march/layout";
+import { Grid } from "march/components/layout/grid";
 
 export const code = `<Grid cols={4} gap={3} fill="stretch" balance>{cards}</Grid>`
 

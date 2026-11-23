@@ -1,6 +1,6 @@
 // Showcase stage for Picture: the same slot fed with a picture object (JSON) or with a ready node; fit, loading and
 // the fallback follow the Playground. The line under the box shows the attributes the image got.
-import { Picture, type PictureSource } from "march/media";
+import { Picture, type PictureSource } from "march/components/media/picture";
 import { appUrl } from "march/base";
 import { Icon, image } from "march/icons";
 import { SOURCE } from "./playground.ts";

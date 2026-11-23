@@ -1,5 +1,6 @@
 // Showcase stage for ProjectDetail: grid and detail with the shared element transition between them.
-import { ProjectDetail, type ProjectDetails, ProjectGrid, type Project } from "march/landing";
+import { ProjectDetail, type ProjectDetails } from "march/components/landing/project-detail";
+import { ProjectGrid, type Project } from "march/components/landing/project-grid";
 import { PROJECTS, Cover } from "../project-grid/demo.tsx";
 import { sharedTransition } from "march/motion";
 import { effect, untrack } from "march";

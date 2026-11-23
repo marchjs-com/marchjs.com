@@ -1,6 +1,6 @@
 // Showcase stage for ThreadNav: a small app frame, the thread at its side, the chosen page's title in it. Press a bead
 // to open its capsule, a category to hang its pages, a page to go there: the drop flows to it in its section's colour.
-import { ThreadNav, threadPath, type ThreadNavItem } from "march/navigation";
+import { ThreadNav, threadPath, type ThreadNavItem } from "march/components/navigation/thread-nav";
 import { computed } from "march";
 
 export const code = `<ThreadNav items={sections} value={$page} onNavigate={(it) => go(it.href)} fixed />

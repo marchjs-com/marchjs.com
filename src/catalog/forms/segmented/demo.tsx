@@ -1,5 +1,5 @@
 // Showcase stage for Segmented: the options (a comma-separated text), the color token, the sliding indicator and the size.
-import { Segmented } from "march/forms";
+import { Segmented } from "march/components/forms/segmented";
 import type { ColorToken } from "march/theme";
 // unions live outside JSX: the March compiler reads `|` in a JSX expression as a pipe
 type Maybe<T> = T | null | undefined

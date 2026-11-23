@@ -17,7 +17,7 @@ const ShellTools = lazy(() => import("./shell-tools.tsx"), { fallback: () => <di
 // palette, toasts, commands: not part of start-up, loaded once the first paint is done (idle)
 const ShellLate = lazy(() => import("./shell-late.tsx"), { when: "idle", fallback: () => null })
 // the trail is the Breadcrumbs component in its own chunk (as <Page> loads it); its height is reserved, so nothing jumps
-const Crumbs = lazy<BreadcrumbsProps>(() => import("march/navigation").then((m) => ({ default: m.Breadcrumbs })), { placeholder: "none", height: "1.875rem" })
+const Crumbs = lazy<BreadcrumbsProps>(() => import("march/components/navigation/breadcrumbs"), { pick: "Breadcrumbs", placeholder: "none", height: "1.875rem" })
 
 /** A showcase page as the menu and the home page show it. */
 export interface PageEntry { path: string; title: string; desc?: string | undefined; group?: string | undefined; icon?: unknown; /** The page this one is listed under. */ parent?: string | undefined; /** A page under another one's route (menu only). */ sub?: boolean }

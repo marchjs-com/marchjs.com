@@ -1,6 +1,6 @@
 // Showcase stage for Carousel: the slides (JSON), label, slides per view, arrows and their icons, dots, colour and
 // smooth scrolling and swiping follow the Playground values (playground.ts).
-import { Carousel } from "march/media";
+import { Carousel } from "march/components/media/carousel";
 import { SLIDES } from "./playground.ts";
 import { arrowLeft, arrowRight, skipBack, stepForward } from "march/icons";
 

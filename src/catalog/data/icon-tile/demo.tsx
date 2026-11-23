@@ -1,5 +1,5 @@
 // Showcase stage for IconTile: every tone side by side (the first takes the Playground icon and tone); a colour token from the Playground paints them all.
-import { IconTile, type IconTone } from "march/data";
+import { IconTile, type IconTone } from "march/components/data/icon-tile";
 import { users, bell, check, star, trash, calendar, heart, home, settings } from "march/icons";
 
 export const code = `<IconTile icon={users} tone="primary" />

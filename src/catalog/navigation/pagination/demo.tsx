@@ -1,6 +1,6 @@
 // Showcase stage for Pagination: a result list paged by the control (Playground values in playground.ts).
 import { signal } from "march";
-import { Pagination } from "march/navigation";
+import { Pagination } from "march/components/navigation/pagination";
 import type { ColorToken } from "march/theme";
 
 export const code = `<Pagination bind:page={$page} pages={20} siblings={1} />

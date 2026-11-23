@@ -1,5 +1,5 @@
 // Showcase stage for ChoicePicker: the same control with more or fewer options, or a forced look.
-import { ChoicePicker, pickerKind } from "march/forms";
+import { ChoicePicker, pickerKind } from "march/components/forms/choice-picker";
 import { normOptions } from "../../demo-util.ts";
 import { CITIES } from "./playground.ts";
 

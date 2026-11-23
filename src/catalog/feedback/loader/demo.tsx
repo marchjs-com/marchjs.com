@@ -1,6 +1,6 @@
 // Showcase stage for Loader: text, spinner, colour and fade from the Playground values; inline, or over a card's content (overlay) until "Bitir".
-import { Loader } from "march/feedback";
-import { Button } from "march/actions";
+import { Loader } from "march/components/feedback/loader";
+import { Button } from "march/components/actions/button";
 import { Icon, hourglass } from "march/icons";
 
 export const code = `<Loader text="Panolar hazırlanıyor…" />

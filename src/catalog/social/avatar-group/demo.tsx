@@ -1,6 +1,6 @@
 // Showcase stage for AvatarGroup: eight communities; the Playground sets how many show, the bubble, spacing and colour.
-import { AvatarGroup } from "march/social";
-import type { AvatarSize } from "march/social";
+import { AvatarGroup } from "march/components/social/avatar-group";
+import type { AvatarSize } from "march/components/social/avatar";
 import { USERS } from "../demo-data.ts";
 
 export const code = `<AvatarGroup names={["Ada", "Linus", "Grace", "Alan", "Margaret"]} max={4} />

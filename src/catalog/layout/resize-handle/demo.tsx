@@ -1,5 +1,5 @@
 // Showcase stage for ResizeHandle: a box resized from the edge (or the corner) the Playground picks.
-import { ResizeHandle } from "march/layout";
+import { ResizeHandle } from "march/components/layout/resize-handle";
 import { pointerDrag } from "march/behaviors/drag";
 import { moreVertical, Icon } from "march/icons";
 

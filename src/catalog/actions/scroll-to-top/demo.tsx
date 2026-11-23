@@ -1,6 +1,6 @@
 // Showcase stage for ScrollToTop: a scrolling box with its own inline button (the page itself has one in the corner).
 // The icon, the colour and the way the button appears follow the Playground values.
-import { ScrollToTop } from "march/actions";
+import { ScrollToTop } from "march/components/actions/scroll-to-top";
 import { chevronUp } from "march/icons";
 import { animate } from "march/motion";
 import type { ColorToken } from "march/theme";

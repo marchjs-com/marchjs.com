@@ -1,5 +1,5 @@
 // Showcase stage for ReactionPicker: pick a reaction (row) or insert emoji into a line of text (grid).
-import { ReactionPicker } from "march/social";
+import { ReactionPicker } from "march/components/social/reaction-picker";
 import type { ColorToken } from "march/theme";
 import { Icon, smile } from "march/icons";
 

@@ -2,9 +2,9 @@
 // the end for the next page, "Yeni gönderi gelsin" queues new posts behind the pill.
 import { computed, effect, untrack } from "march";
 import { later } from "../../demo-util.ts";
-import { Feed } from "march/composite";
-import type { Post } from "march/composite";
-import { Button } from "march/actions";
+import { Feed } from "march/components/composite/feed";
+import type { Post } from "march/components/composite/post-card";
+import { Button } from "march/components/actions/button";
 import { PHOTOS, USERS, minutesAgo } from "../../social/demo-data.ts";
 import type { ColorToken } from "march/theme";
 

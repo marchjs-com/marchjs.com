@@ -1,6 +1,6 @@
 // Showcase stage for ConsentBanner: the banner in the page flow (always shown, a choice still closes it) and a
 // ConsentGate placeholder that opens once third-party content is allowed. Playground values change the wording.
-import { Button } from "march/actions";
+import { Button } from "march/components/actions/button";
 import { lazy } from "march/lazy";
 import type { ConsentBannerProps, ConsentGateProps } from "march/components/composite/consent-banner";
 import { TEXT, OWN } from "./playground.ts";

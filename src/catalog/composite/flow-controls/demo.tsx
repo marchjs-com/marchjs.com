@@ -1,5 +1,6 @@
 // Showcase stage for FlowControls: a small flow with its controls and timeline. Code is shown in the Code tab.
-import { FlowControls, createFlowRunner, FlowCanvas, createFlow } from "march/flow";
+import { FlowControls, createFlowRunner } from "march/components/composite/flow-controls";
+import { FlowCanvas, createFlow } from "march/components/composite/flow-canvas";
 import { sampleTypes } from "../flow-canvas/sample.ts";
 
 export const code = `const runner = createFlowRunner(flow)

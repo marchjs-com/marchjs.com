@@ -1,5 +1,5 @@
 // Showcase stage for CodeView: the code, language, line numbers, wrap and copy follow the Playground values (playground.ts).
-import { CodeView } from "march/typography";
+import { CodeView } from "march/components/typography/code-view";
 import { SAMPLE_TSX } from "./playground.ts";
 
 export const code = `<CodeView code={source} lang="tsx" copy />

@@ -1,5 +1,5 @@
 // Showcase stage for DockLayout: a small workspace for the Playground values (playground.ts). Code: the Code tab.
-import { DockLayout, row, col, tabs, type DockPanel, type DockAction, type Preset } from "march/composite";
+import { DockLayout, row, col, tabs, type DockPanel, type DockAction, type Preset } from "march/components/composite/dock-layout";
 import { fileText, terminal, folder, sliders } from "march/icons";
 
 export const code = `<DockLayout panels={[

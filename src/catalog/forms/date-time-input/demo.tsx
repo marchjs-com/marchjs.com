@@ -1,5 +1,6 @@
 // Showcase stage for DateTimeInput: the stored value is one UTC timestamp.
-import { DateTimeInput, Field } from "march/forms";
+import { DateTimeInput } from "march/components/forms/date-time-input";
+import { Field } from "march/forms";
 // unions live outside JSX: the March compiler reads `|` in a JSX expression as a pipe
 type Maybe<T> = T | null | undefined
 

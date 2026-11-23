@@ -1,8 +1,8 @@
 // Showcase stage for JsonEditor, for the Playground values (playground.ts: the samples and the schema are shared with
 // MarchIDE's raw component).
 import { untrack } from "march";
-import { JsonEditor } from "march/composite";
-import type { JsonSchema } from "march/composite";
+import { JsonEditor } from "march/components/composite/json-editor";
+import type { JsonSchema } from "march/components/composite/tree-editor";
 import { SAMPLES, SCHEMA } from "./playground.ts";
 
 export default function JsonEditorDemo(props: { values: { data: string; mode: string; schema: boolean; readonly: boolean; switcher: boolean; format: boolean; status: boolean; labels: boolean } }) {

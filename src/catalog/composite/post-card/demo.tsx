@@ -1,8 +1,8 @@
 // Showcase stage for PostCard: one post driven by the Playground options; like / comment / share are optimistic.
 // "Fotoğrafa çift dokun" does the double tap for keyboard users (and shows what the double-tap option changes).
 import { computed, effect, untrack } from "march";
-import { PostCard, type Post } from "march/composite";
-import { Button } from "march/actions";
+import { PostCard, type Post } from "march/components/composite/post-card";
+import { Button } from "march/components/actions/button";
 import { PHOTOS, user, minutesAgo } from "../../social/demo-data.ts";
 import { flag, link, eyeOff, zap, star, settings } from "march/icons";
 import type { ColorToken } from "march/theme";

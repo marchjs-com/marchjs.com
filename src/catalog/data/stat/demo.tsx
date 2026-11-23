@@ -1,8 +1,8 @@
 // Showcase stage for Stat: a coffee shop's month in three KPIs. "Yeni gün" adds a day (values, deltas and sparklines
 // move); the first box takes every option, the others the shared ones (delta source, hint, sparkline, icon). The last
 // one is a cost: a decrease is good (invert).
-import { Stat } from "march/charts";
-import { Button } from "march/actions";
+import { Stat } from "march/components/data/stat";
+import { Button } from "march/components/actions/button";
 import { plus, wallet, coffee, clock } from "march/icons";
 
 export const code = `<Stat icon={wallet} label="Aylık gelir" value={$income} previous={$lastMonth} format={["money", "TRY"]} spark={$days} hint="geçen aya göre" />

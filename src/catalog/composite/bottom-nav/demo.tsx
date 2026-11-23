@@ -1,7 +1,7 @@
 // Showcase stage for BottomNav: a phone-width frame with the bar at the bottom, for the Playground values (playground.ts).
 import { effect } from "march";
-import { BottomNav, type BottomNavItem } from "march/composite";
-import { OverlayScope } from "march/layout";
+import { BottomNav, type BottomNavItem } from "march/components/composite/bottom-nav";
+import { OverlayScope } from "march/components/layout/overlay-scope";
 import { home, compass, message, bell, user, calendar, image, film, radio, barChart } from "march/icons";
 
 export const code = `<BottomNav value={$tab} onChange={(id) => $tab = id} onCreate={compose}   // long press: compose at once

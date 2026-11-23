@@ -1,7 +1,7 @@
 // Showcase stage for Media: address, kind, alt, poster, size, player options and the fallback text from the Playground
 // values; the button opens it in a dialog.
-import { Media, openMedia } from "march/media";
-import { Button } from "march/actions";
+import { Media, openMedia } from "march/components/media/media";
+import { Button } from "march/components/actions/button";
 import { appUrl } from "march/base";
 
 export const code = `<Media src="media/dusk.jpg" alt="Gün batımında tepeler" size="md" />

@@ -1,5 +1,5 @@
 // Showcase stage for IconButton: the second button's label and icon, size, variant, shape, pressed, the look on a dark ground and colour follow the Playground values (playground.ts).
-import { IconButton } from "march/actions";
+import { IconButton } from "march/components/actions/icon-button";
 import type { ColorToken } from "march/theme";
 import { heart, star, bell, trash, globe } from "march/icons";
 

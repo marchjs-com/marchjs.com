@@ -1,6 +1,7 @@
 // Showcase stage for Chevron: the arrow driven by the "Açık" option (the same element turns, so the motion shows), and
 // a real trigger button the arrow follows by itself (no `open` prop: it reads the button's aria-expanded).
-import { Chevron, type ChevronDirection, Button } from "march/actions";
+import { Chevron, type ChevronDirection } from "march/components/actions/chevron";
+import { Button } from "march/components/actions/button";
 import type { ColorToken } from "march/theme";
 import { arrowRight } from "march/icons";
 import { computed, effect, untrack, onCleanup } from "march";

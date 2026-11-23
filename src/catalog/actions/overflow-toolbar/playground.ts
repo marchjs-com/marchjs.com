@@ -1,5 +1,5 @@
 import { definePlayground } from "../../spec.ts";
-import type { ToolbarItem } from "march/actions";
+import type { ToolbarItem } from "march/components/actions/overflow-toolbar";
 import { plus, undo, redo, columns, eye, search, copy, download, send, trash, bold, italic, strikethrough, heading, link, quote, list, listOrdered, image, code } from "march/icons";
 
 interface Values { label: string; items: readonly ToolbarItem[]; width: number; size: string; labels: boolean; motion: string; moreIcon: string; color: string }

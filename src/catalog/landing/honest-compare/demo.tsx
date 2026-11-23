@@ -1,5 +1,5 @@
 // Showcase stage for HonestCompare: HADİ next to an ordinary small event group, including the rows where it is behind.
-import { HonestCompare, type CompareColumn, type CompareRow } from "march/landing";
+import { HonestCompare, type CompareColumn, type CompareRow } from "march/components/landing/honest-compare";
 
 export const code = `<HonestCompare columns={[{ id: "us", name: "HADİ" }, { id: "group", name: "Küçük etkinlik grubu" }]}
   rows={[{ label: "Sade: tek sohbet", values: { us: false, group: true }, note: "HADİ çok şey yapar." }]} />

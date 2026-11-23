@@ -1,7 +1,7 @@
 // Showcase stage for LiveCounter: sample HADİ numbers that grow while you watch. Every part follows the options: the
 // digit animation (any text animation), the dot, the "+N" bubble and the beat. Steps come every 0.4–1.2 s here, so a
 // change shows at once.
-import { LiveCounter, type LiveCounterEffect } from "march/landing";
+import { LiveCounter, type LiveCounterEffect } from "march/components/landing/live-counter";
 import { splitFlap, scramble, decode, odometer, pop, glitch } from "march/motion/text";
 import { heart, Icon } from "march/icons";
 

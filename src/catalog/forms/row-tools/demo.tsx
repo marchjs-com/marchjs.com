@@ -1,7 +1,7 @@
 // Showcase stage for RowTools: a small list whose rows really move and go: drag a row by its grip, or use the arrows
 // (off on the first and the last row). "Geri yükle" brings the rows back.
-import { RowTools, type RowAction } from "march/forms";
-import { Button } from "march/actions";
+import { RowTools, type RowAction } from "march/components/forms/row-tools";
+import { Button } from "march/components/actions/button";
 
 export const code = `<RowTools index={i} count={() => $rows.length} onReorder={(from, to) => reorder(from, to)}
   onUp={() => move(i, -1)} onDown={() => move(i, 1)} onRemove={() => remove(i)} />

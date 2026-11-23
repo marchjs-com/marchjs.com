@@ -1,6 +1,6 @@
 // Showcase stage for Reveal: a row of cards that enter for the Playground values; "Tekrar oynat" mounts them again.
-import { Reveal, type RevealEffect } from "march/landing";
-import { Button } from "march/actions";
+import { Reveal, type RevealEffect } from "march/components/landing/reveal";
+import { Button } from "march/components/actions/button";
 
 export const code = `<Reveal effect="up" stagger={80}>
   <Card>…</Card><Card>…</Card><Card>…</Card>

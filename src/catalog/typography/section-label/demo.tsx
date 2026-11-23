@@ -1,7 +1,7 @@
 // Showcase stage for SectionLabel: two groups of a small panel, their labels follow the Playground values (the first
 // one's text is the "Metin" option).
-import { SectionLabel } from "march/typography";
-import { IconButton } from "march/actions";
+import { SectionLabel } from "march/components/typography/section-label";
+import { IconButton } from "march/components/actions/icon-button";
 import { star, clock, plus } from "march/icons";
 
 export const code = `<SectionLabel icon={star} count={3}
