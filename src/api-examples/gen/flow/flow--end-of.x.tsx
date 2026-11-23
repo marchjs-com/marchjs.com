@@ -3,7 +3,7 @@
 import { signal } from "march";
 import { Segmented } from "march/ui";
 import { Out } from "../../_kit.tsx";
-import { endOf } from "march/components/composite/flow-canvas/model.ts";
+import { endOf } from "march/flow";
 import { Stack } from "./_stack.tsx";
 import { json } from "./_json.tsx";
 import type { ApiExample } from "../../types.ts";

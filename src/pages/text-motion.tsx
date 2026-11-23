@@ -4,7 +4,7 @@
 import "./text-motion.css";
 import { signal, effect, onCleanup, untrack } from "march";
 import * as TX from "march/motion/text";
-import { TEXT_ANIMATIONS, type TextAnimMeta, type TextFamily, type TextOptionKey } from "march/motion/text/meta.ts";
+import { TEXT_ANIMATIONS, type TextAnimMeta, type TextFamily, type TextOptionKey } from "march/motion/text/meta";
 import { motion, ease } from "march/motion";
 import { Button, Badge, Tabs, CodeView, Slider, Field } from "march/ui";
 import { Segmented, TextInput } from "march/forms";

@@ -1,10 +1,10 @@
 // Sample product page, lower half: loaded when it comes near the viewport (see product.tsx).
 import { Button } from "march/ui";
-import { SiteSection, Testimonials, Faq, CtaBand, SiteFooter } from "march/components/landing/index.ts";
+import { SiteSection, Testimonials, Faq, CtaBand, SiteFooter } from "march/landing";
 import { arrowRight, sparkles, globe, message, mail } from "march/icons";
-import { QUOTES } from "march/components/landing/testimonials/demo.tsx";
-import { FAQ } from "march/components/landing/faq/demo.tsx";
-import { FOOTER_COLUMNS } from "march/components/landing/site-footer/demo.tsx";
+import { QUOTES } from "../catalog/landing/testimonials/demo.tsx";
+import { FAQ } from "../catalog/landing/faq/demo.tsx";
+import { FOOTER_COLUMNS } from "../catalog/landing/site-footer/demo.tsx";
 
 export default function ProductMore() {
   return <>

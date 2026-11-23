@@ -4,7 +4,7 @@
 // The full Playground (ChoicePicker: chips, cards, grids, Combobox) lives in playground.tsx.
 import { signal, untrack, If } from "march";
 import { Segmented, Toggle, Field } from "march/forms";
-import type { PlaygroundOption, PlaygroundSpec } from "march/ui";
+import type { PlaygroundOption, PlaygroundSpec } from "./catalog/spec.ts";
 
 type View<V> = (p: { values: V }) => unknown
 

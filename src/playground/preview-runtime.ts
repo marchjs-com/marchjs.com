@@ -19,7 +19,7 @@ import * as testing from "march/testing";
 // the network speed of MarchIDE's preview (NetworkThrottle, its state shared with the page): the code's dynamic imports
 // and this March's lazy chunks wait as on the chosen network; fetch / XHR are slowed by the page's wrapper (its scope is
 // this code's stack: blob: modules and this runtime)
-import { throttledImport, throttledLoad, throttleBypass } from "march/components/composite/network-throttle";
+import { throttledImport, throttledLoad, throttleBypass } from "march/composite";
 import { setLoadRunner } from "march/lazy";
 setLoadRunner((fn, info) => throttledLoad(fn, info));
 
@@ -235,7 +235,7 @@ const OWN_PARTS: Record<string, () => Promise<unknown>> = {
   "scheduler": () => import("march/components/data/scheduler"),
   "gantt": () => import("march/components/data/gantt"),
   "wizard": () => import("march/components/composite/wizard"),
-  "context-menu": () => import("march/components/overlays/context-menu"),
+  "context-menu": () => import("march/context-menu"),
   "consent-banner": () => import("march/components/composite/consent-banner"),
   "theme-editor": () => import("march/components/composite/theme-editor"),
 };

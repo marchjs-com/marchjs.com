@@ -9,7 +9,7 @@ import { signal, computed, effect, onCleanup } from "march";
 import { Link, navigate, type Href } from "march/router";
 import { Chip, CopyButton, SearchBox, Grid } from "march/ui";
 import { Icon, arrowLeft, arrowRight, copy, code } from "march/icons";
-import { cards } from "march/components/cards.gen.ts";
+import { cards } from "./catalog/cards.gen.ts";
 import type { Topic } from "./topics/types.ts";
 import { sectionOf, PAGE_META } from "./nav-meta.ts";
 import { HubArt, loadArt } from "./hub-art.tsx";

@@ -1,14 +1,13 @@
 // Sample page: a product landing page built only from the website blocks (march/landing).
 import { Button } from "march/ui";
-import { SiteNav, Hero, LogoCloud, SiteSection, FeatureGrid, ScrollStory, StatsBand, Pricing, ScrollProgress } from "march/components/landing/index.ts";
+import { SiteNav, Hero, LogoCloud, SiteSection, FeatureGrid, ScrollStory, StatsBand, Pricing, ScrollProgress, Counter } from "march/landing";
 import { lazy } from "march/lazy";
 import { arrowRight, sparkles } from "march/icons";
-import { MockApp, Wordmark, LOGO_NAMES } from "march/components/landing/demo-kit.tsx";
-import { FEATURES } from "march/components/landing/feature-grid/demo.tsx";
-import { STORY } from "march/components/landing/scroll-story/demo.tsx";
-import { STATS } from "march/components/landing/stats-band/demo.tsx";
-import { PLANS } from "march/components/landing/pricing/demo.tsx";
-import { Counter } from "march/components/landing/index.ts";
+import { MockApp, Wordmark, LOGO_NAMES } from "../catalog/landing/demo-kit.tsx";
+import { FEATURES } from "../catalog/landing/feature-grid/demo.tsx";
+import { STORY } from "../catalog/landing/scroll-story/demo.tsx";
+import { STATS } from "../catalog/landing/stats-band/demo.tsx";
+import { PLANS } from "../catalog/landing/pricing/demo.tsx";
 
 const LINKS = [
   { label: "Neler var", href: "#p-features" }, { label: "Nasıl çalışır", href: "#p-story" },

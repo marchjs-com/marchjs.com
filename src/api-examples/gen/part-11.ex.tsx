@@ -68,7 +68,6 @@ import e63 from "./ui-a2/ui--chat-thread.x.tsx";
 import e64 from "./ui-a2/ui--checkbox.x.tsx";
 import e65 from "./ui-a2/ui--checkbox-group.x.tsx";
 import e66 from "./ui-a2/ui--chip.x.tsx";
-import e67 from "./ui-a2/ui--choice-picker.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "march/sw#swState": e0,
   "march/sw#unregisterServiceWorker": e1,
@@ -137,6 +136,5 @@ const examples: Record<string, ApiExample<any>> = {
   "march/ui#Checkbox": e64,
   "march/ui#CheckboxGroup": e65,
   "march/ui#Chip": e66,
-  "march/ui#ChoicePicker": e67,
 };
 export default examples;

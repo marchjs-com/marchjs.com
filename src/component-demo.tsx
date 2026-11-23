@@ -1,12 +1,12 @@
-// One showcase card for a component folder (src/components/<name>/): the workbench (workbench.tsx) around its
+// One showcase card for a component folder (src/catalog/<category>/<name>/: demo.tsx, playground.ts): the workbench (workbench.tsx) around its
 // demo.tsx: a stage box (toolbar, stage, code) beside the options panel built from playground.ts. New components
 // appear by adding the folder, not by editing pages.
 // A component with its own package entry (meta.entry) has no lazy loader in the registry: its page passes `view` and
 // `spec` (imported statically) and the card draws them at once.
 // This file stays small (every component page imports it); the workbench itself is one lazy part.
 import { lazy } from "march/lazy";
-import { cards, cardCode } from "march/components/cards.gen.ts";
-import type { PlaygroundSpec } from "march/ui";
+import { cards, cardCode } from "./catalog/cards.gen.ts";
+import type { PlaygroundSpec } from "./catalog/spec.ts";
 
 export type DemoView = (p: { values: never }) => unknown
 

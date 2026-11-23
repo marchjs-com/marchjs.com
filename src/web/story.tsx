@@ -1,10 +1,10 @@
 // Sample page: the landing page is a story. Instead of a feature list, the visitor plays a Saturday on HADİ and finds
 // the features by choosing (sample content). Built from BranchingStory.
 import { Button } from "march/ui";
-import { SiteNav, Hero, SiteSection, BranchingStory, CtaBand, SiteFooter } from "march/components/landing/index.ts";
+import { SiteNav, Hero, SiteSection, BranchingStory, CtaBand, SiteFooter } from "march/landing";
 import { arrowRight, sparkles, globe, message, mail } from "march/icons";
-import { SATURDAY } from "march/components/landing/branching-story/demo.tsx";
-import { FOOTER_COLUMNS } from "march/components/landing/site-footer/demo.tsx";
+import { SATURDAY } from "../catalog/landing/branching-story/demo.tsx";
+import { FOOTER_COLUMNS } from "../catalog/landing/site-footer/demo.tsx";
 
 export default function StorySample() {
   return <div class="sc-sample-page">

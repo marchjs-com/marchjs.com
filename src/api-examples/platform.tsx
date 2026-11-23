@@ -35,9 +35,9 @@ export { default as SIG } from "./platform.sig.gen.ts";
 
 // The manager UIs, the context menu and the icon catalog load on demand (as their docs advise), not with this part.
 const catalogLib = () => import("march/icons/catalog")
-const menuLib = () => import("march/components/overlays/context-menu")
+const menuLib = () => import("march/context-menu")
 const consentLib = () => import("march/managers/consent/ui")
-const commandLib = () => Promise.all([import("march/managers/command/ui"), import("march/ui/menu.ts"), menuLib()]).then(([c, m, x]) => ({ ...c, Menu: m.Menu, ContextMenu: x.ContextMenu }))
+const commandLib = () => Promise.all([import("march/managers/command/ui"), import("march/ui").then((m) => m.Menu), menuLib()]).then(([c, Menu, x]) => ({ ...c, Menu, ContextMenu: x.ContextMenu }))
 const a11yLib = () => import("march/managers/accessibility/ui")
 const hintLib = () => import("march/managers/shortcut-hint/ui")
 /** Renders `children(module)` once the module has loaded. */

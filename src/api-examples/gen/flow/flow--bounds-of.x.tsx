@@ -2,7 +2,7 @@
 // march/flow › boundsOf
 import { Out, Row } from "../../_kit.tsx";
 import { Button } from "march/ui";
-import { boundsOf } from "march/components/composite/flow-canvas/model.ts";
+import { boundsOf } from "march/flow";
 import { newFlow } from "./_new-flow.tsx";
 import { Stack } from "./_stack.tsx";
 import { json } from "./_json.tsx";

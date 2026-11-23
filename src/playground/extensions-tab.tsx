@@ -4,7 +4,7 @@
 // track). The data comes from the preview runtime's March (its `extensions`), read after every build and props change.
 import { Badge, Button, CodeView } from "march/ui";
 import type { AppPlugin, LanguageService } from "march/app-ui";
-import type { PlaygroundOption } from "march/components/meta.ts";
+import type { PlaygroundOption } from "../catalog/spec.ts";
 import "./extensions-tab.css";
 
 import type { ExtInfo, Spec } from "./extensions-info.ts";
@@ -27,7 +27,6 @@ const changes = (s: ExtInfo["traces"][number]["steps"][number]): [string, string
 }
 
 const EXAMPLE = `import { extend, intercept, defineExtension } from "march"
-import { Button } from "march/ui"
 
 const track = defineExtension({
   name: "track",

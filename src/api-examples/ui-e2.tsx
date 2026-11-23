@@ -4,7 +4,7 @@
 import { signal, untrack } from "march";
 import type { Signal } from "march";
 import {
-  Button, Badge, Segmented, TextInput, Textarea, Slider, Kbd, action, isAction, colorTheme, colorThemes, defineMeta, definePlayground, distance, firstDayOf, fold, format, formatCount, formatDate, formatKey, formatNumber, frameSize, freeKey, getAt, gradientCss, heartBurst, heartPop, hsvToRgb, htmlToMarkdown, initials, inputFor, insertAfter, isMac, isSafeLink, key, loadTheme, markdownNodes, mediaKind, mix, model, normalizePhone, openDialog,
+  Button, Badge, Segmented, TextInput, Textarea, Slider, Kbd, action, isAction, colorTheme, colorThemes, defineMeta, distance, firstDayOf, fold, format, formatCount, formatDate, formatKey, formatNumber, frameSize, freeKey, getAt, gradientCss, heartBurst, heartPop, hsvToRgb, htmlToMarkdown, initials, inputFor, insertAfter, isMac, isSafeLink, key, loadTheme, markdownNodes, mediaKind, mix, model, normalizePhone, openDialog,
 } from "march/ui";
 import { examples } from "./types.ts";
 import { Out, Log, Row } from "./_kit.tsx";
@@ -36,20 +36,6 @@ export default examples({
       run: () => {
         const meta = defineMeta({ name: "Chip", status: "experimental", since: "1.0.0", category: "actions", summary: "Küçük etiket.", composedOf: [] })
         return <div class="sc-ex-stack"><Pre text={() => json(meta)} /><Out label="Aynı nesne" value={String(defineMeta(meta) === meta)} /></div>
-      },
-    },
-    definePlayground: {
-      code: `export default definePlayground({ options: [
-  { key: "size", label: "Boyut", default: "md", options: ["sm", "md", "lg"] },
-] })`,
-      run: () => {
-        const spec = definePlayground({ options: [
-          { key: "size", label: "Boyut", default: "md", options: ["sm", "md", "lg"] },
-          { key: "tone", label: "Ton", default: "calm", options: ["calm", "loud"] },
-        ] })
-        const values = signal<Record<string, string>>(Object.fromEntries(spec.options.map((o) => [o.key, String(o.default)])))
-        return <div class="sc-ex-stack">{spec.options.map((o) => <Row><span>{o.label}</span><Segmented value={() => values()[o.key]} onChange={(v: string) => values.update((x) => ({ ...x, [o.key]: v }))} options={(o.options ?? []).map((x) => ({ value: String(x), label: String(x) }))} aria-label={o.label} /></Row>)}
-          <Out label="değerler" value={() => json(values())} /></div>
       },
     },
     distance: {

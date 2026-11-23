@@ -70,7 +70,6 @@ import e65 from "./mock/net.mock--fake.x.tsx";
 import e66 from "./mock/net.mock--from-open-api.x.tsx";
 import e67 from "./mock/net.mock--mock.x.tsx";
 import e68 from "./mock/net.mock--mock-requested.x.tsx";
-import e69 from "./mock/net.mock--mock-socket-server.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "march/motion/text#rainbow": e0,
   "march/motion/text#repel": e1,
@@ -141,6 +140,5 @@ const examples: Record<string, ApiExample<any>> = {
   "march/net/mock#fromOpenApi": e66,
   "march/net/mock#mock": e67,
   "march/net/mock#mockRequested": e68,
-  "march/net/mock#mockSocketServer": e69,
 };
 export default examples;

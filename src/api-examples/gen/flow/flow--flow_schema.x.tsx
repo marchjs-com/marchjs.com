@@ -2,7 +2,7 @@
 // march/flow › FLOW_SCHEMA
 import { signal } from "march";
 import { Out, Row } from "../../_kit.tsx";
-import { FLOW_SCHEMA, validateFlow } from "march/components/composite/flow-canvas/model.ts";
+import { FLOW_SCHEMA, validateFlow } from "march/flow";
 import { Button } from "march/ui";
 import { doc } from "./_doc.tsx";
 import { Stack } from "./_stack.tsx";

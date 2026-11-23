@@ -1,9 +1,8 @@
 // Home page sections (a lazy part): social pieces as they are in an app (a post that can be liked, opened, shared),
 // and an honest comparison: where MarchJS stands and where it does not.
 import "./more.css";
-import { PostCard, type Post } from "march/components/composite/post-card";
-import { HonestCompare } from "march/components/landing/index.ts";
-import { Reveal } from "march/components/landing/index.ts";
+import { PostCard, type Post } from "march/composite";
+import { HonestCompare, Reveal } from "march/landing";
 import { HOME_STATS as S } from "../../home-stats.gen.ts";
 import { Head } from "../head.tsx";
 

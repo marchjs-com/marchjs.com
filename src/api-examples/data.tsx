@@ -1,7 +1,7 @@
 // API examples of the data group: queries and mutations, access control, grouping (march/data), schemas
-// (march/schema) and the component registry (loaded when its example opens).
+// (march/schema).
 // Layout and rules: tools/api-examples.js. Each `run` is a small live demo of its `code`.
-import { signal, computed, effect, untrack, onCleanup, Await } from "march";
+import { signal, computed, effect, untrack, onCleanup } from "march";
 import { appUrl } from "march/base";
 import {
   access, aggregate, aggregates, can, Can, clearCache, configure, denied, fetchJson, Gate, groupRows, hasMethod, hasRole,
@@ -685,23 +685,6 @@ TYPES.list.coerce("a, b\\nc", field)        // ["a", "b", "c"]`,
           <Out label="kayıtlı türler" value={() => String(Object.keys(TYPES).length)} />
         </div>
       },
-    },
-  },
-  "march/components/registry.gen.ts": {
-    registry: {
-      code: `import { registry } from "march/components/registry.gen.ts"
-const forms = registry.filter((e) => e.meta.category === "forms")
-const demo = await forms[0].demo()   // lazy demo module`,
-      run: () => <Await for={() => import("march/components/registry.gen.ts")} loading={<p class="m-muted">Yükleniyor…</p>}>{({ registry }: { registry: readonly { meta: { name: string; category: string; summary: string; status: string } }[] }) => {
-        const cats = [...new Set(registry.map((e) => e.meta.category))].sort()
-        const cat = signal(cats.includes("data") ? "data" : cats[0]!)
-        const shown = () => registry.filter((e) => e.meta.category === cat())
-        return <div class="sc-ex-data-stack">
-          <Segmented value={cat} onChange={(v: string) => cat.set(v)} options={cats} aria-label="Kategori" />
-          <Out label="bileşen" value={() => `${shown().length} / ${registry.length}`} />
-          <ul class="sc-ex-data-grid">{() => shown().map((e) => <li title={e.meta.summary}><strong>{e.meta.name}</strong> <small>{e.meta.status}</small></li>)}</ul>
-        </div>
-      }}</Await>,
     },
   },
 })

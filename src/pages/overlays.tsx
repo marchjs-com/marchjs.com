@@ -10,7 +10,7 @@ import { ComponentDemo } from "../component-demo.tsx";
 import { lazy } from "march/lazy";
 // ContextMenu has its own entry (march/context-menu), so the card registry has no demo loader for it: its demo is a
 // lazy part here (the menu stays out of this route's chunk); the option spec comes from the registry
-const ContextMenuDemo = lazy(() => import("march/components/overlays/context-menu/demo.tsx"), { placeholder: "card" });
+const ContextMenuDemo = lazy(() => import("../catalog/overlays/context-menu/demo.tsx"), { placeholder: "card" });
 
 export default function Overlays(props: { params?: { rest?: string } }) {
   let $last = "—"

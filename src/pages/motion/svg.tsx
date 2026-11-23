@@ -3,10 +3,7 @@
 import "../motion-pages.css";
 import { onCleanup } from "march";
 // each helper from its own module: the page carries only what it uses (the same names are on "march/motion")
-import { animate, type Playback } from "march/motion/engine/playback.ts";
-import { drawPath, morphPath, followPath } from "march/motion/svg.ts";
-import { clipReveal, type ClipShape, type ClipSide } from "march/motion/clip.ts";
-import { filterBlur, displace, goo } from "march/motion/svg-filter.ts";
+import { animate, type Playback, drawPath, morphPath, followPath, clipReveal, type ClipShape, type ClipSide, filterBlur, displace, goo } from "march/motion";
 import { Section } from "../../demo.tsx";
 import { MotionDemo, opt, EASES } from "../../playground.tsx";
 

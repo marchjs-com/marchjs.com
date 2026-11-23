@@ -4,7 +4,7 @@
 import "./more.css";
 import { Link } from "march/router";
 import { ThemeEditor } from "march/components/composite/theme-editor";
-import { Reveal } from "march/components/landing/index.ts";
+import { Reveal } from "march/landing";
 import { Head } from "../head.tsx";
 
 export default function Design() {

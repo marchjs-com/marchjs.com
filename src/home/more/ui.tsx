@@ -5,7 +5,7 @@ import "./more.css";
 import { Link } from "march/router";
 import { Button, PasswordInput, TextInput, Toggle, ThemePreview, colorThemes, colorTheme, setColorTheme, toast, openDialog, openDrawer, confirm, openPalette, Kbd } from "march/ui";
 import { Field } from "march/forms";
-import { Reveal } from "march/components/landing/index.ts";
+import { Reveal } from "march/landing";
 import {
   Icon, arrowRight, bell, calendar, check, clock, cloud, code, copy, download, edit, eye, filter, flag, folder, gift, globe, grid,
   heart, home, image, link, lock, mail, mic, moon, music, phone, pin, play, plus, search, send, settings, shield, sparkles, star, sun, tag, trash, user, users, zap,

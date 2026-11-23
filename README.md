@@ -21,12 +21,23 @@ Every build regenerates the site's generated sources (`tools/`), from its pages 
 
 | Tool | Writes | From |
 | --- | --- | --- |
+| `gen-catalog.mjs` | `src/catalog/*.gen.ts` | CDN `data/components.json`, `data/api/`, `src/catalog/` |
 | `gen-sections.js` | `src/sections.gen.ts` | the pages' demo sections |
 | `gen-ide-texts.js` | `src/playground/ide-texts.gen.tsx`, `ide-list.gen.ts` | the examples' `ide.json` at the pinned sha |
 | `api-examples.js` | `src/api-examples.gen.ts` | `src/api-examples/`, March's exports |
 | `api-data.mjs` | `public/api/` | CDN `data/api/`, with links to the site's pages |
 | `march-data.mjs` | `public/comp/`, `src/home-stats.gen.ts` | CDN `data/comp/`, `data/stats.json`, `march.config.js` budgets |
 | `gen-bench.mjs` (`--release`) | `public/bench/`, `src/bench/apps/` | the compared libraries |
+
+## Component cards
+
+Every March component has a card here: its live demo and its Options panel are the site's own files,
+`src/catalog/<category>/<name>/demo.tsx` and `playground.ts` (the option spec, `src/catalog/spec.ts`). March publishes
+the components themselves (`data/components.json`: name, summary, parts, docs.md) and their props tables (`data/comp/`);
+`src/catalog/showcase.json` names the page that draws each card and `pages.json` a component's own page.
+`tools/gen-catalog.mjs` writes the catalog modules from them on every build (gitignored: never committed) and fails when a March component has no card, or an option
+its demo never reads. The site imports March only through its package entries (`march/actions`, `march/landing`…, and
+`march/components/<category>/<name>` for the large ones): no March file by path.
 
 ## Component examples
 

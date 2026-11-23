@@ -2,7 +2,7 @@
 // The API reference's data (public/api/: index.en.json, index.tr.json, docs-<n>.json) from the data March publishes
 // with the release (cdn.marchjs.com/<version>/data/api/), with the site's own links added: an export's `demo` is the
 // page that draws its component (the component's section, from src/sections.gen.ts), else a page that uses the
-// component (src/pages), else the page its meta.ts names (already in the data).
+// component (src/pages), else the page that shows its card (src/catalog/showcase.json).
 //   node tools/api-data.mjs            write public/api/
 //   node tools/api-data.mjs --check    exit 1 when public/api/ is out of date
 import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync, unlinkSync } from "node:fs";
@@ -41,13 +41,15 @@ export async function generate() {
   const files = (await dataFiles()).filter((f) => f.startsWith("api/"));
   const components = JSON.parse(readFileSync(await dataFile("components.json"), "utf8")).components;
   const sections = sectionLinks(components), pages = pageLinks();
+  const showcase = JSON.parse(readFileSync(join(SITE, "src", "catalog", "showcase.json"), "utf8"));
+  const cards = new Map(components.filter((c) => c.meta?.name && showcase[c.folder]).map((c) => [c.meta.name, showcase[c.folder].page]));
   const out = {};
   for (const rel of files) {
     const name = rel.slice("api/".length);
     const text = readFileSync(await dataFile(rel), "utf8");
     if (!/^docs-\d+\.json$/.test(name)) { out[name] = text; continue; }
     const docs = JSON.parse(text);
-    for (const d of Object.values(docs)) d.demo = sections.get(d.name) || pages.get(d.name) || d.demo || "";
+    for (const d of Object.values(docs)) d.demo = sections.get(d.name) || pages.get(d.name) || cards.get(d.name) || "";
     out[name] = JSON.stringify(docs);
   }
   return out;

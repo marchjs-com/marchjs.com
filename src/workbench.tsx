@@ -6,16 +6,15 @@ import { signal, computed, effect, untrack, batch } from "march";
 import { withParts } from "march/props";
 import { Link, type Href } from "march/router";
 import { Button, OverflowToolbar, resolvedTheme, type ToolbarItem } from "march/ui";
-import type { PlaygroundOption, PlaygroundSpec } from "march/ui";
-import { DevicePreview } from "march/components/layout/device-preview/index.ts";
-import { ExplodedView, type ExplodedPart } from "march/components/layout/exploded-view/index.ts";
+import type { PlaygroundOption, PlaygroundSpec } from "./catalog/spec.ts";
+import { DevicePreview, ExplodedView, type ExplodedPart } from "march/layout";
 import { viewport } from "march/managers/viewport";
 import { defineIcon, monitor, phone, sun, moon, pilcrow, refresh, rotateCw, layers } from "march/icons";
 import { scopedMode, type StageMode } from "./stage-mode.ts";
 import { partOptions, partsAttr, parseParts, choices, type ExtraAttr, type PartOption } from "./gen-code.ts";
 import { CodeBox } from "./wb-code.tsx";
 import { WorkbenchTabs } from "./wb-tabs.tsx";
-import { cards, type CardEntry } from "march/components/cards.gen.ts";
+import { cards, type CardEntry } from "./catalog/cards.gen.ts";
 import { optionRow, type PlayOption } from "./playground.tsx";
 import { demoId, type DemoView } from "./component-demo.tsx";
 
@@ -72,7 +71,7 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
   const partVals = signal<PartVals>({}), partInfo = signal<Record<string, PartInfo>>({}), chosen = signal<string | null>(null)
   let loading: Promise<void> | null = null
   /** Load every part once: its component (cards-parts.gen.ts) and its playground. */
-  const loadParts = (): Promise<void> => (loading ??= import("march/components/cards-parts.gen.ts").then(async ({ parts: loaders }) => {
+  const loadParts = (): Promise<void> => (loading ??= import("./catalog/cards-parts.gen.ts").then(async ({ parts: loaders }) => {
     const info: Record<string, PartInfo> = {}
     await Promise.all(parts.map(async (name) => {
       const card = cards.find((e) => e.n === name)
@@ -124,7 +123,7 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
   const explode = (): void => {
     const next = !apart.peek()
     if (!next || !parts.length) { apart.set(next); return }
-    void import("march/components/cards-roots.gen.ts").then(({ roots }) => {
+    void import("./catalog/cards-roots.gen.ts").then(({ roots }) => {
       const stage = frame as Element, own = roots[props.entry.n]
       // the parts that are on the stage now; the composite's own surface (a Card that is its root) stays the base plate
       const found = parts.filter((name) => roots[name] && stage.querySelector(`.${roots[name]!}`))
@@ -137,7 +136,7 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
   // ---- a composite on the stage: a press on one of its parts chooses it (its options open), hovering outlines it.
   // The parts are found by their root classes (cards-roots.gen.ts); the innermost one under the pointer wins
   let rootsOf: Record<string, string> | null = null
-  if (parts.length) void import("march/components/cards-roots.gen.ts").then((m) => { rootsOf = m.roots })
+  if (parts.length) void import("./catalog/cards-roots.gen.ts").then((m) => { rootsOf = m.roots })
   const partAt = (target: EventTarget | null): [string, Element] | null => {
     if (!rootsOf || !(target instanceof Element)) return null
     let best: [string, Element] | null = null

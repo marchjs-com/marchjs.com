@@ -2,7 +2,7 @@
 import { signal } from "march";
 import { Button } from "march/ui";
 import { TextInput, Textarea } from "march/forms";
-import { SiteSection, FeatureGrid, Roadmap, StatsBand } from "march/components/landing/index.ts";
+import { SiteSection, FeatureGrid, Roadmap, StatsBand } from "march/landing";
 import { palette, code, zap, globe, layers, users } from "march/icons";
 
 /** A light contact form: three labelled fields and a button (the full form engine is not needed here). */

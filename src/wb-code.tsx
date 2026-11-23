@@ -4,8 +4,8 @@
 import { signal, effect, untrack, batch, onCleanup } from "march";
 import { scopedMode } from "./stage-mode.ts";
 import { Widget, codeView, Kbd } from "march/ui";
-import type { PlaygroundOption, PlaygroundSpec, PlaygroundCode } from "march/ui";
-import { CodeEditor, jsxCompleter, type CodeMark, type JsxProp } from "march/components/composite/code-editor/index.ts";
+import type { PlaygroundOption, PlaygroundSpec, PlaygroundCode } from "./catalog/spec.ts";
+import { CodeEditor, jsxCompleter, type CodeMark, type JsxProp } from "march/composite";
 import { mProps } from "march/props";
 import { genCode, parseCode, lexCode, optionAttrs, choices, COMMON_ATTRS, type ExtraAttr } from "./gen-code.ts";
 

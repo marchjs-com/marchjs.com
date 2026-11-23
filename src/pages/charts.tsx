@@ -6,14 +6,14 @@ import { Hub } from "../hub.tsx";
 import { TOPICS } from "../topics/charts.ts";
 import { ComponentDemo } from "../component-demo.tsx";
 
-const LineChartDemo = lazy(() => import("march/components/data/line-chart/demo.tsx"), { placeholder: "card" });
-const BarChartDemo = lazy(() => import("march/components/data/bar-chart/demo.tsx"), { placeholder: "card" });
-const PieChartDemo = lazy(() => import("march/components/data/pie-chart/demo.tsx"), { placeholder: "card" });
-const HeatmapDemo = lazy(() => import("march/components/data/heatmap/demo.tsx"), { placeholder: "card" });
-const StatDemo = lazy(() => import("march/components/data/stat/demo.tsx"), { placeholder: "card" });
-const SparklineDemo = lazy(() => import("march/components/data/sparkline/demo.tsx"), { placeholder: "card" });
-const ProgressRingDemo = lazy(() => import("march/components/data/progress-ring/demo.tsx"), { placeholder: "card" });
-const BarListDemo = lazy(() => import("march/components/data/bar-list/demo.tsx"), { placeholder: "card" });
+const LineChartDemo = lazy(() => import("../catalog/data/line-chart/demo.tsx"), { placeholder: "card" });
+const BarChartDemo = lazy(() => import("../catalog/data/bar-chart/demo.tsx"), { placeholder: "card" });
+const PieChartDemo = lazy(() => import("../catalog/data/pie-chart/demo.tsx"), { placeholder: "card" });
+const HeatmapDemo = lazy(() => import("../catalog/data/heatmap/demo.tsx"), { placeholder: "card" });
+const StatDemo = lazy(() => import("../catalog/data/stat/demo.tsx"), { placeholder: "card" });
+const SparklineDemo = lazy(() => import("../catalog/data/sparkline/demo.tsx"), { placeholder: "card" });
+const ProgressRingDemo = lazy(() => import("../catalog/data/progress-ring/demo.tsx"), { placeholder: "card" });
+const BarListDemo = lazy(() => import("../catalog/data/bar-list/demo.tsx"), { placeholder: "card" });
 
 export default function Charts(props: { params?: { rest?: string } }) {
   const RENDER: Record<string, () => unknown> = {
