@@ -4,72 +4,72 @@ export const HOME_STATS = {
   "dependencies": 0,
   "components": 277,
   "registered": 202,
-  "exports": 1283,
-  "subpaths": 103,
+  "exports": 1281,
+  "subpaths": 101,
   "categories": [
     {
       "id": "layout",
-      "label": "Yerleşim",
+      "title": "Layout",
       "components": 18
     },
     {
       "id": "typography",
-      "label": "Tipografi",
+      "title": "Typography",
       "components": 6
     },
     {
       "id": "actions",
-      "label": "Eylemler",
+      "title": "Actions",
       "components": 11
     },
     {
       "id": "forms",
-      "label": "Formlar",
+      "title": "Forms",
       "components": 31
     },
     {
       "id": "data",
-      "label": "Veri gösterimi",
+      "title": "Data display",
       "components": 24
     },
     {
       "id": "feedback",
-      "label": "Geri bildirim",
+      "title": "Feedback",
       "components": 11
     },
     {
       "id": "overlays",
-      "label": "Katmanlar",
+      "title": "Overlays",
       "components": 6
     },
     {
       "id": "navigation",
-      "label": "Gezinme",
+      "title": "Navigation",
       "components": 12
     },
     {
       "id": "media",
-      "label": "Medya",
+      "title": "Media",
       "components": 5
     },
     {
       "id": "motion",
-      "label": "Hareket",
+      "title": "Motion",
       "components": 1
     },
     {
       "id": "social",
-      "label": "Sosyal",
+      "title": "Social",
       "components": 13
     },
     {
       "id": "composite",
-      "label": "Karmaşık bileşenler",
+      "title": "Composite",
       "components": 34
     },
     {
       "id": "landing",
-      "label": "Web tasarım araçları",
+      "title": "Landing",
       "components": 30
     }
   ],
@@ -85,8 +85,8 @@ export const HOME_STATS = {
   },
   "managers": 30,
   "themes": 16,
-  "tests": 1422,
-  "testFiles": 324,
+  "tests": 1420,
+  "testFiles": 322,
   "budget": {
     "entry": 15360,
     "boot": 53248,
