@@ -26,7 +26,7 @@ Every build regenerates the site's generated sources (`tools/`), from its pages 
 | `gen-ide-texts.js` | `src/playground/ide-texts.gen.tsx`, `ide-list.gen.ts` | the examples' `ide.json` at the pinned sha |
 | `api-examples.js` | `src/api-examples.gen.ts` | `src/api-examples/`, March's exports |
 | `api-data.mjs` | `public/api/` | CDN `data/api/`, with links to the site's pages |
-| `march-data.mjs` | `public/comp/`, `src/home-stats.gen.ts` | CDN `data/comp/`, `data/stats.json`, `march.config.js` budgets |
+| `march-data.mjs` | `public/comp/`, `src/home-stats.gen.ts`, `src/text-costs.gen.ts` | CDN `data/comp/`, `data/stats.json`, `data/text-costs.json`, `march.config.js` budgets |
 | `gen-bench.mjs` (`--release`) | `public/bench/`, `src/bench/apps/` | the compared libraries |
 
 ## Component cards
