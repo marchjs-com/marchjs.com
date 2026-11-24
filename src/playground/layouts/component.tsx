@@ -1609,13 +1609,13 @@ const runtimeIn = async (f: HTMLIFrameElement, wanted: () => boolean): Promise<{
   }
 }
 const frameRuntime = (f: HTMLIFrameElement) => runtimeIn(f, () => frame === f)
-/** A box for a frame nobody looks at: fixed in the page's corner, invisible and out of the way (still drawn, so its
- * timers and animation frames run as on screen). */
+/** A box for a frame nobody looks at: fixed off screen, as the tests' box always was (March skips the motion of what is
+ * off screen, so a list's leaving rows are gone at once, as the tests expect). */
 const hiddenBox = (w: number, h: number): HTMLElement => {
   const box = document.body.appendChild(document.createElement("div"))
   // (not inert: a test moves the focus inside its frame)
   box.setAttribute("aria-hidden", "true")
-  for (const [k, v] of [["position", "fixed"], ["inset-block-start", "0"], ["inset-inline-start", "0"], ["inline-size", `${w}px`], ["block-size", `${h}px`], ["opacity", "0"], ["pointer-events", "none"], ["z-index", "-1"], ["overflow", "hidden"]] as const) box.style.setProperty(k, v)
+  for (const [k, v] of [["position", "fixed"], ["inset-block-start", "0"], ["inset-inline-start", "-10000px"],["inline-size", `${w}px`], ["block-size", `${h}px`], ["opacity", "0"], ["pointer-events", "none"], ["z-index", "-1"], ["overflow", "hidden"]] as const) box.style.setProperty(k, v)
   return box
 }
 // the tests run in a frame of their own at a desktop's size: what they see (a media query, a menu that turns into a
