@@ -1086,9 +1086,9 @@ const consoleTable = (data: unknown, only?: readonly string[]): HTMLElement => {
 }
 const consoleText = (v: unknown): string => {
   if (typeof v === "string") return v
-  if (v instanceof Error) return `${v.name}: ${v.message}`
+  if (isError(v)) return `${v.name}: ${v.message}`
   if (typeof v === "function") return `ƒ ${v.name || "anonim"}()`
-  if (v instanceof Node) return `<${(v as Element).tagName?.toLowerCase() ?? v.nodeName}>`
+  if (isNode(v)) return `<${(v as Element).tagName?.toLowerCase() ?? v.nodeName}>`
   try { const j = JSON.stringify(v, (_k, x) => (typeof x === "bigint" ? `${x}n` : x)); return j === undefined ? String(v) : j.length > 500 ? `${j.slice(0, 499)}…` : j } catch { return String(v) }
 }
 /** The build the preview drew last: its files open in a dialog (the Console's button, the Terminal's `output`). */
@@ -1166,7 +1166,7 @@ const runAllTests = async (): Promise<void> => {
   if (!names.length) { testRuns.set([]); return }
   testsRunning.set(true)
   try {
-    const rt = await loadRuntime(), runs: TestRun[] = []
+    const rt = await loadTestRuntime(), runs: TestRun[] = []
     const all = Object.fromEntries([...files.keys()].map((n) => [n, forBuild(saved.get(n)?.peek() ?? files.get(n)?.peek() ?? "")]))
     for (const file of names) {
       // the same files built before (every build of the preview runs the tests again): the kept bundle, no esbuild run
@@ -1209,9 +1209,15 @@ const buildNow = async () => {
   return r
 }
 const previewTheme = signal(""), previewMode = signal<"system" | "light" | "dark">("system")
-// the preview's own code (its blob: modules and the preview runtime, playground/preview.js): the device values and the
-// network speed of the preview toolbar apply to its calls only, never to the page around it
-const previewScope = (stack: string): boolean => /blob:|\/playground\/preview\.js/.test(stack)
+// the preview runs in its frame: the device values and the network speed of the preview toolbar apply to the frame's
+// calls only, never to the page around it. The frame has its own fetch wrapper (its state is the page's) and reads the
+// device's values from the page while it counts itself in (__marchPreviewCall: preview-share.ts)
+const previewScope = (): boolean => ((globalThis as { __marchPreviewCall?: number }).__marchPreviewCall ?? 0) > 0
+/** An Error, also one of the frame's (another realm: instanceof Error is false for it). */
+const isError = (v: unknown): v is Error => v instanceof Error || (!!v && typeof v === "object" && typeof (v as Error).message === "string" && typeof (v as Error).name === "string" && "stack" in v)
+/** A DOM node, also one of the frame's. */
+const isNode = (v: unknown): v is Node => !!v && typeof v === "object" && typeof (v as Node).nodeType === "number" && typeof (v as Node).nodeName === "string"
+const isElement = (v: unknown): v is Element => isNode(v) && v.nodeType === 1
 /** The element the chosen component draws in the preview (an HTML tag of the tree: its first one). */
 const chosenEl = (): HTMLElement | null => {
   const name = selected.peek(), tag = /^<([\w-]+)>$/.exec(name)?.[1]
@@ -1227,13 +1233,13 @@ const optionsByProp = (): Map<string, PlaygroundOption> => {
 }
 /** A typed value: true / false / null, a number, JSON; anything else is text. */
 const typed = (text: string): unknown => { const p = parse(text); return p.ok ? p.value : text }
-const describe = (v: unknown): string => v instanceof Element ? `<${v.tagName.toLowerCase()}${v.id ? `#${v.id}` : ""}${v.classList.length ? `.${[...v.classList].join(".")}` : ""}>` : short(v)
+const describe = (v: unknown): string => isElement(v) ? `<${v.tagName.toLowerCase()}${v.id ? `#${v.id}` : ""}${v.classList.length ? `.${[...v.classList].join(".")}` : ""}>` : short(v)
 /** Print what a line of JavaScript gave: a value, a tree for an object, a signal's value. */
 const show = (v: unknown, io: TerminalIO): void => {
   if (v === undefined) io.print("undefined", { tone: "muted" })
   // a signal or a computed value (an accessor: it has peek): its value, read without following it
   else if (typeof v === "function") io.print("peek" in v ? `${"set" in v ? "sinyal" : "hesaplanan"} → ${short((v as { peek(): unknown }).peek())}` : `ƒ ${v.name || "fonksiyon"}`, { color: 6 })
-  else if (v instanceof Element) io.print(describe(v), { color: 4 })
+  else if (isElement(v)) io.print(describe(v), { color: 4 })
   else if (v && typeof v === "object") io.json(v, 1)
   else io.print(typeof v === "string" ? JSON.stringify(v) : String(v), { color: typeof v === "number" ? 3 : 2 })
 }
@@ -1250,9 +1256,11 @@ const rgb = (c: string): [number, number, number, number] | null => {
 const lum = ([r, g, b]: readonly number[]): number => { const f = (x: number) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4 }; return 0.2126 * f(r!) + 0.7152 * f(g!) + 0.0722 * f(b!) }
 // the colour behind an element: the first solid background up its ancestors; null when an image or a gradient comes
 // first (the colour under the text cannot be read, so its contrast is not judged)
-const bgOf = (el: Element | null): readonly number[] | null => { for (let n = el; n; n = n.parentElement) { const st = getComputedStyle(n); if (st.backgroundImage !== "none") return null; const c = rgb(st.backgroundColor); if (c && c[3] > 0.5) return c } return [255, 255, 255] }
+// (the preview's elements are the frame's: its window computes their style and knows what is on top)
+const styleOf = (el: Element): CSSStyleDeclaration => (el.ownerDocument.defaultView ?? globalThis).getComputedStyle(el)
+const bgOf = (el: Element | null): readonly number[] | null => { for (let n = el; n; n = n.parentElement) { const st = styleOf(n); if (st.backgroundImage !== "none") return null; const c = rgb(st.backgroundColor); if (c && c[3] > 0.5) return c } return [255, 255, 255] }
 /** Whether an element is seen at its centre (not under an image, as an avatar's initials under its photo). */
-const onTop = (el: Element): boolean => { const r = el.getBoundingClientRect(), hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return !hit || hit === el || el.contains(hit) || hit.contains(el) }
+const onTop = (el: Element): boolean => { const r = el.getBoundingClientRect(), hit = el.ownerDocument.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return !hit || hit === el || el.contains(hit) || hit.contains(el) }
 const nameOf = (el: Element): string => {
   const by = el.getAttribute("aria-labelledby")
   const label = el.id ? el.ownerDocument.querySelector(`label[for="${CSS.escape(el.id)}"]`) : null
@@ -1278,7 +1286,7 @@ const audit = (root: HTMLElement): Issue[] => {
   for (const el of root.querySelectorAll<HTMLElement>("*")) {
     // text of an inactive control (disabled) is exempt from the contrast minimum (WCAG 1.4.3)
     if (![...el.childNodes].some((n) => n.nodeType === 3 && n.nodeValue?.trim()) || !el.offsetParent || el.closest(":disabled, [aria-disabled=true]")) continue
-    const st = getComputedStyle(el), fg = rgb(st.color)
+    const st = styleOf(el), fg = rgb(st.color)
     if (!fg) continue
     const bg = bgOf(el)
     if (!bg || !onTop(el)) continue
@@ -1337,7 +1345,11 @@ const COMMANDS: Record<string, TerminalCommand> = {
     if (type === "click") el.click()
     else if (type === "focus") el.focus()
     else if (type === "blur") el.blur()
-    else el.dispatchEvent(type.startsWith("key") ? new KeyboardEvent(type, { key: String(a.options["key"] ?? "Enter"), bubbles: true }) : type.startsWith("pointer") ? new PointerEvent(type) : new Event(type, { bubbles: true, cancelable: true }))
+    else {
+      // the frame's own event kinds (a handler there may check `e instanceof KeyboardEvent`)
+      const W = (el.ownerDocument.defaultView ?? globalThis) as typeof globalThis
+      el.dispatchEvent(type.startsWith("key") ? new W.KeyboardEvent(type, { key: String(a.options["key"] ?? "Enter"), bubbles: true }) : type.startsWith("pointer") ? new W.PointerEvent(type) : new W.Event(type, { bubbles: true, cancelable: true }))
+    }
     io.success(`${type} → ${describe(el)}`)
   } },
   data: { desc: "Dosyanın sinyalleri, hesaplanan değerleri ve sabitleri", run: (_a, io) => {
@@ -1549,31 +1561,136 @@ const langPanel = () => <div class="sc-lang">
 </div>
 
 // the preview (AppPreview): its toolbar sets the preview's own theme, accent and light / dark; each successful build's
-// PreviewControl is rendered in the middle of its stage by the preview runtime (playground/preview.js, loaded once)
+// PreviewControl is drawn by the preview runtime in a frame of its own (playground/preview.html: an iframe with its own
+// document and its own March, from the CDN as the page's), so what the code does to March (its language, its router,
+// its extensions, its layers) stays in the frame. previewEl is the frame's root, where the runtime draws.
 let previewEl: HTMLElement | null = null
+/** The values Properties gives single instances (by key): the runtime draws those instances with them. */
+const instanceProps = (): Record<string, Record<string, unknown>> => Object.fromEntries(Object.entries(valuesByInst()).map(([k, v]) => [k, propsOf(optsOf(nameOfKey(k)), v, true)]).filter(([, p]) => Object.keys(p as object).length))
+/** The frame's root as a signal (what listens on the preview follows a new frame). */
+const pvRoot = signal<HTMLElement | null>(null)
 type Parts = Record<string, Record<string, unknown>>
 let tsSvc: TypeScriptService | null = null
-type Runtime = { extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(code: string | null, dict: Record<string, string> | null): void; onTree(cb: () => void): void; onConsole(cb: (e: ConsoleEvent) => void): void; sourceAt(node: Node | null): { file: string; line: number } | null; onProbes(cb: (p: Probe[], dom: [string, number][]) => void, root: Element): void; resetProbes(): void; runTests(code: string): Promise<TestResult[]>; elementsAt(root: Element, file: string, line: number): Element[]; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void; setProbe(id: number, value: unknown): boolean }
+type Runtime = { loadTheme(id: string): Promise<boolean>; extensionInfo(names: readonly string[]): ExtInfo; setHost(host: { instrument?: (files: Record<string, string>) => Promise<{ files: Record<string, string>; metas: unknown[] }> }): void; untrack<T>(fn: () => T): T; evaluate(line: string, scope?: Record<string, unknown>): Promise<unknown>; run(code: string, el: HTMLElement, props?: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): Promise<string[]>; setProps(props: Record<string, Record<string, unknown>>, parts?: Record<string, Parts>): void; stop(): void; onData(cb: (values: Record<string, unknown>) => void): void; setData(name: string, value: unknown): void; setLanguage(code: string | null, dict: Record<string, string> | null): void; onTree(cb: () => void): void; onConsole(cb: (e: ConsoleEvent) => void): void; sourceAt(node: Node | null): { file: string; line: number } | null; onProbes(cb: (p: Probe[], dom: [string, number][]) => void, root: Element): void; resetProbes(): void; runTests(code: string): Promise<TestResult[]>; elementsAt(root: Element, file: string, line: number): Element[]; componentTree(): LiveItem[]; highlight(id: number): void; instanceAt(node: Node | null): number; setInstanceProps(map: Record<string, Record<string, unknown>>): void; setProbe(id: number, value: unknown): boolean }
 let runtime: Promise<Runtime> | null = null, runtimeNow: Runtime | null = null
-const loadRuntime = () => (runtime ??= (async () => {
-  // its components' stylesheet, once
-  const link = document.createElement("link")
-  link.rel = "stylesheet"; link.href = appUrl("playground/preview.css")
-  document.head.append(link)
+// the frame: in the preview panel (previewReady), or, while no panel shows the preview, in a box off screen (the tests
+// and the Terminal run in it all the same)
+let frame: HTMLIFrameElement | null = null, frameWait: ((f: HTMLIFrameElement) => void) | null = null
+let offscreen: HTMLElement | null = null
+/** The runtime is gone: its frame was taken away, replaced or loaded again (a panel moved in the page reloads it). */
+const dropRuntime = (): void => { runtime = null; runtimeNow = null; previewEl = null; pvRoot.set(null); probing = null; litNow = [] }
+/** A new frame in `host` (the last one goes): the preview is drawn in it again. */
+const newFrame = (host: HTMLElement): void => {
+  const old = frame
+  const f = document.createElement("iframe")
+  f.className = "sc-pv-frame"
+  f.title = "Önizleme"
+  f.src = appUrl("playground/preview.html")
+  frame = f
+  dropRuntime()
+  // loaded again (moved in the page: the browser reloads a moved frame): a new runtime, the last preview drawn again
+  let loads = 0
+  f.addEventListener("load", () => { if (frame !== f || ++loads === 1) return; dropRuntime(); if (lastCode) void render(lastCode) })
+  host.append(f)
+  old?.remove()
+  if (old && offscreen && !offscreen.contains(f)) { offscreen.remove(); offscreen = null }
+  frameWait?.(f); frameWait = null
+  if (old && lastCode) void render(lastCode)
+}
+/** A frame's runtime once it is there (window.__marchRuntime: preview-frame.ts sets it when everything has loaded); null
+ * when the frame is no longer wanted meanwhile. */
+const runtimeIn = async (f: HTMLIFrameElement, wanted: () => boolean): Promise<{ r: Runtime; root: HTMLElement } | null> => {
+  for (;;) {
+    if (!wanted()) return null
+    const win = f.contentWindow as (Window & { __marchRuntime?: Runtime }) | null
+    const root = win?.document.querySelector<HTMLElement>(".sc-pv-root")
+    if (win?.__marchRuntime && root) return { r: win.__marchRuntime, root }
+    await new Promise((res) => setTimeout(res, 40))
+  }
+}
+const frameRuntime = (f: HTMLIFrameElement) => runtimeIn(f, () => frame === f)
+/** A box for a frame nobody looks at: fixed in the page's corner, invisible and out of the way (still drawn, so its
+ * timers and animation frames run as on screen). */
+const hiddenBox = (w: number, h: number): HTMLElement => {
+  const box = document.body.appendChild(document.createElement("div"))
+  // (not inert: a test moves the focus inside its frame)
+  box.setAttribute("aria-hidden", "true")
+  for (const [k, v] of [["position", "fixed"], ["inset-block-start", "0"], ["inset-inline-start", "0"], ["inline-size", `${w}px`], ["block-size", `${h}px`], ["opacity", "0"], ["pointer-events", "none"], ["z-index", "-1"], ["overflow", "hidden"]] as const) box.style.setProperty(k, v)
+  return box
+}
+// the tests run in a frame of their own at a desktop's size: what they see (a media query, a menu that turns into a
+// drawer on a narrow screen) never depends on the preview panel's width or its device, and they never touch the preview
+let testFrame: HTMLIFrameElement | null = null, testRuntime: Promise<Runtime> | null = null
+const loadTestRuntime = (): Promise<Runtime> => {
+  if (testRuntime && testFrame?.isConnected) return testRuntime
+  testFrame?.parentElement?.remove()
+  const f = document.createElement("iframe")
+  f.className = "sc-pv-frame"
+  f.title = "Testler"
+  f.tabIndex = -1
+  f.src = appUrl("playground/preview.html")
+  hiddenBox(1280, 800).append(f)
+  testFrame = f
+  return (testRuntime = (async () => {
+    const got = await runtimeIn(f, () => testFrame === f)
+    if (!got) return loadTestRuntime()
+    // what a test logs goes to the Console too
+    got.r.onConsole(showConsole)
+    return got.r
+  })())
+}
+const loadRuntime = (): Promise<Runtime> => (runtime ??= (async () => {
   // a big module: fetched and run in a free moment, not in the middle of the page's first paints
   await idle(800)
-  const r = await import(/* @vite-ignore */ appUrl("playground/preview.js")) as Runtime
-  r.onData((values) => liveData.set(values))
-  r.onTree(() => liveTree.set(r.componentTree()))
-  // the code's console.log / warn / error… in the Console, each with its time
-  r.onConsole(showConsole)
-  // import { instrument, run } from "march/playground": the code's own debugging, with the page's TypeScript worker
-  r.setHost({ instrument: (files) => (tsSvc ? tsSvc.instrument(files) : Promise.reject(new Error("TypeScript yok"))) })
-  runtimeNow = r
-  // the language already chosen (the browser's, picked before the runtime was there)
-  untrack(() => { const code = previewLang(); r.setLanguage(code || null, code ? langFile(code) : null) })
-  return r
+  for (;;) {
+    let f = frame
+    if (!f) {
+      // no preview panel yet: a moment for it, else the box off screen
+      const t = setTimeout(() => { if (frame) return; offscreen = hiddenBox(800, 600); newFrame(offscreen) }, 3000)
+      f = await new Promise<HTMLIFrameElement>((res) => { frameWait = res })
+      clearTimeout(t)
+    }
+    const got = await frameRuntime(f)
+    if (!got) continue
+    const { r, root } = got
+    previewEl = root
+    pvRoot.set(root)
+    watchPreview(root)
+    r.onData((values) => liveData.set(values))
+    r.onTree(() => liveTree.set(r.componentTree()))
+    // the code's console.log / warn / error… in the Console, each with its time
+    r.onConsole(showConsole)
+    // import { instrument, run } from "march/playground": the code's own debugging, with the page's TypeScript worker
+    r.setHost({ instrument: (files) => (tsSvc ? tsSvc.instrument(files) : Promise.reject(new Error("TypeScript yok"))) })
+    runtimeNow = r
+    // the language already chosen (the browser's, picked before the runtime was there), the instances' own values, the look
+    untrack(() => { const code = previewLang(); r.setLanguage(code || null, code ? langFile(code) : null); r.setInstanceProps(instanceProps()) })
+    syncLook()
+    return r
+  }
 })())
+// the frame's look follows the preview toolbar (AppPreview's stage: data-m-theme, data-theme; its accent box:
+// data-m-accent) over the page's own (its <html>: theme, mode, accent, language): the frame's <html> takes them and
+// loads its theme's stylesheet
+let lookWatch: MutationObserver | null = null
+const syncLook = (): void => {
+  const f = frame, html = f?.contentDocument?.documentElement, r = runtimeNow
+  if (!f || !html || !r) return
+  const page = document.documentElement, stage = f.closest(".m-app-pv-stage"), box = f.closest(".m-app-pv-accent")
+  const want: Record<string, string> = {}
+  for (const a of page.attributes) if (a.name.startsWith("data-") || a.name === "lang" || a.name === "dir") want[a.name] = a.value
+  for (const k of ["data-m-theme", "data-theme"]) { const v = stage?.getAttribute(k); if (v) want[k] = v }
+  const accent = box?.getAttribute("data-m-accent")
+  if (accent) want["data-m-accent"] = accent
+  for (const a of [...html.attributes]) if (!(a.name in want)) html.removeAttribute(a.name)
+  for (const [k, v] of Object.entries(want)) if (html.getAttribute(k) !== v) html.setAttribute(k, v)
+  // what the page sets inline on its <html> (a custom accent's colours): through the CSSOM (the CSP refuses style="")
+  if (html.style.cssText !== page.style.cssText) html.style.cssText = page.style.cssText
+  if (want["data-m-theme"]) void r.loadTheme(want["data-m-theme"])
+  lookWatch?.disconnect()
+  lookWatch = new MutationObserver(syncLook)
+  for (const el of [page, stage, box]) if (el) lookWatch.observe(el, { attributes: true })
+}
 /** What the code's extensions are and did (the Extensions tab, Properties, suggestions): read from the preview's March. */
 const readExtensions = (): void => { if (runtimeNow) extInfo.set(runtimeNow.extensionInfo(untrack(inTree))) }
 /** Each cell's first element: the tag its component draws. */
@@ -1584,11 +1701,12 @@ const readTag = (): void => {
 }
 /** The code of the last build the preview drew (the Terminal's size reads it). */
 let lastCode = ""
-// a build that came before the preview's box (coming back to the page: the kept result is there at once, the panels
-// later): drawn when the box is there
-let pendingCode = ""
-const previewReady = (el: HTMLElement): void => {
-  previewEl = el
+/** The preview has drawn (the "Derleniyor…" cover goes). */
+const drawn = signal(false)
+// the preview panel's box: the frame goes in it (a box drawn again, the panel docked elsewhere: a new frame there)
+const previewReady = (host: HTMLElement): void => { if (!frame || !host.contains(frame)) newFrame(host) }
+/** The frame's root: what the preview draws answers the IDE (focus, Alt+click). */
+const watchPreview = (el: HTMLElement): void => {
   // what takes focus in the preview is chosen in the Hierarchy (and its Properties show)
   el.addEventListener("focusin", (e) => {
     const r = runtimeNow, id = r?.instanceAt(e.target as Node)
@@ -1605,9 +1723,12 @@ const previewReady = (el: HTMLElement): void => {
     e.preventDefault(); e.stopPropagation()
     goToLine(at.file, at.line)
   }, true)
-  const code = pendingCode
-  pendingCode = ""
-  if (code) queueMicrotask(() => void render(code))
+  // the IDE's shortcuts (Ctrl+S, Ctrl+K, F5…) while the focus is in the preview: the frame's keys go to the page too
+  el.ownerDocument.addEventListener("keydown", (e) => {
+    if (e.defaultPrevented || !(e.ctrlKey || e.metaKey || /^F\d{1,2}$/.test(e.key))) return
+    const copy = new KeyboardEvent("keydown", { key: e.key, code: e.code, ctrlKey: e.ctrlKey, metaKey: e.metaKey, altKey: e.altKey, shiftKey: e.shiftKey, repeat: e.repeat, bubbles: true, cancelable: true })
+    if (!document.dispatchEvent(copy)) e.preventDefault()
+  })
 }
 // the other way: the caret's line in the file in front outlines what that line draws in the preview
 let litNow: Element[] = []
@@ -1640,7 +1761,7 @@ const showRunError = (err: unknown): void => {
     seen.add(`${file}:${o.line}`)
     return [{ file, line: o.line, fn: f.fn }]
   }).slice(0, 6)
-  pvError.set({ title: e instanceof Error ? `${e.name}: ${e.message}` : String(err), frames })
+  pvError.set({ title: isError(e) ? `${e.name}: ${e.message}` : String(err), frames })
 }
 /** A place of the error: its file in front, the caret at the line's start. */
 const goToLine = (file: string, line: number): void => {
@@ -1688,20 +1809,23 @@ const watchReactivity = (r: Runtime, root: HTMLElement): void => {
 let readyCb: ((id: string) => void) | undefined, readyFor: string | null = null
 const markReady = (): void => { const id = readyFor; if (id === null) return; readyFor = null; readyCb?.(id) }
 async function render(code: string): Promise<void> {
-  if (!previewEl) { pendingCode = code; return }
   lastCode = code
   const t0 = performance.now(), g = gen
   pvError.set(null)
   try {
     const rt = await loadRuntime()
-    watchReactivity(rt, previewEl)
+    // a newer build, or a page left meanwhile, draws its own
+    if (code !== lastCode || !previewEl) return
+    const root = previewEl
+    watchReactivity(rt, root)
     // a March component exported as it is (export { IconButton }) is drawn with its options' values: they are there
     // first, or a required prop (IconButton's label) is missing on the first draw of a page
     await Promise.all(untrack(exportedNames).map(loadOptions))
     // a page left meanwhile (its files gone): what was being drawn for it is not drawn
-    if (g !== gen || !previewEl) return
-    await rt.run(code, previewEl, untrack(rootProps), untrack(partsNow))
-    if (g !== gen) { rt.stop(); previewEl?.replaceChildren(); return }
+    if (g !== gen || previewEl !== root) return
+    await rt.run(code, root, untrack(rootProps), untrack(partsNow))
+    if (g !== gen) { rt.stop(); root.replaceChildren(); return }
+    drawn.set(true)
     readTag()
     readExtensions()
     print(`[${stamp()}] Önizleme çizildi · ${Math.round(performance.now() - t0)} ms`, "success")
@@ -1712,7 +1836,7 @@ async function render(code: string): Promise<void> {
 }
 // the preview's picture and recording (the browser asks to share the tab first; the file is saved, nothing is sent)
 const recording = signal<{ stop(): void } | null>(null)
-const pvBox = (): Element | null => previewEl?.closest(".m-app-pv-stage") ?? previewEl
+const pvBox = (): Element | null => frame?.closest(".m-app-pv-stage") ?? frame
 const snap = async (): Promise<void> => {
   const el = pvBox(); if (!el) return
   if (!(await capturePicture(el, `${active().replace(/\.[^.]+$/, "")}-onizleme`))) print(`[${stamp()}] Ekran görüntüsü alınamadı (sekmeyi paylaşmaya izin verilmedi ya da tarayıcı desteklemiyor)`, "warn")
@@ -1730,8 +1854,8 @@ const captureTools = () => <>
   <IconButton icon={video} size="sm" variant={() => (recording() ? "solid" : "ghost")} pressed={() => !!recording()} label={() => (recording() ? "Kaydı durdur ve kaydet (WebM)" : "Önizlemeyi kaydet (WebM)")} onClick={() => void toggleRecord()} />
 </>
 const preview = () => <AppPreview tools={captureTools()} toolbar={{ theme: true, accent: true, mode: true, language: true, fullscreen: true, device: true, network: true }} scope={previewScope} theme={previewTheme} mode={previewMode} language={previewLang} languages={languageList}>
-  <div class="sc-pv-root" m:no-select ref={previewReady}>
-    <div class="sc-playground-empty"><b>Önizleme</b><span>Derleniyor…</span></div>
+  <div class="sc-pv-host" m:no-select ref={previewReady}>
+    {() => (drawn() ? null : <div class="sc-playground-empty sc-pv-wait"><b>Önizleme</b><span>Derleniyor…</span></div>)}
   </div>
   {errorBox}
 </AppPreview>
@@ -1816,7 +1940,7 @@ const useSources = (sources: readonly IdeSource[], page = ""): void => {
   selectedInst.set(null); pickedId.set("")
   // no files (a page being left): the last preview goes too, its components disposed and the stage emptied
   if (!sources.length) {
-    lastCode = ""; pendingCode = ""; pvError.set(null)
+    lastCode = ""; pvError.set(null)
     if (runtime) void runtime.then((rt) => rt.stop())
     previewEl?.replaceChildren()
   }
@@ -2002,10 +2126,7 @@ export default function ComponentLayout(props: { ide: () => IdeJson; id: () => s
   // the preview's language: its file, or the code's own texts
   effect(() => { const code = previewLang(), file = code ? langFile(code) : null; void runtime?.then((r) => r.setLanguage(code || null, file)) })
   // an instance's own values: given to that instance only (the runtime draws again)
-  effect(() => {
-    const map = Object.fromEntries(Object.entries(valuesByInst()).map(([k, v]) => [k, propsOf(optsOf(nameOfKey(k)), v, true)]).filter(([, p]) => Object.keys(p as object).length))
-    void runtime?.then((r) => r.setInstanceProps(map))
-  })
+  effect(() => { const map = instanceProps(); void runtime?.then((r) => r.setInstanceProps(map)) })
   // a property changes: the rendered component takes it at once (no build)
   effect(() => { const p = rootProps(), parts = partsNow(); void runtime?.then((r) => { r.setProps(p, parts); readTag(); readExtensions() }) })
   // HTML events chosen in Events: listened to on the preview, for the element each exported component draws
@@ -2014,7 +2135,7 @@ export default function ComponentLayout(props: { ide: () => IdeJson; id: () => s
     const tags = inTree().filter((n) => n.startsWith("<"))
     const chosen = [...exportedNames(), ...tags].flatMap((name) => Object.entries(handlersBy()[name] ?? {}).filter(([ev, how]) => how && ev.startsWith("on:")).map(([ev, how]) => [name, ev, how] as const))
     rootTags()
-    const el = previewEl
+    const el = pvRoot()
     if (!el) return
     const offs = chosen.map(([name, ev, how]) => {
       const type = ev.slice(3), run = handle(name, ev, how as Handler), tag = /^<([\w-]+)>$/.exec(name)?.[1]
@@ -2029,7 +2150,7 @@ export default function ComponentLayout(props: { ide: () => IdeJson; id: () => s
     })
     onCleanup(() => offs.forEach((off) => off()))
   })
-  onCleanup(() => { clearTimeout(timer); consoleApi = null; previewEl = null; void runtime?.then((r) => r.stop()) })
+  onCleanup(() => { clearTimeout(timer); consoleApi = null; void runtime?.then((r) => r.stop()); lookWatch?.disconnect(); lookWatch = null })
   // Ctrl+P: the files; Ctrl+Shift+O: the named things of the file in front (TypeScript's), the caret goes to the one picked
   hotkeys.bind("mod+p", () => { pickFiles.set(true) }, { inInputs: true, description: "Dosyaya git", group: "MarchIDE" })
   hotkeys.bind("mod+shift+o", () => { void openSymbols() }, { inInputs: true, description: "Dosyadaki sembole git", group: "MarchIDE" })

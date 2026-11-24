@@ -42,13 +42,11 @@
 .sc-console-langs > .sc-lang { min-block-size: 100%; padding-block-start: var(--m-space-6); }
 .sc-lang-of { margin: 0; padding: var(--m-space-2) var(--m-space-3) 0; color: var(--m-muted); font-size: var(--m-text-xs); }
 .sc-props { block-size: 100%; overflow: auto; }
-/* the preview is split into a cell per exported component (its name in the corner when there are several) */
-.sc-pv-root { display: grid; align-self: stretch; inline-size: 100%; grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr)); }
-.sc-pv-cell { position: relative; display: grid; place-items: center; min-block-size: 8rem; padding: var(--m-space-6) var(--m-space-4) var(--m-space-4); }
-.sc-pv-cell + .sc-pv-cell { border-inline-start: 1px dashed var(--m-border); }
-.sc-pv-name { position: absolute; inset-block-start: var(--m-space-2); inset-inline-start: var(--m-space-3); font: var(--m-text-xs) var(--m-font-mono); color: var(--m-muted); }
-.sc-pv-root[data-cells="1"] .sc-pv-name { display: none; }
-.sc-pv-stage { display: grid; place-items: center; inline-size: 100%; }
+/* the preview: a frame of its own (playground/preview.html, its cells styled by preview-frame.css) filling the stage */
+.m-app-pv-accent:has(> .sc-pv-host) { padding: 0; }
+.sc-pv-host { position: relative; align-self: stretch; justify-self: stretch; min-block-size: 12rem; }
+.sc-pv-frame { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; border: 0; background: transparent; }
+.sc-pv-wait { position: absolute; inset: 0; z-index: 1; background: var(--m-bg); }
 /* Canlı kod (its own panel, under the preview): the code fills the panel and scrolls; the chosen component's lines marked */
 .sc-livecode { block-size: 100%; }
 .sc-livecode > .m-code { display: flex; flex-direction: column; block-size: 100%; border-radius: 0; }
@@ -76,8 +74,6 @@
 .sc-deps .m-tree-row > .m-listrow-text { flex: 0 0 auto; max-inline-size: 70%; }
 .sc-deps .m-tree-row > .m-listrow-trail { flex: 1 1 0; min-inline-size: 0; overflow: hidden; justify-content: flex-end; }
 .sc-deps .m-tree-meta { display: block; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--m-text-xs); }
-/* the Hierarchy points at an instance: its root flashes in the preview */
-.sc-pv-root [data-ide-hl] { outline: 2px solid var(--m-accent, var(--m-primary-solid)); outline-offset: 3px; }
 .sc-events { block-size: 100%; overflow: auto; }
 .sc-events-list { list-style: none; margin: 0; padding: var(--m-space-1) 0; }
 .sc-events-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: var(--m-space-2); padding: var(--m-space-1) var(--m-space-3); }
@@ -121,8 +117,6 @@
 .sc-pv-error-frames button:hover { background: color-mix(in srgb, var(--m-danger) 12%, transparent); }
 .sc-pv-error-frames button:focus-visible { outline: 2px solid var(--m-focus, var(--m-primary)); }
 .sc-pv-error-at { color: var(--m-danger-text, var(--m-danger)); text-decoration: underline; text-underline-offset: 2px; }
-/* what the editor's caret line draws, outlined in the preview (Alt+click on it goes back to the line) */
-.sc-src-lit { outline: 2px dashed color-mix(in srgb, var(--m-primary) 70%, transparent); outline-offset: 2px; }
 /* AI ile dil ekle: under the code field, set apart */
 .sc-lang-new-ai { display: grid; gap: var(--m-space-1); padding-block-start: var(--m-space-2); border-block-start: 1px solid var(--m-border); }
 .sc-lang-busy { display: flex; align-items: center; gap: var(--m-space-2); margin: 0; padding: var(--m-space-1) var(--m-space-3); color: var(--m-muted); font-size: var(--m-text-xs); }

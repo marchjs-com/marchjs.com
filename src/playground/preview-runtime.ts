@@ -1,8 +1,8 @@
-// The playground's preview runtime (playground/preview.js + preview.css, bundled at build time and loaded by
-// /playground only): March and its components, and `run(code, el)`, which runs the code the playground builds and
-// renders its default export into the preview's stage. The bundle's `import … from "march/…"` lines are turned
-// into this runtime's own modules; the module is imported from a blob: URL (the showcase's CSP allows script-src
-// blob: — the showcase is served from its own domain, with no sessions).
+// The playground's preview runtime (playground/preview.js, the script of the preview frame playground/preview.html:
+// preview-frame.ts): March and its components (from the CDN, the frame's own), and `run(code, el)`, which runs the code
+// the playground builds and renders its default export into the frame's root. The bundle's `import … from "march/…"`
+// lines are turned into this runtime's own modules; the module is imported from a blob: URL (the showcase's CSP allows
+// script-src blob: — the showcase is served from its own domain, with no sessions).
 import * as core from "march";
 import { removeMessages } from "march/i18n";
 import * as ui from "march/ui";
