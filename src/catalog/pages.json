@@ -200,5 +200,12 @@
  "landing/video-background": "/web/video-background",
  "data/virtual-list": "/social/virtual-list",
  "layout/window": "/layout/window",
- "composite/wizard": "/forms/wizard"
+ "composite/wizard": "/forms/wizard",
+ "data/gauge": "/charts/gauge",
+ "data/odometer": "/charts/odometer",
+ "data/level-meter": "/charts/level-meter",
+ "media/oscilloscope": "/charts/oscilloscope",
+ "media/spectrum": "/charts/spectrum",
+ "media/waveform": "/charts/waveform",
+ "media/audio-reactive": "/charts/audio-reactive"
 }

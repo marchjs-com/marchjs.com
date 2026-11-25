@@ -1585,6 +1585,8 @@ const newFrame = (host: HTMLElement): void => {
   const f = document.createElement("iframe")
   f.className = "sc-pv-frame"
   f.title = "Önizleme"
+  // the audio examples may ask for the microphone (opt-in, a button in the example): the frame may pass it on
+  f.allow = "microphone"
   f.src = appUrl("playground/preview.html")
   frame = f
   dropRuntime()

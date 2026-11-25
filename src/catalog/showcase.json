@@ -200,5 +200,12 @@
  "typography/kbd": {"page":"/text"},
  "typography/overflow-text": {"page":"/navigation"},
  "typography/secret": {"page":"/buttons"},
- "typography/section-label": {"page":"/text"}
+ "typography/section-label": {"page":"/text"},
+ "data/gauge": {"page":"/charts"},
+ "data/odometer": {"page":"/charts"},
+ "data/level-meter": {"page":"/charts"},
+ "media/oscilloscope": {"page":"/charts"},
+ "media/spectrum": {"page":"/charts"},
+ "media/waveform": {"page":"/charts"},
+ "media/audio-reactive": {"page":"/charts"}
 }

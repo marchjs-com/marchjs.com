@@ -246,6 +246,9 @@ async function loadPacks(code: string): Promise<void> {
   if (!MODULES["march/landing"] && /["']march\/landing["']/.test(code)) MODULES["march/landing"] = await import("march/landing");
   // march/charts too (its own entry: LineChart, BarChart, PieChart, Heatmap, Stat, Sparkline, ProgressRing, BarList)
   if (!MODULES["march/charts"] && /["']march\/charts["']/.test(code)) MODULES["march/charts"] = await import("march/charts");
+  // march/audio too (audioSource: the microphone, a media element, a stream, a synthesized demo or any number, for
+  // LevelMeter, Gauge's VU needle, Oscilloscope, Spectrum, Waveform and AudioReactive)
+  if (!MODULES["march/audio"] && /["']march\/audio["']/.test(code)) MODULES["march/audio"] = await import("march/audio");
   // march/table too (Table, createTable, column: sorting, filters, selection, virtual rows)
   if (!MODULES["march/table"] && /["']march\/table["']/.test(code)) MODULES["march/table"] = await import("march/table");
   // march/schema too (schema(), field types, validation: a form from one definition)

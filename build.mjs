@@ -44,6 +44,10 @@ const CDN_ORIGIN = new URL(process.env.MARCH_CDN || "https://cdn.marchjs.com").o
 // nothing else frames the site and the site frames nothing else
 export const CSP = `default-src 'none'; script-src 'self' ${CDN_ORIGIN} blob: 'wasm-unsafe-eval'; style-src 'self' ${CDN_ORIGIN} https://fonts.googleapis.com; img-src 'self' ${CDN_ORIGIN} data: blob:; font-src 'self' ${CDN_ORIGIN} https://fonts.gstatic.com; media-src 'self'; connect-src 'self' ${CDN_ORIGIN} https://cdn.jsdelivr.net https://api.anthropic.com https://api.openai.com https://generativelanguage.googleapis.com https://api.deepseek.com https://api.moonshot.ai https://api.mistral.ai https://api.groq.com https://openrouter.ai https://api.meta.ai https://api.x.ai https://dashscope-intl.aliyuncs.com https://api.z.ai https://api.together.xyz https://api.fireworks.ai https://api.cerebras.ai https://api.perplexity.ai http://localhost:11434 http://localhost:1234; manifest-src 'self'; frame-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'self'; require-trusted-types-for 'script'; trusted-types march-worker`;
 
+// Permissions-Policy: the microphone for the site's own pages only (the audio components' opt-in "use my microphone";
+// every demo works without it). Sent by the local server; the publishing host sends the same header.
+export const PERMISSIONS = "microphone=(self)";
+
 const args = process.argv.slice(2);
 const release = args.includes("--release");
 const watching = !release && args.includes("--watch");
@@ -209,7 +213,7 @@ if (serve) {
     // a build running beside the server rewrites dist/: a file gone for that moment is a 503, not a crash of the server
     let body;
     try { body = readFileSync(p); } catch { res.writeHead(503, { "content-type": "text/plain; charset=utf-8", "retry-after": "1" }); res.end("building"); return; }
-    res.writeHead(200, { "content-type": TYPES[extname(p)] ?? "application/octet-stream", "content-security-policy": CSP });
+    res.writeHead(200, { "content-type": TYPES[extname(p)] ?? "application/octet-stream", "content-security-policy": CSP, "permissions-policy": PERMISSIONS });
     res.end(body);
   }).listen(port, "127.0.0.1", () => console.log(`showcase: http://127.0.0.1:${port}/`));
 }
