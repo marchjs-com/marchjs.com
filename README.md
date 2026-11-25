@@ -54,6 +54,12 @@ MarchIDE turns `examples://` into jsDelivr's URL of that repository at one commi
 `node tools/bundle.mjs` for a changed `ide.json`) and move the sha. `MARCH_EXAMPLES_DIR=<checkout>` makes
 `gen-ide-texts.js` read a local checkout instead of the pinned sha.
 
+MarchIDE's preview is a page of its own in an iframe, `playground/preview.html` (written by `build.mjs`; its script
+`src/playground/preview-frame.ts`): it runs March from the CDN like the site, a March of its own, so what the
+example does to March (its language, router, extensions, layers) stays in the frame. The preview toolbar reaches it
+through the frame's `<html>` (theme, light / dark, accent) and `src/playground/preview-share.ts` (network speed,
+device values). The site's CSP allows frames of its own origin only (`frame-src` / `frame-ancestors 'self'`).
+
 ## Checks
 
 ```sh

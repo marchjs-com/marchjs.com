@@ -1,0 +1,14 @@
+/* MarchIDE's preview frame (playground/preview.html): its document is the preview stage. The theme, light / dark and
+   the accent come from the preview toolbar (the page sets them on <html>); the root is split into a cell per exported
+   component (its name in the corner when there are several). */
+html { block-size: 100%; background: var(--m-bg); color: var(--m-text); font-family: var(--m-font); }
+body { margin: 0; min-block-size: 100%; display: grid; place-items: center; padding: var(--m-space-4); box-sizing: border-box; }
+.sc-pv-root { display: grid; align-self: stretch; inline-size: 100%; grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr)); }
+.sc-pv-cell { position: relative; display: grid; place-items: center; min-block-size: 8rem; padding: var(--m-space-6) var(--m-space-4) var(--m-space-4); }
+.sc-pv-cell + .sc-pv-cell { border-inline-start: 1px dashed var(--m-border); }
+.sc-pv-name { position: absolute; inset-block-start: var(--m-space-2); inset-inline-start: var(--m-space-3); font: var(--m-text-xs) var(--m-font-mono); color: var(--m-muted); }
+.sc-pv-root[data-cells="1"] .sc-pv-name { display: none; }
+.sc-pv-stage { display: grid; place-items: center; inline-size: 100%; }
+/* a Hierarchy row pointed at; the caret's line in the editor */
+.sc-pv-root [data-ide-hl] { outline: 2px solid var(--m-accent, var(--m-primary-solid)); outline-offset: 3px; }
+.sc-src-lit { outline: 2px dashed color-mix(in srgb, var(--m-primary) 70%, transparent); outline-offset: 2px; }

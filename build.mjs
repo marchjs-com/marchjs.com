@@ -40,7 +40,9 @@ const { filesOver } = await import(pathToFileURL(join(MARCH, "cli", "perf.js")).
 // March's CDN (march.config.js › cdn): its origin in script-src, style-src, font-src, img-src and connect-src (theme
 // transitions read the stylesheets)
 const CDN_ORIGIN = new URL(process.env.MARCH_CDN || "https://cdn.marchjs.com").origin;
-export const CSP = `default-src 'none'; script-src 'self' ${CDN_ORIGIN} blob: 'wasm-unsafe-eval'; style-src 'self' ${CDN_ORIGIN} https://fonts.googleapis.com; img-src 'self' ${CDN_ORIGIN} data: blob:; font-src 'self' ${CDN_ORIGIN} https://fonts.gstatic.com; media-src 'self'; connect-src 'self' ${CDN_ORIGIN} https://cdn.jsdelivr.net https://api.anthropic.com https://api.openai.com https://generativelanguage.googleapis.com https://api.deepseek.com https://api.moonshot.ai https://api.mistral.ai https://api.groq.com https://openrouter.ai https://api.meta.ai https://api.x.ai https://dashscope-intl.aliyuncs.com https://api.z.ai https://api.together.xyz https://api.fireworks.ai https://api.cerebras.ai https://api.perplexity.ai http://localhost:11434 http://localhost:1234; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types march-worker`;
+// frame-src / frame-ancestors 'self': MarchIDE's preview is a page of the site's own in an iframe (playground/preview.html);
+// nothing else frames the site and the site frames nothing else
+export const CSP = `default-src 'none'; script-src 'self' ${CDN_ORIGIN} blob: 'wasm-unsafe-eval'; style-src 'self' ${CDN_ORIGIN} https://fonts.googleapis.com; img-src 'self' ${CDN_ORIGIN} data: blob:; font-src 'self' ${CDN_ORIGIN} https://fonts.gstatic.com; media-src 'self'; connect-src 'self' ${CDN_ORIGIN} https://cdn.jsdelivr.net https://api.anthropic.com https://api.openai.com https://generativelanguage.googleapis.com https://api.deepseek.com https://api.moonshot.ai https://api.mistral.ai https://api.groq.com https://openrouter.ai https://api.meta.ai https://api.x.ai https://dashscope-intl.aliyuncs.com https://api.z.ai https://api.together.xyz https://api.fireworks.ai https://api.cerebras.ai https://api.perplexity.ai http://localhost:11434 http://localhost:1234; manifest-src 'self'; frame-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'self'; require-trusted-types-for 'script'; trusted-types march-worker`;
 
 const args = process.argv.slice(2);
 const release = args.includes("--release");
@@ -156,19 +158,37 @@ async function writePlaygroundTools(out) {
       b.onLoad({ filter: /.*/, namespace: "march-browser" }, () => ({ contents: `import * as sx from ${JSON.stringify(sx)}; export const importTs = async () => sx;`, loader: "js", resolveDir: root }));
     } }],
   });
-  // the preview runtime (loaded by MarchIDE only): March and its components bundled once, and run(code, el), which
-  // imports the playground's build from a blob: URL (CSP script-src blob:) and renders it in the preview's stage
+  // the preview frame (loaded by MarchIDE only): playground/preview.html, a page of its own in an iframe beside the IDE,
+  // on March from the CDN like the site (march.config.js › cdn), so what the code does to its March (its language, its
+  // router, its extensions) stays in the frame. preview-share.js runs first (the page's network speed and device
+  // values), then preview.js: the runtime, run(code, el), which imports the playground's build from a blob: URL (CSP
+  // script-src blob:) and renders it in the frame. march/testing is not on the CDN (a tool of node tests): its source is
+  // bundled, with its one import of the core (render) taken from the CDN's march.js, the frame's one core
   const { march } = await import(pathToFileURL(join(root, "compiler", "esbuild.js")).href);
+  const { loadCdn } = await import(pathToFileURL(join(root, "compiler", "cdn.js")).href);
+  const cfg = (await import(pathToFileURL(join(here, "march.config.js")).href)).default;
+  const cdn = await loadCdn(cfg.cdn, join(here, "node_modules", ".cache", "march", "cdn"));
+  const testing = join(root, "src", "testing");
   await esbuild.build({
-    entryPoints: [join(here, "src", "playground", "preview-runtime.ts")], bundle: true, format: "esm", platform: "browser", target: "es2022", minify: true,
-    outdir: out, entryNames: "preview", assetNames: "[name]", logLevel: "error", loader: { ".woff2": "file", ".svg": "file", ".png": "file" },
-    // one file with all of March: March under node_modules is side-effect free by its package.json, and in a bundle
-    // without splitting esbuild then drops the initializer of a module that is both re-exported and imported lazily
-    // (Drawer: through march/ui and through Dialog), so it runs uninitialized. Nothing is shaken out here anyway.
-    ignoreAnnotations: true,
-    plugins: [march({ dev: false, cssSplit: false, deepImports: false })],
+    entryPoints: { preview: join(here, "src", "playground", "preview-frame.ts"), "preview-share": join(here, "src", "playground", "preview-share.ts") },
+    bundle: true, format: "esm", platform: "browser", target: "es2022", minify: true, outdir: out, logLevel: "error",
+    // the entries the code may import later (march/landing, DataGrid…): each a small chunk of its own that links its
+    // stylesheet and loads it from the CDN when the code first imports it, not when the frame starts
+    splitting: true, chunkNames: "preview-parts/[name]-[hash]",
+    plugins: [{ name: "march-testing", setup(b) {
+      b.onResolve({ filter: /^march\/testing$/ }, () => ({ path: join(testing, "index.ts") }));
+      b.onResolve({ filter: /\/dom\/render\.ts$/ }, (a) => (a.importer.startsWith(testing) ? { path: cdn.url["march"], external: true } : undefined));
+    } }, march({ dev: false, cssSplit: false, cdn })],
   });
-  console.log("✔ playground tools (esbuild-wasm, March compiler, TypeScript, preview runtime)");
+  copyFileSync(join(here, "src", "playground", "preview-frame.css"), join(out, "preview-frame.css"));
+  // the core's files announced up front (as the site's index.html does), and where the theme stylesheets are (loadTheme)
+  const preload = (cdn.core ?? []).map((u) => `<link rel="modulepreload" href="${u}" crossorigin>`).join("");
+  writeFileSync(join(out, "preview.html"), `<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="robots" content="noindex"><title>Önizleme</title>
+<meta name="march-themes" content="${cdn.base}/css/themes/">${preload}<link rel="stylesheet" href="preview-frame.css"><script type="module" src="preview-share.js"></script><script type="module" src="preview.js"></script></head>
+<body><div class="sc-pv-root"></div></body></html>
+`);
+  console.log("✔ playground tools (esbuild-wasm, March compiler, TypeScript, preview frame)");
 }
 // the port: 5181, or --port <n> / PORT (several checkouts serving side by side)
 const portArg = args.indexOf("--port");
