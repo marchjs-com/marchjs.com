@@ -4,7 +4,8 @@
 import { activity, appWindow, film, alertCircle, barChart, code, compass, cpu, dashboard, edit, gauge, grid, layers, menu, message, heart, palette, play, search, server, sparkles, zap } from "march/icons";
 import { HOME_STATS } from "./home-stats.gen.ts";
 
-export interface PageMeta { desc: string; group?: string; icon: unknown }
+export interface PageMeta { desc: string; group?: string; icon: unknown; /** The day the page first appeared (YYYY-MM-DD), for a page that is not a
+ *  component's: it shows "Yeni" for 14 days (new-badge.tsx; a component's day comes from March). */ added?: string }
 export const PAGE_META: Record<string, PageMeta> = {
   "/": { desc: "March'a genel bakış", icon: dashboard },
   "/start": { desc: "Kurulum, ilk bileşen, march CLI, proje yapısı", group: "İlk Adımlar", icon: zap },
@@ -36,7 +37,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/network": { desc: "İstek politikaları, middleware, mock, WebSocket, hata kuralları", group: "Altyapı", icon: server },
   "/layout": { desc: "Grid: taşmasız sütunlar, fill ve balance", group: "Yerleşim", icon: grid },
   "/navigation": { desc: "NavSidebar: arama, son kullanılanlar, kategoriler", group: "Gezinme", icon: menu },
-  "/overlay": { desc: "Video, resim, SVG, canvas ve cam katmanları", group: "Medya", icon: layers },
+  "/overlay": { desc: "Video, resim, SVG, canvas, cam katmanları ve LED pano", group: "Medya", icon: layers },
   "/social": { desc: "Gönderi, akış, hikâye, sohbet, profil, etkinlik", group: "Sosyal", icon: heart },
   "/managers": { desc: "Viewport, rıza (KVKK/GDPR) ve komut yöneticileri", group: "Yöneticiler", icon: cpu },
   "/managers-data": { desc: "Pano, geri al, kaydedilmemiş değişiklik, depolama, önbellek, yapılandırma", group: "Yöneticiler", icon: cpu },

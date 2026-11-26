@@ -67,7 +67,7 @@ export const HUBS: Record<string, readonly Topic[]> = {
 };
 
 /** Every topic as a sub page under its section (path, title, parent) for the routes, the breadcrumb and the menu. */
-export const TOPIC_PAGES = [
+export const TOPIC_PAGES: { path: string; title: string; parent: string; desc: string; name?: string | undefined; added?: string | undefined }[] = [
   ...SITE_KINDS.map((k) => ({ path: `/sites/${k.slug}`, title: k.title, parent: "/sites", desc: k.desc })),
-  ...Object.entries(HUBS).flatMap(([base, list]) => list.map((t) => ({ path: `${base}/${t.slug}`, title: t.title, parent: t.parent ?? base, desc: t.desc, name: t.name }))),
+  ...Object.entries(HUBS).flatMap(([base, list]) => list.map((t) => ({ path: `${base}/${t.slug}`, title: t.title, parent: t.parent ?? base, desc: t.desc, name: t.name, added: t.added }))),
 ];
