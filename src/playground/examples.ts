@@ -3,7 +3,7 @@
 // (immutable, a year); a new example reaches the site by moving this sha, which the examples-pin workflow does by itself within minutes of a merge into examples main (a pull request, ci, merge). connect-src in the CSP (build.mjs) allows
 // https://cdn.jsdelivr.net. Small on purpose: shell-late loads it on every page to start the ide.json download early.
 
-export const EXAMPLES = "https://cdn.jsdelivr.net/gh/marchjs-com/examples@d17d1b66c7692992307f2321a65e223bd7612d58/";
+export const EXAMPLES = "https://cdn.jsdelivr.net/gh/marchjs-com/examples@028541cf878d11df00d3081c28544507af4b62a2/";
 /** A source's URL: examples:// becomes EXAMPLES; anything else is fetched as written. */
 export const sourceUrl = (src: string): string => (src.startsWith("examples://") ? EXAMPLES + src.slice("examples://".length) : src);
 
