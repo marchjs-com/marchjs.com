@@ -18,7 +18,8 @@ try {
   if (!(await until("(document.querySelector('.sc-stats')?.scrollIntoView({ block: 'center' }), document.querySelectorAll('.sc-stats .m-stats > *').length >= 2)"))) fail("home: the stats band did not render");
   else {
     await sleep(800);
-    const s = await b.ev(`(() => { const s = document.querySelector('.sc-stats .m-stats'); const tops = [...s.children].map((c) => Math.round(c.getBoundingClientRect().top));
+    // offsetTop: the layout's rows, not where an entrance animation (a transform) has a figure at this moment
+    const s = await b.ev(`(() => { const s = document.querySelector('.sc-stats .m-stats'); const tops = [...s.children].map((c) => c.offsetTop);
       return { display: getComputedStyle(s).display, rows: new Set(tops).size, n: tops.length }; })()`);
     if (s.display !== "grid" || s.rows !== 1) fail(`home: the stats band is not one row (display ${s.display}, ${s.n} figures in ${s.rows} rows)`);
     else console.log(`✔ home: the stats band is one row (${s.n} figures)`);
