@@ -246,6 +246,8 @@ async function loadPacks(code: string): Promise<void> {
   if (!MODULES["march/landing"] && /["']march\/landing["']/.test(code)) MODULES["march/landing"] = await import("march/landing");
   // march/charts too (its own entry: LineChart, BarChart, PieChart, Heatmap, Stat, Sparkline, ProgressRing, BarList)
   if (!MODULES["march/charts"] && /["']march\/charts["']/.test(code)) MODULES["march/charts"] = await import("march/charts");
+  // march/led too (its own entry: LedBoard, LedEyes, LedMatrix, PixelFont, PixelSprite and the LED frame / text helpers)
+  if (!MODULES["march/led"] && /["']march\/led["']/.test(code)) MODULES["march/led"] = await import("march/led");
   // march/audio too (audioSource: the microphone, a media element, a stream, a synthesized demo or any number, for
   // LevelMeter, Gauge's VU needle, Oscilloscope, Spectrum, Waveform and AudioReactive)
   if (!MODULES["march/audio"] && /["']march\/audio["']/.test(code)) MODULES["march/audio"] = await import("march/audio");
@@ -378,7 +380,7 @@ const draw = (C: Comp, el: HTMLElement, props: Props, parts: Parts, cell = ""): 
   const own = resolve(rest);
   // m:parts: the components by themselves (this runtime's ui), each with its props
   const map = new Map<unknown, Record<string, unknown>>();
-  for (const [name, p] of Object.entries(parts)) { const comp = (ui as Record<string, unknown>)[name] ?? (MODULES["march/landing"] as Record<string, unknown> | undefined)?.[name] ?? (MODULES["march/charts"] as Record<string, unknown> | undefined)?.[name] ?? (MODULES["march/table"] as Record<string, unknown> | undefined)?.[name]; if (typeof comp === "function" && Object.keys(p).length) map.set(comp, resolve(p)); }
+  for (const [name, p] of Object.entries(parts)) { const comp = (ui as Record<string, unknown>)[name] ?? (MODULES["march/landing"] as Record<string, unknown> | undefined)?.[name] ?? (MODULES["march/charts"] as Record<string, unknown> | undefined)?.[name] ?? (MODULES["march/table"] as Record<string, unknown> | undefined)?.[name] ?? (MODULES["march/led"] as Record<string, unknown> | undefined)?.[name]; if (typeof comp === "function" && Object.keys(p).length) map.set(comp, resolve(p)); }
   const bare = (): unknown => (children === undefined || children === "" ? core.h(C, own) : core.h(C, own, children));
   const make = (): unknown => (Object.keys(common).length ? mProps(bare(), common) : bare());
   // the cell is the root of its instances' keys (Hierarchy): counted afresh on every draw, so a key stays the same
@@ -666,7 +668,7 @@ const watchTree = (): void => {
   core.extensions.name(ui as Record<string, unknown>);
   // the components outside the ui barrel (march/components/<folder>, march/landing, march/charts) are named too: else
   // the Hierarchy shows their minified names and Properties never reaches their instances
-  for (const [k, m] of Object.entries(MODULES)) if (k.startsWith("march/components/") || k === "march/landing" || k === "march/charts" || k === "march/table") core.extensions.name(m as Record<string, unknown>);
+  for (const [k, m] of Object.entries(MODULES)) if (k.startsWith("march/components/") || k === "march/landing" || k === "march/charts" || k === "march/table" || k === "march/led") core.extensions.name(m as Record<string, unknown>);
   core.extend({ test: (_c: unknown, _i: unknown, path: readonly unknown[]) => path.length >= 0 }, HIERARCHY);
 };
 watchTree();
