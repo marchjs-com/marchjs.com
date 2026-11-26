@@ -48,8 +48,6 @@ export const PENDING = new Set([
   // large components outside their category barrel (march/components/<category>/<name>)
   "march/components/composite/theme-editor", "march/components/data/data-grid",
   "march/components/data/gantt", "march/components/data/scheduler", "march/components/data/tree-view",
-  // input masks (march/mask, its presets and validators, the mask behavior): new in March, their examples come next
-  "march/mask", "march/mask/presets", "march/mask/validators", "march/behaviors/mask",
 ]);
 
 /** Example files: group → { subs: { subpath → Set<name> }, plays: Set<"subpath#name"> (with a Playground) }, read by
