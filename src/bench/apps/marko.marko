@@ -1,0 +1,23 @@
+<!-- Benchmark app: Marko 6 (Tags API). Compiled ahead of time with Marko's own compiler for the browser
+     (tools/gen-bench.mjs → marko.gen.js). Rows and the selection are tag variables; select and remove are the
+     component's own handlers, the rest arrives from marko.ts through exported handlers. -->
+<let/rows=[]/>
+<let/selected=0/>
+<const/api=input.api/>
+<script>
+  api.run = (r) => { rows = r; selected = 0 }
+  api.add = (r) => { rows = rows.concat(r) }
+  api.update = () => { const d = rows.slice(); for (let i = 0; i < d.length; i += 10) { const r = d[i]; d[i] = { id: r.id, label: r.label + " !!!" } } rows = d }
+  api.swap = () => { if (rows.length <= 998) return; const d = rows.slice(); const t = d[1]; d[1] = d[998]; d[998] = t; rows = d }
+  api.clear = () => { rows = []; selected = 0 }
+</script>
+<table class="bt"><tbody>
+  <for|item| of=rows by="id">
+    <tr class=(item.id === selected ? "danger" : "")>
+      <td class="c1">${item.id}</td>
+      <td class="c4"><a class="lbl" onClick() { selected = item.id }>${item.label}</a></td>
+      <td class="c1"><a class="rm" onClick() { rows = rows.filter((r) => r.id !== item.id) }>×</a></td>
+      <td class="c6"></td>
+    </tr>
+  </for>
+</tbody></table>

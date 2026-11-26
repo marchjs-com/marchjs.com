@@ -30,5 +30,29 @@
  "lit": {
   "raw": 11535,
   "gzip": 5008
+ },
+ "marko": {
+  "raw": 7762,
+  "gzip": 3816
+ },
+ "inferno": {
+  "raw": 24822,
+  "gzip": 9322
+ },
+ "ivi": {
+  "raw": 7516,
+  "gzip": 3606
+ },
+ "mithril": {
+  "raw": 27459,
+  "gzip": 10468
+ },
+ "alpine": {
+  "raw": 73385,
+  "gzip": 24292
+ },
+ "angular": {
+  "raw": 117754,
+  "gzip": 39999
  }
 }

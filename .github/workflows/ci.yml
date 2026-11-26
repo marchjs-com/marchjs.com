@@ -31,6 +31,8 @@ jobs:
       - run: node build.mjs --release
         env:
           MARCH_VERSION: ${{ steps.march.outputs.version }}
+      # /bench: the compared libraries in step (versions, compiled apps, sizes, licenses, lazy chunks)
+      - run: node --test test/bench-libs.test.js
       # the generated sources follow March's newest release: a new one may change them (a count, a prop table); that
       # is not this change's fault, so it is a warning that asks for a commit of them
       - name: generated sources up to date

@@ -10,9 +10,14 @@ import { LIBS, BASELINE } from "./libs.ts"
 /** The tab whose test is running (null: none): the other tabs stay put (the stage the apps are drawn in must stay in the page). */
 export const busy = signal<string | null>(null)
 
-// one theme color per library (category tokens; March gets the brand orange, pure JavaScript the neutral baseline)
-const COLOR: Record<string, string> = { march: "cat-1", react: "cat-2", vue: "cat-3", svelte: "cat-4", solid: "cat-5", preact: "cat-6", lit: "cat-7" }
-export const libColor = (id: string): string => (COLOR[id] ? `var(--m-${COLOR[id]})` : "var(--m-faint)")
+// one theme color per library (category tokens; March gets the brand orange, pure JavaScript the neutral baseline). The
+// palette has 8 colors, so the later libraries get mixes of two of them: distinct hues that still follow the theme.
+const mix = (a: number, b: number): string => `color-mix(in oklab, var(--m-cat-${a}), var(--m-cat-${b}))`
+const COLOR: Record<string, string> = {
+  march: "var(--m-cat-1)", react: "var(--m-cat-2)", vue: "var(--m-cat-3)", svelte: "var(--m-cat-4)", solid: "var(--m-cat-5)", preact: "var(--m-cat-6)", lit: "var(--m-cat-7)",
+  marko: "var(--m-cat-8)", inferno: mix(1, 5), ivi: mix(2, 8), mithril: mix(3, 6), alpine: mix(2, 4), angular: mix(4, 5),
+}
+export const libColor = (id: string): string => COLOR[id] ?? "var(--m-faint)"
 
 export const ms = (x: number): string => (Number.isFinite(x) ? (x >= 100 ? x.toFixed(0) : x.toFixed(1)) : "—")
 export const kb = (n: number): string => `${(n / 1024).toFixed(1)} KB`
