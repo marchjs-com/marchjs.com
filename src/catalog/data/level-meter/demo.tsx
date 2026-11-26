@@ -1,15 +1,18 @@
-// Showcase stage for LevelMeter: a small studio console. "Müziği başlat" plays the synthesized demo loop (silent: only
-// the lights dance); the first meter takes every option. "Sayı" turns it into a value meter driven by the Değer
-// slider, so it works without any sound. The second meter is always a horizontal value meter (a CPU load) for contrast.
+// Showcase stage for LevelMeter: a small studio console. It starts on a steady tone (a number source: no permission,
+// it runs at once), so every option shows on the lit LEDs; "demo müzik" plays the synthesized loop after "Müziği
+// başlat" (silent: only the lights dance). The first meter takes every option. "Sayı" turns it into a value meter
+// driven by the Değer slider. The second meter is always a horizontal value meter (a CPU load) for contrast.
 import { LevelMeter } from "march/components/data/level-meter";
 import { Button } from "march/components/actions/button";
 import { audioSource } from "march/audio";
 import { onCleanup } from "march";
 import type { ColorToken } from "march/theme";
 
-export const code = `const song = audioSource("demo")
+export const code = `const tone = audioSource(0.6)               // a steady tone (a number is a source): no permission, runs at once
+const song = audioSource("demo")
 <Button on:click={() => song.start()}>Müziği başlat</Button>
-<LevelMeter source={song} scale="db" ticks />                 // stereo: L / R from the source
+<LevelMeter source={tone} scale="db" ticks />                 // stereo: L / R from the source
+<LevelMeter source={song} scale="db" ticks />
 <LevelMeter value={$cpu} min={0} max={100} orientation="horizontal" variant="flat" clip={false} />`
 
 type V = { input: string; value: number; channels: number; orientation: string; segments: number; scale: string; floor: number; ticks: boolean;
@@ -21,7 +24,8 @@ const PALETTES: Record<string, readonly [ColorToken, ColorToken, ColorToken] | u
 
 export default function LevelMeterDemo(props: { values: V }) {
   const song = audioSource("demo")
-  onCleanup(() => song.stop())
+  const tone = audioSource(0.6)
+  onCleanup(() => { song.stop(); tone.stop() })
   let $playing = false
   let $clips = 0
   async function toggle() {
@@ -36,10 +40,10 @@ export default function LevelMeterDemo(props: { values: V }) {
     </div>
     {() => {
       const v = props.values
-      const live = v.input === "demo"
+      const source = v.input === "demo" ? song : v.input === "tone" ? tone : undefined
       return <div class="sc-row">
         <LevelMeter
-          source={live ? song : undefined} value={live ? undefined : v.value / 100}
+          source={source} value={source ? undefined : v.value / 100}
           channels={v.channels as 1 | 2} orientation={v.orientation as "vertical"} segments={v.segments}
           scale={v.scale as "db"} floor={v.floor} ticks={v.ticks} peakHold={v.peakHold ? v.peakHold : false} clip={v.clip}
           variant={v.variant as "console"} size={v.size as "md"} colors={PALETTES[v.colors]} labels={v.labels} motion={v.motion}

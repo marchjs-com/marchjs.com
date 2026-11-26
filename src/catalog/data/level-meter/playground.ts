@@ -5,17 +5,23 @@ interface Values { input: string; value: number; channels: number; orientation: 
 
 export default definePlayground<Values>({
   options: [
-    // the demo's input: the synthesized loop through `source`, or a number through `value`
-    { key: "input", label: "Giriş", default: "demo", options: [{ value: "demo", label: "demo müzik (source)" }, { value: "value", label: "sayı (value)" }],
-      prop: "source", toCode: { demo: "{song}", value: null }, toProp: (x) => (x === "demo" ? "demo" : undefined) },
+    // the demo's input: a steady tone (a number is a source: no permission, it runs at once, so every option shows), a
+    // number through `value`, or the synthesized loop (it waits for "Müziği başlat"). In MarchIDE a drawn meter keeps
+    // the source written in its file (Properties cannot take a prop away), so there the number reaches it as a source
+    { key: "input", label: "Giriş", default: "tone", options: [{ value: "tone", label: "sabit ton (source)" }, { value: "value", label: "sayı (value)" }, { value: "demo", label: "demo müzik (source)" }],
+      prop: "source", toCode: { tone: "{0.6}", demo: "{song}", value: null },
+      toProp: (x, v) => (x === "demo" ? "demo" : x === "tone" ? 0.6 : (v.value ?? 60) / 100) },
     { key: "value", label: "Değer (value)", default: 60, min: 0, max: 100, step: 1, unit: "%", visibleWhen: (v) => v.input === "value",
       toCode: (x) => `{${Number(x) / 100}}`, toProp: (x) => Number(x) / 100 },
     { key: "channels", label: "Kanal (channels)", default: 2, options: [{ value: 1, label: "mono" }, { value: 2, label: "stereo" }], toCode: (x) => `{${x}}` },
     { key: "orientation", label: "Yön (orientation)", default: "vertical", options: [{ value: "vertical", label: "dikey" }, { value: "horizontal", label: "yatay" }] },
     { key: "segments", label: "LED sayısı (segments)", default: 24, min: 8, max: 48, step: 1, toCode: (x) => (x === 24 ? null : `{${x}}`) },
-    { key: "scale", label: "Ölçek (scale)", default: "linear", options: [{ value: "linear", label: "doğrusal" }, { value: "db", label: "desibel" }] },
+    // a studio meter reads decibels with its marks beside it (as the examples' meters do); both are written either way,
+    // so "doğrusal" and "işaretsiz" reach a meter whose code has them
+    { key: "scale", label: "Ölçek (scale)", default: "db", options: [{ value: "linear", label: "doğrusal" }, { value: "db", label: "desibel" }],
+      toCode: { db: '"db"', linear: null }, toProp: (x) => x },
     { key: "floor", label: "dB tabanı (floor)", default: -48, min: -72, max: -24, step: 6, unit: "dB", visibleWhen: (v) => v.scale === "db", toCode: (x) => (x === -48 ? null : `{${x}}`) },
-    { key: "ticks", label: "Ölçek işaretleri (ticks)", default: false },
+    { key: "ticks", label: "Ölçek işaretleri (ticks)", default: true, toCode: (x) => (x ? "" : null), toProp: (x) => !!x },
     { key: "peakHold", label: "Tepe bekleme (peakHold; 0 = yok)", default: 1500, min: 0, max: 4000, step: 250, unit: "ms",
       toCode: (x) => (x === 1500 ? null : x ? `{${x}}` : "{false}"), toProp: (x) => (x ? x : false) },
     { key: "clip", label: "Kırpılma ışığı (clip)", default: true, toCode: (x) => (x ? null : "{false}") },

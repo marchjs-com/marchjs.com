@@ -26,7 +26,7 @@ export default function GaugeDemo(props: { values: V }) {
       const v = props.values
       const variant = v.variant as Variant
       const live = variant === "vu" && v.source === "demo"
-      const readout = v.readout === "auto" ? undefined : v.readout === "odometer" ? "odometer" as const : v.readout === "true"
+      const readout = v.readout === "odometer" ? "odometer" as const : v.readout === "true"
       const scaled = (p: number): number => onScale({ variant, value: p })
       return <div class="sc-col">
         <Gauge variant={variant} source={live ? demo : undefined}

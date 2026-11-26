@@ -6,8 +6,9 @@ interface Values {
 }
 
 const SCALE: Record<string, [number, number]> = { speedometer: [0, 240], tachometer: [0, 8000], half: [0, 100], vu: [-20, 3] };
-/** The option's 0–100 % as a value on the variant's scale (what the stage passes as `value`). */
-export const onScale = (v: { variant: string; value: number }): number => { const [lo, hi] = SCALE[v.variant] ?? [0, 100]; return Math.round(lo + ((hi - lo) * v.value) / 100); };
+/** The option's 0–100 % as a value on the variant's scale (what the stage passes as `value`). In MarchIDE an
+ *  instance's values hold only what was changed: no variant is the default look. */
+export const onScale = (v: { variant?: string | undefined; value: number }): number => { const [lo, hi] = SCALE[v.variant ?? "speedometer"] ?? [0, 100]; return Math.round(lo + ((hi - lo) * v.value) / 100); };
 
 export default definePlayground<Values>({
   stage: "center",
@@ -27,9 +28,10 @@ export default definePlayground<Values>({
     { key: "peak", label: "Tepe işareti (peak)", default: true },
     { key: "needle", label: "İbre hareketi (needle)", default: "auto", options: [{ value: "auto", label: "varsayılan" }, { value: "spring", label: "yay" }, { value: "vu", label: "VU" }, { value: "none", label: "atlar" }],
       toCode: { auto: null }, toProp: (x) => (x === "auto" ? undefined : x) },
-    { key: "readout", label: "Gösterge (readout)", default: "auto", options: [{ value: "auto", label: "varsayılan" }, { value: "true", label: "sayı" }, { value: "odometer", label: "çarklar" }, { value: "false", label: "yok" }],
-      toCode: { auto: null, true: "", odometer: '"odometer"', false: "{false}" },
-      toProp: (x) => (x === "auto" ? undefined : x === "odometer" ? "odometer" : x === "true") },
+    // no "default" choice: it was the rolling number again (the default of every look but the VU meter, which has none)
+    { key: "readout", label: "Gösterge (readout)", default: "true", options: [{ value: "true", label: "sayı" }, { value: "odometer", label: "çarklar" }, { value: "false", label: "yok" }],
+      toCode: (x, v) => (x === "true" ? (v.variant === "vu" ? "" : null) : x === "odometer" ? '"odometer"' : "{false}"),
+      toProp: (x) => (x === "odometer" ? "odometer" : x === "true") },
     { key: "unit", label: "Birim (unit)", default: "km/h", kind: "text", visibleWhen: (v) => v.variant !== "vu", toCode: (x) => (x ? JSON.stringify(x) : null) },
     { key: "color", label: "Renk (color)", default: "", options: [{ value: "", label: "vurgu" }, { value: "brand-blue", label: "mavi" }, { value: "success", label: "yeşil" }, { value: "brand-purple", label: "mor" }],
       toProp: (x) => (x || undefined), toCode: (x) => (x ? JSON.stringify(x) : null) },

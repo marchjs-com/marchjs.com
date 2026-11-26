@@ -1,6 +1,7 @@
-// Showcase stage for Spectrum: one spectrum that takes every option. "Müziği başlat" plays the synthesized demo loop
-// (silent: only the bars move); "Ton" drives it with a number (a 220 Hz tone whose loudness is the Ses slider), so it
-// works without any audio; "Yok" shows the idle state.
+// Showcase stage for Spectrum: one spectrum that takes every option. By default a number drives it (a 220 Hz
+// tone whose loudness is the Ses slider): live at once, no click and no audio, so every option shows on a steady
+// picture. "Demo müzik" plays the synthesized loop from its button (silent: only the bars move);
+// "Yok" shows the idle state.
 import { Spectrum } from "march/components/media/spectrum";
 import { Button } from "march/components/actions/button";
 import { audioSource } from "march/audio";
@@ -8,7 +9,9 @@ import { onCleanup } from "march";
 import type { ColorToken } from "march/theme";
 import type { MultiColors } from "../../demo-util.ts";
 
-export const code = `const song = audioSource("demo")
+export const code = `let $level = 60
+<Spectrum source={() => $level / 100} />
+const song = audioSource("demo")
 <Button on:click={() => song.start()}>Müziği başlat</Button>
 <Spectrum source={song} />
 <Spectrum source={song} variant="circle" colors="brand" bars={72} />`
@@ -27,9 +30,9 @@ export default function SpectrumDemo(props: { values: V }) {
     $playing = song.active()
   }
   return <div class="sc-col">
-    <div class="sc-row">
-      <Button size="sm" on:click={toggle}>{() => ($playing ? "⏹ Durdur" : "▶ Müziği başlat")}</Button>
-    </div>
+    {() => (props.values.input === "demo"
+      ? <div class="sc-row"><Button size="sm" on:click={toggle}>{() => ($playing ? "⏹ Durdur" : "▶ Müziği başlat")}</Button></div>
+      : null)}
     {() => {
       const v = props.values
       const source = v.input === "demo" ? song : v.input === "tone" ? tone : undefined

@@ -5,8 +5,9 @@ interface Values { input: string; level: number; mode: string; look: string; tri
 
 export default definePlayground<Values>({
   options: [
-    // the stage's input: the synthesized loop, a number (a tone whose loudness is `level`), or nothing (the idle screen)
-    { key: "input", label: "Kaynak (source)", default: "demo", options: [{ value: "demo", label: "demo müzik" }, { value: "tone", label: "ton (sayı)" }, { value: "none", label: "yok" }],
+    // the stage's input: a number (a tone whose loudness is `level`: live at once, no click, no permission), the
+    // synthesized loop (starts from its button), or nothing (the idle screen)
+    { key: "input", label: "Kaynak (source)", default: "tone", options: [{ value: "tone", label: "ton (sayı)" }, { value: "demo", label: "demo müzik" }, { value: "none", label: "yok" }],
       prop: "source", toCode: { demo: "{song}", tone: "{() => $level / 100}", none: null }, toProp: (x) => (x === "none" ? undefined : x === "tone" ? 0.6 : "demo") },
     { key: "level", label: "Ses (sayı kaynağında)", default: 60, min: 0, max: 100, step: 5, unit: "%", visibleWhen: (v) => v.input === "tone", prop: false },
     { key: "mode", label: "Kip (mode)", default: "wave", options: [{ value: "wave", label: "dalga" }, { value: "xy", label: "XY (Lissajous)" }] },

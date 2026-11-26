@@ -14,9 +14,10 @@ export default definePlayground<Values>({
     { key: "progress", label: "Konum (progress)", default: 35, min: 0, max: 100, step: 1, unit: "%", visibleWhen: (v) => v.data === "peaks",
       toCode: (x) => `{${Number(x) / 100}}`, toProp: (x) => Number(x) / 100 },
     { key: "seekable", label: "Basıp atlama (seekable)", default: true, visibleWhen: (v) => v.data === "peaks" },
-    { key: "regions", label: "Bölümler (regions)", default: true, visibleWhen: (v) => v.data === "peaks",
+    { key: "regions", label: "Bölümler (regions)", default: false, visibleWhen: (v) => v.data === "peaks",
       toCode: (x) => (x ? '{[{"start":0,"end":0.3,"label":"Giriş"},{"start":0.3,"end":1,"label":"Söyleşi","color":"brand-orange"}]}' : null),
-      toProp: (x) => (x ? [{ start: 0, end: 0.3, label: "Giriş" }, { start: 0.3, end: 1, label: "Söyleşi", color: "brand-orange" }] : undefined) },
+      // off: an empty list (undefined would leave the regions written in the code in place)
+      toProp: (x) => (x ? [{ start: 0, end: 0.3, label: "Giriş" }, { start: 0.3, end: 1, label: "Söyleşi", color: "brand-orange" }] : []) },
     { key: "regionLabels", label: "Bölüm adları (regionLabels)", default: true, visibleWhen: (v) => v.data === "peaks" && v.regions, toCode: (x) => (x ? null : "{false}") },
     { key: "playhead", label: "Oynatma çizgisi (playhead)", default: true, visibleWhen: (v) => v.data === "peaks", toCode: (x) => (x ? null : "{false}") },
     { key: "align", label: "Hizalama (align)", default: "mirror", options: [{ value: "mirror", label: "ortalı" }, { value: "bottom", label: "tabanda" }], toCode: { mirror: null } },

@@ -2,10 +2,10 @@
 // and the site's budgets (march.config.js). Measured sizes come from march-report.json at run time.
 export const HOME_STATS = {
   "dependencies": 0,
-  "components": 277,
-  "registered": 202,
-  "exports": 1281,
-  "subpaths": 101,
+  "components": 284,
+  "registered": 209,
+  "exports": 1300,
+  "subpaths": 102,
   "categories": [
     {
       "id": "layout",
@@ -30,7 +30,7 @@ export const HOME_STATS = {
     {
       "id": "data",
       "title": "Data display",
-      "components": 24
+      "components": 27
     },
     {
       "id": "feedback",
@@ -50,7 +50,7 @@ export const HOME_STATS = {
     {
       "id": "media",
       "title": "Media",
-      "components": 5
+      "components": 9
     },
     {
       "id": "motion",
@@ -85,8 +85,8 @@ export const HOME_STATS = {
   },
   "managers": 30,
   "themes": 16,
-  "tests": 1433,
-  "testFiles": 324,
+  "tests": 1485,
+  "testFiles": 333,
   "budget": {
     "entry": 15360,
     "boot": 53248,

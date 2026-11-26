@@ -73,22 +73,25 @@ import e68 from "./core/main--unwrap.x.tsx";
 import e69 from "./core/main--use-context.x.tsx";
 import e70 from "./core/main--version.x.tsx";
 import e71 from "./core/main--with-extensions.x.tsx";
-import e72 from "./platform/behaviors.dismiss--dismiss.x.tsx";
-import e73 from "./platform/behaviors.drag--arrow-step.x.tsx";
-import e74 from "./platform/behaviors.drag--draggable.x.tsx";
-import e75 from "./platform/behaviors.drag--track.x.tsx";
-import e76 from "./platform/behaviors.dropzone--dropzone.x.tsx";
-import e77 from "./platform/behaviors.list-nav--list-nav.x.tsx";
-import e78 from "./platform/behaviors.list-nav--move-cursor.x.tsx";
-import e79 from "./platform/behaviors.resize-handle--resize-handle.x.tsx";
-import e80 from "./platform/behaviors.roving-focus--roving-focus.x.tsx";
-import e81 from "./platform/behaviors.swipe--fling.x.tsx";
-import e82 from "./platform/behaviors.swipe--nearest.x.tsx";
-import e83 from "./platform/behaviors.swipe--rubber-band.x.tsx";
-import e84 from "./platform/behaviors.swipe--swipeable.x.tsx";
-import e85 from "./platform/channel---channel-scope.x.tsx";
-import e86 from "./platform/channel--channel.x.tsx";
-import e87 from "./platform/channel--channel-devtools.x.tsx";
+import e72 from "./meters/audio--audio-context.x.tsx";
+import e73 from "./meters/audio--audio-source.x.tsx";
+import e74 from "./meters/audio--is-audio-source.x.tsx";
+import e75 from "./meters/audio--media-chain.x.tsx";
+import e76 from "./meters/audio--to-audio-source.x.tsx";
+import e77 from "./platform/behaviors.dismiss--dismiss.x.tsx";
+import e78 from "./platform/behaviors.drag--arrow-step.x.tsx";
+import e79 from "./platform/behaviors.drag--draggable.x.tsx";
+import e80 from "./platform/behaviors.drag--track.x.tsx";
+import e81 from "./platform/behaviors.dropzone--dropzone.x.tsx";
+import e82 from "./platform/behaviors.list-nav--list-nav.x.tsx";
+import e83 from "./platform/behaviors.list-nav--move-cursor.x.tsx";
+import e84 from "./platform/behaviors.resize-handle--resize-handle.x.tsx";
+import e85 from "./platform/behaviors.roving-focus--roving-focus.x.tsx";
+import e86 from "./platform/behaviors.swipe--fling.x.tsx";
+import e87 from "./platform/behaviors.swipe--nearest.x.tsx";
+import e88 from "./platform/behaviors.swipe--rubber-band.x.tsx";
+import e89 from "./platform/behaviors.swipe--swipeable.x.tsx";
+import e90 from "./platform/channel---channel-scope.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "march#Await": e0,
   "march#DEV": e1,
@@ -162,21 +165,24 @@ const examples: Record<string, ApiExample<any>> = {
   "march#useContext": e69,
   "march#version": e70,
   "march#withExtensions": e71,
-  "march/behaviors/dismiss#dismiss": e72,
-  "march/behaviors/drag#arrowStep": e73,
-  "march/behaviors/drag#draggable": e74,
-  "march/behaviors/drag#track": e75,
-  "march/behaviors/dropzone#dropzone": e76,
-  "march/behaviors/list-nav#listNav": e77,
-  "march/behaviors/list-nav#moveCursor": e78,
-  "march/behaviors/resize-handle#resizeHandle": e79,
-  "march/behaviors/roving-focus#rovingFocus": e80,
-  "march/behaviors/swipe#fling": e81,
-  "march/behaviors/swipe#nearest": e82,
-  "march/behaviors/swipe#rubberBand": e83,
-  "march/behaviors/swipe#swipeable": e84,
-  "march/channel#ChannelScope": e85,
-  "march/channel#channel": e86,
-  "march/channel#channelDevtools": e87,
+  "march/audio#audioContext": e72,
+  "march/audio#audioSource": e73,
+  "march/audio#isAudioSource": e74,
+  "march/audio#mediaChain": e75,
+  "march/audio#toAudioSource": e76,
+  "march/behaviors/dismiss#dismiss": e77,
+  "march/behaviors/drag#arrowStep": e78,
+  "march/behaviors/drag#draggable": e79,
+  "march/behaviors/drag#track": e80,
+  "march/behaviors/dropzone#dropzone": e81,
+  "march/behaviors/list-nav#listNav": e82,
+  "march/behaviors/list-nav#moveCursor": e83,
+  "march/behaviors/resize-handle#resizeHandle": e84,
+  "march/behaviors/roving-focus#rovingFocus": e85,
+  "march/behaviors/swipe#fling": e86,
+  "march/behaviors/swipe#nearest": e87,
+  "march/behaviors/swipe#rubberBand": e88,
+  "march/behaviors/swipe#swipeable": e89,
+  "march/channel#ChannelScope": e90,
 };
 export default examples;

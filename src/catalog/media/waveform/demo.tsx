@@ -1,6 +1,7 @@
-// Showcase stage for Waveform: a podcast episode with three chapters. "Çal" moves the playhead (the stage's own clock,
-// no audio); pressing or dragging the bars seeks. The "Veri" option switches to the live demo music (bars rolling in
-// after "Müziği başlat") or to the decorative recording bars of ChatComposer. Every other option goes to the one Waveform.
+// Showcase stage for Waveform: a podcast episode (three chapters with the Bölümler option). "Çal" moves the playhead
+// (the stage's own clock, no audio); pressing or dragging the bars seeks. The "Veri" option switches to the live demo
+// music (bars rolling in after "Müziği başlat") or to the decorative recording bars of ChatComposer. Every other option
+// goes to the one Waveform.
 import { Waveform } from "march/components/media/waveform";
 import { Button } from "march/components/actions/button";
 import { audioSource } from "march/audio";

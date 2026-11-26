@@ -563,14 +563,27 @@ export function extensionInfo(names: readonly string[]): ExtensionInfo {
 // MarchIDE's Hierarchy: every component instance the preview draws, with the instance that drew it. A path test makes
 // March run each instance under an owner of its own (dom/extend.ts), so an instance provides its id to what it creates,
 // now or later (a list's new row, an If's branch). Control flow (If, For…) is plumbing, not a component of the page.
-export interface TreeItem { id: number; parent: number; name: string; key: string; elId: string; text: string }
+export interface TreeItem { id: number; parent: number; name: string; key: string; elId: string; text: string; written?: Record<string, string | number | boolean> }
 // where an instance stands: its id, its key (the cell, then each instance down to it with its place among the ones of
 // the same name: "SaveBar/SaveBar:0/Button:1") and how many of each name it has made so far
 interface Place { id: number; key: string; counts: Map<string, number> }
 const PARENT: { id: symbol; defaultValue: Place } = { id: Symbol("ide.parent"), defaultValue: { id: 0, key: "", counts: new Map() } };
 const HIDDEN: Place = { id: -1, key: "", counts: new Map() }, OWN = new Set(["ToastHost"]);
 const PLUMBING = new Set(["If", "Else", "For", "Switch", "Match", "Await", "Dynamic", "Portal", "Try", "Fragment", "Show"]);
-const instances = new Map<number, { id: number; parent: number; name: string; key: string; roots: () => Element[] }>();
+const instances = new Map<number, { id: number; parent: number; name: string; key: string; roots: () => Element[]; written?: Record<string, string | number | boolean> }>();
+/** The plain values (text, number, yes / no) an instance's code writes: Properties starts from them, so a value the
+ * example sets (look="crt") shows as chosen and the default can be picked to undo it. Read without tracking. */
+const writtenOf = (p: Props): Record<string, string | number | boolean> => {
+  const out: Record<string, string | number | boolean> = {};
+  for (const k of Object.keys(p)) {
+    if (k === "children" || k.startsWith("on") || k.startsWith("m:")) continue;
+    let v: unknown;
+    // a prop written as an expression is a getter here: reading it gives its value now
+    try { v = core.untrack(() => (p as Record<string, unknown>)[k]); } catch { continue; }
+    if (typeof v === "string" || typeof v === "number" || typeof v === "boolean") out[k] = v;
+  }
+  return out;
+};
 let instSeq = 0, treeCb: (() => void) | null = null, treeQueued = false;
 const treeChanged = (): void => { if (treeQueued || !treeCb) return; treeQueued = true; queueMicrotask(() => { treeQueued = false; treeCb?.() }) };
 // props given to one instance (by its key) in MarchIDE's Properties: over its own, on that instance only
@@ -595,7 +608,7 @@ const HIERARCHY = core.defineExtension({
     parent.counts.set(name, n + 1);
     const id = ++instSeq, key = `${parent.key}/${name}:${n}`;
     core.provide(PARENT, { id, key, counts: new Map() });
-    instances.set(id, { id, parent: parent.id, name, key, roots: () => [] });
+    instances.set(id, { id, parent: parent.id, name, key, roots: () => [], written: writtenOf(p) });
     core.onCleanup(() => { instances.delete(id); treeChanged() });
     treeChanged();
     const extra = instProps[key];
@@ -650,7 +663,7 @@ export function componentTree(): TreeItem[] {
   for (const x of all) { const el = x.roots()[0]; if (el && (inner.get(el) ?? -1) < x.id) inner.set(el, x.id); }
   return all.map((x) => {
     const el = x.roots()[0];
-    return { id: x.id, parent: x.parent, name: x.name, key: x.key, elId: el?.id ?? "", text: el && inner.get(el) === x.id ? ownText(el) : "" };
+    return { id: x.id, parent: x.parent, name: x.name, key: x.key, elId: el?.id ?? "", text: el && inner.get(el) === x.id ? ownText(el) : "", ...(x.written && Object.keys(x.written).length ? { written: x.written } : {}) };
   });
 }
 /** The instance an element of the preview belongs to: the nearest one whose root holds it (of two with the same root,
