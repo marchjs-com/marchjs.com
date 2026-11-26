@@ -170,6 +170,8 @@ export default {
     "src/web/honest.tsx": "honest sample page: loaded only when /sites/honest opens it",
     "src/web/live.tsx": "live sample page: loaded only when /sites/live opens it",
     "src/web/story.tsx": "story sample page: loaded only when /sites/story opens it",
+    "src/component-page/_layout.tsx": "every component page's frame (1 KB): in a page group it made each component page download that group's pages (the motion pages, /start, /transitions)",
+    "src/wb-topics.ts": "the workbench's Parçalar tab titles (the menu's topic tables): loaded when that tab opens; joined to the workbench they cost every component page ~18 KB",
     "src/i18n/tr.ts": "locale dictionary: downloaded only for Turkish, never grouped",
     "src/router/outlets.ts": "named / modal outlets (1.8 KB, no dependencies): joining any page group would make it pull that page",
     "src/demo-code.tsx": "a demo card's Code tab (code widget + highlighter), loaded on the first click on Kod: inlined into the card it would load with every page",

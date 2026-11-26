@@ -9,7 +9,6 @@ import { appUrl } from "march/base";
 import type { PlaygroundOption, PlaygroundSpec } from "./catalog/spec.ts";
 import { cards, type CardEntry } from "./catalog/cards.gen.ts";
 import { demoId } from "./component-demo.tsx";
-import { HUBS } from "./topics.ts";
 
 interface FolderDocs { props: [string, string, string, string][]; notes: string; a11y: string }
 const cache = new Map<string, Promise<Record<string, FolderDocs>>>()
@@ -54,9 +53,10 @@ export function WorkbenchTabs(props: { entry: CardEntry; spec: PlaygroundSpec; v
   const own = (props.entry.p ?? []).map((n) => cards.find((c) => c.n === n) ?? ({ n, s: "" } as Partial<CardEntry> & { n: string }))
   const href = (c: Partial<CardEntry>): Href | null => (c.w && c.f ? `${c.w}#${demoId(c.f)}` as Href : null)
   // the Turkish title and one sentence of a component: its topic page (topics.ts) where it has one
-  const topicOf = (c: Partial<CardEntry>) => { const [, hub, slug] = (c.w ?? "").split("/"); return HUBS[`/${hub ?? ""}`]?.find((t) => t.slug === slug && (!t.name || t.name === c.n)) }
+  // (wb-topics.ts: the topic tables, ~18 KB, load when the Parçalar tab first opens, not with every component page)
+  let topicOf: typeof import("./wb-topics.ts").topicOf = () => undefined
   const PartCard = (c: Partial<CardEntry> & { n: string }) => {
-    const to = href(c), topic = topicOf(c)
+    const to = href(c), topic = topicOf(c.w, c.n)
     const body = <><span class="sc-wbt-ptitle">{topic?.title ?? c.n}</span><span class="sc-wbt-pname">{c.n}</span>{topic?.desc ? <span class="sc-wbt-psum">{topic.desc}</span> : null}</>
     return to ? <Link class="sc-wbt-part sc-card" href={to}>{body}</Link> : <div class="sc-wbt-part sc-card">{body}</div>
   }
@@ -82,12 +82,12 @@ export function WorkbenchTabs(props: { entry: CardEntry; spec: PlaygroundSpec; v
     const d = docs()
     return d?.a11y ? <div class="sc-wbt-text"><Text md={d.a11y} /></div> : <p class="sc-wbt-empty">Bu bileşen için erişilebilirlik notu yok.</p>
   }}</Wait>
-  const partsTab = () => <div class="sc-wbt-rel">
+  const partsTab = () => <Wait load={import("./wb-topics.ts").then((m) => { topicOf = m.topicOf })}>{() => <div class="sc-wbt-rel">
     <section><h3 class="sc-wbt-h">Şunlardan oluşur</h3>
       {own.length ? <div class="sc-wbt-grid">{own.map(PartCard)}</div> : <p class="sc-wbt-empty">Başka bir bileşen kullanmaz: kendi başına bir yapı taşı.</p>}</section>
     <section><h3 class="sc-wbt-h">Bunu kullananlar</h3>
       {used.length ? <div class="sc-wbt-grid">{used.map(PartCard)}</div> : <p class="sc-wbt-empty">Henüz başka bir bileşen bunun üstüne kurulmuyor.</p>}</section>
-  </div>
+  </div>}</Wait>
 
   return <div class="sc-wbt">
     <Tabs label="Bileşen ayrıntıları" tabs={[
