@@ -5,11 +5,13 @@
 // it and waits for one paint.
 import { OPS, rowSource, type BenchApp, type DomProbe, type Op, type RunResult } from "./core.ts"
 import { afterPaint } from "./paint.ts"
-import type { Lib } from "./libs.ts"
+import { BASELINE, libById, type Lib } from "./libs.ts"
 
 export interface Progress { lib: string; op: string; phase: "load" | "warm" | "run" | "cool" | "paused"; done: number; total: number }
 export interface RunOptions { libs: Lib[]; ops: Op[]; reps: number; warm?: number | undefined; stage: HTMLElement; onProgress?: (p: Progress) => void; onSample?: (lib: string, op: string, ms: number) => void; signal?: AbortSignal | undefined }
 
+/** Unmeasured rounds of 1.000 rows made and cleared by the pure JavaScript app before any library is measured. */
+const PAGE_WARM = 10
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
 const heap = (): number | undefined => (performance as Performance & { memory?: { usedJSHeapSize: number } }).memory?.usedJSHeapSize
 const gc = (): void => { (globalThis as { gc?: () => void }).gc?.() }
@@ -91,6 +93,20 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
         done += per
         host.remove()
       }
+    }
+    // the page warms up first: 10 unmeasured rounds of 1.000 rows made and cleared by the pure JavaScript app (CPU
+    // clock, the first layouts, the heap), loaded for this even when it is not among the compared ones
+    if (!stop()) {
+      report(BASELINE, "", "warm")
+      const host = document.createElement("div")
+      host.className = "bt-host"
+      o.stage.append(host)
+      show(null)
+      try {
+        const app = await (await libById(BASELINE)!.load()).mount(host)
+        for (let i = 0; i < PAGE_WARM && !stop(); i++) { app.run(rows(1000)); await afterPaint(); app.clear(); await afterPaint() }
+        app.destroy()
+      } catch { /* the warm-up is a courtesy: a failure here must not stop the run */ } finally { host.remove() }
     }
     report("", "", "cool")
     gc(); await idle(); await sleep(400)
