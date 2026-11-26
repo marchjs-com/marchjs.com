@@ -19,3 +19,6 @@ export function mount(host: HTMLElement): BenchApp {
     destroy: () => app.destroy(),
   }
 }
+
+// the realistic scenarios' Marko apps ride in this chunk (see ../scenarios/libs.ts)
+export { scenarios } from "../scenarios/marko.ts"

@@ -15,4 +15,10 @@ export const SCENARIO_LIBS: Record<string, () => Promise<ScenarioMounts>> = {
   svelte: () => withoutPolicyLookup(() => import("../apps/svelte-app.ts")).then((m) => m.scenarios),
   solid: () => import("../apps/solid.gen.js").then((m) => m.scenarios as ScenarioMounts),
   lit: () => withoutPolicyLookup(() => import("../apps/lit-app.ts")).then((m) => m.scenarios),
+  marko: () => import("../apps/marko.ts").then((m) => m.scenarios),
+  inferno: () => import("../apps/inferno.gen.js").then((m) => m.scenarios as ScenarioMounts),
+  ivi: () => import("../apps/ivi.gen.js").then((m) => m.scenarios as ScenarioMounts),
+  mithril: () => import("../apps/mithril.ts").then((m) => m.scenarios),
+  alpine: () => import("../apps/alpine.ts").then((m) => m.scenarios),
+  angular: () => withoutPolicyLookup(() => import("../apps/angular.gen.js")).then((m) => (m as { scenarios: ScenarioMounts }).scenarios),
 }

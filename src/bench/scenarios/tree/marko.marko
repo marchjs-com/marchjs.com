@@ -1,0 +1,18 @@
+<!-- One value deep in a large tree, Marko 6: the four levels are nested loops (the tree's depth is fixed); each leaf
+     holds its value in its own tag variable, and the target leaf hands its setter to the scenario, so a step changes
+     one variable and Marko writes that one text. Compiled with the benchmark app's Marko build
+     (tools/gen-bench.mjs → ../../apps/marko.gen.js); steps are flushed with run() (../marko.ts). -->
+<const/{ data, api }=input/>
+<div class="tree">
+  <for|a| of=data.roots by="id"><div class="n"><span class="l">${a.label}</span>
+    <for|b| of=a.kids by="id"><div class="n"><span class="l">${b.label}</span>
+      <for|c| of=b.kids by="id"><div class="n"><span class="l">${c.label}</span>
+        <for|d| of=c.kids by="id">
+          <let/v=data.values[d.leaf]/>
+          <script>if (d.leaf === data.target) api.step = (x) => { v = x }</script>
+          <div class="n leaf"><span class="l">${d.label}</span><b class="v">${v}</b></div>
+        </for>
+      </div></for>
+    </div></for>
+  </div></for>
+</div>

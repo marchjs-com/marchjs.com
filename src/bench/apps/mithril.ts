@@ -31,3 +31,6 @@ export function mount(host: HTMLElement): BenchApp {
     destroy: () => m.mount(host, null),
   }
 }
+
+// the realistic scenarios' Mithril apps ride in this chunk (see ../scenarios/libs.ts)
+export { scenarios } from "../scenarios/mithril.ts"

@@ -2,7 +2,7 @@
 //   node --test test/bench-libs.test.js
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { execFileSync } from "node:child_process";
@@ -69,14 +69,42 @@ test("every third-party library is its own lazy chunk, exempt only as a benchmar
 });
 
 test("compiled apps hand no HTML string to the DOM (Trusted Types)", () => {
-  for (const f of ["solid.gen.js", "ivi.gen.js", "inferno.gen.js", "svelte.gen.js", "vue.render.gen.js", "angular.gen.js"]) {
+  for (const f of ["solid.gen.js", "ivi.gen.js", "inferno.gen.js", "svelte.gen.js", "vue.render.gen.js"]) {
     assert.doesNotMatch(read(`src/bench/apps/${f}`), /innerHTML|_\$template\(`|_hN\(`/, f);
   }
   // Marko: its runtime keeps the string parser as a fallback; every compiled template is DOM-built and goes first
   const marko = read("src/bench/apps/marko.gen.js");
   assert.match(marko, /function parseHTML\(html, ns\) \{\n\s*if \(typeof html === "function"\) return html\(\);/);
-  assert.doesNotMatch(marko, /_for_of\(0, "</);
+  assert.doesNotMatch(marko, /"</, "Marko: no HTML-string template left (app and scenarios)");
   assert.doesNotMatch(read("src/bench/apps/angular.gen.js"), /ɵɵngDeclare|new Function/, "Angular: AOT, linked, no JIT");
+  // Angular renders with DOM calls; its runtime names innerHTML only for an [innerHTML] binding, which no app uses
+  for (const p of ["src/bench/apps/angular-app.ts", ...SCENARIO_DIRS().map((d) => `src/bench/scenarios/${d}/angular.ts`)]) assert.doesNotMatch(read(p), /innerHTML|innerHtml/i, p);
+  for (const dir of SCENARIOS) for (const f of ["solid.gen.js", "ivi.gen.js", "inferno.gen.js", "svelte.gen.js"]) {
+    const p = `src/bench/scenarios/${dir}/${f}`;
+    if (existsSync(join(ROOT, p))) assert.doesNotMatch(read(p), /innerHTML|_\$template\(`|_hN\(`/, p);
+  }
+});
+
+// the realistic scenarios: every compared library runs every scenario, its apps riding in its own chunk
+const SCENARIO_DIRS = () => readdirSync(join(ROOT, "src/bench/scenarios"), { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
+const SCENARIOS = SCENARIO_DIRS();
+const SCEN_FILE = { vanilla: "vanilla.ts", march: "march.tsx", react: "react.ts", preact: "preact.ts", vue: "vue.ts", svelte: "svelte.svelte", solid: "solid.jsx", lit: "lit.ts", marko: "marko.marko", inferno: "inferno.jsx", ivi: "ivi.ts", mithril: "mithril.ts", alpine: "alpine.ts", angular: "angular.ts" };
+test("every library has an app for every realistic scenario, registered in its chunk", () => {
+  const reg = read("src/bench/scenarios/libs.ts");
+  const sources = JSON.parse(read("public/bench/scenario-sources.json"));
+  for (const l of LIBS) {
+    assert.match(reg, new RegExp(`^  ${l.id}: \\(\\) =>`, "m"), `${l.id} is in SCENARIO_LIBS`);
+    const file = SCEN_FILE[l.id];
+    assert.ok(file, `${l.id}: its scenario file name is known to this test`);
+    for (const dir of SCENARIOS) {
+      assert.ok(existsSync(join(ROOT, "src/bench/scenarios", dir, file)), `${l.id}: ${dir}/${file}`);
+      assert.ok(sources[dir]?.[l.id], `${l.id}: ${dir} is in the Code section`);
+    }
+    if (l.id === "vanilla" || l.id === "march") continue;
+    // its scenario apps are imported through its benchmark app (one chunk for the runtime and its apps)
+    const agg = read(`src/bench/scenarios/${l.id}.ts`);
+    for (const dir of SCENARIOS) assert.match(agg, new RegExp(`\\b${dir}\\b`), `${l.id}: ${dir} is in scenarios/${l.id}.ts`);
+  }
 });
 
 test("generated benchmark files are up to date", () => {

@@ -1,0 +1,12 @@
+<!-- Independent counters, Marko 6: each counter keeps its count in its own tag variable and registers its increment,
+     so a step changes the fired counters' variables and Marko writes only their text. Compiled with the benchmark
+     app's Marko build (tools/gen-bench.mjs → ../../apps/marko.gen.js); steps are flushed with run() (../marko.ts). -->
+<const/inc=[]/>
+<script>input.api.step = (fired) => { for (const i of fired) inc[i]() }</script>
+<div class="cg">
+  <for|c, i| of=input.data by="id">
+    <let/n=0/>
+    <script>inc[i] = () => { n++ }</script>
+    <span class="ct">${n}</span>
+  </for>
+</div>

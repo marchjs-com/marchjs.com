@@ -1,0 +1,40 @@
+<!-- Data list, Marko 6: the query, categories, sort, selection and the running count and total are tag variables; the
+     filtered list and the sorted view are two <const> computed from them, so a selection does not filter or sort
+     again. A keyed loop reuses rows by record; a selection replaces the flags, Marko re-checks each row's class and
+     writes the one that changed and the summary. Compiled with the benchmark app's Marko build (tools/gen-bench.mjs →
+     ../../apps/marko.gen.js); steps are flushed with run() (../marko.ts). -->
+import { CATS, SEL, matches, compare, fmtPrice, summary } from "./def.ts"
+<const/data=input.data/>
+<let/q=""/>
+<let/cats=CATS.map(() => true)/>
+<let/key="id"/>
+<let/dir=1/>
+<let/sel=data.map(() => false)/>
+<let/count=0/>
+<let/total=0/>
+<const/filtered=data.filter((r) => matches(r, q, cats))/>
+<const/view=filtered.slice().sort(compare(key, dir))/>
+<script>
+  input.api.step = (a) => {
+    if (a.t === "q") q = a.q
+    else if (a.t === "cat") { const c = cats.slice(); c[a.c] = a.on; cats = c }
+    else if (a.t === "sort") { key = a.key; dir = a.dir }
+    else {
+      const s = sel.slice()
+      let n = count, t = total
+      const set = (i, on) => { if (s[i] === on) return; s[i] = on; n += on ? 1 : -1; t += on ? data[i].price : -data[i].price }
+      if (a.t === "sel") set(a.i, a.on)
+      else if (a.t === "all") for (const r of view) set(r.i, true)
+      else for (let i = 0; i < s.length; i++) set(i, false)
+      sel = s; count = n; total = t
+    }
+  }
+</script>
+<div>
+  <p class="gsum">${summary(view.length, count, total)}</p>
+  <table class="bt"><tbody>
+    <for|r| of=view by="id">
+      <tr class=(sel[r.i] ? SEL : "")><td class="id">${r.id}</td><td class="nm">${r.name}</td><td class="cat">${CATS[r.cat]}</td><td class="px">${fmtPrice(r.price)}</td><td class="st">${r.stock}</td></tr>
+    </for>
+  </tbody></table>
+</div>

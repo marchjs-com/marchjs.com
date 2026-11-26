@@ -31,3 +31,6 @@ export function mount(host: HTMLElement): BenchApp {
     destroy: () => { update(root, null) },
   }
 }
+
+// the realistic scenarios' ivi apps ride in this chunk (see ../scenarios/libs.ts)
+export { scenarios } from "../scenarios/ivi.ts"

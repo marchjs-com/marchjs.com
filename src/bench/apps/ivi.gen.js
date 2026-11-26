@@ -85,6 +85,8 @@ function mount(host) {
     }
   };
 }
+import { scenarios } from "../scenarios/ivi.ts";
 export {
-  mount
+  mount,
+  scenarios
 };
