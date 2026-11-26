@@ -1,0 +1,11 @@
+<!-- Moving highlight, Marko 6: the hovered row is a tag variable; Marko's compiler turns the row's comparison with it
+     into a selector over the keyed loop, so a step updates only the old and the new row. Compiled with the benchmark
+     app's Marko build (tools/gen-bench.mjs → ../../apps/marko.gen.js); steps are flushed with run() (../marko.ts). -->
+import { HOVER } from "./def.ts"
+<let/hovered=-1/>
+<script>input.api.step = (i) => { hovered = input.data[i].id }</script>
+<table class="bt"><tbody>
+  <for|it| of=input.data by="id">
+    <tr class=(it.id === hovered ? HOVER : "")><td class="id">${it.id}</td><td class="lbl">${it.label}</td></tr>
+  </for>
+</tbody></table>

@@ -47,3 +47,6 @@ export async function mount(host: HTMLElement) {
     destroy: () => { app.destroy(); el.remove() },
   }
 }
+
+// the realistic scenarios' Angular apps ride in this chunk (see ../scenarios/libs.ts)
+export { scenarios } from "../scenarios/angular.ts"

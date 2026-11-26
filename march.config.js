@@ -20,7 +20,8 @@ export const THIRD_PARTY = ["src/bench/apps/react.ts", "src/bench/apps/preact.ts
 const BENCH_PARTS = {
   "src/bench/apps/react.ts": { limit: 72 * 1024, why: "React 19 + react-dom client runtime (67.6 KB gzip measured), loaded only when its benchmark runs" },
   "src/bench/apps/vue.ts": { limit: 30 * 1024, why: "Vue 3 runtime-dom + reactivity (26.3 KB gzip measured), loaded only when its benchmark runs" },
-  "src/bench/apps/angular.gen.js": { limit: 45 * 1024, why: "Angular 22 core + platform-browser, AOT-compiled and tree-shaken as ng build does (37.9 KB gzip measured in the release build), loaded only when its benchmark runs" },
+  "src/bench/apps/angular.gen.js": { limit: 55 * 1024, why: "Angular 22 core + platform-browser, AOT-compiled and tree-shaken as ng build does, with its 10 realistic scenarios (45.4 KB gzip measured in the release build), loaded only when its benchmark runs" },
+  "src/bench/apps/alpine.ts": { limit: 30 * 1024, why: "Alpine.js CSP build (its expression parser and Vue's reactivity) with its 10 realistic scenarios (25.6 KB gzip measured in the release build), loaded only when its benchmark runs" },
 };
 // Third-party benchmark chunks under the 10 KB floor (a small runtime: Marko, ivi): grouped with others, a library
 // would download with the page or with another library; each stays a file of its own, fetched when its test runs.

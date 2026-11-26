@@ -32,27 +32,27 @@
   "gzip": 5008
  },
  "marko": {
-  "raw": 7762,
-  "gzip": 3816
+  "raw": 7788,
+  "gzip": 3832
  },
  "inferno": {
-  "raw": 24822,
-  "gzip": 9322
+  "raw": 24848,
+  "gzip": 9338
  },
  "ivi": {
-  "raw": 7516,
-  "gzip": 3606
+  "raw": 7542,
+  "gzip": 3620
  },
  "mithril": {
-  "raw": 27459,
-  "gzip": 10468
+  "raw": 27489,
+  "gzip": 10483
  },
  "alpine": {
-  "raw": 73385,
-  "gzip": 24292
+  "raw": 73438,
+  "gzip": 24327
  },
  "angular": {
-  "raw": 117754,
-  "gzip": 39999
+  "raw": 117780,
+  "gzip": 40015
  }
 }

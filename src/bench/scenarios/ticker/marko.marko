@@ -1,0 +1,17 @@
+<!-- Live ticker, Marko 6: the quotes are a tag variable; a tick replaces the changed quotes, and Marko's compiled loop
+     writes only the text and class whose values changed. Compiled with the benchmark app's Marko build
+     (tools/gen-bench.mjs → ../../apps/marko.gen.js); steps are flushed with run() (../marko.ts). -->
+import { fmtPrice, dir } from "./def.ts"
+<let/rows=input.data.map((q) => ({ sym: q.sym, price: q.price, cls: "px" }))/>
+<script>
+  input.api.step = (ticks) => {
+    const d = rows.slice()
+    for (const t of ticks) { const r = d[t.i]; d[t.i] = { sym: r.sym, price: t.price, cls: `px ${dir(t.price, r.price)}` } }
+    rows = d
+  }
+</script>
+<table class="bt"><tbody>
+  <for|r| of=rows>
+    <tr><td class="sym">${r.sym}</td><td class=r.cls>${fmtPrice(r.price)}</td></tr>
+  </for>
+</tbody></table>

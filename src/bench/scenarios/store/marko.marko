@@ -1,0 +1,12 @@
+<!-- Shared store, Marko 6: the store's cells are one tag variable at the top; a step replaces it with the 50 cells
+     written, Marko re-reads every cell binding (it tracks the variable, not its entries) and writes only the 50 texts
+     that changed. Compiled with the benchmark app's Marko build (tools/gen-bench.mjs → ../../apps/marko.gen.js);
+     steps are flushed with run() (../marko.ts). -->
+import { sectionsOf } from "./def.ts"
+<let/cells=input.data.cells.slice()/>
+<script>input.api.step = (writes) => { const d = cells.slice(); for (const w of writes) d[w.i] = w.v; cells = d }</script>
+<div class="sg">
+  <for|idx| of=sectionsOf(input.data.cells.length)>
+    <div class="ss"><for|i| of=idx><span class="sc">${cells[i]}</span></for></div>
+  </for>
+</div>

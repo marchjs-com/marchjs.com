@@ -72,3 +72,6 @@ export function mount(host) {
     destroy: () => render(null, host)
   };
 }
+
+// the realistic scenarios' Inferno apps ride in this chunk (see ../scenarios/libs.ts)
+export { scenarios } from "../scenarios/inferno.ts";

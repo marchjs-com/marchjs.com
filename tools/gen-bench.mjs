@@ -13,7 +13,7 @@
 //                               Marko become DOM-built ones (built once, cloned per row, like the original).
 // `node tools/gen-bench.mjs --check` fails when a written file is out of date (test/bench-libs.test.js).
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, resolve, relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -123,22 +123,29 @@ async function compileIvi(rel) {
  * template string once with innerHTML (refused by Trusted Types); here the compiled templates are functions that build
  * the same nodes with DOM calls, and the runtime's parser calls them (one added line, checked below). The runtime then
  * clones them per instance exactly as before. */
-async function compileMarko(rel) {
+async function compileMarko(rel, scenarios = {}) {
   const { compileFileSync } = await import("@marko/compiler");
   const babel = await import("@babel/core");
   const { build } = await import("esbuild");
   const name = rel.split("/").pop();
-  const marko = compileFileSync(join(SC, rel), { output: "dom", optimize: true, sourceMaps: false, modules: "esm", babelConfig: { babelrc: false, configFile: false } });
-  let n = 0;
-  const domTemplates = ({ template }) => ({ visitor: { StringLiteral(p) {
-    if (!/^</.test(p.node.value)) return;
-    n++;
-    p.replaceWith(template.expression.ast(`() => _$frag(${htmlToDomNodes(p.node.value).join(", ")})`));
-  } } });
-  const app = (await babel.transformAsync(marko.code, { filename: name, babelrc: false, configFile: false, plugins: [domTemplates] })).code;
-  if (!n) throw new Error(`marko ${rel}: no templates found in the compiled output`);
+  // every .marko file: Marko's compiler (output "dom"), then its HTML-string templates → DOM-building functions
+  const compileOne = async (path) => {
+    const marko = compileFileSync(path, { output: "dom", optimize: true, sourceMaps: false, modules: "esm", babelConfig: { babelrc: false, configFile: false } });
+    let n = 0;
+    const domTemplates = ({ template }) => ({ visitor: { StringLiteral(p) {
+      if (!/^</.test(p.node.value)) return;
+      n++;
+      p.replaceWith(template.expression.ast(`() => _$frag(${htmlToDomNodes(p.node.value).join(", ")})`));
+    } } });
+    const code = (await babel.transformAsync(marko.code, { filename: path, babelrc: false, configFile: false, plugins: [domTemplates] })).code;
+    if (!n) throw new Error(`marko ${path}: no templates found in the compiled output`);
+    return 'import { _$el, _$frag } from "marko-dom-template";\n' + code;
+  };
   let patched = 0;
-  const runtime = { name: "marko-dom-templates", setup(b) {
+  const plugin = { name: "marko-dom-templates", setup(b) {
+    b.onResolve({ filter: /^marko-dom-template$/ }, () => ({ path: "marko-dom-template", namespace: "marko-tpl" }));
+    b.onLoad({ filter: /.*/, namespace: "marko-tpl" }, () => ({ contents: DOM_TEMPLATE.replace(/^const (_\$el|_\$tpl)/gm, "export const $1") + "export const _$frag = (...nodes) => { const f = new DocumentFragment(); f.append(...nodes); return f };\n", loader: "js" }));
+    b.onLoad({ filter: /\.marko$/ }, async (x) => ({ contents: await compileOne(x.path), loader: "js", resolveDir: dirname(x.path) }));
     b.onLoad({ filter: /[\\/]marko[\\/]dist[\\/]dom-[\w-]+\.mjs$/ }, (x) => {
       const src = readFileSync(x.path, "utf8");
       const at = "function parseHTML(html, ns) {";
@@ -147,28 +154,44 @@ async function compileMarko(rel) {
       return { contents: src.replace(at, `${at}\n\tif (typeof html === "function") return html(); // DOM-built template (tools/gen-bench.mjs)`), loader: "js" };
     });
   } };
-  const r = await build({ stdin: { contents: DOM_TEMPLATE + "const _$frag = (...nodes) => { const f = new DocumentFragment(); f.append(...nodes); return f };\n" + app + "\n// run(): renders what is queued at once (the benchmark wrapper flushes its own calls with it)\nexport { run } from \"marko/dom\";\n", resolveDir: join(SC, dirname(rel)), sourcefile: name, loader: "js" },
-    bundle: true, format: "esm", write: false, absWorkingDir: SC, logLevel: "error", legalComments: "inline", charset: "utf8", plugins: [runtime] });
+  // the app, run() (renders what is queued at once: the benchmark wrappers flush their own calls with it) and the
+  // realistic scenarios' templates, all on one runtime
+  const entry = [`export { default } from "./${name}";`, `export { run } from "marko/dom";`,
+    ...Object.entries(scenarios).map(([id, f]) => `export { default as ${id} } from ${JSON.stringify("./" + relative(dirname(rel), f).replace(/\\/g, "/"))};`)].join("\n");
+  const bundleOf = (contents) => build({ stdin: { contents, resolveDir: join(SC, dirname(rel)), sourcefile: "marko-entry.js", loader: "js" },
+    bundle: true, format: "esm", write: false, absWorkingDir: SC, logLevel: "error", legalComments: "inline", charset: "utf8", plugins: [plugin] });
+  const r = await bundleOf(entry);
   if (patched !== 1) throw new Error("marko: the DOM runtime was not bundled");
-  return HEAD(name) + r.outputFiles[0].text.replace(/\r\n/g, "\n").trim() + NL;
+  // the app alone, for the size column
+  APP_ONLY.marko = (await bundleOf(entry.split("\n").slice(0, 2).join("\n"))).outputFiles[0].text;
+  return HEAD(name) + r.outputFiles[0].text.replace(/\r\n/g, "\n").replace(/^\/\/ (src\/bench\/|marko-tpl:).*\n/gm, "").trim() + NL;
 }
 /** Angular: AOT as `ng build` does it. ngtsc compiles the component (template → instructions); Angular's build
  * (@angular/build's JavaScriptTransformer) links the framework's partially compiled packages and applies its
  * tree-shaking passes to every file; esbuild bundles and minifies with the options of Angular's application builder
  * (production conditions, ngDevMode / ngJitMode / ngServerMode off, forwardRef pure). */
+// a bundled app without its scenarios (Marko, Angular), for the size column: set by compileMarko / compileAngular
+const APP_ONLY = {};
 async function compileAngular(rel) {
   const ts = (await import("typescript")).default;
   const ngc = await import("@angular/compiler-cli");
   const { JavaScriptTransformer } = await import("@angular/build/private");
   const { build } = await import("esbuild");
   const name = rel.split("/").pop();
-  const options = { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022, moduleResolution: ts.ModuleResolutionKind.Bundler, strict: true, skipLibCheck: true, lib: ["lib.es2022.d.ts", "lib.dom.d.ts"], types: [], sourceMap: false, noEmitOnError: true, useDefineForClassFields: false, compilationMode: "full", strictTemplates: true };
+  // one program: the app, its scenarios (../scenarios/angular.ts, imported by the app) and the plain TS they use;
+  // relative ".ts" imports are rewritten to ".js", every emitted file is kept in memory
+  const options = { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022, moduleResolution: ts.ModuleResolutionKind.Bundler, strict: true, skipLibCheck: true, lib: ["lib.es2022.d.ts", "lib.dom.d.ts"], types: [], sourceMap: false, noEmitOnError: false, useDefineForClassFields: false, rewriteRelativeImportExtensions: true, allowImportingTsExtensions: true, compilationMode: "full", strictTemplates: true };
   const host = ngc.createCompilerHost({ options });
-  let js = "";
-  host.writeFile = (out, text) => { if (out.endsWith(".js")) js = text; };
-  const r = ngc.performCompilation({ rootNames: [join(SC, rel)], options, host });
-  const errors = r.diagnostics.filter((d) => d.category === ts.DiagnosticCategory.Error);
-  if (errors.length || !js) throw new Error(`angular ${rel}: ${errors.map((d) => ts.flattenDiagnosticMessageText(d.messageText, " ")).join("; ") || "no output"}`);
+  const emitted = new Map();
+  host.writeFile = (out, text) => { if (out.endsWith(".js")) emitted.set(resolve(out), text); };
+  // errors in the Angular files (components, templates) fail; the shared plain TS (scenario models) is not type-checked
+  // anywhere else on the site, so its diagnostics are left to the code that owns it
+  const ours = (d) => !d.file || /angular[\w-]*\.ts$/.test(d.file.fileName);
+  const gatherDiagnostics = (p) => [...p.getTsOptionDiagnostics(), ...p.getNgOptionDiagnostics(), ...p.getTsSyntacticDiagnostics(), ...p.getTsSemanticDiagnostics(), ...p.getNgStructuralDiagnostics(), ...p.getNgSemanticDiagnostics()].filter(ours);
+  const r = ngc.performCompilation({ rootNames: [join(SC, rel)], options, host, gatherDiagnostics });
+  const errors = r.diagnostics.filter((d) => d.category === ts.DiagnosticCategory.Error && ours(d));
+  const entry = resolve(SC, rel.replace(/\.ts$/, ".js"));
+  if (errors.length || !emitted.has(entry)) throw new Error(`angular ${rel}: ${errors.map((d) => ts.flattenDiagnosticMessageText(d.messageText, " ")).join("; ") || "no output"}`);
   const transformer = new JavaScriptTransformer({ sourcemap: false, thirdPartySourcemaps: false, advancedOptimizations: true, jit: false, maxConcurrency: 1 });
   const text = (bytes) => Buffer.from(bytes).toString("utf8");
   // a package's "sideEffects": false lets the transformer mark its top level pure, as Angular's build does
@@ -177,19 +200,24 @@ async function compileAngular(rel) {
     const pkg = m ? JSON.parse(readFileSync(join(m[1], "package.json"), "utf8")) : {};
     return async () => (pkg.sideEffects === false ? false : undefined);
   };
-  const entry = join(SC, rel.replace(/\.ts$/, ".js"));
-  const ng = { name: "angular-build", setup(b) {
-    b.onResolve({ filter: /^angular-app-entry$/ }, () => ({ path: entry }));
-    b.onLoad({ filter: /\.[cm]?js$/ }, async (x) => (x.path === entry
-      ? { contents: text(await transformer.transformData(x.path, js, { skipLinker: true, sideEffects: async () => false })), loader: "js", resolveDir: join(SC, dirname(rel)) }
-      : { contents: text(await transformer.transformFile(x.path, { sideEffects: pkgSideEffects(x.path) })), loader: "js" }));
-  } };
-  let bundle;
-  try {
-    bundle = await build({ entryPoints: ["angular-app-entry"], bundle: true, format: "esm", minify: true, write: false, absWorkingDir: SC, logLevel: "error", legalComments: "eof", charset: "utf8", target: "es2022",
-      conditions: ["module", "production"], resolveExtensions: [".ts", ".tsx", ".mjs", ".js", ".cjs"], pure: ["forwardRef"],
-      define: { ngDevMode: "false", ngJitMode: "false", ngServerMode: "false", ngHmrMode: "false" }, plugins: [ng] });
-  } finally { await transformer.close(); }
+  const bundleOf = async (appOnly) => build({ entryPoints: [entry], bundle: true, format: "esm", minify: true, write: false, absWorkingDir: SC, logLevel: "error", legalComments: "eof", charset: "utf8", target: "es2022",
+    conditions: ["module", "production"], resolveExtensions: [".ts", ".tsx", ".mjs", ".js", ".cjs"], pure: ["forwardRef"],
+    define: { ngDevMode: "false", ngJitMode: "false", ngServerMode: "false", ngHmrMode: "false" },
+    plugins: [{ name: "angular-build", setup(b) {
+      b.onResolve({ filter: /^\./ }, (x) => { const p = resolve(x.resolveDir, x.path); return emitted.has(p) || p === entry ? { path: p } : undefined; });
+      b.onResolve({ filter: /.*/ }, (x) => (x.kind === "entry-point" ? { path: entry } : undefined));
+      b.onLoad({ filter: /\.[cm]?js$/ }, async (x) => {
+        if (emitted.has(x.path)) {
+          let src = emitted.get(x.path);
+          if (appOnly && x.path === entry) src = src.replace(/^export \{ scenarios \} from .*$/m, "export const scenarios = {};");
+          return { contents: text(await transformer.transformData(x.path, src, { skipLinker: true, sideEffects: async () => false })), loader: "js", resolveDir: dirname(x.path) };
+        }
+        return { contents: text(await transformer.transformFile(x.path, { sideEffects: pkgSideEffects(x.path) })), loader: "js" };
+      });
+    } }] });
+  let bundle, only;
+  try { bundle = await bundleOf(false); only = await bundleOf(true); } finally { await transformer.close(); }
+  APP_ONLY.angular = only.outputFiles[0].text;
   const code = bundle.outputFiles[0].text.replace(/\r\n/g, "\n");
   if (/ɵɵngDeclare|new Function|\beval\(/.test(code)) throw new Error(`angular ${rel}: JIT code or unlinked declarations left in the bundle`);
   return HEAD(name) + code.trim() + NL;
@@ -201,7 +229,8 @@ export const scenarioDirs = () => readdirSync(join(SC, SCEN), { withFileTypes: t
 const scenarioSources = (dir) => {
   const files = readdirSync(join(SC, SCEN, dir)).filter((f) => !f.includes(".gen.")).sort();
   const pick = (re) => files.filter((f) => re.test(f)).map((f) => `${SCEN}/${dir}/${f}`);
-  return { vanilla: pick(/^vanilla\.ts$/), march: pick(/^march\.tsx$/), react: pick(/^react\.ts$/), preact: pick(/^preact\.ts$/), vue: pick(/^vue.*\.(ts|html)$/), svelte: pick(/^svelte\.(svelte|ts)$/), solid: pick(/^solid\.jsx$/), lit: pick(/^lit.*\.ts$/) };
+  return { vanilla: pick(/^vanilla\.ts$/), march: pick(/^march\.tsx$/), react: pick(/^react\.ts$/), preact: pick(/^preact\.ts$/), vue: pick(/^vue.*\.(ts|html)$/), svelte: pick(/^svelte\.(svelte|ts)$/), solid: pick(/^solid\.jsx$/), lit: pick(/^lit.*\.ts$/),
+    marko: pick(/^marko\.marko$/), inferno: pick(/^inferno\.jsx$/), ivi: pick(/^ivi\.ts$/), mithril: pick(/^mithril\.ts$/), alpine: pick(/^alpine\.ts$/), angular: pick(/^angular\.ts$/) };
 };
 
 async function compiled() {
@@ -212,7 +241,8 @@ async function compiled() {
     out["src/bench/apps/solid.gen.js"] = await compileSolid("src/bench/apps/solid.jsx");
     out["src/bench/apps/inferno.gen.js"] = await compileInferno("src/bench/apps/inferno.jsx");
     out["src/bench/apps/ivi.gen.js"] = await compileIvi("src/bench/apps/ivi.ts");
-    out["src/bench/apps/marko.gen.js"] = await compileMarko("src/bench/apps/marko.marko");
+    // Marko: the app and every scenario's template on one runtime (each exported as its scenario's id)
+    out["src/bench/apps/marko.gen.js"] = await compileMarko("src/bench/apps/marko.marko", Object.fromEntries(scenarioDirs().filter((d) => existsSync(join(SC, SCEN, d, "marko.marko"))).map((d) => [d, `${SCEN}/${d}/marko.marko`])));
     out["src/bench/apps/angular.gen.js"] = await compileAngular("src/bench/apps/angular-app.ts");
   }
   for (const dir of scenarioDirs()) {
@@ -222,6 +252,8 @@ async function compiled() {
       if (f.endsWith(".template.html")) out[`${base}/${f.replace(/\.template\.html$/, ".render.gen.js")}`] = await compileVue(`${base}/${f}`);
       else if (f === "svelte.svelte") out[`${base}/svelte.gen.js`] = await compileSvelte(`${base}/${f}`);
       else if (f === "solid.jsx") out[`${base}/solid.gen.js`] = await compileSolid(`${base}/${f}`);
+      else if (f === "inferno.jsx") out[`${base}/inferno.gen.js`] = await compileInferno(`${base}/${f}`);
+      else if (f === "ivi.ts") out[`${base}/ivi.gen.js`] = await compileIvi(`${base}/${f}`);
     }
   }
   return out;
@@ -247,7 +279,7 @@ async function sizes() {
       alias: { "march": join(MARCH, "src") },
       define: { "process.env.NODE_ENV": '"production"', __VUE_OPTIONS_API__: "true", __VUE_PROD_DEVTOOLS__: "false", __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: "false" },
       // the canonical app alone: the realistic scenarios riding in the same chunk are left out of this column
-      plugins: [{ name: "no-scenarios", setup: (b) => { b.onResolve({ filter: /scenarios\/\w+\.ts$/ }, (x) => (x.importer.includes("apps") ? { path: x.path, namespace: "no-scen" } : undefined)); b.onLoad({ filter: /.*/, namespace: "no-scen" }, () => ({ contents: "export const scenarios = {}", loader: "js" })); } }, march({ components: join(SC, "src/components"), cssSplit: false })], loader: { ".css": "empty" },
+      plugins: [{ name: "app-only", setup: (b) => { b.onLoad({ filter: /apps[\\/](marko|angular)\.gen\.js$/ }, (x) => { const code = APP_ONLY[/(marko|angular)\.gen\.js$/.exec(x.path)[1]]; return code ? { contents: code, loader: "js" } : undefined; }); } },{ name: "no-scenarios", setup: (b) => { b.onResolve({ filter: /scenarios\/\w+\.ts$/ }, (x) => (x.importer.includes("apps") ? { path: x.path, namespace: "no-scen" } : undefined)); b.onLoad({ filter: /.*/, namespace: "no-scen" }, () => ({ contents: "export const scenarios = {}", loader: "js" })); } }, march({ components: join(SC, "src/components"), cssSplit: false })], loader: { ".css": "empty" },
     });
     const js = r.outputFiles.filter((f) => !f.path.endsWith(".css")).map((f) => f.contents);
     const raw = js.reduce((s, b) => s + b.length, 0);
@@ -261,7 +293,9 @@ const gen = await compiled();
 // the Code section: every source file of an app, one after another
 const sources = Object.fromEntries(Object.entries(APPS).map(([id, a]) => [id, a.src.map((f) => (a.src.length > 1 ? `// ── ${f.split("/").pop()}\n` : "") + readFileSync(join(SC, f), "utf8").replace(/\r\n/g, "\n").trim()).join("\n\n") + "\n"]));
 const march = JSON.parse(readFileSync(join(MARCH, "package.json"), "utf8"));
-const licenses = [{ name: "March", version: march.version, license: march.license, text: readFileSync(join(MARCH, "LICENSE"), "utf8").replace(/\r\n/g, "\n").trim() }];
+// March's version follows the installed release (a new one may come out at any time), so --check keeps the written one
+const writtenMarch = check && existsSync(join(SC, "public/bench/licenses.json")) ? JSON.parse(readFileSync(join(SC, "public/bench/licenses.json"), "utf8"))[0]?.version : null;
+const licenses = [{ name: "March", version: writtenMarch ?? march.version, license: march.license, text: readFileSync(join(MARCH, "LICENSE"), "utf8").replace(/\r\n/g, "\n").trim() }];
 for (const pkg of [...new Set(Object.values(APPS).flatMap((a) => a.pkgs))]) {
   const p = JSON.parse(readFileSync(join(ROOT, "node_modules", pkg, "package.json"), "utf8"));
   licenses.push({ name: pkg, version: p.version, license: p.license, text: licenseText(pkg) });

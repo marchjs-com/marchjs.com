@@ -1,0 +1,14 @@
+<!-- Derived values, Marko 6: the fields are a tag variable and each computed cell a <const> computed from it in the
+     loop. An edit replaces the fields, so Marko re-evaluates the 500 computed cells (Marko tracks a variable, not an
+     array's entries) and writes only the text and class that changed. Compiled with the benchmark app's Marko build
+     (tools/gen-bench.mjs → ../../apps/marko.gen.js); steps are flushed with run() (../marko.ts). -->
+import { evalComp, compClass } from "./def.ts"
+<let/f=input.data.fields.slice()/>
+<script>input.api.step = (e) => { const d = f.slice(); d[e.i] = e.v; f = d }</script>
+<div class="dv">
+  <div class="dv-fs"><for|v| of=f><span class="dv-f">${v}</span></for></div>
+  <div class="dv-cs"><for|c| of=input.data.comps>
+    <const/v=evalComp(c, (i) => f[i])/>
+    <span class=compClass(c, v)>${v}</span>
+  </for></div>
+</div>

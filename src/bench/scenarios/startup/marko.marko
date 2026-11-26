@@ -1,0 +1,21 @@
+<!-- Start-up, Marko 6: a start changes the page number; the page sits in a one-item loop keyed by it, so Marko tears
+     the previous page down and creates page k from its compiled template, the work a fresh mount does. The counter is
+     a tag variable reset with each page and the "+1" button uses Marko's delegated onClick. Compiled with the benchmark app's
+     Marko build (tools/gen-bench.mjs → ../../apps/marko.gen.js); steps are flushed with run() (../marko.ts). -->
+import { run } from "marko/dom"
+import { rowsFor, HEADS } from "./def.ts"
+<const/{ data, api, host }=input/>
+<let/k=0/>
+<let/n=0/>
+<script>api.step = (next) => { k = next; n = 0; run(); host.querySelector(".inc").click() }</script>
+<for|page| of=[k] by=(p) => p>
+  <div class="dash">
+    <header class="hd"><h1>${data.title}</h1><span class="run">${page}</span><span class="count">${n}</span><button class="inc" type="button" onClick() { n++ }>+1</button></header>
+    <nav class="nv"><ul><for|l| of=data.nav><li><a href=l.href>${l.label}</a></li></for></ul></nav>
+    <section class="cards"><for|s| of=data.stats><div class="card"><div class="lbl">${s.label}</div><div class="val">${s.value}</div><div class="delta">${s.delta}</div></div></for></section>
+    <table class="bt"><thead><tr><for|t| of=HEADS><th>${t}</th></for></tr></thead><tbody>
+      <for|r| of=rowsFor(data.rows, page) by="id"><tr><td class="id">${r.id}</td><td><a href=`#u${r.id}`>${r.name}</a></td><td>${r.email}</td><td><span class=`badge ${r.status}`>${r.status}</span></td><td class="amt">${r.amount}</td><td>${r.date}</td></tr></for>
+    </tbody></table>
+    <form class="fm"><for|f| of=data.fields><div class="f"><label>${f.label}</label><input name=f.name type=f.type/></div></for><button type="button">Kaydet</button></form>
+  </div>
+</for>

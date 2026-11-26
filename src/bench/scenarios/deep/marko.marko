@@ -1,0 +1,22 @@
+<!-- State at the top, Marko 6: the unit and the focus are tag variables at the top, read by the items three loops
+     down (Marko has no component boundary in the way: the compiler wires each binding to the variables it reads).
+     Only the measured items read the unit; every item's class reads the focus, so a focus step re-checks the items'
+     class and writes the two that changed. Compiled with the benchmark app's Marko build (tools/gen-bench.mjs →
+     ../../apps/marko.gen.js); steps are flushed with run() (../marko.ts). -->
+import { FIRST_UNIT, NO_FOCUS, itemText, itemClass } from "./def.ts"
+<let/unit=FIRST_UNIT/>
+<let/focus=NO_FOCUS/>
+<script>input.api.step = (s) => { if ("unit" in s) unit = s.unit; else focus = s.focus }</script>
+<div class="deep">
+  <for|p| of=input.data.panels by="id">
+    <section class="pnl"><h3>${p.title}</h3><p class="note">${p.note}</p><div class="grps">
+      <for|g| of=p.groups by="id">
+        <div class="grp"><h4>${g.title}</h4>
+          <for|it| of=g.items by="id">
+            <div class=itemClass(it.id === focus)><span class="k">${it.label}</span><b class="v">${it.v === null ? `#${it.id}` : itemText(it, unit)}</b></div>
+          </for>
+        </div>
+      </for>
+    </div></section>
+  </for>
+</div>
