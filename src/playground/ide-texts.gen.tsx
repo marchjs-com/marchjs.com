@@ -24,25 +24,31 @@ export const IDE_TEXTS = (): string[] => [
   // components/badge/ide.json
   t`Durum ve sayı.`,
   // components/bar-chart/ide.json
-  t`Gruplu ya da yığılmış, dikey ya da yatay; veri değişince çubuklar kayar.`,
+  t`Gruplu ya da yığılmış, dikey ya da yatay; çubuklar tabandan büyür, kayar, değer etiketleri ve hedef çizgisi.`,
   // components/bar-list/ide.json
-  t`Sıralı yatay çubuklar: en çok ziyaret edilen sayfalar, ülkeler, şarkılar.`,
+  t`Sıralı yatay çubuklar: en çok ziyaret edilen sayfalar, ülkeler, şarkılar; sıra değişince satırlar kayar.`,
   // components/before-after/ide.json
   t`Sürüklenen ayırıcıyla iki katmanı karşılaştırır; basınca oraya atlar, klavyeyle ve imleci izleyerek de çalışır; yatay ya da dikey.`,
   // components/bottom-nav/ide.json
   t`Mobil sekmeler, orta eylem.`,
   // components/bottom-right-controls/ide.json
   t`Sayfa çapı denetimler dört köşeden birine sırayla yerleşir, üst üste binmez; sağdan sola yazımda aynalanır.`,
+  // components/box-plot/ide.json
+  t`Kategori başına çeyrekler, bıyıklar, aykırılar ve ortalama; keman ya da ikisi birden, kutular ortancadan büyür.`,
   // components/branching-story/ide.json
   t`Seçimlerle ilerleyen hikâye: geri sarılan yol, bulunan sonlar, 3B sayfa çevirme, 1–9 tuşları.`,
   // components/breadcrumbs/ide.json
   t`Dosya yolu; kardeşi olan parça menü açar.`,
+  // components/bullet-chart/ide.json
+  t`Gerçekleşen, hedef ve nitel aralıklar tek satırda; tablolar için sıkı görünüm.`,
   // components/button/ide.json
   t`Beş varyant, üç boyut; yükleniyor düğmeyi kilitler ve ikonun yerinde çark döner.`,
   // components/button-group/ide.json
   t`Aralıklı ya da bitişik; bitişik şeritte yuvarlak uçlar RTL'de de dışta kalır.`,
   // components/calendar/ide.json
   t`Ay görünümü, klavyeyle gün seçimi.`,
+  // components/candlestick-chart/ide.json
+  t`Fiyat mumları: açılış, en yüksek, en düşük, kapanış; hacim, ortalamalar, canlı kayan pencere ve aralık gezgini.`,
   // components/card/ide.json
   t`Başlık, eylemler, alt bilgi.`,
   // components/carousel/ide.json
@@ -67,6 +73,10 @@ export const IDE_TEXTS = (): string[] => [
   t`İkonlu, açıklamalı büyük seçenekler.`,
   // components/choice-variants/ide.json
   t`Aynı seçici beş görünümde; boyut, köşe ve renk.`,
+  // components/chord-chart/ide.json
+  t`Gruplar arası alışveriş: çevrede yaylar, aralarında şeritler; bir grubun üstüne gel, kendi akışı kalsın.`,
+  // components/choropleth-map/ide.json
+  t`Türkiye'nin 81 ili hazır: değere göre renk, sınıflar, bölgeye yakınlaş, iller batıdan doğuya renklenir.`,
   // components/clamp-text/ide.json
   t`N satıra katlanır; sığmıyorsa "devamı", açılınca "daha az".`,
   // components/code-view/ide.json
@@ -147,6 +157,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Kalın, italik, başlık, liste, bağlantı, geri al: araçlar, adlar, ikonlar ve kısayol ipuçları sizin.`,
   // components/forms-code/ide.json
   t`Doğrulama kodu kutuları, yapıştırma.`,
+  // components/funnel-chart/ide.json
+  t`Adımlar ve dönüşüm: huni, çubuk ya da piramit; adımlar arasında kayıp, aşamalar yukarıdan dökülür.`,
   // components/gantt/ide.json
   t`Bağımlılıklar, ölçek, ilerleme.`,
   // components/gauge/ide.json
@@ -156,9 +168,11 @@ export const IDE_TEXTS = (): string[] => [
   // components/grid/ide.json
   t`Sütun sayısı, son satırın davranışı ve dengeleme.`,
   // components/heatmap/ide.json
-  t`Gün × saat ya da hafta takvimi; tema vurgusunun tonlarında yoğunluk.`,
+  t`Gün × saat ya da yıl takvimi; ay ve gün etiketleri, düzey açıklaması, hücreler dalga gibi renklenir.`,
   // components/hero/ide.json
   t`Yedi görünüm, tek yapı: üst etiket, gradyan vurgulu başlık, açıklama, eylemler.`,
+  // components/histogram/ide.json
+  t`Ham değerlerden kutular; birikimli ya da normalleştirilmiş, gruplar üst üste, çan ya da yoğunluk eğrisi, yeniden kutulamada biçim değiştirir.`,
   // components/honest-compare/ide.json
   t`Rakiplerle tablo; geride kalınan satırlar işaretli ve gerekçeli, özet ve yalnız eksikleri gösteren süzgeç.`,
   // components/horizontal-scroll/ide.json
@@ -196,7 +210,7 @@ export const IDE_TEXTS = (): string[] => [
   // components/like-button/ide.json
   t`Kalp yayla zıplar, halka büyür, parçacıklar HADİ renkleriyle saçılır.`,
   // components/line-chart/ide.json
-  t`Zaman, sayı ya da kategori ekseni; birden çok seri, sürükleyerek yakınlaştırma, ← → ile noktalar.`,
+  t`Zaman, sayı ya da kategori ekseni; eğriler, işaretler, ikinci eksen, referans çizgileri, canlı pencere, aralık gezgini.`,
   // components/link-card/ide.json
   t`Tamamı bağlantı olan kart: ikon karosu, başlık, açıklama, sondaki metin ve üstüne gelince ok.`,
   // components/list-editor/ide.json
@@ -229,6 +243,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Sabitlenen ve son kullanılan sayfalar.`,
   // components/nav-sidebar/ide.json
   t`Kategori sırası, daraltma, iç içe sayfalar.`,
+  // components/network-graph/ide.json
+  t`Düğümler ve bağlantılar: kuvvetle yerleşen ağ, sürükle ve sabitle, yakınlaş, komşuları vurgula, oklarla gez.`,
   // components/network-throttle/ide.json
   t`Çevrimdışı, yavaş / hızlı 3G, 4G ya da kendi bant genişliğin ve gecikmen; hız göstergesi ve canlı istek şelalesi`,
   // components/newsletter/ide.json
@@ -268,7 +284,7 @@ export const IDE_TEXTS = (): string[] => [
   // components/picture/ide.json
   t`Resim nesnesi (src, alt, width, height…) ya da hazır düğüm: biri img olur, öteki olduğu gibi çizilir.`,
   // components/pie-chart/ide.json
-  t`Bütünün payları; halkanın ortasında toplam, dilimler odaklanır ve yeni açılara döner.`,
+  t`Bütünün payları; dilimler açılır, yeni açılara döner, etkin dilim dışarı çıkar.`,
   // components/popover/ide.json
   t`Tetikleyici ve yanında yüzen panel: dışarı tıkla ya da Esc ile kapanır, odak içeri girer ve geri döner.`,
   // components/post-card/ide.json
@@ -282,7 +298,7 @@ export const IDE_TEXTS = (): string[] => [
   // components/progress/ide.json
   t`Değer, belirsiz, renkler.`,
   // components/progress-ring/ide.json
-  t`0–100 puan halkası; düşük / orta / yüksek düzey ya da birden çok renk.`,
+  t`0–100 puan halkası; düşük / orta / yüksek düzey ya da birden çok renk, sayı da birlikte sayar.`,
   // components/project-detail/ide.json
   t`Bir projeye tıkla: kapak ayrıntı sayfasındaki yerine büyür (paylaşılan öğe geçişi); geri dönüşte küçülür.`,
   // components/project-grid/ide.json
@@ -291,6 +307,10 @@ export const IDE_TEXTS = (): string[] => [
   t`Gruplu, aranabilir satırlar; her tür kendi form denetimiyle düzenlenir.`,
   // components/pull-to-refresh/ide.json
   t`Dokunmatikte aşağı çek, yenile.`,
+  // components/radar-chart/ide.json
+  t`Eksenler çevrede, seriler dolu çokgenler; şekiller merkezden büyür ve yeni değerlere dönüşür.`,
+  // components/radial-bar-chart/ide.json
+  t`İç içe halkalarda çubuklar; tam daire ya da yay, halkalar sırayla döner.`,
   // components/radio-group/ide.json
   t`Tek seçim; kart ve hap görünümleri.`,
   // components/rating/ide.json
@@ -309,6 +329,10 @@ export const IDE_TEXTS = (): string[] => [
   t`Kalıcı yerleşim, adlı outlet, modal rota, guard ve yönlendirme; önizlemede adres yönlendiricinin kendisinde kalır.`,
   // components/row-tools/ide.json
   t`Düzenlenebilir listede satır araçları: yukarı, aşağı, sil; uçlarda kapanır.`,
+  // components/sankey-chart/ide.json
+  t`Akışlar: düğümler sütunlarda, şeritler değer kalınlığında; bir düğüm kendi akışını vurgular.`,
+  // components/scatter-chart/ide.json
+  t`İki sayı ekseninde noktalar; kabarcık boyu, seriye göre renk ve simge, eğilim çizgisi, noktalar kayarak yer değiştirir.`,
   // components/scheduler/ide.json
   t`Ay, hafta, gün; sürükleyerek taşı ve boyutla.`,
   // components/schema/ide.json
@@ -346,7 +370,7 @@ export const IDE_TEXTS = (): string[] => [
   // components/spacer/ide.json
   t`Kendinden sonrakileri satırın mantıksal sonuna iter; RTL'de aynalanır.`,
   // components/sparkline/ide.json
-  t`Eksensiz küçük çizgi: tablo hücresinde, liste satırında, göstergede.`,
+  t`Eksensiz küçük çizgi, çubuk ya da kazanç / kayıp: tablo hücresinde, liste satırında, göstergede.`,
   // components/spectrum/ide.json
   t`Sesin frekansları canlı: log ölçekli çubuklar, düşen tepe başlıkları; ayna, halka, çizgi; tema, HADİ ya da kendi renklerin.`,
   // components/spinner/ide.json
@@ -356,7 +380,7 @@ export const IDE_TEXTS = (): string[] => [
   // components/stack/ide.json
   t`Satır ya da sütun, boşluk belirteçleri (0–8), hizalama ve satır kaydırma; etiketli araç çubuğu ve ayraçlar.`,
   // components/stat/ide.json
-  t`Değer, önceki döneme göre değişim (iyi yeşil, kötü kırmızı) ve eğilim çizgisi.`,
+  t`Değer sayarak gelir, önceki döneme göre değişim (iyi yeşil, kötü kırmızı) ve eğilim çizgisi.`,
   // components/stat-tile/ide.json
   t`Değer ve etiket; tıklanabilir, sayaçlı.`,
   // components/stats-band/ide.json
@@ -375,6 +399,10 @@ export const IDE_TEXTS = (): string[] => [
   t`Yeni hikâyede dört HADİ rengi, görülünce sakin çizgi, yakın arkadaşta yeşil.`,
   // components/story-viewer/ide.json
   t`Bir halkaya dokunun.`,
+  // components/stream-graph/ide.json
+  t`Kategoriler zamanla akan katmanlar olur; dalgalı, ortalı ya da %100 taban.`,
+  // components/sunburst-chart/ide.json
+  t`Hiyerarşi halkalar olur; bir dala tıkla, içine yakınlaş, ortadan geri çık.`,
   // components/swatch/ide.json
   t`Tıklanır renk ya da gradyan örneği, dama zemini.`,
   // components/table/ide.json
@@ -409,6 +437,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Üstüne gelince kısa bir gecikmeyle, klavye odağında hemen görünür; aria-describedby ile bağlanır, Esc gizler.`,
   // components/tree-view/ide.json
   t`Binlerce düğüm, tembel yükleme, arama, sürükle bırak.`,
+  // components/treemap/ide.json
+  t`Hiyerarşi kutulara bölünür; gruba gir, kırıntıdan çık, değere göre renk.`,
   // components/typing-indicator/ide.json
   t`Üç nokta sırayla yükselir; kim yazıyorsa ekran okuyucuya bir kez söylenir.`,
   // components/undo-redo/ide.json
@@ -419,6 +449,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Sessiz döngü, önce poster; görünmüyorken durur, veri tasarrufu ve azaltılmış harekette yalnız poster.`,
   // components/virtual-list/ide.json
   t`100.000 satır, her biri kendi yüksekliğinde: yalnız görünen pencere DOM'da.`,
+  // components/waterfall-chart/ide.json
+  t`Başlangıçtan sona artı ve eksi adımlar, ara toplamlar ve bağlantı çizgileri; çubuklar sırayla kurulur.`,
   // components/waveform/ide.json
   t`Bir sesin çubukları: sesli mesaj, podcast; çalınan kısım renkli, bölümler, basıp atlama.`,
   // components/web-reveal/ide.json

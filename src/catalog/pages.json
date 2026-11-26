@@ -212,5 +212,21 @@
  "media/oscilloscope": "/charts/oscilloscope",
  "media/spectrum": "/charts/spectrum",
  "media/waveform": "/charts/waveform",
- "media/audio-reactive": "/charts/audio-reactive"
+ "media/audio-reactive": "/charts/audio-reactive",
+ "data/stream-graph": "/charts/stream-graph",
+ "data/scatter-chart": "/charts/scatter-chart",
+ "data/histogram": "/charts/histogram",
+ "data/box-plot": "/charts/box-plot",
+ "data/funnel-chart": "/charts/funnel-chart",
+ "data/waterfall-chart": "/charts/waterfall-chart",
+ "data/bullet-chart": "/charts/bullet-chart",
+ "data/radar-chart": "/charts/radar-chart",
+ "data/radial-bar-chart": "/charts/radial-bar-chart",
+ "data/sunburst-chart": "/charts/sunburst-chart",
+ "data/treemap": "/charts/treemap",
+ "data/sankey-chart": "/charts/sankey-chart",
+ "data/chord-chart": "/charts/chord-chart",
+ "data/candlestick-chart": "/charts/candlestick-chart",
+ "data/network-graph": "/charts/network-graph",
+ "data/choropleth-map": "/charts/choropleth-map"
 }

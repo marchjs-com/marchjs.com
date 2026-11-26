@@ -55,6 +55,9 @@
 .bt-bar.is-run { border-color: var(--m-border-strong); }
 .bt-bar.is-wait { opacity: .6; }
 .bt-bar-name { grid-area: name; display: flex; align-items: center; gap: var(--m-space-2); min-inline-size: 0; font-weight: var(--m-weight-medium); font-size: var(--m-text-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* pure JavaScript: the yardstick under the libraries (a dashed line above it, muted), not a competitor */
+.bt-bar.is-ref { border-style: dashed; opacity: .8; margin-block-start: var(--m-space-2); }
+.bt-ref { padding: 0 .45em; border-radius: var(--m-radius-full, 999px); background: var(--m-surface-2, color-mix(in srgb, var(--m-text) 8%, transparent)); color: var(--m-muted); font-size: var(--m-text-xs); font-weight: var(--m-weight-regular, 400); }
 .bt-crown { display: inline-flex; color: var(--m-brand-orange); font-size: .95rem; }
 .bt-bar-track { grid-area: track; position: relative; block-size: .75rem; border-radius: var(--m-radius-full); background: var(--m-surface-3); overflow: hidden; }
 .bt-bar-fill { position: absolute; inset: 0; border-radius: inherit; background: var(--bt-c); transform: scaleX(0); transform-origin: left center; }

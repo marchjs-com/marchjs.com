@@ -85,13 +85,13 @@ import e80 from "./platform/behaviors.drag--track.x.tsx";
 import e81 from "./platform/behaviors.dropzone--dropzone.x.tsx";
 import e82 from "./platform/behaviors.list-nav--list-nav.x.tsx";
 import e83 from "./platform/behaviors.list-nav--move-cursor.x.tsx";
-import e84 from "./platform/behaviors.resize-handle--resize-handle.x.tsx";
-import e85 from "./platform/behaviors.roving-focus--roving-focus.x.tsx";
-import e86 from "./platform/behaviors.swipe--fling.x.tsx";
-import e87 from "./platform/behaviors.swipe--nearest.x.tsx";
-import e88 from "./platform/behaviors.swipe--rubber-band.x.tsx";
-import e89 from "./platform/behaviors.swipe--swipeable.x.tsx";
-import e90 from "./platform/channel---channel-scope.x.tsx";
+import e84 from "./mask/behaviors.mask--mask.x.tsx";
+import e85 from "./platform/behaviors.resize-handle--resize-handle.x.tsx";
+import e86 from "./platform/behaviors.roving-focus--roving-focus.x.tsx";
+import e87 from "./platform/behaviors.swipe--fling.x.tsx";
+import e88 from "./platform/behaviors.swipe--nearest.x.tsx";
+import e89 from "./platform/behaviors.swipe--rubber-band.x.tsx";
+import e90 from "./platform/behaviors.swipe--swipeable.x.tsx";
 const examples: Record<string, ApiExample<any>> = {
   "march#Await": e0,
   "march#DEV": e1,
@@ -177,12 +177,12 @@ const examples: Record<string, ApiExample<any>> = {
   "march/behaviors/dropzone#dropzone": e81,
   "march/behaviors/list-nav#listNav": e82,
   "march/behaviors/list-nav#moveCursor": e83,
-  "march/behaviors/resize-handle#resizeHandle": e84,
-  "march/behaviors/roving-focus#rovingFocus": e85,
-  "march/behaviors/swipe#fling": e86,
-  "march/behaviors/swipe#nearest": e87,
-  "march/behaviors/swipe#rubberBand": e88,
-  "march/behaviors/swipe#swipeable": e89,
-  "march/channel#ChannelScope": e90,
+  "march/behaviors/mask#mask": e84,
+  "march/behaviors/resize-handle#resizeHandle": e85,
+  "march/behaviors/roving-focus#rovingFocus": e86,
+  "march/behaviors/swipe#fling": e87,
+  "march/behaviors/swipe#nearest": e88,
+  "march/behaviors/swipe#rubberBand": e89,
+  "march/behaviors/swipe#swipeable": e90,
 };
 export default examples;

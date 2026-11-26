@@ -8,6 +8,7 @@
 //   src/catalog/cards-code.gen.ts     the Code-tab snippets (one lazy module, loaded on the first Code tab)
 //   src/catalog/cards-roots.gen.ts    component name → the class of its root element (the exploded view)
 //   src/catalog/cards-parts.gen.ts    component name → a loader of the component (a composite's parts on the stage)
+//   src/catalog/added.gen.ts          the day each component first appeared (March's `added`): the "Yeni" badges
 //   src/catalog/<page>[-n].demos.gen.ts, <page>.kit.gen.ts   the demos of one page, a few per lazy module
 //   node tools/gen-catalog.mjs          write
 //   node tools/gen-catalog.mjs --check  exit 1 when a file is out of date, or a March component has no demo / Options panel
@@ -151,6 +152,12 @@ export async function generate() {
   files["cards-parts.gen.ts"] = HEAD + "/** Component name → a loader of the component itself (the key of an m:parts map). */\n" +
     "export const parts: Record<string, () => Promise<unknown>> = {\n" +
     partList.map((c) => `  ${nameOf(c)}: ${partLoader(c)},\n`).join("") + "};\n";
+  // the day each component first appeared (data/components.json `added`, from March 0.3.x on): the menu's and the topic
+  // pages' "Yeni" badges (src/new-badge.tsx); a release without it gives none
+  const days = {};
+  for (const c of list) if (/^\d{4}-\d{2}-\d{2}$/.test(c.added ?? "")) (days[c.added] ??= []).push(nameOf(c));
+  files["added.gen.ts"] = HEAD + "/** Day (YYYY-MM-DD) → the March components that first appeared on it (names, space-separated). */\n" +
+    "export const ADDED: Record<string, string> = {\n" + Object.keys(days).sort().map((d) => `  ${JSON.stringify(d)}: ${JSON.stringify(days[d].join(" "))},\n`).join("") + "};\n";
   files["cards-code.gen.ts"] = HEAD + `export const code: Record<string, string> = {\n` +
     list.map((c) => `  ${JSON.stringify(c.folder)}: ${JSON.stringify(firstCode(c.docs))},\n`).join("") + `};\n`;
   return { files, problems };

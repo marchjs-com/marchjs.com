@@ -111,7 +111,7 @@ export default function BenchScenarios() {
     <Split title={t("Senaryo ayarları")} summary={() => t("{0} senaryo · {1} kitaplık · {2}", { 0: scenSig().length, 1: libsSig().length, 2: sizeSig() === "large" ? t("büyük") : t("varsayılan") })} panel={panel}>
       <header class="bt-live-head">
         <h2 class="bt-live-title">{t("Senaryo sonuçları")}</h2>
-        <p class="bt-live-sub">{t("Kare süresinin medyanı (işlem + stil + yerleşim + boyama); kısa çubuk daha akıcı. {0} ms'yi aşan kare 60 fps'te düşer. Katsayı vanilla JS'e göre.", { 0: ms(FRAME_MS) })}</p>
+        <p class="bt-live-sub">{t("Kare süresinin medyanı (işlem + stil + yerleşim + boyama); kısa çubuk daha akıcı. {0} ms'yi aşan kare 60 fps'te düşer. Katsayı saf JavaScript'e (çerçevesiz, kıyas çizgisi) göre.", { 0: ms(FRAME_MS) })}</p>
       </header>
       {() => shown().length > 1 ? <ChoicePicker aria-label={t("Gösterilen senaryo")} kind="chips" value={viewSig()} onChange={(v: unknown) => { viewSig.set(String(v)); follow = false }} options={shown().map((s) => ({ value: s.id, label: t(s.label) }))} /> : null}
       {() => busyScenSig().includes(viewSig()) ? <p class="bt-warn" role="status">{t("Makine meşgul: bu senaryodan önce boş bir kare bile {0} ms'den uzun sürdü ve beklemek düzeltmedi (başka bir program çalışıyor). Sonuçlar güvenilir değil; diğer uygulamaları kapatıp yeniden çalıştır.", { 0: BUSY_MS })}</p> : null}

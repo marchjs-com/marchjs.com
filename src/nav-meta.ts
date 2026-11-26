@@ -4,7 +4,8 @@
 import { activity, appWindow, film, alertCircle, barChart, code, compass, cpu, dashboard, edit, gauge, grid, layers, menu, message, heart, palette, play, search, server, sparkles, zap } from "march/icons";
 import { HOME_STATS } from "./home-stats.gen.ts";
 
-export interface PageMeta { desc: string; group?: string; icon: unknown }
+export interface PageMeta { desc: string; group?: string; icon: unknown; /** The day the page first appeared (YYYY-MM-DD), for a page that is not a
+ *  component's: it shows "Yeni" for 14 days (new-badge.tsx; a component's day comes from March). */ added?: string }
 export const PAGE_META: Record<string, PageMeta> = {
   "/": { desc: "March'a genel bakış", icon: dashboard },
   "/start": { desc: "Kurulum, ilk bileşen, march CLI, proje yapısı", group: "İlk Adımlar", icon: zap },
@@ -17,7 +18,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/editors": { desc: "Zengin metin, Markdown, JSON, renk, eğri, zaman çizelgesi, kırpma", group: "Formlar", icon: edit },
   "/data": { desc: "10.000 satırlık tablo, ağaç, pano, adımlar", group: "Veri gösterimi", icon: layers },
   "/big-data": { desc: "DataGrid, TreeView, takvim, Gantt, dosya yöneticisi", group: "Veri gösterimi", icon: grid },
-  "/charts": { desc: "Çizgi, alan, çubuk, pasta, ısı haritası", group: "Veri gösterimi", icon: barChart },
+  "/charts": { desc: "Çizgi, çubuk, pasta, saçılım, huni, ağaç, sankey, mum, ağ, harita…", group: "Veri gösterimi", icon: barChart },
   "/overlays": { desc: "Dialog, çekmece, toast, komut paleti", group: "Katmanlar", icon: message },
   "/feedback": { desc: "Uyarı, ilerleme, iskelet, boş, hata", group: "Geri bildirim", icon: alertCircle },
   "/animation": { desc: "Tek motor: keyframe, timeline, eğri, global hız ve durdurma", group: "Hareket", icon: film },
@@ -32,7 +33,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/motion": { desc: "Yay, FLIP listeler, parallax, parçacık", group: "Hareket", icon: activity },
   "/messaging": { desc: "Habersiz bileşenler arası türlü kanallar, sekmeler arası", group: "Altyapı", icon: message },
   "/speed": { desc: "Tembel yükleme, ön yükleme ve önbellek: canlı ağ paneli", group: "Altyapı", icon: gauge },
-  "/bench": { desc: "React, Vue, Svelte, Solid, Preact, Lit ve vanilla JS ile canlı render ve hız testi", group: "Altyapı", icon: gauge },
+  "/bench": { desc: "React, Vue, Svelte, Solid, Preact ve Lit ile (kıyas: saf JavaScript) canlı render ve hız testi", group: "Altyapı", icon: gauge },
   "/network": { desc: "İstek politikaları, middleware, mock, WebSocket, hata kuralları", group: "Altyapı", icon: server },
   "/layout": { desc: "Grid: taşmasız sütunlar, fill ve balance", group: "Yerleşim", icon: grid },
   "/navigation": { desc: "NavSidebar: arama, son kullanılanlar, kategoriler", group: "Gezinme", icon: menu },

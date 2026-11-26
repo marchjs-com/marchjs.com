@@ -125,7 +125,7 @@ export function unreliable(s: Stats): boolean {
 /** True when two results' 95% intervals overlap: their order is within the noise. */
 export const overlaps = (a: Stats, b: Stats): boolean => a.n > 1 && b.n > 1 && a.ci[0] <= b.ci[1] && b.ci[0] <= a.ci[1]
 
-/** Factor against the baseline (vanilla JS): 1.00 = as fast, 2.00 = twice the time. */
+/** Factor against the baseline (pure JavaScript, no framework): 1.00 = as fast, 2.00 = twice the time. */
 export const factor = (value: number, base: number): number => (base > 0 && Number.isFinite(value) ? value / base : NaN)
 
 /** Results ranked fastest first (by median); failed or empty entries last. */

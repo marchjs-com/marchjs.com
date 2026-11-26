@@ -212,5 +212,21 @@
  "media/oscilloscope": {"page":"/charts"},
  "media/spectrum": {"page":"/charts"},
  "media/waveform": {"page":"/charts"},
- "media/audio-reactive": {"page":"/charts"}
+ "media/audio-reactive": {"page":"/charts"},
+ "data/stream-graph": {"page":"/charts"},
+ "data/scatter-chart": {"page":"/charts"},
+ "data/histogram": {"page":"/charts"},
+ "data/box-plot": {"page":"/charts"},
+ "data/funnel-chart": {"page":"/charts"},
+ "data/waterfall-chart": {"page":"/charts"},
+ "data/bullet-chart": {"page":"/charts"},
+ "data/radar-chart": {"page":"/charts"},
+ "data/radial-bar-chart": {"page":"/charts"},
+ "data/sunburst-chart": {"page":"/charts"},
+ "data/treemap": {"page":"/charts"},
+ "data/sankey-chart": {"page":"/charts"},
+ "data/chord-chart": {"page":"/charts"},
+ "data/candlestick-chart": {"page":"/charts"},
+ "data/network-graph": {"page":"/charts"},
+ "data/choropleth-map": {"page":"/charts"}
 }

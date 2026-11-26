@@ -30,7 +30,7 @@ const libName = (id: string): string => libById(id)?.name ?? id
 
 /** Plain-text summary for the clipboard. */
 function summary(r: RunResult): string {
-  const lines = [`${t("Hız karşılaştırması")} · ${r.date.slice(0, 10)} · ${r.env.ua}`, t("Tekrar: {0}, değer: medyan ms (vanilla JS'e göre katsayı)", { 0: r.reps })]
+  const lines = [`${t("Hız karşılaştırması")} · ${r.date.slice(0, 10)} · ${r.env.ua}`, t("Tekrar: {0}, değer: medyan ms (saf JavaScript'e göre katsayı)", { 0: r.reps })]
   for (const op of OPS) {
     const list = rank(Object.keys(r.samples).filter((l) => r.samples[l]?.[op.id]?.length).map((l) => ({ l, stats: stats(r.samples[l]![op.id]!) })))
     if (!list.length) continue
@@ -159,7 +159,7 @@ export default function Bench() {
     <Split title={t("Test ayarları")} summary={() => t("{0} kitaplık · {1} işlem · {2} tekrar", { 0: $libs.length, 1: $ops.length, 2: $reps })} panel={panel()}>
       <header class="bt-live-head">
         <h2 class="bt-live-title">{t("Sonuçlar")}</h2>
-        <p class="bt-live-sub">{t("Medyan süre; kısa çubuk daha hızlı. Katsayı vanilla JS'e göre: ×1.00 aynı süre, ×2.00 iki katı.")}</p>
+        <p class="bt-live-sub">{t("Medyan süre; kısa çubuk daha hızlı. Katsayı saf JavaScript'e (çerçevesiz, kıyas çizgisi) göre: ×1.00 aynı süre, ×2.00 iki katı.")}</p>
       </header>
       {() => opsIn().length > 1 ? <ChoicePicker aria-label={t("Gösterilen işlem")} kind="chips" value={$view} onChange={(v: unknown) => { $view = String(v); $follow = false }} options={opsIn().map((o) => ({ value: o.id, label: t(o.label) }))} /> : null}
       <Unsure names={unsure} />
@@ -246,7 +246,7 @@ export default function Bench() {
     <header class="sc-page-head">
       <span class="sc-kicker">{t("Hız")}</span>
       <h1 class="sc-h1">{t("Karşılaştırma")}</h1>
-      <p class="sc-lead">{t("March'ı React, Vue, Svelte, Solid, Preact, Lit ve vanilla JS ile senin tarayıcında, canlı ölçer; sonuçlar bu cihaza özgüdür.")}</p>
+      <p class="sc-lead">{t("March'ı React, Vue, Svelte, Solid, Preact ve Lit ile, kıyas çizgisi olarak da saf JavaScript (çerçevesiz, elle yazılmış DOM kodu) ile senin tarayıcında, canlı ölçer; sonuçlar bu cihaza özgüdür.")}</p>
     </header>
     <Tabs class="bt-tabs" query="tab" label={t("Karşılaştırma bölümleri")} tabs={[
       { id: "basic", label: t("Temel testler"), disabled: lock("basic"), content: basic },
