@@ -1,7 +1,7 @@
 import { definePlayground } from "../../spec.ts";
 import { todayIso, addDays } from "march/forms";
 
-interface Values { tasks: string; label: string; scale: string; arrows: boolean; cascade: boolean; editable: boolean; todayLine: boolean; names: boolean; help: string; barLabel: string; animate: boolean }
+interface Values { tasks: string; label: string; scale: string; arrows: boolean; cascade: boolean; editable: boolean; todayLine: boolean; names: boolean; help: string; barLabel: string; animate: string }
 
 // tasks is required: MarchIDE's raw <Gantt /> gets this launch plan (kind "json", dated from today)
 const t0 = todayIso();
@@ -31,7 +31,9 @@ export default definePlayground<Values>({
     { key: "todayLine", label: "Bugün çizgisi", default: true },
     { key: "names", label: "Görev adları sütunu", default: true, toCode: { true: null, false: "{false}" } },
     { key: "help", label: "Alt ipucu", default: "on", options: [{ value: "on", label: "hazır metin" }, { value: "own", label: "kendi metnim" }, { value: "off", label: "yok" }], toCode: { on: null, own: "\"Çubuğu sürükleyin; ardıl görevler kendiliğinden kayar.\"", off: "{false}" } },
-    { key: "animate", label: "Hareket", default: true },
+    // bars glide to new dates, new tasks grow in, removed ones fade out (try "Tasarımı ertele" and "Kutlama")
+    { key: "animate", label: "Animasyon (animate)", default: "spring", options: [{ value: "spring", label: "yay" }, { value: "out", label: "yumuşak" }, { value: "stagger", label: "sırayla" }, { value: "off", label: "kapalı" }],
+      toProp: (v) => (v === "spring" ? true : v === "off" ? false : v === "stagger" ? { stagger: 60 } : v), toCode: { spring: null, off: "{false}", stagger: "{{ stagger: 60 }}" } },
     // the showcase card's own: its bar text (barLabel is a function)
     { key: "barLabel", label: "Çubuk metni", default: "name", options: [{ value: "name", label: "görev adı" }, { value: "own", label: "ad + yüzde" }], prop: false },
   ],

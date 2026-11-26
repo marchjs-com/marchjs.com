@@ -239,6 +239,13 @@ const OWN_PARTS: Record<string, () => Promise<unknown>> = {
   "consent-banner": () => import("march/components/composite/consent-banner"),
   "theme-editor": () => import("march/components/composite/theme-editor"),
 };
+// the input mask subpaths, each read on its first import
+const MASK_PARTS: readonly (readonly [string, () => Promise<unknown>])[] = [
+  ["march/mask", () => import("march/mask")],
+  ["march/mask/presets", () => import("march/mask/presets")],
+  ["march/mask/validators", () => import("march/mask/validators")],
+  ["march/behaviors/mask", () => import("march/behaviors/mask")],
+];
 const loadOwn = (code: string): Promise<unknown> => Promise.all([...new Set([...code.matchAll(/from\s*["']march\/components\/([a-z][a-z0-9-]*)["']/g)].map((m) => m[1]!))]
   .filter((f) => OWN_PARTS[f] && !(`march/components/${f}` in MODULES)).map((f) => OWN_PARTS[f]!().then((m) => { MODULES[`march/components/${f}`] = m })));
 async function loadPacks(code: string): Promise<void> {
@@ -249,6 +256,9 @@ async function loadPacks(code: string): Promise<void> {
   // march/audio too (audioSource: the microphone, a media element, a stream, a synthesized demo or any number, for
   // LevelMeter, Gauge's VU needle, Oscilloscope, Spectrum, Waveform and AudioReactive)
   if (!MODULES["march/audio"] && /["']march\/audio["']/.test(code)) MODULES["march/audio"] = await import("march/audio");
+  // march/mask too (the input mask engine, its presets and validators, and the use:mask behavior): their own entries,
+  // not in the ui barrel, so a `licenseKey` from march/mask/presets is the preset and not undefined
+  for (const [spec, load] of MASK_PARTS) if (!MODULES[spec] && new RegExp(`["']${spec}["']`).test(code)) MODULES[spec] = await load();
   // march/table too (Table, createTable, column: sorting, filters, selection, virtual rows)
   if (!MODULES["march/table"] && /["']march\/table["']/.test(code)) MODULES["march/table"] = await import("march/table");
   // march/schema too (schema(), field types, validation: a form from one definition)
