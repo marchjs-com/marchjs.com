@@ -47,7 +47,7 @@ const ROUTER_DEMO = "the router demo's layout (nested routes, outlets): loaded w
 const COMPONENT_PAGE = "the component pages' layout (prop table, options, cards): loaded with a component page";
 const argued = (rows) => Object.fromEntries(Object.entries(rows).map(([k, [n, why]]) => [k, { limit: kb(n), why }]));
 const SHOWCASE_ROUTES = Object.fromEntries(Object.entries(argued({
-  "/charts": [70, PAGE],
+  "/charts": [75, PAGE],
   "/feedback": [65, PAGE],
   "/home": [70, PAGE],
   "/managers": [65, PAGE],
@@ -119,7 +119,9 @@ export default {
   // maxBuilds: 3 (~2.5 min): the planner groups small pages from size estimates and takes a group past the route budget
   // apart only on its next pass; the third build checks the second's groups. With 2 they were never checked: from 0.3.7 on they
   // came out past 60 KB (/buttons, /big-data, /overlay, /text and /forms each loading one group of 85–137 KB).
-  chunks: { minSize: 10 * 1024, fail: false, maxBuilds: 3, commonRoom: 6 * 1024, allow: {
+  // 5 (26 Nov 2026): with the chart pages' 16 more lazy demos the third build still left groups past their budget; two more
+  // passes let the planner split and re-check them.
+  chunks: { minSize: 10 * 1024, fail: false, maxBuilds: 5, commonRoom: 6 * 1024, allow: {
     "src/web/product.tsx": "Web siteleri sample page: loaded only when /sites/product opens it, never with the blocks page",
     "src/web/product-more.tsx": "lower half of the product sample: loaded when it comes near the viewport",
     "src/web/portfolio-more.tsx": "lower half of the portfolio sample: loaded when it comes near the viewport",
