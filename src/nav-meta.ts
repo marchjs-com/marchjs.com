@@ -37,7 +37,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   "/network": { desc: "İstek politikaları, middleware, mock, WebSocket, hata kuralları", group: "Altyapı", icon: server },
   "/layout": { desc: "Grid: taşmasız sütunlar, fill ve balance", group: "Yerleşim", icon: grid },
   "/navigation": { desc: "NavSidebar: arama, son kullanılanlar, kategoriler", group: "Gezinme", icon: menu },
-  "/overlay": { desc: "Video, resim, SVG, canvas ve cam katmanları", group: "Medya", icon: layers },
+  "/overlay": { desc: "Video, resim, SVG, canvas, cam katmanları ve LED pano", group: "Medya", icon: layers },
   "/social": { desc: "Gönderi, akış, hikâye, sohbet, profil, etkinlik", group: "Sosyal", icon: heart },
   "/managers": { desc: "Viewport, rıza (KVKK/GDPR) ve komut yöneticileri", group: "Yöneticiler", icon: cpu },
   "/managers-data": { desc: "Pano, geri al, kaydedilmemiş değişiklik, depolama, önbellek, yapılandırma", group: "Yöneticiler", icon: cpu },

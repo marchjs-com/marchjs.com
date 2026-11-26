@@ -40,7 +40,7 @@ const INDEX = "src/api-examples.gen.ts";
  * menu and form helpers): their examples are the next group. */
 export const PENDING = new Set([
   "march/base", "march/icons", "march/icons/packs", "march/landing", "march/motion",
-  "march/router", "march/seo/hydrate", "march/ui",
+  "march/router", "march/seo/hydrate", "march/ui", "march/led",
   // march-app-ui: the core is in, its pages come step by step
   "march/app-ui",
   // the data layer (IndexedDB), the vault and the AI client: their examples come next
