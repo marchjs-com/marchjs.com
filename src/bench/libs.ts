@@ -4,7 +4,7 @@ import type { MountFn } from "./core.ts"
 
 export interface Lib { id: string; name: string; version: string; /** manifest key of its lazy chunk */ src: string; load: () => Promise<{ mount: MountFn }> }
 export const LIBS: Lib[] = [
-  { id: "vanilla", name: "Vanilla JS", version: "", src: "src/bench/apps/vanilla.ts", load: () => import("./apps/vanilla.ts") },
+  { id: "vanilla", name: "Saf JavaScript", version: "", src: "src/bench/apps/vanilla.ts", load: () => import("./apps/vanilla.ts") },
   { id: "march", name: "March", version: "0.3.0", src: "src/bench/apps/march.tsx", load: () => import("./apps/march.tsx") },
   { id: "react", name: "React", version: "19.3.1", src: "src/bench/apps/react.ts", load: () => import("./apps/react.ts") },
   { id: "preact", name: "Preact", version: "10.29.8", src: "src/bench/apps/preact.ts", load: () => import("./apps/preact.ts") },
@@ -13,5 +13,6 @@ export const LIBS: Lib[] = [
   { id: "solid", name: "SolidJS", version: "1.9.19", src: "src/bench/apps/solid.gen.js", load: () => import("./apps/solid.gen.js") },
   { id: "lit", name: "Lit", version: "3.3.3", src: "src/bench/apps/lit-app.ts", load: () => import("./apps/lit.ts") },
 ]
+/** The yardstick, not a competitor: hand-written DOM code with no framework (no crown; drawn as the reference line). */
 export const BASELINE = "vanilla"
 export const libById = (id: string): Lib | undefined => LIBS.find((l) => l.id === id)
