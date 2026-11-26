@@ -14,8 +14,8 @@ const until = async (expr, ms = 15000) => { const t0 = Date.now(); while (Date.n
 try {
   // 1. the stats band: one row of seven figures at a desktop width
   await b.load("/", 1440);
-  await b.ev("document.querySelector('.sc-stats')?.scrollIntoView({ block: 'center' }), true");
-  if (!(await until("document.querySelectorAll('.sc-stats .m-stats > *').length >= 2"))) fail("home: the stats band did not render");
+  // the band is drawn as it comes near: scroll to it on every try (it may not exist yet when the page has just loaded)
+  if (!(await until("(document.querySelector('.sc-stats')?.scrollIntoView({ block: 'center' }), document.querySelectorAll('.sc-stats .m-stats > *').length >= 2)"))) fail("home: the stats band did not render");
   else {
     await sleep(800);
     const s = await b.ev(`(() => { const s = document.querySelector('.sc-stats .m-stats'); const tops = [...s.children].map((c) => Math.round(c.getBoundingClientRect().top));
@@ -79,8 +79,17 @@ try {
     const start = document.startViewTransition?.bind(document);
     if (start) document.startViewTransition = (cb) => { window.__wave.add('vt'); return start(cb); };
     return true; })()`);
+  // a press lands where the element is now: wait until it stands still (a menu still opening moves its cards) and is the
+  // element under that point (nothing over it), else a slow machine presses beside it and closes the menu
   const press = async (expr, what) => {
-    const at = await b.ev(`(() => { const el = ${expr}; if (!el) return null; el.scrollIntoView({ block: 'nearest' }); const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
+    let at = null;
+    for (const t0 = Date.now(); Date.now() - t0 < 5000;) {
+      at = await b.ev(`(async () => { const el = ${expr}; if (!el) return null; el.scrollIntoView({ block: 'nearest' });
+        const r1 = el.getBoundingClientRect(); await new Promise((r) => setTimeout(r, 120)); const r = el.getBoundingClientRect();
+        const x = r.left + r.width / 2, y = r.top + r.height / 2, hit = document.elementFromPoint(x, y);
+        return { x, y, still: Math.abs(r.left - r1.left) + Math.abs(r.top - r1.top) < 0.5 && r.width > 0, onTop: !!hit && (hit === el || el.contains(hit)) }; })()`);
+      if (!at || (at.still && at.onTop)) break;
+    }
     if (!at) { fail(`menu: ${what} not found`); return false; }
     for (const type of ["mouseMoved", "mousePressed", "mouseReleased"]) await b.send("Input.dispatchMouseEvent", { type, x: at.x, y: at.y, button: "left", clickCount: 1 });
     return true;
