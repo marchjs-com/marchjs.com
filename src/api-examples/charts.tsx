@@ -65,11 +65,11 @@ animateOf(() => "out")                            // "out": an accessor (a signa
 animateOf(({ index }) => ({ delay: index * 50 }))  // kept as it is: the per-mark form
 const how = () => animateOf(props.animate)        // inside your own chart`,
       run: () => {
-        const cases: Record<string, AnimateProp | (() => AnimateProp)> = { on: true, read: () => "out", mark: ({ index }: MotionContext) => ({ delay: index * 50 }) }
+        const cases: { [k: string]: AnimateProp | (() => AnimateProp) } = { on: true, read: () => "out", mark: ({ index }: MotionContext) => ({ delay: index * 50 }) }
         const pick = signal("read")
         const shown = () => { const r = animateOf(cases[pick()]!); return typeof r === "function" ? "fonksiyon (işaret başına)" : JSON.stringify(r) }
         return <div class="sc-ex-charts-stack">
-          <Segmented value={pick} onChange={(v: string) => pick.set(v)} options={[{ value: "on", label: "true" }, { value: "read", label: "() => \"out\"" }, { value: "mark", label: "(ctx) => …" }]} aria-label="Girdi" />
+          <Segmented value={pick} onChange={(v: string) => pick.set(v)} options={[{ value: "on", label: "true" }, { value: "read", label: '() => "out"' }, { value: "mark", label: "(ctx) => …" }]} aria-label="Girdi" />
           <Out label="animateOf" value={shown} />
         </div>
       },
