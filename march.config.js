@@ -82,6 +82,43 @@ const SHOWCASE_PARTS = argued({
   "src/web/product.tsx": [30, SAMPLE],
 });
 
+// The charts page's card demos (src/pages/charts.tsx): each a lazy part loaded only when its chart page opens. Most are under
+// the 10 KB floor; left as they are, the packer folds them into parts every component page loads (workbench, the
+// component page layout), so each stays a small file of its own.
+const CHART_DEMOS = Object.fromEntries([
+  "src/catalog/data/line-chart/demo.tsx",
+  "src/catalog/data/bar-chart/demo.tsx",
+  "src/catalog/data/pie-chart/demo.tsx",
+  "src/catalog/data/stream-graph/demo.tsx",
+  "src/catalog/data/scatter-chart/demo.tsx",
+  "src/catalog/data/histogram/demo.tsx",
+  "src/catalog/data/box-plot/demo.tsx",
+  "src/catalog/data/heatmap/demo.tsx",
+  "src/catalog/data/funnel-chart/demo.tsx",
+  "src/catalog/data/waterfall-chart/demo.tsx",
+  "src/catalog/data/bullet-chart/demo.tsx",
+  "src/catalog/data/stat/demo.tsx",
+  "src/catalog/data/radar-chart/demo.tsx",
+  "src/catalog/data/radial-bar-chart/demo.tsx",
+  "src/catalog/data/progress-ring/demo.tsx",
+  "src/catalog/data/sunburst-chart/demo.tsx",
+  "src/catalog/data/treemap/demo.tsx",
+  "src/catalog/data/sankey-chart/demo.tsx",
+  "src/catalog/data/chord-chart/demo.tsx",
+  "src/catalog/data/candlestick-chart/demo.tsx",
+  "src/catalog/data/network-graph/demo.tsx",
+  "src/catalog/data/choropleth-map/demo.tsx",
+  "src/catalog/data/sparkline/demo.tsx",
+  "src/catalog/data/bar-list/demo.tsx",
+  "src/catalog/data/gauge/demo.tsx",
+  "src/catalog/data/odometer/demo.tsx",
+  "src/catalog/data/level-meter/demo.tsx",
+  "src/catalog/media/oscilloscope/demo.tsx",
+  "src/catalog/media/spectrum/demo.tsx",
+  "src/catalog/media/waveform/demo.tsx",
+  "src/catalog/media/audio-reactive/demo.tsx",
+].map((f) => [f, "a chart card's live demo: loaded only when its chart page opens"]));
+
 export default {
   entry: "src/main.tsx",
   // MARCH_CDN: another CDN folder (a local build of March's CDN, node tools/build-cdn.js --base <origin>) for a test
@@ -122,6 +159,7 @@ export default {
   // 5 (26 Nov 2026): with the chart pages' 16 more lazy demos the third build still left groups past their budget; two more
   // passes let the planner split and re-check them.
   chunks: { minSize: 10 * 1024, fail: false, maxBuilds: 5, commonRoom: 6 * 1024, allow: {
+    ...CHART_DEMOS,
     "src/web/product.tsx": "Web siteleri sample page: loaded only when /sites/product opens it, never with the blocks page",
     "src/web/product-more.tsx": "lower half of the product sample: loaded when it comes near the viewport",
     "src/web/portfolio-more.tsx": "lower half of the portfolio sample: loaded when it comes near the viewport",
