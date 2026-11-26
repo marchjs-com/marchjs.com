@@ -1,6 +1,6 @@
 // Showcase stage for LedMatrix: the art from the Options panel, and a small "life" screen next to it whose picture
 // changes on every step (only the changed LEDs are repainted).
-import { LedMatrix, ledFrame, setLed } from "march/components/media/led-matrix";
+import { LedMatrix, ledFrame, setLed } from "march/led";
 import { Button } from "march/components/actions/button";
 import type { LedLookValues } from "../../led-look.ts";
 

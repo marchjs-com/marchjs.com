@@ -1,6 +1,6 @@
 // Showcase stage for LedEyes: a robot face. The first face takes every option; next to it a small one follows the
 // pointer, so moving over the page shows the gaze springing after it.
-import { LedEyes } from "march/components/media/led-eyes";
+import { LedEyes } from "march/led";
 import type { LedLookValues } from "../../led-look.ts";
 
 export const code = `<LedEyes />

@@ -1,5 +1,5 @@
 // Showcase stage for PixelFont: the text from the Options panel, and below it the whole Turkish alphabet in both fonts.
-import { PixelFont } from "march/components/media/pixel-font";
+import { PixelFont } from "march/led";
 import type { LedLookValues } from "../../led-look.ts";
 
 export const code = `<PixelFont text="HADİ :heart:" color="amber" />

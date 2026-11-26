@@ -1,5 +1,5 @@
 // Showcase stage for PixelSprite: the chosen sprite large, then the whole built-in set as small tiles.
-import { PixelSprite, LED_SPRITE_NAMES } from "march/components/media/pixel-sprite";
+import { PixelSprite, LED_SPRITE_NAMES } from "march/led";
 import type { LedLookValues } from "../../led-look.ts";
 
 export const code = `<PixelSprite sprite="fire" pitch={14} />

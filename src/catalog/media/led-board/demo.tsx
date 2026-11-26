@@ -1,7 +1,7 @@
 // Showcase stage for LedBoard: an event entrance sign. "Karşılama" greets with text, looking eyes and a heart;
 // "Maç skoru" shows a score whose digits roll when a goal is scored (the buttons) and a ticker; "Saat" a live clock and a
 // countdown; "Gözler" a face. Every option drives the board live.
-import { LedBoard } from "march/components/media/led-board";
+import { LedBoard } from "march/led";
 import { Button } from "march/components/actions/button";
 import type { LedLookValues } from "../../led-look.ts";
 
