@@ -5,11 +5,11 @@ import { PAGE_META, type PageMeta } from "./nav-meta.ts";
 import { TOPIC_PAGES } from "./topics.ts";
 
 // a topic page (topics.ts) gets its description and March name here: start-up lists it by path and title only
-const TOPIC_INFO = new Map(TOPIC_PAGES.map((t) => [t.path, t.name ? { desc: t.desc, name: t.name } : { desc: t.desc }]));
+const TOPIC_INFO = new Map(TOPIC_PAGES.map((t) => [t.path, { desc: t.desc, ...(t.name ? { name: t.name } : {}), ...(t.added ? { added: t.added } : {}) }]));
 
 /** The pages with their menu metadata (the start-up list has paths and titles only). */
 // a page listed under another (parent) takes the parent's group (and its icon when it has none of its own)
-export const withMeta = <P extends { path: string; parent?: string | undefined }>(list: readonly P[]): (P & Partial<PageMeta> & { name?: string })[] => {
+export const withMeta = <P extends { path: string; parent?: string | undefined }>(list: readonly P[]): (P & Partial<PageMeta> & { name?: string; added?: string })[] => {
   // a nested page takes its group and icon from the nearest ancestor that has them (/sites/story → /sites/landing → /sites)
   const parentOf = new Map(list.map((p) => [p.path, p.parent]));
   const upMeta = (path: string | undefined, depth = 0): PageMeta | undefined =>
