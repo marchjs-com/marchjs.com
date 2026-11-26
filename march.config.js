@@ -72,7 +72,7 @@ const SHOWCASE_PARTS = argued({
   "src/bench/apps/react.ts": [85, BENCH],
   "src/bench/apps/svelte-app.ts": [30, BENCH],
   "src/bench/apps/vue.ts": [35, BENCH],
-  "src/component-page/_layout.tsx": [30, COMPONENT_PAGE],
+  "src/component-page/_layout.tsx": [34, COMPONENT_PAGE],
   "src/home/sections.tsx": [55, HOME],
   "src/playground/layouts/component.tsx": [110, MARCH_IDE],
   "src/playground/march-ide.tsx": [75, MARCH_IDE],
