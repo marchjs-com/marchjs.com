@@ -2,7 +2,7 @@
 // look (sc-play) and the same rules (an option shows only while it has an effect, booleans are switches), but every
 // choice is a Segmented control (a feature page's options are few) and a spec is read from playground.ts directly.
 // The full Playground (ChoicePicker: chips, cards, grids, Combobox) lives in playground.tsx.
-import { signal, untrack, If } from "march";
+import { signal, computed, untrack, If, getOwner, runWithOwner } from "march";
 import { Segmented, Toggle, Field } from "march/forms";
 import type { PlaygroundOption, PlaygroundSpec } from "./catalog/spec.ts";
 
@@ -13,7 +13,15 @@ export function LitePlayground<V>(props: { spec: PlaygroundSpec<V>; view: View<V
   const opts = props.spec.options as readonly PlaygroundOption<V>[]
   const values = signal<Record<string, unknown>>(Object.fromEntries(opts.map((o) => [o.key, o.default])))
   const set = (k: string) => (v: unknown) => values.set({ ...values.peek(), [k]: v })
-  const live = new Proxy({}, { get: (_, k) => values()[k as string] }) as V
+  // each key read through its own memo: a block that reads props.values.x runs again only when x changes (the
+  // component then animates the new value instead of being rebuilt at it)
+  const owner = getOwner(), byKey = new Map<string, () => unknown>()
+  const live = new Proxy({}, { get: (_, k) => {
+    if (typeof k !== "string") return undefined
+    let m = byKey.get(k)
+    if (!m) { m = runWithOwner(owner, () => computed(() => values()[k])) as () => unknown; byKey.set(k, m) }
+    return m()
+  } }) as V
   const control = (o: PlaygroundOption<V>) => o.options
     ? <Field label={o.label} group><Segmented aria-label={o.label} value={values()[o.key]} onChange={set(o.key)} options={o.options} /></Field>
     : <Toggle value={!!values()[o.key]} onChange={set(o.key)} label={o.label} />

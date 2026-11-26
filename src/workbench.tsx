@@ -2,7 +2,7 @@
 // One lazy part for every component page. The structural names the audits read stay: .sc-play > .sc-play-inner >
 // .sc-play-stage + .sc-play-panel > .sc-play-opt.
 import "./workbench.css";
-import { signal, computed, effect, untrack, batch } from "march";
+import { signal, computed, effect, untrack, batch, getOwner, runWithOwner } from "march";
 import { withParts } from "march/props";
 import { Link, type Href } from "march/router";
 import { Button, OverflowToolbar, resolvedTheme, type ToolbarItem } from "march/ui";
@@ -57,8 +57,16 @@ export function Workbench(props: { entry: CardEntry; view: DemoView; spec: Playg
   // the demo reads props.values.<key>: a getter, so it stays live. `{ ...props.values }` reads every value at once: a
   // thunk that rebuilds a block must read the values itself, because a value only passed on as a prop (`tone={v.tone}`)
   // becomes a live getter the block reads untracked, once, and the thunk would never run again
+  // each key read through its own memo: a block that reads props.values.x runs again only when x changes, so a new
+  // value reaches the live component (its animation plays: a needle swings, bars grow) instead of a rebuild at it
+  const owner = getOwner(), byKey = new Map<string, () => unknown>()
+  const keyed = (k: string): unknown => {
+    let m = byKey.get(k)
+    if (!m) { m = runWithOwner(owner, () => computed(() => values()[k])) as () => unknown; byKey.set(k, m) }
+    return m()
+  }
   const live = new Proxy({}, {
-    get: (_, k) => values()[k as string],
+    get: (_, k) => (typeof k === "string" ? keyed(k) : undefined),
     ownKeys: () => Reflect.ownKeys(values()),
     getOwnPropertyDescriptor: (_, k) => (k in values() ? { value: values()[k as string], enumerable: true, configurable: true } : undefined),
   })
