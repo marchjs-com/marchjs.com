@@ -2,7 +2,7 @@ import { definePlayground } from "../../spec.ts";
 
 interface Values {
   variant: string; value: number; source: string; zones: boolean; redline: string; peak: boolean; needle: string;
-  readout: string; color: string; size: number; motion: boolean; unit: string; label: string;
+  readout: string; color: string; size: number; motion: boolean; unit: string; label: string; needles: boolean;
 }
 
 const SCALE: Record<string, [number, number]> = { speedometer: [0, 240], tachometer: [0, 8000], half: [0, 100], vu: [-20, 3] };
@@ -26,6 +26,10 @@ export default definePlayground<Values>({
       toCode: (x, v) => (x === "auto" ? null : x === "off" ? "{false}" : `{${onScale({ variant: v.variant, value: 85 })}}`),
       toProp: (x, v) => (x === "auto" ? undefined : x === "off" ? false : onScale({ variant: v.variant, value: 85 })) },
     { key: "peak", label: "Tepe işareti (peak)", default: true },
+    // a second needle (needles): an average at 70 % of the value, on its own spring, spoken with its label
+    { key: "needles", label: "İkinci ibre (needles)", default: false, visibleWhen: (v) => v.variant !== "vu",
+      toCode: { true: '{[{ value: $avg, label: "Ortalama", color: "info", length: 0.7 }]}', false: null },
+      toProp: (x, v) => (x ? [{ value: Math.round(onScale({ variant: v.variant, value: v.value }) * 0.7), label: "Ortalama", color: "info", length: 0.7 }] : undefined) },
     { key: "needle", label: "İbre hareketi (needle)", default: "auto", options: [{ value: "auto", label: "varsayılan" }, { value: "spring", label: "yay" }, { value: "vu", label: "VU" }, { value: "none", label: "atlar" }],
       toCode: { auto: null }, toProp: (x) => (x === "auto" ? undefined : x) },
     // no "default" choice: it was the rolling number again (the default of every look but the VU meter, which has none)
