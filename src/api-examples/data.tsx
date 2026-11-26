@@ -9,6 +9,7 @@ import {
 } from "march/data";
 import { fieldType, options, schema, TYPES, type FieldSpec } from "march/schema";
 import { Button, Badge, Segmented, Slider, TextInput } from "march/ui";
+import { Gauge, LevelMeter, Odometer, decimalMark, dialGeometry, dialStep, drumText } from "march/data";
 import { Card, countLabel, IconTile, JsonView, Kanban, KeyValue, ListRow, StatTile, timePercent, TimeRuler, timeTicks, Timeline, Tree, type KanbanColumn, type TimelineItem, type TreeNode } from "march/data";
 import { bell, zap, star, trash, settings, users, globe, shieldCheck, search } from "march/icons";
 import { useLog } from "./_ui-b.tsx";
@@ -23,6 +24,14 @@ import "./ui-e.css";
 export { default as SIG } from "./data.sig.gen.ts";
 
 const now = () => new Date().toLocaleTimeString("tr-TR")
+/** A number that wanders on its own while the demo is open (a stand-in for a live reading: LevelMeter). */
+function wander(start: number, lo: number, hi: number, step: number) {
+  const v = signal(start)
+  const id = setInterval(() => v.update((x) => Math.min(hi, Math.max(lo, x + (Math.random() - 0.5) * step))), 900)
+  onCleanup(() => clearInterval(id))
+  return v
+}
+
 const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
 const json = (v: unknown) => JSON.stringify(v)
 
@@ -604,6 +613,52 @@ countLabel(120, 999) // "120"`,
         return <div class="sc-ex-stack"><Row><Slider value={n} min={0} max={1500} step={10} aria-label="Sayı" /><Pick value={max} options={["9", "99", "999"]} label="Üst sınır" /></Row>
           <Row><Out label="countLabel" value={() => countLabel(n(), Number(max()))} /><Badge>{() => countLabel(n(), Number(max()))}</Badge></Row></div>
       },
+    },
+    Gauge: {
+      code: `<Gauge value={$speed} max={240} unit="km/h" label="Hız" zones={[{ from: 200, to: 240, color: "danger" }]} />`,
+      run: () => {
+        const speed = signal(88)
+        return <Row>
+          <Gauge value={speed} max={240} unit="km/h" label="Hız" zones={[{ from: 200, to: 240, color: "danger" }]} />
+          <Slider value={speed} onChange={(x: number) => speed.set(x)} min={0} max={240} aria-label="Hız" />
+        </Row>
+      },
+    },
+    Odometer: {
+      code: `<Odometer value={$km} digits={6} decimals={1} unit="km" />`,
+      run: () => {
+        const km = signal(12345.6)
+        return <Row>
+          <Odometer value={km} digits={6} decimals={1} unit="km" label="Yol" />
+          <Button onClick={() => km.update((x) => Math.round((x + 7.3) * 10) / 10)}>+7,3 km</Button>
+        </Row>
+      },
+    },
+    LevelMeter: {
+      code: `<LevelMeter value={$level} />                       // 0–1
+<LevelMeter source={audioSource("demo")} channels={2} />   // live sound`,
+      run: () => {
+        const level = wander(0.5, 0, 1, 0.5)
+        return <Row><LevelMeter value={level} label="Seviye" /><Out label="değer" value={() => level().toFixed(2)} /></Row>
+      },
+    },
+    dialStep: {
+      code: `dialStep(240, 10)   // 20: twelve steps that end on 240
+dialStep(100, 6)    // 20`,
+      run: () => <Row><Out label="dialStep(240, 10)" value={String(dialStep(240, 10))} /><Out label="dialStep(100, 6)" value={String(dialStep(100, 6))} /></Row>,
+    },
+    dialGeometry: {
+      code: `dialGeometry("half", 180)   // { cx, cy, r, h, readY, capY } in viewBox units (200 wide)`,
+      run: () => <Out label={`dialGeometry("half", 180)`} value={JSON.stringify(dialGeometry("half", 180))} />,
+    },
+    decimalMark: {
+      code: `decimalMark("tr")   // ","
+decimalMark("en")   // "."`,
+      run: () => <Row><Out label="tr" value={decimalMark("tr")} /><Out label="en" value={decimalMark("en")} /></Row>,
+    },
+    drumText: {
+      code: `drumText(1234.5, 6, 1, ",")   // "001234,5": what the drums show`,
+      run: () => <Out label={`drumText(1234.5, 6, 1, ",")`} value={drumText(1234.5, 6, 1, ",")} />,
     },
   },
   "march/schema": {

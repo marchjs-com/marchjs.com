@@ -11,4 +11,11 @@ export const TOPICS: readonly Topic[] = [
   { slug: "sparkline", title: "Eğilim çizgisi", name: "Sparkline", desc: "Eksensiz küçük çizgi: tablo hücresinde, liste satırında, göstergede.", group: "Grafikler" },
   { slug: "progress-ring", title: "İlerleme halkası", name: "ProgressRing", desc: "0–100 puan halkası; düşük / orta / yüksek düzey ya da birden çok renk.", group: "Grafikler" },
   { slug: "bar-list", title: "Çubuk listesi", name: "BarList", desc: "Sıralı yatay çubuklar: en çok ziyaret edilen sayfalar, ülkeler, şarkılar.", group: "Grafikler" },
+  { slug: "gauge", title: "Kadran", name: "Gauge", desc: "İbreli kadran: bölgeler, kırmızı çizgi, yaylı ibre, tepe işareti; hız, devir, yarım ve VU.", group: "Göstergeler" },
+  { slug: "odometer", title: "Sayaç çarkları", name: "Odometer", desc: "Mekanik, dijital ya da yaprak saat sayaç: sabit hane, kırmızı kesir çarkı, birim.", group: "Göstergeler" },
+  { slug: "level-meter", title: "Seviye ölçer", name: "LevelMeter", desc: "Stüdyo tipi LED ölçer: sayı ya da canlı ses, stereo, tepe ve kırpılma ışığı, dB ölçeği.", group: "Göstergeler" },
+  { slug: "oscilloscope", title: "Osiloskop", name: "Oscilloscope", desc: "Sesin dalga biçimi canlı: tetiklenen iz, fosfor izi, XY Lissajous; modern ya da retro CRT.", group: "Ses" },
+  { slug: "spectrum", title: "Spektrum", name: "Spectrum", desc: "Sesin frekansları canlı: log ölçekli çubuklar, düşen tepe başlıkları; ayna, halka, çizgi.", group: "Ses" },
+  { slug: "waveform", title: "Ses dalgası", name: "Waveform", desc: "Bir sesin çubukları: sesli mesaj, podcast; çalınan kısım renkli, bölümler, basıp atlama.", group: "Ses" },
+  { slug: "audio-reactive", title: "Sese tepki veren", name: "AudioReactive", desc: "Sesle hareket eden sarmalayıcı: düzey ve bant CSS değişkenleri, hazır halka, nabız, ışıltı efektleri.", group: "Ses" },
 ];

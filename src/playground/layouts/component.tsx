@@ -170,7 +170,7 @@ const depTree = computed((): DepNode[] => {
   })
 })
 // the instances the preview draws now (its runtime's componentTree): the Hierarchy shows them, one row each
-interface LiveItem { id: number; parent: number; name: string; key: string; elId: string; text: string }
+interface LiveItem { id: number; parent: number; name: string; key: string; elId: string; text: string; written?: Record<string, string | number | boolean> }
 const liveTree = signal<LiveItem[]>([])
 const inTree = computed((): string[] => {
   const out = new Set<string>(); const go = (n: DepNode): void => { out.add(n.label); n.children?.forEach(go) }; depTree().forEach(go)
@@ -350,6 +350,14 @@ const optionKeys = computed(() => `${selected()}:${options().map((o) => o.key).j
 // (no instance) keep the values of the component's kind.
 const selectedInst = signal<{ key: string; name: string; root: boolean } | null>(null)
 const valuesByInst = signal<Record<string, Record<string, unknown>>>({})
+/** The options a person has set in Properties, per instance key or component name: they are sent even at their default,
+ * so a value the example writes itself (look="crt") can be set back to the default; a reset forgets them again. */
+const touchedBy = signal<Record<string, ReadonlySet<string>>>({})
+const touch = (target: string, keys: readonly string[], on: boolean): void => {
+  const cur = touchedBy.peek()[target] ?? new Set<string>(), next = new Set(cur)
+  for (const k of keys) { if (on) next.add(k); else next.delete(k) }
+  touchedBy.set({ ...touchedBy.peek(), [target]: next })
+}
 /** "Tüm örneklere uygula" (Properties' bar): while on, a change is the kind's, so every instance of it takes it. */
 const applyAll = signal(false)
 const instOn = (): string | null => { const s = selectedInst(); return s && !s.root && !applyAll() && s.name === selected() ? s.key : null }
@@ -362,11 +370,18 @@ const target = (): string => {
   return many > 1 ? `tüm ${name} örnekleri (${many})` : name
 }
 const values = computed((): Record<string, unknown> => { const k = instOn(), v = (k ? valuesByInst()[k] : valuesBy()[selected()]) ?? {}; return Object.fromEntries(options().map((o) => [o.key, v[o.key] ?? defaultOf(o)])) })
-const setValues = (v: Record<string, unknown>) => {
+const setValues = (v: Record<string, unknown>, reset = false) => {
   const k = untrack(instOn), name = selected.peek()
-  if (k) { valuesByInst.set({ ...valuesByInst.peek(), [k]: { ...v } }); return }
-  // for the whole kind: what changed is taken off the instances' own values too, so every instance shows it
   const before = untrack(values), changed = Object.keys(v).filter((x) => JSON.stringify(v[x]) !== JSON.stringify(before[x]))
+  // a person's choice is sent from now on even at the default; a reset gives the example's own values back
+  touch(k ?? name, reset ? Object.keys(v) : changed, !reset)
+  if (k) {
+    // a reset of an instance gives back what its code writes (the values Properties started from)
+    const it = reset ? untrack(liveTree).find((x) => x.key === k) : undefined
+    const base = it?.written ? fromWritten(optsOf(nameOfKey(k)), it.written) : {}
+    valuesByInst.set({ ...valuesByInst.peek(), [k]: { ...v, ...base } }); return
+  }
+  // for the whole kind: what changed is taken off the instances' own values too, so every instance shows it
   if (untrack(applyAll) && changed.length) {
     const next = { ...valuesByInst.peek() }
     for (const [key, own] of Object.entries(next)) if (nameOfKey(key) === name) { const o = { ...own }; for (const x of changed) delete o[x]; next[key] = o }
@@ -381,6 +396,30 @@ effect(() => {
   if (inst && inst.name === name && items.some((x) => x.key === inst.key)) return
   const it = items.find((x) => x.name === name)
   untrack(() => selectedInst.set(it ? { key: it.key, name, root: it.parent === 0 } : null))
+})
+/** The options an instance's code already sets (plain values the option can show): Properties starts from them, so
+ * the example's own choice (look="crt") shows as chosen, and picking the default is a change that undoes it. */
+const fromWritten = (opts: readonly PlaygroundOption[], w: Record<string, string | number | boolean>): Record<string, unknown> => {
+  const out: Record<string, unknown> = {}
+  for (const o of opts) {
+    const prop = o.prop || o.key
+    if (!(prop in w) || o.toProps) continue
+    const x = w[prop]
+    const vals = o.options?.map((v) => (typeof v === "object" ? v.value : v))
+    if (vals ? vals.some((v) => v === x) : typeof x === typeof o.default) out[o.key] = x
+  }
+  return out
+}
+effect(() => {
+  const inst = selectedInst()
+  if (!inst || inst.root) return
+  const opts = optsOf(inst.name), it = liveTree().find((x) => x.key === inst.key)
+  if (!opts.length || !it?.written) return
+  untrack(() => {
+    if (valuesByInst.peek()[inst.key]) return
+    const w = fromWritten(opts, it.written!)
+    if (Object.keys(w).length) valuesByInst.set({ ...valuesByInst.peek(), [inst.key]: w })
+  })
 })
 /** An instance key's component: "SaveBar/SaveBar:0/Button:1" → Button. */
 const nameOfKey = (key: string): string => (key.split("/").pop() ?? "").replace(/:\d+$/, "")
@@ -540,7 +579,7 @@ function fromCode(o: PlaygroundOption, x: unknown, v: Record<string, unknown>): 
 }
 const jsonOf = (x: unknown): unknown => { if (typeof x !== "string") return x; try { return JSON.parse(x) } catch { return OMIT } }
 /** A component's values as its props: the shown options only, empty / off left out; \`changed\`: only what differs from the default. */
-function propsOf(opts: readonly PlaygroundOption[], v: Record<string, unknown>, changed = false): Record<string, unknown> {
+function propsOf(opts: readonly PlaygroundOption[], v: Record<string, unknown>, changed = false, touched?: ReadonlySet<string>): Record<string, unknown> {
   const out: Record<string, unknown> = {}
   const defs = Object.fromEntries(opts.map((o) => [o.key, defaultOf(o)]))
   for (const o of opts) {
@@ -550,9 +589,10 @@ function propsOf(opts: readonly PlaygroundOption[], v: Record<string, unknown>, 
     if (o.visibleWhen && !o.visibleWhen(v as never)) continue
     const cur = v[o.key] ?? defaultOf(o)
     // an option that writes several props (toProps): each one, as given (undefined: left out)
-    if (o.toProps) { if (!(changed && JSON.stringify(cur) === JSON.stringify(defaultOf(o)))) for (const [k, x] of Object.entries(o.toProps(cur, v as never))) if (x !== undefined) out[k] = x; continue }
+    const set = !!touched?.has(o.key)
+    if (o.toProps) { if (set || !(changed && JSON.stringify(cur) === JSON.stringify(defaultOf(o)))) for (const [k, x] of Object.entries(o.toProps(cur, v as never))) if (x !== undefined) out[k] = x; continue }
     // an option hidden at the defaults (Button's own spinner mark) is a change once it shows, even at its default
-    if (changed && JSON.stringify(cur) === JSON.stringify(defaultOf(o)) && (!o.visibleWhen || o.visibleWhen(defs as never))) continue
+    if (changed && !set && JSON.stringify(cur) === JSON.stringify(defaultOf(o)) && (!o.visibleWhen || o.visibleWhen(defs as never))) continue
     // an icon given to a prop that is not named so (spinner): "icon:name", which the runtime turns into the icon
     // an icon of a pack ("lucide:arrow-left"): the icon itself (its pack was loaded by the picker that chose it)
     // a data prop written as JSON (kind "json": Tree's nodes, Timeline's items): its parsed value; text that does not parse is left out
@@ -560,7 +600,8 @@ function propsOf(opts: readonly PlaygroundOption[], v: Record<string, unknown>, 
     const noIcon = isIcon(o) && !!o.toCode && /^(null|\{(true|false)\})$/.test(String(codeOf(o, cur, v)))
     const x = o.toProp ? o.toProp(cur, v as never) : o.kind === "json" ? jsonOf(cur) : isIcon(o) && !noIcon ? (typeof cur === "string" && cur.includes(":") ? packRef(cur) : typeof cur === "string" && cur && !/icon/i.test(prop) ? `icon:${cur}` : cur) : o.toCode ? fromCode(o, cur, v) : cur
     // a yes / no that is on by default and turned off: false is the choice (animated, dividers…), not "unset"
-    if (x === undefined) continue
+    // "unset" chosen by a person (colors → theme) is sent as null, so it undoes a value the example writes itself
+    if (x === undefined) { if (set && changed) out[prop] = null; continue }
     if (o.key === "html:data") { delete out[prop]; for (const [k, d] of Object.entries(x as Record<string, unknown>)) out[`data-${k}`] = d; continue }
     // on an instance or a kind (changed), a yes / no turned off is written as false even when the card's code leaves it
     // out: the prop written in the code (an Alert's title, a dismissable) is turned off, not kept
@@ -583,7 +624,7 @@ const below = (root: string): string[] => { const out = new Set<string>(); const
 const partsFor = (root: string): Record<string, Record<string, unknown>> => {
   const out: Record<string, Record<string, unknown>> = {}
   for (const name of below(root)) {
-    const p: Record<string, unknown> = { ...propsOf(optsOf(name), valuesBy()[name] ?? {}, true), ...handlerFns(name) }
+    const p: Record<string, unknown> = { ...propsOf(optsOf(name), valuesBy()[name] ?? {}, true, touchedBy()[name]), ...handlerFns(name) }
     // a part's content is what the component around it gives (DevicePreview's screen in its OverlayScope): a text
     // typed on the part's own page must not replace it
     delete p["children"]
@@ -736,10 +777,10 @@ const gridPanel = (make: () => unknown) => () => {
   </div>
 }
 const a11yPanel = gridPanel(() => { const list = options().filter(isA11y); return list.length
-  ? <PropertyGrid persist="sc.playground.a11y" properties={list.map(asProperty)} value={values()} onChange={setValues} label={`${selected()} erişilebilirliği`} saved={values()} footer={false} history={false} dirty={false} search={false} />
+  ? <PropertyGrid persist="sc.playground.a11y" properties={list.map(asProperty)} value={values()} onChange={(v: Record<string, unknown>) => setValues(v)} label={`${selected()} erişilebilirliği`} saved={values()} footer={false} history={false} dirty={false} search={false} />
   : <div class="sc-playground-empty"><b>Erişilebilirlik</b><span>Dışa aktarılan bileşen yok</span></div> })
 const propsPanel = gridPanel(() => (options().length
-  ? <PropertyGrid persist="sc.playground.props" openGroups={[MARCH_GROUP]} properties={options().filter((o) => !isA11y(o)).map(asProperty)} value={values()} onChange={setValues} label={`${selected()} özellikleri`} saved={values()} footer={false} history={false} dirty={false} search={false} />
+  ? <PropertyGrid persist="sc.playground.props" openGroups={[MARCH_GROUP]} properties={options().filter((o) => !isA11y(o)).map(asProperty)} value={values()} onChange={(v: Record<string, unknown>) => setValues(v)} label={`${selected()} özellikleri`} saved={values()} footer={false} history={false} dirty={false} search={false} />
   : <div class="sc-playground-empty"><b>Özellik yok</b><span>{selected() ? `${selected()} prop almıyor` : "Dışa aktarılan bileşen yok"}</span></div>))
 // Hierarchy: every component the preview draws, one row per instance, under the instance that drew it (its root's id
 // and text beside it); before the preview has drawn, the tree of what the file writes (depTree). The filter keeps the
@@ -1329,7 +1370,8 @@ const COMMANDS: Record<string, TerminalCommand> = {
   } },
   reset: { desc: "Özellikleri (ya da birini) varsayılana döndür", args: [{ name: "özellik", get choices() { return propNames() } }], run: (a, io) => {
     const one = a.args["özellik"] ? optionsByProp().get(String(a.args["özellik"])) : null
-    setValues(one ? { ...values(), [one.key]: defaultOf(one) } : Object.fromEntries(options().map((o) => [o.key, defaultOf(o)])))
+    if (one) setValues({ ...values(), [one.key]: defaultOf(one) }); else setValues(Object.fromEntries(options().map((o) => [o.key, defaultOf(o)])), true)
+    if (one) { const k = untrack(instOn); touch(k ?? selected.peek(), [one.key], false) }
     io.success(one ? `${String(a.args["özellik"])} varsayılanda` : `${selected()}: tüm özellikler varsayılanda`)
   } },
   on: { desc: "Bir olaya işleyici bağla: on onClick log · on on:click toast · on onChange none", args: [
@@ -1566,7 +1608,7 @@ const langPanel = () => <div class="sc-lang">
 // its extensions, its layers) stays in the frame. previewEl is the frame's root, where the runtime draws.
 let previewEl: HTMLElement | null = null
 /** The values Properties gives single instances (by key): the runtime draws those instances with them. */
-const instanceProps = (): Record<string, Record<string, unknown>> => Object.fromEntries(Object.entries(valuesByInst()).map(([k, v]) => [k, propsOf(optsOf(nameOfKey(k)), v, true)]).filter(([, p]) => Object.keys(p as object).length))
+const instanceProps = (): Record<string, Record<string, unknown>> => Object.fromEntries(Object.entries(valuesByInst()).map(([k, v]) => [k, propsOf(optsOf(nameOfKey(k)), v, true, touchedBy()[k])]).filter(([, p]) => Object.keys(p as object).length))
 /** The frame's root as a signal (what listens on the preview follows a new frame). */
 const pvRoot = signal<HTMLElement | null>(null)
 type Parts = Record<string, Record<string, unknown>>
@@ -1585,6 +1627,8 @@ const newFrame = (host: HTMLElement): void => {
   const f = document.createElement("iframe")
   f.className = "sc-pv-frame"
   f.title = "Önizleme"
+  // the audio examples may ask for the microphone (opt-in, a button in the example): the frame may pass it on
+  f.allow = "microphone"
   f.src = appUrl("playground/preview.html")
   frame = f
   dropRuntime()

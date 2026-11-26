@@ -15,6 +15,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Kenar çubuğu sütunu, üst duyuru ve kayan ana alan; önce gelen 'İçeriğe geç' bağlantısı.`,
   // components/app-ui/ide.json
   t`March IDE çekirdeği: üst çubuk, Yerleşim menüsü, yan ve alt yuvalar, çalışma alanı`,
+  // components/audio-reactive/ide.json
+  t`Sesle hareket eden sarmalayıcı; düzey, bas, orta, tiz ve tepe CSS değişkenleri, hazır efektler.`,
   // components/avatar/ide.json
   t`Resim yoksa ya da yüklenemezse baş harfler; renk addan gelir. Hazır metin, ikon, sabit renk ve biçim.`,
   // components/avatar-group/ide.json
@@ -147,6 +149,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Doğrulama kodu kutuları, yapıştırma.`,
   // components/gantt/ide.json
   t`Bağımlılıklar, ölçek, ilerleme.`,
+  // components/gauge/ide.json
+  t`İbreli kadran: bölgeler, kırmızı çizgi, yaylı ibre, tepe işareti, dönen gösterge; hız, devir, yarım ve VU.`,
   // components/gradient/ide.json
   t`Duraklar ve açı; CSS çıktısı.`,
   // components/grid/ide.json
@@ -187,6 +191,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Değiştirilebilir sayfa çerçevesi`,
   // components/layout-window/ide.json
   t`Başlıktan sürükle; kenara bırakınca yarısına, üste bırakınca tamamına yerleşir; başlığa çift tıkla: alanı…`,
+  // components/level-meter/ide.json
+  t`Stüdyo tipi LED seviye ölçer; sayı ya da canlı ses, mono / stereo, tepe ve kırpılma ışığı.`,
   // components/like-button/ide.json
   t`Kalp yayla zıplar, halka büyür, parçacıklar HADİ renkleriyle saçılır.`,
   // components/line-chart/ide.json
@@ -231,8 +237,12 @@ export const IDE_TEXTS = (): string[] => [
   t`Ürünün kimin için olmadığı (ve kimin için olduğu); ziyaretçi uyanları işaretler, dürüst bir sonuç görür.`,
   // components/number/ide.json
   t`Adım, sınır, para birimi ve yerel biçim.`,
+  // components/odometer/ide.json
+  t`Sayı çarklarında sayaç: sabit hane, kırmızı kesir çarkı, birim; mekanik, dijital ya da yaprak saat.`,
   // components/option-list/ide.json
   t`Panel içinde seçenek satırları: tek ya da çoklu seçim, komut menüsü; ok tuşları ya da bir alanın tuşlarıyla.`,
+  // components/oscilloscope/ide.json
+  t`Sesin dalga biçimi canlı: tetiklenen iz, fosfor izi, ölçek ızgarası, XY Lissajous; modern ya da retro CRT görünüm.`,
   // components/overflow-text/ide.json
   t`OverflowText ve Marquee.`,
   // components/overflow-toolbar/ide.json
@@ -337,6 +347,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Kendinden sonrakileri satırın mantıksal sonuna iter; RTL'de aynalanır.`,
   // components/sparkline/ide.json
   t`Eksensiz küçük çizgi: tablo hücresinde, liste satırında, göstergede.`,
+  // components/spectrum/ide.json
+  t`Sesin frekansları canlı: log ölçekli çubuklar, düşen tepe başlıkları; ayna, halka, çizgi; tema, HADİ ya da kendi renklerin.`,
   // components/spinner/ide.json
   t`Küçük bekleme göstergesi.`,
   // components/splitter/ide.json
@@ -407,6 +419,8 @@ export const IDE_TEXTS = (): string[] => [
   t`Sessiz döngü, önce poster; görünmüyorken durur, veri tasarrufu ve azaltılmış harekette yalnız poster.`,
   // components/virtual-list/ide.json
   t`100.000 satır, her biri kendi yüksekliğinde: yalnız görünen pencere DOM'da.`,
+  // components/waveform/ide.json
+  t`Bir sesin çubukları: sesli mesaj, podcast; çalınan kısım renkli, bölümler, basıp atlama.`,
   // components/web-reveal/ide.json
   t`Solma, yükselme, baştan ya da sondan kayma (RTL'de aynalı), ölçek, bulanıklık, çevirme; sırayla ya da…`,
   // components/wizard/ide.json
