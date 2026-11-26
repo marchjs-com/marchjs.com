@@ -15,11 +15,16 @@ const { isIdePage } = await import("./src/playground/ide-pages.ts");
 // library code paths the benchmark apps never reach, refused by the CSP's Trusted Types anyway). BENCH_PARTS: the ones a
 // UI library runtime pushes past the 25 KB part budget get an argued, measured limit. Only third-party benchmark apps:
 // no March code, no showcase page (test/bench-libs.test.js).
-export const THIRD_PARTY = ["src/bench/apps/react.ts", "src/bench/apps/preact.ts", "src/bench/apps/vue.ts", "src/bench/apps/svelte-app.ts", "src/bench/apps/solid.gen.js", "src/bench/apps/lit-app.ts"];
+export const THIRD_PARTY = ["src/bench/apps/react.ts", "src/bench/apps/preact.ts", "src/bench/apps/vue.ts", "src/bench/apps/svelte-app.ts", "src/bench/apps/solid.gen.js", "src/bench/apps/lit-app.ts",
+  "src/bench/apps/marko.ts", "src/bench/apps/inferno.gen.js", "src/bench/apps/ivi.gen.js", "src/bench/apps/mithril.ts", "src/bench/apps/alpine.ts", "src/bench/apps/angular.gen.js"];
 const BENCH_PARTS = {
   "src/bench/apps/react.ts": { limit: 72 * 1024, why: "React 19 + react-dom client runtime (67.6 KB gzip measured), loaded only when its benchmark runs" },
   "src/bench/apps/vue.ts": { limit: 30 * 1024, why: "Vue 3 runtime-dom + reactivity (26.3 KB gzip measured), loaded only when its benchmark runs" },
+  "src/bench/apps/angular.gen.js": { limit: 45 * 1024, why: "Angular 22 core + platform-browser, AOT-compiled and tree-shaken as ng build does (37.9 KB gzip measured in the release build), loaded only when its benchmark runs" },
 };
+// Third-party benchmark chunks under the 10 KB floor (a small runtime: Marko, ivi): grouped with others, a library
+// would download with the page or with another library; each stays a file of its own, fetched when its test runs.
+const BENCH_SMALL = Object.fromEntries(THIRD_PARTY.map((k) => [k, "a compared library's benchmark app with its runtime: loaded only on /bench when its own test runs"]));
 
 // Showcase pages and parts past the default budgets (route 60 KB, part 25 KB): each is a demo of many components at
 // once, a full tool or a whole sample site, loaded only where it is shown. March runs from the CDN, so a row counts the
@@ -160,6 +165,7 @@ export default {
   // passes let the planner split and re-check them.
   chunks: { minSize: 10 * 1024, fail: false, maxBuilds: 5, commonRoom: 6 * 1024, allow: {
     ...CHART_DEMOS,
+    ...BENCH_SMALL,
     "src/web/product.tsx": "Web siteleri sample page: loaded only when /sites/product opens it, never with the blocks page",
     "src/web/product-more.tsx": "lower half of the product sample: loaded when it comes near the viewport",
     "src/web/portfolio-more.tsx": "lower half of the portfolio sample: loaded when it comes near the viewport",
