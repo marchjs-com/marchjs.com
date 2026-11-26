@@ -1,0 +1,73 @@
+// The showcase's frame on the built site, in headless Chrome / Edge: what broke unnoticed once March came from the CDN.
+//   1. the home page's stats band is one row (StatsBand's grid wins over the rules of what it is made of: Reveal…)
+//   2. March's stylesheets are linked in March's order (css.json ranks ascending), before the site's own
+//   3. a theme change comes in with the chosen transition (Motion › Page transitions): every shape starts its wave
+// Usage: node tools/check-shell.mjs [--base http://127.0.0.1:5183]   (default: serves dist/)
+import { openHeadless, flag, sleep } from "./lib/headless.mjs";
+
+const base = flag(process.argv, "--base", null);
+const b = await openHeadless(base ? { base } : {});
+const fails = [];
+const fail = (m) => { fails.push(m); console.error(`✖ ${m}`); };
+const until = async (expr, ms = 15000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await b.ev(expr)) return true; await sleep(200); } return false; };
+
+try {
+  // 1. the stats band: one row of seven figures at a desktop width
+  await b.load("/", 1440);
+  await b.ev("document.querySelector('.sc-stats')?.scrollIntoView({ block: 'center' }), true");
+  if (!(await until("document.querySelectorAll('.sc-stats .m-stats > *').length >= 2"))) fail("home: the stats band did not render");
+  else {
+    await sleep(800);
+    const s = await b.ev(`(() => { const s = document.querySelector('.sc-stats .m-stats'); const tops = [...s.children].map((c) => Math.round(c.getBoundingClientRect().top));
+      return { display: getComputedStyle(s).display, rows: new Set(tops).size, n: tops.length }; })()`);
+    if (s.display !== "grid" || s.rows !== 1) fail(`home: the stats band is not one row (display ${s.display}, ${s.n} figures in ${s.rows} rows)`);
+    else console.log(`✔ home: the stats band is one row (${s.n} figures)`);
+  }
+
+  // 2. March's sheets in March's order, before the site's own stylesheets
+  const order = await b.ev(`(() => { const links = [...document.head.querySelectorAll('link[rel=stylesheet]')];
+    const ranked = links.filter((l) => /^\\d+$/.test(l.getAttribute('data-march-cdn') ?? ''));
+    const ranks = ranked.map((l) => +l.getAttribute('data-march-cdn'));
+    const firstOwn = links.findIndex((l) => !l.hasAttribute('data-march-cdn'));
+    const lastCdn = links.map((l) => l.hasAttribute('data-march-cdn')).lastIndexOf(true);
+    return { n: ranked.length, sorted: ranks.every((r, i) => !i || ranks[i - 1] < r), ownLast: firstOwn < 0 || firstOwn > lastCdn,
+      bad: ranks.findIndex((r, i) => i && ranks[i - 1] >= r) }; })()`);
+  if (!order.n) fail("home: no March stylesheet carries its rank (css.json): an older March compiler or CDN release");
+  else if (!order.sorted) fail(`home: March's stylesheets are out of order (at link ${order.bad})`);
+  else if (!order.ownLast) fail("home: a March stylesheet comes after the site's own");
+  else console.log(`✔ home: ${order.n} March stylesheets in March's order, before the site's own`);
+
+  // 3. the theme wave: each shape, from a reload with it chosen, on a real light / dark change
+  for (const shape of ["drip", "circle", "spray", "sweep", "splat"]) {
+    await b.ev(`(localStorage.setItem('sc.wave', ${JSON.stringify(shape)}), true)`);
+    await b.load("/", 1280);
+    // the shell's motion part is loaded when idle (shell-late → motion-late): its pause notice is the sign it is in
+    if (!(await until("!!document.querySelector('.sc-paused')", 20000))) { fail(`wave ${shape}: the shell's motion part never loaded`); continue; }
+    // the painted shapes load their part ahead
+    await sleep(1500);
+    const r = await b.ev(`(async () => {
+      const root = document.documentElement, seen = new Set();
+      const note = () => { if (root.hasAttribute('data-m-wave')) seen.add('attr'); if (document.querySelector('.m-wave-veil, .m-wave-shade')) seen.add('veil'); };
+      const mo = new MutationObserver(note);
+      mo.observe(root, { attributes: true, childList: true, subtree: true, attributeFilter: ['data-m-wave'] });
+      const start = document.startViewTransition?.bind(document);
+      if (start) document.startViewTransition = (cb) => { seen.add('vt'); return start(cb); };
+      const href = document.querySelector('link[href*="/css/tokens.css"]')?.href ?? '';
+      const t = await import(href.replace(/css\\/tokens\\.css$/, 'mod/ui/theme.js'));
+      const before = t.resolvedTheme();
+      t.setTheme(before === 'dark' ? 'light' : 'dark');
+      for (let i = 0; i < 30 && !seen.size; i++) await new Promise((r) => setTimeout(r, 100));
+      mo.disconnect();
+      if (start) document.startViewTransition = start;
+      return { seen: [...seen], changed: t.resolvedTheme() !== before };
+    })()`, 30000);
+    if (!r?.seen?.length) fail(`wave ${shape}: a light / dark change came without a wave (${JSON.stringify(r)})`);
+    else console.log(`✔ wave ${shape}: ${r.seen.join(", ")}`);
+    await sleep(2500);
+  }
+} finally {
+  if (b.errs.length) console.log(`page errors: ${b.errs.slice(0, 5).join(" | ")}`);
+  await b.close();
+}
+if (fails.length) { console.error(`✖ ${fails.length} shell check(s) failed`); process.exit(1); }
+console.log("✔ shell checks pass");

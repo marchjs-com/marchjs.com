@@ -75,3 +75,22 @@ jobs:
       - run: node tools/check-ide.mjs --shard ${{ matrix.shard }}/10
         env:
           BROWSER_PATH: /usr/bin/google-chrome
+
+  # the frame of the built site: the home page's stats band one row, March's stylesheets in March's order, every theme
+  # wave shape starting on a light / dark change (tools/check-shell.mjs)
+  shell:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist
+      - run: node tools/check-shell.mjs
+        env:
+          BROWSER_PATH: /usr/bin/google-chrome
