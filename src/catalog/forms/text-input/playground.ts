@@ -1,21 +1,33 @@
 import { definePlayground } from "../../spec.ts";
-import { cardNumber, iban, phoneTR, money, plateTR, licenseKey, cardExpiry } from "march/mask/presets";
-import { date } from "march/mask";
-
-// the masks of the mask picker: what the demo and MarchIDE's raw component get, and what the code writes
-export const MASKS: Record<string, { label: string; code: string; make: () => unknown }> = {
-  phone: { label: "telefon", code: "{phoneTR()}", make: phoneTR },
-  card: { label: "kart", code: "{cardNumber()}", make: cardNumber },
-  expiry: { label: "AA/YY", code: "{cardExpiry()}", make: cardExpiry },
-  iban: { label: "IBAN", code: '{iban({ country: "TR" })}', make: () => iban({ country: "TR" }) },
-  date: { label: "tarih", code: "{date()}", make: () => date() },
-  money: { label: "tutar", code: '{money({ currency: "TRY" })}', make: () => money({ currency: "TRY" }) },
-  plate: { label: "plaka", code: "{plateTR()}", make: plateTR },
-  pattern: { label: "desen", code: '"(999) 999 99 99"', make: () => "(999) 999 99 99" },
-  code: { label: "kod", code: "{licenseKey({ groups: 3, size: 4 })}", make: () => licenseKey({ groups: 3, size: 4 }) },
+// the masks of the mask picker: what the demo and MarchIDE's raw component get, and what the code writes. The playground
+// specs load with every component page, so march/mask stays out of them: a picked mask is a dynamic mask (a function
+// of the raw value) that uses a plain pattern until the presets have loaded on first use, then the real preset.
+type Presets = typeof import("march/mask/presets");
+type MaskMod = typeof import("march/mask");
+let mods: { p: Presets; m: MaskMod } | null = null;
+let loading: Promise<void> | null = null;
+const load = (): Promise<void> => (loading ??= Promise.all([import("march/mask/presets"), import("march/mask")]).then(([p, m]) => { mods = { p, m }; }));
+export const MASKS: Record<string, { label: string; code: string; make: (p: Presets, m: MaskMod) => unknown; first: string }> = {
+  phone: { label: "telefon", code: "{phoneTR()}", make: (p) => p.phoneTR(), first: "(999) 999 99 99" },
+  card: { label: "kart", code: "{cardNumber()}", make: (p) => p.cardNumber(), first: "9999 9999 9999 9999[999]" },
+  expiry: { label: "AA/YY", code: "{cardExpiry()}", make: (p) => p.cardExpiry(), first: "99/99" },
+  iban: { label: "IBAN", code: '{iban({ country: "TR" })}', make: (p) => p.iban({ country: "TR" }), first: "TR99 9999 9999 9999 9999 9999 99" },
+  date: { label: "tarih", code: "{date()}", make: (_p, m) => m.date(), first: "99.99.9999" },
+  money: { label: "tutar", code: '{money({ currency: "TRY" })}', make: (p) => p.money({ currency: "TRY" }), first: "9{1,12}" },
+  plate: { label: "plaka", code: "{plateTR()}", make: (p) => p.plateTR(), first: "99 A[AA] 99[99]" },
+  pattern: { label: "desen", code: '"(999) 999 99 99"', make: () => "(999) 999 99 99", first: "(999) 999 99 99" },
+  code: { label: "kod", code: "{licenseKey({ groups: 3, size: 4 })}", make: (p) => p.licenseKey({ groups: 3, size: 4 }), first: "****-****-****" },
 };
-const made = new Map<string, unknown>();
-export const maskOf = (k: string): unknown => { if (!MASKS[k]) return undefined; let m = made.get(k); if (!m) made.set(k, (m = MASKS[k]!.make())); return m; };
+const made = new Map<string, unknown>(), specs = new Map<string, (raw: string) => unknown>();
+/** The mask of a picker value: one stable function per value (the TextInput compiles it once). */
+export const maskOf = (k: string): unknown => {
+  const e = MASKS[k];
+  if (!e) return undefined;
+  void load();
+  let f = specs.get(k);
+  if (!f) specs.set(k, (f = () => { if (!mods) return e.first; let m = made.get(k); if (!m) made.set(k, (m = e.make(mods.p, mods.m))); return m; }));
+  return f;
+};
 
 type V = { kind: string; prefix: string; placeholder: string; disabled: boolean; readonly: boolean; error: boolean; mask: string; maskPlaceholder: string; maskValue: string; maskMotion: boolean; maskDone: boolean };
 const masked = (v: V): boolean => v.mask !== "none";
