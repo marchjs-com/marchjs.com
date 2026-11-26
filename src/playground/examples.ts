@@ -1,6 +1,6 @@
 // The examples repository (github.com/marchjs-com/examples) pinned to a commit, served by jsDelivr: every MarchIDE
 // page's files and its ide.json come from there. A commit's files never change, so jsDelivr and the browser keep them
-// (immutable, a year); a new example reaches the site by moving this sha. connect-src in the CSP (build.mjs) allows
+// (immutable, a year); a new example reaches the site by moving this sha, which the examples-pin workflow does by itself within minutes of a merge into examples main (a pull request, ci, merge). connect-src in the CSP (build.mjs) allows
 // https://cdn.jsdelivr.net. Small on purpose: shell-late loads it on every page to start the ide.json download early.
 
 export const EXAMPLES = "https://cdn.jsdelivr.net/gh/marchjs-com/examples@1320c28f60bb3f465d1c864a7d6887057d653c06/";
