@@ -12,4 +12,14 @@ export const art: ArtSet = {
   picture: [["box", 30, 8, 90, 52, 8], ["dot", 52, 24, 5, { mv: { y: -4 } }], ["shape", "M36 55l20-21 14 14 10-9 24 16z", { o: 0.4 }], ["ln", 48, 66, 54]],
   // A round mark on the corner of an image.
   "corner-mark": [["box", 42, 14, 60, 56, 10], ["fill", 42, 14, 60, 56, 10, { o: 0.15 }], ["path", "M50 60l13-15 9 9 8-7 14 13", { o: 0.5 }], ["box", 88, 6, 24, 24, 12, { w: 2, mv: { scale: 1.15 } }], ["shape", "M96.5 13l8 5-8 5z", { mv: { scale: 1.15 } }]],
+  // A wide LED sign: a row of dots with a heart sliding in.
+  "led-board": [["fill", 8, 14, 134, 52, 8, { o: 0.12 }], ["dot", 26, 40, 3], ["dot", 34, 40, 3], ["dot", 42, 40, 3], ["dot", 50, 32, 3], ["dot", 50, 48, 3], ["dot", 62, 40, 3, { o: 0.4 }], ["shape", "M100 34a6 6 0 0 1 10 0a6 6 0 0 1 10 0c0 8-10 14-10 14s-10-6-10-14z", { color: "pink", mv: { x: -8 } }]],
+  // Two eyes on a dark panel, the pupils glancing aside.
+  "led-eyes": [["fill", 20, 10, 110, 60, 12, { o: 0.12 }], ["box", 40, 22, 26, 30, 8], ["box", 84, 22, 26, 30, 8], ["dot", 53, 37, 5, { mv: { x: -6 } }], ["dot", 97, 37, 5, { mv: { x: -6 } }], ["path", "M62 60q13 6 26 0", { o: 0.6 }]],
+  // A grid of dots, some lit.
+  "led-matrix": [["fill", 22, 8, 106, 64, 8, { o: 0.12 }], ["dot", 45, 26, 4], ["dot", 60, 26, 4, { o: 0.3 }], ["dot", 75, 26, 4], ["dot", 90, 26, 4, { o: 0.3 }], ["dot", 105, 26, 4], ["dot", 45, 41, 4, { o: 0.3 }], ["dot", 60, 41, 4], ["dot", 75, 41, 4, { mv: { scale: 1.3 } }], ["dot", 90, 41, 4], ["dot", 105, 41, 4, { o: 0.3 }], ["dot", 60, 56, 4, { o: 0.3 }], ["dot", 75, 56, 4], ["dot", 90, 56, 4, { o: 0.3 }]],
+  // Pixel letters: an A made of small squares.
+  "pixel-font": [["fill", 52, 18, 8, 8, 1], ["fill", 44, 26, 8, 8, 1], ["fill", 60, 26, 8, 8, 1], ["fill", 44, 34, 8, 8, 1], ["fill", 52, 34, 8, 8, 1], ["fill", 60, 34, 8, 8, 1], ["fill", 44, 42, 8, 8, 1], ["fill", 60, 42, 8, 8, 1], ["fill", 84, 26, 8, 8, 1, { color: "pink" }], ["fill", 92, 34, 8, 8, 1, { color: "pink", mv: { y: -4 } }], ["fill", 100, 26, 8, 8, 1, { color: "pink" }]],
+  // A pixel flame flickering.
+  "pixel-sprite": [["fill", 67, 14, 8, 8, 1, { color: "orange", mv: { x: 4 } }], ["fill", 59, 22, 16, 8, 1, { color: "orange" }], ["fill", 59, 30, 32, 8, 1, { color: "orange" }], ["fill", 51, 38, 48, 8, 1, { color: "orange" }], ["fill", 59, 46, 32, 8, 1, { color: "gold" }], ["fill", 59, 54, 32, 8, 1, { color: "orange" }]],
 };
