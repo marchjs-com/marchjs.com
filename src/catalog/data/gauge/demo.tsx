@@ -14,7 +14,7 @@ export const code = `<Gauge value={$speed} max={240} unit="km/h" label="Hız" pe
 
 type V = {
   variant: string; value: number; source: string; zones: boolean; redline: string; peak: boolean; needle: string;
-  readout: string; color: string; size: number; motion: boolean; unit: string; label: string;
+  readout: string; color: string; size: number; motion: boolean; unit: string; label: string; needles: boolean;
 }
 type Variant = "speedometer" | "tachometer" | "half" | "vu";
 
@@ -36,7 +36,10 @@ export default function GaugeDemo(props: { values: V }) {
             ? [{ from: scaled(0), to: scaled(60), color: "success" as const }, { from: scaled(60), to: scaled(85), color: "warning" as const }]
             : undefined)}
           redline={() => (props.values.redline === "auto" ? undefined : props.values.redline === "off" ? false : scaled(85))}
-          peak={() => props.values.peak} needle={v.needle === "auto" ? undefined : v.needle as "spring" | "vu" | "none"}
+          peak={() => props.values.peak}
+          needles={() => (props.values.needles && variant !== "vu"
+            ? [{ value: scaled(Math.max(0, Math.min(100, (props.values.value + $jolt) * 0.7))), label: "Ortalama", color: "info" as const, length: 0.7 }]
+            : undefined)} needle={v.needle === "auto" ? undefined : v.needle as "spring" | "vu" | "none"}
           readout={readout} color={(v.color || undefined) as ColorToken | undefined} size={() => props.values.size}
           motion={() => props.values.motion} unit={() => (variant === "vu" ? undefined : props.values.unit)} label={() => props.values.label} />
         <div class="sc-row">

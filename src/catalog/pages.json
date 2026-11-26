@@ -207,5 +207,17 @@
  "media/oscilloscope": "/charts/oscilloscope",
  "media/spectrum": "/charts/spectrum",
  "media/waveform": "/charts/waveform",
- "media/audio-reactive": "/charts/audio-reactive"
+ "media/audio-reactive": "/charts/audio-reactive",
+ "data/analog-clock": "/charts/analog-clock",
+ "data/stopwatch": "/charts/stopwatch",
+ "data/compass": "/charts/compass",
+ "data/altimeter": "/charts/altimeter",
+ "data/attitude-indicator": "/charts/attitude-indicator",
+ "data/thermometer": "/charts/thermometer",
+ "data/battery-gauge": "/charts/battery-gauge",
+ "data/dot-matrix": "/charts/dot-matrix",
+ "data/split-flap": "/charts/split-flap",
+ "data/flip-clock": "/charts/flip-clock",
+ "media/stereo-vu": "/charts/stereo-vu",
+ "media/loudness-graph": "/charts/loudness-graph"
 }
