@@ -1,0 +1,13 @@
+/* "Yeni" / "New" (new-badge.tsx): the newest is the strongest. Level 0 (today, yesterday): the accent's full colour and a
+   soft glow; 1: the full colour; 2: the accent's tint; 3 (the second week): a quiet neutral. The tones are March Badge's
+   own, readable in every theme, light and dark. */
+.sc-new.m-badge { font-size: 0.6875rem; line-height: 1.45; padding-block: 0; letter-spacing: 0.02em; flex: none; }
+.sc-new-0 { box-shadow: 0 0 0 2px color-mix(in srgb, var(--m-accent, var(--m-primary)) 22%, transparent), 0 0 10px color-mix(in srgb, var(--m-accent, var(--m-primary)) 40%, transparent); }
+@media (prefers-reduced-motion: no-preference) {
+  .sc-new-0 { animation: sc-new-glow 2.6s ease-in-out 3; }
+}
+@keyframes sc-new-glow { 50% { box-shadow: 0 0 0 1px color-mix(in srgb, var(--m-accent, var(--m-primary)) 12%, transparent), 0 0 4px color-mix(in srgb, var(--m-accent, var(--m-primary)) 20%, transparent); } }
+/* in the side menu the badge sits in NavSidebar's own badge slot: that one gives up its look */
+.m-sb-badge.m-badge:has(> .sc-new) { padding: 0; border: 0; background: none; }
+/* on a topic page, after the title and its March name */
+.sc-topic-h1 > .sc-new { vertical-align: middle; margin-inline-start: 0.6em; }
