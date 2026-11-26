@@ -3,7 +3,7 @@
 // (immutable, a year); a new example reaches the site by moving this sha. connect-src in the CSP (build.mjs) allows
 // https://cdn.jsdelivr.net. Small on purpose: shell-late loads it on every page to start the ide.json download early.
 
-export const EXAMPLES = "https://cdn.jsdelivr.net/gh/marchjs-com/examples@4ef6c129f792c0a02d1512930a2e5d474e8a3caa/";
+export const EXAMPLES = "https://cdn.jsdelivr.net/gh/marchjs-com/examples@0f9e6494ec15e430719f55d99c8540596a1d5858/";
 /** A source's URL: examples:// becomes EXAMPLES; anything else is fetched as written. */
 export const sourceUrl = (src: string): string => (src.startsWith("examples://") ? EXAMPLES + src.slice("examples://".length) : src);
 
