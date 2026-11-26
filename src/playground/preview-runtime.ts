@@ -394,7 +394,7 @@ interface Cell { C: Comp; el: HTMLElement; dispose: () => void; /** What it was 
  * is the same handler), an element by its markup; null when it cannot be read (then the cell is drawn again). */
 const sigOf = (props: Props, parts: Parts): string | null => {
   try {
-    return JSON.stringify([props, parts, instProps], (_k, v: unknown) =>
+    return JSON.stringify([props, parts, commonOf(instProps)], (_k, v: unknown) =>
       typeof v === "function" ? `fn:${String(v)}` : v instanceof Node ? `node:${v instanceof Element ? v.outerHTML : v.textContent}` : v);
   } catch { return null; }
 };
@@ -435,7 +435,7 @@ export function setLanguage(code: string | null, next: Record<string, string> | 
   core.locale.set(code);
 }
 /** Send new props (and parts) to the rendered components, by name (the Properties panel calls it on every change). */
-export function setProps(props: Record<string, Props>, parts: Record<string, Parts> = {}): void {
+export function setProps(props: Record<string, Props>, parts: Record<string, Parts> = {}, force = false): void {
   lastProps = props; lastParts = parts;
   if (!last) return;
   // a cell the props do not name is the previous file's (the tab changed, its build has not run yet): left as it is,
@@ -445,7 +445,7 @@ export function setProps(props: Record<string, Props>, parts: Record<string, Par
   for (const [name, cell] of last.cells) {
     if (!(name in props)) continue;
     const sig = sigOf(props[name] ?? {}, parts[name] ?? {});
-    if (sig != null && sig === cell.sig) continue;
+    if (!force && sig != null && sig === cell.sig) continue;
     cell.dispose(); cell.dispose = draw(cell.C, cell.el, props[name] ?? {}, parts[name] ?? {}, name); cell.sig = sig ?? undefined;
   }
 }
@@ -588,13 +588,44 @@ let instSeq = 0, treeCb: (() => void) | null = null, treeQueued = false;
 const treeChanged = (): void => { if (treeQueued || !treeCb) return; treeQueued = true; queueMicrotask(() => { treeQueued = false; treeCb?.() }) };
 // props given to one instance (by its key) in MarchIDE's Properties: over its own, on that instance only
 let instProps: Record<string, Props> = {};
-const over = (p: Props, extra: Props): Props => {
-  // copied as configurable (a prop the component froze, Textarea's disabled, would refuse the override otherwise)
-  const own = Object.getOwnPropertyDescriptors(p);
-  for (const d of Object.values(own)) d.configurable = true;
-  const o = Object.defineProperties({}, own) as Props;
-  for (const [k, v] of Object.entries(resolve(extra))) Object.defineProperty(o, k, { value: v, enumerable: true, configurable: true, writable: true });
-  return o;
+// the same map as a signal: an instance reads its Properties values through it, so a new value reaches the live
+// instance (its own animation runs: a Gauge's needle swings, a chart's bars grow) instead of a redraw that starts it at
+// the new value. Only the common props (m:…, sx), applied around what the component draws, still need a redraw.
+const instLive = core.signal<Record<string, Props>>({});
+const isCommon = (k: string): boolean => k.startsWith("m:") || k === "sx";
+/** The common props of every instance (what still redraws a cell when it changes). */
+const commonOf = (map: Record<string, Props>): Record<string, Props> => Object.fromEntries(Object.entries(map).map(([k, p]) => [k, Object.fromEntries(Object.entries(p).filter(([x]) => isCommon(x)))]).filter(([, p]) => Object.keys(p as object).length));
+/** `p` with the instance's live Properties values on top: a value set there wins over the code's, read reactively. */
+const liveProps = (p: Props, key: string): Props => {
+  const extra = (): Props | undefined => instLive()[key];
+  // each prop reads only its own value (one memo per prop): a new Properties value re-runs only what reads that prop,
+  // so a component's other computations (a Gauge's needle follower) are not rebuilt and its animation runs
+  const memo = new Map<string, () => { set: boolean; v: unknown }>();
+  const slot = (k: string): { set: boolean; v: unknown } => {
+    let m = memo.get(k);
+    if (!m) {
+      m = core.createRoot(() => core.computed(() => { const e = extra(); return e && k in e && !isCommon(k) ? { set: true, v: e[k] } : { set: false, v: undefined }; },
+        { equals: (a, b) => !!a && !!b && a.set === b.set && a.v === b.v }));
+      memo.set(k, m);
+    }
+    return m();
+  };
+  const own = (k: string | symbol): boolean => typeof k === "string" && slot(k).set;
+  // the m: props (applied around what the component draws, not given to it)
+  const hidden = (k: string | symbol): boolean => typeof k === "string" && k.startsWith("m:");
+  return new Proxy({} as Props, {
+    get: (_t, k) => (own(k) ? resolve({ [k as string]: slot(k as string).v })[k as string] : hidden(k) ? undefined : (p as Record<string | symbol, unknown>)[k]),
+    has: (_t, k) => own(k) || (!hidden(k) && k in p),
+    ownKeys: () => [...new Set([...Reflect.ownKeys(p).filter((k) => !hidden(k)), ...Object.keys(core.untrack(extra) ?? {}).filter((k) => !isCommon(k))])],
+    // the code's own props keep their descriptors (a getter stays a getter, a value a value: code that copies props by
+    // descriptor sees what it saw before); a Properties value is a getter, read live
+    getOwnPropertyDescriptor: (_t, k) => {
+      if (own(k)) return { configurable: true, enumerable: true, get: () => resolve({ [k as string]: slot(k as string).v })[k as string] };
+      if (hidden(k)) return undefined;
+      const d = Reflect.getOwnPropertyDescriptor(p, k);
+      return d ? { ...d, configurable: true } : undefined;
+    },
+  });
 };
 const HIERARCHY = core.defineExtension({
   name: "march-ide-hierarchy", order: -1000,
@@ -616,13 +647,14 @@ const HIERARCHY = core.defineExtension({
     // not on screen and its cleanup never runs: it leaves the Hierarchy here, or every such draw would stay listed
     // the common props (m:color, m:tip…) and sx given from Properties (to this instance, or to its kind as m:parts) are no
     // props of the component: they are applied to what it draws, as the compiler does for the ones written in code
-    const given = extra ? over(p, extra) : p;
+    // the plain props live (liveProps: a new Properties value reaches the instance without a redraw); the common ones
+    // (m:…, and sx when Properties gave it) as they were when the cell was drawn, applied around what it draws
     const common: Record<string, unknown> = {};
-    // (sx only when Properties gave it: one written in code is the compiler's already)
-    const mine = (k: string): boolean => k.startsWith("m:") || (k === "sx" && !!extra && "sx" in extra);
-    for (const k of Object.keys(given)) if (mine(k)) common[k === "sx" ? k : k.slice(2)] = (given as Props)[k];
-    let clean = given;
-    if (Object.keys(common).length) { clean = over(given, {}); for (const k of Object.keys(given)) if (mine(k)) delete (clean as Props)[k]; }
+    // (an m: prop the instance already carries, from its kind's m:parts, too; sx only when Properties gave it: one
+    // written in code is the compiler's already)
+    for (const k of Object.keys(p)) if (k.startsWith("m:")) common[k.slice(2)] = (p as Props)[k];
+    for (const [k, v] of Object.entries(resolve(extra ?? {}))) if (isCommon(k)) common[k === "sx" ? k : k.slice(2)] = v;
+    const clean = liveProps(p, key);
     try { const out = next(clean); return Object.keys(common).length ? mProps(out, Object.fromEntries(Object.entries(common).filter(([, v]) => v !== undefined && v !== ""))) : out; }
     catch (e) { instances.delete(id); treeChanged(); throw e; }
   },
@@ -677,8 +709,22 @@ export function instanceAt(node: Node | null): number {
 /** Props for single instances, by key (the Hierarchy's choice in Properties): the preview is drawn again with them. */
 export function setInstanceProps(map: Record<string, Props>): void {
   if (JSON.stringify(map) === JSON.stringify(instProps)) return;
+  const redraw = JSON.stringify(commonOf(map)) !== JSON.stringify(commonOf(instProps));
+  const before = instProps;
   instProps = map;
-  setProps(lastProps, lastParts);
+  if (redraw) { instLive.set(map); setProps(lastProps, lastParts); return; }
+  // plain props reach the instances live (their animation runs). A prop a component reads only once, when it is made
+  // (a Gauge's variant), changes nothing there: when the changed instances' elements did not change within two frames,
+  // the cell is drawn again, as before
+  const changed = Object.keys({ ...before, ...map }).filter((k) => JSON.stringify(before[k]) !== JSON.stringify(map[k]));
+  const roots = [...instances.values()].filter((x) => changed.includes(x.key)).flatMap((x) => x.roots());
+  let moved = !roots.length;
+  const mo = roots.length && typeof MutationObserver === "function" ? new MutationObserver(() => { moved = true; }) : null;
+  for (const el of roots) mo?.observe(el, { subtree: true, childList: true, attributes: true, characterData: true });
+  instLive.set(map);
+  const settle = (): void => { mo?.disconnect(); if (!moved) setProps(lastProps, lastParts, true); };
+  if (!mo) { if (!moved) setProps(lastProps, lastParts, true); return; }
+  requestAnimationFrame(() => requestAnimationFrame(settle));
 }
 /** Points at an instance in the preview: its root element flashes and comes into view. */
 export function highlight(id: number): void {
