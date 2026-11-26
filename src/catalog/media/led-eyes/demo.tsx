@@ -10,14 +10,14 @@ export const code = `<LedEyes />
 type V = LedLookValues & { expression: string; mouth: string; alive: boolean; follow: boolean; cols: number; rows: number };
 
 export default function LedEyesDemo(props: { values: V }) {
-  return <div class="sc-row" sx={{ w: "100%", gap: 4 }}>
+  return <div class="sc-row" sx={{ w: "full", gap: 4 }}>
     {() => {
       const v = props.values
-      return <div sx={{ flex: "2 1 18rem" }}>
+      return <div sx={{ flex: "grow" }}>
         <LedEyes expression={v.expression as "open"} mouth={v.mouth as "none"} alive={v.alive} follow={v.follow} cols={v.cols} rows={v.rows}
           color={v.color as "rgb"} shape={v.shape as "round"} gap={v.gap} bloom={v.bloom || false} ghost={v.ghost} scanlines={v.scanlines} panel={v.panel as "dark"} />
       </div>
     }}
-    <div sx={{ flex: "1 1 9rem" }}><LedEyes follow cols={20} rows={9} color="green" label="İşaretçiyi izleyen gözler" /></div>
+    <div sx={{ w: "sm" }}><LedEyes follow cols={20} rows={9} color="green" label="İşaretçiyi izleyen gözler" /></div>
   </div>
 }

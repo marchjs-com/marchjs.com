@@ -14,7 +14,7 @@ export default function PixelSpriteDemo(props: { values: V }) {
       return <PixelSprite sprite={v.sprite} fps={v.fps} playing={v.playing} pitch={v.pitch}
         color={v.color as "rgb"} shape={v.shape as "round"} gap={v.gap} bloom={v.bloom || false} ghost={v.ghost} scanlines={v.scanlines} panel={v.panel as "dark"} />
     }}
-    <div class="sc-row" sx={{ gap: 2, w: "22rem" }}>
+    <div class="sc-row" sx={{ gap: 2, w: "sm" }}>
       {LED_SPRITE_NAMES.map((n) => <PixelSprite sprite={n} pitch={4} />)}
     </div>
   </div>

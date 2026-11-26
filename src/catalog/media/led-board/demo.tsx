@@ -26,7 +26,7 @@ export default function LedBoardDemo(props: { values: V }) {
       default: return [{ text: v.text }, { eye: "look-left" as const, duration: 1600 }, { eye: "look-right" as const, mouth: "smile" as const, duration: 2000 }, { emoji: "heart" }, { text: "Kapı 3 :arrow-right:" }]
     }
   }
-  return <div class="sc-col" sx={{ w: "100%" }}>
+  return <div class="sc-col" sx={{ w: "full" }}>
     {() => props.values.preset === "match"
       ? <div class="sc-row">
           <Button size="sm" on:click={() => { $score = [$score[0] + 1, $score[1]] }}>Gol: EV</Button>
