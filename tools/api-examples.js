@@ -89,8 +89,8 @@ const GEN = `${DIR}/gen`;
 export const EX = ".ex.tsx";
 /** Suffix of a per-example module (statically imported by its part, so it never becomes a file of its own). */
 export const ONE = ".x.tsx";
-/** Source bytes per part (examples and the helpers they use; library code not counted): ~15–18 KB gzip once built. */
-export const PART_SOURCE = 86 * 1024;
+/** Source bytes per part (examples and the helpers they use; library code not counted): ~12–14 KB gzip once built (64 KB since 26 Nov 2026: the parts with chart and mask examples compiled past their budget at 86). */
+export const PART_SOURCE = 64 * 1024;
 /** File names for identifiers, distinct on case-insensitive file systems: kebab-case ("createRouter" → "create-router",
  *  "MOTION_DEFAULTS" → "motion_defaults"); names that differ only in case get "-" before each uppercase letter instead. */
 export function fileKeys(names) {

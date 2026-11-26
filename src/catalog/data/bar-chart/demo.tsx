@@ -11,22 +11,26 @@ export const code = `<BarChart data={$week} x="day" y={["shop", "online"]} serie
 const DAYS = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"];
 const week = (seed: number) => DAYS.map((day, i) => ({ day, shop: 900 + ((i * 37 + seed * 53) % 11) * 80 + (i >= 5 ? 700 : 0), online: 400 + ((i * 23 + seed * 31) % 9) * 70 }));
 
-type V = { series: string; stacked: boolean; horizontal: boolean; animate: string; grid: boolean; legend: string; format: string; height: number; title: string };
+type V = { series: string; stacked: boolean; horizontal: boolean; labels: string; marks: string; animate: string; grid: boolean; legend: string; format: string; height: number; title: string };
 
 export default function BarChartDemo(props: { values: V }) {
   let $seed = 1
   let $week = week(1)
   let $picked = ""
+  // "Yeni hafta" redraws the numbers (bars glide); "Hafta sonu kapalı" drops the last two days (they sink away)
+  let $short = false
   const next = () => { $seed++; $week = week($seed) }
   return <div class="sc-col">
     <div class="sc-row">
       <Button size="sm" icon={refresh} on:click={next}>Yeni hafta</Button>
+      <Button size="sm" variant="secondary" on:click={() => { $short = !$short }}>{() => ($short ? "Hafta sonu açık" : "Hafta sonu kapalı")}</Button>
       <span class="m-muted">{() => ($picked ? `Seçilen: ${$picked}` : "Bir çubuğa tıkla ya da Tab ile gel, ← → ile gez")}</span>
     </div>
     {() => {
       const v = props.values
-      return <BarChart data={() => $week} x="day" y={v.series === "both" ? ["shop", "online"] : "shop"} series={{ shop: "Dükkân", online: "Çevrimiçi" }}
-        stacked={v.stacked} horizontal={v.horizontal} animate={v.animate === "spring" ? true : v.animate === "off" ? false : v.animate} grid={v.grid}
+      const marks = v.marks === "target" ? [{ y: 1500, label: "Hedef", color: "success" }] : v.marks === "average" ? [{ y: "average" as const, series: "shop" }] : undefined
+      return <BarChart data={() => ($short ? $week.slice(0, 5) : $week)} labels={v.labels === "off" ? false : (v.labels as "inside")} marks={marks} x="day" y={v.series === "both" ? ["shop", "online"] : "shop"} series={{ shop: "Dükkân", online: "Çevrimiçi" }}
+        stacked={v.stacked} horizontal={v.horizontal} animate={v.animate === "spring" ? true : v.animate === "off" ? false : v.animate === "stagger" ? { stagger: 70 } : v.animate} grid={v.grid}
         legend={v.legend === "none" ? false : v.legend === "auto" ? undefined : (v.legend as "bottom")} format={v.format === "money" ? ["money", "TRY"] : v.format}
         height={v.height} title={v.title || undefined}
         onSelect={(p) => { $picked = `${p.x} · ${p.series === "online" ? "Çevrimiçi" : "Dükkân"}: ${(p.y ?? 0).toLocaleString("tr")}` }} />
