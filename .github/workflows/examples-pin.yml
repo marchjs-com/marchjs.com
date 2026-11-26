@@ -1,0 +1,89 @@
+name: examples-pin
+# Keeps the site on the newest examples without anyone moving the pin by hand. The site reads its examples from one
+# immutable commit of marchjs-com/examples (src/playground/examples.ts › EXAMPLES): cached for a year and tested by ci
+# with exactly that commit. Every few minutes this looks at examples' main; when it has moved, it opens (or updates) a
+# pull request that moves the pin, runs ci on it and merges it once ci is green.
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [examples-updated]
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+  checks: read
+
+concurrency:
+  group: examples-pin
+  cancel-in-progress: false
+
+jobs:
+  pin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      BRANCH: auto/examples-pin
+      FILE: src/playground/examples.ts
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - name: newest examples commit
+        id: sha
+        run: |
+          new=$(git ls-remote https://github.com/marchjs-com/examples.git refs/heads/main | cut -f1)
+          cur=$(grep -o 'marchjs-com/examples@[0-9a-f]\{40\}' "$FILE" | cut -d@ -f2)
+          echo "new=$new" >> "$GITHUB_OUTPUT"
+          echo "cur=$cur" >> "$GITHUB_OUTPUT"
+          if [ -z "$new" ] || [ -z "$cur" ]; then echo "::error::could not read the shas (new=$new cur=$cur)"; exit 1; fi
+          [ "$new" = "$cur" ] && echo "The pin is at examples main ($cur)." || echo "examples main moved: $cur → $new"
+      - name: move the pin on the branch
+        if: steps.sha.outputs.new != steps.sha.outputs.cur
+        run: |
+          sed -i "s/${{ steps.sha.outputs.cur }}/${{ steps.sha.outputs.new }}/" "$FILE"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git commit -am "Examples at ${{ steps.sha.outputs.new }}" -m "marchjs-com/examples@${{ steps.sha.outputs.new }} (moved automatically by examples-pin)"
+          git push -f origin "$BRANCH"
+      - name: pull request
+        if: steps.sha.outputs.new != steps.sha.outputs.cur
+        run: |
+          new=${{ steps.sha.outputs.new }}
+          body="Moves the examples pin to marchjs-com/examples@${new} (https://github.com/marchjs-com/examples/compare/${{ steps.sha.outputs.cur }}...${new}). Opened by the examples-pin workflow; it merges once ci is green."
+          if [ -z "$(gh pr list --head "$BRANCH" --state open --json number -q '.[0].number')" ]; then
+            gh pr create --head "$BRANCH" --base main --title "Examples at ${new:0:7}" --body "$body"
+          else
+            gh pr edit "$BRANCH" --title "Examples at ${new:0:7}" --body "$body"
+          fi
+      # a pull request opened with this workflow's token does not start ci by itself; a dispatch does, on the branch's
+      # commit, so the required checks (build, ide 1–10) report on it
+      - name: run ci on the branch and wait for it
+        if: steps.sha.outputs.new != steps.sha.outputs.cur
+        run: |
+          head=$(git rev-parse HEAD)
+          gh workflow run ci.yml --ref "$BRANCH"
+          for i in $(seq 1 30); do
+            id=$(gh run list --workflow ci.yml --branch "$BRANCH" --event workflow_dispatch --json databaseId,headSha -q ".[] | select(.headSha == \"$head\") | .databaseId" | head -1)
+            [ -n "$id" ] && break
+            sleep 10
+          done
+          [ -n "$id" ] || { echo "::error::ci did not start"; exit 1; }
+          # a flaky headless-browser start (webSocketDebuggerUrl) gets one rerun of the failed parts
+          if ! gh run watch "$id" --exit-status --interval 30 > /dev/null; then
+            if gh run view "$id" --log-failed | grep -q webSocketDebuggerUrl; then
+              gh run rerun "$id" --failed
+              sleep 20
+              gh run watch "$id" --exit-status --interval 30 > /dev/null
+            else
+              echo "::error::ci failed on the pin move; the pull request stays open"
+              exit 1
+            fi
+          fi
+      - name: merge
+        if: steps.sha.outputs.new != steps.sha.outputs.cur
+        run: gh pr merge "$BRANCH" --merge --delete-branch
