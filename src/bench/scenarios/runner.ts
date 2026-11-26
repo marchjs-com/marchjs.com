@@ -1,4 +1,5 @@
-// Realistic scenarios: the runner. One library at a time in its own host; every step starts in a requestAnimationFrame
+// Realistic scenarios: the runner. A warm-up pass over every library first, then one library at a time in its own host
+// (the order turned by one every scenario); every step starts in a requestAnimationFrame
 // callback and is timed until a message posted from it is handled, which is right after that frame's paint.
 // (Not an animation: the motion engine's global speed or "stop all" must not change a measurement.)
 import { stats, type Stats } from "../core.ts"
@@ -53,11 +54,29 @@ export async function runScenarios(o: { scenarios: Scenario[]; libs: string[]; s
   const libs = o.libs.filter((l) => reg[l])
   const total = o.scenarios.reduce((s, sc) => s + libs.length * (sc.steps + sc.warm), 0)
   let done = 0
-  for (const sc of o.scenarios) {
+  // the page's own warm-up (JIT of the runner and the shared code, style and layout caches) once for every library
+  // before anything is measured: run one after another, the first ones paid it (measured: the same build gave the
+  // library run first a slower median than when it ran third)
+  const first = o.scenarios[0]
+  if (first) {
+    const data = first.data(seed, false), plan = first.plan(data, seed, first.warm)
+    for (const lib of libs) {
+      if (o.signal?.aborted) break
+      const host = document.createElement("div")
+      host.className = "bt-host"; host.dataset.lib = lib
+      o.stage.append(host)
+      try {
+        const mount = (await reg[lib]!())[first.id]
+        if (mount) { const app = await mount(host, data as never); for (const step of plan) await frame(() => app.step(step)); app.destroy() }
+      } catch { /* measured (and reported) below */ } finally { host.remove() }
+    }
+  }
+  for (const [si, sc] of o.scenarios.entries()) {
     const per: Record<string, ScenarioResult> = (res.results[sc.id] = {})
     const data = sc.data(seed, o.large && !!sc.large), plan = sc.plan(data, seed, sc.warm + sc.steps)
     if (!(await calm(o.signal))) res.busy.push(sc.id)
-    for (const lib of libs) {
+    // the order turns by one every scenario: no library is always first or last
+    for (const lib of libs.map((_, i) => libs[(i + si) % libs.length]!)) {
       if (o.signal?.aborted) break
       gc(); await sleep(300); await visible()
       const host = document.createElement("div")
