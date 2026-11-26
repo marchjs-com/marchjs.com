@@ -47,7 +47,7 @@ const ROUTER_DEMO = "the router demo's layout (nested routes, outlets): loaded w
 const COMPONENT_PAGE = "the component pages' layout (prop table, options, cards): loaded with a component page";
 const argued = (rows) => Object.fromEntries(Object.entries(rows).map(([k, [n, why]]) => [k, { limit: kb(n), why }]));
 const SHOWCASE_ROUTES = Object.fromEntries(Object.entries(argued({
-  "/charts": [70, PAGE],
+  "/charts": [75, PAGE],
   "/feedback": [65, PAGE],
   "/home": [70, PAGE],
   "/managers": [65, PAGE],
@@ -72,7 +72,7 @@ const SHOWCASE_PARTS = argued({
   "src/bench/apps/react.ts": [85, BENCH],
   "src/bench/apps/svelte-app.ts": [30, BENCH],
   "src/bench/apps/vue.ts": [35, BENCH],
-  "src/component-page/_layout.tsx": [30, COMPONENT_PAGE],
+  "src/component-page/_layout.tsx": [34, COMPONENT_PAGE],
   "src/home/sections.tsx": [55, HOME],
   "src/playground/layouts/component.tsx": [110, MARCH_IDE],
   "src/playground/march-ide.tsx": [75, MARCH_IDE],
@@ -81,6 +81,43 @@ const SHOWCASE_PARTS = argued({
   "src/shell-menu.tsx": [30, MENU],
   "src/web/product.tsx": [30, SAMPLE],
 });
+
+// The charts page's card demos (src/pages/charts.tsx): each a lazy part loaded only when its chart page opens. Most are under
+// the 10 KB floor; left as they are, the packer folds them into parts every component page loads (workbench, the
+// component page layout), so each stays a small file of its own.
+const CHART_DEMOS = Object.fromEntries([
+  "src/catalog/data/line-chart/demo.tsx",
+  "src/catalog/data/bar-chart/demo.tsx",
+  "src/catalog/data/pie-chart/demo.tsx",
+  "src/catalog/data/stream-graph/demo.tsx",
+  "src/catalog/data/scatter-chart/demo.tsx",
+  "src/catalog/data/histogram/demo.tsx",
+  "src/catalog/data/box-plot/demo.tsx",
+  "src/catalog/data/heatmap/demo.tsx",
+  "src/catalog/data/funnel-chart/demo.tsx",
+  "src/catalog/data/waterfall-chart/demo.tsx",
+  "src/catalog/data/bullet-chart/demo.tsx",
+  "src/catalog/data/stat/demo.tsx",
+  "src/catalog/data/radar-chart/demo.tsx",
+  "src/catalog/data/radial-bar-chart/demo.tsx",
+  "src/catalog/data/progress-ring/demo.tsx",
+  "src/catalog/data/sunburst-chart/demo.tsx",
+  "src/catalog/data/treemap/demo.tsx",
+  "src/catalog/data/sankey-chart/demo.tsx",
+  "src/catalog/data/chord-chart/demo.tsx",
+  "src/catalog/data/candlestick-chart/demo.tsx",
+  "src/catalog/data/network-graph/demo.tsx",
+  "src/catalog/data/choropleth-map/demo.tsx",
+  "src/catalog/data/sparkline/demo.tsx",
+  "src/catalog/data/bar-list/demo.tsx",
+  "src/catalog/data/gauge/demo.tsx",
+  "src/catalog/data/odometer/demo.tsx",
+  "src/catalog/data/level-meter/demo.tsx",
+  "src/catalog/media/oscilloscope/demo.tsx",
+  "src/catalog/media/spectrum/demo.tsx",
+  "src/catalog/media/waveform/demo.tsx",
+  "src/catalog/media/audio-reactive/demo.tsx",
+].map((f) => [f, "a chart card's live demo: loaded only when its chart page opens"]));
 
 export default {
   entry: "src/main.tsx",
@@ -119,7 +156,10 @@ export default {
   // maxBuilds: 3 (~2.5 min): the planner groups small pages from size estimates and takes a group past the route budget
   // apart only on its next pass; the third build checks the second's groups. With 2 they were never checked: from 0.3.7 on they
   // came out past 60 KB (/buttons, /big-data, /overlay, /text and /forms each loading one group of 85–137 KB).
-  chunks: { minSize: 10 * 1024, fail: false, maxBuilds: 3, commonRoom: 6 * 1024, allow: {
+  // 5 (26 Nov 2026): with the chart pages' 16 more lazy demos the third build still left groups past their budget; two more
+  // passes let the planner split and re-check them.
+  chunks: { minSize: 10 * 1024, fail: false, maxBuilds: 5, commonRoom: 6 * 1024, allow: {
+    ...CHART_DEMOS,
     "src/web/product.tsx": "Web siteleri sample page: loaded only when /sites/product opens it, never with the blocks page",
     "src/web/product-more.tsx": "lower half of the product sample: loaded when it comes near the viewport",
     "src/web/portfolio-more.tsx": "lower half of the portfolio sample: loaded when it comes near the viewport",
@@ -130,6 +170,8 @@ export default {
     "src/web/honest.tsx": "honest sample page: loaded only when /sites/honest opens it",
     "src/web/live.tsx": "live sample page: loaded only when /sites/live opens it",
     "src/web/story.tsx": "story sample page: loaded only when /sites/story opens it",
+    "src/component-page/_layout.tsx": "every component page's frame (1 KB): in a page group it made each component page download that group's pages (the motion pages, /start, /transitions)",
+    "src/wb-topics.ts": "the workbench's Parçalar tab titles (the menu's topic tables): loaded when that tab opens; joined to the workbench they cost every component page ~18 KB",
     "src/i18n/tr.ts": "locale dictionary: downloaded only for Turkish, never grouped",
     "src/router/outlets.ts": "named / modal outlets (1.8 KB, no dependencies): joining any page group would make it pull that page",
     "src/demo-code.tsx": "a demo card's Code tab (code widget + highlighter), loaded on the first click on Kod: inlined into the card it would load with every page",

@@ -1,6 +1,6 @@
 import { definePlayground } from "../../spec.ts";
 
-interface Values { sort: boolean; limit: number; format: string; color: number; clickable: boolean; title: string }
+interface Values { sort: boolean; limit: number; format: string; color: number; clickable: boolean; title: string; animate: string }
 
 export default definePlayground<Values>({
   options: [
@@ -12,5 +12,7 @@ export default definePlayground<Values>({
     // the showcase card's own: rows become buttons (in MarchIDE: onSelect in Events)
     { key: "clickable", label: "Tıklanabilir satırlar (onSelect)", default: true, prop: false },
     { key: "title", label: "Erişilebilir ad (title)", default: "En çok dinlenenler", kind: "text" },
+    { key: "animate", label: "Animasyon (animate)", default: "spring", options: [{ value: "spring", label: "yay" }, { value: "out", label: "yumuşak" }, { value: "stagger", label: "sırayla" }, { value: "off", label: "kapalı" }],
+      toProp: (v) => (v === "spring" ? true : v === "off" ? false : v === "stagger" ? { stagger: 60 } : v), toCode: { spring: null, off: "{false}", stagger: "{{ stagger: 60 }}" } },
   ],
 });

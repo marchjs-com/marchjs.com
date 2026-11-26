@@ -14,3 +14,12 @@
 .sc-ex-charts-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: var(--m-space-3); }
 .sc-ex-charts-list { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; font-size: var(--m-text-sm); }
 .sc-ex-charts-list > li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--m-space-2); padding: var(--m-space-1) var(--m-space-2); border-radius: var(--m-radius-1); background: var(--m-surface-2); }
+.sc-ex-charts-thick { stroke-width: 10; stroke-linecap: round; }
+.sc-ex-charts-faint { opacity: .25; }
+.sc-ex-charts-none { fill: none; }
+.sc-ex-charts-box { fill: none; stroke: var(--m-border); stroke-dasharray: 4 3; }
+.sc-ex-charts-tile { stroke: var(--m-surface); stroke-width: 2; }
+.sc-ex-charts-region { stroke: var(--m-surface); stroke-width: .8; }
+.sc-ex-charts-swatches svg.sc-ex-charts-symbol { inline-size: 2.5rem; block-size: 2.5rem; }
+.sc-ex-charts-swatches > li.sc-ex-charts-in { padding: 2px 6px; border-radius: var(--m-radius-1); background: var(--m-surface-2); font-weight: 600; }
+.sc-ex-charts-swatches > li.sc-ex-charts-out { padding: 2px 6px; opacity: .45; }
