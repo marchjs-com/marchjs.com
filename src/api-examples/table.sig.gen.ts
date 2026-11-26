@@ -13,7 +13,7 @@ const sig: Record<string, Record<string, string>> = {
   "createVirtual": "function createVirtual(o: VirtualOptions): Virtual",
   "csvField": "function csvField(v: unknown, separator = \",\", safe = true): string",
   "describeFilter": "function describeFilter(col: { filter?: Column[\"filter\"] | undefined; options?: OptionsInput | undefined }, f: unknown): string",
-  "download": "function download(filename: string, text: string, type = \"text/plain;charset=utf-8\"): string",
+  "download": "function download(filename: string, text: string | Blob, type = \"text/plain;charset=utf-8\"): string",
   "formatValue": "function formatValue<R>(row: R, col: Column<R>): unknown",
   "isEmptyFilter": "function isEmptyFilter(v: unknown): boolean",
   "mapParams": "function mapParams(p: Record<string, unknown>, names?: ParamNames, cursorMode?: boolean): Record<string, unknown>",
