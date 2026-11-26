@@ -11,6 +11,7 @@ import { pages, setTrail } from "./app.tsx";
 import { ideOpen } from "./playground/ide-open.ts";
 import { MENU_GROUPS, SECTIONS, sectionOf, type NavSection } from "./nav-meta.ts";
 import { withMeta } from "./nav-pages.ts";
+import { NewBadge, addedOf, ageOf } from "./new-badge.tsx";
 
 const SECTION_KEY = "sc.section";
 const HOME = "home";
@@ -32,9 +33,24 @@ export default function ShellMenu() {
   }
   // a component page shows its Turkish title with the March name under it ("Bülten formu" / Newsletter); a page a
   // section took from another group ("March dili") is listed under that section's first group
+  // "Yeni": a page new for 14 days (new-badge.tsx); a page with new pages under it shows the newest of them (they sit in
+  // its flyout). Ctrl+K finds them by "yeni" / "new" too.
+  const kidsOf = new Map<string, Entry[]>()
+  for (const p of all) if (p.parent) kidsOf.set(p.parent, [...(kidsOf.get(p.parent) ?? []), p])
+  const ages = new Map<string, number | null>()
+  const ageAt = (p: Entry, depth = 0): number | null => {
+    if (ages.has(p.path)) return ages.get(p.path)!
+    let a = ageOf(addedOf(p))
+    if (depth < 8) for (const k of kidsOf.get(p.path) ?? []) { const b = ageAt(k, depth + 1); if (b !== null && (a === null || b < a)) a = b }
+    ages.set(p.path, a)
+    return a
+  }
+  // (NavSidebar's badge slot takes a number or a text; the March Badge it draws holds this one, new-badge.css)
+  const newMark = (age: number | null) => age === null ? {} : { badge: (() => <NewBadge age={age} />) as unknown as () => string, badgeTone: "primary" as const }
   const items = all.map((p) => {
-    const s = secOf(p), moved = !!s?.pages?.includes(topOf(p).path)
-    return { id: p.path, label: p.title, sub: p.name ?? p.desc, href: p.path as Href, icon: p.icon, group: moved ? s?.groups[0] : p.group, parent: p.parent, keywords: p.name ? `${p.name} ${p.desc ?? ""}` : p.desc }
+    const s = secOf(p), moved = !!s?.pages?.includes(topOf(p).path), age = ageAt(p)
+    const keywords = [p.name, p.desc, age !== null ? "yeni new" : ""].filter(Boolean).join(" ")
+    return { id: p.path, label: p.title, sub: p.name ?? p.desc, href: p.path as Href, icon: p.icon, group: moved ? s?.groups[0] : p.group, parent: p.parent, keywords, ...newMark(age) }
   })
   /** The top pages of a section, in the order of its groups (the menu's order). */
   const topsOf = (s: NavSection | undefined): Entry[] => !s ? [] : all.filter((x) => !x.parent && secOf(x) === s)

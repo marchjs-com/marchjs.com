@@ -4,7 +4,8 @@
 import { activity, appWindow, film, alertCircle, barChart, code, compass, cpu, dashboard, edit, gauge, grid, layers, menu, message, heart, palette, play, search, server, sparkles, zap } from "march/icons";
 import { HOME_STATS } from "./home-stats.gen.ts";
 
-export interface PageMeta { desc: string; group?: string; icon: unknown }
+export interface PageMeta { desc: string; group?: string; icon: unknown; /** The day the page first appeared (YYYY-MM-DD), for a page that is not a
+ *  component's: it shows "Yeni" for 14 days (new-badge.tsx; a component's day comes from March). */ added?: string }
 export const PAGE_META: Record<string, PageMeta> = {
   "/": { desc: "March'a genel bakış", icon: dashboard },
   "/start": { desc: "Kurulum, ilk bileşen, march CLI, proje yapısı", group: "İlk Adımlar", icon: zap },

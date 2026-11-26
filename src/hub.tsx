@@ -13,6 +13,7 @@ import { cards } from "./catalog/cards.gen.ts";
 import type { Topic } from "./topics/types.ts";
 import { sectionOf, PAGE_META } from "./nav-meta.ts";
 import { HubArt, loadArt } from "./hub-art.tsx";
+import { NewBadge, addedOf, ageOf } from "./new-badge.tsx";
 import type { ArtSet } from "./hub-art/types.ts";
 
 export interface HubProps {
@@ -64,7 +65,7 @@ function apiOf(t: Topic): { name: string; from: string; href: Href } | null {
 function TopicPage(props: { section: string; title: string; topics: readonly Topic[]; at: number; draw: (() => unknown) | undefined }) {
   const { section: base, topics, at } = props
   const t = topics[at]!, prev = topics[(at - 1 + topics.length) % topics.length]!, next = topics[(at + 1) % topics.length]!
-  const api = apiOf(t)
+  const api = apiOf(t), age = ageOf(addedOf(t))
   const line = api ? `import { ${api.name} } from "${api.from}"` : ""
   // arriving from a card: the stage carries the morph's name for the moment of the transition
   const arriving = morphing
@@ -76,7 +77,7 @@ function TopicPage(props: { section: string; title: string; topics: readonly Top
     </nav>
     <header class="sc-topic-head">
       <div class="sc-topic-titles">
-        <h1 class="sc-h1 sc-topic-h1">{t.title}{t.name ? <code class="sc-topic-name">{t.name}</code> : null}</h1>
+        <h1 class="sc-h1 sc-topic-h1">{t.title}{t.name ? <code class="sc-topic-name">{t.name}</code> : null}{age !== null ? <NewBadge age={age} /> : null}</h1>
         <p class="sc-lead">{t.desc}</p>
       </div>
       {api ? <div class="sc-topic-acts">
