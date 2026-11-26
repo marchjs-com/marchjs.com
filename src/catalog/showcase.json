@@ -207,5 +207,17 @@
  "media/oscilloscope": {"page":"/charts"},
  "media/spectrum": {"page":"/charts"},
  "media/waveform": {"page":"/charts"},
- "media/audio-reactive": {"page":"/charts"}
+ "media/audio-reactive": {"page":"/charts"},
+ "data/analog-clock": {"page":"/charts"},
+ "data/stopwatch": {"page":"/charts"},
+ "data/compass": {"page":"/charts"},
+ "data/altimeter": {"page":"/charts"},
+ "data/attitude-indicator": {"page":"/charts"},
+ "data/thermometer": {"page":"/charts"},
+ "data/battery-gauge": {"page":"/charts"},
+ "data/dot-matrix": {"page":"/charts"},
+ "data/split-flap": {"page":"/charts"},
+ "data/flip-clock": {"page":"/charts"},
+ "media/stereo-vu": {"page":"/charts"},
+ "media/loudness-graph": {"page":"/charts"}
 }

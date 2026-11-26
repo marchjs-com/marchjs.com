@@ -32,4 +32,28 @@ export const art: ArtSet = {
   waveform: [["shape", "M14 34h4v12h-4zM22 28h4v24h-4zM30 22h4v36h-4zM38 30h4v20h-4zM46 24h4v32h-4zM54 32h4v16h-4z"], ["shape", "M62 26h4v28h-4zM70 20h4v40h-4zM78 30h4v20h-4zM86 34h4v12h-4zM94 26h4v28h-4zM102 32h4v16h-4zM110 28h4v24h-4zM118 34h4v12h-4zM126 36h4v8h-4z", { o: 0.3 }], ["path", "M60 14v52", { w: 2, color: "orange", mv: { x: 10 } }]],
   // An avatar whose ring breathes with the voice.
   "audio-reactive": [["ring", 75, 40, 28, { w: 4, mv: { scale: 1.12, opacity: 0.5 } }], ["dot", 75, 40, 20, { o: 0.5 }], ["ln", 108, 32, 26], ["ln", 108, 46, 18]],
+  // A clock face: twelve marks, the hands moving on.
+  "analog-clock": [["ring", 75, 40, 30, { w: 3 }], ["path", "M75 14v5M75 61v5M49 40h5M96 40h5", { o: 0.5 }], ["path", "M75 40l0-18", { w: 3 }], ["path", "M75 40l14 8", { w: 2.5, mv: { rotate: 30 } }], ["dot", 75, 40, 3]],
+  // A stopwatch with its crown and a small sub-dial.
+  stopwatch: [["ring", 75, 44, 26, { w: 3 }], ["fill", 70, 10, 10, 6, 2], ["ring", 75, 54, 7, { o: 0.4 }], ["path", "M75 44l12-14", { w: 2.5, color: "orange", mv: { rotate: 40 } }], ["dot", 75, 44, 3]],
+  // A compass rose turning to a new heading.
+  compass: [["ring", 75, 40, 28, { w: 3 }], ["shape", "M75 16l5 24h-10z", { color: "orange", mv: { rotate: 35 } }], ["shape", "M75 64l-5-24h10z", { o: 0.4, mv: { rotate: 35 } }], ["dot", 75, 40, 3]],
+  // Three hands on one altitude dial and the pressure window.
+  altimeter: [["ring", 75, 40, 28, { w: 3 }], ["path", "M75 40l0-24", { w: 1.5 }], ["path", "M75 40l12-10", { w: 3, mv: { rotate: 20 } }], ["fill", 88, 36, 12, 8, 1, { o: 0.4 }], ["dot", 75, 40, 3]],
+  // The horizon card tilting: sky above, ground below, the aircraft symbol fixed.
+  "attitude-indicator": [["ring", 75, 40, 28, { w: 3 }], ["shape", "M49 44l52-8v20a26 26 0 0 1-52 0z", { o: 0.35, mv: { rotate: -8 } }], ["path", "M61 40h10m8 0h10", { w: 3, color: "orange" }], ["dot", 75, 40, 2.5]],
+  // A glass column with its bulb, the liquid rising.
+  thermometer: [["path", "M75 12v42", { w: 12, o: 0.2 }], ["path", "M75 54v-26", { w: 7, color: "orange", mv: { y: -6 } }], ["dot", 75, 60, 9, { color: "orange" }], ["ln", 90, 20, 14], ["ln", 90, 34, 10], ["ln", 90, 48, 14]],
+  // A battery filling up, the tip on its side.
+  "battery-gauge": [["box", 38, 24, 70, 32, 6], ["fill", 109, 34, 5, 12, 2], ["fill", 43, 29, 44, 22, 3, { mv: { x: 6 } }]],
+  // LED dots spelling a word on a dark board.
+  "dot-matrix": [["fill", 18, 18, 114, 44, 6, { o: 0.15 }], ["shape", "M28 28h4v4h-4zM28 36h4v4h-4zM28 44h4v4h-4zM36 28h4v4h-4zM44 36h4v4h-4zM56 28h4v4h-4zM56 44h4v4h-4zM64 36h4v4h-4zM76 28h4v4h-4zM84 28h4v4h-4zM92 36h4v4h-4zM104 44h4v4h-4zM112 28h4v4h-4z", { color: "orange", mv: { x: -4 } }]],
+  // Split-flap cells, one turning to a new letter.
+  "split-flap": [["fill", 24, 22, 22, 36, 3, { o: 0.7 }], ["fill", 50, 22, 22, 36, 3, { o: 0.7 }], ["fill", 76, 22, 22, 36, 3, { o: 0.7, mv: { scale: 0.92 } }], ["fill", 102, 22, 22, 36, 3, { o: 0.7 }], ["path", "M24 40h100", { o: 0.6 }]],
+  // Flip-clock cards: hours and minutes, the separator blinking.
+  "flip-clock": [["fill", 22, 20, 46, 40, 5, { o: 0.75 }], ["fill", 82, 20, 46, 40, 5, { o: 0.75, mv: { scale: 0.94 } }], ["dot", 75, 32, 2.5, { mv: { opacity: 0.2 } }], ["dot", 75, 48, 2.5, { mv: { opacity: 0.2 } }], ["path", "M22 40h106", { o: 0.5 }]],
+  // Two VU meters on one panel, the needles swinging together.
+  "stereo-vu": [["box", 12, 14, 126, 52, 6], ["path", "M24 52a22 22 0 0 1 42 0M84 52a22 22 0 0 1 42 0", { w: 2, o: 0.5 }], ["path", "M45 56l-8-22", { w: 2, mv: { rotate: 25 } }], ["path", "M105 56l-6-22", { w: 2, mv: { rotate: 30 } }]],
+  // A loudness line around its target line.
+  "loudness-graph": [["path", "M12 32h126", { o: 0.4, color: "orange" }], ["path", "M12 46l14-8 12 4 14-14 12 6 14-4 12 10 14-12 12 4 14-2", { w: 2 }], ["path", "M12 64h126", { o: 0.25 }], ["dot", 124, 30, 3, { mv: { scale: 1.3 } }]],
 };
