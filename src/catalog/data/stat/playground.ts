@@ -1,6 +1,6 @@
 import { definePlayground } from "../../spec.ts";
 
-interface Values { label: string; format: string; delta: string; invert: boolean; hint: string; spark: boolean; icon: boolean }
+interface Values { label: string; format: string; delta: string; invert: boolean; hint: string; spark: boolean; icon: boolean; animate: string }
 
 export default definePlayground<Values>({
   options: [
@@ -13,5 +13,10 @@ export default definePlayground<Values>({
     { key: "hint", label: "Değişimden sonra (hint)", default: "geçen aya göre", kind: "text", toCode: (v) => (v ? JSON.stringify(v) : null) },
     { key: "spark", label: "Eğilim çizgisi (spark)", default: true, prop: false },
     { key: "icon", label: "İkon (icon)", default: true, prop: false },
+    // the number counts, the arrow turns, the sparkline morphs; "yavaş" makes the count easy to follow, "girişsiz"
+    // shows the first value at once (only changes count)
+    { key: "animate", label: "Animasyon (animate)", default: "spring", options: [{ value: "spring", label: "yay" }, { value: "out", label: "yumuşak" }, { value: "slow", label: "yavaş" }, { value: "noenter", label: "girişsiz" }, { value: "off", label: "kapalı" }],
+      toProp: (v) => (v === "spring" ? true : v === "off" ? false : v === "slow" ? { easing: "out", duration: 1400 } : v === "noenter" ? { enter: false } : v),
+      toCode: { spring: null, off: "{false}", slow: "{{ easing: \"out\", duration: 1400 }}", noenter: "{{ enter: false }}" } },
   ],
 });

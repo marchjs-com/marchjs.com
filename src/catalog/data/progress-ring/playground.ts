@@ -1,6 +1,6 @@
 import { definePlayground } from "../../spec.ts";
 
-interface Values { value: number; max: number; size: number; thickness: number; colors: string; paint: string; color: string; label: string }
+interface Values { value: number; max: number; size: number; thickness: number; colors: string; paint: string; color: string; label: string; animate: string }
 
 export default definePlayground<Values>({
   options: [
@@ -15,5 +15,8 @@ export default definePlayground<Values>({
     { key: "color", label: "Renk (color)", default: "", options: [{ value: "", label: "düzeye göre" }, { value: "primary", label: "vurgu" }, { value: "brand-blue", label: "mavi" }, { value: "success", label: "yeşil" }],
       visibleWhen: (v) => v.colors !== "brand", toProp: (v) => (v || undefined), toCode: (v) => (v ? JSON.stringify(v) : null) },
     { key: "label", label: "Erişilebilir ad (label)", default: "Uyku puanı", kind: "text" },
+    { key: "animate", label: "Animasyon (animate)", default: "spring", options: [{ value: "spring", label: "yay" }, { value: "out", label: "yumuşak" }, { value: "slow", label: "yavaş" }, { value: "off", label: "kapalı" }],
+      toProp: (v) => (v === "spring" ? true : v === "off" ? false : v === "slow" ? { easing: "out", duration: 1600 } : v),
+      toCode: { spring: null, off: "{false}", slow: "{{ easing: \"out\", duration: 1600 }}" } },
   ],
 });
