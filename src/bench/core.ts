@@ -154,9 +154,12 @@ export interface RunResult {
   samples: Record<string, Record<string, number[]>>
   /** library id → op id → the operation alone (ms, from the call to its paint; older results have none) */
   act?: Record<string, Record<string, number[]>>
-  /** library id → op id → JS heap per sample (MB, from its start): `peak` the most it reached (after preparing, after the
-   * operation or after emptying the table), `end` what was left at its end; only where the browser reports the heap */
-  heap?: Record<string, Record<string, { peak: number[]; end: number[] }>>
+  /** library id → op id → the most JS heap any of its samples grew by (MB, from that sample's start, read after each
+   * paint); only where the browser reports the heap */
+  heapMax?: Record<string, Record<string, number>>
+  /** library id → op id → the busiest any of its samples kept the page's main thread (% of the sample's time, from the
+   * long animation frames the browser reports: frames over 50 ms); only where the browser reports them */
+  cpuMax?: Record<string, Record<string, number>>
   /** library id → op id → reason (a failed check, a load error) */
   errors: Record<string, Record<string, string>>
   /** library id → first paint (ms: download + start-up + first empty draw) */
@@ -182,9 +185,7 @@ async function pipe(bytes: Uint8Array, stream: CompressionStream | Decompression
 }
 /** Samples rounded to 0.1 ms keep the link short. */
 const round1 = (m: Record<string, Record<string, number[]>>) => Object.fromEntries(Object.entries(m).map(([k, ops]) => [k, Object.fromEntries(Object.entries(ops).map(([o, xs]) => [o, xs.map((x) => Math.round(x * 10) / 10)]))]))
-const round2 = (xs: number[]) => xs.map((x) => Math.round(x * 100) / 100)
-const round = (r: RunResult): RunResult => ({ ...r, samples: round1(r.samples), ...(r.act ? { act: round1(r.act) } : {}),
-  ...(r.heap ? { heap: Object.fromEntries(Object.entries(r.heap).map(([k, ops]) => [k, Object.fromEntries(Object.entries(ops).map(([o, h]) => [o, { peak: round2(h.peak), end: round2(h.end) }]))])) } : {}) })
+const round = (r: RunResult): RunResult => ({ ...r, samples: round1(r.samples), ...(r.act ? { act: round1(r.act) } : {}) })
 /** Result → deflate → base64url (the share link's hash part). */
 export async function encodeResult(r: RunResult): Promise<string> {
   return b64url(await pipe(new TextEncoder().encode(JSON.stringify(round(r))), new CompressionStream("deflate-raw")))

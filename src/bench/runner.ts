@@ -38,7 +38,12 @@ function visible(): Promise<void> {
 
 export async function runBench(o: RunOptions): Promise<RunResult> {
   const nav = navigator as Navigator & { deviceMemory?: number }
-  const res: RunResult = { v: 1, date: new Date().toISOString(), env: { ua: nav.userAgent, cores: nav.hardwareConcurrency, memory: nav.deviceMemory, screen: `${screen.width}×${screen.height}`, dpr: devicePixelRatio }, reps: o.reps, samples: {}, act: {}, heap: {}, errors: {}, firstPaint: {}, memory: {} }
+  const res: RunResult = { v: 1, date: new Date().toISOString(), env: { ua: nav.userAgent, cores: nav.hardwareConcurrency, memory: nav.deviceMemory, screen: `${screen.width}×${screen.height}`, dpr: devicePixelRatio }, reps: o.reps, samples: {}, act: {}, heapMax: {}, cpuMax: {}, errors: {}, firstPaint: {}, memory: {} }
+  // the page's long animation frames (over 50 ms), where the browser reports them: how busy a sample kept the main thread
+  type Frame = { startTime: number; duration: number }
+  let frames: Frame[] | null = null
+  const loaf = PerformanceObserver.supportedEntryTypes?.includes("long-animation-frame") ? new PerformanceObserver((l) => { for (const e of l.getEntries()) frames?.push({ startTime: e.startTime, duration: e.duration }) }) : null
+  if (loaf) { frames = []; loaf.observe({ type: "long-animation-frame" }) }
   let hides = 0
   const onVis = () => { if (document.hidden) hides++ }
   document.addEventListener("visibilitychange", onVis)
@@ -61,7 +66,7 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
   try {
     for (const lib of o.libs) {
       if (stop()) break
-      res.samples[lib.id] = {}; res.act![lib.id] = {}; res.heap![lib.id] = {}
+      res.samples[lib.id] = {}; res.act![lib.id] = {}; res.heapMax![lib.id] = {}; res.cpuMax![lib.id] = {}
       report(lib.id, "", "load")
       gc(); await idle()
       await guard(lib.id, "")
@@ -101,7 +106,7 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
      * outside the time; only the pause for garbage collection comes before the start. Also returns the operation alone.
      * NaN when the tab was hidden during it, null when the check failed.
      */
-    const sample = async (m: Mounted, op: Op): Promise<{ all: number; act: number; peak?: number; end?: number } | number | null> => {
+    const sample = async (m: Mounted, op: Op): Promise<{ all: number; act: number; peak?: number; cpu?: number } | number | null> => {
       show(m)
       await settle()
       const seen = hides
@@ -124,15 +129,19 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
       const h3 = heap()
       if (hides !== seen) return NaN
       if (!ok) return null
-      if (h0 === undefined || h1 === undefined || h2 === undefined || h3 === undefined) return { all, act }
-      return { all, act, peak: Math.max(0, h1 - h0, h2 - h0, h3 - h0) / 1048576, end: (h3 - h0) / 1048576 }
+      const end = start + all
+      if (loaf && frames) for (const e of loaf.takeRecords()) frames.push({ startTime: e.startTime, duration: e.duration })
+      const cpu = frames ? Math.min(100, (frames.reduce((s, f) => s + Math.max(0, Math.min(end, f.startTime + f.duration) - Math.max(start, f.startTime)), 0) / all) * 100) : undefined
+      if (frames) frames = frames.filter((f) => f.startTime + f.duration > end)
+      const peak = h0 === undefined || h1 === undefined || h2 === undefined || h3 === undefined ? undefined : Math.max(0, h1 - h0, h2 - h0, h3 - h0) / 1048576
+      return { all, act, peak, cpu }
     }
     for (const op of o.ops) {
       if (stop()) break
       const warm = o.warm ?? op.warm
       let live = mounted.filter((m) => !m.errs[op.id])
       const lists = new Map(live.map((m) => [m, [] as number[]])), acts = new Map(live.map((m) => [m, [] as number[]]))
-      const heaps = new Map(live.map((m) => [m, { peak: [] as number[], end: [] as number[] }]))
+      const peaks = new Map(live.map((m) => [m, -1])), cpus = new Map(live.map((m) => [m, -1]))
       const fail = (m: Mounted, left: number) => { m.errs[op.id] = "Sonuç beklenen tabloyla eşleşmedi"; done += left; live = live.filter((x) => x !== m) }
       // one library after another, each doing all of its rounds before the next starts; March runs first
       const order = [...live.filter((m) => m.lib.id === "march"), ...live.filter((m) => m.lib.id !== "march")]
@@ -147,7 +156,8 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
           done++
           if (round >= warm) {
             lists.get(m)!.push(ms.all); acts.get(m)!.push(ms.act)
-            if (ms.peak !== undefined && ms.end !== undefined) { heaps.get(m)!.peak.push(ms.peak); heaps.get(m)!.end.push(ms.end) }
+            if (ms.peak !== undefined) peaks.set(m, Math.max(peaks.get(m)!, ms.peak))
+            if (ms.cpu !== undefined) cpus.set(m, Math.max(cpus.get(m)!, ms.cpu))
             o.onSample?.(m.lib.id, op.id, ms.all)
           }
         }
@@ -155,7 +165,8 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
       }
       for (const [m, list] of lists) {
         res.samples[m.lib.id]![op.id] = list; res.act![m.lib.id]![op.id] = acts.get(m)!
-        if (heaps.get(m)!.peak.length) res.heap![m.lib.id]![op.id] = heaps.get(m)!
+        if (peaks.get(m)! >= 0) res.heapMax![m.lib.id]![op.id] = Math.round(peaks.get(m)! * 100) / 100
+        if (cpus.get(m)! >= 0) res.cpuMax![m.lib.id]![op.id] = Math.round(cpus.get(m)!)
       }
     }
   } finally {
@@ -165,6 +176,7 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
       if (Object.keys(m.errs).length) res.errors[m.lib.id] = { ...res.errors[m.lib.id], ...m.errs }
     }
     document.removeEventListener("visibilitychange", onVis)
+    loaf?.disconnect()
   }
   return res
 }
