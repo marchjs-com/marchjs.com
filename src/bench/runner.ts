@@ -10,7 +10,6 @@ import type { Lib } from "./libs.ts"
 export interface Progress { lib: string; op: string; phase: "load" | "warm" | "run" | "cool" | "paused"; done: number; total: number }
 export interface RunOptions { libs: Lib[]; ops: Op[]; reps: number; warm?: number | undefined; stage: HTMLElement; onProgress?: (p: Progress) => void; onSample?: (lib: string, op: string, ms: number) => void; signal?: AbortSignal | undefined }
 
-/** Unmeasured rounds of 1.000 rows made and cleared by the pure JavaScript app before any library is measured. */
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
 const heap = (): number | undefined => (performance as Performance & { memory?: { usedJSHeapSize: number } }).memory?.usedJSHeapSize
 const gc = (): void => { (globalThis as { gc?: () => void }).gc?.() }
@@ -56,7 +55,8 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
   // Only the measured library's host is shown, and it is emptied after each sample, so every sample sees the same stage.
   interface Mounted { lib: Lib; host: HTMLElement; app: BenchApp; dom: DomProbe; errs: Record<string, string> }
   const mounted: Mounted[] = []
-  const rows = rowSource(1)
+  // every library gets the same rows: the source starts again (same seed, ids from 1) for each library and operation
+  let rows = rowSource(1)
   const show = (m: Mounted | null) => { for (const x of mounted) x.host.hidden = x !== m }
   try {
     for (const lib of o.libs) {
@@ -81,6 +81,7 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
         await settle(); await sleep(50)
         const h0 = heap()
         if (h0 !== undefined) {
+          rows = rowSource(1)
           app.run(rows(1000)); await afterPaint(); await settle(); await sleep(50)
           const h1 = heap()
           if (h1 !== undefined) res.memory[lib.id] = Math.max(0, (h1 - h0) / 1048576)
@@ -124,6 +125,7 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
       // one library after another, each doing all of its rounds before the next starts; March runs first
       const order = [...live.filter((m) => m.lib.id === "march"), ...live.filter((m) => m.lib.id !== "march")]
       for (const m of order) {
+        rows = rowSource(1)
         for (let round = 0; round < warm + o.reps && !stop(); round++) {
           await guard(m.lib.id, op.id)
           report(m.lib.id, op.id, round < warm ? "warm" : "run")
