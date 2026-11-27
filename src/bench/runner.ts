@@ -1,17 +1,16 @@
 // Benchmark runner (browser): mounts every library in its own host element on the stage, then runs the selected
-// operations round-robin across them (warm-up rounds, then N measured rounds, each sample timed from the call to the
+// operations round-robin across them (N measured rounds from the start, no warm-up, each sample timed from the call to the
 // next paint, the library order rotated every round) and reports progress. A hidden tab pauses the run (a sample that
 // saw the tab hidden is measured again); before each sample it asks for garbage collection where the browser exposes
 // it and waits for one paint.
 import { OPS, rowSource, type BenchApp, type DomProbe, type Op, type RunResult } from "./core.ts"
 import { afterPaint } from "./paint.ts"
-import { BASELINE, libById, type Lib } from "./libs.ts"
+import type { Lib } from "./libs.ts"
 
 export interface Progress { lib: string; op: string; phase: "load" | "warm" | "run" | "cool" | "paused"; done: number; total: number }
 export interface RunOptions { libs: Lib[]; ops: Op[]; reps: number; warm?: number | undefined; stage: HTMLElement; onProgress?: (p: Progress) => void; onSample?: (lib: string, op: string, ms: number) => void; signal?: AbortSignal | undefined }
 
 /** Unmeasured rounds of 1.000 rows made and cleared by the pure JavaScript app before any library is measured. */
-const PAGE_WARM = 10
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
 const heap = (): number | undefined => (performance as Performance & { memory?: { usedJSHeapSize: number } }).memory?.usedJSHeapSize
 const gc = (): void => { (globalThis as { gc?: () => void }).gc?.() }
@@ -51,8 +50,8 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
   const stop = () => o.signal?.aborted ?? false
   /** Waits out a hidden tab (reported as paused). */
   const guard = async (lib: string, op: string) => { if (document.hidden) { report(lib, op, "paused"); await visible(); await sleep(300) } }
-  // Fair order: every library is loaded and mounted first, then each operation is warmed up for all of them and
-  // measured round-robin, one sample per library per round, the order rotated every round. Measured one library after
+  // Fair order: every library is loaded and mounted first, then each operation is measured at once (no warm-up rounds)
+  // round-robin, one sample per library per round, the order rotated every round. Measured one library after
   // another, the first ones paid the page's own warm-up (JIT, layout caches): the same build gave March 73 ms on
   // "create 1.000" when it ran first and 70 ms when it ran third. Only the measured library's host is shown, and the
   // others are emptied after each of their samples, so every sample sees the same stage.
@@ -93,20 +92,6 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
         done += per
         host.remove()
       }
-    }
-    // the page warms up first: 10 unmeasured rounds of 1.000 rows made and cleared by the pure JavaScript app (CPU
-    // clock, the first layouts, the heap), loaded for this even when it is not among the compared ones
-    if (!stop()) {
-      report(BASELINE, "", "warm")
-      const host = document.createElement("div")
-      host.className = "bt-host"
-      o.stage.append(host)
-      show(null)
-      try {
-        const app = await (await libById(BASELINE)!.load()).mount(host)
-        for (let i = 0; i < PAGE_WARM && !stop(); i++) { app.run(rows(1000)); await afterPaint(); app.clear(); await afterPaint() }
-        app.destroy()
-      } catch { /* the warm-up is a courtesy: a failure here must not stop the run */ } finally { host.remove() }
     }
     report("", "", "cool")
     gc(); await idle(); await sleep(400)
