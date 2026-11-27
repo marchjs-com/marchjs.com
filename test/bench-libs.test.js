@@ -11,8 +11,8 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (p) => readFileSync(join(ROOT, p), "utf8");
 const pkg = JSON.parse(read("package.json"));
 const dev = pkg.devDependencies;
-// LIBS rows of src/bench/libs.ts: { id, name, version, src }
-const LIBS = [...read("src/bench/libs.ts").matchAll(/\{ id: "([^"]+)", name: "([^"]+)", version: "([^"]*)", src: "([^"]+)"/g)].map((m) => ({ id: m[1], name: m[2], version: m[3], src: m[4] }));
+// LIBS rows of src/bench/libs.ts: { id, name, version, (kind, has,) src }
+const LIBS = [...read("src/bench/libs.ts").matchAll(/\{ id: "([^"]+)", name: "([^"]+)", version: "([^"]*)", .*?src: "([^"]+)"/g)].map((m) => ({ id: m[1], name: m[2], version: m[3], src: m[4] }));
 // the APPS map of tools/gen-bench.mjs (read as text: importing the tool would run it)
 const GEN = read("tools/gen-bench.mjs").replace(/\r\n/g, "\n");
 const APPS = [...GEN.slice(GEN.indexOf("export const APPS")).split("\n};")[0].matchAll(/^ {2}(\w+): \{/gm)].map((m) => m[1]);

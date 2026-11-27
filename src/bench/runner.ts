@@ -1,17 +1,15 @@
 // Benchmark runner (browser): mounts every library in its own host element on the stage, then runs the selected
-// operations round-robin across them (warm-up rounds, then N measured rounds, each sample timed from the call to the
-// next paint, the library order rotated every round) and reports progress. A hidden tab pauses the run (a sample that
-// saw the tab hidden is measured again); before each sample it asks for garbage collection where the browser exposes
-// it and waits for one paint.
-import { OPS, rowSource, type BenchApp, type DomProbe, type Op, type RunResult } from "./core.ts"
-import { afterPaint } from "./paint.ts"
-import { BASELINE, libById, type Lib } from "./libs.ts"
+// operations library by library, March first (N measured rounds from the start, no warm-up, each sample timed from the
+// call to the next paint) and reports progress. A hidden tab pauses the run (a sample that saw the tab hidden is
+// measured again); before each sample it asks for garbage collection where the browser exposes it and waits for one
+// paint.
+import { OPS, TIMEOUT, rowSource, type BenchApp, type DomProbe, type Op, type RunResult } from "./core.ts"
+import { afterPaint, afterPaintFrom, afterTask } from "./paint.ts"
+import type { Lib } from "./libs.ts"
 
 export interface Progress { lib: string; op: string; phase: "load" | "warm" | "run" | "cool" | "paused"; done: number; total: number }
 export interface RunOptions { libs: Lib[]; ops: Op[]; reps: number; warm?: number | undefined; stage: HTMLElement; onProgress?: (p: Progress) => void; onSample?: (lib: string, op: string, ms: number) => void; signal?: AbortSignal | undefined }
 
-/** Unmeasured rounds of 1.000 rows made and cleared by the pure JavaScript app before any library is measured. */
-const PAGE_WARM = 10
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
 const heap = (): number | undefined => (performance as Performance & { memory?: { usedJSHeapSize: number } }).memory?.usedJSHeapSize
 const gc = (): void => { (globalThis as { gc?: () => void }).gc?.() }
@@ -40,7 +38,7 @@ function visible(): Promise<void> {
 
 export async function runBench(o: RunOptions): Promise<RunResult> {
   const nav = navigator as Navigator & { deviceMemory?: number }
-  const res: RunResult = { v: 1, date: new Date().toISOString(), env: { ua: nav.userAgent, cores: nav.hardwareConcurrency, memory: nav.deviceMemory, screen: `${screen.width}×${screen.height}`, dpr: devicePixelRatio }, reps: o.reps, samples: {}, errors: {}, firstPaint: {}, memory: {} }
+  const res: RunResult = { v: 1, date: new Date().toISOString(), env: { ua: nav.userAgent, cores: nav.hardwareConcurrency, memory: nav.deviceMemory, screen: `${screen.width}×${screen.height}`, dpr: devicePixelRatio }, reps: o.reps, samples: {}, act: {}, heapMax: {}, cpuMax: {}, errors: {}, firstPaint: {}, memory: {} }
   let hides = 0
   const onVis = () => { if (document.hidden) hides++ }
   document.addEventListener("visibilitychange", onVis)
@@ -51,19 +49,19 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
   const stop = () => o.signal?.aborted ?? false
   /** Waits out a hidden tab (reported as paused). */
   const guard = async (lib: string, op: string) => { if (document.hidden) { report(lib, op, "paused"); await visible(); await sleep(300) } }
-  // Fair order: every library is loaded and mounted first, then each operation is warmed up for all of them and
-  // measured round-robin, one sample per library per round, the order rotated every round. Measured one library after
-  // another, the first ones paid the page's own warm-up (JIT, layout caches): the same build gave March 73 ms on
-  // "create 1.000" when it ran first and 70 ms when it ran third. Only the measured library's host is shown, and the
-  // others are emptied after each of their samples, so every sample sees the same stage.
+  // Order: every library is loaded and mounted first; then, for each operation, one library after another does all of
+  // its rounds (no warm-up rounds), March first. Running first can cost more (the page's own JIT and layout warm-up: the
+  // same March build once gave 73 ms on "create 1.000" first and 70 ms third): March takes that cost, not a rival.
+  // Only the measured library's host is shown, and it is emptied after each sample, so every sample sees the same stage.
   interface Mounted { lib: Lib; host: HTMLElement; app: BenchApp; dom: DomProbe; errs: Record<string, string> }
   const mounted: Mounted[] = []
-  const rows = rowSource(1)
+  // every library gets the same rows: the source starts again (same seed, ids from 1) for each library and operation
+  let rows = rowSource(1)
   const show = (m: Mounted | null) => { for (const x of mounted) x.host.hidden = x !== m }
   try {
     for (const lib of o.libs) {
       if (stop()) break
-      res.samples[lib.id] = {}
+      res.samples[lib.id] = {}; res.act![lib.id] = {}; res.heapMax![lib.id] = {}; res.cpuMax![lib.id] = {}
       report(lib.id, "", "load")
       gc(); await idle()
       await guard(lib.id, "")
@@ -83,6 +81,7 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
         await settle(); await sleep(50)
         const h0 = heap()
         if (h0 !== undefined) {
+          rows = rowSource(1)
           app.run(rows(1000)); await afterPaint(); await settle(); await sleep(50)
           const h1 = heap()
           if (h1 !== undefined) res.memory[lib.id] = Math.max(0, (h1 - h0) / 1048576)
@@ -94,60 +93,91 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
         host.remove()
       }
     }
-    // the page warms up first: 10 unmeasured rounds of 1.000 rows made and cleared by the pure JavaScript app (CPU
-    // clock, the first layouts, the heap), loaded for this even when it is not among the compared ones
-    if (!stop()) {
-      report(BASELINE, "", "warm")
-      const host = document.createElement("div")
-      host.className = "bt-host"
-      o.stage.append(host)
-      show(null)
-      try {
-        const app = await (await libById(BASELINE)!.load()).mount(host)
-        for (let i = 0; i < PAGE_WARM && !stop(); i++) { app.run(rows(1000)); await afterPaint(); app.clear(); await afterPaint() }
-        app.destroy()
-      } catch { /* the warm-up is a courtesy: a failure here must not stop the run */ } finally { host.remove() }
-    }
     report("", "", "cool")
     gc(); await idle(); await sleep(400)
-    /** One sample of `op` on `m`; NaN when the tab was hidden during it (measure again), null when the check failed. */
-    const sample = async (m: Mounted, op: Op): Promise<number | null> => {
+    /**
+     * One sample, timed from its start to its end: preparing the table (e.g. 1.000 rows to update) and its paint, the
+     * operation and its paint, the check, then emptying the table and that paint. Nothing the library does happens
+     * outside the time; only the pause for garbage collection comes before the start. Also returns the operation alone.
+     * NaN when the tab was hidden during it, null when the check failed.
+     */
+    const sample = async (m: Mounted, op: Op): Promise<{ all: number; act: number; peak?: number; cpu?: number } | number | null> => {
       show(m)
-      op.setup(m.app, rows, m.dom)
-      await afterPaint()
       await settle()
-      op.mark?.(m.dom)
       const seen = hides
+      // the heap is read at the sample's start and after each of its paints (reading it takes no measurable time)
+      // how long the main thread was busy: each call with its microtasks (to the end of its task), then each frame from its
+      // start to the end of its paint; the rest of the sample it waited (for the next frame)
+      let busy = 0
+      const work = async (fn: () => void): Promise<number> => {
+        const a = performance.now(); fn(); const b = await afterTask(); busy += b - a
+        const p = await afterPaintFrom(); busy += p.done - p.frame
+        return p.done
+      }
+      const h0 = heap()
+      const start = performance.now()
+      await work(() => op.setup(m.app, rows, m.dom))
+      const h1 = heap()
+      op.mark?.(m.dom)
       const t0 = performance.now()
-      op.act(m.app, rows, m.dom)
-      const ms = (await afterPaint()) - t0
+      const act = (await work(() => op.act(m.app, rows, m.dom))) - t0
+      const h2 = heap()
       const ok = hides !== seen || op.check(m.dom)
-      // the next library meets an empty stage: this one's rows go before it is hidden
-      m.app.clear(); await afterPaint()
+      // the next sample meets an empty stage: emptying it is part of the time (a library that is slow to tear down
+      // what it drew pays for it here, not between samples where nobody sees it)
+      const all = (await work(() => m.app.clear())) - start
+      const h3 = heap()
       if (hides !== seen) return NaN
-      return ok ? ms : null
+      if (!ok) return null
+      const cpu = Math.min(100, (busy / all) * 100)
+      const peak = h0 === undefined || h1 === undefined || h2 === undefined || h3 === undefined ? undefined : Math.max(0, h1 - h0, h2 - h0, h3 - h0) / 1048576
+      return { all, act, peak, cpu }
     }
     for (const op of o.ops) {
       if (stop()) break
       const warm = o.warm ?? op.warm
       let live = mounted.filter((m) => !m.errs[op.id])
-      const lists = new Map(live.map((m) => [m, [] as number[]]))
+      const lists = new Map(live.map((m) => [m, [] as number[]])), acts = new Map(live.map((m) => [m, [] as number[]]))
+      const peaks = new Map(live.map((m) => [m, -1])), cpus = new Map(live.map((m) => [m, -1]))
       const fail = (m: Mounted, left: number) => { m.errs[op.id] = "Sonuç beklenen tabloyla eşleşmedi"; done += left; live = live.filter((x) => x !== m) }
-      for (let round = 0; round < warm + o.reps && !stop(); round++) {
-        // the order turns by one every round: each library is measured first, second, … equally often
-        const order = live.map((_, i) => live[(i + round) % live.length]!)
-        for (const m of order) {
-          if (stop()) break
+      // one library after another, each doing all of its rounds before the next starts; March runs first
+      const order = [...live.filter((m) => m.lib.id === "march"), ...live.filter((m) => m.lib.id !== "march")]
+      for (const m of order) {
+        rows = rowSource(1)
+        // the expected most for this library's whole test of the operation; its samples' own time counts (not the
+        // pauses between them, not a hidden tab). A running call cannot be cut short: the check follows each sample
+        const budget = op.limit * (warm + o.reps)
+        let spent = 0
+        for (let round = 0; round < warm + o.reps && !stop(); round++) {
           await guard(m.lib.id, op.id)
           report(m.lib.id, op.id, round < warm ? "warm" : "run")
           let ms = await sample(m, op)
-          while (ms !== null && Number.isNaN(ms) && !stop()) { await guard(m.lib.id, op.id); ms = await sample(m, op) } // the tab was hidden: measure it again
-          if (ms === null) { fail(m, warm + o.reps - round); continue }
+          while (typeof ms === "number" && Number.isNaN(ms) && !stop()) { await guard(m.lib.id, op.id); ms = await sample(m, op) } // the tab was hidden: measure it again
+          if (ms === null || typeof ms === "number") { if (ms === null) fail(m, warm + o.reps - round); break }
           done++
-          if (round >= warm) { lists.get(m)!.push(ms); o.onSample?.(m.lib.id, op.id, ms) }
+          spent += ms.all
+          // one sample over the expected most, or all of them together over theirs: stopped at once
+          if (ms.all > op.limit || spent > budget) {
+            m.errs[op.id] = ms.all > op.limit
+              ? `${TIMEOUT}: bir tekrar için en çok ${op.limit / 1000} sn beklenirdi, ${round + 1}. tekrar ${(ms.all / 1000).toFixed(1)} sn sürdü`
+              : `${TIMEOUT}: ${warm + o.reps} tekrar için en çok ${budget / 1000} sn beklenirdi, ${round + 1}. tekrarda ${(spent / 1000).toFixed(1)} sn oldu`
+            done += warm + o.reps - round - 1; live = live.filter((x) => x !== m)
+            break
+          }
+          if (round >= warm) {
+            lists.get(m)!.push(ms.all); acts.get(m)!.push(ms.act)
+            if (ms.peak !== undefined) peaks.set(m, Math.max(peaks.get(m)!, ms.peak))
+            if (ms.cpu !== undefined) cpus.set(m, Math.max(cpus.get(m)!, ms.cpu))
+            o.onSample?.(m.lib.id, op.id, ms.all)
+          }
         }
+        if (stop()) break
       }
-      for (const [m, list] of lists) res.samples[m.lib.id]![op.id] = list
+      for (const [m, list] of lists) {
+        res.samples[m.lib.id]![op.id] = list; res.act![m.lib.id]![op.id] = acts.get(m)!
+        if (peaks.get(m)! >= 0) res.heapMax![m.lib.id]![op.id] = Math.round(peaks.get(m)! * 100) / 100
+        if (cpus.get(m)! >= 0) res.cpuMax![m.lib.id]![op.id] = Math.round(cpus.get(m)!)
+      }
     }
   } finally {
     for (const m of mounted) {

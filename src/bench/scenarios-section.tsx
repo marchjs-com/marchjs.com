@@ -7,7 +7,7 @@ import { ChoicePicker } from "march/forms"
 import { signal, t, untrack } from "march"
 import { lazy } from "march/lazy"
 import { play, x as stopIcon } from "march/icons"
-import { factor, rank, unreliable, overlaps } from "./core.ts"
+import { factor, rank, unreliable, best, tied } from "./core.ts"
 import { LIBS, BASELINE, libById } from "./libs.ts"
 import { FRAME_MS } from "./scenarios/core.ts"
 import { SCENARIOS, scenarioById } from "./scenarios/list.ts"
@@ -76,7 +76,7 @@ export default function BenchScenarios() {
   const pct = () => { const p = progressSig(); return p && p.total ? Math.round((p.done / p.total) * 100) : 0 }
   const per = (): Record<string, ScenarioResult> => resultsSig()[viewSig()] ?? {}
   const rows = () => rank(Object.entries(per()).map(([id, r]) => ({ id, ...r })))
-  const base = (): number => per()[BASELINE]?.stats.median ?? NaN
+  const base = (): number => { const s = per()[BASELINE]?.stats; return s?.n ? best(s) : NaN }
   const barRows = (): BarRow[] => {
     const p = progressSig(), running = runningSig(), here = per()
     const ids = running ? orderSig() : ALL_LIBS.filter((id) => here[id])
@@ -84,7 +84,7 @@ export default function BenchScenarios() {
     return ids.map((id) => {
       const r = here[id]
       const state: BarRow["state"] = r ? "done" : runningHere && p?.lib === id ? "run" : "wait"
-      return { id, name: libName(id), value: r ? r.stats.median : NaN, text: r ? `${ms(r.stats.median)} ms` : "—", factor: r ? factor(r.stats.median, base()) : undefined, warn: r ? unreliable(r.stats) : false, error: r?.error, state,
+      return { id, name: libName(id), value: r ? best(r.stats) : NaN, text: r ? `${ms(best(r.stats))} ms` : "—", factor: r ? factor(best(r.stats), base()) : undefined, warn: r ? unreliable(r.stats) : false, error: r?.error, state,
         note: r && !r.error ? t("{0} / {1} kare düştü", { 0: r.dropped, 1: r.samples.length }) : undefined }
     })
   }
@@ -111,7 +111,7 @@ export default function BenchScenarios() {
     <Split title={t("Senaryo ayarları")} summary={() => t("{0} senaryo · {1} kitaplık · {2}", { 0: scenSig().length, 1: libsSig().length, 2: sizeSig() === "large" ? t("büyük") : t("varsayılan") })} panel={panel}>
       <header class="bt-live-head">
         <h2 class="bt-live-title">{t("Senaryo sonuçları")}</h2>
-        <p class="bt-live-sub">{t("Kare süresinin medyanı (işlem + stil + yerleşim + boyama); kısa çubuk daha akıcı. {0} ms'yi aşan kare 60 fps'te düşer. Katsayı saf JavaScript'e (çerçevesiz, kıyas çizgisi) göre.", { 0: ms(FRAME_MS) })}</p>
+        <p class="bt-live-sub">{t("En kısa kare süresi (işlem + stil + yerleşim + boyama); kısa çubuk daha akıcı. {0} ms'yi aşan kare 60 fps'te düşer. Katsayı saf JavaScript'e (çerçevesiz, kıyas çizgisi) göre.", { 0: ms(FRAME_MS) })}</p>
       </header>
       {() => shown().length > 1 ? <ChoicePicker aria-label={t("Gösterilen senaryo")} kind="chips" value={viewSig()} onChange={(v: unknown) => { viewSig.set(String(v)); follow = false }} options={shown().map((s) => ({ value: s.id, label: t(s.label) }))} /> : null}
       {() => busyScenSig().includes(viewSig()) ? <p class="bt-warn" role="status">{t("Makine meşgul: bu senaryodan önce boş bir kare bile {0} ms'den uzun sürdü ve beklemek düzeltmedi (başka bir program çalışıyor). Sonuçlar güvenilir değil; diğer uygulamaları kapatıp yeniden çalıştır.", { 0: BUSY_MS })}</p> : null}
@@ -122,13 +122,13 @@ export default function BenchScenarios() {
       {() => rows().length ? <div class="bt-table-wrap">
         <table class="m-table bt-table">
           <caption class="bt-caption">{t("{0}: ayrıntı", { 0: scenLabel(viewSig()) })}</caption>
-          <thead><tr><th scope="col">{t("Kitaplık")}</th><th scope="col">{t("Kare (medyan)")}</th><th scope="col">%95</th><th scope="col">{t("Düşen kare")}</th><th scope="col">{t("Katsayı")}</th><th scope="col">{t("Kurulum")}</th><th scope="col">{t("Bellek")}</th></tr></thead>
+          <thead><tr><th scope="col">{t("Kitaplık")}</th><th scope="col">{t("Kare (en düşük)")}</th><th scope="col">%95</th><th scope="col">{t("Düşen kare")}</th><th scope="col">{t("Katsayı")}</th><th scope="col">{t("Kurulum")}</th><th scope="col">{t("Bellek")}</th></tr></thead>
           <tbody>{rows().map((x) => <tr>
             <th scope="row">{libName(x.id)}</th>
-            <td title={x.error ?? undefined}>{x.error ? t("hata") : `${ms(x.stats.median)} ms`}</td>
+            <td title={x.error ?? undefined}>{x.error ? t("hata") : `${ms(best(x.stats))} ms`}</td>
             <td>{ms(p95(x.samples))} ms</td>
             <td>{x.dropped} / {x.samples.length}</td>
-            <td>{Number.isFinite(base()) ? `×${factor(x.stats.median, base()).toFixed(2)}` : "—"}{x !== rows()[0] && !x.error && rows()[0] && overlaps(x.stats, rows()[0]!.stats) ? <span class="bt-factor bt-noise" title={t("%95 güven aralığı en hızlıyla örtüşüyor")}>{t("fark gürültü içinde")}</span> : null}</td>
+            <td>{Number.isFinite(base()) ? `×${factor(best(x.stats), base()).toFixed(2)}` : "—"}{x !== rows()[0] && !x.error && rows()[0] && tied(x.stats, rows()[0]!.stats) ? <span class="bt-factor bt-noise" title={t("En düşük süresi en hızlınınkinden %1'den az farklı")}>{t("fark gürültü içinde")}</span> : null}</td>
             <td>{x.mountMs !== undefined ? `${ms(x.mountMs)} ms` : "—"}</td>
             <td>{x.heapMB !== undefined ? `${x.heapMB.toFixed(1)} MB` : "—"}</td>
           </tr>)}</tbody>

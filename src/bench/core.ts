@@ -58,6 +58,9 @@ export interface Op {
   desc: string
   /** warm-up samples before the measured ones */
   warm: number
+  /** the most a sample is expected to take (ms): a library with a sample over it, or whose samples add up to more than
+   * limit × samples, is stopped for this operation and reported as not finishing in the expected time */
+  limit: number
   setup(app: BenchApp, rows: (n: number) => Row[], dom: DomProbe): void
   /** Reads the prepared table after setup has been drawn (libraries that render in a microtask have drawn by then). */
   mark?(dom: DomProbe): void
@@ -75,24 +78,26 @@ export interface DomProbe {
 
 const fresh = (app: BenchApp, rows: (n: number) => Row[], n: number) => { app.clear(); app.run(rows(n)) }
 let before = ""
+/** The start of the error a library gets when its samples of an operation take longer than expected (Op.limit). */
+export const TIMEOUT = "Beklenen sürede bitiremedi"
 export const OPS: Op[] = [
-  { id: "create1k", label: "1.000 satır oluştur", desc: "Boş tabloya 1.000 satır", warm: 3,
+  { id: "create1k", label: "1.000 satır oluştur", desc: "Boş tabloya 1.000 satır", warm: 0, limit: 1000,
     setup: (a) => a.clear(), act: (a, r) => a.run(r(1000)), check: (d) => d.count() === 1000 },
-  { id: "create10k", label: "10.000 satır oluştur", desc: "Boş tabloya 10.000 satır", warm: 1,
+  { id: "create10k", label: "10.000 satır oluştur", desc: "Boş tabloya 10.000 satır", warm: 0, limit: 5000,
     setup: (a) => a.clear(), act: (a, r) => a.run(r(10000)), check: (d) => d.count() === 10000 },
-  { id: "replace", label: "Tümünü değiştir", desc: "1.000 satırın yerine yeni 1.000 satır", warm: 3,
+  { id: "replace", label: "Tümünü değiştir", desc: "1.000 satırın yerine yeni 1.000 satır", warm: 0, limit: 1000,
     setup: (a, r) => fresh(a, r, 1000), mark: (d) => { before = d.id(0) }, act: (a, r) => a.run(r(1000)), check: (d) => d.count() === 1000 && d.id(0) !== before },
-  { id: "update", label: "Her 10. satırı güncelle", desc: "1.000 satırda her 10. satırın etiketine ekleme", warm: 3,
+  { id: "update", label: "Her 10. satırı güncelle", desc: "1.000 satırda her 10. satırın etiketine ekleme", warm: 0, limit: 1000,
     setup: (a, r) => fresh(a, r, 1000), act: (a) => a.update(), check: (d) => d.label(0).endsWith(" !!!") && d.label(10).endsWith(" !!!") && !d.label(1).endsWith(" !!!") },
-  { id: "select", label: "Satır seç", desc: "1.000 satırdan birine tıklayıp vurgulamak", warm: 3,
+  { id: "select", label: "Satır seç", desc: "1.000 satırdan birine tıklayıp vurgulamak", warm: 0, limit: 1000,
     setup: (a, r) => fresh(a, r, 1000), act: (_a, _r, d) => d.click(1, "lbl"), check: (d) => d.selected(1) && !d.selected(0) },
-  { id: "swap", label: "İki satırı takas et", desc: "1.000 satırda 2. ve 999. satırın yer değiştirmesi", warm: 3,
+  { id: "swap", label: "İki satırı takas et", desc: "1.000 satırda 2. ve 999. satırın yer değiştirmesi", warm: 0, limit: 1000,
     setup: (a, r) => fresh(a, r, 1000), mark: (d) => { before = d.id(1) }, act: (a) => a.swap(), check: (d) => d.id(998) === before && d.count() === 1000 },
-  { id: "remove", label: "Satır sil", desc: "1.000 satırdan birini silmek", warm: 3,
+  { id: "remove", label: "Satır sil", desc: "1.000 satırdan birini silmek", warm: 0, limit: 1000,
     setup: (a, r) => fresh(a, r, 1000), mark: (d) => { before = d.id(3) }, act: (_a, _r, d) => d.click(3, "rm"), check: (d) => d.count() === 999 && d.id(3) !== before },
-  { id: "clear", label: "Temizle", desc: "1.000 satırın hepsini kaldırmak", warm: 3,
+  { id: "clear", label: "Temizle", desc: "1.000 satırın hepsini kaldırmak", warm: 0, limit: 1000,
     setup: (a, r) => fresh(a, r, 1000), act: (a) => a.clear(), check: (d) => d.count() === 0 },
-  { id: "append", label: "10.000 satır ekle", desc: "1.000 satırlık tablonun sonuna 10.000 satır", warm: 1,
+  { id: "append", label: "10.000 satır ekle", desc: "1.000 satırlık tablonun sonuna 10.000 satır", warm: 0, limit: 5000,
     setup: (a, r) => fresh(a, r, 1000), act: (a, r) => a.add(r(10000)), check: (d) => d.count() === 11000 },
 ]
 export const opById = (id: string): Op | undefined => OPS.find((o) => o.id === id)
@@ -128,9 +133,24 @@ export const overlaps = (a: Stats, b: Stats): boolean => a.n > 1 && b.n > 1 && a
 /** Factor against the baseline (pure JavaScript, no framework): 1.00 = as fast, 2.00 = twice the time. */
 export const factor = (value: number, base: number): number => (base > 0 && Number.isFinite(value) ? value / base : NaN)
 
-/** Results ranked fastest first (by median); failed or empty entries last. */
+/** Results are compared by their lowest sample: the time with the least interference from the rest of the machine. */
+export const best = (s: Stats): number => s.min
+/** Lowest samples closer than this share of the smaller one are a tie. */
+export const TIE = 0.01
+/** True when two results' lowest samples are within TIE of each other. */
+export const tied = (a: Stats, b: Stats): boolean => a.n > 0 && b.n > 0 && Math.abs(a.min - b.min) <= TIE * Math.min(a.min, b.min)
+/**
+ * Place of each result counting only clear wins: 1 + the number of others whose lowest sample is lower by more than TIE.
+ * Results within TIE of each other share a place. `skip` (the yardstick) is not counted.
+ */
+export function places<T extends { id: string; stats: Stats }>(list: readonly T[], skip?: string): Map<string, number> {
+  const ok = list.filter((x) => x.stats.n > 0 && x.id !== skip)
+  return new Map(ok.map((x) => [x.id, 1 + ok.filter((y) => y !== x && y.stats.min < x.stats.min && !tied(x.stats, y.stats)).length]))
+}
+
+/** Results ranked fastest first (by their lowest sample); failed or empty entries last. */
 export function rank<T extends { stats: Stats; error?: string | undefined }>(list: readonly T[]): T[] {
-  const key = (x: T) => (x.error || !x.stats.n ? Infinity : x.stats.median)
+  const key = (x: T) => (x.error || !x.stats.n ? Infinity : best(x.stats))
   return [...list].sort((a, b) => key(a) - key(b))
 }
 
@@ -140,8 +160,17 @@ export interface RunResult {
   date: string
   env: { ua: string; cores?: number | undefined; memory?: number | undefined; screen?: string | undefined; dpr?: number | undefined }
   reps: number
-  /** library id → op id → samples (ms) */
+  /** library id → op id → samples (ms): the whole sample, from its start to its end (preparing the table, the operation,
+   * emptying the table again, with their paints: nothing the library does is left out) */
   samples: Record<string, Record<string, number[]>>
+  /** library id → op id → the operation alone (ms, from the call to its paint; older results have none) */
+  act?: Record<string, Record<string, number[]>>
+  /** library id → op id → the most JS heap any of its samples grew by (MB, from that sample's start, read after each
+   * paint); only where the browser reports the heap */
+  heapMax?: Record<string, Record<string, number>>
+  /** library id → op id → the busiest any of its samples kept the page's main thread (% of the sample's time: its calls
+   * with their microtasks, and its frames from their start to the end of their paint) */
+  cpuMax?: Record<string, Record<string, number>>
   /** library id → op id → reason (a failed check, a load error) */
   errors: Record<string, Record<string, string>>
   /** library id → first paint (ms: download + start-up + first empty draw) */
@@ -166,7 +195,8 @@ async function pipe(bytes: Uint8Array, stream: CompressionStream | Decompression
   return new Uint8Array(buf)
 }
 /** Samples rounded to 0.1 ms keep the link short. */
-const round = (r: RunResult): RunResult => ({ ...r, samples: Object.fromEntries(Object.entries(r.samples).map(([k, ops]) => [k, Object.fromEntries(Object.entries(ops).map(([o, xs]) => [o, xs.map((x) => Math.round(x * 10) / 10)]))])) })
+const round1 = (m: Record<string, Record<string, number[]>>) => Object.fromEntries(Object.entries(m).map(([k, ops]) => [k, Object.fromEntries(Object.entries(ops).map(([o, xs]) => [o, xs.map((x) => Math.round(x * 10) / 10)]))]))
+const round = (r: RunResult): RunResult => ({ ...r, samples: round1(r.samples), ...(r.act ? { act: round1(r.act) } : {}) })
 /** Result → deflate → base64url (the share link's hash part). */
 export async function encodeResult(r: RunResult): Promise<string> {
   return b64url(await pipe(new TextEncoder().encode(JSON.stringify(round(r))), new CompressionStream("deflate-raw")))
