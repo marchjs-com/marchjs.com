@@ -1,8 +1,8 @@
 // Benchmark runner (browser): mounts every library in its own host element on the stage, then runs the selected
-// operations round-robin across them (N measured rounds from the start, no warm-up, each sample timed from the call to the
-// next paint, the library order rotated every round) and reports progress. A hidden tab pauses the run (a sample that
-// saw the tab hidden is measured again); before each sample it asks for garbage collection where the browser exposes
-// it and waits for one paint.
+// operations library by library, March last (N measured rounds from the start, no warm-up, each sample timed from the
+// call to the next paint) and reports progress. A hidden tab pauses the run (a sample that saw the tab hidden is
+// measured again); before each sample it asks for garbage collection where the browser exposes it and waits for one
+// paint.
 import { OPS, rowSource, type BenchApp, type DomProbe, type Op, type RunResult } from "./core.ts"
 import { afterPaint } from "./paint.ts"
 import type { Lib } from "./libs.ts"
@@ -50,11 +50,10 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
   const stop = () => o.signal?.aborted ?? false
   /** Waits out a hidden tab (reported as paused). */
   const guard = async (lib: string, op: string) => { if (document.hidden) { report(lib, op, "paused"); await visible(); await sleep(300) } }
-  // Fair order: every library is loaded and mounted first, then each operation is measured at once (no warm-up rounds)
-  // round-robin, one sample per library per round, the order rotated every round. Measured one library after
-  // another, the first ones paid the page's own warm-up (JIT, layout caches): the same build gave March 73 ms on
-  // "create 1.000" when it ran first and 70 ms when it ran third. Only the measured library's host is shown, and the
-  // others are emptied after each of their samples, so every sample sees the same stage.
+  // Order: every library is loaded and mounted first; then, for each operation, one library after another does all of
+  // its rounds (no warm-up rounds), March last. Running first can cost more (the page's own JIT and layout warm-up: the
+  // same March build once gave 73 ms on "create 1.000" first and 70 ms third), so the Method tab says March runs last.
+  // Only the measured library's host is shown, and it is emptied after each sample, so every sample sees the same stage.
   interface Mounted { lib: Lib; host: HTMLElement; app: BenchApp; dom: DomProbe; errs: Record<string, string> }
   const mounted: Mounted[] = []
   const rows = rowSource(1)
@@ -118,19 +117,19 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
       let live = mounted.filter((m) => !m.errs[op.id])
       const lists = new Map(live.map((m) => [m, [] as number[]]))
       const fail = (m: Mounted, left: number) => { m.errs[op.id] = "Sonuç beklenen tabloyla eşleşmedi"; done += left; live = live.filter((x) => x !== m) }
-      for (let round = 0; round < warm + o.reps && !stop(); round++) {
-        // the order turns by one every round: each library is measured first, second, … equally often
-        const order = live.map((_, i) => live[(i + round) % live.length]!)
-        for (const m of order) {
-          if (stop()) break
+      // one library after another, each doing all of its rounds before the next starts; March runs last
+      const order = [...live.filter((m) => m.lib.id !== "march"), ...live.filter((m) => m.lib.id === "march")]
+      for (const m of order) {
+        for (let round = 0; round < warm + o.reps && !stop(); round++) {
           await guard(m.lib.id, op.id)
           report(m.lib.id, op.id, round < warm ? "warm" : "run")
           let ms = await sample(m, op)
           while (ms !== null && Number.isNaN(ms) && !stop()) { await guard(m.lib.id, op.id); ms = await sample(m, op) } // the tab was hidden: measure it again
-          if (ms === null) { fail(m, warm + o.reps - round); continue }
+          if (ms === null) { fail(m, warm + o.reps - round); break }
           done++
           if (round >= warm) { lists.get(m)!.push(ms); o.onSample?.(m.lib.id, op.id, ms) }
         }
+        if (stop()) break
       }
       for (const [m, list] of lists) res.samples[m.lib.id]![op.id] = list
     }
