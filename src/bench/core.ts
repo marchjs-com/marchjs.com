@@ -149,8 +149,8 @@ export interface RunResult {
   date: string
   env: { ua: string; cores?: number | undefined; memory?: number | undefined; screen?: string | undefined; dpr?: number | undefined }
   reps: number
-  /** library id → op id → samples (ms): from the call to the paint after the table is emptied again (the operation, its
-   * paint and the clean-up after it: a library slow to tear down what it drew pays for it) */
+  /** library id → op id → samples (ms): the whole sample, from its start to its end (preparing the table, the operation,
+   * emptying the table again, with their paints: nothing the library does is left out) */
   samples: Record<string, Record<string, number[]>>
   /** library id → op id → the operation alone (ms, from the call to its paint; older results have none) */
   act?: Record<string, Record<string, number[]>>

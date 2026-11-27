@@ -47,8 +47,8 @@ const HAS: [keyof Bundled, string][] = [["router", "Yönlendirme"], ["store", "P
 /** The method, as short cards (title + one paragraph) instead of one long list. */
 const METHOD: { title: string; text: string }[] = [
   { title: "Uygulama", text: "4 sütunlu tablo (kimlik, etiket, seçme ve silme bağlantısı). Satırlar her kitaplık için aynıdır: her kitaplıkta ve her işlemde veri kaynağı baştan başlar (aynı tohum, kimlikler 1'den), yani her kitaplık aynı tekrarda aynı kimlik ve etiketleri çizer. Kitaplık kodları kendi önerilen kalıbıyla yazıldı (anahtarlı liste, satır başına bağlama); Kod bölümünde hepsi görünür." },
-  { title: "Süre", text: "İşlem çağrısından hemen önce saat alınır; işlem boyanır, sonra tablo boşaltılır ve o da boyanır: süre, ikinci boyamanın bittiği ana kadardır. Yani bir kitaplığın çizdiğini kaldırması da (ör. 10.000 satırı silmesi) süreye dahildir; tekrarlar arasında ölçülmeden geçen bir bekleme yoktur. Ayrıntı tablosundaki \"Yalnız işlem\" sütunu temizleme hariç süreyi gösterir. Boyama, bir requestAnimationFrame ve onun içinden gönderilen bir mesajla beklenir; mesaj, boyamanın hemen ardından gelir. Satır seç ve sil, satırdaki bağlantıya gerçek bir tıklama olayıyla yapılır." },
-  { title: "Hazırlık ve kontrol", text: "Her ölçümden önce hazırlık (ör. 1.000 satır kurmak) ölçülmeden yapılır ve boyanır; sonra tarayıcı izin veriyorsa çöp toplama istenir, 20 ms beklenir ve bir boyama daha beklenir. İşlemden sonra tablo kontrol edilir; işi atlayan bir uygulama hata alır, kazanmaz." },
+  { title: "Süre", text: "Süre = tekrarın bitişi − tekrarın başlangıcı. Bir tekrar şunları kapsar: tabloyu hazırlamak (ör. güncellenecek 1.000 satırı kurmak) ve boyamak, işlemi yapmak ve boyamak, sonucu kontrol etmek, tabloyu boşaltmak ve boyamak. Kitaplığın yaptığı hiçbir iş ölçüm dışında kalmaz; yalnız çöp toplama molası tekrar başlamadan önce verilir. Ayrıntı tablosundaki \"Yalnız işlem\" sütunu, işlemin tek başına süresini (çağrıdan boyamasına) gösterir. Boyama, bir requestAnimationFrame ve onun içinden gönderilen bir mesajla beklenir; mesaj, boyamanın hemen ardından gelir. Satır seç ve sil, satırdaki bağlantıya gerçek bir tıklama olayıyla yapılır." },
+  { title: "Hazırlık ve kontrol", text: "Her tekrardan önce, tarayıcı izin veriyorsa çöp toplama istenir, 20 ms beklenir ve bir boyama beklenir (ölçüm dışı mola; kitaplık bu sırada iş yapmaz). Hazırlık (ör. 1.000 satır kurmak) tekrarın içindedir ve ölçülür. İşlemden sonra tablo kontrol edilir; işi atlayan bir uygulama hata alır, kazanmaz." },
   { title: "İstatistik", text: "Isınma turu yok: test hemen başlar ve her tur ölçülür. Seçilen sayıda tekrar; medyan, ortalama, örnek standart sapması ve ortalamanın %95 güven aralığı (Student t) verilir. Sapma ya da güven aralığının yarısı medyanın %15'ini aşarsa sonuç güvenilir sayılmaz ve uyarı çıkar." },
   { title: "Sıra ve yalıtım", text: "Her işlemde kitaplıklar sırayla çalışır: biri bütün tekrarlarını bitirince sıradakine geçilir; March ilk çalışır. Sayfanın ilk ölçümleri (JIT, ilk yerleşim) daha yavaş olabilir: bu bedeli rakipler değil March öder. Her kitaplık bu sayfada ayrı bir kapsayıcıda çalışır. Aralarında uygulama kaldırılır, tarayıcı izin veriyorsa çöp toplama istenir, sayfa boşta kalana kadar beklenir. Sekme gizlenirse test durur; gizliyken başlayan ölçüm atılıp yeniden yapılır." },
   { title: "Sıra ve beraberlik", text: "Kitaplıklar medyana göre dizilir, ama sıra numarası yalnız açık farkları sayar: bir kitaplığın sırası, %95 güven aralığı tümüyle onunkinin altında kalan kitaplık sayısı + 1'dir. Aralıkları çakışanlar gürültü içinde berabere sayılır, aynı sırayı paylaşır; birinci sıradakilerin hepsi taç alır." },
@@ -117,7 +117,9 @@ export default function Bench() {
     const rows = ids.map((id, i) => {
       const s = statOf(id, $view), err = $result?.errors[id]?.[$view] ?? $result?.errors[id]?.load
       const state: BarRow["state"] = !$running ? "done" : i < at ? "done" : i === at ? "run" : "wait"
-      return { id, name: libName(id), value: s ? s.median : NaN, text: s ? `${ms(s.median)} ms` : "—", factor: s ? factor(s.median, base($view)) : undefined, warn: s ? state === "done" && unreliable(s) : false, error: err, state, s }
+      // the library being measured says so under its bar, with how many of its samples are in
+      const note = state === "run" ? t("Şu an ölçülüyor · {0}/{1} tekrar", { 0: s?.n ?? 0, 1: $reps }) : undefined
+      return { id, name: libName(id), value: s ? s.median : NaN, text: s ? `${ms(s.median)} ms` : "—", factor: s ? factor(s.median, base($view)) : undefined, warn: s ? state === "done" && unreliable(s) : false, error: err, state, note, s }
     })
     // places among the finished libraries only (one being measured has too few samples)
     const at1 = places(rows.filter((r) => r.state === "done" && r.s && !r.error).map((r) => ({ id: r.id, stats: r.s as Stats })), BASELINE)
@@ -169,13 +171,13 @@ export default function Bench() {
     <Split title={t("Test ayarları")} summary={() => t("{0} kitaplık · {1} işlem · {2} tekrar", { 0: $libs.length, 1: $ops.length, 2: $reps })} panel={panel()}>
       <header class="bt-live-head">
         <h2 class="bt-live-title">{t("Sonuçlar")}</h2>
-        <p class="bt-live-sub">{t("Medyan süre; kısa çubuk daha hızlı. Süre, işlemle birlikte ardından tablonun boşaltılmasını da kapsar. Katsayı saf JavaScript'e (çerçevesiz, kıyas çizgisi) göre: ×1.00 aynı süre, ×2.00 iki katı. Taç, birinci sıradaki her kitaplıkta: %95 güven aralıkları çakışanlar gürültü içinde berabere sayılır.")}</p>
+        <p class="bt-live-sub">{t("Medyan süre; kısa çubuk daha hızlı. Süre, tekrarın başından sonuna kadardır: hazırlık, işlem ve ardından tablonun boşaltılması dahil. Katsayı saf JavaScript'e (çerçevesiz, kıyas çizgisi) göre: ×1.00 aynı süre, ×2.00 iki katı. Taç, birinci sıradaki her kitaplıkta: %95 güven aralıkları çakışanlar gürültü içinde berabere sayılır.")}</p>
       </header>
       {() => opsIn().length > 1 ? <ChoicePicker aria-label={t("Gösterilen işlem")} kind="chips" value={$view} onChange={(v: unknown) => { $view = String(v); $follow = false }} options={opsIn().map((o) => ({ value: o.id, label: t(o.label) }))} /> : null}
       <Unsure names={unsure} />
       <Bars ids={LIB_IDS} rows={barRows} label={() => t("{0}: medyan süre", { 0: opLabel($view) })} />
       {() => (!barRows().length ? <p class="bt-empty">{t("Henüz sonuç yok. Testi başlatınca kitaplıklar burada canlı olarak sıralanır.")}</p> : null)}
-      <Preview stage={(el) => { stage = el }} running={() => $running} caption={() => ($progress ? `${libName($progress.lib)} · ${opLabel($progress.op)}` : t("bekliyor"))} />
+      <Preview stage={(el) => { stage = el }} running={() => $running} caption={() => ($progress ? t("Ölçülüyor: {0} · {1}", { 0: libName($progress.lib), 1: opLabel($progress.op) }) : t("bekliyor"))} />
       {() => ranked().length ? <div class="bt-table-wrap">
         <table class="m-table bt-table">
           <caption class="bt-caption">{t("{0}: ayrıntı", { 0: opLabel($view) })}</caption>

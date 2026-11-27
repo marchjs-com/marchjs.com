@@ -95,16 +95,20 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
     }
     report("", "", "cool")
     gc(); await idle(); await sleep(400)
-    /** One sample of `op` on `m`; NaN when the tab was hidden during it (measure again), null when the check failed. */
-    /** One sample: the whole time (the operation, its paint, then emptying the table and that paint) and the operation
-     * alone; NaN when the tab was hidden during it, null when the check failed. */
+    /**
+     * One sample, timed from its start to its end: preparing the table (e.g. 1.000 rows to update) and its paint, the
+     * operation and its paint, the check, then emptying the table and that paint. Nothing the library does happens
+     * outside the time; only the pause for garbage collection comes before the start. Also returns the operation alone.
+     * NaN when the tab was hidden during it, null when the check failed.
+     */
     const sample = async (m: Mounted, op: Op): Promise<{ all: number; act: number } | number | null> => {
       show(m)
+      await settle()
+      const seen = hides
+      const start = performance.now()
       op.setup(m.app, rows, m.dom)
       await afterPaint()
-      await settle()
       op.mark?.(m.dom)
-      const seen = hides
       const t0 = performance.now()
       op.act(m.app, rows, m.dom)
       const act = (await afterPaint()) - t0
@@ -112,7 +116,7 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
       // the next sample meets an empty stage: emptying it is part of the time (a library that is slow to tear down
       // what it drew pays for it here, not between samples where nobody sees it)
       m.app.clear()
-      const all = (await afterPaint()) - t0
+      const all = (await afterPaint()) - start
       if (hides !== seen) return NaN
       return ok ? { all, act } : null
     }
