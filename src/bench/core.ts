@@ -128,6 +128,15 @@ export const overlaps = (a: Stats, b: Stats): boolean => a.n > 1 && b.n > 1 && a
 /** Factor against the baseline (pure JavaScript, no framework): 1.00 = as fast, 2.00 = twice the time. */
 export const factor = (value: number, base: number): number => (base > 0 && Number.isFinite(value) ? value / base : NaN)
 
+/**
+ * Place of each result counting only clear wins: 1 + the number of others whose 95% interval lies wholly below its own.
+ * Results whose intervals overlap share a place (a tie within the noise). `skip` (the yardstick) is not counted.
+ */
+export function places<T extends { id: string; stats: Stats }>(list: readonly T[], skip?: string): Map<string, number> {
+  const ok = list.filter((x) => x.stats.n > 1 && x.id !== skip)
+  return new Map(ok.map((x) => [x.id, 1 + ok.filter((y) => y !== x && y.stats.ci[1] < x.stats.ci[0]).length]))
+}
+
 /** Results ranked fastest first (by median); failed or empty entries last. */
 export function rank<T extends { stats: Stats; error?: string | undefined }>(list: readonly T[]): T[] {
   const key = (x: T) => (x.error || !x.stats.n ? Infinity : x.stats.median)

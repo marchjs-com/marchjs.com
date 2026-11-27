@@ -10,10 +10,10 @@ import { t, untrack } from "march"
 import { query, setQuery } from "march/router"
 import { appUrl } from "march/base"
 import { play, x as stopIcon, copy as copyIcon, download as downloadIcon, link as linkIcon } from "march/icons"
-import { OPS, stats, factor, rank, unreliable, encodeResult, decodeResult, type RunResult, type Stats } from "../bench/core.ts"
-import { LIBS, BASELINE, libById } from "../bench/libs.ts"
+import { OPS, stats, factor, rank, places, unreliable, encodeResult, decodeResult, type RunResult, type Stats } from "../bench/core.ts"
+import { LIBS, BASELINE, libById, type Bundled } from "../bench/libs.ts"
 import { runBench, type Progress as RunProgress } from "../bench/runner.ts"
-import { busy, Split, Group, Toggles, AllNone, Bars, Unsure, Preview, Status, libItems, ms, kb, type BarRow } from "../bench/ui.tsx"
+import { busy, Split, Group, Toggles, AllNone, Bars, Unsure, Preview, Status, Kind, libItems, ms, kb, type BarRow } from "../bench/ui.tsx"
 import "./bench.css"
 
 const DemoCode = lazy(() => import("../demo-code.tsx"), { placeholder: "text", height: "16rem" })
@@ -41,13 +41,18 @@ function summary(r: RunResult): string {
   return lines.join("\n")
 }
 
+/** The columns of the "what comes with it" table. */
+const HAS: [keyof Bundled, string][] = [["router", "Yönlendirme"], ["store", "Paylaşılan durum"], ["ui", "Hazır arayüz bileşenleri"], ["i18n", "Çeviri (i18n)"]]
+
 /** The method, as short cards (title + one paragraph) instead of one long list. */
 const METHOD: { title: string; text: string }[] = [
   { title: "Uygulama", text: "4 sütunlu tablo (kimlik, etiket, seçme ve silme bağlantısı). Satırlar her kitaplık için aynı tohumdan üretilir. Kitaplık kodları kendi önerilen kalıbıyla yazıldı (anahtarlı liste, satır başına bağlama); Kod bölümünde hepsi görünür." },
   { title: "Süre", text: "İşlem çağrısından hemen önce saat alınır; sonra bir requestAnimationFrame ve onun içinden gönderilen bir mesaj beklenir. Mesaj, işlemden sonraki ilk boyamanın hemen ardından gelir. Satır seç ve sil, satırdaki bağlantıya gerçek bir tıklama olayıyla yapılır." },
   { title: "Hazırlık ve kontrol", text: "Her ölçümden önce hazırlık (ör. 1.000 satır kurmak) ölçülmeden yapılır ve boyanır; sonra tarayıcı izin veriyorsa çöp toplama istenir, 20 ms beklenir ve bir boyama daha beklenir. İşlemden sonra tablo kontrol edilir; işi atlayan bir uygulama hata alır, kazanmaz." },
   { title: "İstatistik", text: "Isınma turu yok: test hemen başlar ve her tur ölçülür. Seçilen sayıda tekrar; medyan, ortalama, örnek standart sapması ve ortalamanın %95 güven aralığı (Student t) verilir. Sapma ya da güven aralığının yarısı medyanın %15'ini aşarsa sonuç güvenilir sayılmaz ve uyarı çıkar." },
-  { title: "Sıra ve yalıtım", text: "Her işlemde kitaplıklar sırayla çalışır: biri bütün tekrarlarını bitirince sıradakine geçilir; March en son çalışır. Sayfanın ilk ölçümleri (JIT, ilk yerleşim) daha yavaş olabildiğinden sonda çalışmak biraz avantaj sağlayabilir. Her kitaplık bu sayfada ayrı bir kapsayıcıda çalışır. Aralarında uygulama kaldırılır, tarayıcı izin veriyorsa çöp toplama istenir, sayfa boşta kalana kadar beklenir. Sekme gizlenirse test durur; gizliyken başlayan ölçüm atılıp yeniden yapılır." },
+  { title: "Sıra ve yalıtım", text: "Her işlemde kitaplıklar sırayla çalışır: biri bütün tekrarlarını bitirince sıradakine geçilir; March ilk çalışır. Sayfanın ilk ölçümleri (JIT, ilk yerleşim) daha yavaş olabilir: bu bedeli rakipler değil March öder. Her kitaplık bu sayfada ayrı bir kapsayıcıda çalışır. Aralarında uygulama kaldırılır, tarayıcı izin veriyorsa çöp toplama istenir, sayfa boşta kalana kadar beklenir. Sekme gizlenirse test durur; gizliyken başlayan ölçüm atılıp yeniden yapılır." },
+  { title: "Sıra ve beraberlik", text: "Kitaplıklar medyana göre dizilir, ama sıra numarası yalnız açık farkları sayar: bir kitaplığın sırası, %95 güven aralığı tümüyle onunkinin altında kalan kitaplık sayısı + 1'dir. Aralıkları çakışanlar gürültü içinde berabere sayılır, aynı sırayı paylaşır; birinci sıradakilerin hepsi taç alır." },
+  { title: "Görünüm ve çatı", text: "Görünüm kitaplıkları (React, Preact, Vue, Svelte, Solid, Lit, Marko, Inferno, ivi, Alpine.js) yalnız arayüzü çizer; yönlendirme, durum, hazır bileşenler ve çeviri ayrı paketlerden gelir. Çatılar (March, Angular, Mithril) yönlendirme ve daha fazlasını kendi içinde getirir. Sonuçlar altındaki \"Pakette ne var\" tablosu hangi kitaplıkta neyin hazır geldiğini gösterir; bu test yalnız tablo çizme hızını ölçer." },
   { title: "İlk çizim, bellek, indirilen", text: "İlk çizim: kitaplık parçasının indirilmesinden boş uygulamanın ilk boyamasına kadar (ikinci çalıştırmada parça önbellektedir). Bellek: 1.000 satır sonrası JS yığını artışı; yalnız performance.memory veren tarayıcılarda ve kabadır. İndirilen: uygulamanın kitaplığıyla birlikte tek başına paketlenmiş, küçültülmüş hâlinin gzip (düzey 9) boyutu." },
   { title: "Gerçekçi senaryolar", text: "Her adım bir karenin başında çağrılır ve o karenin boyamasına kadar ölçülür (işlem + stil + yerleşim + boyama); 16,7 ms'yi aşan kare 60 fps'te düşen karedir. Kurulum: sayfanın kurulup ilk kez boyanması (kitaplık kodu önceden inmiş). Her kitaplık senaryoyu kendi önerilen kalıbıyla yazdı." },
   { title: "Kitaplığa özgü", text: "React çağrıları flushSync içinde yapılır (düğme tıklaması gibi, boyamadan önce çizilir). Svelte ve Solid derlenmiş çıktılarıyla çalışır. Sonuçlar bu cihaza ve tarayıcıya özgüdür." },
@@ -83,7 +88,8 @@ export default function Bench() {
     const libs = LIBS.filter((l) => $libs.includes(l.id)), ops = OPS.filter((o) => $ops.includes(o.id))
     if (!libs.length || !ops.length) { toast(t("En az bir kitaplık ve bir işlem seç"), { kind: "warn" }); return }
     ctrl = new AbortController()
-    $running = true; $shared = false; $live = {}; $result = null; $follow = true; $order = libs.map((l) => l.id)
+    // the runner measures March first, then the others in the list's order
+    $running = true; $shared = false; $live = {}; $result = null; $follow = true; $order = [...libs.filter((l) => l.id === "march"), ...libs.filter((l) => l.id !== "march")].map((l) => l.id)
     busy.set("basic")
     if (!ops.some((o) => o.id === $view)) $view = ops[0]!.id
     if (query().r) void setQuery({ r: null })
@@ -103,15 +109,19 @@ export default function Bench() {
   const base = (op: string): number => statOf(BASELINE, op)?.median ?? NaN
   const ranked = () => rank(libsIn().map((id) => ({ id, stats: statOf(id, $view) ?? stats([]), error: $result?.errors[id]?.[$view] ?? $result?.errors[id]?.load })))
     .filter((x) => x.stats.n)
+  const placeOf = () => places(ranked().filter((x) => !x.error), BASELINE)
   // one bar per library of this run (or of the result): waiting, being measured, or its median so far
   const barRows = (): BarRow[] => {
     const ids = $running ? $order : libsIn()
     const at = $progress ? $order.indexOf($progress.lib) : -1
-    return ids.map((id, i) => {
+    const rows = ids.map((id, i) => {
       const s = statOf(id, $view), err = $result?.errors[id]?.[$view] ?? $result?.errors[id]?.load
       const state: BarRow["state"] = !$running ? "done" : i < at ? "done" : i === at ? "run" : "wait"
-      return { id, name: libName(id), value: s ? s.median : NaN, text: s ? `${ms(s.median)} ms` : "—", factor: s ? factor(s.median, base($view)) : undefined, warn: s ? state === "done" && unreliable(s) : false, error: err, state }
+      return { id, name: libName(id), value: s ? s.median : NaN, text: s ? `${ms(s.median)} ms` : "—", factor: s ? factor(s.median, base($view)) : undefined, warn: s ? state === "done" && unreliable(s) : false, error: err, state, s }
     })
+    // places among the finished libraries only (one being measured has too few samples)
+    const at1 = places(rows.filter((r) => r.state === "done" && r.s && !r.error).map((r) => ({ id: r.id, stats: r.s as Stats })), BASELINE)
+    return rows.map(({ s: _s, ...r }) => ({ ...r, place: at1.get(r.id) }))
   }
   // only finished libraries: a library being measured has too few samples to judge
   const unsure = (): string[] => barRows().filter((r) => r.warn).map((r) => r.name)
@@ -159,7 +169,7 @@ export default function Bench() {
     <Split title={t("Test ayarları")} summary={() => t("{0} kitaplık · {1} işlem · {2} tekrar", { 0: $libs.length, 1: $ops.length, 2: $reps })} panel={panel()}>
       <header class="bt-live-head">
         <h2 class="bt-live-title">{t("Sonuçlar")}</h2>
-        <p class="bt-live-sub">{t("Medyan süre; kısa çubuk daha hızlı. Katsayı saf JavaScript'e (çerçevesiz, kıyas çizgisi) göre: ×1.00 aynı süre, ×2.00 iki katı.")}</p>
+        <p class="bt-live-sub">{t("Medyan süre; kısa çubuk daha hızlı. Katsayı saf JavaScript'e (çerçevesiz, kıyas çizgisi) göre: ×1.00 aynı süre, ×2.00 iki katı. Taç, birinci sıradaki her kitaplıkta: %95 güven aralıkları çakışanlar gürültü içinde berabere sayılır.")}</p>
       </header>
       {() => opsIn().length > 1 ? <ChoicePicker aria-label={t("Gösterilen işlem")} kind="chips" value={$view} onChange={(v: unknown) => { $view = String(v); $follow = false }} options={opsIn().map((o) => ({ value: o.id, label: t(o.label) }))} /> : null}
       <Unsure names={unsure} />
@@ -169,9 +179,10 @@ export default function Bench() {
       {() => ranked().length ? <div class="bt-table-wrap">
         <table class="m-table bt-table">
           <caption class="bt-caption">{t("{0}: ayrıntı", { 0: opLabel($view) })}</caption>
-          <thead><tr><th scope="col">{t("Kitaplık")}</th><th scope="col">{t("Medyan")}</th><th scope="col">{t("Ortalama ± sapma")}</th><th scope="col">{t("%95 güven aralığı")}</th><th scope="col">n</th><th scope="col">{t("Katsayı")}</th></tr></thead>
+          <thead><tr><th scope="col">{t("Sıra")}</th><th scope="col">{t("Kitaplık")}</th><th scope="col">{t("Medyan")}</th><th scope="col">{t("Ortalama ± sapma")}</th><th scope="col">{t("%95 güven aralığı")}</th><th scope="col">n</th><th scope="col">{t("Katsayı")}</th></tr></thead>
           <tbody>{ranked().map((x) => <tr>
-            <th scope="row">{libName(x.id)}</th>
+            <td title={t("Aralığı tümüyle daha hızlı olan kitaplık sayısı + 1; aralıkları çakışanlar aynı sırada")}>{x.id === BASELINE ? t("kıyas") : placeOf().get(x.id) ?? "—"}</td>
+            <th scope="row">{libName(x.id)} <Kind id={x.id} /></th>
             <td>{ms(x.stats.median)} ms</td>
             <td>{ms(x.stats.mean)} ± {ms(x.stats.sd)}</td>
             <td>{ms(x.stats.ci[0])}–{ms(x.stats.ci[1])}</td>
@@ -194,6 +205,18 @@ export default function Bench() {
           </table>
         </div>
       </Disclosure> : null}
+      <Disclosure class="bt-more" title={t("Pakette ne var: yönlendirme, durum, bileşenler, çeviri")}>
+        <div class="bt-table-wrap">
+          <table class="m-table bt-table">
+            <caption class="bt-caption">{t("✓ kitaplığın içinde · resmî: kendi ekibinin ayrı paketi · —: yok (topluluk paketleri sayılmadı)")}</caption>
+            <thead><tr><th scope="col">{t("Kitaplık")}</th>{HAS.map(([, label]) => <th scope="col">{t(label)}</th>)}</tr></thead>
+            <tbody>{LIBS.filter((l) => l.kind !== "baseline").map((l) => <tr>
+              <th scope="row">{l.name} <Kind id={l.id} /></th>
+              {HAS.map(([k]) => <td>{l.has[k] === 1 ? "✓" : l.has[k] === 2 ? t("resmî") : "—"}</td>)}
+            </tr>)}</tbody>
+          </table>
+        </div>
+      </Disclosure>
       {() => $result ? <div class="bt-env">
         <p><strong>{t("Cihaz ve tarayıcı:")}</strong> {$result.env.ua}</p>
         <p>{$result.env.cores ? `${t("{0} çekirdek", { 0: $result.env.cores })} · ` : ""}{$result.env.memory ? `${t("{0} GB bellek", { 0: $result.env.memory })} · ` : ""}{$result.env.screen ?? ""}{$result.env.dpr ? ` · ${t("piksel oranı {0}", { 0: $result.env.dpr })}` : ""} · {new Date($result.date).toLocaleString()}</p>

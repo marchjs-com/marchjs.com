@@ -1,5 +1,5 @@
 // Benchmark runner (browser): mounts every library in its own host element on the stage, then runs the selected
-// operations library by library, March last (N measured rounds from the start, no warm-up, each sample timed from the
+// operations library by library, March first (N measured rounds from the start, no warm-up, each sample timed from the
 // call to the next paint) and reports progress. A hidden tab pauses the run (a sample that saw the tab hidden is
 // measured again); before each sample it asks for garbage collection where the browser exposes it and waits for one
 // paint.
@@ -51,8 +51,8 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
   /** Waits out a hidden tab (reported as paused). */
   const guard = async (lib: string, op: string) => { if (document.hidden) { report(lib, op, "paused"); await visible(); await sleep(300) } }
   // Order: every library is loaded and mounted first; then, for each operation, one library after another does all of
-  // its rounds (no warm-up rounds), March last. Running first can cost more (the page's own JIT and layout warm-up: the
-  // same March build once gave 73 ms on "create 1.000" first and 70 ms third), so the Method tab says March runs last.
+  // its rounds (no warm-up rounds), March first. Running first can cost more (the page's own JIT and layout warm-up: the
+  // same March build once gave 73 ms on "create 1.000" first and 70 ms third): March takes that cost, not a rival.
   // Only the measured library's host is shown, and it is emptied after each sample, so every sample sees the same stage.
   interface Mounted { lib: Lib; host: HTMLElement; app: BenchApp; dom: DomProbe; errs: Record<string, string> }
   const mounted: Mounted[] = []
@@ -117,8 +117,8 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
       let live = mounted.filter((m) => !m.errs[op.id])
       const lists = new Map(live.map((m) => [m, [] as number[]]))
       const fail = (m: Mounted, left: number) => { m.errs[op.id] = "Sonuç beklenen tabloyla eşleşmedi"; done += left; live = live.filter((x) => x !== m) }
-      // one library after another, each doing all of its rounds before the next starts; March runs last
-      const order = [...live.filter((m) => m.lib.id !== "march"), ...live.filter((m) => m.lib.id === "march")]
+      // one library after another, each doing all of its rounds before the next starts; March runs first
+      const order = [...live.filter((m) => m.lib.id === "march"), ...live.filter((m) => m.lib.id !== "march")]
       for (const m of order) {
         for (let round = 0; round < warm + o.reps && !stop(); round++) {
           await guard(m.lib.id, op.id)
