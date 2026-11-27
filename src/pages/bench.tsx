@@ -47,7 +47,7 @@ const HAS: [keyof Bundled, string][] = [["router", "Yönlendirme"], ["store", "P
 /** The method, as short cards (title + one paragraph) instead of one long list. */
 const METHOD: { title: string; text: string }[] = [
   { title: "Uygulama", text: "4 sütunlu tablo (kimlik, etiket, seçme ve silme bağlantısı). Satırlar her kitaplık için aynı tohumdan üretilir. Kitaplık kodları kendi önerilen kalıbıyla yazıldı (anahtarlı liste, satır başına bağlama); Kod bölümünde hepsi görünür." },
-  { title: "Süre", text: "İşlem çağrısından hemen önce saat alınır; sonra bir requestAnimationFrame ve onun içinden gönderilen bir mesaj beklenir. Mesaj, işlemden sonraki ilk boyamanın hemen ardından gelir. Satır seç ve sil, satırdaki bağlantıya gerçek bir tıklama olayıyla yapılır." },
+  { title: "Süre", text: "İşlem çağrısından hemen önce saat alınır; işlem boyanır, sonra tablo boşaltılır ve o da boyanır: süre, ikinci boyamanın bittiği ana kadardır. Yani bir kitaplığın çizdiğini kaldırması da (ör. 10.000 satırı silmesi) süreye dahildir; tekrarlar arasında ölçülmeden geçen bir bekleme yoktur. Ayrıntı tablosundaki \"Yalnız işlem\" sütunu temizleme hariç süreyi gösterir. Boyama, bir requestAnimationFrame ve onun içinden gönderilen bir mesajla beklenir; mesaj, boyamanın hemen ardından gelir. Satır seç ve sil, satırdaki bağlantıya gerçek bir tıklama olayıyla yapılır." },
   { title: "Hazırlık ve kontrol", text: "Her ölçümden önce hazırlık (ör. 1.000 satır kurmak) ölçülmeden yapılır ve boyanır; sonra tarayıcı izin veriyorsa çöp toplama istenir, 20 ms beklenir ve bir boyama daha beklenir. İşlemden sonra tablo kontrol edilir; işi atlayan bir uygulama hata alır, kazanmaz." },
   { title: "İstatistik", text: "Isınma turu yok: test hemen başlar ve her tur ölçülür. Seçilen sayıda tekrar; medyan, ortalama, örnek standart sapması ve ortalamanın %95 güven aralığı (Student t) verilir. Sapma ya da güven aralığının yarısı medyanın %15'ini aşarsa sonuç güvenilir sayılmaz ve uyarı çıkar." },
   { title: "Sıra ve yalıtım", text: "Her işlemde kitaplıklar sırayla çalışır: biri bütün tekrarlarını bitirince sıradakine geçilir; March ilk çalışır. Sayfanın ilk ölçümleri (JIT, ilk yerleşim) daha yavaş olabilir: bu bedeli rakipler değil March öder. Her kitaplık bu sayfada ayrı bir kapsayıcıda çalışır. Aralarında uygulama kaldırılır, tarayıcı izin veriyorsa çöp toplama istenir, sayfa boşta kalana kadar beklenir. Sekme gizlenirse test durur; gizliyken başlayan ölçüm atılıp yeniden yapılır." },
@@ -169,7 +169,7 @@ export default function Bench() {
     <Split title={t("Test ayarları")} summary={() => t("{0} kitaplık · {1} işlem · {2} tekrar", { 0: $libs.length, 1: $ops.length, 2: $reps })} panel={panel()}>
       <header class="bt-live-head">
         <h2 class="bt-live-title">{t("Sonuçlar")}</h2>
-        <p class="bt-live-sub">{t("Medyan süre; kısa çubuk daha hızlı. Katsayı saf JavaScript'e (çerçevesiz, kıyas çizgisi) göre: ×1.00 aynı süre, ×2.00 iki katı. Taç, birinci sıradaki her kitaplıkta: %95 güven aralıkları çakışanlar gürültü içinde berabere sayılır.")}</p>
+        <p class="bt-live-sub">{t("Medyan süre; kısa çubuk daha hızlı. Süre, işlemle birlikte ardından tablonun boşaltılmasını da kapsar. Katsayı saf JavaScript'e (çerçevesiz, kıyas çizgisi) göre: ×1.00 aynı süre, ×2.00 iki katı. Taç, birinci sıradaki her kitaplıkta: %95 güven aralıkları çakışanlar gürültü içinde berabere sayılır.")}</p>
       </header>
       {() => opsIn().length > 1 ? <ChoicePicker aria-label={t("Gösterilen işlem")} kind="chips" value={$view} onChange={(v: unknown) => { $view = String(v); $follow = false }} options={opsIn().map((o) => ({ value: o.id, label: t(o.label) }))} /> : null}
       <Unsure names={unsure} />
@@ -179,7 +179,7 @@ export default function Bench() {
       {() => ranked().length ? <div class="bt-table-wrap">
         <table class="m-table bt-table">
           <caption class="bt-caption">{t("{0}: ayrıntı", { 0: opLabel($view) })}</caption>
-          <thead><tr><th scope="col">{t("Sıra")}</th><th scope="col">{t("Kitaplık")}</th><th scope="col">{t("Medyan")}</th><th scope="col">{t("Ortalama ± sapma")}</th><th scope="col">{t("%95 güven aralığı")}</th><th scope="col">n</th><th scope="col">{t("Katsayı")}</th></tr></thead>
+          <thead><tr><th scope="col">{t("Sıra")}</th><th scope="col">{t("Kitaplık")}</th><th scope="col">{t("Medyan")}</th><th scope="col">{t("Ortalama ± sapma")}</th><th scope="col">{t("%95 güven aralığı")}</th><th scope="col">n</th><th scope="col">{t("Katsayı")}</th><th scope="col" title={t("Temizleme hariç: çağrıdan işlemin boyanmasına kadar")}>{t("Yalnız işlem")}</th></tr></thead>
           <tbody>{ranked().map((x) => <tr>
             <td title={t("Aralığı tümüyle daha hızlı olan kitaplık sayısı + 1; aralıkları çakışanlar aynı sırada")}>{x.id === BASELINE ? t("kıyas") : placeOf().get(x.id) ?? "—"}</td>
             <th scope="row">{libName(x.id)} <Kind id={x.id} /></th>
@@ -188,6 +188,7 @@ export default function Bench() {
             <td>{ms(x.stats.ci[0])}–{ms(x.stats.ci[1])}</td>
             <td>{x.stats.n}</td>
             <td>{Number.isFinite(base($view)) ? `×${factor(x.stats.median, base($view)).toFixed(2)}` : "—"}</td>
+            <td>{(() => { const a = $result?.act?.[x.id]?.[$view]; return a?.length ? `${ms(stats(a).median)} ms` : "—" })()}</td>
           </tr>)}</tbody>
         </table>
       </div> : null}

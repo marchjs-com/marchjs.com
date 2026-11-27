@@ -39,7 +39,7 @@ function visible(): Promise<void> {
 
 export async function runBench(o: RunOptions): Promise<RunResult> {
   const nav = navigator as Navigator & { deviceMemory?: number }
-  const res: RunResult = { v: 1, date: new Date().toISOString(), env: { ua: nav.userAgent, cores: nav.hardwareConcurrency, memory: nav.deviceMemory, screen: `${screen.width}×${screen.height}`, dpr: devicePixelRatio }, reps: o.reps, samples: {}, errors: {}, firstPaint: {}, memory: {} }
+  const res: RunResult = { v: 1, date: new Date().toISOString(), env: { ua: nav.userAgent, cores: nav.hardwareConcurrency, memory: nav.deviceMemory, screen: `${screen.width}×${screen.height}`, dpr: devicePixelRatio }, reps: o.reps, samples: {}, act: {}, errors: {}, firstPaint: {}, memory: {} }
   let hides = 0
   const onVis = () => { if (document.hidden) hides++ }
   document.addEventListener("visibilitychange", onVis)
@@ -61,7 +61,7 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
   try {
     for (const lib of o.libs) {
       if (stop()) break
-      res.samples[lib.id] = {}
+      res.samples[lib.id] = {}; res.act![lib.id] = {}
       report(lib.id, "", "load")
       gc(); await idle()
       await guard(lib.id, "")
@@ -95,7 +95,9 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
     report("", "", "cool")
     gc(); await idle(); await sleep(400)
     /** One sample of `op` on `m`; NaN when the tab was hidden during it (measure again), null when the check failed. */
-    const sample = async (m: Mounted, op: Op): Promise<number | null> => {
+    /** One sample: the whole time (the operation, its paint, then emptying the table and that paint) and the operation
+     * alone; NaN when the tab was hidden during it, null when the check failed. */
+    const sample = async (m: Mounted, op: Op): Promise<{ all: number; act: number } | number | null> => {
       show(m)
       op.setup(m.app, rows, m.dom)
       await afterPaint()
@@ -104,18 +106,20 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
       const seen = hides
       const t0 = performance.now()
       op.act(m.app, rows, m.dom)
-      const ms = (await afterPaint()) - t0
+      const act = (await afterPaint()) - t0
       const ok = hides !== seen || op.check(m.dom)
-      // the next library meets an empty stage: this one's rows go before it is hidden
-      m.app.clear(); await afterPaint()
+      // the next sample meets an empty stage: emptying it is part of the time (a library that is slow to tear down
+      // what it drew pays for it here, not between samples where nobody sees it)
+      m.app.clear()
+      const all = (await afterPaint()) - t0
       if (hides !== seen) return NaN
-      return ok ? ms : null
+      return ok ? { all, act } : null
     }
     for (const op of o.ops) {
       if (stop()) break
       const warm = o.warm ?? op.warm
       let live = mounted.filter((m) => !m.errs[op.id])
-      const lists = new Map(live.map((m) => [m, [] as number[]]))
+      const lists = new Map(live.map((m) => [m, [] as number[]])), acts = new Map(live.map((m) => [m, [] as number[]]))
       const fail = (m: Mounted, left: number) => { m.errs[op.id] = "Sonuç beklenen tabloyla eşleşmedi"; done += left; live = live.filter((x) => x !== m) }
       // one library after another, each doing all of its rounds before the next starts; March runs first
       const order = [...live.filter((m) => m.lib.id === "march"), ...live.filter((m) => m.lib.id !== "march")]
@@ -124,14 +128,14 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
           await guard(m.lib.id, op.id)
           report(m.lib.id, op.id, round < warm ? "warm" : "run")
           let ms = await sample(m, op)
-          while (ms !== null && Number.isNaN(ms) && !stop()) { await guard(m.lib.id, op.id); ms = await sample(m, op) } // the tab was hidden: measure it again
-          if (ms === null) { fail(m, warm + o.reps - round); break }
+          while (typeof ms === "number" && Number.isNaN(ms) && !stop()) { await guard(m.lib.id, op.id); ms = await sample(m, op) } // the tab was hidden: measure it again
+          if (ms === null || typeof ms === "number") { if (ms === null) fail(m, warm + o.reps - round); break }
           done++
-          if (round >= warm) { lists.get(m)!.push(ms); o.onSample?.(m.lib.id, op.id, ms) }
+          if (round >= warm) { lists.get(m)!.push(ms.all); acts.get(m)!.push(ms.act); o.onSample?.(m.lib.id, op.id, ms.all) }
         }
         if (stop()) break
       }
-      for (const [m, list] of lists) res.samples[m.lib.id]![op.id] = list
+      for (const [m, list] of lists) { res.samples[m.lib.id]![op.id] = list; res.act![m.lib.id]![op.id] = acts.get(m)! }
     }
   } finally {
     for (const m of mounted) {

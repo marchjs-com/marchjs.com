@@ -149,8 +149,11 @@ export interface RunResult {
   date: string
   env: { ua: string; cores?: number | undefined; memory?: number | undefined; screen?: string | undefined; dpr?: number | undefined }
   reps: number
-  /** library id → op id → samples (ms) */
+  /** library id → op id → samples (ms): from the call to the paint after the table is emptied again (the operation, its
+   * paint and the clean-up after it: a library slow to tear down what it drew pays for it) */
   samples: Record<string, Record<string, number[]>>
+  /** library id → op id → the operation alone (ms, from the call to its paint; older results have none) */
+  act?: Record<string, Record<string, number[]>>
   /** library id → op id → reason (a failed check, a load error) */
   errors: Record<string, Record<string, string>>
   /** library id → first paint (ms: download + start-up + first empty draw) */
@@ -175,7 +178,8 @@ async function pipe(bytes: Uint8Array, stream: CompressionStream | Decompression
   return new Uint8Array(buf)
 }
 /** Samples rounded to 0.1 ms keep the link short. */
-const round = (r: RunResult): RunResult => ({ ...r, samples: Object.fromEntries(Object.entries(r.samples).map(([k, ops]) => [k, Object.fromEntries(Object.entries(ops).map(([o, xs]) => [o, xs.map((x) => Math.round(x * 10) / 10)]))])) })
+const round1 = (m: Record<string, Record<string, number[]>>) => Object.fromEntries(Object.entries(m).map(([k, ops]) => [k, Object.fromEntries(Object.entries(ops).map(([o, xs]) => [o, xs.map((x) => Math.round(x * 10) / 10)]))]))
+const round = (r: RunResult): RunResult => ({ ...r, samples: round1(r.samples), ...(r.act ? { act: round1(r.act) } : {}) })
 /** Result → deflate → base64url (the share link's hash part). */
 export async function encodeResult(r: RunResult): Promise<string> {
   return b64url(await pipe(new TextEncoder().encode(JSON.stringify(round(r))), new CompressionStream("deflate-raw")))
