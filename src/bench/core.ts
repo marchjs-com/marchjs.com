@@ -58,8 +58,8 @@ export interface Op {
   desc: string
   /** warm-up samples before the measured ones */
   warm: number
-  /** the most a sample is expected to take (ms): a library whose samples add up to more than limit × samples is stopped
-   * for this operation and reported as not finishing in the expected time */
+  /** the most a sample is expected to take (ms): a library with a sample over it, or whose samples add up to more than
+   * limit × samples, is stopped for this operation and reported as not finishing in the expected time */
   limit: number
   setup(app: BenchApp, rows: (n: number) => Row[], dom: DomProbe): void
   /** Reads the prepared table after setup has been drawn (libraries that render in a microtask have drawn by then). */
@@ -162,8 +162,8 @@ export interface RunResult {
   /** library id → op id → the most JS heap any of its samples grew by (MB, from that sample's start, read after each
    * paint); only where the browser reports the heap */
   heapMax?: Record<string, Record<string, number>>
-  /** library id → op id → the busiest any of its samples kept the page's main thread (% of the sample's time, from the
-   * long animation frames the browser reports: frames over 50 ms); only where the browser reports them */
+  /** library id → op id → the busiest any of its samples kept the page's main thread (% of the sample's time: its calls
+   * with their microtasks, and its frames from their start to the end of their paint) */
   cpuMax?: Record<string, Record<string, number>>
   /** library id → op id → reason (a failed check, a load error) */
   errors: Record<string, Record<string, string>>

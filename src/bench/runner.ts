@@ -4,7 +4,7 @@
 // measured again); before each sample it asks for garbage collection where the browser exposes it and waits for one
 // paint.
 import { OPS, TIMEOUT, rowSource, type BenchApp, type DomProbe, type Op, type RunResult } from "./core.ts"
-import { afterPaint } from "./paint.ts"
+import { afterPaint, afterPaintFrom, afterTask } from "./paint.ts"
 import type { Lib } from "./libs.ts"
 
 export interface Progress { lib: string; op: string; phase: "load" | "warm" | "run" | "cool" | "paused"; done: number; total: number }
@@ -39,11 +39,6 @@ function visible(): Promise<void> {
 export async function runBench(o: RunOptions): Promise<RunResult> {
   const nav = navigator as Navigator & { deviceMemory?: number }
   const res: RunResult = { v: 1, date: new Date().toISOString(), env: { ua: nav.userAgent, cores: nav.hardwareConcurrency, memory: nav.deviceMemory, screen: `${screen.width}×${screen.height}`, dpr: devicePixelRatio }, reps: o.reps, samples: {}, act: {}, heapMax: {}, cpuMax: {}, errors: {}, firstPaint: {}, memory: {} }
-  // the page's long animation frames (over 50 ms), where the browser reports them: how busy a sample kept the main thread
-  type Frame = { startTime: number; duration: number }
-  let frames: Frame[] | null = null
-  const loaf = PerformanceObserver.supportedEntryTypes?.includes("long-animation-frame") ? new PerformanceObserver((l) => { for (const e of l.getEntries()) frames?.push({ startTime: e.startTime, duration: e.duration }) }) : null
-  if (loaf) { frames = []; loaf.observe({ type: "long-animation-frame" }) }
   let hides = 0
   const onVis = () => { if (document.hidden) hides++ }
   document.addEventListener("visibilitychange", onVis)
@@ -111,28 +106,30 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
       await settle()
       const seen = hides
       // the heap is read at the sample's start and after each of its paints (reading it takes no measurable time)
+      // how long the main thread was busy: each call with its microtasks (to the end of its task), then each frame from its
+      // start to the end of its paint; the rest of the sample it waited (for the next frame)
+      let busy = 0
+      const work = async (fn: () => void): Promise<number> => {
+        const a = performance.now(); fn(); const b = await afterTask(); busy += b - a
+        const p = await afterPaintFrom(); busy += p.done - p.frame
+        return p.done
+      }
       const h0 = heap()
       const start = performance.now()
-      op.setup(m.app, rows, m.dom)
-      await afterPaint()
+      await work(() => op.setup(m.app, rows, m.dom))
       const h1 = heap()
       op.mark?.(m.dom)
       const t0 = performance.now()
-      op.act(m.app, rows, m.dom)
-      const act = (await afterPaint()) - t0
+      const act = (await work(() => op.act(m.app, rows, m.dom))) - t0
       const h2 = heap()
       const ok = hides !== seen || op.check(m.dom)
       // the next sample meets an empty stage: emptying it is part of the time (a library that is slow to tear down
       // what it drew pays for it here, not between samples where nobody sees it)
-      m.app.clear()
-      const all = (await afterPaint()) - start
+      const all = (await work(() => m.app.clear())) - start
       const h3 = heap()
       if (hides !== seen) return NaN
       if (!ok) return null
-      const end = start + all
-      if (loaf && frames) for (const e of loaf.takeRecords()) frames.push({ startTime: e.startTime, duration: e.duration })
-      const cpu = frames ? Math.min(100, (frames.reduce((s, f) => s + Math.max(0, Math.min(end, f.startTime + f.duration) - Math.max(start, f.startTime)), 0) / all) * 100) : undefined
-      if (frames) frames = frames.filter((f) => f.startTime + f.duration > end)
+      const cpu = Math.min(100, (busy / all) * 100)
       const peak = h0 === undefined || h1 === undefined || h2 === undefined || h3 === undefined ? undefined : Math.max(0, h1 - h0, h2 - h0, h3 - h0) / 1048576
       return { all, act, peak, cpu }
     }
@@ -159,8 +156,11 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
           if (ms === null || typeof ms === "number") { if (ms === null) fail(m, warm + o.reps - round); break }
           done++
           spent += ms.all
-          if (spent > budget) {
-            m.errs[op.id] = `${TIMEOUT}: ${warm + o.reps} tekrar için en çok ${budget / 1000} sn beklenirdi, ${round + 1}. tekrarda ${(spent / 1000).toFixed(1)} sn oldu`
+          // one sample over the expected most, or all of them together over theirs: stopped at once
+          if (ms.all > op.limit || spent > budget) {
+            m.errs[op.id] = ms.all > op.limit
+              ? `${TIMEOUT}: bir tekrar için en çok ${op.limit / 1000} sn beklenirdi, ${round + 1}. tekrar ${(ms.all / 1000).toFixed(1)} sn sürdü`
+              : `${TIMEOUT}: ${warm + o.reps} tekrar için en çok ${budget / 1000} sn beklenirdi, ${round + 1}. tekrarda ${(spent / 1000).toFixed(1)} sn oldu`
             done += warm + o.reps - round - 1; live = live.filter((x) => x !== m)
             break
           }
@@ -186,7 +186,6 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
       if (Object.keys(m.errs).length) res.errors[m.lib.id] = { ...res.errors[m.lib.id], ...m.errs }
     }
     document.removeEventListener("visibilitychange", onVis)
-    loaf?.disconnect()
   }
   return res
 }
