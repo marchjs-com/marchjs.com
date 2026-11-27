@@ -3,7 +3,7 @@
 // call to the next paint) and reports progress. A hidden tab pauses the run (a sample that saw the tab hidden is
 // measured again); before each sample it asks for garbage collection where the browser exposes it and waits for one
 // paint.
-import { OPS, rowSource, type BenchApp, type DomProbe, type Op, type RunResult } from "./core.ts"
+import { OPS, TIMEOUT, rowSource, type BenchApp, type DomProbe, type Op, type RunResult } from "./core.ts"
 import { afterPaint } from "./paint.ts"
 import type { Lib } from "./libs.ts"
 
@@ -147,6 +147,10 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
       const order = [...live.filter((m) => m.lib.id === "march"), ...live.filter((m) => m.lib.id !== "march")]
       for (const m of order) {
         rows = rowSource(1)
+        // the expected most for this library's whole test of the operation; its samples' own time counts (not the
+        // pauses between them, not a hidden tab). A running call cannot be cut short: the check follows each sample
+        const budget = op.limit * (warm + o.reps)
+        let spent = 0
         for (let round = 0; round < warm + o.reps && !stop(); round++) {
           await guard(m.lib.id, op.id)
           report(m.lib.id, op.id, round < warm ? "warm" : "run")
@@ -154,6 +158,12 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
           while (typeof ms === "number" && Number.isNaN(ms) && !stop()) { await guard(m.lib.id, op.id); ms = await sample(m, op) } // the tab was hidden: measure it again
           if (ms === null || typeof ms === "number") { if (ms === null) fail(m, warm + o.reps - round); break }
           done++
+          spent += ms.all
+          if (spent > budget) {
+            m.errs[op.id] = `${TIMEOUT}: ${warm + o.reps} tekrar için en çok ${budget / 1000} sn beklenirdi, ${round + 1}. tekrarda ${(spent / 1000).toFixed(1)} sn oldu`
+            done += warm + o.reps - round - 1; live = live.filter((x) => x !== m)
+            break
+          }
           if (round >= warm) {
             lists.get(m)!.push(ms.all); acts.get(m)!.push(ms.act)
             if (ms.peak !== undefined) peaks.set(m, Math.max(peaks.get(m)!, ms.peak))

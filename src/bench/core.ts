@@ -58,6 +58,9 @@ export interface Op {
   desc: string
   /** warm-up samples before the measured ones */
   warm: number
+  /** the most a sample is expected to take (ms): a library whose samples add up to more than limit × samples is stopped
+   * for this operation and reported as not finishing in the expected time */
+  limit: number
   setup(app: BenchApp, rows: (n: number) => Row[], dom: DomProbe): void
   /** Reads the prepared table after setup has been drawn (libraries that render in a microtask have drawn by then). */
   mark?(dom: DomProbe): void
@@ -75,24 +78,26 @@ export interface DomProbe {
 
 const fresh = (app: BenchApp, rows: (n: number) => Row[], n: number) => { app.clear(); app.run(rows(n)) }
 let before = ""
+/** The start of the error a library gets when its samples of an operation take longer than expected (Op.limit). */
+export const TIMEOUT = "Beklenen sürede bitiremedi"
 export const OPS: Op[] = [
-  { id: "create1k", label: "1.000 satır oluştur", desc: "Boş tabloya 1.000 satır", warm: 0,
+  { id: "create1k", label: "1.000 satır oluştur", desc: "Boş tabloya 1.000 satır", warm: 0, limit: 1000,
     setup: (a) => a.clear(), act: (a, r) => a.run(r(1000)), check: (d) => d.count() === 1000 },
-  { id: "create10k", label: "10.000 satır oluştur", desc: "Boş tabloya 10.000 satır", warm: 0,
+  { id: "create10k", label: "10.000 satır oluştur", desc: "Boş tabloya 10.000 satır", warm: 0, limit: 5000,
     setup: (a) => a.clear(), act: (a, r) => a.run(r(10000)), check: (d) => d.count() === 10000 },
-  { id: "replace", label: "Tümünü değiştir", desc: "1.000 satırın yerine yeni 1.000 satır", warm: 0,
+  { id: "replace", label: "Tümünü değiştir", desc: "1.000 satırın yerine yeni 1.000 satır", warm: 0, limit: 1000,
     setup: (a, r) => fresh(a, r, 1000), mark: (d) => { before = d.id(0) }, act: (a, r) => a.run(r(1000)), check: (d) => d.count() === 1000 && d.id(0) !== before },
-  { id: "update", label: "Her 10. satırı güncelle", desc: "1.000 satırda her 10. satırın etiketine ekleme", warm: 0,
+  { id: "update", label: "Her 10. satırı güncelle", desc: "1.000 satırda her 10. satırın etiketine ekleme", warm: 0, limit: 1000,
     setup: (a, r) => fresh(a, r, 1000), act: (a) => a.update(), check: (d) => d.label(0).endsWith(" !!!") && d.label(10).endsWith(" !!!") && !d.label(1).endsWith(" !!!") },
-  { id: "select", label: "Satır seç", desc: "1.000 satırdan birine tıklayıp vurgulamak", warm: 0,
+  { id: "select", label: "Satır seç", desc: "1.000 satırdan birine tıklayıp vurgulamak", warm: 0, limit: 1000,
     setup: (a, r) => fresh(a, r, 1000), act: (_a, _r, d) => d.click(1, "lbl"), check: (d) => d.selected(1) && !d.selected(0) },
-  { id: "swap", label: "İki satırı takas et", desc: "1.000 satırda 2. ve 999. satırın yer değiştirmesi", warm: 0,
+  { id: "swap", label: "İki satırı takas et", desc: "1.000 satırda 2. ve 999. satırın yer değiştirmesi", warm: 0, limit: 1000,
     setup: (a, r) => fresh(a, r, 1000), mark: (d) => { before = d.id(1) }, act: (a) => a.swap(), check: (d) => d.id(998) === before && d.count() === 1000 },
-  { id: "remove", label: "Satır sil", desc: "1.000 satırdan birini silmek", warm: 0,
+  { id: "remove", label: "Satır sil", desc: "1.000 satırdan birini silmek", warm: 0, limit: 1000,
     setup: (a, r) => fresh(a, r, 1000), mark: (d) => { before = d.id(3) }, act: (_a, _r, d) => d.click(3, "rm"), check: (d) => d.count() === 999 && d.id(3) !== before },
-  { id: "clear", label: "Temizle", desc: "1.000 satırın hepsini kaldırmak", warm: 0,
+  { id: "clear", label: "Temizle", desc: "1.000 satırın hepsini kaldırmak", warm: 0, limit: 1000,
     setup: (a, r) => fresh(a, r, 1000), act: (a) => a.clear(), check: (d) => d.count() === 0 },
-  { id: "append", label: "10.000 satır ekle", desc: "1.000 satırlık tablonun sonuna 10.000 satır", warm: 0,
+  { id: "append", label: "10.000 satır ekle", desc: "1.000 satırlık tablonun sonuna 10.000 satır", warm: 0, limit: 5000,
     setup: (a, r) => fresh(a, r, 1000), act: (a, r) => a.add(r(10000)), check: (d) => d.count() === 11000 },
 ]
 export const opById = (id: string): Op | undefined => OPS.find((o) => o.id === id)

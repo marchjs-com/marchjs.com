@@ -6,6 +6,7 @@ import { animateEl } from "march/motion"
 import { Progress } from "march/ui"
 import { Icon, check, crown, alertTriangle, sliders, chevronDown } from "march/icons"
 import { LIBS, BASELINE, libById } from "./libs.ts"
+import { TIMEOUT } from "./core.ts"
 
 /** The tab whose test is running (null: none): the other tabs stay put (the stage the apps are drawn in must stay in the page). */
 export const busy = signal<string | null>(null)
@@ -108,12 +109,12 @@ export function Bars(props: { ids: string[]; rows: () => BarRow[]; label: string
         {id === BASELINE ? <span class="bt-ref" title={t("Çerçeve değil: elle yazılmış DOM kodu, kıyas çizgisi")}>{t("kıyas")}</span> : <Kind id={id} />}
         {() => (best(id) ? <span class="bt-crown" title={props.best ?? t("En hızlı")}><Icon of={crown} label={props.best ?? t("En hızlı")} /></span> : null)}</span>
       <span class="bt-bar-track" aria-hidden="true"><span class="bt-bar-fill" ref={(el: HTMLElement) => grow(el, id)} /></span>
-      <span class="bt-bar-value">{() => { const r = row(id); return r ? (r.error ? t("hata") : r.state === "wait" && !Number.isFinite(r.value) ? t("sırada") : r.state === "run" && !Number.isFinite(r.value) ? t("ölçülüyor…") : r.text) : "" }}</span>
+      <span class="bt-bar-value">{() => { const r = row(id); return r ? (r.error ? (r.error.startsWith(TIMEOUT) ? t("süre aşıldı") : t("hata")) : r.state === "wait" && !Number.isFinite(r.value) ? t("sırada") : r.state === "run" && !Number.isFinite(r.value) ? t("ölçülüyor…") : r.text) : "" }}</span>
       <span class="bt-bar-badges">
         {() => { const f = row(id)?.factor; return f !== undefined && Number.isFinite(f) ? <span class="bt-factor" class:is-base={f > 0.995 && f < 1.005} class:is-fast={f < 0.995} title={t("saf JavaScript'e göre katsayı")}>×{f.toFixed(2)}</span> : null }}
         {() => (row(id)?.warn ? <span class="bt-unsure" title={t("Sapma ya da güven aralığı medyanın %15'inden büyük")}><Icon of={alertTriangle} label={t("güvenilir değil")} /></span> : null)}
       </span>
-      {() => { const n = row(id)?.note; return n ? <span class="bt-bar-note">{n}</span> : null }}
+      {() => { const r = row(id), n = r?.error?.startsWith(TIMEOUT) ? r.error : r?.note; return n ? <span class="bt-bar-note">{n}</span> : null }}
     </li>)}
   </ol>
 }
