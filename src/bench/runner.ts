@@ -38,7 +38,7 @@ function visible(): Promise<void> {
 
 export async function runBench(o: RunOptions): Promise<RunResult> {
   const nav = navigator as Navigator & { deviceMemory?: number }
-  const res: RunResult = { v: 1, date: new Date().toISOString(), env: { ua: nav.userAgent, cores: nav.hardwareConcurrency, memory: nav.deviceMemory, screen: `${screen.width}×${screen.height}`, dpr: devicePixelRatio }, reps: o.reps, samples: {}, act: {}, errors: {}, firstPaint: {}, memory: {} }
+  const res: RunResult = { v: 1, date: new Date().toISOString(), env: { ua: nav.userAgent, cores: nav.hardwareConcurrency, memory: nav.deviceMemory, screen: `${screen.width}×${screen.height}`, dpr: devicePixelRatio }, reps: o.reps, samples: {}, act: {}, heap: {}, errors: {}, firstPaint: {}, memory: {} }
   let hides = 0
   const onVis = () => { if (document.hidden) hides++ }
   document.addEventListener("visibilitychange", onVis)
@@ -61,7 +61,7 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
   try {
     for (const lib of o.libs) {
       if (stop()) break
-      res.samples[lib.id] = {}; res.act![lib.id] = {}
+      res.samples[lib.id] = {}; res.act![lib.id] = {}; res.heap![lib.id] = {}
       report(lib.id, "", "load")
       gc(); await idle()
       await guard(lib.id, "")
@@ -101,30 +101,38 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
      * outside the time; only the pause for garbage collection comes before the start. Also returns the operation alone.
      * NaN when the tab was hidden during it, null when the check failed.
      */
-    const sample = async (m: Mounted, op: Op): Promise<{ all: number; act: number } | number | null> => {
+    const sample = async (m: Mounted, op: Op): Promise<{ all: number; act: number; peak?: number; end?: number } | number | null> => {
       show(m)
       await settle()
       const seen = hides
+      // the heap is read at the sample's start and after each of its paints (reading it takes no measurable time)
+      const h0 = heap()
       const start = performance.now()
       op.setup(m.app, rows, m.dom)
       await afterPaint()
+      const h1 = heap()
       op.mark?.(m.dom)
       const t0 = performance.now()
       op.act(m.app, rows, m.dom)
       const act = (await afterPaint()) - t0
+      const h2 = heap()
       const ok = hides !== seen || op.check(m.dom)
       // the next sample meets an empty stage: emptying it is part of the time (a library that is slow to tear down
       // what it drew pays for it here, not between samples where nobody sees it)
       m.app.clear()
       const all = (await afterPaint()) - start
+      const h3 = heap()
       if (hides !== seen) return NaN
-      return ok ? { all, act } : null
+      if (!ok) return null
+      if (h0 === undefined || h1 === undefined || h2 === undefined || h3 === undefined) return { all, act }
+      return { all, act, peak: Math.max(0, h1 - h0, h2 - h0, h3 - h0) / 1048576, end: (h3 - h0) / 1048576 }
     }
     for (const op of o.ops) {
       if (stop()) break
       const warm = o.warm ?? op.warm
       let live = mounted.filter((m) => !m.errs[op.id])
       const lists = new Map(live.map((m) => [m, [] as number[]])), acts = new Map(live.map((m) => [m, [] as number[]]))
+      const heaps = new Map(live.map((m) => [m, { peak: [] as number[], end: [] as number[] }]))
       const fail = (m: Mounted, left: number) => { m.errs[op.id] = "Sonuç beklenen tabloyla eşleşmedi"; done += left; live = live.filter((x) => x !== m) }
       // one library after another, each doing all of its rounds before the next starts; March runs first
       const order = [...live.filter((m) => m.lib.id === "march"), ...live.filter((m) => m.lib.id !== "march")]
@@ -137,11 +145,18 @@ export async function runBench(o: RunOptions): Promise<RunResult> {
           while (typeof ms === "number" && Number.isNaN(ms) && !stop()) { await guard(m.lib.id, op.id); ms = await sample(m, op) } // the tab was hidden: measure it again
           if (ms === null || typeof ms === "number") { if (ms === null) fail(m, warm + o.reps - round); break }
           done++
-          if (round >= warm) { lists.get(m)!.push(ms.all); acts.get(m)!.push(ms.act); o.onSample?.(m.lib.id, op.id, ms.all) }
+          if (round >= warm) {
+            lists.get(m)!.push(ms.all); acts.get(m)!.push(ms.act)
+            if (ms.peak !== undefined && ms.end !== undefined) { heaps.get(m)!.peak.push(ms.peak); heaps.get(m)!.end.push(ms.end) }
+            o.onSample?.(m.lib.id, op.id, ms.all)
+          }
         }
         if (stop()) break
       }
-      for (const [m, list] of lists) { res.samples[m.lib.id]![op.id] = list; res.act![m.lib.id]![op.id] = acts.get(m)! }
+      for (const [m, list] of lists) {
+        res.samples[m.lib.id]![op.id] = list; res.act![m.lib.id]![op.id] = acts.get(m)!
+        if (heaps.get(m)!.peak.length) res.heap![m.lib.id]![op.id] = heaps.get(m)!
+      }
     }
   } finally {
     for (const m of mounted) {
